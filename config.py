@@ -13,6 +13,3 @@ CLUSTERING_THRESHOLD = 0.5
 # File paths
 CASES_DIRECTORY = "Cases"
 DATA_DIRECTORY = "data"
-
-# Processing
-DEFAULT_SOURCE = "AZICAC"

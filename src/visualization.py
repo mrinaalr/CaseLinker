@@ -6,7 +6,7 @@ Interactive dashboards, graphs, filtering, and case detail views
 from typing import List, Dict, Any, Optional, Tuple
 
 
-def create__graph(cases: List[Dict[str, Any]], relationships: List[Tuple[str, str, float]]) -> Dict[str, Any]:
+def create_graph(cases: List[Dict[str, Any]], relationships: List[Tuple[str, str, float]]) -> Dict[str, Any]:
     """
     Create graph visualization of case relationships.
     
