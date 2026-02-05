@@ -15,5 +15,5 @@ CaseLinker aims to address these challenges by serving as a tool for case analys
 
 Contributors can help by
 - adding ideas to the README
-- contributing to the architecture deign
+- contributing to the architecture design
 - code implementation
