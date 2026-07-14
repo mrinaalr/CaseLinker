@@ -1,0 +1,106 @@
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-undercover: <https://cacontology.projectvic.org/undercover#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://caselinker.up.railway.app/resource/case/doj_archives_2004_002/admission/1/extraction-confidence> a cac-core:AssessmentResult ;
+    cac-core:assesses <https://caselinker.up.railway.app/resource/case/doj_archives_2004_002/admission/1> ;
+    cac-core:generatedBy <https://caselinker.up.railway.app/resource/case/doj_archives_2004_002> ;
+    cac-core:hasConfidence 0.65 .
+
+<https://caselinker.up.railway.app/resource/case/doj_archives_2004_002/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2004-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_archives_2004_002/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/agency/anchorage-police-department> a cacontology-multi:LocalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/doj> a cacontology-multi:FederalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/fbi> a cacontology-multi:FederalAgency .
+
+<https://caselinker.up.railway.app/resource/case/doj_archives_2004_002> a cacontology:CACInvestigation,
+        cac-core:EnduringEntity ;
+    dcterms:created "2026-06-18T20:16:38.454503" ;
+    dcterms:identifier "doj_archives_2004_002" ;
+    dcterms:modified "2026-06-18T20:16:38.454503" ;
+    dcterms:source <https://www.justice.gov/archive/criminal/ceos/pressreleases/downloads/DAK%20Boehm%20plea%20PR_112204.pdf>,
+        "DOJ ARCHIVES" ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_archives_2004_002/phase/sentenced> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_archives_2004_002/phase/sentenced> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_archives_2004_002/admission/1>,
+        <https://caselinker.up.railway.app/resource/case/doj_archives_2004_002/event/distribution>,
+        <https://caselinker.up.railway.app/resource/case/doj_archives_2004_002/event/trafficking>,
+        <https://caselinker.up.railway.app/resource/case/doj_archives_2004_002/legal-proceeding>,
+        <https://caselinker.up.railway.app/resource/case/doj_archives_2004_002/legal-step/sentenced> ;
+    cacontology:investigationStatus "unknown" ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/anchorage-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/doj>,
+        <https://caselinker.up.railway.app/resource/agency/fbi> .
+
+<https://caselinker.up.railway.app/resource/case/doj_archives_2004_002/charge/1> a cacontology-legal-outcomes:CriminalCharge,
+        cacontology-legal-outcomes:SexTrafficking ;
+    rdfs:label "sex trafficking" .
+
+<https://caselinker.up.railway.app/resource/case/doj_archives_2004_002/event/distribution> a cac-core:Event,
+        cacontology-legal-outcomes:CSAM_Distribution .
+
+<https://caselinker.up.railway.app/resource/case/doj_archives_2004_002/event/trafficking> a cac-core:Event,
+        cacontology-legal-outcomes:SexTrafficking .
+
+<https://caselinker.up.railway.app/resource/case/doj_archives_2004_002/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/doj_archives_2004_002/charge/1> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2004-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_archives_2004_002/sentence/1>,
+        <https://caselinker.up.railway.app/resource/case/doj_archives_2004_002/sentence/2> .
+
+<https://caselinker.up.railway.app/resource/case/doj_archives_2004_002/legal-step/sentenced> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding,
+        cacontology-legal-outcomes:SentencingHearing ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2004-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/doj_archives_2004_002/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 60 .
+
+<https://caselinker.up.railway.app/resource/case/doj_archives_2004_002/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/doj_archives_2004_002/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2004-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_archives_2004_002/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/doj_archives_2004_002/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "11 years" .
+
+<https://caselinker.up.railway.app/resource/case/doj_archives_2004_002/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:MonetaryPenalty ;
+    rdfs:label "$1" .
+
+<https://caselinker.up.railway.app/resource/case/doj_archives_2004_002/admission/1> a cacontology-undercover:IncriminatingStatement ;
+    rdfs:label "conspiring to commit the crime of sex trafficking of children" ;
+    dcterms:source <https://www.justice.gov/archive/criminal/ceos/pressreleases/downloads/DAK%20Boehm%20plea%20PR_112204.pdf> ;
+    ns1:admissionContext "conspiring to distribute over 50 grams of crack cocaine to persons under 21 years of age. Boehm also admitted to conspiring to commit the..." ;
+    ns1:admissionFrame "admitted_to" ;
+    ns1:admissionTheme "other" ;
+    ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/doj_archives_2004_002/role/offender/1> ;
+    ns1:evidenceTier "press_release_stated" ;
+    ns1:quoteType "paraphrase" ;
+    uco-core:description "conspiring to commit the crime of sex trafficking of children" .
+
+<https://caselinker.up.railway.app/resource/case/doj_archives_2004_002/phase/sentenced> a cac-core:Phase,
+        cacontology-legal-outcomes:SentencingPhase ;
+    cacontology:hasPhaseBeginPoint "2004-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+

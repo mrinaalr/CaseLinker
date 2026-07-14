@@ -1,0 +1,114 @@
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://caselinker.up.railway.app/resource/case/usss_2019_005> a cacontology:CACInvestigation,
+        cac-core:EnduringEntity ;
+    dcterms:created "2026-06-18T21:11:20.524932" ;
+    dcterms:identifier "usss_2019_005" ;
+    dcterms:modified "2026-06-18T21:11:20.524932" ;
+    dcterms:source <https://www.secretservice.gov/press/releases/2019/08/registered-sex-offender-sentenced-30-years-producing-child-pornography-4>,
+        "USSS" ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/usss_2019_005/phase/sentenced> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/usss_2019_005/phase/sentenced> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/usss_2019_005/event/csam>,
+        <https://caselinker.up.railway.app/resource/case/usss_2019_005/event/distribution>,
+        <https://caselinker.up.railway.app/resource/case/usss_2019_005/legal-proceeding>,
+        <https://caselinker.up.railway.app/resource/case/usss_2019_005/legal-step/sentenced>,
+        <https://caselinker.up.railway.app/resource/case/usss_2019_005/offense-event/charge-3> ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/east-st-louis-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/us-secret-service> .
+
+<https://caselinker.up.railway.app/resource/case/usss_2019_005/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2019-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/usss_2019_005/event/csam>,
+        <https://caselinker.up.railway.app/resource/case/usss_2019_005/offense-event/charge-3> ;
+    cacontology:perpetratorRegisteredSexOffender true ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/usss_2019_005/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/usss_2019_005/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2019-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/usss_2019_005/event/csam>,
+        <https://caselinker.up.railway.app/resource/case/usss_2019_005/offense-event/charge-3> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/usss_2019_005/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/agency/east-st-louis-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "East St. Louis Police Department" .
+
+<https://caselinker.up.railway.app/resource/agency/us-secret-service> a cacontology-multi:FederalAgency .
+
+<https://caselinker.up.railway.app/resource/case/usss_2019_005/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
+        cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "child pornography" .
+
+<https://caselinker.up.railway.app/resource/case/usss_2019_005/charge/2> a cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "sexual exploitation" ;
+    ns1:chargeCluster "sexual_exploitation_unspecified" .
+
+<https://caselinker.up.railway.app/resource/case/usss_2019_005/charge/3> a cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "child exploitation" ;
+    rdfs:seeAlso <https://caselinker.up.railway.app/resource/case/usss_2019_005/offense-event/charge-3> ;
+    ns1:chargeCluster "child_exploitation" ;
+    ns1:chargeOffenseEvent <https://caselinker.up.railway.app/resource/case/usss_2019_005/offense-event/charge-3> .
+
+<https://caselinker.up.railway.app/resource/case/usss_2019_005/event/distribution> a cac-core:Event,
+        cacontology-legal-outcomes:CSAM_Distribution ;
+    cacontology:severityLevel 3 .
+
+<https://caselinker.up.railway.app/resource/case/usss_2019_005/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+
+<https://caselinker.up.railway.app/resource/case/usss_2019_005/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/usss_2019_005/charge/1>,
+        <https://caselinker.up.railway.app/resource/case/usss_2019_005/charge/2>,
+        <https://caselinker.up.railway.app/resource/case/usss_2019_005/charge/3> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2019-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/usss_2019_005/legal-step/sentenced> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding,
+        cacontology-legal-outcomes:SentencingHearing ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2019-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/usss_2019_005/person/offender/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/usss_2019_005/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/usss_2019_005/phase/sentenced> a cac-core:Phase,
+        cacontology-legal-outcomes:SentencingPhase ;
+    cacontology:hasPhaseBeginPoint "2019-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/platform/facebook> a cacontology-platforms:SocialMediaPlatform ;
+    rdfs:label "Facebook" .
+
+<https://caselinker.up.railway.app/resource/platform/facebook-messenger> a cacontology-platforms:MessagingService ;
+    rdfs:label "Facebook Messenger" .
+
+<https://caselinker.up.railway.app/resource/case/usss_2019_005/event/csam> a cacontology:CSAMIncident,
+        cac-core:Event ;
+    cacontology:severityLevel 3 ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/facebook>,
+        <https://caselinker.up.railway.app/resource/platform/facebook-messenger> ;
+    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/usss_2019_005/facet/csam> .
+
+<https://caselinker.up.railway.app/resource/case/usss_2019_005/offense-event/charge-3> a cacontology:ChildSexualAbuseEvent,
+        cac-core:Event,
+        uco-action:Crime ;
+    rdfs:label "Inferred offense from charge: child exploitation" ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/facebook>,
+        <https://caselinker.up.railway.app/resource/platform/facebook-messenger> .
+

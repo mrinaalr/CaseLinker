@@ -1,0 +1,80 @@
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://caselinker.up.railway.app/resource/case/wy_dci_2023_001> a cacontology:CACInvestigation,
+        cac-core:EnduringEntity ;
+    dcterms:created "2026-06-18T21:16:23.100991" ;
+    dcterms:identifier "wy_dci_2023_001" ;
+    dcterms:modified "2026-06-18T21:16:23.100991" ;
+    dcterms:source <https://cowboystatedaily.com/2023/09/27/casper-man-accused-of-buying-girl-14-sex-toy-and-secretly-recording-her/>,
+        "WY DCI" ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/wy_dci_2023_001/phase/charged> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/wy_dci_2023_001/phase/charged> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/wy_dci_2023_001/event/multi-jurisdiction>,
+        <https://caselinker.up.railway.app/resource/case/wy_dci_2023_001/event/trust-violation>,
+        <https://caselinker.up.railway.app/resource/case/wy_dci_2023_001/legal-proceeding> ;
+    cacontology:investigationStatus "unknown" ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/casper-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/wyoming-division-of-criminal-investigation> .
+
+<https://caselinker.up.railway.app/resource/agency/casper-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Casper Police Department" .
+
+<https://caselinker.up.railway.app/resource/agency/wyoming-division-of-criminal-investigation> a cacontology-multi:LocalAgency .
+
+<https://caselinker.up.railway.app/resource/case/wy_dci_2023_001/event/multi-jurisdiction> a cac-core:Event,
+        cacontology-multi:MultiJurisdictionalInvestigation ;
+    cacontology:severityLevel 3 .
+
+<https://caselinker.up.railway.app/resource/case/wy_dci_2023_001/event/trust-violation> a cacontology-custodial:CustodialAbuse,
+        cacontology-custodial:TrustViolation ;
+    cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/wy_dci_2023_001/relationship/mother> .
+
+<https://caselinker.up.railway.app/resource/case/wy_dci_2023_001/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/wy_dci_2023_001/sentence/1>,
+        <https://caselinker.up.railway.app/resource/case/wy_dci_2023_001/sentence/2> .
+
+<https://caselinker.up.railway.app/resource/case/wy_dci_2023_001/person/offender/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/wy_dci_2023_001/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/wy_dci_2023_001/relationship/mother> a cacontology-custodial:CustodialRelationship,
+        cacontology-custodial:FamilialRelationship ;
+    cacontology-custodial:involvesChild <https://caselinker.up.railway.app/resource/case/wy_dci_2023_001/role/victim/1> ;
+    cacontology-custodial:involvesCustodian <https://caselinker.up.railway.app/resource/case/wy_dci_2023_001/role/offender/1> ;
+    cacontology-custodial:relationshipType "mother" .
+
+<https://caselinker.up.railway.app/resource/case/wy_dci_2023_001/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/wy_dci_2023_001/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/wy_dci_2023_001/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/wy_dci_2023_001/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/case/wy_dci_2023_001/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "10 years" .
+
+<https://caselinker.up.railway.app/resource/case/wy_dci_2023_001/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:MonetaryPenalty ;
+    rdfs:label "$5,000" .
+
+<https://caselinker.up.railway.app/resource/case/wy_dci_2023_001/phase/charged> a cacontology:LegalProcessPhase,
+        cac-core:Phase ;
+    cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+

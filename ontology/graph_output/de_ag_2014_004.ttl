@@ -1,0 +1,97 @@
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://caselinker.up.railway.app/resource/case/de_ag_2014_004> a cacontology:CACInvestigation,
+        cac-core:EnduringEntity ;
+    dcterms:created "2026-06-18T20:14:59.482993" ;
+    dcterms:identifier "de_ag_2014_004" ;
+    dcterms:modified "2026-06-18T20:14:59.482993" ;
+    dcterms:source <https://news.delaware.gov/2014/03/06/child-predator-task-force-arrests-dover-man-on-child-pornography-charges>,
+        "DE AG" ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/de_ag_2014_004/phase/charged> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/de_ag_2014_004/phase/charged> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/de_ag_2014_004/event/csam>,
+        <https://caselinker.up.railway.app/resource/case/de_ag_2014_004/event/distribution>,
+        <https://caselinker.up.railway.app/resource/case/de_ag_2014_004/event/online-only>,
+        <https://caselinker.up.railway.app/resource/case/de_ag_2014_004/legal-proceeding>,
+        <https://caselinker.up.railway.app/resource/case/de_ag_2014_004/operation> ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/child-predator-task-force>,
+        <https://caselinker.up.railway.app/resource/agency/delaware-child-predator-task-force>,
+        <https://caselinker.up.railway.app/resource/agency/dover-police-department> .
+
+<https://caselinker.up.railway.app/resource/case/de_ag_2014_004/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2014-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/de_ag_2014_004/event/csam>,
+        <https://caselinker.up.railway.app/resource/case/de_ag_2014_004/event/online-only> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/de_ag_2014_004/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/de_ag_2014_004/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2014-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/de_ag_2014_004/event/csam>,
+        <https://caselinker.up.railway.app/resource/case/de_ag_2014_004/event/online-only> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/de_ag_2014_004/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/agency/child-predator-task-force> a cacontology-multi:LocalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/delaware-child-predator-task-force> a cacontology-multi:LocalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/dover-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Dover Police Department" .
+
+<https://caselinker.up.railway.app/resource/case/de_ag_2014_004/charge/1> a cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "Dealing in Child" ;
+    cacontology-legal-outcomes:indictmentCounts 10 .
+
+<https://caselinker.up.railway.app/resource/case/de_ag_2014_004/charge/2> a cacontology-legal-outcomes:CSAM_Possession,
+        cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "child pornography" .
+
+<https://caselinker.up.railway.app/resource/case/de_ag_2014_004/charge/3> a cacontology-legal-outcomes:CSAM_Distribution,
+        cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "distribution of child pornography" .
+
+<https://caselinker.up.railway.app/resource/case/de_ag_2014_004/event/distribution> a cac-core:Event,
+        cacontology-legal-outcomes:CSAM_Distribution .
+
+<https://caselinker.up.railway.app/resource/case/de_ag_2014_004/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+
+<https://caselinker.up.railway.app/resource/case/de_ag_2014_004/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/de_ag_2014_004/charge/1>,
+        <https://caselinker.up.railway.app/resource/case/de_ag_2014_004/charge/2>,
+        <https://caselinker.up.railway.app/resource/case/de_ag_2014_004/charge/3> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2014-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/de_ag_2014_004/operation> a cac-core:Event,
+        cacontology-taskforce:TaskForceOperation .
+
+<https://caselinker.up.railway.app/resource/case/de_ag_2014_004/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 22 .
+
+<https://caselinker.up.railway.app/resource/case/de_ag_2014_004/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/de_ag_2014_004/phase/charged> a cacontology:LegalProcessPhase,
+        cac-core:Phase ;
+    cacontology:hasPhaseBeginPoint "2014-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/de_ag_2014_004/event/csam> a cacontology:CSAMIncident,
+        cac-core:Event ;
+    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/de_ag_2014_004/facet/csam> .
+
+<https://caselinker.up.railway.app/resource/case/de_ag_2014_004/event/online-only> a cacontology:ChildSexualAbuseEvent,
+        cac-core:Event .
+

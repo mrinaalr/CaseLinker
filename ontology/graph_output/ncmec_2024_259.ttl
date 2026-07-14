@@ -1,0 +1,119 @@
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
+@prefix cacontology-undercover: <https://cacontology.projectvic.org/undercover#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_259/admission/1/extraction-confidence> a cac-core:AssessmentResult ;
+    cac-core:assesses <https://caselinker.up.railway.app/resource/case/ncmec_2024_259/admission/1> ;
+    cac-core:generatedBy <https://caselinker.up.railway.app/resource/case/ncmec_2024_259> ;
+    cac-core:hasConfidence 0.65 .
+
+<https://caselinker.up.railway.app/resource/agency/pasco-county-sheriffs-office> a cacontology-multi:LocalAgency .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_259> a cacontology:CACInvestigation,
+        cac-core:EnduringEntity ;
+    dcterms:created "2026-06-18T19:42:06.506087" ;
+    dcterms:identifier "ncmec_2024_259" ;
+    dcterms:modified "2026-06-18T19:42:06.506087" ;
+    dcterms:source <https://www.foxnews.com/us/florida-christian-school-teacher-accused-ai-produce-erotic-content-yearbook-photos>,
+        "NCMEC" ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_259/phase/charged> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_259/phase/charged> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_259/admission/1>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_259/event/ai-csam>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_259/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_259/event/trust-violation>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_259/legal-proceeding> ;
+    cacontology:investigationStatus "unknown" ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/pasco-county-sheriffs-office> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_259/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
+        cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "child pornography" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_259/charge/2> a cacontology-legal-outcomes:CSAM_Possession,
+        cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "possession of child pornography" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_259/event/trust-violation> a cacontology-custodial:AuthorityAbuse,
+        cacontology-custodial:TrustViolation ;
+    cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/ncmec_2024_259/relationship/teacher> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_259/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_259/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2024_259/charge/1>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_259/charge/2> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-03-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2024_259/sentence/1> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_259/person/offender/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_259/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_259/relationship/teacher> a cacontology-custodial:CustodialRelationship,
+        cacontology-custodial:Teacher ;
+    cacontology-custodial:involvesChild <https://caselinker.up.railway.app/resource/case/ncmec_2024_259/role/victim/1> ;
+    cacontology-custodial:involvesCustodian <https://caselinker.up.railway.app/resource/case/ncmec_2024_259/role/offender/1> ;
+    cacontology-custodial:relationshipType "teacher" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_259/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2024-03-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_259/event/ai-csam>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_259/event/possession> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_259/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_259/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:MonetaryPenalty ;
+    rdfs:label "$100,000" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_259/admission/1> a cacontology-undercover:IncriminatingStatement ;
+    rdfs:label "investigators he used yearbook photos of three students when generating content with AI" ;
+    dcterms:source <https://www.foxnews.com/us/florida-christian-school-teacher-accused-ai-produce-erotic-content-yearbook-photos> ;
+    ns1:admissionContext "allegedly in possession of child erotic material generated using an AI computer program. Houser allegedly admitted to investigators he us..." ;
+    ns1:admissionFrame "admitted_to" ;
+    ns1:admissionTheme "other" ;
+    ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_259/role/offender/1> ;
+    ns1:evidenceTier "press_release_stated" ;
+    ns1:quoteType "paraphrase" ;
+    uco-core:description "investigators he used yearbook photos of three students when generating content with AI" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_259/phase/charged> a cacontology:LegalProcessPhase,
+        cac-core:Phase ;
+    cacontology:hasPhaseBeginPoint "2024-03-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_259/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2024-03-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_259/event/ai-csam>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_259/event/possession> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_259/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/platform/gen-ai> a cacontology-platforms:FileHostingService ;
+    rdfs:label "Gen AI" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_259/event/ai-csam> a cacontology:DigitallyGeneratedCSAMIncident,
+        <https://cacontology.projectvic.org/ai-csam#AIGeneratedCSAM>,
+        cac-core:Event ;
+    cacontology:severityLevel 3 ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/gen-ai> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_259/event/possession> a cacontology:CSAMIncident,
+        cac-core:Event ;
+    cacontology:severityLevel 3 ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/gen-ai> ;
+    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2024_259/facet/possession> .
+

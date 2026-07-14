@@ -1,0 +1,72 @@
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://caselinker.up.railway.app/resource/case/us_marshals_2023_009> a cacontology:CACInvestigation,
+        cac-core:EnduringEntity ;
+    dcterms:created "2026-06-18T21:10:24.891412" ;
+    dcterms:identifier "us_marshals_2023_009" ;
+    dcterms:modified "2026-06-18T21:10:24.891412" ;
+    dcterms:source <https://www.usmarshals.gov/news/press-release/us-marshals-wv-state-police-announce-results-of-operation-blue-gold-shield>,
+        "US MARSHALS" ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/us_marshals_2023_009/phase/indicted> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/us_marshals_2023_009/phase/indicted> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/us_marshals_2023_009/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/us_marshals_2023_009/legal-proceeding> ;
+    cacontology:investigationStatus "unknown" ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/usms>,
+        <https://caselinker.up.railway.app/resource/agency/west-virginia-department-of-corrections-rehabilitation>,
+        <https://caselinker.up.railway.app/resource/agency/west-virginia-state-police-department> .
+
+<https://caselinker.up.railway.app/resource/case/us_marshals_2023_009/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/us_marshals_2023_009/event/possession> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/us_marshals_2023_009/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/us_marshals_2023_009/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/us_marshals_2023_009/event/possession> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/us_marshals_2023_009/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/agency/usms> a cacontology-multi:FederalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/west-virginia-department-of-corrections-rehabilitation> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "West Virginia Department of Corrections & Rehabilitation" .
+
+<https://caselinker.up.railway.app/resource/agency/west-virginia-state-police-department> a cacontology-multi:StateAgency .
+
+<https://caselinker.up.railway.app/resource/case/us_marshals_2023_009/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+
+<https://caselinker.up.railway.app/resource/case/us_marshals_2023_009/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/us_marshals_2023_009/sentence/1> .
+
+<https://caselinker.up.railway.app/resource/case/us_marshals_2023_009/person/offender/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/us_marshals_2023_009/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/us_marshals_2023_009/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:SupervisedRelease ;
+    rdfs:label "supervised release" .
+
+<https://caselinker.up.railway.app/resource/case/us_marshals_2023_009/phase/indicted> a cacontology:LegalProcessPhase,
+        cac-core:Phase ;
+    cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/us_marshals_2023_009/event/possession> a cacontology:CSAMIncident,
+        cac-core:Event ;
+    cacontology:severityLevel 3 ;
+    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/us_marshals_2023_009/facet/possession> .
+

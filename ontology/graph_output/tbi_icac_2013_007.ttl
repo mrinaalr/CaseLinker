@@ -1,0 +1,77 @@
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://caselinker.up.railway.app/resource/case/tbi_icac_2013_007> a cacontology:CACInvestigation,
+        cac-core:EnduringEntity ;
+    dcterms:created "2026-06-18T21:07:40.836414" ;
+    dcterms:identifier "tbi_icac_2013_007" ;
+    dcterms:modified "2026-06-18T21:07:40.836414" ;
+    dcterms:source <https://tbinewsroom.com/2013/07/18/tbi-puts-alabama-man-wanted-for-child-rape-on-states-top-ten-most-wanted-list/>,
+        "TBI ICAC" ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_007/phase/charged> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_007/phase/charged> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_007/event/hands-on>,
+        <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_007/event/trust-violation>,
+        <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_007/legal-proceeding> ;
+    cacontology:investigationStatus "unknown" ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/pulaski-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/tennessee-bureau-of-investigation> .
+
+<https://caselinker.up.railway.app/resource/agency/pulaski-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Pulaski Police Department" .
+
+<https://caselinker.up.railway.app/resource/agency/tennessee-bureau-of-investigation> a cacontology-multi:StateAgency .
+
+<https://caselinker.up.railway.app/resource/case/tbi_icac_2013_007/event/trust-violation> a cacontology-custodial:CustodialAbuse,
+        cacontology-custodial:TrustViolation ;
+    cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_007/relationship/mother> .
+
+<https://caselinker.up.railway.app/resource/case/tbi_icac_2013_007/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_007/sentence/1> .
+
+<https://caselinker.up.railway.app/resource/case/tbi_icac_2013_007/person/offender/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/tbi_icac_2013_007/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/tbi_icac_2013_007/relationship/mother> a cacontology-custodial:CustodialRelationship,
+        cacontology-custodial:FamilialRelationship ;
+    cacontology-custodial:involvesChild <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_007/role/victim/1> ;
+    cacontology-custodial:involvesCustodian <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_007/role/offender/1> ;
+    cacontology-custodial:relationshipType "mother" .
+
+<https://caselinker.up.railway.app/resource/case/tbi_icac_2013_007/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_007/event/hands-on> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_007/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/tbi_icac_2013_007/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_007/event/hands-on> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_007/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/case/tbi_icac_2013_007/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:MonetaryPenalty ;
+    rdfs:label "$1,000" .
+
+<https://caselinker.up.railway.app/resource/case/tbi_icac_2013_007/phase/charged> a cacontology:LegalProcessPhase,
+        cac-core:Phase ;
+    cacontology:hasPhaseBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/tbi_icac_2013_007/event/hands-on> a cacontology:ChildSexualAbuseEvent,
+        cac-core:Event ;
+    cacontology:severityLevel 3 .
+

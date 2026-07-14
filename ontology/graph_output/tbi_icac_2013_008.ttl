@@ -1,0 +1,96 @@
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://caselinker.up.railway.app/resource/case/tbi_icac_2013_008> a cacontology:CACInvestigation,
+        cac-core:EnduringEntity ;
+    dcterms:created "2026-06-18T21:07:41.345455" ;
+    dcterms:identifier "tbi_icac_2013_008" ;
+    dcterms:modified "2026-06-18T21:07:41.345455" ;
+    dcterms:source <https://tbinewsroom.com/2013/07/19/tbi-top-ten-most-wanted-captured-in-huntsville-alabama-thanks-to-an-anonymous-tip/>,
+        "TBI ICAC" ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_008/phase/arrested> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_008/phase/arrested> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_008/event/hands-on>,
+        <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_008/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_008/event/trust-violation>,
+        <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_008/legal-proceeding> ;
+    cacontology:investigationStatus "unknown" ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/huntsville-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/pulaski-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/tennessee-bureau-of-investigation> .
+
+<https://caselinker.up.railway.app/resource/agency/huntsville-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Huntsville Police Department" .
+
+<https://caselinker.up.railway.app/resource/agency/pulaski-police-department> a cacontology-multi:LocalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/tennessee-bureau-of-investigation> a cacontology-multi:StateAgency .
+
+<https://caselinker.up.railway.app/resource/case/tbi_icac_2013_008/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
+        cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "child pornography" .
+
+<https://caselinker.up.railway.app/resource/case/tbi_icac_2013_008/charge/2> a cacontology-legal-outcomes:CSAM_Possession,
+        cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "possession of child pornography" .
+
+<https://caselinker.up.railway.app/resource/case/tbi_icac_2013_008/event/trust-violation> a cacontology-custodial:CustodialAbuse,
+        cacontology-custodial:TrustViolation ;
+    cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_008/relationship/mother> .
+
+<https://caselinker.up.railway.app/resource/case/tbi_icac_2013_008/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+
+<https://caselinker.up.railway.app/resource/case/tbi_icac_2013_008/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_008/charge/1>,
+        <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_008/charge/2> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/tbi_icac_2013_008/person/offender/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/tbi_icac_2013_008/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/tbi_icac_2013_008/relationship/mother> a cacontology-custodial:CustodialRelationship,
+        cacontology-custodial:FamilialRelationship ;
+    cacontology-custodial:involvesChild <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_008/role/victim/1> ;
+    cacontology-custodial:involvesCustodian <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_008/role/offender/1> ;
+    cacontology-custodial:relationshipType "mother" .
+
+<https://caselinker.up.railway.app/resource/case/tbi_icac_2013_008/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_008/event/hands-on>,
+        <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_008/event/possession> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_008/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/tbi_icac_2013_008/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_008/event/hands-on>,
+        <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_008/event/possession> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_008/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/case/tbi_icac_2013_008/phase/arrested> a cacontology:InitialPhase,
+        cac-core:Phase ;
+    cacontology:hasPhaseBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/tbi_icac_2013_008/event/hands-on> a cacontology:ChildSexualAbuseEvent,
+        cac-core:Event ;
+    cacontology:severityLevel 3 .
+
+<https://caselinker.up.railway.app/resource/case/tbi_icac_2013_008/event/possession> a cacontology:CSAMIncident,
+        cac-core:Event ;
+    cacontology:severityLevel 3 ;
+    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_008/facet/possession> .
+

@@ -368,6 +368,22 @@
     return caseData.citation || caseData.case_name || caseData.id || "";
   }
 
+  const LSTAR_EQUATION_TEX =
+    String.raw`L^{*}_{g,A} = \operatorname{arg}\ \underset{L \in \mathrm{Seq}(A)}{\operatorname{max}} \ \mathbb{E}[U_g(L)]`;
+
+  function renderFundamentalEquation() {
+    const host = document.getElementById("fundamental-equation-tex");
+    if (!host || typeof katex === "undefined") return;
+    try {
+      katex.render(LSTAR_EQUATION_TEX, host, {
+        displayMode: false,
+        throwOnError: false,
+      });
+    } catch (_) {
+      /* keep aria-label on parent if KaTeX fails */
+    }
+  }
+
   function renderFundamentalSection() {
     const el = document.getElementById("fundamental-section");
     if (!el) return;
@@ -389,7 +405,7 @@
       <div class="fundamental-math">
         <p class="fundamental-basis-label">Mathematical basis · Section 7.2</p>
         <div class="fundamental-equation" aria-label="L-star g A equals argmax over L in Seq(A) of expected U_g of L">
-          L*<sub>g,A</sub> = <span class="eq-argmax">arg&nbsp;max<sub class="eq-domain"><i>L</i>&thinsp;∈&thinsp;Seq(<i>A</i>)</sub></span> E[<i>U</i><sub><i>g</i></sub>(<i>L</i>)]
+          <span id="fundamental-equation-tex" class="fundamental-equation-tex"></span>
         </div>
         <p class="fundamental-basis-text">
           Five PACER trajectories diverge by goal <i>g</i> and exploitation modality, but their CAC phase types are drawn from the same stage set.
@@ -401,6 +417,7 @@
         </a>
       </div>
     `;
+    renderFundamentalEquation();
   }
 
   function setText(id, value) {

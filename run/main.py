@@ -271,6 +271,19 @@ def _sanitize_case_for_public(case: Dict[str, Any]) -> Dict[str, Any]:
     return case
 
 
+def _sanitize_tagged_cases_response(request: Request, out: Dict[str, Any]) -> Dict[str, Any]:
+    """Strip raw_data from tagged-case payloads for callers without bulk corpus access."""
+    if _has_bulk_corpus_access(request):
+        return out
+    return {
+        "cases": [
+            _sanitize_case_for_public(dict(c))
+            for c in out.get("cases", [])
+            if isinstance(c, dict)
+        ],
+    }
+
+
 def _extract_case_text_value(case: Dict[str, Any]) -> str:
     """Best-effort extraction of case narrative text from a case payload."""
     direct = case.get("case_text")
@@ -1193,14 +1206,13 @@ try:
                     _cluster_groups_cache_case_count = case_count
                     print(f"✅ Cluster cache warmed from Redis ({case_count} cases)")
                     return
-                precomputed = storage.get_precomputed_clusters(case_count)
-                if precomputed and precomputed.get('case_groups'):
-                    slim_groups = _slim_for_cluster_groups(precomputed.get('case_groups', []))
-                    result = {"success": True, "case_groups": slim_groups, "cached": True, "source": "startup"}
+                slim_from_db = storage.get_cluster_groups_slim(case_count)
+                if slim_from_db and len(slim_from_db) > 0:
+                    result = {"success": True, "case_groups": slim_from_db, "cached": True, "source": "startup"}
                     set_cached(cache_key, result, ttl=86400)
                     _cluster_groups_cache = result
                     _cluster_groups_cache_case_count = case_count
-                    print(f"✅ Cluster cache warmed from DB ({case_count} cases)")
+                    print(f"✅ Cluster cache warmed from DB slim ({case_count} cases)")
                     return
                 cases = storage.get_all_cases(include_raw_data=False)
                 if cases:
@@ -1232,8 +1244,8 @@ try:
                     set_cached(get_cache_key('tags', version=len(cases)), tags_result, ttl=86400)
                     from analysis import run_automated_analysis
                     cluster_data = run_automated_analysis(cases)
-                    storage.store_precomputed_clusters(cluster_data, len(cases))
                     case_count = len(cases)
+                    stored = storage.store_precomputed_clusters(cluster_data, case_count)
                     # Warm cache: in-memory + Redis so /api/cluster-groups is fast on first request
                     slim_groups = _slim_for_cluster_groups(cluster_data.get('case_groups', []))
                     result = {"success": True, "case_groups": slim_groups, "cached": True, "source": "startup"}
@@ -1241,7 +1253,13 @@ try:
                     set_cached(cache_key, result, ttl=86400)
                     _cluster_groups_cache = result
                     _cluster_groups_cache_case_count = case_count
-                    print(f"✅ Pre-computed clusters stored and cache warmed ({case_count} cases)")
+                    if stored:
+                        print(f"✅ Pre-computed clusters stored and cache warmed ({case_count} cases)")
+                    else:
+                        print(
+                            f"⚠️  Failed to persist clusters to DB; warmed memory/Redis only "
+                            f"({case_count} cases)"
+                        )
             except Exception as e:
                 print(f"⚠️  Error pre-computing clusters: {e}")
         
@@ -1967,13 +1985,13 @@ def get_tagged_cases(request: Request, selected_tags: List[Dict[str, str]]):
         rk = get_cache_key("return-tagged", h=ph, version=current_count)
         cached = get_cached(rk)
         if cached is not None:
-            return cached
+            return _sanitize_tagged_cases_response(request, cached)
     cases = storage.get_all_cases()
     matching_cases = return_tagged_cases(cases, selected_tags)
     out = {"cases": matching_cases}
     if REDIS_AVAILABLE:
         set_cached(rk, out, ttl=3600)
-    return out
+    return _sanitize_tagged_cases_response(request, out)
 
 
 @app.get("/api/case-ids-by-filter")
@@ -2146,12 +2164,18 @@ def clear_cache(request: Request):
     Requires authentication token or environment variable for security.
     """
     try:
-        # Simple security: require CACHE_CLEAR_TOKEN env var or query param
-        token = request.query_params.get('token') or os.getenv('CACHE_CLEAR_TOKEN')
-        expected_token = os.getenv('CACHE_CLEAR_TOKEN', 'dev-cache-clear-token')
-        
-        if token != expected_token:
-            return {"error": "Unauthorized. Provide ?token=YOUR_TOKEN or set CACHE_CLEAR_TOKEN env var"}
+        expected_token = os.getenv('CACHE_CLEAR_TOKEN')
+        if not expected_token:
+            raise HTTPException(
+                status_code=403,
+                detail="Cache clear is disabled (CACHE_CLEAR_TOKEN not configured).",
+            )
+        token = request.query_params.get('token')
+        if not token or token != expected_token:
+            raise HTTPException(
+                status_code=403,
+                detail="Unauthorized. Provide ?token=YOUR_TOKEN.",
+            )
         
         if REDIS_AVAILABLE:
             cleared = clear_all_cache()
@@ -2166,6 +2190,8 @@ def clear_cache(request: Request):
                 "message": "No Redis cache to clear (using direct database queries)",
                 "cache_type": "None"
             }
+    except HTTPException:
+        raise
     except Exception as e:
         return {"error": str(e)}
 
@@ -2910,29 +2936,14 @@ async def cluster_groups_endpoint(request: Request):
             _cluster_groups_cache_case_count = current_case_count
             return result
 
-        # 4. Full precomputed (fallback for old data before slim table)
-        precomputed = storage.get_precomputed_clusters(current_case_count)
-        if precomputed and isinstance(precomputed, dict) and precomputed.get('case_groups'):
-            raw_groups = precomputed.get('case_groups', [])
-            slim_groups = _slim_for_cluster_groups(raw_groups)
-            result = {
-                "success": True,
-                "case_groups": slim_groups,
-                "cached": True,
-                "source": "database"
-            }
-            set_cached(cache_key, result, ttl=86400)
-            storage.store_cluster_groups_slim(raw_groups, current_case_count)  # backfill slim table
-            _cluster_groups_cache = result
-            _cluster_groups_cache_case_count = current_case_count
-            return result
-        
-        # 5. Fallback: compute on-demand, then store
+        # 4. Fallback: compute on-demand, then store slim groups
         print("⚠️  No pre-computed cluster groups found, computing on-demand (this is slow once)...")
         cases = storage.get_all_cases(include_raw_data=True)
         analysis_results = run_automated_analysis(cases)
-        storage.store_precomputed_clusters(analysis_results, current_case_count)
-        
+        stored = storage.store_precomputed_clusters(analysis_results, current_case_count)
+        if not stored:
+            print("❌ Failed to persist slim cluster groups after on-demand compute")
+
         raw_groups = analysis_results.get('case_groups', [])
         slim_groups = _slim_for_cluster_groups(raw_groups)
         result = {
@@ -2955,8 +2966,8 @@ async def cluster_groups_endpoint(request: Request):
 async def automated_analysis_endpoint(request: Request):
     """
     Full automated analysis (case groups, triaged cases, insights).
-    Uses Redis caching + pre-computed clusters from database for fast response.
-    Falls back to computing if pre-computed clusters not available.
+    Uses Redis for the full payload. DB only persists slim case_groups
+    (via store_precomputed_clusters) for /api/cluster-groups.
     """
     try:
         current_case_count = get_case_count()
@@ -2970,23 +2981,15 @@ async def automated_analysis_endpoint(request: Request):
             cached_result['_cache_source'] = 'redis'
             return cached_result
         
-        precomputed = storage.get_precomputed_clusters(current_case_count)
-        if precomputed:
-            precomputed = _attach_case_text_to_automated_analysis(precomputed)
-            result = {
-                "success": True,
-                "analysis": precomputed,
-                "cached": True,
-                "source": "database"
-            }
-            set_cached(cache_key, result, ttl=86400)
-            return result
-        
-        print("⚠️  No pre-computed clusters found, computing on-demand (this is slow)...")
+        # Full analysis is not stored in Postgres (too large). Compute live, persist
+        # slim case_groups for cluster UI, cache the full result in Redis.
+        print("⚠️  No Redis automated-analysis cache, computing on-demand (this is slow)...")
         cases = storage.get_all_cases(include_raw_data=True)
         analysis_results = run_automated_analysis(cases)
         analysis_results = _attach_case_text_to_automated_analysis(analysis_results)
-        storage.store_precomputed_clusters(analysis_results, current_case_count)
+        stored = storage.store_precomputed_clusters(analysis_results, current_case_count)
+        if not stored:
+            print("❌ Failed to persist slim cluster groups after automated-analysis compute")
         
         result = {
             "success": True,

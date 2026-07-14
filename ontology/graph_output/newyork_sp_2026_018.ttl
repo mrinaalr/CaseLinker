@@ -1,0 +1,70 @@
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://caselinker.up.railway.app/resource/case/newyork_sp_2026_018> a cacontology:CACInvestigation,
+        cac-core:EnduringEntity ;
+    dcterms:created "2026-06-18T20:46:25.926911" ;
+    dcterms:identifier "newyork_sp_2026_018" ;
+    dcterms:modified "2026-06-18T20:46:25.926911" ;
+    dcterms:source <https://troopers.ny.gov/news/state-police-arrest-albany-man-following-child-sexual-abuse-investigation>,
+        "NEWYORK SP" ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/newyork_sp_2026_018/phase/arrested> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/newyork_sp_2026_018/phase/arrested> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/newyork_sp_2026_018/event/hands-on>,
+        <https://caselinker.up.railway.app/resource/case/newyork_sp_2026_018/event/trust-violation> ;
+    cacontology:investigationStatus "unknown" ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/canton-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/hsi>,
+        <https://caselinker.up.railway.app/resource/agency/state-police-department> .
+
+<https://caselinker.up.railway.app/resource/agency/canton-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Canton Police Department" .
+
+<https://caselinker.up.railway.app/resource/agency/hsi> a cacontology-multi:FederalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/state-police-department> a cacontology-multi:StateAgency .
+
+<https://caselinker.up.railway.app/resource/case/newyork_sp_2026_018/event/trust-violation> a cacontology-custodial:AuthorityAbuse,
+        cacontology-custodial:TrustViolation ;
+    cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/newyork_sp_2026_018/relationship/teacher> .
+
+<https://caselinker.up.railway.app/resource/case/newyork_sp_2026_018/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 27 .
+
+<https://caselinker.up.railway.app/resource/case/newyork_sp_2026_018/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/newyork_sp_2026_018/relationship/teacher> a cacontology-custodial:CustodialRelationship,
+        cacontology-custodial:Teacher ;
+    cacontology-custodial:involvesChild <https://caselinker.up.railway.app/resource/case/newyork_sp_2026_018/role/victim/1> ;
+    cacontology-custodial:involvesCustodian <https://caselinker.up.railway.app/resource/case/newyork_sp_2026_018/role/offender/1> ;
+    cacontology-custodial:relationshipType "teacher" .
+
+<https://caselinker.up.railway.app/resource/case/newyork_sp_2026_018/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/newyork_sp_2026_018/event/hands-on> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/newyork_sp_2026_018/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/newyork_sp_2026_018/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/newyork_sp_2026_018/event/hands-on> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/newyork_sp_2026_018/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/case/newyork_sp_2026_018/phase/arrested> a cacontology:InitialPhase,
+        cac-core:Phase ;
+    cacontology:hasPhaseBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/newyork_sp_2026_018/event/hands-on> a cacontology:ChildSexualAbuseEvent,
+        cac-core:Event ;
+    cacontology:severityLevel 3 .
+

@@ -312,9 +312,9 @@ To answer Q1–Q3 at corpus scale, enforcement narratives cannot stay only in re
 
 **What is an ontology:** The [CAC Ontology](https://github.com/Project-VIC-International/CAC-Ontology) (Crimes Against Children Ontology) is a formal vocabulary developed to model the entities of a child-exploitation investigation as typed, related objects: platforms, victims, offenders, investigations, and outcomes. CAC is shepherded by [Project VIC International](https://www.projectvic.org/) and is built on the Linux Foundation's [Cyber Domain Ontology](https://cyberdomainontology.org/) stack ([UCO](https://unifiedcyberontology.org/) and [CASE](https://caseontology.org/)). CaseLinker case data is being aligned to this vocabulary so graphs can be shared, validated, and queried with the same tools used in forensic and intelligence workflows.
 
-**How CaseLinker uses ontologies :** A deterministic mapping layer translates each case's extracted features into CAC entities and relationships, emits per-case RDF graphs, validates them, and merges conformant graphs into a queryable knowledge graph.
+**How CaseLinker uses ontologies:** A deterministic mapping layer translates each case's extracted features into CAC entities and relationships, emits per-case RDF graphs, validates them, and merges conformant graphs into a queryable knowledge graph.
 
-**Pipeline flow** :
+**Pipeline flow**:
 
 1. **CaseLinker case features** — already extracted (platforms, topics, investigation signals, prosecution outcomes).
 2. **Mapping layer** — deterministic translation to CAC entities and relationships (`ontology/graph_generate.py`).

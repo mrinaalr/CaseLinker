@@ -1,0 +1,165 @@
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-undercover: <https://cacontology.projectvic.org/undercover#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://caselinker.up.railway.app/resource/case/usss_2023_002/admission/1/extraction-confidence> a cac-core:AssessmentResult ;
+    cac-core:assesses <https://caselinker.up.railway.app/resource/case/usss_2023_002/admission/1> ;
+    cac-core:generatedBy <https://caselinker.up.railway.app/resource/case/usss_2023_002> ;
+    cac-core:hasConfidence 0.9 .
+
+<https://caselinker.up.railway.app/resource/case/usss_2023_002/admission/2/extraction-confidence> a cac-core:AssessmentResult ;
+    cac-core:assesses <https://caselinker.up.railway.app/resource/case/usss_2023_002/admission/2> ;
+    cac-core:generatedBy <https://caselinker.up.railway.app/resource/case/usss_2023_002> ;
+    cac-core:hasConfidence 0.65 .
+
+<https://caselinker.up.railway.app/resource/case/usss_2023_002/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/usss_2023_002/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/usss_2023_002/offense-event/charge-3> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/usss_2023_002/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/agency/ceos> a cacontology-multi:FederalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/richmond-fire-and-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Richmond Fire and Police Department" .
+
+<https://caselinker.up.railway.app/resource/agency/richmond-fire-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Richmond Fire Department" .
+
+<https://caselinker.up.railway.app/resource/agency/richmond-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Richmond Police Department" .
+
+<https://caselinker.up.railway.app/resource/agency/us-secret-service> a cacontology-multi:FederalAgency .
+
+<https://caselinker.up.railway.app/resource/case/usss_2023_002/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
+        cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "child sexual abuse material" .
+
+<https://caselinker.up.railway.app/resource/case/usss_2023_002/charge/2> a cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "sexual exploitation" ;
+    ns1:chargeCluster "sexual_exploitation_unspecified" .
+
+<https://caselinker.up.railway.app/resource/case/usss_2023_002/charge/3> a cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "child exploitation" ;
+    rdfs:seeAlso <https://caselinker.up.railway.app/resource/case/usss_2023_002/offense-event/charge-3> ;
+    ns1:chargeCluster "child_exploitation" ;
+    ns1:chargeOffenseEvent <https://caselinker.up.railway.app/resource/case/usss_2023_002/offense-event/charge-3> .
+
+<https://caselinker.up.railway.app/resource/case/usss_2023_002/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+
+<https://caselinker.up.railway.app/resource/case/usss_2023_002/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/usss_2023_002/charge/1>,
+        <https://caselinker.up.railway.app/resource/case/usss_2023_002/charge/2>,
+        <https://caselinker.up.railway.app/resource/case/usss_2023_002/charge/3> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/usss_2023_002/sentence/1>,
+        <https://caselinker.up.railway.app/resource/case/usss_2023_002/sentence/2>,
+        <https://caselinker.up.railway.app/resource/case/usss_2023_002/sentence/3> .
+
+<https://caselinker.up.railway.app/resource/case/usss_2023_002/legal-step/sentenced> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding,
+        cacontology-legal-outcomes:SentencingHearing ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/usss_2023_002/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 65 .
+
+<https://caselinker.up.railway.app/resource/case/usss_2023_002/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/usss_2023_002/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "15 years" .
+
+<https://caselinker.up.railway.app/resource/case/usss_2023_002/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:ProbationSentence ;
+    rdfs:label "Probation" .
+
+<https://caselinker.up.railway.app/resource/case/usss_2023_002/sentence/3> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "5 years" .
+
+<https://caselinker.up.railway.app/resource/case/usss_2023_002> a cacontology:CACInvestigation,
+        cac-core:EnduringEntity ;
+    dcterms:created "2026-06-18T21:11:10.041059" ;
+    dcterms:identifier "usss_2023_002" ;
+    dcterms:modified "2026-06-18T21:11:10.041059" ;
+    dcterms:source <https://www.secretservice.gov/newsroom/releases/2023/08/richmond-man-sentenced-15-years-federal-prison-after-investigators>,
+        "USSS" ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/usss_2023_002/phase/sentenced> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/usss_2023_002/phase/sentenced> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/usss_2023_002/admission/1>,
+        <https://caselinker.up.railway.app/resource/case/usss_2023_002/admission/2>,
+        <https://caselinker.up.railway.app/resource/case/usss_2023_002/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/usss_2023_002/legal-proceeding>,
+        <https://caselinker.up.railway.app/resource/case/usss_2023_002/legal-step/sentenced>,
+        <https://caselinker.up.railway.app/resource/case/usss_2023_002/offense-event/charge-3> ;
+    cacontology:investigationStatus "unknown" ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ceos>,
+        <https://caselinker.up.railway.app/resource/agency/richmond-fire-and-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/richmond-fire-department>,
+        <https://caselinker.up.railway.app/resource/agency/richmond-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/us-secret-service> .
+
+<https://caselinker.up.railway.app/resource/case/usss_2023_002/admission/1> a cacontology-undercover:IncriminatingStatement ;
+    rdfs:label "there will be thousands and thousands and thousands more of those photos" ;
+    dcterms:source <https://www.secretservice.gov/newsroom/releases/2023/08/richmond-man-sentenced-15-years-federal-prison-after-investigators> ;
+    ns1:admissionContext "ty Fire Chief found notebooks on a dresser that contained pictures of child sexual abuse. Officers with the Richmond Police Department sp..." ;
+    ns1:admissionFrame "perp_proximate_admitted_quote" ;
+    ns1:admissionTheme "other" ;
+    ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/usss_2023_002/role/offender/1> ;
+    ns1:evidenceTier "press_release_stated" ;
+    ns1:quoteType "direct" ;
+    uco-core:description "there will be thousands and thousands and thousands more of those photos" .
+
+<https://caselinker.up.railway.app/resource/case/usss_2023_002/phase/sentenced> a cac-core:Phase,
+        cacontology-legal-outcomes:SentencingPhase ;
+    cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/usss_2023_002/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/usss_2023_002/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/usss_2023_002/offense-event/charge-3> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/usss_2023_002/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/usss_2023_002/admission/2> a cacontology-undercover:IncriminatingStatement ;
+    rdfs:label "Downloading Child Sexual Abuse Material" ;
+    dcterms:source <https://www.secretservice.gov/newsroom/releases/2023/08/richmond-man-sentenced-15-years-federal-prison-after-investigators> ;
+    ns1:admissionContext "ho exploit children via the internet, as well as to identify and rescue victims. For more information about Project Safe Childhood, pleas..." ;
+    ns1:admissionFrame "admitted_to" ;
+    ns1:admissionTheme "harm_conduct",
+        "tech_use" ;
+    ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/usss_2023_002/role/offender/1> ;
+    ns1:evidenceTier "press_release_stated" ;
+    ns1:quoteType "paraphrase" ;
+    uco-core:description "Downloading Child Sexual Abuse Material" .
+
+<https://caselinker.up.railway.app/resource/case/usss_2023_002/event/possession> a cacontology:CSAMIncident,
+        cac-core:Event ;
+    cacontology:producesArtifact <https://caselinker.up.railway.app/resource/case/usss_2023_002/admission/2> ;
+    cacontology:severityLevel 3 ;
+    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/usss_2023_002/facet/possession> .
+
+<https://caselinker.up.railway.app/resource/case/usss_2023_002/offense-event/charge-3> a cacontology:ChildSexualAbuseEvent,
+        cac-core:Event,
+        uco-action:Crime ;
+    rdfs:label "Inferred offense from charge: child exploitation" .
+

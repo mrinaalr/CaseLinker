@@ -1,0 +1,58 @@
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://caselinker.up.railway.app/resource/case/anchorage_pd_2025_004> a cacontology:CACInvestigation,
+        cac-core:EnduringEntity ;
+    dcterms:created "2026-06-18T20:12:22.012464" ;
+    dcterms:identifier "anchorage_pd_2025_004" ;
+    dcterms:modified "2026-06-18T20:12:22.012464" ;
+    dcterms:source <https://www.anchoragepolice.com/news/richard-lee-cramer-indicted-in-sexual-assault-investigations-police-believe-there-may-be-more-victims>,
+        "ANCHORAGE PD" ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/anchorage_pd_2025_004/phase/indicted> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/anchorage_pd_2025_004/phase/indicted> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/anchorage_pd_2025_004/event/trust-violation> ;
+    cacontology:investigationStatus "unknown" ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/anchorage-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/homer-police-department> .
+
+<https://caselinker.up.railway.app/resource/agency/anchorage-police-department> a cacontology-multi:LocalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/homer-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Homer Police Department" .
+
+<https://caselinker.up.railway.app/resource/case/anchorage_pd_2025_004/event/trust-violation> a cacontology-custodial:AuthorityAbuse,
+        cacontology-custodial:TrustViolation ;
+    cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/anchorage_pd_2025_004/relationship/coach> .
+
+<https://caselinker.up.railway.app/resource/case/anchorage_pd_2025_004/person/offender/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/anchorage_pd_2025_004/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/anchorage_pd_2025_004/relationship/coach> a cacontology-custodial:Coach,
+        cacontology-custodial:CustodialRelationship ;
+    cacontology-custodial:involvesChild <https://caselinker.up.railway.app/resource/case/anchorage_pd_2025_004/role/victim/1> ;
+    cacontology-custodial:involvesCustodian <https://caselinker.up.railway.app/resource/case/anchorage_pd_2025_004/role/offender/1> ;
+    cacontology-custodial:relationshipType "coach" .
+
+<https://caselinker.up.railway.app/resource/case/anchorage_pd_2025_004/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/anchorage_pd_2025_004/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/anchorage_pd_2025_004/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/anchorage_pd_2025_004/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/case/anchorage_pd_2025_004/phase/indicted> a cacontology:LegalProcessPhase,
+        cac-core:Phase ;
+    cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+

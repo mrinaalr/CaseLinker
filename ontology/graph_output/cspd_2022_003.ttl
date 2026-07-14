@@ -1,0 +1,61 @@
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://caselinker.up.railway.app/resource/case/cspd_2022_003> a cacontology:CACInvestigation,
+        cac-core:EnduringEntity ;
+    dcterms:created "2026-06-18T20:14:18.141270" ;
+    dcterms:identifier "cspd_2022_003" ;
+    dcterms:modified "2026-06-18T20:14:18.141270" ;
+    dcterms:source <https://coloradosprings.gov/police-department/article/news/arrest-sexual-assault-child-0>,
+        "CSPD" ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/cspd_2022_003/phase/arrested> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/cspd_2022_003/phase/arrested> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/cspd_2022_003/event/hands-on>,
+        <https://caselinker.up.railway.app/resource/case/cspd_2022_003/event/trust-violation> ;
+    cacontology:investigationStatus "unknown" ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/colorado-springs-police-department> .
+
+<https://caselinker.up.railway.app/resource/agency/colorado-springs-police-department> a cacontology-multi:LocalAgency .
+
+<https://caselinker.up.railway.app/resource/case/cspd_2022_003/event/trust-violation> a cacontology-custodial:AuthorityAbuse,
+        cacontology-custodial:TrustViolation ;
+    cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/cspd_2022_003/relationship/coach> .
+
+<https://caselinker.up.railway.app/resource/case/cspd_2022_003/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 19 .
+
+<https://caselinker.up.railway.app/resource/case/cspd_2022_003/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/cspd_2022_003/relationship/coach> a cacontology-custodial:Coach,
+        cacontology-custodial:CustodialRelationship ;
+    cacontology-custodial:involvesChild <https://caselinker.up.railway.app/resource/case/cspd_2022_003/role/victim/1> ;
+    cacontology-custodial:involvesCustodian <https://caselinker.up.railway.app/resource/case/cspd_2022_003/role/offender/1> ;
+    cacontology-custodial:relationshipType "coach" .
+
+<https://caselinker.up.railway.app/resource/case/cspd_2022_003/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/cspd_2022_003/event/hands-on> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/cspd_2022_003/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/cspd_2022_003/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/cspd_2022_003/event/hands-on> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/cspd_2022_003/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/case/cspd_2022_003/phase/arrested> a cacontology:InitialPhase,
+        cac-core:Phase ;
+    cacontology:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/cspd_2022_003/event/hands-on> a cacontology:ChildSexualAbuseEvent,
+        cac-core:Event ;
+    cacontology:severityLevel 3 .
+

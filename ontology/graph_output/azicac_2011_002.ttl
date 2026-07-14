@@ -1,0 +1,116 @@
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
+@prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://caselinker.up.railway.app/resource/case/azicac_2011_002> a cacontology:CACInvestigation,
+        cac-core:EnduringEntity ;
+    dcterms:created "2026-06-18T19:21:43.055768" ;
+    dcterms:identifier "azicac_2011_002" ;
+    dcterms:modified "2026-06-18T19:21:43.055768" ;
+    dcterms:source <https://www.azicac.org/cases-and-arrests/>,
+        "AZICAC" ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/azicac_2011_002/phase/booked> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/azicac_2011_002/phase/booked> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/azicac_2011_002/event/distribution>,
+        <https://caselinker.up.railway.app/resource/case/azicac_2011_002/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/azicac_2011_002/event/production>,
+        <https://caselinker.up.railway.app/resource/case/azicac_2011_002/event/trust-violation>,
+        <https://caselinker.up.railway.app/resource/case/azicac_2011_002/legal-proceeding>,
+        <https://caselinker.up.railway.app/resource/case/azicac_2011_002/operation> ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/azicac>,
+        <https://caselinker.up.railway.app/resource/agency/azicac-phoenix-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/maricopa-county-attorneys-office>,
+        <https://caselinker.up.railway.app/resource/agency/phoenix-police-department> .
+
+<https://caselinker.up.railway.app/resource/agency/azicac> a cac-core:OrganizationLikeEntity,
+        cacontology-taskforce:StateICACtaskForce ;
+    rdfs:label "AZICAC" .
+
+<https://caselinker.up.railway.app/resource/agency/azicac-phoenix-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-taskforce:StateICACtaskForce ;
+    rdfs:label "AZICAC Phoenix Police Department" .
+
+<https://caselinker.up.railway.app/resource/agency/maricopa-county-attorneys-office> a cacontology-multi:StateAgency .
+
+<https://caselinker.up.railway.app/resource/agency/phoenix-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Phoenix Police Department" .
+
+<https://caselinker.up.railway.app/resource/case/azicac_2011_002/charge/1> a cacontology-legal-outcomes:CriminalCharge,
+        cacontology-legal-outcomes:StateCharge ;
+    rdfs:label "sexual exploitation of a minor" .
+
+<https://caselinker.up.railway.app/resource/case/azicac_2011_002/charge/2> a cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "sexual exploitation" ;
+    ns1:chargeCluster "sexual_exploitation_unspecified" .
+
+<https://caselinker.up.railway.app/resource/case/azicac_2011_002/event/distribution> a cac-core:Event,
+        cacontology-legal-outcomes:CSAM_Distribution .
+
+<https://caselinker.up.railway.app/resource/case/azicac_2011_002/event/trust-violation> a cacontology-custodial:AuthorityAbuse,
+        cacontology-custodial:TrustViolation ;
+    cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/azicac_2011_002/relationship/teacher> .
+
+<https://caselinker.up.railway.app/resource/case/azicac_2011_002/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+
+<https://caselinker.up.railway.app/resource/case/azicac_2011_002/facet/production> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+
+<https://caselinker.up.railway.app/resource/case/azicac_2011_002/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/azicac_2011_002/charge/1>,
+        <https://caselinker.up.railway.app/resource/case/azicac_2011_002/charge/2> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2011-02-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/azicac_2011_002/operation> a cac-core:Event,
+        cacontology-taskforce:ProactiveOperation .
+
+<https://caselinker.up.railway.app/resource/case/azicac_2011_002/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 21 .
+
+<https://caselinker.up.railway.app/resource/case/azicac_2011_002/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/azicac_2011_002/relationship/teacher> a cacontology-custodial:CustodialRelationship,
+        cacontology-custodial:Teacher ;
+    cacontology-custodial:involvesChild <https://caselinker.up.railway.app/resource/case/azicac_2011_002/role/victim/1> ;
+    cacontology-custodial:involvesCustodian <https://caselinker.up.railway.app/resource/case/azicac_2011_002/role/offender/1> ;
+    cacontology-custodial:relationshipType "teacher" .
+
+<https://caselinker.up.railway.app/resource/case/azicac_2011_002/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2011-02-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/azicac_2011_002/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/azicac_2011_002/event/production> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/azicac_2011_002/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/azicac_2011_002/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2011-02-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/azicac_2011_002/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/azicac_2011_002/event/production> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/azicac_2011_002/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/case/azicac_2011_002/phase/booked> a cacontology:InitialPhase,
+        cac-core:Phase ;
+    cacontology:hasPhaseBeginPoint "2011-02-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/azicac_2011_002/event/possession> a cacontology:CSAMIncident,
+        cac-core:Event ;
+    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/azicac_2011_002/facet/possession> .
+
+<https://caselinker.up.railway.app/resource/case/azicac_2011_002/event/production> a cac-core:Event,
+        cacontology-production:ProductionOffense ;
+    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/azicac_2011_002/facet/production> .
+

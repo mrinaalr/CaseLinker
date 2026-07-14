@@ -1,0 +1,176 @@
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
+@prefix cacontology-undercover: <https://cacontology.projectvic.org/undercover#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/admission/1/extraction-confidence> a cac-core:AssessmentResult ;
+    cac-core:assesses <https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/admission/1> ;
+    cac-core:generatedBy <https://caselinker.up.railway.app/resource/case/wy_dci_2023_002> ;
+    cac-core:hasConfidence 0.65 .
+
+<https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/admission/2/extraction-confidence> a cac-core:AssessmentResult ;
+    cac-core:assesses <https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/admission/2> ;
+    cac-core:generatedBy <https://caselinker.up.railway.app/resource/case/wy_dci_2023_002> ;
+    cac-core:hasConfidence 0.65 .
+
+<https://caselinker.up.railway.app/resource/agency/department-of-family-services> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Department of Family Services" .
+
+<https://caselinker.up.railway.app/resource/agency/wyoming-division-of-criminal-investigation> a cacontology-multi:LocalAgency .
+
+<https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/event/trust-violation> a cacontology-custodial:CustodialAbuse,
+        cacontology-custodial:TrustViolation ;
+    cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/relationship/father> .
+
+<https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/sentence/1>,
+        <https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/sentence/2> .
+
+<https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/legal-step/sentenced> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding,
+        cacontology-legal-outcomes:SentencingHearing ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 39 .
+
+<https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/person/offender/2> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 40 .
+
+<https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/person/offender/3> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 46 .
+
+<https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/person/offender/4> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 51 .
+
+<https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/person/victim/1> a uco-identity:Person ;
+    cacontology-production:victimAge 5 .
+
+<https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/relationship/father> a cacontology-custodial:CustodialRelationship,
+        cacontology-custodial:FamilialRelationship ;
+    cacontology-custodial:involvesChild <https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/role/victim/1> ;
+    cacontology-custodial:involvesCustodian <https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/role/offender/1>,
+        <https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/role/offender/2>,
+        <https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/role/offender/3>,
+        <https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/role/offender/4> ;
+    cacontology-custodial:relationshipType "father" .
+
+<https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/event/conspiracy>,
+        <https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/event/hands-on> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "50 Years" .
+
+<https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:MonetaryPenalty ;
+    rdfs:label "$4,322" .
+
+<https://caselinker.up.railway.app/resource/case/wy_dci_2023_002> a cacontology:CACInvestigation,
+        cac-core:EnduringEntity ;
+    dcterms:created "2026-06-18T21:16:24.894952" ;
+    dcterms:identifier "wy_dci_2023_002" ;
+    dcterms:modified "2026-06-18T21:16:24.894952" ;
+    dcterms:source <https://cowboystatedaily.com/2023/10/19/lander-man-accused-of-molesting-girls-for-4-decades-gets-40-50-years-in-prison/>,
+        "WY DCI" ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/phase/sentenced> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/phase/sentenced> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/admission/1>,
+        <https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/admission/2>,
+        <https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/event/conspiracy>,
+        <https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/event/hands-on>,
+        <https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/event/trust-violation>,
+        <https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/legal-proceeding>,
+        <https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/legal-step/sentenced> ;
+    cacontology:investigationStatus "unknown" ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/department-of-family-services>,
+        <https://caselinker.up.railway.app/resource/agency/wyoming-division-of-criminal-investigation> .
+
+<https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/admission/1> a cacontology-undercover:IncriminatingStatement ;
+    rdfs:label "did not wish to" ;
+    dcterms:source <https://cowboystatedaily.com/2023/10/19/lander-man-accused-of-molesting-girls-for-4-decades-gets-40-50-years-in-prison/> ;
+    ns1:admissionContext "o run concurrently, plus $4,322 in restitution. When it was his turn to make a statement, Detimore said he did not wish to" ;
+    ns1:admissionFrame "said_paraphrase" ;
+    ns1:admissionTheme "other" ;
+    ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/role/offender/1> ;
+    ns1:evidenceTier "press_release_stated" ;
+    ns1:quoteType "paraphrase" ;
+    uco-core:description "did not wish to" .
+
+<https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/phase/sentenced> a cac-core:Phase,
+        cacontology-legal-outcomes:SentencingPhase ;
+    cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/role/offender/2> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/event/conspiracy>,
+        <https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/event/hands-on> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/person/offender/2> .
+
+<https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/role/offender/3> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/event/conspiracy>,
+        <https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/event/hands-on> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/person/offender/3> .
+
+<https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/role/offender/4> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/event/conspiracy>,
+        <https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/event/hands-on> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/person/offender/4> .
+
+<https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/admission/2> a cacontology-undercover:IncriminatingStatement ;
+    rdfs:label "could not imagine what the girl went through, explaining at a public trial the sexual abuses she endured, which inclu..." ;
+    dcterms:source <https://cowboystatedaily.com/2023/10/19/lander-man-accused-of-molesting-girls-for-4-decades-gets-40-50-years-in-prison/> ;
+    ns1:admissionContext "imore. “This case involved the most vulnerable of victims,” he said. “A little girl.” The judge said he could not imagine what the girl w..." ;
+    ns1:admissionFrame "said_paraphrase" ;
+    ns1:admissionTheme "harm_conduct" ;
+    ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/role/offender/1> ;
+    ns1:evidenceTier "press_release_stated" ;
+    ns1:quoteType "paraphrase" ;
+    uco-core:description "could not imagine what the girl went through, explaining at a public trial the sexual abuses she endured, which included Detimore fondling her genitalia" .
+
+<https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/event/conspiracy>,
+        <https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/event/hands-on> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/event/conspiracy> a cacontology:ConspiracyToCommitCSA,
+        cac-core:Event ;
+    cacontology:conspiracyMemberCount 4 ;
+    cacontology:participatesInConspiracy <https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/role/offender/1>,
+        <https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/role/offender/2>,
+        <https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/role/offender/3>,
+        <https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/role/offender/4> ;
+    cacontology:severityLevel 3 .
+
+<https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/event/hands-on> a cacontology:ChildSexualAbuseEvent,
+        cac-core:Event ;
+    cacontology:producesArtifact <https://caselinker.up.railway.app/resource/case/wy_dci_2023_002/admission/2> ;
+    cacontology:severityLevel 3 .
+

@@ -1,0 +1,72 @@
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://caselinker.up.railway.app/resource/case/mt_doj_2025_004> a cacontology:CACInvestigation,
+        cac-core:EnduringEntity ;
+    dcterms:created "2026-06-18T20:38:59.941578" ;
+    dcterms:identifier "mt_doj_2025_004" ;
+    dcterms:modified "2026-06-18T20:38:59.941578" ;
+    dcterms:source <https://dojmt.gov/attorney-generals-office-secures-guilty-verdict-of-former-hockey-coach/>,
+        "MT DOJ" ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/mt_doj_2025_004/event/hands-on>,
+        <https://caselinker.up.railway.app/resource/case/mt_doj_2025_004/event/trust-violation> ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/butte-silver-bow-law-enforcement-department>,
+        <https://caselinker.up.railway.app/resource/agency/columbia-falls-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/flathead-county-attorneys>,
+        <https://caselinker.up.railway.app/resource/agency/flathead-county-sheriffs-office> .
+
+<https://caselinker.up.railway.app/resource/agency/butte-silver-bow-law-enforcement-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Butte Silver Bow Law Enforcement Department" .
+
+<https://caselinker.up.railway.app/resource/agency/columbia-falls-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Columbia Falls Police Department" .
+
+<https://caselinker.up.railway.app/resource/agency/flathead-county-attorneys> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:StateAgency ;
+    rdfs:label "Flathead County Attorney's" .
+
+<https://caselinker.up.railway.app/resource/agency/flathead-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Flathead County Sheriff's Office" .
+
+<https://caselinker.up.railway.app/resource/case/mt_doj_2025_004/event/trust-violation> a cacontology-custodial:AuthorityAbuse,
+        cacontology-custodial:TrustViolation ;
+    cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/mt_doj_2025_004/relationship/coach> .
+
+<https://caselinker.up.railway.app/resource/case/mt_doj_2025_004/person/offender/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/mt_doj_2025_004/person/victim/1> a uco-identity:Person ;
+    cacontology-production:victimAge 8 .
+
+<https://caselinker.up.railway.app/resource/case/mt_doj_2025_004/relationship/coach> a cacontology-custodial:Coach,
+        cacontology-custodial:CustodialRelationship ;
+    cacontology-custodial:involvesChild <https://caselinker.up.railway.app/resource/case/mt_doj_2025_004/role/victim/1> ;
+    cacontology-custodial:involvesCustodian <https://caselinker.up.railway.app/resource/case/mt_doj_2025_004/role/offender/1> ;
+    cacontology-custodial:relationshipType "coach" .
+
+<https://caselinker.up.railway.app/resource/case/mt_doj_2025_004/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/mt_doj_2025_004/event/hands-on> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/mt_doj_2025_004/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/mt_doj_2025_004/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/mt_doj_2025_004/event/hands-on> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/mt_doj_2025_004/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/case/mt_doj_2025_004/event/hands-on> a cacontology:ChildSexualAbuseEvent,
+        cac-core:Event ;
+    cacontology:severityLevel 3 .
+

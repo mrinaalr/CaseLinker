@@ -147,7 +147,7 @@ Public tier only (no trusted key): omit `CaseLinker-Key` from `headers`.
 
 | Variable | Purpose |
 |----------|---------|
-| `MCP_ACCESS_KEY` | Gates inbound MCP HTTP requests on **SSE** (`/mcp/sse`) and **Streamable HTTP** (`/mcp-http/`) — `Authorization: Bearer …` |
+| `MCP_ACCESS_KEY` | Gates inbound MCP HTTP requests on **SSE** (`/mcp/sse`) and **Streamable HTTP** (`/mcp-http/`) via `Authorization: Bearer …` |
 
 `MCP_ACCESS_KEY` is separate from `CASELINKER_KEY` / `CaseLinker-Key`:
 

@@ -1,0 +1,72 @@
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://caselinker.up.railway.app/resource/case/alea_2024_001> a cacontology:CACInvestigation,
+        cac-core:EnduringEntity ;
+    dcterms:created "2026-06-18T20:11:43.848689" ;
+    dcterms:identifier "alea_2024_001" ;
+    dcterms:modified "2026-06-18T20:11:43.848689" ;
+    dcterms:source <https://www.alea.gov/news/alea-three-missing-children-virginia-safely-located-alabama>,
+        "ALEA" ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/alea_2024_001/phase/booked> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/alea_2024_001/phase/booked> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/alea_2024_001/event/multi-jurisdiction>,
+        <https://caselinker.up.railway.app/resource/case/alea_2024_001/event/trust-violation>,
+        <https://caselinker.up.railway.app/resource/case/alea_2024_001/legal-proceeding> ;
+    cacontology:investigationStatus "unknown" ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/aleas-state-bureau-of-investigation>,
+        <https://caselinker.up.railway.app/resource/agency/virginia-state-police-department> .
+
+<https://caselinker.up.railway.app/resource/agency/aleas-state-bureau-of-investigation> a cacontology-multi:StateAgency .
+
+<https://caselinker.up.railway.app/resource/agency/virginia-state-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:StateAgency ;
+    rdfs:label "Virginia State Police Department" .
+
+<https://caselinker.up.railway.app/resource/case/alea_2024_001/event/multi-jurisdiction> a cac-core:Event,
+        cacontology-multi:MultiJurisdictionalInvestigation .
+
+<https://caselinker.up.railway.app/resource/case/alea_2024_001/event/trust-violation> a cacontology-custodial:CustodialAbuse,
+        cacontology-custodial:TrustViolation ;
+    cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/alea_2024_001/relationship/mother> .
+
+<https://caselinker.up.railway.app/resource/case/alea_2024_001/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    rdfs:comment "Pretrial detention facility (not a sentence): Jefferson County Jail" ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/alea_2024_001/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 35 .
+
+<https://caselinker.up.railway.app/resource/case/alea_2024_001/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/alea_2024_001/relationship/mother> a cacontology-custodial:CustodialRelationship,
+        cacontology-custodial:FamilialRelationship ;
+    cacontology-custodial:involvesChild <https://caselinker.up.railway.app/resource/case/alea_2024_001/role/victim/1> ;
+    cacontology-custodial:involvesCustodian <https://caselinker.up.railway.app/resource/case/alea_2024_001/role/offender/1> ;
+    cacontology-custodial:relationshipType "mother" .
+
+<https://caselinker.up.railway.app/resource/case/alea_2024_001/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/alea_2024_001/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/alea_2024_001/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/alea_2024_001/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/case/alea_2024_001/phase/booked> a cacontology:InitialPhase,
+        cac-core:Phase ;
+    cacontology:hasPhaseBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+

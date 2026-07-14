@@ -1,0 +1,78 @@
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://caselinker.up.railway.app/resource/case/cbp_2026_043> a cacontology:CACInvestigation,
+        cac-core:EnduringEntity ;
+    dcterms:created "2026-06-18T20:13:43.870510" ;
+    dcterms:identifier "cbp_2026_043" ;
+    dcterms:modified "2026-06-18T20:13:43.870510" ;
+    dcterms:source <https://www.cbp.gov/newsroom/local-media-release/laredo-cbp-officers-apprehend-two-texas-fugitives-wanted-sexual-abuse>,
+        "CBP" ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/cbp_2026_043/event/conspiracy>,
+        <https://caselinker.up.railway.app/resource/case/cbp_2026_043/event/distribution>,
+        <https://caselinker.up.railway.app/resource/case/cbp_2026_043/event/hands-on>,
+        <https://caselinker.up.railway.app/resource/case/cbp_2026_043/legal-proceeding> ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/harris-county-sheriffs-department> .
+
+<https://caselinker.up.railway.app/resource/case/cbp_2026_043/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/cbp_2026_043/event/conspiracy>,
+        <https://caselinker.up.railway.app/resource/case/cbp_2026_043/event/hands-on> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/cbp_2026_043/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/agency/harris-county-sheriffs-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Harris County Sheriff's Department" .
+
+<https://caselinker.up.railway.app/resource/case/cbp_2026_043/event/distribution> a cac-core:Event,
+        cacontology-legal-outcomes:CSAM_Distribution ;
+    cacontology:severityLevel 3 .
+
+<https://caselinker.up.railway.app/resource/case/cbp_2026_043/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    rdfs:comment "Pretrial detention facility (not a sentence): Webb County Jail" ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/cbp_2026_043/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 54 .
+
+<https://caselinker.up.railway.app/resource/case/cbp_2026_043/person/offender/2> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 55 .
+
+<https://caselinker.up.railway.app/resource/case/cbp_2026_043/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/cbp_2026_043/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/cbp_2026_043/event/conspiracy>,
+        <https://caselinker.up.railway.app/resource/case/cbp_2026_043/event/hands-on> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/cbp_2026_043/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/cbp_2026_043/role/offender/2> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/cbp_2026_043/event/conspiracy>,
+        <https://caselinker.up.railway.app/resource/case/cbp_2026_043/event/hands-on> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/cbp_2026_043/person/offender/2> .
+
+<https://caselinker.up.railway.app/resource/case/cbp_2026_043/event/conspiracy> a cacontology:ConspiracyToCommitCSA,
+        cac-core:Event ;
+    cacontology:conspiracyMemberCount 2 ;
+    cacontology:participatesInConspiracy <https://caselinker.up.railway.app/resource/case/cbp_2026_043/role/offender/1>,
+        <https://caselinker.up.railway.app/resource/case/cbp_2026_043/role/offender/2> ;
+    cacontology:severityLevel 3 .
+
+<https://caselinker.up.railway.app/resource/case/cbp_2026_043/event/hands-on> a cacontology:ChildSexualAbuseEvent,
+        cac-core:Event ;
+    cacontology:severityLevel 3 .
+

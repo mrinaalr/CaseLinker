@@ -122,8 +122,11 @@ def main():
                 storage = CaseStorage(db_path)  # SQLite
             else:
                 storage = CaseStorage()  # PostgreSQL
-            storage.store_precomputed_clusters(cluster_data, len(all_stored_cases))
-            print(f"✓ Pre-computed clusters stored ({len(all_stored_cases)} cases)")
+            stored = storage.store_precomputed_clusters(cluster_data, len(all_stored_cases))
+            if stored:
+                print(f"✓ Pre-computed clusters stored ({len(all_stored_cases)} cases)")
+            else:
+                print(f"❌ Failed to store pre-computed clusters ({len(all_stored_cases)} cases)")
         except Exception as e:
             print(f"⚠️  Warning: Could not pre-compute clusters: {e}")
             import traceback

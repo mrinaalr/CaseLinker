@@ -251,6 +251,64 @@
       font-size: 0.85rem;
       line-height: 1.45;
     }
+    .content-cta {
+      padding: 24px 22px;
+      background: #f0fdf4;
+      border-color: #bbf7d0;
+    }
+    .cta-lead {
+      margin: 0 0 18px;
+      color: #374151;
+      font-size: 0.98rem;
+      line-height: 1.65;
+    }
+    .cta-button {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 14px 22px;
+      background: #bbf7d0;
+      color: #14532d;
+      font-weight: 700;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      line-height: 1.4;
+      border: 1px solid #86efac;
+    }
+    .cta-button:hover {
+      background: #86efac;
+      color: #14532d;
+      text-decoration: none;
+    }
+    .lifecycle-embed-wrap {
+      margin-top: 20px;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fff;
+      position: relative;
+      min-height: 640px;
+    }
+    .lifecycle-embed-loading {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #6b7280;
+      font-size: 0.95rem;
+      background: #f9fafb;
+      z-index: 1;
+    }
+    .lifecycle-embed-loading.is-hidden {
+      display: none;
+    }
+    .lifecycle-embed {
+      display: block;
+      width: 100%;
+      height: 640px;
+      border: 0;
+    }
     @media (max-width: 720px) {
       .container { padding: 24px 18px 32px; }
       .evidence-table col.col-subset { width: 22%; }
@@ -259,6 +317,8 @@
       .evidence-table col.col-evidence { width: 36%; }
       .evidence-table th:nth-child(2),
       .evidence-table td:nth-child(2) { display: none; }
+      .lifecycle-embed { height: 480px; }
+      .lifecycle-embed-wrap { min-height: 480px; }
     }
   </style>
 </head>
@@ -280,33 +340,30 @@
       What does enforcement and offending actually look like at scale, and within definable subsets, what is the structure of the lifecycle from contact through investigation through prosecution?
     </p>
     <p class="research-framing">
-      Most ICAC research works on hashing or aggregate counts. Neither reveals how offenses unfold, how investigators respond, or how cases contrast across offense types. CaseLinker tags the full ICAC/CAC offense landscape in press releases: not only grooming and sextortion, but production, online possession and distribution, hands-on and familial abuse, trafficking networks, and AI-generated CSAM. Q2 stratifies the corpus into eight research subsets below (cases can belong to more than one). Lifecycle phases and offender pathways are synthesized from stated-evidence cases per subset.
+      Most ICAC research works on hashing or aggregate counts. Neither reveals how offenses unfold, how investigators respond, or how cases contrast across offense types. Q2 traces the full ICAC/CAC offense landscape -- grooming, sextortion, production, possession and distribution, institutional abuse, trafficking, and AI-generated CSAM -- as structured lifecycles from contact through investigation through prosecution.
     </p>
 
-    <h2>The Data</h2>
-    <div class="card card--flush" id="data"></div>
-
-    <h2>Supporting Cases</h2>
-    <div class="card cases" id="cases"></div>
-
-    <h2>Methodology Note</h2>
-    <div class="card">
-      <p class="method" id="limitations"></p>
-      <details style="margin-top:10px;">
-        <summary class="method">SPARQL / query (if applicable)</summary>
-        <pre id="sparql"># Placeholder: live query will ship with q2_evidence.json wire-up.</pre>
-      </details>
+    <h2>Interactive Analysis</h2>
+    <div class="card content-cta">
+      <p class="cta-lead">
+        Exploitation trajectories are modeled as CAC Ontology state machines. Each offense path is a sequence of typed Phase steps linked by cac-core:precedes and grounded in federal court records.
+      </p>
+      <div class="lifecycle-embed-wrap">
+        <div class="lifecycle-embed-loading" id="lifecycle-embed-loading">Loading lifecycle state machine&hellip;</div>
+        <iframe
+          class="lifecycle-embed"
+          id="lifecycle-embed"
+          data-src="/lifecycle"
+          title="Exploitation lifecycle state machine preview"
+        ></iframe>
+      </div>
+      <a class="cta-button" href="/lifecycle">View exploitation lifecycles as an interactive state machines &rarr;</a>
     </div>
 
     <a class="back" href="/patterns">&larr; Back to Patterns</a>
   </div>
 
   <script>
-    const PAGE_COPY = {
-      limitations:
-        "Subset membership is drawn from case_topics, charge clusters, and CAC graph event typing; each subset has explicit inclusion rules in ontology/q2/build_candidates.py. Lifecycle phases and offender pathway synthesis in the middle column are manual analytical layers in q2_lifecycle.json, grounded in stated-evidence cases from q2_evidence.json. Evidence quotes are verbatim excerpts from case_text, tiered by strength: stated (lifecycle or pathway role explicitly described in case facts), inferred (role implied by investigative context), and named-only (subset signal present without described lifecycle role). Corpus coverage varies by subset and by how completely press releases narrate offense sequence versus charging outcome; findings should be read as a lower-bound on reportable lifecycle structure, not a complete picture of offending.",
-    };
-
     const SUBSET_GROUPS = [
       {
         subset_id: "familial_abuse",
@@ -431,7 +488,6 @@
       });
 
       return {
-        limitations: PAGE_COPY.limitations,
         supporting_case_groups,
         groups,
         lifecycleAnalysis: lifecycle || {},
@@ -638,40 +694,37 @@
       }
     }
 
-    function renderPage(data) {
-      document.querySelector("#limitations").textContent = data.limitations;
+    (function initLifecycleEmbed() {
+      const wrap = document.querySelector(".lifecycle-embed-wrap");
+      const iframe = document.getElementById("lifecycle-embed");
+      const loading = document.getElementById("lifecycle-embed-loading");
+      if (!wrap || !iframe) return;
 
-      const dataEl = document.querySelector("#data");
-      dataEl.innerHTML = "";
-      renderEvidenceTable(dataEl, data.groups, data.lifecycleAnalysis || {});
+      let loaded = false;
+      function loadEmbed() {
+        if (loaded) return;
+        loaded = true;
+        iframe.src = iframe.dataset.src || "/lifecycle";
+        iframe.addEventListener("load", () => {
+          if (loading) loading.classList.add("is-hidden");
+        });
+      }
 
-      renderSupportingCases(
-        document.querySelector("#cases"),
-        data.supporting_case_groups || []
-      );
-    }
-
-    async function loadData() {
-      const [evidenceRes, lifecycleRes] = await Promise.all([
-        fetch("/ontology/q2/q2_evidence.json", { cache: "no-store" }),
-        fetch("/ontology/q2/q2_lifecycle.json", { cache: "no-store" }),
-      ]);
-      if (!evidenceRes.ok) throw new Error("q2_evidence.json not available");
-      const evidence = await evidenceRes.json();
-      const lifecycle = lifecycleRes.ok ? await lifecycleRes.json() : {};
-      const { _note, _meta, ...lifecycleData } = lifecycle;
-      renderPage(buildFromEvidence(evidence, lifecycleData));
-    }
-
-    loadData().catch(() => {
-      document.querySelector("#data").innerHTML = "";
-      document.querySelector("#data").appendChild(
-        el("p", { class: "lifecycle-placeholder" }, "Q02 Research is underway!")
-      );
-      document.querySelector("#cases").appendChild(
-        el("p", { class: "lifecycle-placeholder" }, "")
-      );
-    });
+      if ("IntersectionObserver" in window) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            if (entries.some((entry) => entry.isIntersecting)) {
+              loadEmbed();
+              observer.disconnect();
+            }
+          },
+          { rootMargin: "200px" }
+        );
+        observer.observe(wrap);
+      } else {
+        loadEmbed();
+      }
+    })();
   </script>
 </body>
 </html>

@@ -1,0 +1,92 @@
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
+@prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://caselinker.up.railway.app/resource/case/illinois_ag_2006_001> a cacontology:CACInvestigation,
+        cac-core:EnduringEntity ;
+    dcterms:created "2026-06-18T20:29:12.552122" ;
+    dcterms:identifier "illinois_ag_2006_001" ;
+    dcterms:modified "2026-06-18T20:29:12.552122" ;
+    dcterms:source <https://illinoisattorneygeneral.gov/News-Room/2006-2018-Press-Archive/200607-28%20MISSOURI%20MAN%20ARRESTED%20FOR%20ALLEGED%20ABDUCTION%20AND%20SEXUAL%20ASSAULT%20OF%20SANGAMON%20COUNTY%20CHILD.pdf>,
+        "ILLINOIS AG" ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/illinois_ag_2006_001/phase/charged> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/illinois_ag_2006_001/phase/charged> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/illinois_ag_2006_001/legal-proceeding>,
+        <https://caselinker.up.railway.app/resource/case/illinois_ag_2006_001/offense-event/charge-1> ;
+    cacontology:investigationStatus "unknown" ;
+    cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/illinois_ag_2006_001/tech/cybertipline> ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/divernon-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/icac>,
+        <https://caselinker.up.railway.app/resource/agency/illinois-department-of-corrections>,
+        <https://caselinker.up.railway.app/resource/agency/missouri-sheriffs-department>,
+        <https://caselinker.up.railway.app/resource/agency/sheriffs-department> .
+
+<https://caselinker.up.railway.app/resource/case/illinois_ag_2006_001/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2006-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/illinois_ag_2006_001/offense-event/charge-1> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/illinois_ag_2006_001/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/illinois_ag_2006_001/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2006-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/illinois_ag_2006_001/offense-event/charge-1> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/illinois_ag_2006_001/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/agency/divernon-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Divernon Police Department" .
+
+<https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
+
+<https://caselinker.up.railway.app/resource/agency/illinois-department-of-corrections> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Illinois Department of Corrections" .
+
+<https://caselinker.up.railway.app/resource/agency/missouri-sheriffs-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Missouri Sheriff's Department" .
+
+<https://caselinker.up.railway.app/resource/agency/sheriffs-department> a cacontology-multi:LocalAgency .
+
+<https://caselinker.up.railway.app/resource/case/illinois_ag_2006_001/charge/1> a cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "child exploitation" ;
+    rdfs:seeAlso <https://caselinker.up.railway.app/resource/case/illinois_ag_2006_001/offense-event/charge-1> ;
+    ns1:chargeCluster "child_exploitation" ;
+    ns1:chargeOffenseEvent <https://caselinker.up.railway.app/resource/case/illinois_ag_2006_001/offense-event/charge-1> .
+
+<https://caselinker.up.railway.app/resource/case/illinois_ag_2006_001/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    rdfs:comment "Pretrial detention facility (not a sentence): Boone County Jail" ;
+    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/illinois_ag_2006_001/charge/1> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2006-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/illinois_ag_2006_001/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 31 .
+
+<https://caselinker.up.railway.app/resource/case/illinois_ag_2006_001/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/illinois_ag_2006_001/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
+    rdfs:label "CyberTipline" .
+
+<https://caselinker.up.railway.app/resource/case/illinois_ag_2006_001/phase/charged> a cacontology:LegalProcessPhase,
+        cac-core:Phase ;
+    cacontology:hasPhaseBeginPoint "2006-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/illinois_ag_2006_001/offense-event/charge-1> a cacontology:ChildSexualAbuseEvent,
+        cac-core:Event,
+        uco-action:Crime ;
+    rdfs:label "Inferred offense from charge: child exploitation" .
+

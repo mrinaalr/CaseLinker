@@ -115,17 +115,19 @@ class CaseStorage:
             )
         ''')
         
-        # Table for pre-computed clusters (performance optimization)
+        # Legacy table kept for migrations/clear scripts. Full analysis blobs are no
+        # longer written here (too large for Postgres). Cluster cache lives in
+        # cluster_groups_slim only.
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS precomputed_clusters (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                cluster_data TEXT,  -- JSON: full analysis results
-                case_count INTEGER,  -- Number of cases when computed
+                cluster_data TEXT,
+                case_count INTEGER,
                 computed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                UNIQUE(case_count)  -- Only one cluster set per case count
+                UNIQUE(case_count)
             )
         ''')
-        # Slimmed cluster groups (IDs only) - fast fetch for /api/cluster-groups
+        # Slim cluster groups (metadata + case IDs only) — durable /api/cluster-groups cache
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS cluster_groups_slim (
                 case_count INTEGER PRIMARY KEY,
@@ -1028,91 +1030,43 @@ class CaseStorage:
 
     def store_precomputed_clusters(self, cluster_data: Dict[str, Any], case_count: int) -> bool:
         """
-        Store pre-computed cluster analysis results in database.
-        
-        Args:
-            cluster_data: Full analysis results dictionary from run_automated_analysis()
-            case_count: Number of cases when clusters were computed
-            
-        Returns:
-            True if successful, False otherwise
+        Persist slim cluster groups only (IDs + group metadata).
+
+        Never writes the full per-case analysis blob — that exceeds Postgres's
+        ~1GB single-field limit at corpus scale. Full analysis (triage/insights)
+        is Redis-cached or computed live from the cases table.
         """
+        case_groups: List[Dict[str, Any]] = []
+        if isinstance(cluster_data, dict):
+            raw = cluster_data.get("case_groups") or []
+            if isinstance(raw, list):
+                case_groups = raw
+
+        # Drop any legacy full-blob row so stale huge values cannot be re-read.
         try:
             conn = get_connection(self.db_path)
             cursor = conn.cursor()
-            
-            # Delete old clusters for this case count (if any)
-            cursor.execute('DELETE FROM precomputed_clusters WHERE case_count = ?', (case_count,))
-            
-            # Convert datetime objects to strings for JSON serialization
-            def json_serializer(obj):
-                """Custom JSON serializer for datetime objects."""
-                from datetime import datetime
-                if isinstance(obj, datetime):
-                    return obj.isoformat()
-                raise TypeError(f"Type {type(obj)} not serializable")
-            
-            # Store new clusters
-            cursor.execute('''
-                INSERT INTO precomputed_clusters (cluster_data, case_count)
-                VALUES (?, ?)
-            ''', (json.dumps(cluster_data, default=json_serializer), case_count))
+            cursor.execute(
+                "DELETE FROM precomputed_clusters WHERE case_count = ?",
+                (case_count,),
+            )
             conn.commit()
             conn.close()
-            # Also store slimmed version for fast /api/cluster-groups
-            case_groups = cluster_data.get('case_groups', [])
-            if case_groups:
-                self.store_cluster_groups_slim(case_groups, case_count)
-            return True
         except Exception as e:
-            print(f"Error storing precomputed clusters: {e}")
-            return False
+            print(f"Warning clearing legacy precomputed_clusters row: {e}")
 
-    def get_precomputed_clusters(self, case_count: int) -> Optional[Dict[str, Any]]:
-        """
-        Retrieve pre-computed cluster analysis results from database.
-        
-        Args:
-            case_count: Current number of cases (must match stored count)
-            
-        Returns:
-            Cluster data dictionary or None if not found/outdated
-        """
-        try:
-            conn = get_connection(self.db_path)
-            cursor = conn.cursor()
-            
-            # Get clusters for this case count
-            cursor.execute('''
-                SELECT cluster_data FROM precomputed_clusters 
-                WHERE case_count = ?
-                ORDER BY computed_at DESC
-                LIMIT 1
-            ''', (case_count,))
-            
-            row = cursor.fetchone()
-            conn.close()
-            
-            if row:
-                cluster_json = row[0]
-                # Use faster JSON parsing if available, fallback to standard json
-                try:
-                    import orjson
-                    return orjson.loads(cluster_json)
-                except ImportError:
-                    # Fallback to standard json (slower but works)
-                    return json.loads(cluster_json)
-            return None
-        except Exception as e:
-            print(f"Error retrieving precomputed clusters: {e}")
-            return None
-    
+        ok = self.store_cluster_groups_slim(case_groups, case_count)
+        if not ok:
+            print("Error storing precomputed clusters: slim write failed")
+        return ok
+
     def clear_precomputed_clusters(self):
-        """Clear all pre-computed clusters (useful when cases change significantly)."""
+        """Clear legacy full-blob table and slim cluster-groups cache."""
         try:
             conn = get_connection(self.db_path)
             cursor = conn.cursor()
-            cursor.execute('DELETE FROM precomputed_clusters')
+            cursor.execute("DELETE FROM precomputed_clusters")
+            cursor.execute("DELETE FROM cluster_groups_slim")
             conn.commit()
             conn.close()
             return True

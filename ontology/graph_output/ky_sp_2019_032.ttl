@@ -1,0 +1,85 @@
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://caselinker.up.railway.app/resource/case/ky_sp_2019_032> a cacontology:CACInvestigation,
+        cac-core:EnduringEntity ;
+    dcterms:created "2026-06-18T20:36:35.169909" ;
+    dcterms:identifier "ky_sp_2019_032" ;
+    dcterms:modified "2026-06-18T20:36:35.169909" ;
+    dcterms:source <https://www.kentuckystatepolice.ky.gov/news/p4-5-30-19/>,
+        "KY SP" ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ky_sp_2019_032/phase/charged> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ky_sp_2019_032/phase/charged> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ky_sp_2019_032/event/distribution>,
+        <https://caselinker.up.railway.app/resource/case/ky_sp_2019_032/legal-proceeding>,
+        <https://caselinker.up.railway.app/resource/case/ky_sp_2019_032/offense-event/charge-1> ;
+    cacontology:investigationStatus "unknown" ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/grayson-county-sheriffs-office>,
+        <https://caselinker.up.railway.app/resource/agency/kentucky-state-police-department> .
+
+<https://caselinker.up.railway.app/resource/case/ky_sp_2019_032/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2019-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ky_sp_2019_032/offense-event/charge-1> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ky_sp_2019_032/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/ky_sp_2019_032/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2019-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ky_sp_2019_032/offense-event/charge-1> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ky_sp_2019_032/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/agency/grayson-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Grayson County Sheriff's Office" .
+
+<https://caselinker.up.railway.app/resource/agency/kentucky-state-police-department> a cacontology-multi:StateAgency .
+
+<https://caselinker.up.railway.app/resource/case/ky_sp_2019_032/charge/1> a cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "child exploitation" ;
+    rdfs:seeAlso <https://caselinker.up.railway.app/resource/case/ky_sp_2019_032/offense-event/charge-1> ;
+    ns1:chargeCluster "child_exploitation" ;
+    ns1:chargeOffenseEvent <https://caselinker.up.railway.app/resource/case/ky_sp_2019_032/offense-event/charge-1> .
+
+<https://caselinker.up.railway.app/resource/case/ky_sp_2019_032/event/distribution> a cac-core:Event,
+        cacontology-legal-outcomes:CSAM_Distribution ;
+    cacontology:severityLevel 3 .
+
+<https://caselinker.up.railway.app/resource/case/ky_sp_2019_032/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ky_sp_2019_032/charge/1> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2019-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ky_sp_2019_032/sentence/1>,
+        <https://caselinker.up.railway.app/resource/case/ky_sp_2019_032/sentence/2> .
+
+<https://caselinker.up.railway.app/resource/case/ky_sp_2019_032/person/offender/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/ky_sp_2019_032/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/ky_sp_2019_032/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "50 years" .
+
+<https://caselinker.up.railway.app/resource/case/ky_sp_2019_032/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "10 years" .
+
+<https://caselinker.up.railway.app/resource/case/ky_sp_2019_032/phase/charged> a cacontology:LegalProcessPhase,
+        cac-core:Phase ;
+    cacontology:hasPhaseBeginPoint "2019-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/ky_sp_2019_032/offense-event/charge-1> a cacontology:ChildSexualAbuseEvent,
+        cac-core:Event,
+        uco-action:Crime ;
+    rdfs:label "Inferred offense from charge: child exploitation" .
+
