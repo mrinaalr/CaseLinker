@@ -5,7 +5,7 @@ Simple tag-based case filtering and retrieval.
 Automated analysis with case grouping, triage, and insights.
 """
 
-from typing import List, Dict, Any, Tuple
+from typing import List, Dict, Any, Tuple, Optional
 import json
 import re
 from collections import Counter, defaultdict
@@ -1113,6 +1113,8 @@ def find_similar_cases_general(all_cases: List[Dict[str, Any]], similarity_thres
                 'statistics': characteristics.get('statistics', {})
             })
     
+    # Free O(n²) matrix before returning (peak allocation site)
+    del similarity_matrix, case_connectivity
     return sorted(groups, key=lambda g: g['size'], reverse=True)
 
 
@@ -1785,6 +1787,50 @@ def generate_automated_insights(all_cases: List[Dict[str, Any]]) -> Dict[str, An
     }
 
 
+def _slim_case_ref(case: Any) -> Optional[str]:
+    """Collapse a case dict or id to a plain string id."""
+    if isinstance(case, str) and case:
+        return case
+    if isinstance(case, dict):
+        cid = case.get('id')
+        return cid if isinstance(cid, str) and cid else None
+    return None
+
+
+def slim_case_groups_to_ids(case_groups: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """Replace nested case objects with id strings (keeps group metadata/stats)."""
+    if not case_groups:
+        return []
+    result = []
+    for group in case_groups:
+        if not isinstance(group, dict):
+            continue
+        slim = {k: v for k, v in group.items() if k not in ('cases', 'internal_groups')}
+        cases = group.get('cases') or []
+        slim['cases'] = [cid for cid in (_slim_case_ref(c) for c in cases) if cid]
+        internal = group.get('internal_groups') or []
+        slim_internal = []
+        for ig in internal:
+            if not isinstance(ig, dict):
+                continue
+            ig_cases = ig.get('cases') or []
+            slim_internal.append({
+                'cases': [cid for cid in (_slim_case_ref(c) for c in ig_cases) if cid],
+                'size': ig.get('size', 0),
+            })
+        slim['internal_groups'] = slim_internal
+        result.append(slim)
+    return result
+
+
+def slim_triaged_case(case: Dict[str, Any]) -> Dict[str, Any]:
+    """Drop heavy/raw fields from a triaged case; keep priority + display fields."""
+    if not isinstance(case, dict):
+        return {}
+    drop = {'raw_data', 'case_text', 'extracted_features', 'comparison_values', 'notes'}
+    return {k: v for k, v in case.items() if k not in drop}
+
+
 def run_automated_analysis(all_cases: List[Dict[str, Any]]) -> Dict[str, Any]:
     """
     Run complete automated analysis pipeline.
@@ -1795,11 +1841,13 @@ def run_automated_analysis(all_cases: List[Dict[str, Any]]) -> Dict[str, Any]:
         
     Returns:
         Dictionary containing:
-            - case_groups: List of similar case groups
-            - triaged_cases: Cases sorted by priority
+            - case_groups: List of similar case groups (case ids only)
+            - triaged_cases: Cases sorted by priority (slim, no raw narratives)
             - insights: Automated insights and patterns
             - summary: Analysis summary statistics
     """
+    import gc
+
     if not all_cases:
         return {
             'case_groups': [],
@@ -1817,15 +1865,17 @@ def run_automated_analysis(all_cases: List[Dict[str, Any]]) -> Dict[str, Any]:
     # 3. Generate insights
     insights = generate_automated_insights(all_cases)
     
-    # 4. Extract keywords for semantic analysis
+    # 4. Extract keywords for semantic analysis (prefer case_text; fall back to raw_data)
     semantic_keywords = []
     for case in all_cases[:10]:  # Sample first 10 cases for keywords
-        case_text = case.get('raw_data', {}).get('case_text', '') if isinstance(case.get('raw_data'), dict) else ''
+        case_text = case.get('case_text') if isinstance(case.get('case_text'), str) else ''
+        if not case_text:
+            case_text = case.get('raw_data', {}).get('case_text', '') if isinstance(case.get('raw_data'), dict) else ''
         if not case_text and isinstance(case.get('raw_data'), str):
             try:
                 raw_data = json.loads(case['raw_data'])
                 case_text = raw_data.get('case_text', '')
-            except:
+            except Exception:
                 pass
         
         if case_text:
@@ -1833,19 +1883,31 @@ def run_automated_analysis(all_cases: List[Dict[str, Any]]) -> Dict[str, Any]:
             semantic_keywords.extend(keywords)
     
     top_keywords = Counter(semantic_keywords).most_common(10)
+
+    # Slim immediately so callers never hold full case-object graphs
+    slim_groups = slim_case_groups_to_ids(case_groups)
+    del case_groups
+    slim_triaged = [slim_triaged_case(c) for c in triaged_cases[:20]]
+    high_priority = len([
+        c for c in triaged_cases
+        if c.get('priority_score', 0) >= HIGH_PRIORITY_SCORE_THRESHOLD
+    ])
+    avg_priority = (
+        sum(c.get('priority_score', 0) for c in triaged_cases) / len(triaged_cases)
+        if triaged_cases else 0.0
+    )
+    del triaged_cases
+    gc.collect()
     
     return {
-        'case_groups': case_groups,
-        'triaged_cases': triaged_cases[:20],  # Top 20 priority cases
+        'case_groups': slim_groups,
+        'triaged_cases': slim_triaged,
         'insights': insights,
         'semantic_keywords': [{'keyword': kw, 'frequency': freq} for kw, freq in top_keywords],
         'summary': {
             'total_cases': len(all_cases),
-            'total_groups': len(case_groups),
-            'high_priority_cases': len([
-                c for c in triaged_cases
-                if c.get('priority_score', 0) >= HIGH_PRIORITY_SCORE_THRESHOLD
-            ]),
-            'average_priority': sum(c.get('priority_score', 0) for c in triaged_cases) / len(triaged_cases) if triaged_cases else 0.0
+            'total_groups': len(slim_groups),
+            'high_priority_cases': high_priority,
+            'average_priority': avg_priority
         }
     }

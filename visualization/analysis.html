@@ -1352,8 +1352,20 @@
             );
 
             try {
-                const response = await fetch('/api/automated-analysis');
-                const data = await response.json();
+                let data = null;
+                for (let attempt = 0; attempt < 90; attempt++) {
+                    const response = await fetch('/api/automated-analysis');
+                    if (response.status === 202) {
+                        // Warming in background — keep countdown UI, poll again
+                        await new Promise((r) => setTimeout(r, 2000));
+                        continue;
+                    }
+                    data = await response.json();
+                    break;
+                }
+                if (!data) {
+                    throw new Error('Analysis is still warming; try again shortly');
+                }
                 
                 if (!data.success) {
                     throw new Error(data.error || 'Analysis failed');

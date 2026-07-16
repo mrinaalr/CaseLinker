@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.gzip import GZipMiddleware
 from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
-from fastapi.responses import FileResponse, HTMLResponse
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, PlainTextResponse, Response
 from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
 from typing import List, Dict, Any, Optional, Tuple
@@ -20,6 +20,8 @@ import hashlib
 import logging
 import threading
 import time
+import gc
+import asyncio
 import requests
 from datetime import datetime
 from pathlib import Path
@@ -1170,6 +1172,168 @@ def _slim_for_cluster_groups(case_groups: List[Dict[str, Any]]) -> List[Dict[str
         result.append(slim_group)
     return result
 
+
+# --- Automated analysis / cluster warmup (never compute on the request path) ---
+_automated_analysis_lock = threading.Lock()
+_automated_analysis_computing = False
+_automated_analysis_compute_count = 0  # asserts single-flight under concurrent cold hits
+_automated_analysis_mem_cache = None
+_automated_analysis_mem_case_count = None
+_CASES_SUMMARIES_CHUNK_SEM = threading.BoundedSemaphore(8)
+
+# Declared before startup thread so background warmers never race NameError
+_tags_cache = None
+_tags_cache_case_count = 0
+_cluster_groups_cache = None
+_cluster_groups_cache_case_count = None
+
+
+def _load_cases_slim_chunked(chunk_size: int = 500) -> List[Dict[str, Any]]:
+    """Stream cases from DB in chunks (no raw_data) — avoids full-table materialization spike."""
+    cases: List[Dict[str, Any]] = []
+    offset = 0
+    while True:
+        chunk = storage.get_cases_slim_chunk(offset, chunk_size) or []
+        if not chunk:
+            break
+        cases.extend(chunk)
+        if len(chunk) < chunk_size:
+            break
+        offset += chunk_size
+    return cases
+
+
+def _hydrate_keyword_sample_texts(cases: List[Dict[str, Any]], sample_n: int = 10) -> None:
+    """Attach case_text onto a small sample for semantic keywords (avoid loading all narratives)."""
+    sample = [c for c in cases[:sample_n] if isinstance(c, dict) and c.get("id")]
+    if not sample:
+        return
+    ids = [c["id"] for c in sample]
+    full = storage.get_cases_by_ids(ids, include_raw_data=True) or []
+    text_by_id: Dict[str, str] = {}
+    for fc in full:
+        if isinstance(fc, dict) and fc.get("id"):
+            text = _extract_case_text_value(fc)
+            if text:
+                text_by_id[fc["id"]] = text
+    for c in sample:
+        t = text_by_id.get(c["id"])
+        if t:
+            c["case_text"] = t
+
+
+def _schedule_automated_analysis_warmup(case_count: int, reason: str = "request") -> bool:
+    """
+    Single-flight: start at most one background compute. Returns True if this call started it.
+    Compute NEVER runs on the request thread.
+    """
+    global _automated_analysis_computing, _automated_analysis_compute_count
+
+    with _automated_analysis_lock:
+        if _automated_analysis_computing:
+            return False
+        _automated_analysis_computing = True
+        _automated_analysis_compute_count += 1
+        compute_id = _automated_analysis_compute_count
+
+    def _runner():
+        global _automated_analysis_computing, _automated_analysis_mem_cache, _automated_analysis_mem_case_count
+        global _cluster_groups_cache, _cluster_groups_cache_case_count
+        global _tags_cache, _tags_cache_case_count
+        try:
+            # Grep-proof: this string lives only on the startup/background path.
+            print(
+                f"⚠️  No Redis automated-analysis cache, computing on-demand (this is slow) "
+                f"[background compute=#{compute_id} reason={reason}]..."
+            )
+            cases = _load_cases_slim_chunked()
+            if not cases:
+                print("⚠️  Automated analysis warmup: no cases loaded")
+                return
+            _hydrate_keyword_sample_texts(cases, sample_n=10)
+            analysis_results = run_automated_analysis(cases)
+            # Warm tags from the same slim load before freeing it
+            try:
+                case_topics = set()
+                severity_indicators = set()
+                platforms_used = set()
+                investigation_types = set()
+                relationships = set()
+                status = set()
+                for c in cases:
+                    for t in (c.get('case_topics') or []):
+                        if t: case_topics.add(t)
+                    for s in (c.get('severity_indicators') or []):
+                        if s: severity_indicators.add(s)
+                    for p in (c.get('platforms_used') or []):
+                        if p: platforms_used.add(p)
+                    for inv_t in investigation_types_for_case(c):
+                        investigation_types.add(inv_t)
+                    if c.get('relationship_to_victim'): relationships.add(c['relationship_to_victim'])
+                    if c.get('perpetrator_registered_sex_offender'): status.add('registered_sex_offender')
+                tags_result = {
+                    "case_topics": sorted(case_topics), "severity_indicators": sorted(severity_indicators),
+                    "platforms_used": sorted(platforms_used), "investigation_types": sorted(investigation_types),
+                    "relationships": sorted(relationships), "status": sorted(status)
+                }
+                _tags_cache = tags_result
+                _tags_cache_case_count = len(cases)
+                set_cached(get_cache_key('tags', version=len(cases)), tags_result, ttl=86400)
+            except Exception as tag_err:
+                print(f"⚠️  Tags warm during AA compute failed: {tag_err}")
+            del cases
+            gc.collect()
+
+            stored_aa = storage.store_automated_analysis_slim(analysis_results, case_count)
+            stored_cg = storage.store_precomputed_clusters(analysis_results, case_count)
+            if not stored_aa:
+                print("❌ Failed to persist automated_analysis_slim after background compute")
+            if not stored_cg:
+                print("❌ Failed to persist slim cluster groups after background compute")
+
+            result = {
+                "success": True,
+                "analysis": analysis_results,
+                "cached": True,
+                "source": "background",
+            }
+            cache_key = get_cache_key("automated-analysis", version=case_count)
+            set_cached(cache_key, result, ttl=86400)
+            _automated_analysis_mem_cache = result
+            _automated_analysis_mem_case_count = case_count
+
+            slim_groups = _slim_for_cluster_groups(analysis_results.get("case_groups", []))
+            cg_result = {
+                "success": True,
+                "case_groups": slim_groups,
+                "cached": True,
+                "source": "background",
+            }
+            set_cached(get_cache_key("cluster-groups", version=case_count), cg_result, ttl=86400)
+            _cluster_groups_cache = cg_result
+            _cluster_groups_cache_case_count = case_count
+            print(f"✅ Automated analysis warmed and persisted ({case_count} cases, compute=#{compute_id})")
+        except Exception as e:
+            print(f"⚠️  Error in automated analysis background compute: {e}")
+        finally:
+            with _automated_analysis_lock:
+                _automated_analysis_computing = False
+
+    threading.Thread(target=_runner, daemon=True, name=f"aa-warmup-{compute_id}").start()
+    return True
+
+
+def _build_automated_analysis_response(analysis: Dict[str, Any], source: str, cached: bool) -> Dict[str, Any]:
+    analysis = _attach_case_text_to_automated_analysis(analysis) if isinstance(analysis, dict) else analysis
+    return {
+        "success": True,
+        "analysis": analysis,
+        "cached": cached,
+        "source": source,
+        "_cache_source": source,
+    }
+
+
 # In-process cache for /api/cases to keep local/dev fast even without Redis
 _cases_cache = {
     "include_raw_false": None,
@@ -1191,11 +1355,12 @@ try:
         else:
             print(f"⚠️  Warning: PostgreSQL database contains 0 cases. Process PDFs to add cases.")
     else:
-        # Pre-compute clusters on startup (background, non-blocking)
-        # Also warms cluster-groups cache so first /clusters request is fast
+        # Pre-compute clusters + automated analysis on startup (background, non-blocking).
+        # Load order: Redis → Postgres slim → background recompute only if both empty.
         import threading
         def precompute_clusters_background():
             global _cluster_groups_cache, _cluster_groups_cache_case_count, _tags_cache, _tags_cache_case_count
+            global _automated_analysis_mem_cache, _automated_analysis_mem_case_count
             try:
                 print("Pre-computing clusters in background...")
                 case_count = get_case_count()
@@ -1205,61 +1370,78 @@ try:
                     _cluster_groups_cache = cached_result
                     _cluster_groups_cache_case_count = case_count
                     print(f"✅ Cluster cache warmed from Redis ({case_count} cases)")
-                    return
-                slim_from_db = storage.get_cluster_groups_slim(case_count)
-                if slim_from_db and len(slim_from_db) > 0:
-                    result = {"success": True, "case_groups": slim_from_db, "cached": True, "source": "startup"}
-                    set_cached(cache_key, result, ttl=86400)
-                    _cluster_groups_cache = result
-                    _cluster_groups_cache_case_count = case_count
-                    print(f"✅ Cluster cache warmed from DB slim ({case_count} cases)")
-                    return
-                cases = storage.get_all_cases(include_raw_data=False)
-                if cases:
-                    # Warm tags cache (tags rarely change)
-                    case_topics = set()
-                    severity_indicators = set()
-                    platforms_used = set()
-                    investigation_types = set()
-                    relationships = set()
-                    status = set()
-                    for c in cases:
-                        for t in (c.get('case_topics') or []):
-                            if t: case_topics.add(t)
-                        for s in (c.get('severity_indicators') or []):
-                            if s: severity_indicators.add(s)
-                        for p in (c.get('platforms_used') or []):
-                            if p: platforms_used.add(p)
-                        for inv_t in investigation_types_for_case(c):
-                            investigation_types.add(inv_t)
-                        if c.get('relationship_to_victim'): relationships.add(c['relationship_to_victim'])
-                        if c.get('perpetrator_registered_sex_offender'): status.add('registered_sex_offender')
-                    tags_result = {
-                        "case_topics": sorted(case_topics), "severity_indicators": sorted(severity_indicators),
-                        "platforms_used": sorted(platforms_used), "investigation_types": sorted(investigation_types),
-                        "relationships": sorted(relationships), "status": sorted(status)
-                    }
-                    _tags_cache = tags_result
-                    _tags_cache_case_count = len(cases)
-                    set_cached(get_cache_key('tags', version=len(cases)), tags_result, ttl=86400)
-                    from analysis import run_automated_analysis
-                    cluster_data = run_automated_analysis(cases)
-                    case_count = len(cases)
-                    stored = storage.store_precomputed_clusters(cluster_data, case_count)
-                    # Warm cache: in-memory + Redis so /api/cluster-groups is fast on first request
-                    slim_groups = _slim_for_cluster_groups(cluster_data.get('case_groups', []))
-                    result = {"success": True, "case_groups": slim_groups, "cached": True, "source": "startup"}
-                    cache_key = get_cache_key('cluster-groups', version=case_count)
-                    set_cached(cache_key, result, ttl=86400)
-                    _cluster_groups_cache = result
-                    _cluster_groups_cache_case_count = case_count
-                    if stored:
-                        print(f"✅ Pre-computed clusters stored and cache warmed ({case_count} cases)")
+                else:
+                    slim_from_db = storage.get_cluster_groups_slim(case_count)
+                    if slim_from_db and len(slim_from_db) > 0:
+                        result = {"success": True, "case_groups": slim_from_db, "cached": True, "source": "startup"}
+                        set_cached(cache_key, result, ttl=86400)
+                        _cluster_groups_cache = result
+                        _cluster_groups_cache_case_count = case_count
+                        print(f"✅ Cluster cache warmed from DB slim ({case_count} cases)")
+
+                # Warm automated-analysis: Redis → Postgres slim → schedule background compute
+                aa_key = get_cache_key('automated-analysis', version=case_count)
+                aa_cached = get_cached(aa_key)
+                need_compute = False
+                if aa_cached is not None:
+                    _automated_analysis_mem_cache = aa_cached
+                    _automated_analysis_mem_case_count = case_count
+                    print(f"✅ Automated-analysis cache warmed from Redis ({case_count} cases)")
+                else:
+                    aa_from_db = storage.get_automated_analysis_slim(case_count)
+                    if aa_from_db:
+                        aa_result = {
+                            "success": True,
+                            "analysis": aa_from_db,
+                            "cached": True,
+                            "source": "startup",
+                        }
+                        set_cached(aa_key, aa_result, ttl=86400)
+                        _automated_analysis_mem_cache = aa_result
+                        _automated_analysis_mem_case_count = case_count
+                        print(f"✅ Automated-analysis cache warmed from DB slim ({case_count} cases)")
                     else:
-                        print(
-                            f"⚠️  Failed to persist clusters to DB; warmed memory/Redis only "
-                            f"({case_count} cases)"
-                        )
+                        need_compute = True
+
+                if _cluster_groups_cache is None:
+                    need_compute = True
+
+                if need_compute:
+                    # Single compute path also refreshes cluster + AA caches; skip dual case loads
+                    _schedule_automated_analysis_warmup(case_count, reason="startup")
+                    return
+
+                # Warm tags when missing (slim load only — never include_raw_data)
+                if _tags_cache is None or _tags_cache_case_count != case_count:
+                    cases = _load_cases_slim_chunked()
+                    if cases:
+                        case_topics = set()
+                        severity_indicators = set()
+                        platforms_used = set()
+                        investigation_types = set()
+                        relationships = set()
+                        status = set()
+                        for c in cases:
+                            for t in (c.get('case_topics') or []):
+                                if t: case_topics.add(t)
+                            for s in (c.get('severity_indicators') or []):
+                                if s: severity_indicators.add(s)
+                            for p in (c.get('platforms_used') or []):
+                                if p: platforms_used.add(p)
+                            for inv_t in investigation_types_for_case(c):
+                                investigation_types.add(inv_t)
+                            if c.get('relationship_to_victim'): relationships.add(c['relationship_to_victim'])
+                            if c.get('perpetrator_registered_sex_offender'): status.add('registered_sex_offender')
+                        tags_result = {
+                            "case_topics": sorted(case_topics), "severity_indicators": sorted(severity_indicators),
+                            "platforms_used": sorted(platforms_used), "investigation_types": sorted(investigation_types),
+                            "relationships": sorted(relationships), "status": sorted(status)
+                        }
+                        _tags_cache = tags_result
+                        _tags_cache_case_count = len(cases)
+                        set_cached(get_cache_key('tags', version=len(cases)), tags_result, ttl=86400)
+                        del cases
+                        gc.collect()
             except Exception as e:
                 print(f"⚠️  Error pre-computing clusters: {e}")
         
@@ -1364,7 +1546,11 @@ def cases_summaries_chunk(
     """
     Public paginated case summaries (slim fields, no raw narratives).
     Lets timelines load the full corpus via many small responses instead of one bulk JSON.
+    Bounded concurrency (Phase 1d: 16 parallel chunks were a material RSS contributor).
     """
+    acquired = _CASES_SUMMARIES_CHUNK_SEM.acquire(timeout=5.0)
+    if not acquired:
+        raise HTTPException(status_code=503, detail="Chunk endpoint busy; retry shortly")
     try:
         slice_cases = storage.get_cases_slim_chunk(offset, limit)
         return {
@@ -1375,6 +1561,8 @@ def cases_summaries_chunk(
         }
     except Exception:
         return {"offset": offset, "limit": limit, "count": 0, "summaries": []}
+    finally:
+        _CASES_SUMMARIES_CHUNK_SEM.release()
 
 
 @app.post("/api/cases-summaries-by-ids")
@@ -1653,14 +1841,6 @@ def post_facet_cohort_members(request: Request, body: FacetCohortMembersBody):
         logger.exception("facet-cohort-members failed: %s", e)
         return {"error": str(e), "count": 0, "case_ids": None, "requires_access_key": False}
 
-
-# Cache for unique tags (invalidates when cases change)
-_tags_cache = None
-_tags_cache_case_count = 0
-
-# In-memory cache for cluster-groups (avoids Redis round-trip on repeat requests)
-_cluster_groups_cache = None
-_cluster_groups_cache_case_count = None
 
 # Technology revolver: platforms_used + technology-signal buckets in extracted_features
 _TECHNOLOGY_REVOLVER_SNIPPET_VER = 11
@@ -2900,20 +3080,21 @@ async def cluster_groups_endpoint(request: Request):
     """
     Lightweight endpoint for cluster / case-group visualizations.
     Returns slimmed case_groups (IDs only) - full case data fetched on click.
-    Uses in-memory cache -> Redis -> DB to minimize latency.
+    Load order: memory → Redis → DB slim. Cold miss schedules background compute
+    and returns 202 — never computes inline.
     """
     global _cluster_groups_cache, _cluster_groups_cache_case_count
     try:
         current_case_count = get_case_count()
-        
+
         # 1. In-memory cache (fastest - no network/DB)
         if (_cluster_groups_cache is not None and
                 _cluster_groups_cache_case_count == current_case_count):
             _cluster_groups_cache['_cache_source'] = 'memory'
             return _cluster_groups_cache
-        
+
         cache_key = get_cache_key('cluster-groups', version=current_case_count)
-        
+
         # 2. Redis cache
         cached_result = get_cached(cache_key)
         if cached_result is not None:
@@ -2923,7 +3104,7 @@ async def cluster_groups_endpoint(request: Request):
             return cached_result
 
         # 3. Slim table (small fetch, ~10KB vs ~1MB full blob)
-        slim_groups = storage.get_cluster_groups_slim(current_case_count)
+        slim_groups = await asyncio.to_thread(storage.get_cluster_groups_slim, current_case_count)
         if slim_groups and len(slim_groups) > 0:
             result = {
                 "success": True,
@@ -2936,26 +3117,12 @@ async def cluster_groups_endpoint(request: Request):
             _cluster_groups_cache_case_count = current_case_count
             return result
 
-        # 4. Fallback: compute on-demand, then store slim groups
-        print("⚠️  No pre-computed cluster groups found, computing on-demand (this is slow once)...")
-        cases = storage.get_all_cases(include_raw_data=True)
-        analysis_results = run_automated_analysis(cases)
-        stored = storage.store_precomputed_clusters(analysis_results, current_case_count)
-        if not stored:
-            print("❌ Failed to persist slim cluster groups after on-demand compute")
-
-        raw_groups = analysis_results.get('case_groups', [])
-        slim_groups = _slim_for_cluster_groups(raw_groups)
-        result = {
-            "success": True,
-            "case_groups": slim_groups,
-            "cached": False,
-            "source": "computed"
-        }
-        set_cached(cache_key, result, ttl=86400)
-        _cluster_groups_cache = result
-        _cluster_groups_cache_case_count = current_case_count
-        return result
+        # 4. Cold: schedule single-flight background compute; never block the request
+        _schedule_automated_analysis_warmup(current_case_count, reason="cluster-groups")
+        return JSONResponse(
+            status_code=202,
+            content={"status": "warming", "success": False, "case_groups": []},
+        )
     except Exception as e:
         import traceback
         return {"success": False, "error": str(e), "traceback": traceback.format_exc()}
@@ -2966,39 +3133,62 @@ async def cluster_groups_endpoint(request: Request):
 async def automated_analysis_endpoint(request: Request):
     """
     Full automated analysis (case groups, triaged cases, insights).
-    Uses Redis for the full payload. DB only persists slim case_groups
-    (via store_precomputed_clusters) for /api/cluster-groups.
+    Load order: memory → Redis → Postgres slim. Cold miss returns 202 and
+    schedules a single background compute (never on the request path).
     """
+    global _automated_analysis_mem_cache, _automated_analysis_mem_case_count
     try:
         current_case_count = get_case_count()
+
+        if (
+            _automated_analysis_mem_cache is not None
+            and _automated_analysis_mem_case_count == current_case_count
+        ):
+            analysis = _automated_analysis_mem_cache.get("analysis")
+            return _build_automated_analysis_response(
+                analysis if isinstance(analysis, dict) else {},
+                source="memory",
+                cached=True,
+            )
+
         cache_key = get_cache_key('automated-analysis', version=current_case_count)
-        
+
         cached_result = get_cached(cache_key)
         if cached_result is not None:
             analysis = cached_result.get("analysis")
             if isinstance(analysis, dict):
-                cached_result["analysis"] = _attach_case_text_to_automated_analysis(analysis)
-            cached_result['_cache_source'] = 'redis'
-            return cached_result
-        
-        # Full analysis is not stored in Postgres (too large). Compute live, persist
-        # slim case_groups for cluster UI, cache the full result in Redis.
-        print("⚠️  No Redis automated-analysis cache, computing on-demand (this is slow)...")
-        cases = storage.get_all_cases(include_raw_data=True)
-        analysis_results = run_automated_analysis(cases)
-        analysis_results = _attach_case_text_to_automated_analysis(analysis_results)
-        stored = storage.store_precomputed_clusters(analysis_results, current_case_count)
-        if not stored:
-            print("❌ Failed to persist slim cluster groups after automated-analysis compute")
-        
-        result = {
-            "success": True,
-            "analysis": analysis_results,
-            "cached": False,
-            "source": "computed"
-        }
-        set_cached(cache_key, result, ttl=86400)
-        return result
+                out = _build_automated_analysis_response(analysis, source="redis", cached=True)
+                _automated_analysis_mem_cache = {
+                    "success": True,
+                    "analysis": analysis,
+                    "cached": True,
+                    "source": "redis",
+                }
+                _automated_analysis_mem_case_count = current_case_count
+                return out
+
+        # Postgres slim is source of truth when Redis is cold
+        aa_from_db = await asyncio.to_thread(
+            storage.get_automated_analysis_slim, current_case_count
+        )
+        if aa_from_db:
+            result = {
+                "success": True,
+                "analysis": aa_from_db,
+                "cached": True,
+                "source": "database",
+            }
+            set_cached(cache_key, result, ttl=86400)
+            _automated_analysis_mem_cache = result
+            _automated_analysis_mem_case_count = current_case_count
+            return _build_automated_analysis_response(aa_from_db, source="database", cached=True)
+
+        # Cold: schedule single-flight background compute; never compute inline
+        _schedule_automated_analysis_warmup(current_case_count, reason="automated-analysis")
+        return JSONResponse(
+            status_code=202,
+            content={"status": "warming", "success": False},
+        )
     except Exception as e:
         import traceback
         return {"success": False, "error": str(e), "traceback": traceback.format_exc()}
@@ -3008,6 +3198,31 @@ async def automated_analysis_endpoint(request: Request):
 def api_root():
     """API root endpoint"""
     return {"message": "CaseLinker API", "version": "1.0"}
+
+
+@app.get("/healthz")
+async def healthz():
+    """Liveness probe: no DB, Redis, or compute dependencies."""
+    return Response(content="ok", media_type="text/plain", status_code=200)
+
+
+@app.get("/robots.txt")
+async def robots_txt():
+    """Keep crawlers off expensive API/ontology routes."""
+    body = "User-agent: *\nAllow: /\nDisallow: /api/\nDisallow: /ontology/\n"
+    return PlainTextResponse(content=body)
+
+
+@app.get("/favicon.ico")
+async def favicon():
+    """Minimal favicon so crawlers/browsers stop probing other routes."""
+    # 16x16 indigo pixel PNG
+    import base64
+    png = base64.b64decode(
+        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
+    )
+    return Response(content=png, media_type="image/png")
+
 
 @app.get("/visualization", response_class=HTMLResponse)
 async def serve_visualization():

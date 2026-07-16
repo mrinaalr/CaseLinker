@@ -141,6 +141,13 @@ class CaseStorage:
                 data TEXT NOT NULL
             )
         ''')
+        # Slim automated analysis (groups as IDs, top triaged, insights) — durable cache
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS automated_analysis_slim (
+                case_count INTEGER PRIMARY KEY,
+                data TEXT NOT NULL
+            )
+        ''')
         conn.commit()
         conn.close()
     
@@ -1028,13 +1035,57 @@ class CaseStorage:
         except Exception as e:
             return None
 
+    def store_automated_analysis_slim(self, analysis: Dict[str, Any], case_count: int) -> bool:
+        """Persist slim automated-analysis payload (IDs-only groups + top triaged + insights)."""
+        if not isinstance(analysis, dict):
+            return False
+        try:
+            conn = get_connection(self.db_path)
+            cursor = conn.cursor()
+            cursor.execute(
+                """
+                INSERT OR REPLACE INTO automated_analysis_slim (case_count, data)
+                VALUES (?, ?)
+                """,
+                (case_count, json.dumps(analysis)),
+            )
+            conn.commit()
+            conn.close()
+            return True
+        except Exception as e:
+            print(f"Error storing automated_analysis_slim: {e}")
+            return False
+
+    def get_automated_analysis_slim(self, case_count: int) -> Optional[Dict[str, Any]]:
+        """Load persisted slim automated analysis if row exists for this case count."""
+        try:
+            conn = get_connection(self.db_path)
+            cursor = conn.cursor()
+            cursor.execute(
+                "SELECT data FROM automated_analysis_slim WHERE case_count = ?",
+                (case_count,),
+            )
+            row = cursor.fetchone()
+            conn.close()
+            if not row:
+                return None
+            try:
+                import orjson
+
+                data = orjson.loads(row[0])
+            except ImportError:
+                data = json.loads(row[0])
+            return data if isinstance(data, dict) else None
+        except Exception as e:
+            return None
+
     def store_precomputed_clusters(self, cluster_data: Dict[str, Any], case_count: int) -> bool:
         """
         Persist slim cluster groups only (IDs + group metadata).
 
         Never writes the full per-case analysis blob — that exceeds Postgres's
-        ~1GB single-field limit at corpus scale. Full analysis (triage/insights)
-        is Redis-cached or computed live from the cases table.
+        ~1GB single-field limit at corpus scale. Full analysis is persisted in
+        automated_analysis_slim and Redis-cached for /api/automated-analysis.
         """
         case_groups: List[Dict[str, Any]] = []
         if isinstance(cluster_data, dict):
@@ -1061,12 +1112,13 @@ class CaseStorage:
         return ok
 
     def clear_precomputed_clusters(self):
-        """Clear legacy full-blob table and slim cluster-groups cache."""
+        """Clear legacy full-blob table and slim analysis/cluster caches."""
         try:
             conn = get_connection(self.db_path)
             cursor = conn.cursor()
             cursor.execute("DELETE FROM precomputed_clusters")
             cursor.execute("DELETE FROM cluster_groups_slim")
+            cursor.execute("DELETE FROM automated_analysis_slim")
             conn.commit()
             conn.close()
             return True
