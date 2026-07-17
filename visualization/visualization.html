@@ -892,7 +892,7 @@
       </div>
       <label class="toggle-label">
         <input type="checkbox" id="analyzed-only" />
-        Analyzed platforms only
+        Manually analyzed platforms only
       </label>
     </div>
 
@@ -920,7 +920,7 @@
 
     <p class="framing">
       <strong>Research framing:</strong> Platforms do not cause exploitation. They alter who can reach whom, at what scale, and with what evidentiary footprint.
-      Harm vectors and affordances are manual analytical layers grounded in stated-evidence cases.
+      Harm vectors and affordances are analytical layers grounded in stated-evidence cases.
       <a href="https://mrinaalr.github.io/website/Affordance%2C%20Misuse%2C%20Harm%2C%20Kill%20Chain.pdf" target="_blank" rel="noopener">Read full affordance paper →</a>
     </p>
   </div>
@@ -1073,9 +1073,10 @@
       return [];
     }
 
-    function hasHarmAnalysis(platform, harmData) {
+    function hasResearcherAnalysis(platform, harmData) {
       const raw = (harmData || state.harm)[platform];
       if (!raw || typeof raw !== "object") return false;
+      if (raw.analysis_author !== "researcher") return false;
       return (
         harmLines(raw.affordances).length > 0 ||
         harmLines(raw.misuse_surface).length > 0 ||
@@ -1120,7 +1121,7 @@
           total,
           lane: laneForPlatform(row.platform, row.platform_type),
           surface: TYPE_SURFACE[row.platform_type] || row.platform_type,
-          analyzed: hasHarmAnalysis(row.platform, harm),
+          researcherAnalyzed: hasResearcherAnalysis(row.platform, harm),
         });
       }
 
@@ -1142,7 +1143,7 @@
     function filteredPlatforms() {
       const q = state.search.trim().toLowerCase();
       return state.platforms.filter((p) => {
-        if (state.analyzedOnly && !p.analyzed) return false;
+        if (state.analyzedOnly && !p.researcherAnalyzed) return false;
         if (q && !p.platform.toLowerCase().includes(q)) return false;
         if (state.tier !== "all" && countForTier(p, state.tier) === 0) return false;
         return true;
@@ -1160,13 +1161,13 @@
 
     function renderStats() {
       const meta = (state.evidence && state.evidence._meta) || {};
-      const analyzed = state.platforms.filter((p) => p.analyzed).length;
+      const analyzed = state.platforms.filter((p) => p.researcherAnalyzed).length;
       const strip = document.getElementById("stats");
       strip.innerHTML = "";
       [
         { val: meta.cases_processed || "—", lbl: "Evidence Cases" },
         { val: state.platforms.length, lbl: "Platforms named" },
-        { val: analyzed, lbl: "Harm analyzed" },
+        { val: analyzed, lbl: "Researcher analyzed" },
       ].forEach(({ val, lbl }) => {
         strip.appendChild(
           el("div", { className: "stat-pill" }, [
@@ -1216,7 +1217,7 @@
         type: "button",
         className:
           "platform-node" +
-          (p.analyzed ? " analyzed" : "") +
+          (p.researcherAnalyzed ? " analyzed" : "") +
           (state.selected === p.platform ? " selected" : ""),
         "data-platform": p.platform,
         "aria-pressed": state.selected === p.platform ? "true" : "false",
@@ -1224,7 +1225,12 @@
         onClick: () => selectPlatform(p.platform),
       });
 
-      if (p.analyzed) btn.appendChild(el("span", { className: "analyzed-dot", "aria-label": "Harm analyzed" }));
+      if (p.researcherAnalyzed) {
+        btn.appendChild(el("span", {
+          className: "analyzed-dot",
+          "aria-label": "Researcher analysis completed",
+        }));
+      }
 
       btn.appendChild(el("span", { className: "name", textContent: p.platform }));
       btn.appendChild(
@@ -1295,7 +1301,7 @@
 
     function renderHarmList(items, laneColor) {
       if (!items.length) {
-        return el("p", { className: "pending-note", textContent: "Manual harm analysis pending for this platform." });
+        return el("p", { className: "pending-note", textContent: "Harm analysis unavailable for this platform." });
       }
       const ul = el("ul", { className: "harm-list" });
       ul.style.setProperty("--lane-color", laneColor);
