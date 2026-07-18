@@ -86,20 +86,53 @@ Then open your browser to:
 - **Patterns (Phase 2)**: http://localhost:8000/patterns
 - **Tech Landscape**: http://localhost:8000/tech-landscape
 - **LLM**: http://localhost:8000/llm
-- **Look Under the Hood**: http://localhost:8000/under-the-hood
 - **Data Sources**: http://localhost:8000/sources
 - **Data Audit**: http://localhost:8000/audit
+- **Look Under the Hood**: http://localhost:8000/under-the-hood
 - **Case Studies**: http://localhost:8000/case-studies
 - **API Documentation**: http://localhost:8000/docs
 
 
-**Database:** 
-- **Production (Railway)**: PostgreSQL database with encrypted connections and managed backups
-- **Local Development**: SQLite database (`caselinker.db`) - created automatically when running locally, initially empty
+**Database:**
+- **Production (Railway)**: PostgreSQL with encrypted connections and managed backups
+- **Local Development**: SQLite (`caselinker.db`) - created automatically when 
+running locally, initially empty
 
+**What a fresh clone includes** (works with an empty DB):
+
+| Included | Path | Local use |
+|-------|------|-----------|
+| Ontology case graphs (~2k+ cases across pools) | `ontology/graph_output/` | `/patterns/graph`, `/api/ontology/*` |
+| PACER lifecycle state machines (30 cases) | `state_machines/graphs/`, `ontology/PACER/` | `/lifecycle` |
+| L* trajectories / transition matrix | `state_machines/data/lstar_all_cases.json` | `/api/lifecycle/lstar` |
+| Case studies (21 across 4 eras) | `data/case_studies.json` | `/case-studies` |
+| Triage model bundle | `models/triage_bundle.joblib` | `/triage`, `/api/triage-live` |
+
+
+**Reproduce the local corpus DB** (two options):
+
+1. **Trusted API export** (full production corpus in one shot) — request a `CaseLinker-Key` at **mramachandra@umass.edu**, then:
+
+```bash
+source .venv/bin/activate
+export CASELINKER_KEY='your-trusted-key'
+python3 scripts/run/import_corpus_from_api.py
+python3 run/main.py
+```
+
+2. **PDF ingest** (build from public data you collect; see **Process Your Own PDF Files** below):
+
+```bash
+source .venv/bin/activate
+python3 src/main.py "path/to/your/file.pdf"
+
+# or, after placing multiple PDFs in the repo root:
+
+./scripts/run/ingest_all_pdfs.sh
+python3 run/main.py
+```
 
 You can process additional PDFs to add more cases to the database.
-
 
 ## Usage
 
@@ -132,7 +165,7 @@ You can process additional PDFs to add more cases to the database.
    - Reach out for private mcp.json keys and review `caselinker_mcp/README.md` & `caselinker_mcp/tool_registry.md` for setup, auth and the full tool catalog
 
 **Typical use case:**
-1. First, process PDFs with `src/main.py` to populate the database
+1. First, populate the database with processed PDFs or request a trusted API key
 2. Then, start the web server with `run/main.py` to view and analyze cases
 3. Optionally, connect an MCP client (Cursor, Claude Desktop, or any MCP-compatible host) via **stdio**, **SSE**, or **Streamable HTTP**
 
@@ -338,7 +371,7 @@ Agents can also build cohort graphs on demand via MCP (`case2cac` → `graph_sum
 - **Clusters Tab**: View pre-computed clusters and analyze case reports
 - **Stats Tab**: Coverage over the dataset and case distributions
 - **Tech Landscape**: Technology revolver (platforms, investigation tech, anonymization, P2P) by era
-- **Lifecycle**: PACER exploitation lifecycles. Five offense types as CAC ontology state machines (public page; API export requires trusted `CaseLinker-Key`)
+- **Lifecycle**: PACER exploitation lifecycles. Five offense types as CAC ontology state machines
 - **Query**: Custom analysis lab (public APIs)
 - **LLM**: Natural-language queries over case statistics (SQL-backed; rate limited on production)
 - **Case Studies Tab**: Era-organized narrative case studies (`data/case_studies.json`)
@@ -364,7 +397,7 @@ CaseLinker/
 ├── scripts/
 │   ├── stats/                        # Corpus statistics scripts
 │   ├── verify/                       # Claims, uniqueness, ICAC TF alignment, triage tests
-│   ├── run/                          # ingest_all_pdfs.sh, clear_postgres.py, train_triage_model.py
+│   ├── run/                          # ingest_all_pdfs.sh, import_corpus_from_api.py, clear_postgres.py, train_triage_model.py
 │   └── scraper/                      # fetch_source_urls.py, scrape_pdf.py
 ├── visualization/                    # Static HTML (served by run/main.py)
 │   ├── assets/                       # caselinker-api.js, cover.png
