@@ -1,5 +1,6 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
@@ -10,13 +11,14 @@
 
 <https://caselinker.up.railway.app/resource/case/cspd_2021_003> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-06-04T04:37:19.629460" ;
+    dcterms:created "2026-07-24T05:27:30.396530" ;
     dcterms:identifier "cspd_2021_003" ;
-    dcterms:modified "2026-06-04T04:37:19.629460" ;
+    dcterms:modified "2026-07-24T05:27:30.396530" ;
     dcterms:source <https://coloradosprings.gov/police-department/article/news/sexual-assault-child-arrest-0>,
         "CSPD" ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/cspd_2021_003/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/cspd_2021_003/phase/charged> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/cspd_2021_003/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/colorado-springs-police-department> .
 
@@ -35,9 +37,19 @@
 
 <https://caselinker.up.railway.app/resource/agency/colorado-springs-police-department> a cacontology-multi:LocalAgency .
 
+<https://caselinker.up.railway.app/resource/case/cspd_2021_003/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/cspd_2021_003/sentence/1> .
+
 <https://caselinker.up.railway.app/resource/case/cspd_2021_003/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/cspd_2021_003/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/cspd_2021_003/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/case/cspd_2021_003/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;

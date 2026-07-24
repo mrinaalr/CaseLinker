@@ -1,5 +1,6 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
 @prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
@@ -14,9 +15,9 @@
 
 <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_006> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-06-04T04:37:14.838006" ;
+    dcterms:created "2026-07-24T05:26:30.004272" ;
     dcterms:identifier "arkansas_dps_2024_006" ;
-    dcterms:modified "2026-06-04T04:37:14.838006" ;
+    dcterms:modified "2026-07-24T05:26:30.004272" ;
     dcterms:source <https://dps.arkansas.gov/news/asp-icac-task-force-rearrests-volunteer-coach-on-rape-charges/>,
         "ARKANSAS DPS" ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_006/phase/charged> ;
@@ -24,12 +25,51 @@
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_006/event/distribution>,
         <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_006/event/hands-on>,
         <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_006/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_006/event/trust-violation>,
         <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_006/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/arkansas-state-police-department>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/nevada-county-sheriffs-office>,
         <https://caselinker.up.railway.app/resource/agency/usms> .
+
+<https://caselinker.up.railway.app/resource/agency/arkansas-state-police-department> a cacontology-multi:StateAgency .
+
+<https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
+
+<https://caselinker.up.railway.app/resource/agency/nevada-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Nevada County Sheriff's Office" .
+
+<https://caselinker.up.railway.app/resource/agency/usms> a cacontology-multi:FederalAgency .
+
+<https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_006/event/distribution> a cac-core:Event,
+        cacontology-legal-outcomes:CSAM_Distribution ;
+    cacontology:severityLevel 3 .
+
+<https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_006/event/trust-violation> a cacontology-custodial:AuthorityAbuse,
+        cacontology-custodial:TrustViolation ;
+    cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_006/relationship/coach> .
+
+<https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_006/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+
+<https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_006/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_006/sentence/1> .
+
+<https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_006/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 34 .
+
+<https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_006/person/victim/1> a uco-identity:Person ;
+    cacontology-production:victimAge 13 .
+
+<https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_006/relationship/coach> a cacontology-custodial:Coach,
+        cacontology-custodial:CustodialRelationship ;
+    cacontology-custodial:involvesChild <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_006/role/victim/1> ;
+    cacontology-custodial:involvesCustodian <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_006/role/offender/1> ;
+    cacontology-custodial:relationshipType "coach" .
 
 <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_006/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -45,42 +85,9 @@
         <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_006/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_006/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/arkansas-state-police-department> a cacontology-multi:StateAgency .
-
-<https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
-
-<https://caselinker.up.railway.app/resource/agency/nevada-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
-        cacontology-multi:LocalAgency ;
-    rdfs:label "Nevada County Sheriff's Office" .
-
-<https://caselinker.up.railway.app/resource/agency/usms> a cacontology-multi:FederalAgency .
-
-<https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_006/charge/1> a cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "CSAM" ;
-    cacontology-legal-outcomes:indictmentCounts 40 .
-
-<https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_006/event/distribution> a cac-core:Event,
-        cacontology-legal-outcomes:CSAM_Distribution ;
-    cacontology:severityLevel 3 .
-
-<https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_006/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_006/legal-proceeding> a cac-core:Event,
-        cac-core:LegalEvent,
-        cacontology-legal-outcomes:LegalProceeding ;
-    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_006/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_006/sentence/1> .
-
-<https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_006/person/offender/1> a uco-identity:Person ;
-    cacontology-detection:ageEstimate 34 .
-
-<https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_006/person/victim/1> a uco-identity:Person ;
-    cacontology-production:victimAge 13 .
-
 <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_006/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$2" .
+    rdfs:label "[\"$750,000\", \"$2\"]" .
 
 <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_006/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;

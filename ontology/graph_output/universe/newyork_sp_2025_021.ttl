@@ -1,6 +1,5 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
-@prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
 @prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
@@ -17,16 +16,15 @@
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_021> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-06-04T04:38:54.452910" ;
+    dcterms:created "2026-07-24T05:48:34.494160" ;
     dcterms:identifier "newyork_sp_2025_021" ;
-    dcterms:modified "2026-06-04T04:38:54.452910" ;
+    dcterms:modified "2026-07-24T05:48:34.494160" ;
     dcterms:source <https://troopers.ny.gov/news/state-police-arrest-livingston-manor-man-child-sexual-exploitation-charges>,
         "NEWYORK SP" ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_021/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_021/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_021/cybertip>,
         <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_021/event/possession>,
-        <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_021/event/trust-violation>,
         <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_021/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
     cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_021/tech/cybertipline> ;
@@ -36,6 +34,18 @@
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
         <https://caselinker.up.railway.app/resource/agency/new-york-state-police-department>,
         <https://caselinker.up.railway.app/resource/agency/troop-f-bureau-of-criminal-investigation> .
+
+<https://caselinker.up.railway.app/resource/case/newyork_sp_2025_021/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_021/event/possession> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_021/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/newyork_sp_2025_021/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_021/event/possession> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_021/person/victim/1> .
 
 <https://caselinker.up.railway.app/resource/agency/district-attorneys-office> a cacontology-multi:StateAgency .
 
@@ -54,17 +64,14 @@
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_021/cybertip> a cacontology-us-ncmec:NCMECCybertipReport ;
     cacontology-us-ncmec:supportedBy <https://caselinker.up.railway.app/resource/agency/ncmec> .
 
-<https://caselinker.up.railway.app/resource/case/newyork_sp_2025_021/event/trust-violation> a cacontology-custodial:AuthorityAbuse,
-        cacontology-custodial:TrustViolation ;
-    cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_021/relationship/teacher> .
-
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_021/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_021/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_021/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_021/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_021/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 26 .
@@ -72,23 +79,9 @@
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_021/person/victim/1> a uco-identity:Person ;
     cacontology-production:victimAge 10 .
 
-<https://caselinker.up.railway.app/resource/case/newyork_sp_2025_021/relationship/teacher> a cacontology-custodial:CustodialRelationship,
-        cacontology-custodial:Teacher ;
-    cacontology-custodial:involvesChild <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_021/role/victim/1> ;
-    cacontology-custodial:involvesCustodian <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_021/role/offender/1> ;
-    cacontology-custodial:relationshipType "teacher" .
-
-<https://caselinker.up.railway.app/resource/case/newyork_sp_2025_021/role/offender/1> a cacontology:OffenderRole,
-        uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_021/event/possession> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_021/person/offender/1> .
-
-<https://caselinker.up.railway.app/resource/case/newyork_sp_2025_021/role/victim/1> a cacontology:VictimRole,
-        uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_021/event/possession> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_021/person/victim/1> .
+<https://caselinker.up.railway.app/resource/case/newyork_sp_2025_021/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_021/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .

@@ -480,6 +480,10 @@ When the ML stack is enabled, NER adds organizations, locations, dates, and ages
 - `GET /api/cases-summaries-chunk` - Public paginated summaries (`offset`, `limit` ≤ 500); UI loads the full timeline via many small responses, not one bulk JSON
 - `POST /api/cases-summaries-by-ids` - Public batched summaries (max 500 ids per request) for cluster membership and similar flows
 - `GET /api/cases/{case_id}` - Single case (public responses omit `raw_data`; narrative available as `case_text` for UI drill-down)
+- `GET /api/case-count` - Total case count (public, rate limited)
+- `GET /api/case-ids-by-filter` - Case IDs matching filter query params (public, rate limited)
+- `GET /api/tags` - Distinct tag values across the corpus (public, rate limited)
+- `POST /api/tag-threader` - Tag co-occurrence threading analysis (public, rate limited)
 - `GET /visualization` - Platform Harm Dashboard (Q1 affordance-misuse-harm analysis, tiered evidence, manual platform analysis)
 - `GET /api/q1/platform-evidence` - Q1 platform evidence index or per-platform cohort (`platform`, optional `tier`)
 - `GET /search` - Facet decision tree over stored cases (D3); prune filters; cohort case IDs via API
@@ -487,6 +491,7 @@ When the ML stack is enabled, NER adds organizations, locations, dates, and ages
 - `GET /lifecycle` - Exploitation lifecycle visualization (public HTML; payload embedded server-side)
 - `GET /api/lifecycle/cases` - Lifecycle JSON (trusted `CaseLinker-Key` or localhost; same gate as `GET /api/cases`)
 - `GET /api/lifecycle/lstar` - Full L* output (`state_machines/data/lstar_all_cases.json`; trusted key or localhost)
+- `GET /api/lifecycle/canonical` - Public JSON for the 5 canonical PACER state-machine cases (no key; rate limited; intended for external embeds)
 - `GET /analysis` - Advanced case analysis page with tag-based filtering and automated analysis
 - `GET /api/facet-tree` - Build facet tree JSON (`max_depth`, optional prune query params)
 - `GET /api/facet-distinct` - Distinct primary-bucket values per facet (for Search prune UI)
@@ -497,8 +502,12 @@ When the ML stack is enabled, NER adds organizations, locations, dates, and ages
 - `GET /patterns/questions/{question_id}` - Q01–Q03 narrative question pages
 - `GET /mcp/sse` - MCP SSE transport (requires `Authorization: Bearer <MCP_ACCESS_KEY>`)
 - `GET|POST /mcp-http/` - MCP Streamable HTTP transport (same auth)
-- `GET /api/ontology/merged` - Merged graph JSON (`pool=compare|all`)
-- `GET /api/ontology/cases` - Per-case graph manifest / metadata
+- `GET /api/ontology/merged` - Merged graph JSON (`pool=compare|all|universe|analysis`; public, cached)
+- `GET /api/ontology/cases` - Per-case graph catalog (`pool=compare|all|universe|analysis`; public metadata: `case_id`, `path`, `ttl_path`)
+- `GET /ontology/graph_output/{pool}/{case_id}.jsonld|.ttl` - Static per-case CAC graph files (public)
+- `GET /ontology/q1/*`, `/ontology/q2/*`, `/ontology/q3/*`, `/ontology/question_data/*` - Static Q1–Q3 evidence JSON (public)
+- `GET /ontology/q_results.json` - Aggregated question results JSON when present (public)
+- `POST /api/ontology/cache/warm` - Rebuild/warm the merged-graph cache (`pool=compare|all|universe|analysis|both`)
 - `GET /api/triage-eval` - Stratified train/test metrics on live cases (same pipeline as `scripts/verify/test_triage.py`)
 - `GET /api/triage-model-corpus` - Saved bundle predictions over live DB; optional `facet_constraints` JSON query param (rate limited)
 - `POST /api/triage-live` - Classify pasted batch text in memory only; requires bundle; no persistence
@@ -511,6 +520,18 @@ When the ML stack is enabled, NER adds organizations, locations, dates, and ages
 - `GET /api/automated-analysis` - Run automated analysis (case grouping, triage, insights)
 - `POST /api/return-tagged-cases` - Get cases matching selected tags (intersection logic)
 - `GET /api/stats` - Get case statistics (total cases, extracted features count, sources)
+- `GET /api/stats-detailed` - Detailed corpus statistics (public, rate limited)
+- `GET /api/location-stats` - Location/geography aggregates (public, rate limited)
+- `GET /api/technology-revolver` - Technology-by-era data keyed by era buckets (public, rate limited)
+- `GET /api/cluster-groups` - Pre-computed similarity cluster groups (public, rate limited)
+- `GET /stats` - Statistics dashboard page
+- `GET /clusters` - Cluster explorer page
+- `GET /tech-landscape` - Technology landscape page
+- `GET /under-the-hood` - Architecture/methodology page
+- `GET /llm` - LLM chat page
+- `POST /api/llm/chat` - LLM chat endpoint (public; per-IP daily cap, exempt for localhost/trusted key)
+- `POST /api/cache/clear` - Clear server caches (rate limited 10/hour)
+- `GET /api` - API info root; `GET /healthz` - health check
 - `GET /docs` - Interactive API documentation
 
 ## Technology Stack

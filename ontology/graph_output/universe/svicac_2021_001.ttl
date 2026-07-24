@@ -1,6 +1,7 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
 @prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
@@ -11,15 +12,16 @@
 
 <https://caselinker.up.railway.app/resource/case/svicac_2021_001> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-06-04T04:39:56.537136" ;
+    dcterms:created "2026-07-24T06:01:18.389288" ;
     dcterms:identifier "svicac_2021_001" ;
-    dcterms:modified "2026-06-04T04:39:56.537136" ;
+    dcterms:modified "2026-07-24T06:01:18.389288" ;
     dcterms:source <https://conandaily.com/2023/06/10/oakley-californias-nhouel-dulay-arrested-during-operation-hosted-by-brentwood-police-department/>,
         "SVICAC" ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/svicac_2021_001/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/svicac_2021_001/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/svicac_2021_001/event/conspiracy>,
-        <https://caselinker.up.railway.app/resource/case/svicac_2021_001/event/multi-jurisdiction> ;
+        <https://caselinker.up.railway.app/resource/case/svicac_2021_001/event/multi-jurisdiction>,
+        <https://caselinker.up.railway.app/resource/case/svicac_2021_001/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/brentwood-police-department>,
         <https://caselinker.up.railway.app/resource/agency/fbi>,
@@ -46,6 +48,12 @@
         cacontology-multi:MultiJurisdictionalInvestigation ;
     cacontology:severityLevel 1 ;
     cacontology-multi:crossesBorders true .
+
+<https://caselinker.up.railway.app/resource/case/svicac_2021_001/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/svicac_2021_001/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2021_001/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 21 .
@@ -84,6 +92,10 @@
     cacontology:hasRoleBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/svicac_2021_001/event/conspiracy> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/svicac_2021_001/person/offender/4> .
+
+<https://caselinker.up.railway.app/resource/case/svicac_2021_001/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2021_001/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;

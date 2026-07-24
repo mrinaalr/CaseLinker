@@ -1,6 +1,7 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
 @prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
@@ -12,20 +13,20 @@
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_002> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-06-04T04:38:54.907689" ;
+    dcterms:created "2026-07-24T05:48:42.157123" ;
     dcterms:identifier "newyork_sp_2024_002" ;
-    dcterms:modified "2026-06-04T04:38:54.907689" ;
+    dcterms:modified "2026-07-24T05:48:42.157123" ;
     dcterms:source <https://troopers.ny.gov/news/state-police-arrested-pine-island-man-possession-child-pornography>,
         "NEWYORK SP" ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_002/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_002/phase/arrested> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_002/event/possession> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_002/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_002/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/bureau-of-criminal-investigation>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/new-york-state-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/town-of-warwick-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/village-of-chester-building-department> .
+        <https://caselinker.up.railway.app/resource/agency/town-of-warwick-police-department> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_002/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -43,24 +44,34 @@
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
-<https://caselinker.up.railway.app/resource/agency/new-york-state-police-department> a cac-core:OrganizationLikeEntity,
-        cacontology-multi:StateAgency ;
-    rdfs:label "New York State Police Department" .
+<https://caselinker.up.railway.app/resource/agency/new-york-state-police-department> a cacontology-multi:StateAgency .
 
 <https://caselinker.up.railway.app/resource/agency/town-of-warwick-police-department> a cac-core:OrganizationLikeEntity,
         cacontology-multi:LocalAgency ;
     rdfs:label "Town of Warwick Police Department" .
 
-<https://caselinker.up.railway.app/resource/agency/village-of-chester-building-department> a cac-core:OrganizationLikeEntity,
-        cacontology-multi:LocalAgency ;
-    rdfs:label "Village of Chester Building Department" .
+<https://caselinker.up.railway.app/resource/case/newyork_sp_2024_002/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
+        cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "possession of child pornography" ;
+    cacontology-legal-outcomes:indictmentCounts 2 .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_002/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+
+<https://caselinker.up.railway.app/resource/case/newyork_sp_2024_002/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_002/charge/1> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_002/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_002/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 60 .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_002/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/newyork_sp_2024_002/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_002/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;

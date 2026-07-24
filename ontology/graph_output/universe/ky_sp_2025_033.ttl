@@ -3,6 +3,7 @@
 @prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
@@ -11,15 +12,17 @@
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2025_033> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-06-04T04:38:20.492107" ;
+    dcterms:created "2026-07-24T05:41:54.610831" ;
     dcterms:identifier "ky_sp_2025_033" ;
-    dcterms:modified "2026-06-04T04:38:20.492107" ;
+    dcterms:modified "2026-07-24T05:41:54.610831" ;
     dcterms:source <https://www.kentuckystatepolice.ky.gov/news/p3-8-19-2025/>,
         "KY SP" ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ky_sp_2025_033/phase/booked> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ky_sp_2025_033/phase/booked> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ky_sp_2025_033/event/distribution> ;
-    cacontology:investigationStatus "unknown" ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ky_sp_2025_033/event/distribution>,
+        <https://caselinker.up.railway.app/resource/case/ky_sp_2025_033/event/online-only>,
+        <https://caselinker.up.railway.app/resource/case/ky_sp_2025_033/legal-proceeding>,
+        <https://caselinker.up.railway.app/resource/case/ky_sp_2025_033/operation> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/kansas-bureau-of-investigation>,
         <https://caselinker.up.railway.app/resource/agency/kentucky-state-police-department>,
         <https://caselinker.up.railway.app/resource/agency/shawnee-county-department-of-corrections> .
@@ -27,11 +30,13 @@
 <https://caselinker.up.railway.app/resource/case/ky_sp_2025_033/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
     cacontology:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ky_sp_2025_033/event/online-only> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ky_sp_2025_033/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2025_033/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
     cacontology:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ky_sp_2025_033/event/online-only> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ky_sp_2025_033/person/victim/1> .
 
 <https://caselinker.up.railway.app/resource/agency/kansas-bureau-of-investigation> a cac-core:OrganizationLikeEntity,
@@ -47,12 +52,28 @@
 <https://caselinker.up.railway.app/resource/case/ky_sp_2025_033/event/distribution> a cac-core:Event,
         cacontology-legal-outcomes:CSAM_Distribution .
 
+<https://caselinker.up.railway.app/resource/case/ky_sp_2025_033/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ky_sp_2025_033/sentence/1> .
+
+<https://caselinker.up.railway.app/resource/case/ky_sp_2025_033/operation> a cac-core:Event,
+        cacontology-taskforce:TaskForceOperation .
+
 <https://caselinker.up.railway.app/resource/case/ky_sp_2025_033/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 41 .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2025_033/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ky_sp_2025_033/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ky_sp_2025_033/phase/booked> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/ky_sp_2025_033/event/online-only> a cacontology:ChildSexualAbuseEvent,
+        cac-core:Event .
 

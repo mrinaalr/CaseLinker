@@ -1865,8 +1865,126 @@ def _merged_news_is_likely_preface_before_date(line: str) -> bool:
     if low.startswith(("the ", "this ", "chicago ", "springfield ", "morrilton,", "viola,", "amity,", "alma,")):
         return False
     if re.search(r"\b(office of|department of|attorney general)\b", low):
+        # News headlines often contain "Attorney General" (WA AG Title Case titles).
+        # Only treat short org-name lines as preface, not "AG … sentenced / seeks / wins …".
+        if len(s) > 70:
+            return False
+        if re.search(r"(?i)\b(media resource|faq)\b", s):
+            return False
+        if re.search(
+            r"\b(sentenced|arrested|charged|wins?|seeks?|files?|announces?|"
+            r"prevents?|obtains?|commits?|commitment|re-?commitment|prosecution|"
+            r"conviction|predator|offender|guide)\b",
+            low,
+        ):
+            return False
         return True
     return False
+
+
+_MERGED_NEWS_CONTACT_BOILER_RE = re.compile(
+    r"(?i)("
+    r"contacts?:|"
+    r"director of communications|"
+    r"communications director|"
+    r"deputy communications|"
+    r"visit www\.|"
+    r"learn more\.?$|"
+    r"@atg\.|"
+    r"\(\d{3}\)\s*\d{3}[-.]?\d{4}|"
+    r"working hard to protect consumers|"
+    r"chief legal office for the state|"
+    r"media resource guide|"
+    r"\bfaq\b"
+    r")"
+)
+
+
+def _merged_news_line_is_contact_or_boilerplate(line: str) -> bool:
+    """WA AG / similar press-release contact lines and closing blurbs above the next headline."""
+    s = line.strip()
+    if not s:
+        return False
+    return bool(_MERGED_NEWS_CONTACT_BOILER_RE.search(s))
+
+
+def _merged_news_line_looks_like_title_case_headline(line: str) -> bool:
+    """
+    Mixed / sentence-case / Title Case press-release headline (e.g. WA AG), not ALL-CAPS body.
+    First line usually starts with a capital (AG's… / Idaho man… / Opening statements…).
+    """
+    s = line.strip()
+    if len(s) < 15 or len(s) > 140:
+        return False
+    if _merged_news_line_looks_like_dateline_above_source(s):
+        return False
+    if re.match(r"^\s*Source:\s*", s, re.I):
+        return False
+    if _merged_news_line_is_contact_or_boilerplate(s):
+        return False
+    if re.match(r"^[A-Z]{2,}(?:\s[A-Z]+)?\s*[—–-]", s):  # CITY -- lead
+        return False
+    # Stats / body sentences that start with a digit (e.g. "294 sexually violent…").
+    if re.match(r"^\d", s) and not re.match(r"^\d{1,2}-year-old\b", s, re.I):
+        return False
+    if not re.match(r"^[A-Z0-9\"'“]", s):
+        return False
+    letters = [c for c in s if c.isalpha()]
+    if len(letters) < 12:
+        return False
+    upper_ratio = sum(1 for c in letters if c.isupper()) / len(letters)
+    # ALL-CAPS handled elsewhere.
+    if upper_ratio >= 0.58:
+        return False
+    # Full sentence body usually ends with a period.
+    if s.endswith(".") and s.count(" ") >= 8:
+        return False
+    low = s.lower()
+    if any(
+        p in low
+        for p in (
+            "are civilly committed",
+            "as of this month",
+            "as of september",
+            "as of late",
+            "are in the state's",
+        )
+    ):
+        return False
+    return True
+
+
+def _merged_news_line_looks_like_title_wrap(line: str) -> bool:
+    """
+    PDF-wrapped continuation of a headline (often starts lowercase or is a short
+    trailing word), e.g. \"offender into community\" or \"case\" / \"Center\".
+    """
+    s = line.strip()
+    if len(s) < 4 or len(s) > 110:
+        return False
+    if _merged_news_line_looks_like_dateline_above_source(s):
+        return False
+    if re.match(r"^\s*Source:\s*", s, re.I):
+        return False
+    if _merged_news_line_is_contact_or_boilerplate(s):
+        return False
+    if re.match(r"^[A-Z]{2,}(?:\s[A-Z]+)?\s*[—–-]", s):
+        return False
+    if not re.match(r"^[A-Za-z0-9\"'“]", s):
+        return False
+    if re.match(r"^\d", s) and not re.match(r"^\d{1,2}-year-old\b", s, re.I):
+        return False
+    # Short trailing fragment of a wrapped title ("case", "Center", "predator").
+    if len(s) <= 40 and s.count(" ") <= 5 and not s.endswith("."):
+        return True
+    # Longer wrap line — reject heavy body-like wraps.
+    if s.count(" ") > 14:
+        return False
+    if s.endswith(".") and s.count(" ") >= 6:
+        return False
+    if len(s) >= 118:
+        return False
+    return True
 
 
 def _merge_merged_news_wrapped_source_url_lines(lines: List[str]) -> List[str]:
@@ -1928,6 +2046,17 @@ def _merged_news_title_starts(lines: List[str], sources: List[int]) -> List[int]
             ):
                 title_start = t
                 t -= 1
+            # Title Case headlines + PDF wraps (WA AG and similar): date ← wrap ← title ← contact.
+            while t > prev_barrier and lines[t].strip() and _merged_news_line_looks_like_title_wrap(lines[t]):
+                title_start = t
+                t -= 1
+            while (
+                t > prev_barrier
+                and lines[t].strip()
+                and _merged_news_line_looks_like_title_case_headline(lines[t])
+            ):
+                title_start = t
+                t -= 1
             while t > prev_barrier and _merged_news_is_likely_preface_before_date(lines[t]):
                 title_start = t
                 t -= 1
@@ -1943,6 +2072,8 @@ def _merged_news_title_starts(lines: List[str], sources: List[int]) -> List[int]
             if not raw.strip():
                 t -= 1
                 continue
+            if _merged_news_line_is_contact_or_boilerplate(raw):
+                break
             if _merged_news_line_looks_like_narrative_body(raw):
                 break
             title_start = t

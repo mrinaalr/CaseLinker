@@ -1,5 +1,6 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
@@ -11,28 +12,19 @@
 
 <https://caselinker.up.railway.app/resource/case/mt_doj_2026_001> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-06-04T04:38:31.743110" ;
+    dcterms:created "2026-07-24T05:44:11.097187" ;
     dcterms:identifier "mt_doj_2026_001" ;
-    dcterms:modified "2026-06-04T04:38:31.743110" ;
+    dcterms:modified "2026-07-24T05:44:11.097187" ;
     dcterms:source <https://dojmt.gov/flathead-county-man-sentenced-in-child-sexual-assault-case/>,
         "MT DOJ" ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/mt_doj_2026_001/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/mt_doj_2026_001/phase/sentenced> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/mt_doj_2026_001/legal-proceeding>,
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/mt_doj_2026_001/event/trust-violation>,
+        <https://caselinker.up.railway.app/resource/case/mt_doj_2026_001/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/mt_doj_2026_001/legal-step/sentenced> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/butte-silver-bow-law-enforcement-department>,
         <https://caselinker.up.railway.app/resource/agency/columbia-falls-police-department>,
         <https://caselinker.up.railway.app/resource/agency/flathead-county-sheriffs-office> .
-
-<https://caselinker.up.railway.app/resource/case/mt_doj_2026_001/role/offender/1> a cacontology:OffenderRole,
-        uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/mt_doj_2026_001/person/offender/1> .
-
-<https://caselinker.up.railway.app/resource/case/mt_doj_2026_001/role/victim/1> a cacontology:VictimRole,
-        uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/mt_doj_2026_001/person/victim/1> .
 
 <https://caselinker.up.railway.app/resource/agency/butte-silver-bow-law-enforcement-department> a cac-core:OrganizationLikeEntity,
         cacontology-multi:LocalAgency ;
@@ -45,6 +37,10 @@
 <https://caselinker.up.railway.app/resource/agency/flathead-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
         cacontology-multi:LocalAgency ;
     rdfs:label "Flathead County Sheriff's Office" .
+
+<https://caselinker.up.railway.app/resource/case/mt_doj_2026_001/event/trust-violation> a cacontology-custodial:AuthorityAbuse,
+        cacontology-custodial:TrustViolation ;
+    cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/mt_doj_2026_001/relationship/coach> .
 
 <https://caselinker.up.railway.app/resource/case/mt_doj_2026_001/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
@@ -63,9 +59,25 @@
 <https://caselinker.up.railway.app/resource/case/mt_doj_2026_001/person/victim/1> a uco-identity:Person ;
     cacontology-production:victimAge 8 .
 
+<https://caselinker.up.railway.app/resource/case/mt_doj_2026_001/relationship/coach> a cacontology-custodial:Coach,
+        cacontology-custodial:CustodialRelationship ;
+    cacontology-custodial:involvesChild <https://caselinker.up.railway.app/resource/case/mt_doj_2026_001/role/victim/1> ;
+    cacontology-custodial:involvesCustodian <https://caselinker.up.railway.app/resource/case/mt_doj_2026_001/role/offender/1> ;
+    cacontology-custodial:relationshipType "coach" .
+
+<https://caselinker.up.railway.app/resource/case/mt_doj_2026_001/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/mt_doj_2026_001/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/mt_doj_2026_001/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/mt_doj_2026_001/person/victim/1> .
+
 <https://caselinker.up.railway.app/resource/case/mt_doj_2026_001/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "300 years" .
+    rdfs:label "[\"300 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/mt_doj_2026_001/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;

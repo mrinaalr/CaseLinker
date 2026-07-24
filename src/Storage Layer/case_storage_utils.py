@@ -39,6 +39,19 @@ _SLIM_EXCLUDED_KEYS = frozenset(
 )
 
 
+def dumps_json_safe(value: Any) -> str:
+    """
+    JSON-serialize analysis/cache payloads that may contain datetime (or other)
+    non-JSON types. Prefer orjson when available; fall back to stdlib + default=str.
+    """
+    try:
+        import orjson
+
+        return orjson.dumps(value, default=str).decode("utf-8")
+    except ImportError:
+        return json.dumps(value, default=str)
+
+
 def investigation_types_for_case(case: Dict[str, Any]) -> List[str]:
     """
     All investigation type tags for a case (list field + legacy single investigation_type).

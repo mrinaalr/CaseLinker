@@ -1,9 +1,11 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
 @prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
@@ -11,14 +13,15 @@
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2019_006> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-06-04T04:38:22.601917" ;
+    dcterms:created "2026-07-24T05:42:23.854020" ;
     dcterms:identifier "ky_sp_2019_006" ;
-    dcterms:modified "2026-06-04T04:38:22.601917" ;
+    dcterms:modified "2026-07-24T05:42:23.854020" ;
     dcterms:source <https://www.kentuckystatepolice.ky.gov/news/hq-10-17-19/>,
         "KY SP" ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ky_sp_2019_006/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ky_sp_2019_006/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ky_sp_2019_006/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/ky_sp_2019_006/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/ky_sp_2019_006/operation> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/kentucky-state-police-department> .
 
@@ -38,6 +41,12 @@
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2019_006/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
+<https://caselinker.up.railway.app/resource/case/ky_sp_2019_006/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2019-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ky_sp_2019_006/sentence/1> .
+
 <https://caselinker.up.railway.app/resource/case/ky_sp_2019_006/operation> a cac-core:Event,
         cacontology-taskforce:UndercoverUnit .
 
@@ -45,6 +54,10 @@
     cacontology-detection:ageEstimate 32 .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2019_006/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/ky_sp_2019_006/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2019_006/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;

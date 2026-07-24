@@ -7,23 +7,23 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_013> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-06-04T04:38:54.164995" ;
+    dcterms:created "2026-07-24T05:48:30.652831" ;
     dcterms:identifier "newyork_sp_2025_013" ;
-    dcterms:modified "2026-06-04T04:38:54.164995" ;
+    dcterms:modified "2026-07-24T05:48:30.652831" ;
     dcterms:source <https://troopers.ny.gov/news/madison-man-arrested-child-exploitation-charges>,
         "NEWYORK SP" ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_013/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_013/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_013/event/distribution>,
-        <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_013/event/possession>,
-        <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_013/legal-proceeding> ;
+        <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_013/legal-proceeding>,
+        <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_013/offense-event/charge-2> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/hsi>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
@@ -34,13 +34,13 @@
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_013/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
     cacontology:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_013/event/possession> ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_013/offense-event/charge-2> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_013/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_013/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
     cacontology:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_013/event/possession> ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_013/offense-event/charge-2> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_013/person/victim/1> .
 
 <https://caselinker.up.railway.app/resource/agency/hsi> a cacontology-multi:FederalAgency .
@@ -57,29 +57,38 @@
     rdfs:label "sexual exploitation" ;
     ns1:chargeCluster "sexual_exploitation_unspecified" .
 
-<https://caselinker.up.railway.app/resource/case/newyork_sp_2025_013/event/distribution> a cac-core:Event,
-        cacontology-legal-outcomes:CSAM_Distribution ;
-    cacontology:severityLevel 3 .
+<https://caselinker.up.railway.app/resource/case/newyork_sp_2025_013/charge/2> a cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "child exploitation" ;
+    rdfs:seeAlso <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_013/offense-event/charge-2> ;
+    ns1:chargeCluster "child_exploitation" ;
+    ns1:chargeOffenseEvent <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_013/offense-event/charge-2> .
 
-<https://caselinker.up.railway.app/resource/case/newyork_sp_2025_013/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://caselinker.up.railway.app/resource/case/newyork_sp_2025_013/event/distribution> a cac-core:Event,
+        cacontology-legal-outcomes:CSAM_Distribution .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_013/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_013/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_013/charge/1>,
+        <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_013/charge/2> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_013/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_013/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 26 .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_013/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/newyork_sp_2025_013/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_013/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
-<https://caselinker.up.railway.app/resource/case/newyork_sp_2025_013/event/possession> a cacontology:CSAMIncident,
-        cac-core:Event ;
-    cacontology:severityLevel 3 ;
-    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_013/facet/possession> .
+<https://caselinker.up.railway.app/resource/case/newyork_sp_2025_013/offense-event/charge-2> a cacontology:ChildSexualAbuseEvent,
+        cac-core:Event,
+        uco-action:Crime ;
+    rdfs:label "Inferred offense from charge: child exploitation" .
 

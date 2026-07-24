@@ -1,5 +1,6 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
 @prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
@@ -15,17 +16,49 @@
 
 <https://caselinker.up.railway.app/resource/case/svicac_2019_011> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-06-04T04:39:59.226610" ;
+    dcterms:created "2026-07-24T06:02:04.371192" ;
     dcterms:identifier "svicac_2019_011" ;
-    dcterms:modified "2026-06-04T04:39:59.226610" ;
+    dcterms:modified "2026-07-24T06:02:04.371192" ;
     dcterms:source <https://www.nbcbayarea.com/news/local/San-Jose-Youth-Basketball-Coach-Arrested-on-Suspicion-of-Lewd-Acts-With-a-Child-508198581.html>,
         "SVICAC" ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/svicac_2019_011/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/svicac_2019_011/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/svicac_2019_011/event/hands-on>,
+        <https://caselinker.up.railway.app/resource/case/svicac_2019_011/event/trust-violation>,
         <https://caselinker.up.railway.app/resource/case/svicac_2019_011/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/svicac_2019_011/offense-event/charge-1> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac> .
+
+<https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
+
+<https://caselinker.up.railway.app/resource/case/svicac_2019_011/charge/1> a cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "child exploitation" ;
+    rdfs:seeAlso <https://caselinker.up.railway.app/resource/case/svicac_2019_011/offense-event/charge-1> ;
+    ns1:chargeCluster "child_exploitation" ;
+    ns1:chargeOffenseEvent <https://caselinker.up.railway.app/resource/case/svicac_2019_011/offense-event/charge-1> .
+
+<https://caselinker.up.railway.app/resource/case/svicac_2019_011/event/trust-violation> a cacontology-custodial:AuthorityAbuse,
+        cacontology-custodial:TrustViolation ;
+    cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/svicac_2019_011/relationship/coach> .
+
+<https://caselinker.up.railway.app/resource/case/svicac_2019_011/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/svicac_2019_011/charge/1> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2019-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/svicac_2019_011/sentence/1> .
+
+<https://caselinker.up.railway.app/resource/case/svicac_2019_011/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 53 .
+
+<https://caselinker.up.railway.app/resource/case/svicac_2019_011/person/victim/1> a uco-identity:Person ;
+    cacontology-production:victimAge 12 .
+
+<https://caselinker.up.railway.app/resource/case/svicac_2019_011/relationship/coach> a cacontology-custodial:Coach,
+        cacontology-custodial:CustodialRelationship ;
+    cacontology-custodial:involvesChild <https://caselinker.up.railway.app/resource/case/svicac_2019_011/role/victim/1> ;
+    cacontology-custodial:involvesCustodian <https://caselinker.up.railway.app/resource/case/svicac_2019_011/role/offender/1> ;
+    cacontology-custodial:relationshipType "coach" .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2019_011/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -41,25 +74,9 @@
         <https://caselinker.up.railway.app/resource/case/svicac_2019_011/offense-event/charge-1> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/svicac_2019_011/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
-
-<https://caselinker.up.railway.app/resource/case/svicac_2019_011/charge/1> a cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "child exploitation" ;
-    rdfs:seeAlso <https://caselinker.up.railway.app/resource/case/svicac_2019_011/offense-event/charge-1> ;
-    ns1:chargeCluster "child_exploitation" ;
-    ns1:chargeOffenseEvent <https://caselinker.up.railway.app/resource/case/svicac_2019_011/offense-event/charge-1> .
-
-<https://caselinker.up.railway.app/resource/case/svicac_2019_011/legal-proceeding> a cac-core:Event,
-        cac-core:LegalEvent,
-        cacontology-legal-outcomes:LegalProceeding ;
-    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/svicac_2019_011/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2019-01-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://caselinker.up.railway.app/resource/case/svicac_2019_011/person/offender/1> a uco-identity:Person ;
-    cacontology-detection:ageEstimate 53 .
-
-<https://caselinker.up.railway.app/resource/case/svicac_2019_011/person/victim/1> a uco-identity:Person ;
-    cacontology-production:victimAge 12 .
+<https://caselinker.up.railway.app/resource/case/svicac_2019_011/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2019_011/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;

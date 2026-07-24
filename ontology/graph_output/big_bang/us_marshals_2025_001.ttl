@@ -1,5 +1,6 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -9,13 +10,14 @@
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2025_001> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-06-04T04:40:07.494437" ;
+    dcterms:created "2026-07-24T06:03:57.115616" ;
     dcterms:identifier "us_marshals_2025_001" ;
-    dcterms:modified "2026-06-04T04:40:07.494437" ;
+    dcterms:modified "2026-07-24T06:03:57.115616" ;
     dcterms:source <https://www.usmarshals.gov/news/press-release/hawaii-fugitive-wanted-sexual-assaultarrested-massachusetts>,
         "US MARSHALS" ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/us_marshals_2025_001/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/us_marshals_2025_001/phase/charged> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/us_marshals_2025_001/legal-proceeding> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/boston-police-department>,
         <https://caselinker.up.railway.app/resource/agency/brockton-police-department>,
         <https://caselinker.up.railway.app/resource/agency/bureau-ofalcohol-tobacco-firearms-explosives>,
@@ -120,9 +122,19 @@
         cacontology-multi:LocalAgency ;
     rdfs:label "Worcester Police Department" .
 
+<https://caselinker.up.railway.app/resource/case/us_marshals_2025_001/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/us_marshals_2025_001/sentence/1> .
+
 <https://caselinker.up.railway.app/resource/case/us_marshals_2025_001/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2025_001/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/us_marshals_2025_001/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2025_001/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;

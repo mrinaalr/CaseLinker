@@ -4,21 +4,23 @@
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/cbp_2026_019> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-06-04T04:37:16.571660" ;
+    dcterms:created "2026-07-24T05:26:53.009483" ;
     dcterms:identifier "cbp_2026_019" ;
-    dcterms:modified "2026-06-04T04:37:16.571660" ;
+    dcterms:modified "2026-07-24T05:26:53.009483" ;
     dcterms:source <https://www.cbp.gov/newsroom/local-media-release/canadian-arrested-blaine-child-sexual-assault-charge-texas>,
         "CBP" ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/cbp_2026_019/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/cbp_2026_019/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/cbp_2026_019/event/distribution>,
-        <https://caselinker.up.railway.app/resource/case/cbp_2026_019/event/multi-jurisdiction> ;
+        <https://caselinker.up.railway.app/resource/case/cbp_2026_019/event/multi-jurisdiction>,
+        <https://caselinker.up.railway.app/resource/case/cbp_2026_019/legal-proceeding> ;
     cacontology:investigationStatus "unknown" .
 
 <https://caselinker.up.railway.app/resource/case/cbp_2026_019/role/offender/1> a cacontology:OffenderRole,
@@ -39,10 +41,20 @@
         cacontology-multi:MultiJurisdictionalInvestigation ;
     cacontology:severityLevel 3 .
 
+<https://caselinker.up.railway.app/resource/case/cbp_2026_019/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/cbp_2026_019/sentence/1> .
+
 <https://caselinker.up.railway.app/resource/case/cbp_2026_019/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 44 .
 
 <https://caselinker.up.railway.app/resource/case/cbp_2026_019/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/cbp_2026_019/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/case/cbp_2026_019/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;

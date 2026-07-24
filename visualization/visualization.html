@@ -659,10 +659,21 @@
       border-bottom-color: var(--accent);
     }
 
+    #detail-content {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
+    }
+    #detail-content[hidden] { display: none; }
+
     .detail-body {
       flex: 1;
+      min-height: 0;
       overflow-y: auto;
       padding: 18px 22px 24px;
+      -webkit-overflow-scrolling: touch;
     }
     .detail-section { display: none; }
     .detail-section.active { display: block; }
@@ -1047,6 +1058,7 @@
       search: "",
       analyzedOnly: false,
       evidenceLimit: 12,
+      activeTab: null,
     };
 
     function el(tag, attrs, children) {
@@ -1291,6 +1303,7 @@
       }
       state.selected = platformName;
       state.evidenceLimit = 12;
+      state.activeTab = null;
       const p = getPlatform(platformName);
       if (!p) return;
 
@@ -1343,8 +1356,8 @@
         { id: "evidence", label: "Case Evidence", items: null },
       ];
 
-      let activeTab = "affordances";
-      if (!harm.affordances.length && !harm.misuse_surface.length && !harm.harm_vector.length) {
+      let activeTab = state.activeTab || "affordances";
+      if (!state.activeTab && !harm.affordances.length && !harm.misuse_surface.length && !harm.harm_vector.length) {
         activeTab = "evidence";
       }
 
@@ -1378,6 +1391,7 @@
       content.appendChild(body);
 
       function switchTab(id) {
+        state.activeTab = id;
         tabs.querySelectorAll(".detail-tab").forEach((t) => {
           const on = t.dataset.tab === id;
           t.classList.toggle("active", on);
@@ -1443,7 +1457,11 @@
           textContent: "Show more (" + (recs.length - state.evidenceLimit) + " remaining)",
           onClick: () => {
             state.evidenceLimit += 20;
+            const oldBody = document.querySelector("#detail-content .detail-body");
+            const scrollPos = oldBody ? oldBody.scrollTop : 0;
             renderDetail(p);
+            const newBody = document.querySelector("#detail-content .detail-body");
+            if (newBody) newBody.scrollTop = scrollPos;
           },
         });
         wrap.appendChild(btn);

@@ -3,24 +3,78 @@
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
+@prefix cacontology-undercover: <https://cacontology.projectvic.org/undercover#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
+<https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/admission/1/extraction-confidence> a cac-core:AssessmentResult ;
+    cac-core:assesses <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/admission/1> ;
+    cac-core:generatedBy <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020> ;
+    cac-core:hasConfidence 0.9 .
+
+<https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/admission/2/extraction-confidence> a cac-core:AssessmentResult ;
+    cac-core:assesses <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/admission/2> ;
+    cac-core:generatedBy <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020> ;
+    cac-core:hasConfidence 0.65 .
+
+<https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/event/hands-on>,
+        <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/event/possession> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/agency/hollywood-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Hollywood Police Department" .
+
+<https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
+        cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "child pornography" ;
+    cacontology-legal-outcomes:indictmentCounts 2 .
+
+<https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/cybertip> a cacontology-us-ncmec:NCMECCybertipReport ;
+    cacontology-us-ncmec:supportedBy <https://caselinker.up.railway.app/resource/agency/ncmec> .
+
+<https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/event/distribution> a cac-core:Event,
+        cacontology-legal-outcomes:CSAM_Distribution ;
+    cacontology:severityLevel 3 .
+
+<https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+
+<https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/charge/1> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/sentence/1> .
+
+<https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/person/offender/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:MonetaryPenalty ;
+    rdfs:label "[\"$82,500\"]" .
+
+<https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
+
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-06-04T04:39:52.878164" ;
+    dcterms:created "2026-07-24T06:00:29.643219" ;
     dcterms:identifier "south_florida_icac_2025_020" ;
-    dcterms:modified "2026-06-04T04:39:52.878164" ;
+    dcterms:modified "2026-07-24T06:00:29.643219" ;
     dcterms:source <https://www.local10.com/news/local/2025/03/20/miami-dade-school-employee-caught-with-dozens-of-child-sex-abuse-images-police-say/>,
         "SOUTH FLORIDA ICAC" ;
-    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/phase/arrested> ;
-    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/phase/arrested> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/cybertip>,
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/admission/1>,
+        <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/admission/2>,
+        <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/cybertip>,
         <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/event/distribution>,
         <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/event/hands-on>,
         <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/event/possession>,
@@ -36,72 +90,43 @@
         <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/person/offender/1> .
 
-<https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/role/victim/1> a cacontology:VictimRole,
-        uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/event/hands-on>,
-        <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/event/possession> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/person/victim/1> .
-
-<https://caselinker.up.railway.app/resource/agency/hollywood-police-department> a cac-core:OrganizationLikeEntity,
-        cacontology-multi:LocalAgency ;
-    rdfs:label "Hollywood Police Department" .
-
-<https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
-        cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "child sexual abuse material" .
-
-<https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/charge/2> a cacontology-legal-outcomes:CSAM_Possession,
-        cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "child pornography" .
-
-<https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/charge/3> a cacontology-legal-outcomes:CSAM_Possession,
-        cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "child porn" .
-
-<https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/cybertip> a cacontology-us-ncmec:NCMECCybertipReport ;
-    cacontology-us-ncmec:supportedBy <https://caselinker.up.railway.app/resource/agency/ncmec> .
-
-<https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/event/distribution> a cac-core:Event,
-        cacontology-legal-outcomes:CSAM_Distribution ;
-    cacontology:severityLevel 3 .
-
-<https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/legal-proceeding> a cac-core:Event,
-        cac-core:LegalEvent,
-        cacontology-legal-outcomes:LegalProceeding ;
-    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/charge/1>,
-        <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/charge/2>,
-        <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/charge/3> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/sentence/1> .
-
-<https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/person/offender/1> a uco-identity:Person .
-
-<https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/person/victim/1> a uco-identity:Person .
-
-<https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$82,500" .
-
-<https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
-
-<https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/phase/arrested> a cacontology:InitialPhase,
-        cac-core:Phase ;
-    cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
-
 <https://caselinker.up.railway.app/resource/platform/dark-web> a cacontology-platforms:DarkWebService ;
     rdfs:label "dark web" .
 
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;
+    cacontology:producesArtifact <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/admission/1>,
+        <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/admission/2> ;
     cacontology:severityLevel 3 ;
     cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/dark-web> .
 
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
+    cacontology:producesArtifact <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/admission/1>,
+        <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/admission/2> ;
     cacontology:severityLevel 3 ;
     cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/dark-web> ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/facet/possession> .
+
+<https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/admission/1> a cacontology-undercover:IncriminatingStatement ;
+    rdfs:label "uses the dark web" ;
+    dcterms:source <https://www.local10.com/news/local/2025/03/20/miami-dade-school-employee-caught-with-dozens-of-child-sex-abuse-images-police-say/> ;
+    ns1:admissionContext "home with “dozens” of child sexual abuse images, police said Thursday. _Leer en español_ According to an arrest report from the Hollywood..." ;
+    ns1:admissionFrame "perp_proximate_admitted_quote" ;
+    ns1:admissionTheme "tech_use" ;
+    ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/role/offender/1> ;
+    ns1:evidenceTier "press_release_stated" ;
+    ns1:quoteType "direct" ;
+    uco-core:description "uses the dark web" .
+
+<https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/admission/2> a cacontology-undercover:IncriminatingStatement ;
+    rdfs:label "being “into child pornography” since the early 1990s" ;
+    dcterms:source <https://www.local10.com/news/local/2025/03/20/miami-dade-school-employee-caught-with-dozens-of-child-sex-abuse-images-police-say/> ;
+    ns1:admissionContext "ictims as young as 3 being subject to various forms of abuse, including rape and bondage. Police said Collot “originally denied being inv..." ;
+    ns1:admissionFrame "admitted_to" ;
+    ns1:admissionTheme "harm_conduct" ;
+    ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_020/role/offender/1> ;
+    ns1:evidenceTier "press_release_stated" ;
+    ns1:quoteType "paraphrase" ;
+    uco-core:description "being “into child pornography” since the early 1990s" .
 

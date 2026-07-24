@@ -1685,6 +1685,10 @@ class CaseToCAC:
             str(s).strip() for s in sentences_raw if s is not None and str(s).strip()
         ]
 
+        # Collapse synonym charge strings that map to the same CAC class/cluster
+        # (e.g. "child porn" + "child pornography" + "possession of child pornography").
+        charges_raw = self._collapse_duplicate_charges(charges_raw, warnings)
+
         has_charges = bool(charges_raw)
         has_sentence_durations = bool(sentence_texts)
         has_jail = bool(jail_str)
@@ -2163,6 +2167,73 @@ class CaseToCAC:
             f"'{charge_str[:100]}'"
         )
         return CAC_LEGAL.CriminalCharge, None, True
+
+    @classmethod
+    def _collapse_duplicate_charges(
+        cls,
+        charges_raw: List[Any],
+        warnings: List[str],
+    ) -> List[Dict[str, Any]]:
+        """
+        Merge charge rows that resolve to the same CAC class + cluster.
+
+        Feature extraction often emits synonymous press-release fragments
+        ("child porn", "child pornography", "possession of child pornography")
+        as separate charges; those become duplicate viz nodes otherwise.
+        Prefer the most specific label (longest, expanded "porn"→"pornography").
+        """
+        if not charges_raw:
+            return []
+
+        def _label_rank(label: str) -> Tuple[int, int]:
+            # Higher is better: expanded form, then longer phrasing.
+            expanded = 1 if re.search(r'\bpornography\b', label, re.I) else 0
+            return (expanded, len(label))
+
+        def _parse_row(charge: Any) -> Tuple[str, int]:
+            if isinstance(charge, dict):
+                label = str(charge.get("charge") or "").strip()
+                try:
+                    count = int(charge.get("count") or 1)
+                except (TypeError, ValueError):
+                    count = 1
+            else:
+                label = str(charge).strip()
+                count = 1
+            return label, max(count, 1)
+
+        merged: Dict[Tuple[str, str, str], Dict[str, Any]] = {}
+        order: List[Tuple[str, str, str]] = []
+
+        for charge in charges_raw:
+            label, count = _parse_row(charge)
+            if not label:
+                continue
+            # Quiet match — map_prosecution will warn on the collapsed set.
+            charge_class, cluster, unmapped = cls._match_charge(label, [])
+            # Typed CAC classes (CSAM_Possession, etc.) and clustered generics collapse
+            # by class/cluster. Bare unmatched CriminalCharge only collapses near-
+            # identical labels so distinct unknowns stay separate.
+            if unmapped and not cluster:
+                norm = re.sub(r"\s+", " ", label.lower()).strip()
+                norm = re.sub(r"\bporn\b", "pornography", norm)
+                key = (str(charge_class), "", norm)
+            else:
+                key = (str(charge_class), cluster or "", "")
+            if key not in merged:
+                merged[key] = {"charge": label, "count": count}
+                order.append(key)
+                continue
+            merged[key]["count"] = int(merged[key]["count"]) + count
+            if _label_rank(label) > _label_rank(str(merged[key]["charge"])):
+                merged[key]["charge"] = label
+
+        if len(merged) < len([c for c in charges_raw if _parse_row(c)[0]]):
+            warnings.append(
+                f"CHARGE_MAP (info): collapsed {len(charges_raw)} charge strings "
+                f"→ {len(merged)} unique CAC charge nodes"
+            )
+        return [merged[k] for k in order]
 
     def _backfill_uses_channel_on_csa_events(
         self,

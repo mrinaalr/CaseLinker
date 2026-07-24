@@ -1,7 +1,7 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
@@ -10,18 +10,17 @@
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_011> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-06-04T04:39:10.153472" ;
+    dcterms:created "2026-07-24T05:51:42.434314" ;
     dcterms:identifier "ohio_ag_2013_011" ;
-    dcterms:modified "2026-06-04T04:39:10.153472" ;
-    dcterms:source <https://www.ohioattorneygeneral.gov/Media/News-Releases/May-2013/Attorney-General-DeWine-Announces-Arrest-of-Woman>,
+    dcterms:modified "2026-07-24T05:51:42.434314" ;
+    dcterms:source <https://www.ohioattorneygeneral.gov/Media/News-Releases/April-2013/Former-Mayor-of-Stockport-Convicted-on-21-Counts>,
         "OHIO AG" ;
-    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_011/phase/indicted> ;
-    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_011/phase/indicted> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_011/event/hands-on> ;
-    cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/attorney-generals-crimes-against-children-unit>,
-        <https://caselinker.up.railway.app/resource/agency/ohio-bureau-of-criminal-investigation>,
-        <https://caselinker.up.railway.app/resource/agency/vinton-county-sheriffs-office> .
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_011/phase/convicted> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_011/phase/convicted> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_011/event/hands-on>,
+        <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_011/legal-proceeding>,
+        <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_011/legal-step/convicted> ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ohio-attorney-generals-crimes-against-children-unit> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_011/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -35,21 +34,32 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_011/event/hands-on> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_011/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/attorney-generals-crimes-against-children-unit> a cacontology-multi:StateAgency .
+<https://caselinker.up.railway.app/resource/agency/ohio-attorney-generals-crimes-against-children-unit> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:StateAgency ;
+    rdfs:label "Ohio Attorney General's Crimes Against Children Unit" .
 
-<https://caselinker.up.railway.app/resource/agency/ohio-bureau-of-criminal-investigation> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/case/ohio_ag_2013_011/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_011/sentence/1> .
 
-<https://caselinker.up.railway.app/resource/agency/vinton-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
-        cacontology-multi:LocalAgency ;
-    rdfs:label "Vinton County Sheriff's Office" .
+<https://caselinker.up.railway.app/resource/case/ohio_ag_2013_011/legal-step/convicted> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding,
+        cacontology-legal-outcomes:SentencingHearing ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_011/person/offender/1> a uco-identity:Person .
 
-<https://caselinker.up.railway.app/resource/case/ohio_ag_2013_011/person/victim/1> a uco-identity:Person ;
-    cacontology-production:victimAge 13 .
+<https://caselinker.up.railway.app/resource/case/ohio_ag_2013_011/person/victim/1> a uco-identity:Person .
 
-<https://caselinker.up.railway.app/resource/case/ohio_ag_2013_011/phase/indicted> a cacontology:LegalProcessPhase,
-        cac-core:Phase ;
+<https://caselinker.up.railway.app/resource/case/ohio_ag_2013_011/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
+<https://caselinker.up.railway.app/resource/case/ohio_ag_2013_011/phase/convicted> a cac-core:Phase,
+        cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_011/event/hands-on> a cacontology:ChildSexualAbuseEvent,

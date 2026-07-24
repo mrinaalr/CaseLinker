@@ -1,5 +1,6 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
 @prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
@@ -13,32 +14,20 @@
 
 <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_013> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-06-04T04:37:15.267865" ;
+    dcterms:created "2026-07-24T05:26:35.700137" ;
     dcterms:identifier "arkansas_dps_2024_013" ;
-    dcterms:modified "2026-06-04T04:37:15.267865" ;
+    dcterms:modified "2026-07-24T05:26:35.700137" ;
     dcterms:source <https://dps.arkansas.gov/news/sw-arkansas-volunteer-coach-arrested-for-engaging-children-in-sexually-explicit-conduct/>,
         "ARKANSAS DPS" ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_013/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_013/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_013/event/distribution>,
         <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_013/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_013/event/trust-violation>,
         <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_013/legal-proceeding> ;
-    cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/arkansas-state-police-department>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/nevada-county-sheriffs-office> .
-
-<https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_013/role/offender/1> a cacontology:OffenderRole,
-        uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_013/event/possession> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_013/person/offender/1> .
-
-<https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_013/role/victim/1> a cacontology:VictimRole,
-        uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_013/event/possession> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_013/person/victim/1> .
 
 <https://caselinker.up.railway.app/resource/agency/arkansas-state-police-department> a cacontology-multi:StateAgency .
 
@@ -50,6 +39,10 @@
 
 <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_013/event/distribution> a cac-core:Event,
         cacontology-legal-outcomes:CSAM_Distribution .
+
+<https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_013/event/trust-violation> a cacontology-custodial:AuthorityAbuse,
+        cacontology-custodial:TrustViolation ;
+    cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_013/relationship/coach> .
 
 <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_013/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
@@ -64,9 +57,27 @@
 
 <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_013/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_013/relationship/coach> a cacontology-custodial:Coach,
+        cacontology-custodial:CustodialRelationship ;
+    cacontology-custodial:involvesChild <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_013/role/victim/1> ;
+    cacontology-custodial:involvesCustodian <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_013/role/offender/1> ;
+    cacontology-custodial:relationshipType "coach" .
+
+<https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_013/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_013/event/possession> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_013/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_013/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_013/event/possession> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_013/person/victim/1> .
+
 <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_013/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$250,000" .
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_013/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;

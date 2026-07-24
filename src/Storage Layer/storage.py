@@ -15,7 +15,11 @@ import json
 import sqlite3
 from pathlib import Path
 
-from case_storage_utils import hydrate_case_text_from_raw_data, slim_extracted_features_for_storage
+from case_storage_utils import (
+    dumps_json_safe,
+    hydrate_case_text_from_raw_data,
+    slim_extracted_features_for_storage,
+)
 from typing import Dict, List, Any, Optional, Tuple
 from datetime import datetime
 
@@ -964,7 +968,7 @@ class CaseStorage:
             cursor.execute('''
                 INSERT OR REPLACE INTO cluster_groups_slim (case_count, data)
                 VALUES (?, ?)
-            ''', (case_count, json.dumps(slim)))
+            ''', (case_count, dumps_json_safe(slim)))
             conn.commit()
             conn.close()
             return True
@@ -1001,7 +1005,7 @@ class CaseStorage:
                 INSERT OR REPLACE INTO technology_revolver_slim (case_count, data)
                 VALUES (?, ?)
                 """,
-                (case_count, json.dumps(storable)),
+                (case_count, dumps_json_safe(storable)),
             )
             conn.commit()
             conn.close()
@@ -1047,7 +1051,7 @@ class CaseStorage:
                 INSERT OR REPLACE INTO automated_analysis_slim (case_count, data)
                 VALUES (?, ?)
                 """,
-                (case_count, json.dumps(analysis)),
+                (case_count, dumps_json_safe(analysis)),
             )
             conn.commit()
             conn.close()

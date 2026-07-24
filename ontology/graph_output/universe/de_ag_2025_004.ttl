@@ -1,41 +1,57 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
-@prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/de_ag_2025_004> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-06-04T04:37:22.565212" ;
+    dcterms:created "2026-07-24T05:28:04.923780" ;
     dcterms:identifier "de_ag_2025_004" ;
-    dcterms:modified "2026-06-04T04:37:22.565212" ;
+    dcterms:modified "2026-07-24T05:28:04.923780" ;
     dcterms:source <https://news.delaware.gov/2025/01/09/doj-secures-lengthy-prison-sentence-for-repeat-child-pornography-offender>,
         "DE AG" ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/de_ag_2025_004/event/trust-violation> .
-
-<https://caselinker.up.railway.app/resource/case/de_ag_2025_004/event/trust-violation> a cacontology-custodial:AuthorityAbuse,
-        cacontology-custodial:TrustViolation ;
-    cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/de_ag_2025_004/relationship/teacher> .
-
-<https://caselinker.up.railway.app/resource/case/de_ag_2025_004/person/offender/1> a uco-identity:Person .
-
-<https://caselinker.up.railway.app/resource/case/de_ag_2025_004/person/victim/1> a uco-identity:Person .
-
-<https://caselinker.up.railway.app/resource/case/de_ag_2025_004/relationship/teacher> a cacontology-custodial:CustodialRelationship,
-        cacontology-custodial:Teacher ;
-    cacontology-custodial:involvesChild <https://caselinker.up.railway.app/resource/case/de_ag_2025_004/role/victim/1> ;
-    cacontology-custodial:involvesCustodian <https://caselinker.up.railway.app/resource/case/de_ag_2025_004/role/offender/1> ;
-    cacontology-custodial:relationshipType "teacher" .
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/de_ag_2025_004/event/csam>,
+        <https://caselinker.up.railway.app/resource/case/de_ag_2025_004/legal-proceeding> .
 
 <https://caselinker.up.railway.app/resource/case/de_ag_2025_004/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
     cacontology:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/de_ag_2025_004/event/csam> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/de_ag_2025_004/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/de_ag_2025_004/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
     cacontology:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/de_ag_2025_004/event/csam> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/de_ag_2025_004/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/case/de_ag_2025_004/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
+        cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "child pornography" .
+
+<https://caselinker.up.railway.app/resource/case/de_ag_2025_004/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+
+<https://caselinker.up.railway.app/resource/case/de_ag_2025_004/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/de_ag_2025_004/charge/1> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/de_ag_2025_004/sentence/1> .
+
+<https://caselinker.up.railway.app/resource/case/de_ag_2025_004/person/offender/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/de_ag_2025_004/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/de_ag_2025_004/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
+<https://caselinker.up.railway.app/resource/case/de_ag_2025_004/event/csam> a cacontology:CSAMIncident,
+        cac-core:Event ;
+    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/de_ag_2025_004/facet/csam> .
 

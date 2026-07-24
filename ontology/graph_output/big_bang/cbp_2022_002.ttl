@@ -1,6 +1,7 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
 @prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
@@ -11,14 +12,15 @@
 
 <https://caselinker.up.railway.app/resource/case/cbp_2022_002> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-06-04T04:37:17.966245" ;
+    dcterms:created "2026-07-24T05:27:07.809759" ;
     dcterms:identifier "cbp_2022_002" ;
-    dcterms:modified "2026-06-04T04:37:17.966245" ;
+    dcterms:modified "2026-07-24T05:27:07.809759" ;
     dcterms:source <https://www.cbp.gov/newsroom/local-media-release/cbp-officers-apprehend-fugitive-wanted-aggravated-sexual-assault-1>,
         "CBP" ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/cbp_2022_002/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/cbp_2022_002/phase/charged> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/cbp_2022_002/event/multi-jurisdiction> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/cbp_2022_002/event/multi-jurisdiction>,
+        <https://caselinker.up.railway.app/resource/case/cbp_2022_002/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/mcallen-police-department> .
 
@@ -44,10 +46,20 @@
     cacontology:severityLevel 3 ;
     cacontology-multi:crossesBorders true .
 
+<https://caselinker.up.railway.app/resource/case/cbp_2022_002/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/cbp_2022_002/sentence/1> .
+
 <https://caselinker.up.railway.app/resource/case/cbp_2022_002/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 47 .
 
 <https://caselinker.up.railway.app/resource/case/cbp_2022_002/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/cbp_2022_002/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/case/cbp_2022_002/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;

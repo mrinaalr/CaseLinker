@@ -2,6 +2,7 @@
 @prefix cacontology: <https://cacontology.projectvic.org#> .
 @prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
 @prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
@@ -12,15 +13,18 @@
 
 <https://caselinker.up.railway.app/resource/case/cspd_2021_002> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-06-04T04:37:19.600183" ;
+    dcterms:created "2026-07-24T05:27:30.025008" ;
     dcterms:identifier "cspd_2021_002" ;
-    dcterms:modified "2026-06-04T04:37:19.600183" ;
+    dcterms:modified "2026-07-24T05:27:30.025008" ;
     dcterms:source <https://coloradosprings.gov/police-department/article/news/suspects-arrested-sexual-assault-child-and>,
         "CSPD" ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/cspd_2021_002/phase/arrested> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/cspd_2021_002/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/cspd_2021_002/event/conspiracy>,
         <https://caselinker.up.railway.app/resource/case/cspd_2021_002/event/hands-on>,
         <https://caselinker.up.railway.app/resource/case/cspd_2021_002/event/multi-jurisdiction>,
         <https://caselinker.up.railway.app/resource/case/cspd_2021_002/event/trust-violation>,
+        <https://caselinker.up.railway.app/resource/case/cspd_2021_002/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/cspd_2021_002/operation> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/colorado-springs-police-department>,
         <https://caselinker.up.railway.app/resource/agency/framingham-police-department> .
@@ -38,6 +42,12 @@
 <https://caselinker.up.railway.app/resource/case/cspd_2021_002/event/trust-violation> a cacontology-custodial:AuthorityAbuse,
         cacontology-custodial:TrustViolation ;
     cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/cspd_2021_002/relationship/teacher> .
+
+<https://caselinker.up.railway.app/resource/case/cspd_2021_002/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/cspd_2021_002/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/cspd_2021_002/operation> a cac-core:Event,
         cacontology-taskforce:TaskForceOperation .
@@ -63,6 +73,14 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/cspd_2021_002/event/conspiracy>,
         <https://caselinker.up.railway.app/resource/case/cspd_2021_002/event/hands-on> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/cspd_2021_002/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/case/cspd_2021_002/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
+<https://caselinker.up.railway.app/resource/case/cspd_2021_002/phase/arrested> a cacontology:InitialPhase,
+        cac-core:Phase ;
+    cacontology:hasPhaseBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
 <https://caselinker.up.railway.app/resource/case/cspd_2021_002/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;

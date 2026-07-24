@@ -20,7 +20,11 @@ from psycopg2.pool import SimpleConnectionPool
 from typing import Dict, List, Any, Optional, Tuple
 from datetime import datetime
 
-from case_storage_utils import hydrate_case_text_from_raw_data, slim_extracted_features_for_storage
+from case_storage_utils import (
+    dumps_json_safe,
+    hydrate_case_text_from_raw_data,
+    slim_extracted_features_for_storage,
+)
 
 # Connection pool (reuse connections for better performance)
 _pool: Optional[SimpleConnectionPool] = None
@@ -1001,7 +1005,7 @@ class CaseStorage:
                 INSERT INTO cluster_groups_slim (case_count, data)
                 VALUES (%s, %s)
                 ON CONFLICT (case_count) DO UPDATE SET data = EXCLUDED.data
-            ''', (case_count, json.dumps(slim)))
+            ''', (case_count, dumps_json_safe(slim)))
             conn.commit()
             cursor.close()
             return_connection(conn)
@@ -1047,7 +1051,7 @@ class CaseStorage:
                 VALUES (%s, %s)
                 ON CONFLICT (case_count) DO UPDATE SET data = EXCLUDED.data
                 """,
-                (case_count, json.dumps(storable)),
+                (case_count, dumps_json_safe(storable)),
             )
             conn.commit()
             cursor.close()
@@ -1102,7 +1106,7 @@ class CaseStorage:
                 VALUES (%s, %s)
                 ON CONFLICT (case_count) DO UPDATE SET data = EXCLUDED.data
                 """,
-                (case_count, json.dumps(analysis)),
+                (case_count, dumps_json_safe(analysis)),
             )
             conn.commit()
             cursor.close()

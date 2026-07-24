@@ -1298,7 +1298,7 @@ def _schedule_automated_analysis_warmup(case_count: int, reason: str = "request"
                 "source": "background",
             }
             cache_key = get_cache_key("automated-analysis", version=case_count)
-            set_cached(cache_key, result, ttl=86400)
+            redis_ok = set_cached(cache_key, result, ttl=86400)
             _automated_analysis_mem_cache = result
             _automated_analysis_mem_case_count = case_count
 
@@ -1312,7 +1312,18 @@ def _schedule_automated_analysis_warmup(case_count: int, reason: str = "request"
             set_cached(get_cache_key("cluster-groups", version=case_count), cg_result, ttl=86400)
             _cluster_groups_cache = cg_result
             _cluster_groups_cache_case_count = case_count
-            print(f"✅ Automated analysis warmed and persisted ({case_count} cases, compute=#{compute_id})")
+            if stored_aa and redis_ok:
+                print(f"✅ Automated analysis warmed and persisted ({case_count} cases, compute=#{compute_id})")
+            elif redis_ok or _automated_analysis_mem_cache is not None:
+                print(
+                    f"✅ Automated analysis warmed in memory/Redis ({case_count} cases, compute=#{compute_id})"
+                    + ("" if stored_aa else "; Postgres slim persist failed")
+                )
+            else:
+                print(
+                    f"⚠️  Automated analysis computed ({case_count} cases, compute=#{compute_id}) "
+                    "but cache persist incomplete"
+                )
         except Exception as e:
             print(f"⚠️  Error in automated analysis background compute: {e}")
         finally:
@@ -3467,6 +3478,28 @@ def get_lifecycle_lstar(request: Request):
         return load_lstar_raw()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Lifecycle L* output unavailable: {e}") from e
+
+
+@app.get("/api/lifecycle/canonical")
+@limiter.limit("60/minute")
+def get_lifecycle_canonical(request: Request):
+    """
+    Public: the 5 canonical PACER state-machine cases (enticement, production,
+    sextortion, enterprise, trafficking) with phases, transitions, and
+    affordance annotations. Same data the public /lifecycle page embeds
+    server-side, minus the expansion-case records. No CaseLinker-Key required;
+    intended for external embeds (e.g. partner research sites).
+    """
+    from state_machines.lifecycle_api import build_lifecycle_payload
+
+    try:
+        payload = build_lifecycle_payload()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Lifecycle data unavailable: {e}") from e
+
+    payload.pop("expansion_cases", None)
+    payload["cases"] = payload.get("canonical_cases", [])
+    return payload
 
 
 @app.get("/triage", response_class=HTMLResponse)

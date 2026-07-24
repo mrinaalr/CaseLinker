@@ -1,5 +1,6 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -9,14 +10,15 @@
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2018_009> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-06-04T04:39:07.169611" ;
+    dcterms:created "2026-07-24T05:51:13.722164" ;
     dcterms:identifier "ohio_ag_2018_009" ;
-    dcterms:modified "2026-06-04T04:39:07.169611" ;
+    dcterms:modified "2026-07-24T05:51:13.722164" ;
     dcterms:source <https://www.ohioattorneygeneral.gov/Media/News-Releases/January-2018/Meigs-County-Man-Indicted-on-Rape-Charges-Against>,
         "OHIO AG" ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ohio_ag_2018_009/phase/indicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ohio_ag_2018_009/phase/indicted> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ohio_ag_2018_009/event/hands-on> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ohio_ag_2018_009/event/hands-on>,
+        <https://caselinker.up.railway.app/resource/case/ohio_ag_2018_009/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/attorney-generals-special-prosecutions>,
         <https://caselinker.up.railway.app/resource/agency/ohio-bureau-of-criminal-investigation> .
@@ -39,9 +41,19 @@
 
 <https://caselinker.up.railway.app/resource/agency/ohio-bureau-of-criminal-investigation> a cacontology-multi:LocalAgency .
 
+<https://caselinker.up.railway.app/resource/case/ohio_ag_2018_009/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2018-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ohio_ag_2018_009/sentence/1> .
+
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2018_009/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2018_009/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/ohio_ag_2018_009/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2018_009/phase/indicted> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
