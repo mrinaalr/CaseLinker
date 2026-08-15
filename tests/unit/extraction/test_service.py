@@ -8,8 +8,11 @@ from caselinker.assertions.models import Assertion
 from caselinker.documents.models import SourceDocumentVersion
 from caselinker.documents.ports import InsertOutcome
 from caselinker.extraction import (
+    AttributedSubject,
     ExtractionBatchResult,
     ExtractionRun,
+    LegalEventExtractor,
+    LegalEventPipeline,
     PlatformMentionExtractor,
     PlatformMentionPipeline,
 )
@@ -96,3 +99,23 @@ def test_result_rejects_partial_outcome_vectors() -> None:
 
     with pytest.raises(ValueError, match="one persistence outcome"):
         ExtractionBatchResult(assertions=(assertion,), outcomes=())
+
+
+def test_legal_event_pipeline_submits_the_whole_event_graph_once() -> None:
+    text = "On March 4, 2026, Example Defendant was charged."
+    writer = RecordingWriter()
+    pipeline = LegalEventPipeline(
+        extractor=LegalEventExtractor(),
+        writer=writer,
+    )
+
+    result = pipeline.extract_and_store(
+        subject=AttributedSubject("party_example_001", ("Example Defendant",)),
+        document_version=_version(text),
+        normalized_text=text,
+        run=ExtractionRun("run_legal_pipeline_001", "test-revision", NOW),
+    )
+
+    assert writer.calls == [result.assertions]
+    assert len(result.assertions) == 3
+    assert result.outcomes == (InsertOutcome.CREATED,) * 3
