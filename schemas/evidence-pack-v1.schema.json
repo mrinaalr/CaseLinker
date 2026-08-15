@@ -1,0 +1,26 @@
+{
+  "$id": "https://caselinker.org/schemas/evidence-pack-v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "claim_card": {"$ref": "claim-card-v1.schema.json"},
+    "contents": {
+      "additionalProperties": false,
+      "properties": {
+        "projection_sha256s": {"items": {"pattern": "^[0-9a-f]{64}$", "type": "string"}, "minItems": 1, "type": "array", "uniqueItems": true},
+        "query_sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+        "shapes_sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+        "snapshot_manifest_sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"}
+      },
+      "required": ["projection_sha256s", "query_sha256", "shapes_sha256", "snapshot_manifest_sha256"],
+      "type": "object"
+    },
+    "exclusions": {
+      "const": ["source_text", "personal_display_labels", "disclosure_authorization"]
+    },
+    "schema_version": {"const": "1.0"}
+  },
+  "required": ["claim_card", "contents", "exclusions", "schema_version"],
+  "title": "CaseLinker Evidence Pack index v1",
+  "type": "object"
+}

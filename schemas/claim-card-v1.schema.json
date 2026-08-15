@@ -1,0 +1,29 @@
+{
+  "$id": "https://caselinker.org/schemas/claim-card-v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "claim_id": {"pattern": "^claim_[0-9a-f]{64}$", "type": "string"},
+    "claim_text": {"minLength": 1, "type": "string"},
+    "denominator": {"minimum": 1, "type": "integer"},
+    "denominator_event_ids": {"items": {"type": "string"}, "minItems": 1, "type": "array", "uniqueItems": true},
+    "limitations": {"items": {"minLength": 1, "type": "string"}, "minItems": 3, "type": "array", "uniqueItems": true},
+    "numerator": {"minimum": 0, "type": "integer"},
+    "numerator_event_ids": {"items": {"type": "string"}, "type": "array", "uniqueItems": true},
+    "projection_sha256s": {"items": {"pattern": "^[0-9a-f]{64}$", "type": "string"}, "minItems": 1, "type": "array", "uniqueItems": true},
+    "query_id": {"pattern": "^qry_[a-z0-9][a-z0-9._-]{2,127}$", "type": "string"},
+    "query_sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "schema_version": {"const": "1.0"},
+    "shapes_sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "snapshot_id": {"pattern": "^snap_[a-z0-9][a-z0-9._-]{2,127}$", "type": "string"},
+    "snapshot_manifest_sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "unit": {"const": "legal_event"}
+  },
+  "required": [
+    "claim_id", "claim_text", "denominator", "denominator_event_ids", "limitations",
+    "numerator", "numerator_event_ids", "projection_sha256s", "query_id", "query_sha256",
+    "schema_version", "shapes_sha256", "snapshot_id", "snapshot_manifest_sha256", "unit"
+  ],
+  "title": "CaseLinker claim card v1",
+  "type": "object"
+}
