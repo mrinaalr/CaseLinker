@@ -58,9 +58,22 @@ jobs:
       - name: Run fast tests with coverage
         run: >-
           uv run --locked --only-group dev pytest
-          tests/quality tests/unit tests/contract
+          tests/quality tests/unit tests/integration tests/contract
           --cov=scripts/quality --cov=src/caselinker
           --cov-report=term-missing
+
+      - name: Reproduce and verify the policy-safe snapshot fixture
+        run: |
+          set -euo pipefail
+          uv run --locked --only-group dev python scripts/run/snapshot_manifest.py \
+            build --spec data/manifests/example.snapshot-spec.json \
+            --output /tmp/caselinker-example-1.snapshot.json
+          uv run --locked --only-group dev python scripts/run/snapshot_manifest.py \
+            build --spec data/manifests/example.snapshot-spec.json \
+            --output /tmp/caselinker-example-2.snapshot.json
+          cmp /tmp/caselinker-example-1.snapshot.json /tmp/caselinker-example-2.snapshot.json
+          uv run --locked --only-group dev python scripts/run/snapshot_manifest.py \
+            verify --manifest /tmp/caselinker-example-1.snapshot.json
 
   application-smoke:
     name: Application smoke test

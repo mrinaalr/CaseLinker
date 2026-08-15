@@ -11,7 +11,20 @@ from dataclasses import dataclass
 from pathlib import Path
 
 TEXT_SUFFIXES = frozenset(
-    {".css", ".html", ".js", ".json", ".md", ".py", ".sh", ".toml", ".txt", ".yaml", ".yml"}
+    {
+        ".css",
+        ".html",
+        ".js",
+        ".json",
+        ".md",
+        ".py",
+        ".sh",
+        ".sql",
+        ".toml",
+        ".txt",
+        ".yaml",
+        ".yml",
+    }
 )
 TEXT_FILENAMES = frozenset({"LICENSE", "Dockerfile", ".editorconfig", ".gitattributes"})
 GENERATED_PREFIXES = (

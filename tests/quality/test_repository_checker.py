@@ -75,11 +75,13 @@ def test_finding_renders_relative_and_external_paths(tmp_path: Path) -> None:
 
 def test_authored_text_filter_excludes_artifacts(tmp_path: Path) -> None:
     authored = tmp_path / "docs" / "design.md"
+    migration = tmp_path / "migrations" / "0001.sql"
     named_text = tmp_path / "LICENSE"
     generated = tmp_path / "ontology" / "graph_output" / "case.json"
     binary = tmp_path / "image.png"
 
     assert is_authored_text(authored, tmp_path)
+    assert is_authored_text(migration, tmp_path)
     assert is_authored_text(named_text, tmp_path)
     assert not is_authored_text(generated, tmp_path)
     assert not is_authored_text(binary, tmp_path)
