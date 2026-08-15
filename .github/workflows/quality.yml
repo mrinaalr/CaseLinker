@@ -43,23 +43,23 @@ jobs:
       - name: Lint strict proposal surface
         run: >-
           uv run --locked --only-group dev ruff check
-          scripts/quality tests
+          scripts/quality scripts/run/snapshot_manifest.py src/caselinker tests
 
       - name: Verify formatting on strict proposal surface
         run: >-
           uv run --locked --only-group dev ruff format --check
-          scripts/quality tests
+          scripts/quality scripts/run/snapshot_manifest.py src/caselinker tests
 
-      - name: Type-check repository integrity tooling
+      - name: Type-check strict proposal surface
         run: >-
           uv run --locked --only-group dev mypy
-          scripts/quality/check_repository.py
+          scripts/quality/check_repository.py src/caselinker
 
       - name: Run fast tests with coverage
         run: >-
           uv run --locked --only-group dev pytest
-          tests/quality
-          --cov=scripts/quality
+          tests/quality tests/unit tests/contract
+          --cov=scripts/quality --cov=src/caselinker
           --cov-report=term-missing
 
   application-smoke:
@@ -93,4 +93,6 @@ jobs:
         run: uv run --locked pip-audit --local --skip-editable
 
       - name: Scan strict proposal Python for high-severity findings
-        run: uv run --locked bandit -q -lll -r scripts/quality
+        run: >-
+          uv run --locked bandit -q -lll -r
+          scripts/quality scripts/run/snapshot_manifest.py src/caselinker

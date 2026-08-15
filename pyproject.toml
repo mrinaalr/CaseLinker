@@ -58,7 +58,7 @@ addopts = [
   "-ra",
 ]
 testpaths = ["tests"]
-pythonpath = ["."]
+pythonpath = [".", "src"]
 markers = [
   "smoke: verifies that the application boots and exposes its minimum contract",
 ]
@@ -83,13 +83,15 @@ line-ending = "lf"
 
 [tool.mypy]
 python_version = "3.11"
+mypy_path = ["src"]
+explicit_package_bases = true
 strict = true
 warn_unreachable = true
 show_error_codes = true
 
 [tool.coverage.run]
 branch = true
-source = ["scripts/quality"]
+source = ["scripts/quality", "src/caselinker"]
 
 [tool.coverage.report]
 fail_under = 90

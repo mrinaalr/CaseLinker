@@ -1,0 +1,118 @@
+{
+  "$id": "https://caselinker.org/schemas/snapshot-manifest-v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "const": "https://caselinker.org/schemas/snapshot-manifest-v1.schema.json"
+    },
+    "code_revision": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "components": {
+      "items": {
+        "$ref": "#/$defs/component"
+      },
+      "minItems": 11,
+      "type": "array"
+    },
+    "manifest_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "recorded_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0"
+    },
+    "snapshot_id": {
+      "pattern": "^snap_[a-z0-9][a-z0-9._-]{2,127}$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "$schema",
+    "schema_version",
+    "snapshot_id",
+    "recorded_at",
+    "code_revision",
+    "components",
+    "manifest_sha256"
+  ],
+  "title": "CaseLinker snapshot manifest v1",
+  "type": "object",
+  "$defs": {
+    "component": {
+      "additionalProperties": false,
+      "properties": {
+        "files": {
+          "items": {
+            "$ref": "#/$defs/file"
+          },
+          "type": "array"
+        },
+        "kind": {
+          "enum": [
+            "accepted_assertions",
+            "code",
+            "corpus",
+            "extraction_rules",
+            "model_bundles",
+            "ontology",
+            "outputs",
+            "parameters",
+            "query",
+            "shapes",
+            "source_versions"
+          ]
+        },
+        "reason": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "included",
+            "not_applicable"
+          ]
+        }
+      },
+      "required": [
+        "kind",
+        "status",
+        "files"
+      ],
+      "type": "object"
+    },
+    "file": {
+      "additionalProperties": false,
+      "properties": {
+        "bytes": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "path": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "path",
+        "bytes",
+        "sha256"
+      ],
+      "type": "object"
+    }
+  }
+}
