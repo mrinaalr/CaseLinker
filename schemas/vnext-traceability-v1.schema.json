@@ -1,0 +1,33 @@
+{
+  "$id": "https://caselinker.org/schemas/vnext-traceability-v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "implementation_checkpoint": {"pattern": "^[0-9a-f]{40}$", "type": "string"},
+    "manifest_sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "milestones": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "adrs": {"items": {"type": "string"}, "minItems": 1, "type": "array", "uniqueItems": true},
+          "commits": {"items": {"pattern": "^[0-9a-f]{40}$", "type": "string"}, "minItems": 1, "type": "array", "uniqueItems": true},
+          "id": {"pattern": "^M[0-9]{2}$", "type": "string"},
+          "implementation": {"items": {"type": "string"}, "minItems": 1, "type": "array", "uniqueItems": true},
+          "migrations": {"items": {"type": "string"}, "type": "array", "uniqueItems": true},
+          "status": {"const": "implemented_proposal"},
+          "tests": {"items": {"type": "string"}, "minItems": 1, "type": "array", "uniqueItems": true},
+          "title": {"minLength": 1, "type": "string"}
+        },
+        "required": ["adrs", "commits", "id", "implementation", "migrations", "status", "tests", "title"],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "schema_version": {"const": "1.0"},
+    "upstream_baseline": {"pattern": "^[0-9a-f]{40}$", "type": "string"}
+  },
+  "required": ["implementation_checkpoint", "manifest_sha256", "milestones", "schema_version", "upstream_baseline"],
+  "title": "CaseLinker vNext proposal traceability manifest v1",
+  "type": "object"
+}

@@ -40,6 +40,9 @@ jobs:
       - name: Validate authored files and Python syntax
         run: uv run --locked --only-group dev python scripts/quality/check_repository.py
 
+      - name: Validate proposal milestone traceability
+        run: uv run --locked --only-group dev python scripts/quality/check_traceability.py
+
       - name: Lint strict proposal surface
         run: >-
           uv run --locked --only-group dev ruff check
@@ -55,7 +58,8 @@ jobs:
       - name: Type-check strict proposal surface
         run: >-
           uv run --locked --only-group dev mypy
-          scripts/quality/check_repository.py scripts/run/claim_pipeline.py src/caselinker
+          scripts/quality/check_repository.py scripts/quality/check_traceability.py
+          scripts/run/claim_pipeline.py src/caselinker
 
       - name: Run fast tests with coverage
         run: >-

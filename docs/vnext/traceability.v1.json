@@ -1,0 +1,148 @@
+{
+  "schema_version": "1.0",
+  "upstream_baseline": "9da0a4ff8b45df03fed073a9af5c00d22aab0d9d",
+  "implementation_checkpoint": "802fb7d244e3751b42dbb20cc8d258e1b71adbc7",
+  "milestones": [
+    {
+      "id": "M01",
+      "title": "Proposal governance and reproducible engineering baseline",
+      "status": "implemented_proposal",
+      "commits": [
+        "5a4c19835df8d13a39b407a5ce31f20969eb78f7",
+        "2d90b0957aa7376664268008fd3e824a294f97ef",
+        "75df1d2f1cec02094f0f1b7df168a57c36c99528"
+      ],
+      "adrs": ["docs/adr/0000-vnext-governance-and-versioning.md"],
+      "implementation": [
+        ".github/workflows/quality.yml",
+        "scripts/quality/check_repository.py",
+        "uv.lock"
+      ],
+      "tests": [
+        "tests/quality/test_repository_checker.py",
+        "tests/smoke/test_application_contract.py"
+      ],
+      "migrations": []
+    },
+    {
+      "id": "M02",
+      "title": "Immutable snapshots, documents, and assertion ledger",
+      "status": "implemented_proposal",
+      "commits": [
+        "ef9bbe38ec923e79cd25d33aa397e16de4538c6d",
+        "784c16b45f8368c87804055878e267cf1c1657a2",
+        "75e19d9c62ad5e32affcc1998673cf8c656814db",
+        "169f14a9f222c343d4677246de662bf70ce4ab04"
+      ],
+      "adrs": [
+        "docs/adr/0001-content-addressed-snapshot-manifests.md",
+        "docs/adr/0002-immutable-document-identity.md",
+        "docs/adr/0003-assertions-and-review-history.md",
+        "docs/adr/0004-append-only-assertion-ledger.md"
+      ],
+      "implementation": [
+        "src/caselinker/snapshots/manifest.py",
+        "src/caselinker/documents/sqlite_repository.py",
+        "src/caselinker/assertions/sqlite_repository.py"
+      ],
+      "tests": [
+        "tests/unit/snapshots/test_manifest.py",
+        "tests/integration/documents/test_sqlite_repository.py",
+        "tests/integration/assertions/test_sqlite_repository.py"
+      ],
+      "migrations": [
+        "migrations/sqlite/0001_source_documents.sql",
+        "migrations/sqlite/0002_assertion_ledger.sql"
+      ]
+    },
+    {
+      "id": "M03",
+      "title": "Evidence-bound extraction and atomic candidate persistence",
+      "status": "implemented_proposal",
+      "commits": [
+        "002af78f315b3a76283e968e3c756b136b68a255",
+        "40b87e2db96b5bb65acb7285877be18464b47dba",
+        "ec0ff217426ee4d7628c11c643e4d649205f3367"
+      ],
+      "adrs": [
+        "docs/adr/0005-separate-platform-mentions-from-use-claims.md",
+        "docs/adr/0006-reported-legal-events-and-bound-dates.md"
+      ],
+      "implementation": [
+        "src/caselinker/extraction/platform_mentions.py",
+        "src/caselinker/extraction/legal_events.py",
+        "src/caselinker/extraction/service.py"
+      ],
+      "tests": [
+        "tests/integration/extraction/test_platform_pipeline.py",
+        "tests/integration/extraction/test_legal_event_pipeline.py"
+      ],
+      "migrations": []
+    },
+    {
+      "id": "M04",
+      "title": "Review-aware resolution and live research eligibility",
+      "status": "implemented_proposal",
+      "commits": ["17d397fc0127e750ad56dc5e0005614bb3b78818"],
+      "adrs": ["docs/adr/0007-review-aware-resolution-and-publication-eligibility.md"],
+      "implementation": [
+        "src/caselinker/resolution/legal_events.py",
+        "src/caselinker/resolution/publication.py"
+      ],
+      "tests": ["tests/integration/resolution/test_legal_event_resolution.py"],
+      "migrations": ["migrations/sqlite/0003_assertion_review_lineage.sql"]
+    },
+    {
+      "id": "M05",
+      "title": "Policy-gated deterministic CAC graph projection",
+      "status": "implemented_proposal",
+      "commits": ["c759f9ed20eee5e053a0243bfa8c16c20b76f7f4"],
+      "adrs": ["docs/adr/0008-policy-gated-deterministic-cac-graph-projection.md"],
+      "implementation": [
+        "src/caselinker/graph/cac_legal_events.py",
+        "src/caselinker/graph/shacl.py",
+        "schemas/rdf/cac-legal-event-projection-v1.shacl.ttl"
+      ],
+      "tests": ["tests/integration/graph/test_shacl_projection.py"],
+      "migrations": []
+    },
+    {
+      "id": "M06",
+      "title": "Snapshot-scoped claims, Evidence Packs, and Claim CI",
+      "status": "implemented_proposal",
+      "commits": [
+        "d3cda8d5937e4fff5bdda84acb685b3622fc5a7d",
+        "40d0392e2b004b8e4f02349322aa352e815c4b24"
+      ],
+      "adrs": [
+        "docs/adr/0009-snapshot-scoped-claims-and-evidence-pack-indexes.md",
+        "docs/adr/0010-content-addressed-claim-ci-expectations.md"
+      ],
+      "implementation": [
+        "src/caselinker/analysis/cohorts.py",
+        "src/caselinker/analysis/evidence_pack.py",
+        "src/caselinker/analysis/claim_ci.py"
+      ],
+      "tests": [
+        "tests/integration/analysis/test_claim_evidence_pack.py",
+        "tests/unit/analysis/test_claim_ci.py"
+      ],
+      "migrations": []
+    },
+    {
+      "id": "M07",
+      "title": "Repository-bound operational claim pipeline",
+      "status": "implemented_proposal",
+      "commits": ["802fb7d244e3751b42dbb20cc8d258e1b71adbc7"],
+      "adrs": ["docs/adr/0011-repository-bound-claim-pipeline-cli.md"],
+      "implementation": [
+        "src/caselinker/analysis/pipeline.py",
+        "src/caselinker/analysis/cli.py",
+        "scripts/run/claim_pipeline.py"
+      ],
+      "tests": ["tests/contract/analysis/test_claim_pipeline_cli.py"],
+      "migrations": []
+    }
+  ],
+  "manifest_sha256": "3e4ccddbc653411a26320543b22a7e8dcaae898d7340abfc46796360b425d8c0"
+}
