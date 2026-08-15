@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0.0",
+  "rule_set": "platform_mentions.v1",
+  "cases": [
+    {
+      "fixture_id": "specific_brand_suppresses_containing_brand",
+      "text": "Investigators referenced Facebook Messenger and later Facebook and Snapchat.",
+      "expected": [
+        {"entity_id": "platform_facebook_messenger", "span": "Facebook Messenger"},
+        {"entity_id": "platform_facebook", "span": "Facebook"},
+        {"entity_id": "platform_snapchat", "span": "Snapchat"}
+      ]
+    },
+    {
+      "fixture_id": "aliases_casing_and_repetition",
+      "text": "FB Messenger, whatsapp, Twitter, x.com, and YouTube Live were named. Twitter appeared twice.",
+      "expected": [
+        {"entity_id": "platform_facebook_messenger", "span": "FB Messenger"},
+        {"entity_id": "platform_whatsapp", "span": "whatsapp"},
+        {"entity_id": "platform_twitter_x", "span": "Twitter"},
+        {"entity_id": "platform_twitter_x", "span": "x.com"},
+        {"entity_id": "platform_youtube_live", "span": "YouTube Live"},
+        {"entity_id": "platform_twitter_x", "span": "Twitter"}
+      ]
+    },
+    {
+      "fixture_id": "mention_is_not_use",
+      "text": "The filing did not identify a Snapchat account; it only mentioned Discord in a footnote.",
+      "expected": [
+        {"entity_id": "platform_snapchat", "span": "Snapchat"},
+        {"entity_id": "platform_discord", "span": "Discord"}
+      ]
+    },
+    {
+      "fixture_id": "ambiguous_and_partial_tokens_are_rejected",
+      "text": "The discordant Instagrammer discussed X, online chat, telegrams, and YouTubers.",
+      "expected": []
+    },
+    {
+      "fixture_id": "empty_document",
+      "text": "",
+      "expected": []
+    }
+  ]
+}
