@@ -48,8 +48,7 @@ dimension; they must not manufacture a probability for display convenience.
 
 ## Current boundary
 
-The domain models and repository port are implemented and strictly tested. The
-next migration will persist assertions, evidence references, input-assertion
-edges, and review decisions with append-only database constraints. Until that
-migration exists, this module is not wired into legacy extraction or public
-responses.
+The domain models, SQLite migration, and repository adapter are implemented and
+strictly tested. They are not yet wired into legacy extraction or public
+responses. See `assertion-persistence.md` for write ordering and operational
+limitations.
