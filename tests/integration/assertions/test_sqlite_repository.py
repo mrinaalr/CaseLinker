@@ -26,6 +26,7 @@ from caselinker.assertions.models import (
 from caselinker.assertions.ports import (
     AssertionConflictError,
     EvidenceMismatchError,
+    LineageCycleError,
     MissingLineageError,
     ReviewChainError,
 )
@@ -190,6 +191,105 @@ def test_source_assertion_round_trip_and_retry_are_idempotent(
     assert repository.add_assertion(assertion) is InsertOutcome.EXISTING
     assert repository.get_assertion(assertion.assertion_id) == assertion
     assert repository.get_assertion("asrt_missing_001") is None
+
+
+def test_empty_assertion_batch_is_a_no_op(repository: SQLiteAssertionRepository) -> None:
+    assert repository.add_assertions(()) == ()
+
+
+def test_batch_preserves_outcome_order_and_is_idempotent(
+    repository: SQLiteAssertionRepository,
+) -> None:
+    existing = _assertion()
+    created = _assertion(assertion_id="asrt_example_002")
+    repository.add_assertion(existing)
+
+    assert repository.add_assertions((existing, created)) == (
+        InsertOutcome.EXISTING,
+        InsertOutcome.CREATED,
+    )
+    assert repository.add_assertions((existing, created)) == (
+        InsertOutcome.EXISTING,
+        InsertOutcome.EXISTING,
+    )
+
+
+def test_batch_inserts_lineage_in_dependency_order(
+    repository: SQLiteAssertionRepository,
+) -> None:
+    source = _assertion()
+    derived = _assertion(
+        assertion_id="asrt_derived_001",
+        state=AssertionState.DERIVED,
+        evidence=(),
+        input_assertion_ids=(source.assertion_id,),
+        confidence=None,
+    )
+
+    outcomes = repository.add_assertions((derived, source))
+
+    assert outcomes == (InsertOutcome.CREATED, InsertOutcome.CREATED)
+    assert repository.get_assertion(derived.assertion_id) == derived
+
+
+def test_batch_rejects_duplicate_identity_without_writes(
+    repository: SQLiteAssertionRepository,
+) -> None:
+    assertion = _assertion()
+
+    with pytest.raises(AssertionConflictError, match="batch repeats"):
+        repository.add_assertions((assertion, assertion))
+
+    assert repository.get_assertion(assertion.assertion_id) is None
+
+
+def test_batch_rejects_lineage_cycles_without_writes(
+    repository: SQLiteAssertionRepository,
+) -> None:
+    first = _assertion(
+        assertion_id="asrt_cycle_001",
+        state=AssertionState.DERIVED,
+        evidence=(),
+        input_assertion_ids=("asrt_cycle_002",),
+        confidence=None,
+    )
+    second = _assertion(
+        assertion_id="asrt_cycle_002",
+        state=AssertionState.DERIVED,
+        evidence=(),
+        input_assertion_ids=("asrt_cycle_001",),
+        confidence=None,
+    )
+
+    with pytest.raises(LineageCycleError, match="lineage cycle"):
+        repository.add_assertions((first, second))
+
+    assert repository.get_assertion(first.assertion_id) is None
+    assert repository.get_assertion(second.assertion_id) is None
+
+
+def test_database_failure_rolls_back_entire_batch(
+    connection: sqlite3.Connection,
+    repository: SQLiteAssertionRepository,
+) -> None:
+    first = _assertion(assertion_id="asrt_batch_first_001")
+    second = _assertion(assertion_id="asrt_batch_fail_001")
+    connection.execute(
+        """
+        CREATE TRIGGER fail_selected_assertion
+        BEFORE INSERT ON assertions
+        WHEN NEW.assertion_id = 'asrt_batch_fail_001'
+        BEGIN
+            SELECT RAISE(ABORT, 'synthetic second-write failure');
+        END
+        """
+    )
+
+    with pytest.raises(AssertionConflictError, match="batch violated"):
+        repository.add_assertions((first, second))
+
+    assert repository.get_assertion(first.assertion_id) is None
+    assert repository.get_assertion(second.assertion_id) is None
 
 
 def test_unavailable_span_round_trips(repository: SQLiteAssertionRepository) -> None:

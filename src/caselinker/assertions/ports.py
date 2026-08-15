@@ -28,8 +28,14 @@ class ReviewChainError(AssertionRepositoryError):
     """A review decision does not extend the current linear review history."""
 
 
+class LineageCycleError(AssertionRepositoryError):
+    """A batch contains assertion lineage that cannot be ordered acyclically."""
+
+
 class AssertionRepository(Protocol):
     def add_assertion(self, assertion: Assertion) -> InsertOutcome: ...
+
+    def add_assertions(self, assertions: tuple[Assertion, ...]) -> tuple[InsertOutcome, ...]: ...
 
     def get_assertion(self, assertion_id: str) -> Assertion | None: ...
 

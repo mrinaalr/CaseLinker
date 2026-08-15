@@ -20,6 +20,7 @@ from caselinker.assertions.ports import (
     AssertionConflictError,
     AssertionRepository,
     EvidenceMismatchError,
+    LineageCycleError,
     MissingLineageError,
     ReviewChainError,
 )
@@ -35,6 +36,7 @@ __all__ = [
     "ConfidenceDimension",
     "EvidenceMismatchError",
     "EvidenceReference",
+    "LineageCycleError",
     "MethodFamily",
     "MissingLineageError",
     "Polarity",

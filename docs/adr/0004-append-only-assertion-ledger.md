@@ -26,13 +26,19 @@ tables:
 - `assertion_inputs` stores ordered assertion-to-assertion lineage;
 - `review_decisions` stores the ordered append-only review chain.
 
-One repository transaction inserts an assertion and all of its evidence and
-input edges. Before insertion it verifies that:
+One repository transaction inserts an assertion—or an entire extraction
+batch—and all evidence and input edges. Before insertion it verifies that:
 
 - every referenced document version exists;
 - every evidence basis hash equals that version's normalized-text hash;
 - every input or superseded assertion exists;
 - an exact retry is identical, otherwise ID reuse is a conflict.
+
+Batch insertion returns one ordered outcome per requested assertion, resolves
+in-batch lineage in topological order, rejects duplicate identities and lineage
+cycles before writing, and rolls back every candidate if any write fails. The
+platform-mention application service only exposes this batch boundary; it
+cannot accidentally persist candidates one at a time.
 
 Review history is linear at both service and database boundaries:
 
@@ -57,6 +63,8 @@ cascade.
 | Review is backdated ahead of current state | Monotonic-time checks in service and database |
 | Accepted fact or citation is edited in place | Update/delete denial triggers |
 | Retry creates duplicate facts | Exact immutable equality returns `existing` |
+| Extraction run is partially recorded | Atomic batch insert with rollback test |
+| In-batch lineage is cyclic | Deterministic topological preflight rejects the batch |
 
 ## Compatibility and migration
 
