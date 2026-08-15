@@ -1,0 +1,19 @@
+{
+  "$id": "https://caselinker.org/schemas/legal-event-cohort-query-v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "event_type": {
+      "enum": [
+        "legal_event_arrest", "legal_event_charge", "legal_event_indictment",
+        "legal_event_guilty_plea", "legal_event_conviction", "legal_event_sentencing"
+      ]
+    },
+    "query_id": {"pattern": "^qry_[a-z0-9][a-z0-9._-]{2,127}$", "type": "string"},
+    "schema_version": {"const": "1.0"},
+    "unit": {"const": "legal_event"}
+  },
+  "required": ["event_type", "query_id", "schema_version", "unit"],
+  "title": "CaseLinker legal-event cohort query v1",
+  "type": "object"
+}

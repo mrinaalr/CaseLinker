@@ -156,6 +156,23 @@ def test_expectation_serialization_includes_content_identity() -> None:
     assert expectation.to_dict()["expectation_id"] == expectation.expectation_id
 
 
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        lambda value: value.pop("query_sha256"),
+        lambda value: value.update({"query_sha256": 42}),
+        lambda value: value.update({"numerator": True}),
+    ],
+)
+def test_expectation_deserialization_rejects_contract_errors(mutation: object) -> None:
+    _, _, expectation = artifacts()
+    value = expectation.to_dict()
+    mutation(value)  # type: ignore[operator]
+
+    with pytest.raises(ValueError):
+        ClaimExpectation.from_dict(value)
+
+
 def test_report_rejects_duplicate_findings() -> None:
     _, _, expectation = artifacts()
 

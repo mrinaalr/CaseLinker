@@ -43,17 +43,19 @@ jobs:
       - name: Lint strict proposal surface
         run: >-
           uv run --locked --only-group dev ruff check
-          scripts/quality scripts/run/snapshot_manifest.py src/caselinker tests
+          scripts/quality scripts/run/claim_pipeline.py scripts/run/snapshot_manifest.py
+          src/caselinker tests
 
       - name: Verify formatting on strict proposal surface
         run: >-
           uv run --locked --only-group dev ruff format --check
-          scripts/quality scripts/run/snapshot_manifest.py src/caselinker tests
+          scripts/quality scripts/run/claim_pipeline.py scripts/run/snapshot_manifest.py
+          src/caselinker tests
 
       - name: Type-check strict proposal surface
         run: >-
           uv run --locked --only-group dev mypy
-          scripts/quality/check_repository.py src/caselinker
+          scripts/quality/check_repository.py scripts/run/claim_pipeline.py src/caselinker
 
       - name: Run fast tests with coverage
         run: >-
@@ -108,4 +110,5 @@ jobs:
       - name: Scan strict proposal Python for high-severity findings
         run: >-
           uv run --locked bandit -q -lll -r
-          scripts/quality scripts/run/snapshot_manifest.py src/caselinker
+          scripts/quality scripts/run/claim_pipeline.py scripts/run/snapshot_manifest.py
+          src/caselinker

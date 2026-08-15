@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from collections.abc import Mapping
 from dataclasses import dataclass
 from enum import StrEnum
 from typing import Final, TypedDict
@@ -123,6 +124,56 @@ class ClaimExpectation:
         values = cls._values(claim=claim, evidence_pack=evidence_pack)
         expectation_id = "expect_" + sha256_bytes(canonical_json(values))
         return cls(expectation_id=expectation_id, **values)
+
+    @classmethod
+    def from_dict(cls, value: Mapping[str, object]) -> ClaimExpectation:
+        allowed = {
+            "expectation_id",
+            "schema_version",
+            "snapshot_manifest_sha256",
+            "query_sha256",
+            "unit",
+            "numerator",
+            "denominator",
+            "numerator_membership_sha256",
+            "denominator_membership_sha256",
+            "projections_sha256",
+            "shapes_sha256",
+            "limitations_sha256",
+            "claim_id",
+            "evidence_pack_id",
+        }
+        if set(value) != allowed:
+            raise ValueError("claim expectation fields do not match the v1 contract")
+
+        def text(field: str) -> str:
+            raw = value[field]
+            if not isinstance(raw, str):
+                raise ValueError(f"{field} must be a string")
+            return raw
+
+        def integer(field: str) -> int:
+            raw = value[field]
+            if isinstance(raw, bool) or not isinstance(raw, int):
+                raise ValueError(f"{field} must be an integer")
+            return raw
+
+        return cls(
+            expectation_id=text("expectation_id"),
+            schema_version=text("schema_version"),
+            snapshot_manifest_sha256=text("snapshot_manifest_sha256"),
+            query_sha256=text("query_sha256"),
+            unit=text("unit"),
+            numerator=integer("numerator"),
+            denominator=integer("denominator"),
+            numerator_membership_sha256=text("numerator_membership_sha256"),
+            denominator_membership_sha256=text("denominator_membership_sha256"),
+            projections_sha256=text("projections_sha256"),
+            shapes_sha256=text("shapes_sha256"),
+            limitations_sha256=text("limitations_sha256"),
+            claim_id=text("claim_id"),
+            evidence_pack_id=text("evidence_pack_id"),
+        )
 
     @staticmethod
     def _values(*, claim: ClaimCard, evidence_pack: EvidencePack) -> _ExpectationValues:
