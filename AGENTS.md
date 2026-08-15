@@ -36,7 +36,7 @@ before changing code. That charter is normative for all work on this branch.
 1. State the user or research outcome and the invariant it must preserve.
 2. Inspect current behavior and write the smallest falsifiable acceptance test.
 3. Implement through a narrow interface; avoid new global state and hidden I/O.
-4. Run `uv run --only-group dev python scripts/quality/check_repository.py`.
+4. Run `uv run --locked --no-extra ml python scripts/quality/check_repository.py`.
 5. Run focused tests, then the complete fast suite.
 6. Document migrations, limitations, and rollback behavior.
 7. Summarize evidence for correctness in the commit or pull-request description.

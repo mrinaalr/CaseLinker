@@ -21,13 +21,13 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Check out source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
           persist-credentials: false
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v6
+        uses: astral-sh/setup-uv@v10
         with:
           enable-cache: true
           version: "0.11.33"
@@ -35,36 +35,36 @@ jobs:
       - name: Select Python
         run: uv python install 3.12
 
-      - name: Install locked quality tools
-        run: uv sync --locked --only-group dev
+      - name: Install locked core and quality environment
+        run: uv sync --locked --no-extra ml
 
       - name: Validate authored files and Python syntax
-        run: uv run --locked --only-group dev python scripts/quality/check_repository.py
+        run: uv run --locked --no-extra ml python scripts/quality/check_repository.py
 
       - name: Validate proposal milestone traceability
-        run: uv run --locked --only-group dev python scripts/quality/check_traceability.py
+        run: uv run --locked --no-extra ml python scripts/quality/check_traceability.py
 
       - name: Lint strict proposal surface
         run: >-
-          uv run --locked --only-group dev ruff check
+          uv run --locked --no-extra ml ruff check
           scripts/quality scripts/run/claim_pipeline.py scripts/run/snapshot_manifest.py
           src/caselinker tests
 
       - name: Verify formatting on strict proposal surface
         run: >-
-          uv run --locked --only-group dev ruff format --check
+          uv run --locked --no-extra ml ruff format --check
           scripts/quality scripts/run/claim_pipeline.py scripts/run/snapshot_manifest.py
           src/caselinker tests
 
       - name: Type-check strict proposal surface
         run: >-
-          uv run --locked --only-group dev mypy
+          uv run --locked --no-extra ml mypy
           scripts/quality/check_repository.py scripts/quality/check_traceability.py
           scripts/run/claim_pipeline.py src/caselinker
 
       - name: Run fast tests with coverage
         run: >-
-          uv run --locked --only-group dev pytest
+          uv run --locked --no-extra ml pytest
           tests/quality tests/unit tests/integration tests/contract
           --cov=scripts/quality --cov=src/caselinker
           --cov-report=term-missing
@@ -72,14 +72,14 @@ jobs:
       - name: Reproduce and verify the policy-safe snapshot fixture
         run: |
           set -euo pipefail
-          uv run --locked --only-group dev python scripts/run/snapshot_manifest.py \
+          uv run --locked --no-extra ml python scripts/run/snapshot_manifest.py \
             build --spec data/manifests/example.snapshot-spec.json \
             --output /tmp/caselinker-example-1.snapshot.json
-          uv run --locked --only-group dev python scripts/run/snapshot_manifest.py \
+          uv run --locked --no-extra ml python scripts/run/snapshot_manifest.py \
             build --spec data/manifests/example.snapshot-spec.json \
             --output /tmp/caselinker-example-2.snapshot.json
           cmp /tmp/caselinker-example-1.snapshot.json /tmp/caselinker-example-2.snapshot.json
-          uv run --locked --only-group dev python scripts/run/snapshot_manifest.py \
+          uv run --locked --no-extra ml python scripts/run/snapshot_manifest.py \
             verify --manifest /tmp/caselinker-example-1.snapshot.json
 
   application-smoke:
@@ -88,12 +88,12 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Check out source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           persist-credentials: false
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v6
+        uses: astral-sh/setup-uv@v10
         with:
           enable-cache: true
           version: "0.11.33"

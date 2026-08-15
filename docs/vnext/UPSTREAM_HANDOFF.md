@@ -89,13 +89,13 @@ permission to publish.
 From the repository root, run:
 
 ```bash
-uv sync --locked --only-group dev
-uv run --locked --only-group dev python scripts/quality/check_repository.py
-uv run --locked --only-group dev python scripts/quality/check_traceability.py
-uv run --locked --only-group dev ruff check scripts/quality scripts/run/claim_pipeline.py scripts/run/snapshot_manifest.py src/caselinker tests
-uv run --locked --only-group dev ruff format --check scripts/quality scripts/run/claim_pipeline.py scripts/run/snapshot_manifest.py src/caselinker tests
-uv run --locked --only-group dev mypy scripts/quality/check_repository.py scripts/quality/check_traceability.py scripts/run/claim_pipeline.py src/caselinker
-uv run --locked --only-group dev pytest tests/quality tests/unit tests/integration tests/contract --cov=scripts/quality --cov=src/caselinker --cov-report=term-missing
+uv sync --locked --no-extra ml
+uv run --locked --no-extra ml python scripts/quality/check_repository.py
+uv run --locked --no-extra ml python scripts/quality/check_traceability.py
+uv run --locked --no-extra ml ruff check scripts/quality scripts/run/claim_pipeline.py scripts/run/snapshot_manifest.py src/caselinker tests
+uv run --locked --no-extra ml ruff format --check scripts/quality scripts/run/claim_pipeline.py scripts/run/snapshot_manifest.py src/caselinker tests
+uv run --locked --no-extra ml mypy scripts/quality/check_repository.py scripts/quality/check_traceability.py scripts/run/claim_pipeline.py src/caselinker
+uv run --locked --no-extra ml pytest tests/quality tests/unit tests/integration tests/contract --cov=scripts/quality --cov=src/caselinker --cov-report=term-missing
 uv run --locked pytest -m smoke tests/smoke
 uv run --locked pip-audit --local --skip-editable
 uv run --locked bandit -q -lll -r scripts/quality scripts/run/claim_pipeline.py scripts/run/snapshot_manifest.py src/caselinker
