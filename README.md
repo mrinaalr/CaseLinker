@@ -1,5 +1,12 @@
 # CaseLinker
 
+> [!IMPORTANT]
+> **Proposal branch:** `proposal/v3-foundation` explores a production-grade
+> vNext architecture for possible upstream adoption. It is not an official
+> CaseLinker release and does not claim the upstream `v3.0.0` designation. See
+> the [engineering charter](docs/vnext/ENGINEERING_CHARTER.md) and
+> [governance decision](docs/adr/0000-vnext-governance-and-versioning.md).
+
 **CaseLinker** is a project designed to group and visualize **statistical** and **contextual** information from cases involving crimes against children and child sexual exploitation & abuse (CSEA).
 
 ## Live Demo
