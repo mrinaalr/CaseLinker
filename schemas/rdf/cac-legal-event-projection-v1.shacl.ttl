@@ -1,0 +1,47 @@
+@prefix cl: <https://caselinker.up.railway.app/vocab/vnext#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+cl:LegalEventProjectionShape
+    a sh:NodeShape ;
+    sh:targetClass cl:LegalEventProjection ;
+    sh:property [
+        sh:path cl:projectionProfile ;
+        sh:hasValue "cac-legal-event-projection-v1" ;
+        sh:minCount 1 ;
+        sh:maxCount 1
+    ] ;
+    sh:property [
+        sh:path [ sh:inversePath cl:subjectOfLegalEvent ] ;
+        sh:class cl:AttributedLegalSubject ;
+        sh:minCount 1 ;
+        sh:maxCount 1
+    ] ;
+    sh:property [
+        sh:path cl:legalEventType ;
+        sh:nodeKind sh:IRI ;
+        sh:minCount 1 ;
+        sh:maxCount 1
+    ] ;
+    sh:property [
+        sh:path dcterms:date ;
+        sh:datatype xsd:date ;
+        sh:maxCount 1
+    ] ;
+    sh:property [
+        sh:path prov:wasDerivedFrom ;
+        sh:class cl:ResolvedProjectionStatement ;
+        sh:minCount 2 ;
+        sh:maxCount 3
+    ] .
+
+cl:ResolvedProjectionStatementShape
+    a sh:NodeShape ;
+    sh:targetClass cl:ResolvedProjectionStatement ;
+    sh:property [ sh:path cl:assertionState ; sh:hasValue "resolved" ; sh:minCount 1 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path cl:inputAssertionCount ; sh:datatype xsd:integer ; sh:minCount 1 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path cl:reviewDecisionCount ; sh:datatype xsd:integer ; sh:minCount 1 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path prov:wasGeneratedBy ; sh:nodeKind sh:IRI ; sh:minCount 1 ; sh:maxCount 1 ] .

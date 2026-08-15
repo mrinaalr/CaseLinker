@@ -17,11 +17,13 @@ TEXT_SUFFIXES = frozenset(
         ".js",
         ".json",
         ".md",
+        ".nt",
         ".py",
         ".sh",
         ".sql",
         ".toml",
         ".txt",
+        ".ttl",
         ".yaml",
         ".yml",
     }
