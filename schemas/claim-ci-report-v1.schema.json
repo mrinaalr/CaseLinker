@@ -1,0 +1,25 @@
+{
+  "$id": "https://caselinker.org/schemas/claim-ci-report-v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "expectation_id": {"pattern": "^expect_[0-9a-f]{64}$", "type": "string"},
+    "findings": {
+      "items": {
+        "enum": [
+          "snapshot", "query", "unit", "counts", "numerator_membership",
+          "denominator_membership", "projections", "shapes", "limitations", "claim_id",
+          "claim_content_identity", "evidence_pack_id", "evidence_pack_content"
+        ]
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
+    "observed_claim_id": {"pattern": "^claim_.+$", "type": "string"},
+    "observed_evidence_pack_id": {"pattern": "^epack_.+$", "type": "string"},
+    "passed": {"type": "boolean"}
+  },
+  "required": ["expectation_id", "findings", "observed_claim_id", "observed_evidence_pack_id", "passed"],
+  "title": "CaseLinker Claim CI report v1",
+  "type": "object"
+}

@@ -1,0 +1,29 @@
+{
+  "$id": "https://caselinker.org/schemas/claim-expectation-v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "claim_id": {"pattern": "^claim_[0-9a-f]{64}$", "type": "string"},
+    "denominator": {"minimum": 1, "type": "integer"},
+    "denominator_membership_sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "evidence_pack_id": {"pattern": "^epack_[0-9a-f]{64}$", "type": "string"},
+    "expectation_id": {"pattern": "^expect_[0-9a-f]{64}$", "type": "string"},
+    "limitations_sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "numerator": {"minimum": 0, "type": "integer"},
+    "numerator_membership_sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "projections_sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "query_sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "schema_version": {"const": "1.0"},
+    "shapes_sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "snapshot_manifest_sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "unit": {"const": "legal_event"}
+  },
+  "required": [
+    "claim_id", "denominator", "denominator_membership_sha256", "evidence_pack_id",
+    "expectation_id", "limitations_sha256", "numerator", "numerator_membership_sha256",
+    "projections_sha256", "query_sha256", "schema_version", "shapes_sha256",
+    "snapshot_manifest_sha256", "unit"
+  ],
+  "title": "CaseLinker Claim CI expectation v1",
+  "type": "object"
+}

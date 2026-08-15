@@ -6,6 +6,8 @@ from rdflib import Graph
 
 from caselinker.analysis import (
     ClaimCardBuilder,
+    ClaimCiEvaluator,
+    ClaimExpectation,
     CohortQuery,
     EvidencePackAssembler,
     LegalEventCohortAnalyzer,
@@ -32,8 +34,13 @@ def test_reviewed_assertions_to_validated_claim_evidence_pack() -> None:
 
     claim = ClaimCardBuilder().build(result)
     pack = EvidencePackAssembler().assemble(claim)
+    expectation = ClaimExpectation.pin(claim=claim, evidence_pack=pack)
+    ci_report = ClaimCiEvaluator().evaluate(
+        expectation=expectation, claim=claim, evidence_pack=pack
+    )
 
     assert validation.conforms
     assert (result.numerator, result.denominator) == (1, 1)
     assert "1 of 1 distinct eligible legal-event units" in claim.claim_text
     assert pack.pack_id == f"epack_{pack.sha256}"
+    assert ci_report.passed
