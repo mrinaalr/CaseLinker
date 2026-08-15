@@ -200,6 +200,18 @@ def test_derived_assertion_can_use_only_assertion_lineage() -> None:
     assert assertion.state is AssertionState.DERIVED
 
 
+def test_resolved_assertion_can_cite_immutable_review_decisions() -> None:
+    assertion = _assertion(
+        state=AssertionState.RESOLVED,
+        evidence=(),
+        input_assertion_ids=("asrt_input_001",),
+        review_decision_ids=("rvw_input_001",),
+        confidence=Confidence(ConfidenceDimension.RESOLUTION, None, None),
+    )
+
+    assert assertion.review_decision_ids == ("rvw_input_001",)
+
+
 def test_retraction_is_a_new_assertion_with_explicit_target() -> None:
     assertion = _assertion(
         state=AssertionState.RETRACTED,
@@ -225,6 +237,12 @@ def test_retraction_is_a_new_assertion_with_explicit_target() -> None:
         ),
         ({"input_assertion_ids": ("bad",)}, "opaque asrt_"),
         ({"input_assertion_ids": ("asrt_example_001",)}, "depend on itself"),
+        (
+            {"review_decision_ids": ("rvw_input_001", "rvw_input_001")},
+            "must not be duplicated",
+        ),
+        ({"review_decision_ids": ("bad",)}, "opaque rvw_"),
+        ({"review_decision_ids": ("rvw_input_001",)}, "cannot cite later review"),
         ({"state": AssertionState.INFERRED, "evidence": (), "input_assertion_ids": ()}, "requires"),
         (
             {

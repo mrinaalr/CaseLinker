@@ -16,7 +16,7 @@ legacy `cases` table or claiming production PostgreSQL readiness.
 
 ## Decision
 
-Add an idempotent SQLite migration and repository adapter with four append-only
+Add idempotent SQLite migrations and a repository adapter with five append-only
 tables:
 
 - `assertions` stores typed value, epistemic state, polarity, method,
@@ -25,6 +25,8 @@ tables:
   span-unavailable reasons;
 - `assertion_inputs` stores ordered assertion-to-assertion lineage;
 - `review_decisions` stores the ordered append-only review chain.
+- `assertion_review_inputs` (added by migration 0003) records which immutable
+  decisions authorized a later assertion.
 
 One repository transaction inserts an assertion—or an entire extraction
 batch—and all evidence and input edges. Before insertion it verifies that:
@@ -48,7 +50,7 @@ Review history is linear at both service and database boundaries:
 - decision time must strictly advance;
 - exact retries are idempotent and conflicting ID reuse fails.
 
-Database triggers reject update and delete operations on all four tables.
+Database triggers reject update and delete operations on all five tables.
 Foreign keys use `RESTRICT`; historical evidence cannot disappear through a
 cascade.
 
@@ -69,9 +71,10 @@ cascade.
 ## Compatibility and migration
 
 Migration `0002_assertion_ledger.sql` requires the additive document tables from
-migration `0001_source_documents.sql`. It does not alter or backfill legacy
-tables. Existing case dictionaries, API routes, and graph generators remain
-unchanged.
+migration `0001_source_documents.sql`. Migration
+`0003_assertion_review_lineage.sql` requires both earlier migrations. They do
+not alter or backfill legacy tables. Existing case dictionaries, API routes,
+and graph generators remain unchanged.
 
 Legacy fields must later pass through extractor adapters and review policy.
 They are not accepted assertions merely because they currently appear in a
@@ -79,7 +82,7 @@ case record.
 
 ## Recovery and rollback
 
-The migration is idempotent. Production adoption requires a backup and tested
+The migrations are idempotent. Production adoption requires a backup and tested
 restore. There is intentionally no destructive down migration: rollback means
 stopping proposal writes and reverting application use while preserving the
 ledger for diagnosis. At the current proposal stage, the tables are additive

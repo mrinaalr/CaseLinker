@@ -256,6 +256,7 @@ class Assertion:
     input_assertion_ids: tuple[str, ...]
     supersedes_assertion_id: str | None
     created_at: datetime
+    review_decision_ids: tuple[str, ...] = ()
 
     def __post_init__(self) -> None:
         if ASSERTION_ID_PATTERN.fullmatch(self.assertion_id) is None:
@@ -274,11 +275,16 @@ class Assertion:
             raise ValueError("evidence references must not be duplicated")
         if len(set(self.input_assertion_ids)) != len(self.input_assertion_ids):
             raise ValueError("input_assertion_ids must not be duplicated")
+        if len(set(self.review_decision_ids)) != len(self.review_decision_ids):
+            raise ValueError("review_decision_ids must not be duplicated")
         for assertion_id in self.input_assertion_ids:
             if ASSERTION_ID_PATTERN.fullmatch(assertion_id) is None:
                 raise ValueError("input_assertion_ids must contain opaque asrt_ identifiers")
             if assertion_id == self.assertion_id:
                 raise ValueError("an assertion cannot depend on itself")
+        for decision_id in self.review_decision_ids:
+            if DECISION_ID_PATTERN.fullmatch(decision_id) is None:
+                raise ValueError("review_decision_ids must contain opaque rvw_ identifiers")
         source_states = {AssertionState.OBSERVED, AssertionState.EXTRACTED}
         lineage_states = {
             AssertionState.RESOLVED,
@@ -288,6 +294,8 @@ class Assertion:
         }
         if self.state in source_states and not self.evidence:
             raise ValueError(f"{self.state.value} assertions require document evidence")
+        if self.state in source_states and self.review_decision_ids:
+            raise ValueError(f"{self.state.value} assertions cannot cite later review decisions")
         if self.state in lineage_states and not self.input_assertion_ids:
             raise ValueError(f"{self.state.value} assertions require input assertions")
         if not self.evidence and not self.input_assertion_ids:

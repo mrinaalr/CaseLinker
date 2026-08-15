@@ -33,7 +33,8 @@ generic `None` to imply provenance.
 An extractor emits an `extracted` assertion. A reviewer emits a separate
 `ReviewDecision`. Acceptance does not change the assertion to `observed` or
 erase its extraction method. If resolution creates a canonical value, it emits
-a new `resolved` assertion linked to its input assertions.
+a new `resolved` assertion linked to its input assertions and, when human
+adjudication authorizes resolution, the exact review decisions used.
 
 Likewise, correction emits a superseding or retraction assertion. Historical
 records remain addressable so a snapshot can reproduce what was accepted at a
@@ -48,7 +49,8 @@ dimension; they must not manufacture a probability for display convenience.
 
 ## Current boundary
 
-The domain models, SQLite migration, and repository adapter are implemented and
-strictly tested. They are not yet wired into legacy extraction or public
-responses. See `assertion-persistence.md` for write ordering and operational
-limitations.
+The domain models, SQLite migrations, repository adapter, deterministic
+extractors, and first reviewed legal-event resolver are implemented and
+strictly tested. They are not wired into legacy public responses. See
+`assertion-persistence.md` and `reviewed-legal-event-resolution.md` for write
+ordering and operational limitations.

@@ -39,6 +39,8 @@ Introduce an immutable assertion kernel with these contracts:
   probability.
 - Review acceptance or rejection is a separate immutable `ReviewDecision`.
   There is no mutable `accepted` flag on an assertion.
+- Assertions created from reviewed inputs may cite the exact immutable review
+  decisions that authorized the new assertion.
 
 ## State and evidence requirements
 

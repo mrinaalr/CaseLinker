@@ -24,6 +24,7 @@ TEXT = (
 MIGRATIONS = (
     Path("migrations/sqlite/0001_source_documents.sql"),
     Path("migrations/sqlite/0002_assertion_ledger.sql"),
+    Path("migrations/sqlite/0003_assertion_review_lineage.sql"),
 )
 
 

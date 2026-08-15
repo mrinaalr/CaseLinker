@@ -39,6 +39,7 @@ NOW = datetime(2026, 8, 15, 8, 0, tzinfo=UTC)
 TEXT = "A synthetic public record referenced Example Platform in this fixture."
 MIGRATION_1 = Path("migrations/sqlite/0001_source_documents.sql")
 MIGRATION_2 = Path("migrations/sqlite/0002_assertion_ledger.sql")
+MIGRATION_3 = Path("migrations/sqlite/0003_assertion_review_lineage.sql")
 
 
 @pytest.fixture
@@ -46,6 +47,7 @@ def connection() -> sqlite3.Connection:
     connection = sqlite3.connect(":memory:")
     apply_migration(connection, MIGRATION_1.read_text(encoding="utf-8"))
     apply_migration(connection, MIGRATION_2.read_text(encoding="utf-8"))
+    apply_migration(connection, MIGRATION_3.read_text(encoding="utf-8"))
     yield connection
     connection.close()
 
@@ -182,6 +184,20 @@ def test_migration_is_idempotent_and_preserves_prior_tables(
     assert {"assertions", "assertion_evidence", "assertion_inputs", "review_decisions"} <= tables
 
 
+def test_review_lineage_migration_is_idempotent(
+    connection: sqlite3.Connection,
+) -> None:
+    apply_migration(connection, MIGRATION_3.read_text(encoding="utf-8"))
+
+    tables = {
+        row[0]
+        for row in connection.execute(
+            "SELECT name FROM sqlite_master WHERE type = 'table'"
+        ).fetchall()
+    }
+    assert "assertion_review_inputs" in tables
+
+
 def test_source_assertion_round_trip_and_retry_are_idempotent(
     repository: SQLiteAssertionRepository,
 ) -> None:
@@ -307,6 +323,73 @@ def test_unavailable_span_round_trips(repository: SQLiteAssertionRepository) -> 
     repository.add_assertion(assertion)
 
     assert repository.get_assertion(assertion.assertion_id) == assertion
+
+
+def test_resolved_assertion_preserves_review_decision_lineage(
+    repository: SQLiteAssertionRepository,
+) -> None:
+    source = _assertion()
+    repository.add_assertion(source)
+    decision = _review()
+    repository.add_review_decision(decision)
+    resolved = _assertion(
+        assertion_id="asrt_resolved_001",
+        state=AssertionState.RESOLVED,
+        evidence=(),
+        input_assertion_ids=(source.assertion_id,),
+        review_decision_ids=(decision.decision_id,),
+        method=AssertionMethod(
+            family=MethodFamily.RESOLUTION_RULE,
+            name="fixture_resolution",
+            version="1.0.0",
+            run_id="run_resolution_001",
+            code_revision="fixture",
+        ),
+        confidence=Confidence(ConfidenceDimension.RESOLUTION, None, None),
+    )
+
+    repository.add_assertion(resolved)
+
+    assert repository.get_assertion(resolved.assertion_id) == resolved
+
+
+def test_missing_review_decision_lineage_is_rejected(
+    repository: SQLiteAssertionRepository,
+) -> None:
+    source = _assertion()
+    repository.add_assertion(source)
+    resolved = _assertion(
+        assertion_id="asrt_resolved_001",
+        state=AssertionState.RESOLVED,
+        evidence=(),
+        input_assertion_ids=(source.assertion_id,),
+        review_decision_ids=("rvw_missing_001",),
+        confidence=Confidence(ConfidenceDimension.RESOLUTION, None, None),
+    )
+
+    with pytest.raises(MissingLineageError, match="review decision lineage"):
+        repository.add_assertion(resolved)
+
+
+def test_review_decision_must_govern_an_input_assertion(
+    repository: SQLiteAssertionRepository,
+) -> None:
+    reviewed = _assertion()
+    other = _assertion(assertion_id="asrt_example_002")
+    repository.add_assertions((reviewed, other))
+    decision = _review()
+    repository.add_review_decision(decision)
+    resolved = _assertion(
+        assertion_id="asrt_resolved_001",
+        state=AssertionState.RESOLVED,
+        evidence=(),
+        input_assertion_ids=(other.assertion_id,),
+        review_decision_ids=(decision.decision_id,),
+        confidence=Confidence(ConfidenceDimension.RESOLUTION, None, None),
+    )
+
+    with pytest.raises(MissingLineageError, match="does not govern"):
+        repository.add_assertion(resolved)
 
 
 def test_assertion_id_cannot_be_reused(repository: SQLiteAssertionRepository) -> None:
@@ -583,4 +666,29 @@ def test_input_edges_are_immutable(
         connection.execute(
             "DELETE FROM assertion_inputs WHERE assertion_id = ?",
             (derived.assertion_id,),
+        )
+
+
+def test_review_input_edges_are_immutable(
+    connection: sqlite3.Connection,
+    repository: SQLiteAssertionRepository,
+) -> None:
+    source = _assertion()
+    repository.add_assertion(source)
+    decision = _review()
+    repository.add_review_decision(decision)
+    resolved = _assertion(
+        assertion_id="asrt_resolved_001",
+        state=AssertionState.RESOLVED,
+        evidence=(),
+        input_assertion_ids=(source.assertion_id,),
+        review_decision_ids=(decision.decision_id,),
+        confidence=Confidence(ConfidenceDimension.RESOLUTION, None, None),
+    )
+    repository.add_assertion(resolved)
+
+    with pytest.raises(sqlite3.IntegrityError, match="immutable"):
+        connection.execute(
+            "DELETE FROM assertion_review_inputs WHERE assertion_id = ?",
+            (resolved.assertion_id,),
         )

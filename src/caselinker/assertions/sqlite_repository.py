@@ -195,6 +195,16 @@ class SQLiteAssertionRepository:
                 for ordinal, input_assertion_id in enumerate(assertion.input_assertion_ids)
             ],
         )
+        self._connection.executemany(
+            """
+            INSERT INTO assertion_review_inputs (assertion_id, ordinal, decision_id)
+            VALUES (?, ?, ?)
+            """,
+            [
+                (assertion.assertion_id, ordinal, decision_id)
+                for ordinal, decision_id in enumerate(assertion.review_decision_ids)
+            ],
+        )
 
     def add_assertion(self, assertion: Assertion) -> InsertOutcome:
         return self.add_assertions((assertion,))[0]
@@ -228,6 +238,21 @@ class SQLiteAssertionRepository:
 
         for assertion in pending.values():
             self._validate_evidence_lineage(assertion)
+            for decision_id in assertion.review_decision_ids:
+                row = self._connection.execute(
+                    """
+                    SELECT assertion_id
+                    FROM review_decisions
+                    WHERE decision_id = ?
+                    """,
+                    (decision_id,),
+                ).fetchone()
+                if row is None:
+                    raise MissingLineageError(f"review decision lineage is missing: {decision_id}")
+                if str(row[0]) not in assertion.input_assertion_ids:
+                    raise MissingLineageError(
+                        f"review decision {decision_id} does not govern an input assertion"
+                    )
 
         persisted_ids = set(by_id) - set(pending)
         for assertion in pending.values():
@@ -309,6 +334,15 @@ class SQLiteAssertionRepository:
             """,
             (assertion_id,),
         ).fetchall()
+        review_input_rows = self._connection.execute(
+            """
+            SELECT decision_id
+            FROM assertion_review_inputs
+            WHERE assertion_id = ?
+            ORDER BY ordinal ASC
+            """,
+            (assertion_id,),
+        ).fetchall()
         confidence = (
             Confidence(
                 dimension=ConfidenceDimension(str(row[14])),
@@ -339,6 +373,7 @@ class SQLiteAssertionRepository:
             input_assertion_ids=tuple(str(input_row[0]) for input_row in input_rows),
             supersedes_assertion_id=str(row[17]) if row[17] is not None else None,
             created_at=parse_canonical_utc(str(row[18])),
+            review_decision_ids=tuple(str(review_row[0]) for review_row in review_input_rows),
         )
 
     def add_review_decision(self, decision: ReviewDecision) -> InsertOutcome:
