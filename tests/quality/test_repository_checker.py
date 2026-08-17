@@ -67,10 +67,11 @@ def test_validate_python_reports_value_error() -> None:
 
 def test_finding_renders_relative_and_external_paths(tmp_path: Path) -> None:
     internal = Finding(tmp_path / "inside.py", "test", "detail")
-    external = Finding(Path("/outside.py"), "test", "detail")
+    external_path = Path("/outside.py")
+    external = Finding(external_path, "test", "detail")
 
     assert internal.render(tmp_path) == "inside.py: test: detail"
-    assert external.render(tmp_path) == "/outside.py: test: detail"
+    assert external.render(tmp_path) == f"{external_path}: test: detail"
 
 
 def test_authored_text_filter_excludes_artifacts(tmp_path: Path) -> None:
