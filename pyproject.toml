@@ -1,0 +1,106 @@
+[project]
+name = "caselinker-proposal-workspace"
+version = "0.0.0"
+description = "Non-release workspace metadata for the CaseLinker vNext proposal"
+requires-python = ">=3.11,<3.14"
+dependencies = [
+  "beautifulsoup4==4.14.3",
+  "fastapi>=0.128.6,<1",
+  "httpx>=0.27.0",
+  "joblib==1.5.3",
+  "lxml-html-clean>=0.4.5,<1",
+  "mcp>=1.0.0",
+  "numpy==2.4.6",
+  "orjson==3.11.7",
+  "pandas==3.0.3",
+  "pdfplumber==0.11.9",
+  "psycopg2-binary==2.9.11",
+  "pyshacl==0.31.0",
+  "pypdf>=6.15.0,<7",
+  "python-dotenv==1.2.2",
+  "python-json-logger==4.0.0",
+  "rdflib==7.6.0",
+  "redis==7.3.0",
+  "reportlab==4.4.10",
+  "requests==2.34.2",
+  "scikit-learn==1.8.0",
+  "slowapi==0.1.9",
+  "tqdm==4.67.3",
+  "trafilatura==2.0.0",
+  "uvicorn==0.40.0",
+]
+
+[project.optional-dependencies]
+ml = [
+  "stanza==1.12.1",
+  "torch==2.12.0",
+  "transformers==5.9.0",
+]
+
+[dependency-groups]
+dev = [
+  "bandit[toml]>=1.8.6,<2",
+  "mypy>=1.17,<2",
+  "pip-audit>=2.9,<3",
+  "pytest>=9.0.3,<10",
+  "pytest-cov>=6.2,<7",
+  "ruff>=0.12,<1",
+]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+addopts = [
+  "--strict-config",
+  "--strict-markers",
+  "--showlocals",
+  "-ra",
+]
+testpaths = ["tests"]
+pythonpath = ["."]
+markers = [
+  "smoke: verifies that the application boots and exposes its minimum contract",
+]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+extend-exclude = [
+  "ontology/graph_output",
+  "ontology/mcp_output",
+  "ontology/PACER/BULK_FOLDER",
+  "state_machines/graphs",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_unreachable = true
+show_error_codes = true
+
+[tool.coverage.run]
+branch = true
+source = ["scripts/quality"]
+
+[tool.coverage.report]
+fail_under = 90
+show_missing = true
+skip_covered = true
+
+[tool.bandit]
+exclude_dirs = [
+  ".venv",
+  "ontology/graph_output",
+  "ontology/mcp_output",
+  "state_machines/graphs",
+  "tests",
+]

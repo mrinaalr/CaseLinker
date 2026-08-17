@@ -1,0 +1,96 @@
+name: Quality
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - "proposal/**"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: quality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  repository-integrity:
+    name: Repository integrity
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10.0.1
+        with:
+          enable-cache: true
+          version: "0.11.33"
+
+      - name: Select Python
+        run: uv python install 3.12
+
+      - name: Install locked quality tools
+        run: uv sync --locked --only-group dev
+
+      - name: Validate authored files and Python syntax
+        run: uv run --locked --only-group dev python scripts/quality/check_repository.py
+
+      - name: Lint strict proposal surface
+        run: >-
+          uv run --locked --only-group dev ruff check
+          scripts/quality tests
+
+      - name: Verify formatting on strict proposal surface
+        run: >-
+          uv run --locked --only-group dev ruff format --check
+          scripts/quality tests
+
+      - name: Type-check repository integrity tooling
+        run: >-
+          uv run --locked --only-group dev mypy
+          scripts/quality/check_repository.py
+
+      - name: Run fast tests with coverage
+        run: >-
+          uv run --locked --only-group dev pytest
+          tests/quality
+          --cov=scripts/quality
+          --cov-report=term-missing
+
+  application-smoke:
+    name: Application smoke test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10.0.1
+        with:
+          enable-cache: true
+          version: "0.11.33"
+
+      - name: Select Python
+        run: uv python install 3.12
+
+      - name: Install locked core environment
+        run: uv sync --locked --no-extra ml
+
+      - name: Boot the API contract
+        env:
+          CASELINKER_DISABLE_MCP: "1"
+        run: uv run --locked pytest -m smoke tests/smoke
+
+      - name: Audit the locked core environment
+        run: uv run --locked pip-audit --local --skip-editable
+
+      - name: Scan strict proposal Python for high-severity findings
+        run: uv run --locked bandit -q -lll -r scripts/quality
