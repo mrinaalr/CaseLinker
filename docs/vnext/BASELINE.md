@@ -51,8 +51,10 @@ deployment. It is intentionally a foundation, not a feature release.
   dependency review, and scheduled dependency updates.
 - Pinned `astral-sh/setup-uv` to the resolvable `v10.0.1` release learned from
   the PR #4 CI cycle.
-- Security reporting and the project threat model are added in a dedicated
-  follow-on commit, rewritten against the Scaling paper and HRPO #7668.
+- Security reporting (`SECURITY.md`) and the project threat model
+  (`docs/vnext/THREAT_MODEL.md`) are rewritten against Report #3 §6, Report
+  #4 §§3.4/5, and HRPO Determination #7668. They are not a cosmetic restyle
+  of the earlier generic application policy.
 
 ## Verification evidence
 
