@@ -23,6 +23,27 @@ from case_storage_utils import (
 from typing import Dict, List, Any, Optional, Tuple
 from datetime import datetime
 
+try:
+    from provenance import (
+        apply_sqlite_provenance_schema,
+        insert_extraction_run,
+        latest_version_id_for_url,
+        load_provenance_sidecar,
+        persist_models,
+        persist_sidecar_rows,
+        utcnow,
+    )
+except ImportError:
+    from .provenance import (
+        apply_sqlite_provenance_schema,
+        insert_extraction_run,
+        latest_version_id_for_url,
+        load_provenance_sidecar,
+        persist_models,
+        persist_sidecar_rows,
+        utcnow,
+    )
+
 
 def get_connection(db_path: str, encryption_key: Optional[str] = None):
     """Get database connection"""
@@ -75,7 +96,9 @@ class CaseStorage:
                 raw_data TEXT,                -- JSON - original ingestion batch (includes case_text)
                 extracted_features TEXT,      -- JSON - structured fields only (see case_storage_utils.slim_extracted_features_for_storage)
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                document_version_id TEXT,     -- nullable provenance link
+                extraction_run_id TEXT        -- nullable extraction_runs link
             )
         ''')
         
@@ -87,6 +110,7 @@ class CaseStorage:
             cursor.execute('ALTER TABLE cases ADD COLUMN source_url TEXT')
         except sqlite3.OperationalError:
             pass
+        apply_sqlite_provenance_schema(cursor)
         
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS victim_demographics (
@@ -176,14 +200,24 @@ class CaseStorage:
             
             # Check if case already exists to preserve created_at timestamp and prevent conflicts
             case_id = case.get('id')
-            cursor.execute('SELECT created_at, raw_data FROM cases WHERE id = ?', (case_id,))
+            cursor.execute(
+                'SELECT created_at, raw_data, document_version_id, extraction_run_id '
+                'FROM cases WHERE id = ?',
+                (case_id,),
+            )
             existing_case = cursor.fetchone()
             
             # Use consistent ISO format for timestamps
             current_time = datetime.now().isoformat()
             
+            existing_document_version_id = None
+            existing_extraction_run_id = None
             if existing_case:
-                existing_created_at, existing_raw_data_json = existing_case
+                existing_created_at = existing_case[0]
+                existing_raw_data_json = existing_case[1]
+                if len(existing_case) > 2:
+                    existing_document_version_id = existing_case[2]
+                    existing_extraction_run_id = existing_case[3]
                 
                 # Check if this is from a different source file (conflict detection)
                 new_source_file = None
@@ -220,14 +254,18 @@ class CaseStorage:
                 created_at = case.get('created_at') or current_time
                 # For new cases, updated_at should equal created_at (we're not updating, just creating)
                 updated_at = case.get('updated_at') or created_at
+
+            document_version_id = case.get('document_version_id') or existing_document_version_id
+            extraction_run_id = case.get('extraction_run_id') or existing_extraction_run_id
             
             cursor.execute('''
                 INSERT OR REPLACE INTO cases (
                     id, source, source_url, date_start, date_end, victim_count, perpetrator_count,
                     relationship_to_victim, platforms_used,
                     severity_indicators, case_topics, tags, notes,
-                    raw_data, extracted_features, created_at, updated_at
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    raw_data, extracted_features, created_at, updated_at,
+                    document_version_id, extraction_run_id
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ''', (
                 case_id,
                 case.get('source', 'unknown'),
@@ -245,7 +283,9 @@ class CaseStorage:
                 json.dumps(case.get('raw_data', {})),
                 json.dumps(slim_extracted_features_for_storage(case)),
                 created_at,
-                updated_at
+                updated_at,
+                document_version_id,
+                extraction_run_id,
             ))
             
             case_demo = case.get('case_demographics') or case.get('victim_demographics')  # Support both for backward compatibility
@@ -344,6 +384,76 @@ class CaseStorage:
             if self.store_case(case):
                 stored_count += 1
         return stored_count
+
+    def persist_provenance_models(self, document, version) -> Tuple[str, str]:
+        """Insert one source document + version. Idempotent for identical rows."""
+        conn = get_connection(self.db_path)
+        try:
+            cursor = conn.cursor()
+            ids = persist_models(cursor, document, version, dialect="sqlite")
+            conn.commit()
+            return ids
+        finally:
+            conn.close()
+
+    def import_provenance_sidecar(self, sidecar_path) -> int:
+        """Load a scrape sidecar into source_documents / source_document_versions."""
+        rows = load_provenance_sidecar(sidecar_path)
+        if not rows:
+            return 0
+        conn = get_connection(self.db_path)
+        try:
+            cursor = conn.cursor()
+            persist_sidecar_rows(cursor, rows, dialect="sqlite")
+            conn.commit()
+            return len(rows)
+        finally:
+            conn.close()
+
+    def get_document_version_id_for_url(self, url: str) -> Optional[str]:
+        """Latest version_id for a canonicalized URL, or None."""
+        conn = get_connection(self.db_path)
+        try:
+            cursor = conn.cursor()
+            return latest_version_id_for_url(cursor, url, dialect="sqlite")
+        finally:
+            conn.close()
+
+    def record_extraction_run(
+        self,
+        *,
+        code_revision: str,
+        started_at=None,
+        source_files: Optional[List[str]] = None,
+        pattern_layer_version: str = "pattern_processing",
+        ner_backend: str = "stanza",
+        semantic_model: str = "all-MiniLM-L6-v2",
+        victim_age_gate_version: str = "v2",
+        run_id: Optional[str] = None,
+    ) -> str:
+        """Append one slim extraction_runs row and return run_id."""
+        from provenance import new_run_id
+
+        run_id = run_id or new_run_id()
+        conn = get_connection(self.db_path)
+        try:
+            cursor = conn.cursor()
+            insert_extraction_run(
+                cursor,
+                run_id=run_id,
+                code_revision=code_revision,
+                started_at=started_at or utcnow(),
+                pattern_layer_version=pattern_layer_version,
+                ner_backend=ner_backend,
+                semantic_model=semantic_model,
+                victim_age_gate_version=victim_age_gate_version,
+                source_files=source_files or [],
+                dialect="sqlite",
+            )
+            conn.commit()
+            return run_id
+        finally:
+            conn.close()
     
     def get_case(self, case_id: str) -> Optional[Dict[str, Any]]:
         """

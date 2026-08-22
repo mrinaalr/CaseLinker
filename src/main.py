@@ -180,6 +180,13 @@ def store_cases(cases: List[Dict[str, Any]], db_path: Optional[str]) -> int:
     cases_to_store = cases
     # cases_to_store = _filter_incoming_cases_by_novelty(cases, storage)
 
+    try:
+        from provenance import attach_ingest_provenance
+
+        attach_ingest_provenance(storage, cases_to_store)
+    except Exception as exc:
+        print(f"⚠️  Provenance attach skipped (ingest continues): {exc}")
+
     stored_count = 0
     for case in cases_to_store:
         if storage.store_case(case):
