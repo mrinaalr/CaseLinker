@@ -15,6 +15,7 @@ sys.path.insert(0, str(src_path / "Clustering & Analysis Layer"))
 sys.path.insert(0, str(src_path / "Visualization Layer"))
 
 from processing import process_cases
+from provenance import get_code_revision
 import difflib
 import os
 import re
@@ -180,9 +181,45 @@ def store_cases(cases: List[Dict[str, Any]], db_path: Optional[str]) -> int:
     cases_to_store = cases
     # cases_to_store = _filter_incoming_cases_by_novelty(cases, storage)
 
+    if not cases_to_store:
+        return 0
+
+    source_files = sorted({
+        str(case.get('raw_data', {}).get('source_file'))
+        for case in cases_to_store
+        if isinstance(case.get('raw_data'), dict)
+        and case.get('raw_data', {}).get('source_file')
+    })
+    extractor_versions = next(
+        (
+            dict(case['_extraction_versions'])
+            for case in cases_to_store
+            if isinstance(case.get('_extraction_versions'), dict)
+        ),
+        {
+            'pattern_layer': 'pattern-processing-v1',
+            'ner_backend': 'unknown',
+            'semantic_model': 'unknown',
+            'victim_age_gate': 'victim-age-gate-v1',
+        },
+    )
+    extraction_run_id = storage.create_extraction_run(
+        code_revision=get_code_revision(Path(__file__).resolve().parent.parent),
+        extractor_versions=extractor_versions,
+        source_files=source_files,
+    )
+
     stored_count = 0
     for case in cases_to_store:
-        if storage.store_case(case):
+        capture = case.get('_provenance')
+        document_version_id = (
+            storage.store_document_capture(capture) if isinstance(capture, dict) else None
+        )
+        if storage.store_case(
+            case,
+            document_version_id=document_version_id,
+            extraction_run_id=extraction_run_id,
+        ):
             stored_count += 1
     return stored_count
 

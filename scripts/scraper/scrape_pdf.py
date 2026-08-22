@@ -19,10 +19,12 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.util
 import re
 import sys
 import time
-from datetime import date, datetime
+from dataclasses import dataclass
+from datetime import UTC, date, datetime
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -60,6 +62,25 @@ JINA_READER_TIMEOUT = 90
 MIN_BODY_CHARS = 80
 # Drupal SPAs (e.g. troopers.ny.gov) often return only title+date in static HTML.
 THIN_HTML_RETRY_CHARS = 400
+
+_PROVENANCE_PATH = Path(__file__).resolve().parents[2] / "src" / "Storage Layer" / "provenance.py"
+_provenance_spec = importlib.util.spec_from_file_location("caselinker_provenance", _PROVENANCE_PATH)
+if _provenance_spec is None or _provenance_spec.loader is None:
+    raise RuntimeError(f"Unable to load provenance support from {_PROVENANCE_PATH}")
+provenance = importlib.util.module_from_spec(_provenance_spec)
+_provenance_spec.loader.exec_module(provenance)
+
+
+@dataclass(frozen=True)
+class FetchedResource:
+    content: bytes
+    text: str
+    retrieved_at: datetime
+    status_code: int
+    content_type: str | None
+    etag: str | None
+    last_modified: str | None
+    final_url: str
 
 # news.delaware.gov: breadcrumb lines vary — e.g.
 #   ``Department of Justice Press Releases | Date Posted:``
@@ -368,36 +389,50 @@ def load_urls(path: Path) -> list[str]:
     return urls
 
 
-def fetch(url: str, headers: dict[str, str], *, verify: bool = True) -> str | None:
+def fetch_resource(
+    url: str,
+    headers: dict[str, str],
+    *,
+    verify: bool = True,
+    timeout: int = REQUEST_TIMEOUT,
+) -> FetchedResource | None:
     try:
+        retrieved_at = datetime.now(UTC)
         r = requests.get(
             url,
             headers=headers,
-            timeout=REQUEST_TIMEOUT,
+            timeout=timeout,
             allow_redirects=True,
             verify=verify,
         )
         r.raise_for_status()
-        return r.text
+        return FetchedResource(
+            content=r.content,
+            text=r.text,
+            retrieved_at=retrieved_at,
+            status_code=r.status_code,
+            content_type=r.headers.get("Content-Type"),
+            etag=r.headers.get("ETag"),
+            last_modified=r.headers.get("Last-Modified"),
+            final_url=r.url,
+        )
     except Exception as e:
         print(f"    [fetch error] {e}", file=sys.stderr)
         return None
+
+
+def fetch(url: str, headers: dict[str, str], *, verify: bool = True) -> str | None:
+    resource = fetch_resource(url, headers, verify=verify)
+    return resource.text if resource is not None else None
 
 
 def fetch_bytes(url: str, headers: dict[str, str], *, verify: bool = True) -> bytes | None:
-    try:
-        r = requests.get(
-            url,
-            headers={**headers, "Accept": "application/pdf,*/*;q=0.8"},
-            timeout=REQUEST_TIMEOUT,
-            allow_redirects=True,
-            verify=verify,
-        )
-        r.raise_for_status()
-        return r.content
-    except Exception as e:
-        print(f"    [fetch error] {e}", file=sys.stderr)
-        return None
+    resource = fetch_resource(
+        url,
+        {**headers, "Accept": "application/pdf,*/*;q=0.8"},
+        verify=verify,
+    )
+    return resource.content if resource is not None else None
 
 
 def _publication_date_from_filename(url: str) -> date | None:
@@ -490,7 +525,9 @@ def extract_from_native_pdf(pdf_bytes: bytes, url: str) -> tuple[str, str, str, 
     return title, byline, body.strip(), pub_date
 
 
-def fetch_via_jina_reader(target_url: str, *, verify: bool = True, retries: int = 5) -> str | None:
+def fetch_via_jina_reader_resource(
+    target_url: str, *, verify: bool = True, retries: int = 5
+) -> FetchedResource | None:
     """Some hosts (e.g. mass.gov) block datacenter IPs; Jina Reader returns markdown + metadata."""
     jina_url = "https://r.jina.ai/" + target_url
     hdrs = {
@@ -500,6 +537,7 @@ def fetch_via_jina_reader(target_url: str, *, verify: bool = True, retries: int 
     last_err: Exception | None = None
     for attempt in range(retries):
         try:
+            retrieved_at = datetime.now(UTC)
             r = requests.get(
                 jina_url,
                 headers=hdrs,
@@ -513,7 +551,16 @@ def fetch_via_jina_reader(target_url: str, *, verify: bool = True, retries: int 
                 time.sleep(wait)
                 continue
             r.raise_for_status()
-            return r.text
+            return FetchedResource(
+                content=r.content,
+                text=r.text,
+                retrieved_at=retrieved_at,
+                status_code=r.status_code,
+                content_type=r.headers.get("Content-Type"),
+                etag=r.headers.get("ETag"),
+                last_modified=r.headers.get("Last-Modified"),
+                final_url=r.url,
+            )
         except Exception as e:
             last_err = e
             if attempt + 1 < retries:
@@ -521,6 +568,11 @@ def fetch_via_jina_reader(target_url: str, *, verify: bool = True, retries: int 
     if last_err is not None:
         print(f"    [jina fetch error] {last_err}", file=sys.stderr)
     return None
+
+
+def fetch_via_jina_reader(target_url: str, *, verify: bool = True, retries: int = 5) -> str | None:
+    resource = fetch_via_jina_reader_resource(target_url, verify=verify, retries=retries)
+    return resource.text if resource is not None else None
 
 
 def _parse_jina_published_time(raw: str) -> date | None:
@@ -2438,6 +2490,45 @@ def _per_url_cache_pdf(tmp_dir: Path, index: int, url: str) -> Path:
     return tmp_dir / f"{index:04d}_{h}.pdf"
 
 
+def _capture_success(
+    *,
+    out_dir: Path,
+    per_url_pdf: Path,
+    source_url: str,
+    resource: FetchedResource,
+    parser_name: str,
+    normalized_text: str,
+    published_at: date | None,
+) -> dict | None:
+    """Persist exact fetched bytes and the per-article ingest sidecar."""
+    published_timestamp = (
+        datetime(published_at.year, published_at.month, published_at.day, tzinfo=UTC)
+        if published_at is not None
+        else None
+    )
+    try:
+        record = provenance.build_capture_record(
+            source_url=source_url,
+            content=resource.content,
+            retrieved_at=resource.retrieved_at,
+            mime_type=resource.content_type,
+            http_status=resource.status_code,
+            http_etag=resource.etag,
+            http_last_modified=resource.last_modified,
+            final_url=resource.final_url,
+            parser_name=parser_name,
+            parser_version="1",
+            normalized_text=normalized_text,
+            published_at=published_timestamp,
+        )
+        provenance.persist_capture_bytes(out_dir / "provenance", record, resource.content)
+        provenance.write_capture_manifest(per_url_pdf, [record])
+        return record
+    except (OSError, TypeError, ValueError) as exc:
+        print(f"    [provenance error] {exc}", file=sys.stderr)
+        return None
+
+
 def main():
     ap = argparse.ArgumentParser(
         description="Scrape HTML URLs from a list into one merged PDF.",
@@ -2499,6 +2590,7 @@ def main():
 
     successes: list[Path] = []
     failures: list[str] = []
+    captures: list[dict] = []
 
     for i, url in enumerate(urls, start=1):
         slug = url.rstrip("/").split("/")[-1][:65]
@@ -2506,20 +2598,33 @@ def main():
 
         out_pdf = _per_url_cache_pdf(tmp_dir, i, url)
         if out_pdf.exists() and out_pdf.stat().st_size > 500:
-            print("    [cached]")
-            successes.append(out_pdf)
-            continue
+            try:
+                cached_captures = provenance.load_capture_manifest(out_pdf)
+            except (OSError, TypeError, ValueError) as exc:
+                cached_captures = []
+                print(f"    [cache provenance invalid] {exc}", file=sys.stderr)
+            if cached_captures:
+                print("    [cached]")
+                successes.append(out_pdf)
+                captures.extend(cached_captures)
+                continue
+            print("    [cache missing provenance; refetching]")
 
         parsed = urlparse(url)
         ref = args.referer or f"{parsed.scheme}://{parsed.netloc}/"
         hdrs = _default_headers(referer=ref)
         path_lower = parsed.path.lower()
         if path_lower.endswith(".pdf"):
-            raw = fetch_bytes(url, hdrs, verify=verify_tls)
-            if not raw:
+            resource = fetch_resource(
+                url,
+                {**hdrs, "Accept": "application/pdf,*/*;q=0.8"},
+                verify=verify_tls,
+            )
+            if resource is None:
                 failures.append(url)
                 time.sleep(args.delay)
                 continue
+            raw = resource.content
             result = extract_from_native_pdf(raw, url)
             if not result:
                 print("    [FAILED] native PDF: body too thin")
@@ -2539,6 +2644,17 @@ def main():
                 kb = out_pdf.stat().st_size // 1024
                 print(f"    [ok pdf] {kb} KB - {title[:65]}")
                 successes.append(out_pdf)
+                record = _capture_success(
+                    out_dir=args.out_dir,
+                    per_url_pdf=out_pdf,
+                    source_url=url,
+                    resource=resource,
+                    parser_name="native-pdf",
+                    normalized_text="\n".join((title, byline, body)),
+                    published_at=pub_date,
+                )
+                if record is not None:
+                    captures.append(record)
             else:
                 failures.append(url)
             time.sleep(args.delay)
@@ -2557,12 +2673,18 @@ def main():
             else:
                 tag = "nysp"
             print(f"    [{tag}] r.jina.ai reader ...")
-            html = fetch_via_jina_reader(url, verify=verify_tls)
+            resource = fetch_via_jina_reader_resource(url, verify=verify_tls)
+            html = resource.text if resource is not None else None
+            capture_parser = "jina-reader"
         else:
-            html = fetch(url, hdrs, verify=verify_tls)
+            resource = fetch_resource(url, hdrs, verify=verify_tls)
+            html = resource.text if resource is not None else None
+            capture_parser = "case-linker-html"
             if not html and args.jina_fallback:
                 print("    [fallback] r.jina.ai reader ...")
-                html = fetch_via_jina_reader(url, verify=verify_tls)
+                resource = fetch_via_jina_reader_resource(url, verify=verify_tls)
+                html = resource.text if resource is not None else None
+                capture_parser = "jina-reader"
         if not html:
             failures.append(url)
             time.sleep(args.delay)
@@ -2595,8 +2717,11 @@ def main():
         )
         if needs_jina:
             print("    [fallback] r.jina.ai reader (thin or empty extract) ...")
-            html_j = fetch_via_jina_reader(url, verify=verify_tls)
+            jina_resource = fetch_via_jina_reader_resource(url, verify=verify_tls)
+            html_j = jina_resource.text if jina_resource is not None else None
             if html_j:
+                resource = jina_resource
+                capture_parser = "jina-reader"
                 is_j2 = html_j.lstrip().startswith("Title:") and "Markdown Content:" in html_j
                 if is_j2:
                     result = extract_from_jina_reader(html_j, url)
@@ -2640,6 +2765,18 @@ def main():
             kb = out_pdf.stat().st_size // 1024
             print(f"    [ok] {kb} KB - {title[:65]}")
             successes.append(out_pdf)
+            if resource is not None:
+                record = _capture_success(
+                    out_dir=args.out_dir,
+                    per_url_pdf=out_pdf,
+                    source_url=url,
+                    resource=resource,
+                    parser_name=capture_parser,
+                    normalized_text="\n".join((title, byline, body)),
+                    published_at=pub_date,
+                )
+                if record is not None:
+                    captures.append(record)
         else:
             failures.append(url)
 
@@ -2655,6 +2792,8 @@ def main():
     if merge(successes, out_pdf):
         mb = out_pdf.stat().st_size / 1024 / 1024
         print(f"-> {out_pdf}  ({mb:.2f} MB)\n")
+        sidecar = provenance.write_capture_manifest(out_pdf, captures)
+        print(f"-> {sidecar}  ({len(captures)} source versions)\n")
     else:
         sys.exit("Merge failed.")
 

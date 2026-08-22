@@ -24,6 +24,11 @@ _suc_spec.loader.exec_module(_suc_mod)
 try_append_source_url_continuation = _suc_mod.try_append_source_url_continuation
 consume_same_line_slug_after_url = _suc_mod.consume_same_line_slug_after_url
 
+_provenance_path = Path(__file__).resolve().parents[1] / "Storage Layer" / "provenance.py"
+_provenance_spec = importlib.util.spec_from_file_location("caselinker_provenance", _provenance_path)
+_provenance_mod = importlib.util.module_from_spec(_provenance_spec)
+_provenance_spec.loader.exec_module(_provenance_mod)
+
 from typing import Dict, List, Any, Optional
 import warnings
 import logging
@@ -39,6 +44,15 @@ try:
     warnings.filterwarnings("ignore", category=UserWarning)
 except ImportError:
     PDFPLUMBER_AVAILABLE = False
+
+
+def _load_provenance_records(path: Path) -> List[Dict[str, Any]]:
+    """Load an optional scraper sidecar; legacy PDFs deliberately return an empty list."""
+    try:
+        return _provenance_mod.load_capture_manifest(path)
+    except (OSError, TypeError, ValueError) as exc:
+        warnings.warn(f"Ignoring invalid provenance sidecar for {path.name}: {exc}")
+        return []
 
 
 def detect_source_from_content(text: str, filename: str) -> str:
@@ -882,6 +896,7 @@ def ingest_file(file_path: str, file_type: Optional[str] = None, source_url: Opt
             'extracted_text': [text],
             'source': [source],
             'source_url': [resolved_source_url],
+            'provenance_records': [_load_provenance_records(path)],
         })
         
         return df
@@ -957,6 +972,7 @@ def ingest_multiple_pdfs(
                 'extracted_text': text,
                 'source': org_name,
                 'source_url': resolved_source_url,
+                'provenance_records': _load_provenance_records(path),
             })
             print(f"✓ Ingested: {path.name} ({len(text):,} characters) - Detected source: {org_name}")
             

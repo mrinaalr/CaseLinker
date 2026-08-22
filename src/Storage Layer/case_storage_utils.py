@@ -35,6 +35,10 @@ _SLIM_EXCLUDED_KEYS = frozenset(
         "case_topics",
         "created_at",
         "updated_at",
+        "document_version_id",
+        "extraction_run_id",
+        "_provenance",
+        "_extraction_versions",
     }
 )
 

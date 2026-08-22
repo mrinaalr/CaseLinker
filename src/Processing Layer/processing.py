@@ -10,12 +10,14 @@ It re-exports all functions from the Pattern Processing Layer and Batching modul
 # Re-export everything from Pattern Processing Layer and Batching
 # Handle spaces in directory name using importlib
 import importlib.util
-import sys
-from pathlib import Path
-import pandas as pd
 import re
-from typing import Dict, Any, List
+import sys
 from datetime import datetime
+from importlib.metadata import PackageNotFoundError, version as package_version
+from pathlib import Path
+from typing import Any, Dict, List
+
+import pandas as pd
 
 # Try to import tqdm for progress bars, fallback gracefully if not available
 try:
@@ -93,6 +95,18 @@ semantic_module = importlib.util.module_from_spec(_semantic_spec)
 _semantic_spec.loader.exec_module(semantic_module)
 
 SemanticConcepts = semantic_module.SemanticConcepts
+
+_provenance_path = Path(__file__).parent.parent / "Storage Layer" / "provenance.py"
+_provenance_spec = importlib.util.spec_from_file_location("caselinker_provenance", _provenance_path)
+provenance = importlib.util.module_from_spec(_provenance_spec)
+_provenance_spec.loader.exec_module(provenance)
+
+
+def _dependency_version(distribution: str) -> str:
+    try:
+        return package_version(distribution)
+    except PackageNotFoundError:
+        return "unknown"
 
 
 def _extract_source_url(case_text: str) -> str:
@@ -203,6 +217,11 @@ def process_cases(df):
                 'source': source,
                 'source_file': source_file,
                 'source_url': row.get('source_url'),
+                'provenance_records': (
+                    row.get('provenance_records')
+                    if isinstance(row.get('provenance_records'), list)
+                    else []
+                ),
             })
     
     # Second pass: Process all cases with progress bar
@@ -310,6 +329,33 @@ def process_cases(df):
         
         # Step 5: Assign comparison values (Pattern Processing Layer handles its own logic)
         case_with_values = assign_comparison_values(merged_features)
+
+        capture = provenance.match_capture_for_url(
+            batch_info.get('provenance_records', []), raw_case.get('source_url')
+        )
+        if capture is not None:
+            case_with_values['_provenance'] = capture
+        semantic_name = "none"
+        if semantic_detector is not None and getattr(semantic_detector, "model", None) is not None:
+            semantic_name = (
+                "sentence-transformers:"
+                f"{_dependency_version('sentence-transformers')}:all-MiniLM-L6-v2"
+            )
+        ner_name = "none"
+        if ner_backend == "stanza":
+            ner_name = f"stanza:{_dependency_version('stanza')}:en/tokenize,ner"
+        elif ner_backend == "transformers":
+            ner_name = (
+                f"transformers:{_dependency_version('transformers')}:dslim/bert-base-NER"
+            )
+        elif ner_backend == "spacy":
+            ner_name = f"spacy:{_dependency_version('spacy')}"
+        case_with_values['_extraction_versions'] = {
+            'pattern_layer': 'pattern-processing-v1',
+            'ner_backend': ner_name,
+            'semantic_model': semantic_name,
+            'victim_age_gate': 'victim-age-gate-v1',
+        }
         
         # Step 6: Add timestamps
         timestamp = datetime.now().isoformat()

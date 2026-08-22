@@ -15,16 +15,18 @@ Design Ideas from Architecture:
 import json
 import os
 import psycopg2
+from uuid import uuid4
 from psycopg2.extras import RealDictCursor
 from psycopg2.pool import SimpleConnectionPool
 from typing import Dict, List, Any, Optional, Tuple
-from datetime import datetime
+from datetime import UTC, datetime
 
 from case_storage_utils import (
     dumps_json_safe,
     hydrate_case_text_from_raw_data,
     slim_extracted_features_for_storage,
 )
+from provenance import canonical_utc
 
 # Connection pool (reuse connections for better performance)
 _pool: Optional[SimpleConnectionPool] = None
@@ -111,6 +113,8 @@ class CaseStorage:
                     notes TEXT,
                     raw_data TEXT,
                     extracted_features TEXT,
+                    document_version_id TEXT,
+                    extraction_run_id TEXT,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
@@ -133,6 +137,101 @@ class CaseStorage:
                     END IF;
                 END $$;
             ''')
+            cursor.execute('''
+                DO $$
+                BEGIN
+                    IF NOT EXISTS (
+                        SELECT 1 FROM information_schema.columns
+                        WHERE table_name='cases' AND column_name='document_version_id'
+                    ) THEN
+                        ALTER TABLE cases ADD COLUMN document_version_id TEXT;
+                    END IF;
+                    IF NOT EXISTS (
+                        SELECT 1 FROM information_schema.columns
+                        WHERE table_name='cases' AND column_name='extraction_run_id'
+                    ) THEN
+                        ALTER TABLE cases ADD COLUMN extraction_run_id TEXT;
+                    END IF;
+                END $$;
+            ''')
+
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS source_documents (
+                    document_id TEXT PRIMARY KEY,
+                    source_id TEXT NOT NULL,
+                    canonical_url TEXT NOT NULL UNIQUE,
+                    canonicalization_version TEXT NOT NULL,
+                    document_type TEXT NOT NULL,
+                    recorded_at TEXT NOT NULL
+                )
+            ''')
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS source_document_versions (
+                    version_id TEXT PRIMARY KEY,
+                    document_id TEXT NOT NULL REFERENCES source_documents(document_id),
+                    content_sha256 TEXT NOT NULL CHECK (length(content_sha256) = 64),
+                    byte_length BIGINT NOT NULL CHECK (byte_length >= 0),
+                    storage_key TEXT NOT NULL,
+                    retrieved_at TEXT NOT NULL,
+                    published_at TEXT,
+                    recorded_at TEXT NOT NULL,
+                    mime_type TEXT NOT NULL,
+                    http_status INTEGER NOT NULL CHECK (http_status = 200),
+                    http_etag TEXT,
+                    http_last_modified TEXT,
+                    http_final_url TEXT NOT NULL,
+                    parser_name TEXT NOT NULL,
+                    parser_version TEXT NOT NULL,
+                    normalized_text_sha256 TEXT
+                )
+            ''')
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS extraction_runs (
+                    run_id TEXT PRIMARY KEY,
+                    code_revision TEXT NOT NULL,
+                    started_at TEXT NOT NULL,
+                    extractor_versions TEXT NOT NULL,
+                    source_files TEXT NOT NULL
+                )
+            ''')
+            cursor.execute('''
+                CREATE INDEX IF NOT EXISTS idx_source_document_versions_document_time
+                ON source_document_versions(document_id, retrieved_at, version_id)
+            ''')
+            cursor.execute('''
+                CREATE INDEX IF NOT EXISTS idx_source_document_versions_content_sha256
+                ON source_document_versions(content_sha256)
+            ''')
+            cursor.execute('''
+                CREATE INDEX IF NOT EXISTS idx_cases_document_version
+                ON cases(document_version_id)
+            ''')
+            cursor.execute('''
+                CREATE INDEX IF NOT EXISTS idx_cases_extraction_run
+                ON cases(extraction_run_id)
+            ''')
+            cursor.execute('''
+                CREATE OR REPLACE FUNCTION caselinker_prevent_provenance_mutation()
+                RETURNS trigger AS $$
+                BEGIN
+                    RAISE EXCEPTION '% rows are append-only', TG_TABLE_NAME;
+                END;
+                $$ LANGUAGE plpgsql;
+            ''')
+            for table_name in ('source_documents', 'source_document_versions', 'extraction_runs'):
+                cursor.execute(f'''
+                    DO $$
+                    BEGIN
+                        IF NOT EXISTS (
+                            SELECT 1 FROM pg_trigger
+                            WHERE tgname = '{table_name}_immutable'
+                        ) THEN
+                            CREATE TRIGGER {table_name}_immutable
+                            BEFORE UPDATE OR DELETE ON {table_name}
+                            FOR EACH ROW EXECUTE FUNCTION caselinker_prevent_provenance_mutation();
+                        END IF;
+                    END $$;
+                ''')
             
             cursor.execute('''
                 CREATE TABLE IF NOT EXISTS victim_demographics (
@@ -201,8 +300,106 @@ class CaseStorage:
         finally:
             cursor.close()
             return_connection(conn)
+
+    def store_document_capture(self, capture: Dict[str, Any]) -> str:
+        """Persist one scraper capture idempotently and return its version ID."""
+        conn = get_connection()
+        cursor = conn.cursor()
+        try:
+            document_values = (
+                capture['document_id'], capture['source_id'], capture['canonical_url'],
+                capture['canonicalization_version'], capture['document_type'],
+                capture['recorded_at'],
+            )
+            cursor.execute('''
+                INSERT INTO source_documents (
+                    document_id, source_id, canonical_url, canonicalization_version,
+                    document_type, recorded_at
+                ) VALUES (%s, %s, %s, %s, %s, %s)
+                ON CONFLICT DO NOTHING
+            ''', document_values)
+            cursor.execute('''
+                SELECT document_id, source_id, canonical_url, canonicalization_version,
+                       document_type
+                FROM source_documents WHERE document_id = %s
+            ''', (capture['document_id'],))
+            if cursor.fetchone() != document_values[:5]:
+                raise ValueError('document identity collision or conflicting capture metadata')
+
+            version_values = (
+                capture['version_id'], capture['document_id'], capture['content_sha256'],
+                capture['byte_length'], capture['storage_key'], capture['retrieved_at'],
+                capture.get('published_at'), capture['recorded_at'], capture['mime_type'],
+                capture['http_status'], capture.get('http_etag'),
+                capture.get('http_last_modified'), capture['http_final_url'],
+                capture['parser_name'], capture['parser_version'],
+                capture.get('normalized_text_sha256'),
+            )
+            cursor.execute('''
+                INSERT INTO source_document_versions (
+                    version_id, document_id, content_sha256, byte_length, storage_key,
+                    retrieved_at, published_at, recorded_at, mime_type, http_status,
+                    http_etag, http_last_modified, http_final_url, parser_name,
+                    parser_version, normalized_text_sha256
+                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                ON CONFLICT DO NOTHING
+            ''', version_values)
+            cursor.execute('''
+                SELECT version_id, document_id, content_sha256, byte_length, storage_key,
+                       retrieved_at, published_at, recorded_at, mime_type, http_status,
+                       http_etag, http_last_modified, http_final_url, parser_name,
+                       parser_version, normalized_text_sha256
+                FROM source_document_versions WHERE version_id = %s
+            ''', (capture['version_id'],))
+            if cursor.fetchone() != version_values:
+                raise ValueError('document version collision or conflicting capture metadata')
+            conn.commit()
+            return str(capture['version_id'])
+        except Exception:
+            conn.rollback()
+            raise
+        finally:
+            cursor.close()
+            return_connection(conn)
+
+    def create_extraction_run(
+        self,
+        *,
+        code_revision: str,
+        started_at: datetime | str | None = None,
+        extractor_versions: Dict[str, str],
+        source_files: List[str],
+        run_id: Optional[str] = None,
+    ) -> str:
+        """Record one ingest/extraction run without introducing per-field assertions."""
+        run_id = run_id or f"run_{uuid4().hex}"
+        started_at_text = canonical_utc(started_at or datetime.now(UTC))
+        versions_json = json.dumps(extractor_versions, sort_keys=True, separators=(',', ':'))
+        sources_json = json.dumps(sorted(set(source_files)), separators=(',', ':'))
+        conn = get_connection()
+        cursor = conn.cursor()
+        try:
+            cursor.execute('''
+                INSERT INTO extraction_runs (
+                    run_id, code_revision, started_at, extractor_versions, source_files
+                ) VALUES (%s, %s, %s, %s, %s)
+            ''', (run_id, code_revision, started_at_text, versions_json, sources_json))
+            conn.commit()
+            return run_id
+        except Exception:
+            conn.rollback()
+            raise
+        finally:
+            cursor.close()
+            return_connection(conn)
     
-    def store_case(self, case: Dict[str, Any]) -> bool:
+    def store_case(
+        self,
+        case: Dict[str, Any],
+        *,
+        document_version_id: Optional[str] = None,
+        extraction_run_id: Optional[str] = None,
+    ) -> bool:
         """
         Store a single case in the database.
         Preserves raw data while storing normalized fields.
@@ -216,6 +413,21 @@ class CaseStorage:
         try:
             conn = get_connection()
             cursor = conn.cursor()
+
+            if document_version_id is not None:
+                cursor.execute(
+                    'SELECT 1 FROM source_document_versions WHERE version_id = %s',
+                    (document_version_id,),
+                )
+                if cursor.fetchone() is None:
+                    raise ValueError('document_version_id does not identify a stored version')
+            if extraction_run_id is not None:
+                cursor.execute(
+                    'SELECT 1 FROM extraction_runs WHERE run_id = %s',
+                    (extraction_run_id,),
+                )
+                if cursor.fetchone() is None:
+                    raise ValueError('extraction_run_id does not identify a stored run')
             
             date_range = case.get('date_range', {})
             date_start = date_range.get('start') if isinstance(date_range, dict) else None
@@ -223,14 +435,26 @@ class CaseStorage:
             
             # Check if case already exists to preserve created_at timestamp and prevent conflicts
             case_id = case.get('id')
-            cursor.execute('SELECT created_at, raw_data FROM cases WHERE id = %s', (case_id,))
+            cursor.execute('''
+                SELECT created_at, raw_data, document_version_id, extraction_run_id
+                FROM cases WHERE id = %s
+            ''', (case_id,))
             existing_case = cursor.fetchone()
             
             # Use consistent ISO format for timestamps
             current_time = datetime.now().isoformat()
             
             if existing_case:
-                existing_created_at, existing_raw_data_json = existing_case
+                (
+                    existing_created_at,
+                    existing_raw_data_json,
+                    existing_document_version_id,
+                    existing_extraction_run_id,
+                ) = existing_case
+                if document_version_id is None:
+                    document_version_id = existing_document_version_id
+                if extraction_run_id is None:
+                    extraction_run_id = existing_extraction_run_id
                 
                 # Check if this is from a different source file (conflict detection)
                 new_source_file = None
@@ -274,8 +498,9 @@ class CaseStorage:
                     id, source, source_url, date_start, date_end, victim_count, perpetrator_count,
                     relationship_to_victim, platforms_used,
                     severity_indicators, case_topics, tags, notes,
-                    raw_data, extracted_features, created_at, updated_at
-                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    raw_data, extracted_features, document_version_id,
+                    extraction_run_id, created_at, updated_at
+                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 ON CONFLICT (id) DO UPDATE SET
                     source = EXCLUDED.source,
                     source_url = EXCLUDED.source_url,
@@ -291,6 +516,8 @@ class CaseStorage:
                     notes = EXCLUDED.notes,
                     raw_data = EXCLUDED.raw_data,
                     extracted_features = EXCLUDED.extracted_features,
+                    document_version_id = EXCLUDED.document_version_id,
+                    extraction_run_id = EXCLUDED.extraction_run_id,
                     updated_at = EXCLUDED.updated_at
             ''', (
                 case_id,
@@ -308,6 +535,8 @@ class CaseStorage:
                 case.get('notes'),
                 json.dumps(case.get('raw_data', {})),
                 json.dumps(slim_extracted_features_for_storage(case)),
+                document_version_id,
+                extraction_run_id,
                 created_at,
                 updated_at
             ))
