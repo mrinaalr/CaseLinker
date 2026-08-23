@@ -165,6 +165,70 @@ def test_scrape_sidecar_ingest_links_version_and_run(tmp_path: Path):
     assert preserved["extraction_run_id"] == run_id
 
 
+def test_existing_db_alters_nullable_provenance_columns(tmp_path: Path):
+    """Pre-provenance SQLite DB: init_database ALTERs the two nullable case refs."""
+    db = tmp_path / "legacy.db"
+    conn = sqlite3.connect(db)
+    conn.execute(
+        """
+        CREATE TABLE cases (
+            id TEXT PRIMARY KEY,
+            source TEXT,
+            source_url TEXT,
+            date_start TEXT,
+            date_end TEXT,
+            victim_count INTEGER,
+            perpetrator_count INTEGER,
+            relationship_to_victim TEXT,
+            platforms_used TEXT,
+            severity_indicators TEXT,
+            case_topics TEXT,
+            tags TEXT,
+            notes TEXT,
+            raw_data TEXT,
+            extracted_features TEXT,
+            created_at TIMESTAMP,
+            updated_at TIMESTAMP
+        )
+        """
+    )
+    conn.execute(
+        "INSERT INTO cases (id, source, raw_data) VALUES (?, ?, ?)",
+        ("legacy_2020_001", "Other", "{}"),
+    )
+    conn.commit()
+    before = {row[1] for row in conn.execute("PRAGMA table_info(cases)")}
+    conn.close()
+    assert "document_version_id" not in before
+    assert "extraction_run_id" not in before
+
+    storage = CaseStorage(str(db))
+    conn = sqlite3.connect(db)
+    try:
+        after = {row[1] for row in conn.execute("PRAGMA table_info(cases)")}
+        tables = {
+            row[0]
+            for row in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
+        }
+    finally:
+        conn.close()
+    assert "document_version_id" in after
+    assert "extraction_run_id" in after
+    assert "source_documents" in tables
+    assert "extraction_runs" in tables
+
+    legacy = storage.get_case("legacy_2020_001")
+    assert legacy is not None
+    assert legacy.get("document_version_id") in (None, "")
+    assert storage.store_case(
+        _minimal_case(case_id="other_2026_legacy_add", url=None, source_file="old.pdf")
+    ) is True
+    added = storage.get_case("other_2026_legacy_add")
+    assert added is not None
+    assert added.get("document_version_id") in (None, "")
+    assert added.get("extraction_run_id") in (None, "")
+
+
 def test_persist_same_capture_is_idempotent(tmp_path: Path):
     db = tmp_path / "caselinker.db"
     storage = CaseStorage(str(db))

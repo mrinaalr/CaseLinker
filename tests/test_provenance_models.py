@@ -9,6 +9,9 @@ import pytest
 
 from provenance import (
     CANONICALIZATION_VERSION,
+    DEFAULT_DOCUMENT_TYPE,
+    JINA_DOCUMENT_TYPE,
+    JINA_PARSER_NAME,
     FetchedCapture,
     SourceDocument,
     SourceDocumentVersion,
@@ -145,3 +148,20 @@ def test_fetched_capture_sidecar_roundtrip(tmp_path: Path):
     sidecar = write_provenance_sidecar(pdf, [row])
     assert sidecar == provenance_sidecar_path(pdf)
     assert sidecar.name == "batch.provenance.json"
+
+
+def test_jina_payload_is_not_typed_as_agency_document():
+    jina_bytes = b"Title: X\nMarkdown Content:\nproxy\n"
+    capture = FetchedCapture(
+        url="https://agency.gov/blocked",
+        content=jina_bytes,
+        retrieved_at=_utc(),
+        mime_type="text/plain",
+        parser_name=JINA_PARSER_NAME,
+        document_type=JINA_DOCUMENT_TYPE,
+    )
+    document, version = capture.to_models()
+    assert document.document_type == JINA_DOCUMENT_TYPE
+    assert document.document_type != DEFAULT_DOCUMENT_TYPE
+    assert version.parser_name == JINA_PARSER_NAME
+    assert version.content_sha256 == sha256_bytes(jina_bytes)

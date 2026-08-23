@@ -36,7 +36,9 @@ CANONICALIZATION_VERSION: Final = "urlcanon_v1"
 SIDECAR_SCHEMA: Final = "caselinker.provenance.capture.v1"
 SCRAPE_PARSER_NAME: Final = "scrape_pdf"
 SCRAPE_PARSER_VERSION: Final = "v1"
+JINA_PARSER_NAME: Final = "scrape_pdf.jina"
 DEFAULT_DOCUMENT_TYPE: Final = "press_release"
+JINA_DOCUMENT_TYPE: Final = "jina_reader_payload"
 
 # Declared extractor tokens for extraction_runs (not a live ML probe).
 PATTERN_LAYER_VERSION: Final = "pattern_processing"

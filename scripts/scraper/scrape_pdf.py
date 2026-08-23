@@ -32,6 +32,10 @@ if str(_STORAGE_LAYER) not in sys.path:
     sys.path.insert(0, str(_STORAGE_LAYER))
 try:
     from provenance import (
+        DEFAULT_DOCUMENT_TYPE,
+        JINA_DOCUMENT_TYPE,
+        JINA_PARSER_NAME,
+        SCRAPE_PARSER_NAME,
         FetchedCapture,
         date_to_utc_midnight,
         load_provenance_sidecar,
@@ -400,9 +404,10 @@ class HttpFetch:
     etag: str | None
     last_modified: datetime | None
     retrieved_at: datetime
+    via_jina: bool = False
 
 
-def _http_fetch_from_response(r, *, fallback_mime: str) -> HttpFetch:
+def _http_fetch_from_response(r, *, fallback_mime: str, via_jina: bool = False) -> HttpFetch:
     mime = fallback_mime
     etag = None
     last_modified = None
@@ -427,6 +432,7 @@ def _http_fetch_from_response(r, *, fallback_mime: str) -> HttpFetch:
         etag=etag,
         last_modified=last_modified,
         retrieved_at=retrieved,
+        via_jina=via_jina,
     )
 
 
@@ -584,7 +590,7 @@ def fetch_jina_http(target_url: str, *, verify: bool = True, retries: int = 5) -
                 time.sleep(wait)
                 continue
             r.raise_for_status()
-            return _http_fetch_from_response(r, fallback_mime="text/plain")
+            return _http_fetch_from_response(r, fallback_mime="text/plain", via_jina=True)
         except Exception as e:
             last_err = e
             if attempt + 1 < retries:
@@ -2517,6 +2523,7 @@ def _capture_row_from_fetch(
     if http_fetch.status != 200:
         return None
     try:
+        via_jina = bool(getattr(http_fetch, "via_jina", False))
         capture = FetchedCapture(
             url=url,
             content=http_fetch.content,
@@ -2527,6 +2534,8 @@ def _capture_row_from_fetch(
             http_last_modified=http_fetch.last_modified,
             published_at=date_to_utc_midnight(pub_date),
             normalized_text=body,
+            parser_name=JINA_PARSER_NAME if via_jina else SCRAPE_PARSER_NAME,
+            document_type=JINA_DOCUMENT_TYPE if via_jina else DEFAULT_DOCUMENT_TYPE,
         )
         return capture.to_sidecar_row()
     except Exception as e:
