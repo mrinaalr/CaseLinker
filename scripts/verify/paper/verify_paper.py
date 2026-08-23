@@ -113,40 +113,44 @@ def main(argv: list[str] | None = None) -> int:
         _write_results_json(args.json, results)
         print(f"Wrote {args.json}")
 
-    code_revision = args.code_revision or git_code_revision(REPO_ROOT)
-    conn = sqlite3.connect(str(args.db))
-    try:
-        corpus = pin_corpus(conn)
-    finally:
-        conn.close()
+    # Snapshot pin/compare is opt-in. Default verify_paper is today's path:
+    # write the claim reports and stop. pin_corpus must not be a new
+    # default-path failure mode.
+    if args.snapshot is not None or args.against_snapshot is not None:
+        code_revision = args.code_revision or git_code_revision(REPO_ROOT)
+        conn = sqlite3.connect(str(args.db))
+        try:
+            corpus = pin_corpus(conn)
+        finally:
+            conn.close()
 
-    if args.snapshot is not None:
-        if args.snapshot:
-            snapshot_dir = Path(args.snapshot).parent
-        else:
-            snapshot_dir = out_dir / "snapshot"
-        recorded_at = args.recorded_at or git_recorded_at(REPO_ROOT)
-        written = emit_claim_snapshot(
-            snapshot_dir=snapshot_dir,
-            corpus=corpus,
-            results=results,
-            code_revision=code_revision,
-            recorded_at=recorded_at,
-        )
-        print(f"Wrote {written}")
+        if args.snapshot is not None:
+            if args.snapshot:
+                snapshot_dir = Path(args.snapshot).parent
+            else:
+                snapshot_dir = out_dir / "snapshot"
+            recorded_at = args.recorded_at or git_recorded_at(REPO_ROOT)
+            written = emit_claim_snapshot(
+                snapshot_dir=snapshot_dir,
+                corpus=corpus,
+                results=results,
+                code_revision=code_revision,
+                recorded_at=recorded_at,
+            )
+            print(f"Wrote {written}")
 
-    if args.against_snapshot is not None:
-        pinned = load_pinned_snapshot(args.against_snapshot)
-        report = compare_against_snapshot(
-            pinned=pinned,
-            live_corpus=corpus,
-            live_results=results,
-            live_code_revision=code_revision,
-        )
-        drift_path = out_dir / "claim-drift.json"
-        write_stable_json(drift_path, report)
-        print(f"Wrote {drift_path}")
-        print(format_drift_summary(report))
+        if args.against_snapshot is not None:
+            pinned = load_pinned_snapshot(args.against_snapshot)
+            report = compare_against_snapshot(
+                pinned=pinned,
+                live_corpus=corpus,
+                live_results=results,
+                live_code_revision=code_revision,
+            )
+            drift_path = out_dir / "claim-drift.json"
+            write_stable_json(drift_path, report)
+            print(f"Wrote {drift_path}")
+            print(format_drift_summary(report))
 
     counts: dict[str, int] = {}
     for r in results:
