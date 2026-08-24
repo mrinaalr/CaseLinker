@@ -1011,18 +1011,25 @@ def attach_ingest_provenance(
     storage: Any,
     cases: Sequence[dict[str, Any]],
     *,
+    source_files: Sequence[str | Path] | None = None,
     repo_root: str | Path | None = None,
     extractor_versions: Mapping[str, str] | None = None,
 ) -> Optional[str]:
     """
     Import any scrape sidecars, record one extraction_run, and set nullable
-    document_version_id / extraction_run_id on each case dict.
+    document_version_id / extraction_run_id on each case dict. When supplied,
+    source_files must be the original ingest paths; case records retain only
+    basenames and cannot reliably locate adjacent sidecars.
 
     Returns the run_id, or None if recording the run failed. Missing sidecars
     leave document_version_id unset (legacy NULL).
     """
-    source_files = case_source_files(cases)
-    for sidecar in discover_sidecars(source_files):
+    resolved_source_files = (
+        [str(source_file) for source_file in source_files]
+        if source_files is not None
+        else case_source_files(cases)
+    )
+    for sidecar in discover_sidecars(resolved_source_files):
         try:
             storage.import_provenance_sidecar(sidecar)
         except Exception as exc:
@@ -1035,7 +1042,7 @@ def attach_ingest_provenance(
         run_id = storage.record_extraction_run(
             code_revision=git_code_revision(repo_root),
             started_at=utcnow(),
-            source_files=source_files,
+            source_files=resolved_source_files,
             **versions,
         )
     except Exception as exc:

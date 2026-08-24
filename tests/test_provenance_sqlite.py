@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import sqlite3
 from datetime import UTC, datetime
 from pathlib import Path
@@ -98,10 +99,16 @@ def test_immutability_trigger_rejects_update(tmp_path: Path):
         conn.close()
 
 
-def test_scrape_sidecar_ingest_links_version_and_run(tmp_path: Path):
+def test_scrape_sidecar_ingest_links_version_and_run(tmp_path: Path, monkeypatch):
+    repo_root = tmp_path / "repo"
+    output_dir = repo_root / "scrape_output"
+    output_dir.mkdir(parents=True)
+    monkeypatch.chdir(repo_root)
+
     db = tmp_path / "caselinker.db"
     storage = CaseStorage(str(db))
-    pdf = tmp_path / "scraped_cases.pdf"
+    ingest_path = Path("scrape_output") / "scraped_cases.pdf"
+    pdf = repo_root / ingest_path
     pdf.write_bytes(b"%PDF-1.4 fake")
     url = "https://agency.gov/news/linked-case"
     capture = FetchedCapture(
@@ -121,9 +128,15 @@ def test_scrape_sidecar_ingest_links_version_and_run(tmp_path: Path):
     case = _minimal_case(
         case_id="other_2026_002",
         url=url,
-        source_file=str(pdf),
+        # Real ingestion stores only Path.name, not the argv path.
+        source_file=pdf.name,
     )
-    run_id = attach_ingest_provenance(storage, [case], repo_root=Path(__file__).resolve().parents[1])
+    run_id = attach_ingest_provenance(
+        storage,
+        [case],
+        source_files=[str(ingest_path)],
+        repo_root=Path(__file__).resolve().parents[1],
+    )
     assert run_id
     assert case["extraction_run_id"] == run_id
     assert case["document_version_id"]
@@ -149,7 +162,7 @@ def test_scrape_sidecar_ingest_links_version_and_run(tmp_path: Path):
         assert run[2] == "stanza"
         assert run[3] == "all-MiniLM-L6-v2"
         assert run[4] == "v2"
-        assert "scraped_cases.pdf" in run[5]
+        assert json.loads(run[5]) == [str(ingest_path)]
     finally:
         conn.close()
 
@@ -157,7 +170,7 @@ def test_scrape_sidecar_ingest_links_version_and_run(tmp_path: Path):
     again = _minimal_case(
         case_id="other_2026_002",
         url=url,
-        source_file=str(pdf),
+        source_file=pdf.name,
     )
     assert storage.store_case(again) is True
     preserved = storage.get_case("other_2026_002")

@@ -5,7 +5,7 @@ Simple pipeline: ingest -> process -> analyze -> store -> visualize
 
 import sys
 from pathlib import Path
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Sequence
 
 src_path = Path(__file__).parent
 sys.path.insert(0, str(src_path / "Ingestion Layer"))
@@ -92,7 +92,7 @@ def main():
         print("Step 3: Storing cases in database...")
         print("="*60)
         db_path = get_database_path()
-        stored_count = store_cases(cases, db_path)
+        stored_count = store_cases(cases, db_path, ingest_paths=file_paths)
         print(f"✓ Stored {stored_count}/{len(cases)} cases in database")
         
         print("\n" + "="*60)
@@ -156,7 +156,12 @@ def get_database_path() -> Optional[str]:
         return "caselinker.db"
 
 
-def store_cases(cases: List[Dict[str, Any]], db_path: Optional[str]) -> int:
+def store_cases(
+    cases: List[Dict[str, Any]],
+    db_path: Optional[str],
+    *,
+    ingest_paths: Optional[Sequence[str]] = None,
+) -> int:
     """
     Store cases in the database.
     
@@ -167,6 +172,8 @@ def store_cases(cases: List[Dict[str, Any]], db_path: Optional[str]) -> int:
     Args:
         cases: List of case dictionaries to store
         db_path: Path to database file (SQLite) or None (PostgreSQL)
+        ingest_paths: Original PDF paths supplied to the ingest command. These
+            retain the directories that case source_file basenames omit.
         
     Returns:
         Number of successfully stored cases
@@ -183,7 +190,11 @@ def store_cases(cases: List[Dict[str, Any]], db_path: Optional[str]) -> int:
     try:
         from provenance import attach_ingest_provenance
 
-        attach_ingest_provenance(storage, cases_to_store)
+        attach_ingest_provenance(
+            storage,
+            cases_to_store,
+            source_files=ingest_paths,
+        )
     except Exception as exc:
         print(f"⚠️  Provenance attach skipped (ingest continues): {exc}")
 
