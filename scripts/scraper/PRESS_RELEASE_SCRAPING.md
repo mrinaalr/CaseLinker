@@ -18,6 +18,24 @@ Every article in the merged PDF must be a **self-contained press-release page** 
 
 `scrape_pdf.py` builds that layout with ReportLab and merges pages with `pypdf`. Generic HTML works for many sites; some hosts need **host-specific extractors** in `extract()` or Jina cleanup in `extract_from_jina_reader()`.
 
+### justice.gov (DOJ) — API route, not scraping
+
+`www.justice.gov/usao-*/pr/*` and `/archives/opa/pr/*` sit behind an **Akamai Bot Manager JS interstitial** (a proof-of-work challenge page, not the article — confirmed host-wide across multiple USAOs, not specific to one release). Direct `requests`/`curl` gets back a ~2.4KB challenge shell instead of content. Jina Reader (`r.jina.ai`) can *also* independently refuse anonymous requests on network-reputation grounds, unrelated to Akamai. **Do not try to solve the JS challenge** — that is bot-wall evasion, not scraping, and this repo does not do that.
+
+Instead, DOJ publishes a public press-release API that needs no bot-wall workaround:
+
+- `GET https://www.justice.gov/api/v1/press_releases.json?parameters[title]=<substring>&pagesize=50&page=N`
+- Docs: `https://www.justice.gov/developer/api-documentation/api_v1`
+- `parameters[title]` does a **substring** match against the title — not exact/quoted, despite how the docs example reads
+- `page=` and `pagesize=` are **top-level** query params, *not* nested under `parameters[...]`
+- Rate limit per the docs: **4 requests/second** (`scrape_doj.py` self-throttles to ~3.3 req/s to stay comfortably under it)
+- No API key required
+- The `body` field is raw HTML — `<p>` blocks, `&nbsp;`, embedded `<a>`/`<br>`, and sometimes an addendum `<table>` (defendant / role / charges / status rows). A naive "grab all `<p>` text" strip silently **drops the table** — real content, not noise. `scrape_doj.py`'s `clean_doj_api_body()` walks `<p>` and `<tr>` in document order so table rows survive as their own line.
+
+There's no direct "search by URL" API parameter, so matching a specific `justice.gov` URL to its API record works by: deriving search keywords from the URL's slug, querying `parameters[title]`, then confirming an **exact slug match** against each candidate's `url` field (title-substring search alone returns too many near-miss titles to trust blindly — DOJ often republishes the same case under slightly different titles, e.g. "...Elder **Fraud** Scheme" vs "...Elder **Abuse** Scheme" for the same prosecution).
+
+`scrape_doj.py` (see below) is the entry point that does this resolution automatically — you should not need to call the DOJ API by hand.
+
 ---
 
 ## Prerequisites
@@ -193,6 +211,32 @@ Read the console summary: `Succeeded: N | Failed: M`. Investigate every failed U
 
 ---
 
+## `scrape_doj.py` — DOJ API bridge (run before `scrape_pdf.py` when the source list may contain justice.gov URLs)
+
+If a url-file mixes `justice.gov` URLs with state AG / other self-hosted sources, run `scrape_doj.py` **first** instead of feeding the url-file straight to `scrape_pdf.py`:
+
+```bash
+cd scripts/scraper
+python3 scrape_doj.py --url-file sources/urls.txt --out sources/urls_resolved.json
+```
+
+For each URL, it classifies and routes:
+
+- **`justice.gov`** → resolved via the DOJ API (see above), never fetched live. Emits `{"source_url", "mode": "resolved", "title", "byline", "pub_date", "body", "agency", "uuid"}` — `body` is already clean paragraph text, ready for `write_pdf()`.
+- **anything else** → passed through unchanged: `{"source_url", "mode": "scrape"}`. **No behavior change** for state AG / other existing sources — `scrape_pdf.py` fetches and extracts these exactly as it always has.
+- **no exact API match found** for a `justice.gov` URL → `{"source_url", "mode": "unresolved"}`. `scrape_pdf.py` counts these as failures rather than guessing at a fetch that will just hit the Akamai wall.
+
+Then feed the output into `scrape_pdf.py` with `--doj-file` instead of `--url-file`:
+
+```bash
+python3 scrape_pdf.py --doj-file sources/urls_resolved.json \
+  --out-dir ../.. --out-name MIXED_BATCH_All.pdf
+```
+
+`--doj-file` takes precedence over `--url-file` when both are given. `mode: "resolved"` records skip network entirely and go straight to `write_pdf()` (no rate-limit delay applied — no request was made). `mode: "scrape"` records run through the same `resolve_url_content()` helper the plain `--url-file` path always used (native-PDF handling, Jina-first hosts, njoag/ncis-follow cleanup — unchanged), so the merged PDF looks identical regardless of whether an article came from the DOJ API or a live scrape. Per-URL PDF caching under `tmp/` works the same in both modes (keyed by URL hash).
+
+---
+
 ## `scrape_pdf.py` internals (what agents may extend)
 
 ### HTML extract path (`extract()`)
@@ -211,6 +255,7 @@ Read the console summary: `Succeeded: N | Failed: M`. Investigate every failed U
 | `fresnosheriff.org` | `.item-page`; title from `h2` if h1 is “Media Relations” |
 | `osceolasheriff.org` | `.l-main .entry-content` |
 | `dps.iowa.gov` | `.field--name-field-news__body` (Drupal news body field) |
+| `michigan.gov` | `.news-item__section-content`; plain `main` also picks up a hidden browser-detection modal **and** a "related news" widget that inlines the full body text of *other* releases (not just teaser links) — using bare `main` silently merges two unrelated press releases into one body |
 
 **Adding a new host:** in `extract()`, after `netloc = urlparse(url).netloc.lower()`, add an `elif netloc in (...): container = soup.select_one("...")` block. Prefer the **smallest** node that still contains all `<p>` body copy. Re-run the one-URL probe.
 
@@ -262,9 +307,11 @@ python3 scrape_pdf.py --url-file <(echo 'https://...') --out-dir /tmp/scrape-tes
 ```
 scripts/scraper/
   scrape_pdf.py              # HTML/PDF → per-article PDF → merge
+  scrape_doj.py             # DOJ API bridge → resolved/scrape-mode JSON for scrape_pdf.py --doj-file
   fetch_source_urls.py         # listing pages → url list
   urls.txt                     # optional: active run list (often copied from sources/)
   sources/
+    urls.txt                   # active run list (scrape_doj.py / scrape_pdf.py input)
     osceola_icac_urls.txt
     example_trafficking_urls.txt
   patterns/                    # optional: require/exclude line files for fetch_source_urls
@@ -411,6 +458,11 @@ python3 filter_merged_pdf.py \
 
 # Clear cache for one host
 rm -rf ../../tmp ../scrape_output/tmp  # adjust path to your --out-dir/tmp
+
+# DOJ (justice.gov) mixed in with other sources — resolve via API, then scrape the rest
+python3 scrape_doj.py --url-file sources/urls.txt --out sources/urls_resolved.json
+python3 scrape_pdf.py --doj-file sources/urls_resolved.json \
+  --out-dir ../.. --out-name MIXED_BATCH_All.pdf
 ```
 
 ---
@@ -428,8 +480,11 @@ rm -rf ../../tmp ../scrape_output/tmp  # adjust path to your --out-dir/tmp
 
 | File | Role |
 |------|------|
-| `scrape_pdf.py` | Extract, PDF layout, merge, cache, Jina, native PDF |
+| `scrape_pdf.py` | Extract, PDF layout, merge, cache, Jina, native PDF, `--doj-file` intake |
+| `scrape_doj.py` | DOJ API bridge — resolves justice.gov URLs via the API, passes everything else through unchanged |
 | `fetch_source_urls.py` | Pagination, filters, Squarespace search API |
 | `urls.txt` | Example active list (often copied per run) |
+
+For the suite-level "what does what, how do I use all of this" onboarding doc, see `README.md` in this directory.
 
 Pipeline wiring (`ingestion.py`, `batching.py`, `sources.html`) is **out of scope** for this guide.
