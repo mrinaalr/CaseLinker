@@ -26,6 +26,27 @@ from case_storage_utils import (
     slim_extracted_features_for_storage,
 )
 
+try:
+    from provenance import (
+        apply_postgres_provenance_schema,
+        insert_extraction_run,
+        latest_version_id_for_url,
+        load_provenance_sidecar,
+        persist_models,
+        persist_sidecar_rows,
+        utcnow,
+    )
+except ImportError:
+    from .provenance import (
+        apply_postgres_provenance_schema,
+        insert_extraction_run,
+        latest_version_id_for_url,
+        load_provenance_sidecar,
+        persist_models,
+        persist_sidecar_rows,
+        utcnow,
+    )
+
 # Connection pool (reuse connections for better performance)
 _pool: Optional[SimpleConnectionPool] = None
 
@@ -112,7 +133,9 @@ class CaseStorage:
                     raw_data TEXT,
                     extracted_features TEXT,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    document_version_id TEXT,
+                    extraction_run_id TEXT
                 )
             ''')
             
@@ -133,6 +156,7 @@ class CaseStorage:
                     END IF;
                 END $$;
             ''')
+            apply_postgres_provenance_schema(cursor)
             
             cursor.execute('''
                 CREATE TABLE IF NOT EXISTS victim_demographics (
@@ -223,14 +247,24 @@ class CaseStorage:
             
             # Check if case already exists to preserve created_at timestamp and prevent conflicts
             case_id = case.get('id')
-            cursor.execute('SELECT created_at, raw_data FROM cases WHERE id = %s', (case_id,))
+            cursor.execute(
+                'SELECT created_at, raw_data, document_version_id, extraction_run_id '
+                'FROM cases WHERE id = %s',
+                (case_id,),
+            )
             existing_case = cursor.fetchone()
             
             # Use consistent ISO format for timestamps
             current_time = datetime.now().isoformat()
             
+            existing_document_version_id = None
+            existing_extraction_run_id = None
             if existing_case:
-                existing_created_at, existing_raw_data_json = existing_case
+                existing_created_at = existing_case[0]
+                existing_raw_data_json = existing_case[1]
+                if len(existing_case) > 2:
+                    existing_document_version_id = existing_case[2]
+                    existing_extraction_run_id = existing_case[3]
                 
                 # Check if this is from a different source file (conflict detection)
                 new_source_file = None
@@ -267,6 +301,9 @@ class CaseStorage:
                 # New case: use created_at from case dict if provided, otherwise use current time
                 created_at = case.get('created_at') or current_time
                 updated_at = case.get('updated_at') or created_at
+
+            document_version_id = case.get('document_version_id') or existing_document_version_id
+            extraction_run_id = case.get('extraction_run_id') or existing_extraction_run_id
             
             # PostgreSQL: Use INSERT ... ON CONFLICT DO UPDATE instead of INSERT OR REPLACE
             cursor.execute('''
@@ -274,8 +311,9 @@ class CaseStorage:
                     id, source, source_url, date_start, date_end, victim_count, perpetrator_count,
                     relationship_to_victim, platforms_used,
                     severity_indicators, case_topics, tags, notes,
-                    raw_data, extracted_features, created_at, updated_at
-                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    raw_data, extracted_features, created_at, updated_at,
+                    document_version_id, extraction_run_id
+                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 ON CONFLICT (id) DO UPDATE SET
                     source = EXCLUDED.source,
                     source_url = EXCLUDED.source_url,
@@ -291,7 +329,9 @@ class CaseStorage:
                     notes = EXCLUDED.notes,
                     raw_data = EXCLUDED.raw_data,
                     extracted_features = EXCLUDED.extracted_features,
-                    updated_at = EXCLUDED.updated_at
+                    updated_at = EXCLUDED.updated_at,
+                    document_version_id = COALESCE(EXCLUDED.document_version_id, cases.document_version_id),
+                    extraction_run_id = COALESCE(EXCLUDED.extraction_run_id, cases.extraction_run_id)
             ''', (
                 case_id,
                 case.get('source', 'unknown'),
@@ -309,7 +349,9 @@ class CaseStorage:
                 json.dumps(case.get('raw_data', {})),
                 json.dumps(slim_extracted_features_for_storage(case)),
                 created_at,
-                updated_at
+                updated_at,
+                document_version_id,
+                extraction_run_id,
             ))
             
             case_demo = case.get('case_demographics') or case.get('victim_demographics')
@@ -414,6 +456,81 @@ class CaseStorage:
             if self.store_case(case):
                 stored_count += 1
         return stored_count
+
+    def persist_provenance_models(self, document, version) -> Tuple[str, str]:
+        """Insert one source document + version. Idempotent for identical rows."""
+        conn = get_connection()
+        try:
+            cursor = conn.cursor()
+            ids = persist_models(cursor, document, version, dialect="postgres")
+            conn.commit()
+            cursor.close()
+            return ids
+        finally:
+            return_connection(conn)
+
+    def import_provenance_sidecar(self, sidecar_path) -> int:
+        """Load a scrape sidecar into source_documents / source_document_versions."""
+        rows = load_provenance_sidecar(sidecar_path)
+        if not rows:
+            return 0
+        conn = get_connection()
+        try:
+            cursor = conn.cursor()
+            persist_sidecar_rows(cursor, rows, dialect="postgres")
+            conn.commit()
+            cursor.close()
+            return len(rows)
+        finally:
+            return_connection(conn)
+
+    def get_document_version_id_for_url(self, url: str) -> Optional[str]:
+        """Latest version_id for a canonicalized URL, or None."""
+        conn = get_connection()
+        try:
+            cursor = conn.cursor()
+            version_id = latest_version_id_for_url(cursor, url, dialect="postgres")
+            cursor.close()
+            return version_id
+        finally:
+            return_connection(conn)
+
+    def record_extraction_run(
+        self,
+        *,
+        code_revision: str,
+        started_at=None,
+        source_files: Optional[List[str]] = None,
+        pattern_layer_version: str = "pattern_processing",
+        ner_backend: str = "stanza",
+        semantic_model: str = "all-MiniLM-L6-v2",
+        victim_age_gate_version: str = "v2",
+        run_id: Optional[str] = None,
+    ) -> str:
+        """Append one slim extraction_runs row and return run_id."""
+        from provenance import new_run_id
+
+        run_id = run_id or new_run_id()
+        conn = get_connection()
+        try:
+            cursor = conn.cursor()
+            insert_extraction_run(
+                cursor,
+                run_id=run_id,
+                code_revision=code_revision,
+                started_at=started_at or utcnow(),
+                pattern_layer_version=pattern_layer_version,
+                ner_backend=ner_backend,
+                semantic_model=semantic_model,
+                victim_age_gate_version=victim_age_gate_version,
+                source_files=source_files or [],
+                dialect="postgres",
+            )
+            conn.commit()
+            cursor.close()
+            return run_id
+        finally:
+            return_connection(conn)
     
     def get_case(self, case_id: str) -> Optional[Dict[str, Any]]:
         """Retrieve a single case by ID."""
