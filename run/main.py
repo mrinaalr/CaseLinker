@@ -22,6 +22,7 @@ import threading
 import time
 import gc
 import asyncio
+import httpx
 import requests
 from datetime import datetime
 from pathlib import Path
@@ -30,8 +31,11 @@ from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent
+_RUN_DIR = Path(__file__).resolve().parent
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
+if str(_RUN_DIR) not in sys.path:
+    sys.path.insert(0, str(_RUN_DIR))
 sys.path.insert(0, str(_REPO_ROOT / "src" / "Storage Layer"))
 sys.path.insert(0, str(_REPO_ROOT / "src" / "Clustering & Analysis Layer"))
 sys.path.insert(0, str(_REPO_ROOT / "src" / "Visualization Layer"))
@@ -98,6 +102,8 @@ except ImportError:
         return False
     def get_cache_key(endpoint, **kwargs):
         return f"caselinker:{endpoint}"
+
+from sparql_proxy import SparqlRejected, prepare_sparql_query
 
 _mcp_streamable_enabled = False
 
@@ -3220,7 +3226,7 @@ async def healthz():
 @app.get("/robots.txt")
 async def robots_txt():
     """Keep crawlers off expensive API/ontology routes."""
-    body = "User-agent: *\nAllow: /\nDisallow: /api/\nDisallow: /ontology/\n"
+    body = "User-agent: *\nAllow: /\nDisallow: /api/\nDisallow: /ontology/\nDisallow: /sparql\n"
     return PlainTextResponse(content=body)
 
 
@@ -4297,6 +4303,103 @@ def api_ontology_cache_warm(
             }
         )
     return {"warmed": results}
+
+
+_OXIGRAPH_URL = os.environ.get("OXIGRAPH_URL", "").strip().rstrip("/")
+_SPARQL_HTTP_TIMEOUT_S = float(os.environ.get("SPARQL_HTTP_TIMEOUT_S", "32"))
+
+
+async def _sparql_query_from_request(request: Request) -> str:
+    """Read a SPARQL 1.1 Protocol query from GET or POST; reject Update payloads."""
+    if request.query_params.get("update"):
+        raise HTTPException(
+            status_code=405,
+            detail="SPARQL Update is not allowed on this endpoint.",
+        )
+    if request.method == "GET":
+        query = request.query_params.get("query")
+        if not query or not str(query).strip():
+            raise HTTPException(status_code=400, detail="Missing query parameter.")
+        return str(query)
+
+    content_type = (request.headers.get("content-type") or "").split(";")[0].strip().lower()
+    if content_type == "application/sparql-update":
+        raise HTTPException(
+            status_code=405,
+            detail="SPARQL Update is not allowed on this endpoint.",
+        )
+    if content_type == "application/sparql-query":
+        raw = (await request.body()).decode("utf-8", errors="replace")
+        if not raw.strip():
+            raise HTTPException(status_code=400, detail="Missing SPARQL query.")
+        return raw
+
+    form = await request.form()
+    if form.get("update"):
+        raise HTTPException(
+            status_code=405,
+            detail="SPARQL Update is not allowed on this endpoint.",
+        )
+    query = form.get("query")
+    if not query or not str(query).strip():
+        raise HTTPException(
+            status_code=400,
+            detail="Missing SPARQL query (POST application/sparql-query or form field query=).",
+        )
+    return str(query)
+
+
+@app.api_route("/sparql", methods=["GET", "POST"])
+@limiter.limit("30/minute")
+async def sparql_query(request: Request):
+    """Public SPARQL 1.1 Query proxy (query-only). Rate limited 30/minute per IP.
+
+    Same slowapi layer as other public analytical routes. No MCP_ACCESS_KEY gate.
+    Update verbs and SERVICE are rejected. A default LIMIT is injected when the
+    outer query has none (rdflib parser; see run/sparql_proxy.py).
+    """
+    if not _OXIGRAPH_URL:
+        raise HTTPException(
+            status_code=503,
+            detail="SPARQL store is not configured (set OXIGRAPH_URL).",
+        )
+
+    query_text = await _sparql_query_from_request(request)
+    try:
+        prepared = prepare_sparql_query(query_text)
+    except SparqlRejected as exc:
+        raise HTTPException(status_code=exc.status_code, detail=exc.detail) from exc
+
+    accept = request.headers.get("accept") or "application/sparql-results+json"
+    try:
+        async with httpx.AsyncClient(
+            timeout=httpx.Timeout(_SPARQL_HTTP_TIMEOUT_S, connect=5.0)
+        ) as client:
+            upstream = await client.post(
+                f"{_OXIGRAPH_URL}/query",
+                content=prepared.query.encode("utf-8"),
+                headers={
+                    "Content-Type": "application/sparql-query",
+                    "Accept": accept,
+                },
+            )
+    except httpx.TimeoutException as exc:
+        raise HTTPException(
+            status_code=504,
+            detail=f"SPARQL query timed out after {_SPARQL_HTTP_TIMEOUT_S:.0f}s.",
+        ) from exc
+    except httpx.RequestError as exc:
+        raise HTTPException(
+            status_code=503,
+            detail="SPARQL store is unreachable.",
+        ) from exc
+
+    media_type = upstream.headers.get("content-type") or "application/sparql-results+json"
+    return Response(
+        content=upstream.content,
+        status_code=upstream.status_code,
+        media_type=media_type,
+    )
 
 
 # MCP mounts: legacy SSE at /mcp/sse + Streamable HTTP at /mcp-http

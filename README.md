@@ -353,9 +353,33 @@ To answer Q1–Q3 at corpus scale, enforcement narratives cannot stay only in re
 2. **Mapping layer** — deterministic translation to CAC entities and relationships (`ontology/graph_generate.py`).
 3. **RDF emission** — per-case graphs as Turtle and JSON-LD under `ontology/graph_output/`.
 4. **SHACL validation** — only conformant graphs enter the merged corpus.
-5. **SPARQL-queryable corpus** — merged validated graphs become the substrate for Q1–Q3 analyses.
+5. **SPARQL-queryable corpus** — canonical per-case graphs are loaded into Oxigraph (named graph per case; union default graph) and served at `GET|POST /sparql`.
 
 Agents can also build cohort graphs on demand via MCP (`case2cac` → `graph_summarize` → `export_case_graph_ttl`).
+
+**Public SPARQL endpoint** (`GET|POST /sparql`) — SPARQL 1.1 Query only (SELECT, CONSTRUCT, ASK, DESCRIBE). Same public IP rate-limit layer as the rest of the API (slowapi **30/minute**, matching `/api/technology-revolver` and `/api/automated-analysis`: analytical, bounded by LIMIT + timeout). No `MCP_ACCESS_KEY` gate. SPARQL Update and `SERVICE` federation are rejected. If a SELECT/CONSTRUCT/DESCRIBE has no outer `LIMIT`, the proxy injects `LIMIT 1000` using [rdflib’s SPARQL parser](run/sparql_proxy.py) (not regex). Outer `LIMIT` above 10,000 is rejected. Each case lives in named graph `https://caselinker.up.railway.app/resource/case/{case_id}`; default-graph queries see the union. Rebuild is wholesale remap-and-overwrite (`python3 scripts/rebuild_oxigraph.py`), not incremental. Platform/agency extra facts can vary by batch order ([issue #10](https://github.com/mrinaalr/CaseLinker/issues/10)).
+
+```bash
+curl -sS -X POST 'https://caselinker.up.railway.app/sparql' \
+  -H 'Content-Type: application/sparql-query' \
+  -H 'Accept: application/sparql-results+json' \
+  --data-binary @- <<'SPARQL'
+PREFIX cac: <https://cacontology.projectvic.org#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?platform ?label (COUNT(DISTINCT ?case) AS ?cases)
+WHERE {
+  ?event cac:usesChannel ?platform .
+  ?platform rdfs:label ?label .
+  ?case a cac:CACInvestigation ; cac:hasStep ?event .
+}
+GROUP BY ?platform ?label
+ORDER BY DESC(?cases)
+LIMIT 8
+SPARQL
+```
+
+Set `OXIGRAPH_URL` on the web service to the private Oxigraph base URL (for example `http://oxigraph.railway.internal:7878`).
+
 
 **References**
 - [CAC Ontology repository](https://github.com/Project-VIC-International/CAC-Ontology)
@@ -391,10 +415,12 @@ CaseLinker/
 │   ├── Visualization Layer/          # Server-side viz helpers
 │   └── main.py                       # CLI: ingest PDFs → process → store
 ├── run/
-│   ├── main.py                       # FastAPI app: pages + REST API
+│   ├── main.py                       # FastAPI app: pages + REST API + /sparql
+│   ├── sparql_proxy.py               # SPARQL parser policy (LIMIT / Update / SERVICE)
 │   ├── redis_cache.py                # Optional Redis caching (production)
 │   └── auth.py                       # Access gates / keys for sensitive views
 ├── scripts/
+│   ├── rebuild_oxigraph.py           # Wholesale Oxigraph reload (N-Quads PUT /store)
 │   ├── stats/                        # Corpus statistics scripts
 │   ├── verify/                       # Claims, uniqueness, ICAC TF alignment, triage tests
 │   ├── run/                          # ingest_all_pdfs.sh, import_corpus_from_api.py, clear_postgres.py, train_triage_model.py
@@ -426,7 +452,8 @@ CaseLinker/
 │   │   ├── universe/                 # full corpus — compare + Universe mode
 │   │   └── big_bang/                 # half-sample — Big Bang button
 │   ├── big_bang.py                   # ~1k bridge-dense subset for /patterns/graph
-│   └── merge_graph_cache.py          # merged compare / all pools (API)
+│   ├── merge_graph_cache.py          # merged compare / all pools (API)
+│   └── oxigraph_rebuild.py           # canonical TTL → per-case named-graph N-Quads
 ├── caselinker_mcp/                   # MCP server (37 tools; SSE + Streamable HTTP on Railway)
 │   ├── server.py                     # FastMCP entry point
 │   ├── README.md                     # Hosted auth, Cursor config, graph workflow
@@ -502,6 +529,7 @@ When the ML stack is enabled, NER adds organizations, locations, dates, and ages
 - `GET /patterns/questions/{question_id}` - Q01–Q03 narrative question pages
 - `GET /mcp/sse` - MCP SSE transport (requires `Authorization: Bearer <MCP_ACCESS_KEY>`)
 - `GET|POST /mcp-http/` - MCP Streamable HTTP transport (same auth)
+- `GET|POST /sparql` - SPARQL 1.1 Query proxy over the CASE/UCO/CAC case graphs (public, 30/minute; query-only; see Section B)
 - `GET /api/ontology/merged` - Merged graph JSON (`pool=compare|all|universe|analysis`; public, cached)
 - `GET /api/ontology/cases` - Per-case graph catalog (`pool=compare|all|universe|analysis`; public metadata: `case_id`, `path`, `ttl_path`)
 - `GET /ontology/graph_output/{pool}/{case_id}.jsonld|.ttl` - Static per-case CAC graph files (public)
@@ -551,7 +579,7 @@ When the ML stack is enabled, NER adds organizations, locations, dates, and ages
 
 ## Deployment
 
-CaseLinker can be deployed to cloud platforms for public access. The app includes a `Procfile` for deployment to Railway, Heroku, and similar platforms.
+CaseLinker can be deployed to cloud platforms for public access. The app includes a `Procfile` for deployment to Railway, Heroku, and similar platforms. The SPARQL proxy reads `OXIGRAPH_URL` (private Oxigraph base URL). After regenerating case graphs, reload the store with `python3 scripts/rebuild_oxigraph.py` (wholesale overwrite, not incremental).
 
 
 ## Sources and Ethics
