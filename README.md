@@ -355,9 +355,10 @@ To answer Q1–Q3 at corpus scale, enforcement narratives cannot stay only in re
 4. **SHACL validation** — only conformant graphs enter the merged corpus.
 5. **SPARQL-queryable corpus** — canonical per-case graphs are loaded into Oxigraph (named graph per case; union default graph) and served at `GET|POST /sparql`.
 
-Agents can also build cohort graphs on demand via MCP (`case2cac` → `graph_summarize` → `export_case_graph_ttl`).
+Agents can also build cohort graphs on demand via MCP (`case2cac` → `graph_summarize` → `export_case_graph_ttl`), or query the live store with the [CASE/UCO SDK](https://github.com/vulnmaster/CASE-UCO-SDK) `execute_sparql_query` tool.
 
-**Public SPARQL endpoint** (`GET|POST /sparql`) — SPARQL 1.1 Query only (SELECT, CONSTRUCT, ASK, DESCRIBE). Same public IP rate-limit layer as the rest of the API (slowapi **30/minute**, matching `/api/technology-revolver` and `/api/automated-analysis`: analytical, bounded by LIMIT + timeout). No `MCP_ACCESS_KEY` gate. SPARQL Update and `SERVICE` federation are rejected. If a SELECT/CONSTRUCT/DESCRIBE has no outer `LIMIT`, the proxy injects `LIMIT 1000` using [rdflib’s SPARQL parser](run/sparql_proxy.py) (not regex). Outer `LIMIT` above 10,000 is rejected. Each case lives in named graph `https://caselinker.up.railway.app/resource/case/{case_id}`; default-graph queries see the union. Rebuild is wholesale remap-and-overwrite (`python3 scripts/rebuild_oxigraph.py`), not incremental. Platform/agency extra facts can vary by batch order ([issue #10](https://github.com/mrinaalr/CaseLinker/issues/10)).
+
+**Public SPARQL** (`GET|POST /sparql`) — SPARQL 1.1 Query only (`SELECT`, `CONSTRUCT`, `ASK`, `DESCRIBE`). No auth. Update and `SERVICE` are rejected. Rate limit is **30/minute** per IP. If a query has no outer `LIMIT`, the proxy injects **1000**; outer `LIMIT` above **10,000** is rejected. Each case is named graph `https://caselinker.up.railway.app/resource/case/{case_id}`; default-graph patterns see the union. Request formats, namespaces, errors, and more examples: **[ontology/docs/SPARQL.md](ontology/docs/SPARQL.md)**.
 
 ```bash
 curl -sS -X POST 'https://caselinker.up.railway.app/sparql' \
@@ -377,6 +378,9 @@ ORDER BY DESC(?cases)
 LIMIT 8
 SPARQL
 ```
+
+Full ontology documentation (vocabulary, pipeline, graph pools, Q1–Q3, PACER, code map): **[ontology/README.md](ontology/README.md)**.
+
 
 **References**
 - [CAC Ontology repository](https://github.com/Project-VIC-International/CAC-Ontology)
@@ -443,14 +447,14 @@ CaseLinker/
 │   ├── audit.html                    # /audit
 │   └── under-the-hood.html           # /under-the-hood
 ├── ontology/
-│   ├── q1/                           # Q1 affordance candidates + evidence
-│   ├── q2/                           # Q2 lifecycle subsets + evidence
-│   ├── graph_output/                 # staging (new graphs; not in Patterns viz)
-│   │   ├── universe/                 # full corpus — compare + Universe mode
-│   │   └── big_bang/                 # half-sample — Big Bang button
-│   ├── big_bang.py                   # ~1k bridge-dense subset for /patterns/graph
-│   ├── merge_graph_cache.py          # merged compare / all pools (API)
-│   └── oxigraph_rebuild.py           # canonical TTL → per-case named-graph N-Quads
+│   ├── README.md                     # Ontology docs (vocabulary, pipeline, pools)
+│   ├── docs/SPARQL.md                # Public SPARQL 1.1 API guide
+│   ├── features_to_cac.py            # Case features → CAC RDF
+│   ├── graph_generate.py             # Batch TTL / JSON-LD
+│   ├── oxigraph_rebuild.py           # Canonical TTL → named-graph N-Quads
+│   ├── q1/ q2/ q3/                   # Research evidence
+│   ├── PACER/                        # PACER → lifecycle facts
+│   └── graph_output/                 # staging + universe/ + big_bang/ + analysis/
 ├── caselinker_mcp/                   # MCP server (37 tools; SSE + Streamable HTTP on Railway)
 │   ├── server.py                     # FastMCP entry point
 │   ├── README.md                     # Hosted auth, Cursor config, graph workflow
@@ -526,7 +530,7 @@ When the ML stack is enabled, NER adds organizations, locations, dates, and ages
 - `GET /patterns/questions/{question_id}` - Q01–Q03 narrative question pages
 - `GET /mcp/sse` - MCP SSE transport (requires `Authorization: Bearer <MCP_ACCESS_KEY>`)
 - `GET|POST /mcp-http/` - MCP Streamable HTTP transport (same auth)
-- `GET|POST /sparql` - SPARQL 1.1 Query proxy over the CASE/UCO/CAC case graphs (public, 30/minute; query-only; see Section B)
+- `GET|POST /sparql` - SPARQL 1.1 Query proxy over the CASE/UCO/CAC case graphs (public, 30/minute; query-only; [ontology/docs/SPARQL.md](ontology/docs/SPARQL.md))
 - `GET /api/ontology/merged` - Merged graph JSON (`pool=compare|all|universe|analysis`; public, cached)
 - `GET /api/ontology/cases` - Per-case graph catalog (`pool=compare|all|universe|analysis`; public metadata: `case_id`, `path`, `ttl_path`)
 - `GET /ontology/graph_output/{pool}/{case_id}.jsonld|.ttl` - Static per-case CAC graph files (public)

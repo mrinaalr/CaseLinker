@@ -4378,14 +4378,20 @@ async def _sparql_query_from_request(request: Request) -> str:
     return str(query)
 
 
-@app.api_route("/sparql", methods=["GET", "POST"])
+@app.api_route(
+    "/sparql",
+    methods=["GET", "POST"],
+    tags=["SPARQL"],
+    summary="SPARQL 1.1 Query (public)",
+)
 @limiter.limit("30/minute")
 async def sparql_query(request: Request):
-    """Public SPARQL 1.1 Query proxy (query-only). Rate limited 30/minute per IP.
+    """Public SPARQL 1.1 Query proxy over the CASE/UCO/CAC case graphs.
 
-    Same slowapi layer as other public analytical routes. No MCP_ACCESS_KEY gate.
-    Update verbs and SERVICE are rejected. A default LIMIT is injected when the
-    outer query has none (rdflib parser; see run/sparql_proxy.py).
+    Query-only (`SELECT`, `CONSTRUCT`, `ASK`, `DESCRIBE`). GET `?query=` or POST
+    `application/sparql-query` / form `query=`. Default `Accept` is SPARQL Results
+    JSON. Named graph per case; default graph is the union. 30/minute per IP.
+    Update and `SERVICE` are rejected. User-facing guide: ontology/docs/SPARQL.md.
     """
     if not _OXIGRAPH_URL:
         raise HTTPException(
