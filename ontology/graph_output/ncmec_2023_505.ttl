@@ -1,0 +1,111 @@
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_505> a cacontology:CACInvestigation,
+        cac-core:EnduringEntity ;
+    dcterms:created "2026-08-24T18:02:44.307852" ;
+    dcterms:identifier "ncmec_2023_505" ;
+    dcterms:modified "2026-08-24T18:02:44.307852" ;
+    dcterms:source <https://www.appeal-democrat.com/news/what-gets-children-victimized-man-arrested-in-alleged-child-porn-case-out-on-own-recognizance/article_b58966bc-21d2-11ee-b67e-f7f579a4249c.html>,
+        "NCMEC" ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_505/phase/booked> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_505/phase/booked> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_505/cybertip>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2023_505/event/distribution>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2023_505/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2023_505/event/trust-violation>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2023_505/legal-proceeding> ;
+    cacontology:investigationStatus "unknown" ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ncmec>,
+        <https://caselinker.up.railway.app/resource/agency/sutter-county-sheriffs-office> .
+
+<https://caselinker.up.railway.app/resource/agency/sutter-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Sutter County Sheriff's Office" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_505/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
+        cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "child pornography" ;
+    cacontology-legal-outcomes:indictmentCounts 2 .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_505/charge/2> a cacontology-legal-outcomes:CSAM_Distribution,
+        cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "distribution of child pornography" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_505/charge/3> a cacontology-legal-outcomes:CriminalCharge,
+        cacontology-legal-outcomes:OnlineEnticement ;
+    rdfs:label "online enticement" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_505/charge/4> a cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "sexual exploitation" ;
+    ns1:chargeCluster "sexual_exploitation_unspecified" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_505/cybertip> a cacontology-us-ncmec:NCMECCybertipReport ;
+    cacontology-us-ncmec:supportedBy <https://caselinker.up.railway.app/resource/agency/ncmec> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_505/event/distribution> a cac-core:Event,
+        cacontology-legal-outcomes:CSAM_Distribution ;
+    cacontology:severityLevel 3 .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_505/event/trust-violation> a cacontology-custodial:CustodialAbuse,
+        cacontology-custodial:TrustViolation ;
+    cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/ncmec_2023_505/relationship/father> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_505/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_505/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    rdfs:comment "Pretrial detention facility (not a sentence): Sutter County Jail" ;
+    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_505/charge/1>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2023_505/charge/2>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2023_505/charge/3>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2023_505/charge/4> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_505/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 58 .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_505/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_505/relationship/father> a cacontology-custodial:CustodialRelationship,
+        cacontology-custodial:FamilialRelationship ;
+    cacontology-custodial:involvesChild <https://caselinker.up.railway.app/resource/case/ncmec_2023_505/role/victim/1> ;
+    cacontology-custodial:involvesCustodian <https://caselinker.up.railway.app/resource/case/ncmec_2023_505/role/offender/1> ;
+    cacontology-custodial:relationshipType "father" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_505/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_505/event/possession> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_505/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_505/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_505/event/possession> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_505/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_505/phase/booked> a cacontology:InitialPhase,
+        cac-core:Phase ;
+    cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_505/event/possession> a cacontology:CSAMIncident,
+        cac-core:Event ;
+    cacontology:severityLevel 3 ;
+    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2023_505/facet/possession> .
+

@@ -1,0 +1,99 @@
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
+@prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
+@prefix cacontology-undercover: <https://cacontology.projectvic.org/undercover#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://caselinker.up.railway.app/resource/case/spd_2011_001/admission/1/extraction-confidence> a cac-core:AssessmentResult ;
+    cac-core:assesses <https://caselinker.up.railway.app/resource/case/spd_2011_001/admission/1> ;
+    cac-core:generatedBy <https://caselinker.up.railway.app/resource/case/spd_2011_001> ;
+    cac-core:hasConfidence 0.65 .
+
+<https://caselinker.up.railway.app/resource/case/spd_2011_001/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2011-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/spd_2011_001/event/hands-on> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/spd_2011_001/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
+
+<https://caselinker.up.railway.app/resource/case/spd_2011_001> a cacontology:CACInvestigation,
+        cac-core:EnduringEntity ;
+    dcterms:created "2026-08-24T19:10:19.193837" ;
+    dcterms:identifier "spd_2011_001" ;
+    dcterms:modified "2026-08-24T19:10:19.193837" ;
+    dcterms:source <https://spdblotter.seattle.gov/2011/02/04/icac-detectives-arrest-suspect-in-online-child-rape-case/>,
+        "SPD" ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/spd_2011_001/phase/booked> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/spd_2011_001/phase/booked> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/spd_2011_001/admission/1>,
+        <https://caselinker.up.railway.app/resource/case/spd_2011_001/event/distribution>,
+        <https://caselinker.up.railway.app/resource/case/spd_2011_001/event/hands-on>,
+        <https://caselinker.up.railway.app/resource/case/spd_2011_001/legal-proceeding>,
+        <https://caselinker.up.railway.app/resource/case/spd_2011_001/operation> ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac> .
+
+<https://caselinker.up.railway.app/resource/case/spd_2011_001/charge/1> a cacontology-legal-outcomes:CriminalCharge,
+        cacontology-legal-outcomes:StateCharge ;
+    rdfs:label "sexual exploitation of children" .
+
+<https://caselinker.up.railway.app/resource/case/spd_2011_001/charge/2> a cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "sexual exploitation" ;
+    ns1:chargeCluster "sexual_exploitation_unspecified" .
+
+<https://caselinker.up.railway.app/resource/case/spd_2011_001/event/distribution> a cac-core:Event,
+        cacontology-legal-outcomes:CSAM_Distribution ;
+    cacontology:severityLevel 3 .
+
+<https://caselinker.up.railway.app/resource/case/spd_2011_001/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    rdfs:comment "Pretrial detention facility (not a sentence): King County Jail" ;
+    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/spd_2011_001/charge/1>,
+        <https://caselinker.up.railway.app/resource/case/spd_2011_001/charge/2> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2011-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/spd_2011_001/operation> a cac-core:Event,
+        cacontology-taskforce:UndercoverUnit .
+
+<https://caselinker.up.railway.app/resource/case/spd_2011_001/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 29 .
+
+<https://caselinker.up.railway.app/resource/case/spd_2011_001/person/victim/1> a uco-identity:Person ;
+    cacontology-production:victimAge 13 .
+
+<https://caselinker.up.railway.app/resource/case/spd_2011_001/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2011-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/spd_2011_001/event/hands-on> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/spd_2011_001/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/spd_2011_001/admission/1> a cacontology-undercover:IncriminatingStatement ;
+    rdfs:label "detectives that he came to the location with the express intent of having sex with the child" ;
+    dcterms:source <https://spdblotter.seattle.gov/2011/02/04/icac-detectives-arrest-suspect-in-online-child-rape-case/> ;
+    ns1:admissionContext "n of engaging in sex with the 13 year old “girl.” He was promptly arrested by detectives. The suspect admitted to detectives that he came..." ;
+    ns1:admissionFrame "admitted_to" ;
+    ns1:admissionTheme "other" ;
+    ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/spd_2011_001/role/offender/1> ;
+    ns1:evidenceTier "press_release_stated" ;
+    ns1:quoteType "paraphrase" ;
+    uco-core:description "detectives that he came to the location with the express intent of having sex with the child" .
+
+<https://caselinker.up.railway.app/resource/case/spd_2011_001/phase/booked> a cacontology:InitialPhase,
+        cac-core:Phase ;
+    cacontology:hasPhaseBeginPoint "2011-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/spd_2011_001/event/hands-on> a cacontology:ChildSexualAbuseEvent,
+        cac-core:Event ;
+    cacontology:severityLevel 3 .
+

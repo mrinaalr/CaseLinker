@@ -1,0 +1,77 @@
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
+@prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://caselinker.up.railway.app/resource/case/fresno_so_2025_005> a cacontology:CACInvestigation,
+        cac-core:EnduringEntity ;
+    dcterms:created "2026-08-24T18:37:34.906216" ;
+    dcterms:identifier "fresno_so_2025_005" ;
+    dcterms:modified "2026-08-24T18:37:34.906216" ;
+    dcterms:source <https://www.fresnosheriff.org/media-relations/detectives-arrest-substitute-teacher-for-contacting-a-child-for-sexual-purposes.html>,
+        "FRESNO SO" ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/fresno_so_2025_005/phase/arrested> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/fresno_so_2025_005/phase/arrested> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/fresno_so_2025_005/event/online-only>,
+        <https://caselinker.up.railway.app/resource/case/fresno_so_2025_005/event/trust-violation> ;
+    cacontology:investigationStatus "unknown" ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/fresno-county-sheriffs-office>,
+        <https://caselinker.up.railway.app/resource/agency/hsi>,
+        <https://caselinker.up.railway.app/resource/agency/icac> .
+
+<https://caselinker.up.railway.app/resource/agency/fresno-county-sheriffs-office> a cacontology-multi:LocalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/hsi> a cacontology-multi:FederalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
+
+<https://caselinker.up.railway.app/resource/case/fresno_so_2025_005/event/trust-violation> a cacontology-custodial:AuthorityAbuse,
+        cacontology-custodial:TrustViolation ;
+    cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/fresno_so_2025_005/relationship/teacher> .
+
+<https://caselinker.up.railway.app/resource/case/fresno_so_2025_005/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 43 .
+
+<https://caselinker.up.railway.app/resource/case/fresno_so_2025_005/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/fresno_so_2025_005/relationship/teacher> a cacontology-custodial:CustodialRelationship,
+        cacontology-custodial:Teacher ;
+    cacontology-custodial:involvesChild <https://caselinker.up.railway.app/resource/case/fresno_so_2025_005/role/victim/1> ;
+    cacontology-custodial:involvesCustodian <https://caselinker.up.railway.app/resource/case/fresno_so_2025_005/role/offender/1> ;
+    cacontology-custodial:relationshipType "teacher" .
+
+<https://caselinker.up.railway.app/resource/case/fresno_so_2025_005/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/fresno_so_2025_005/event/online-only> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/fresno_so_2025_005/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/fresno_so_2025_005/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/fresno_so_2025_005/event/online-only> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/fresno_so_2025_005/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/platform/kik> a cacontology-platforms:MessagingService ;
+    rdfs:label "Kik" .
+
+<https://caselinker.up.railway.app/resource/platform/social-media> a cacontology-platforms:SocialMediaPlatform ;
+    rdfs:label "social media" .
+
+<https://caselinker.up.railway.app/resource/case/fresno_so_2025_005/phase/arrested> a cacontology:InitialPhase,
+        cac-core:Phase ;
+    cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/fresno_so_2025_005/event/online-only> a cacontology:ChildSexualAbuseEvent,
+        cac-core:Event ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/kik>,
+        <https://caselinker.up.railway.app/resource/platform/social-media> .
+

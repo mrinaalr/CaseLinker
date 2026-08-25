@@ -1,0 +1,95 @@
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
+@prefix cacontology-undercover: <https://cacontology.projectvic.org/undercover#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_060/admission/1/extraction-confidence> a cac-core:AssessmentResult ;
+    cac-core:assesses <https://caselinker.up.railway.app/resource/case/ncmec_2022_060/admission/1> ;
+    cac-core:generatedBy <https://caselinker.up.railway.app/resource/case/ncmec_2022_060> ;
+    cac-core:hasConfidence 0.65 .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_060> a cacontology:CACInvestigation,
+        cac-core:EnduringEntity ;
+    dcterms:created "2026-08-24T17:54:41.944720" ;
+    dcterms:identifier "ncmec_2022_060" ;
+    dcterms:modified "2026-08-24T17:54:41.944720" ;
+    dcterms:source <https://www.modbee.com/news/local/crime/article266913571.html>,
+        "NCMEC" ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_060/phase/booked> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_060/phase/booked> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2022_060/admission/1>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_060/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_060/event/trust-violation>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_060/legal-proceeding> ;
+    cacontology:investigationStatus "unknown" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_060/event/trust-violation> a cacontology-custodial:AuthorityAbuse,
+        cacontology-custodial:TrustViolation ;
+    cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/ncmec_2022_060/relationship/teacher> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_060/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_060/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-10-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2022_060/sentence/1> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_060/person/offender/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_060/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_060/relationship/teacher> a cacontology-custodial:CustodialRelationship,
+        cacontology-custodial:Teacher ;
+    cacontology-custodial:involvesChild <https://caselinker.up.railway.app/resource/case/ncmec_2022_060/role/victim/1> ;
+    cacontology-custodial:involvesCustodian <https://caselinker.up.railway.app/resource/case/ncmec_2022_060/role/offender/1> ;
+    cacontology-custodial:relationshipType "teacher" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_060/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2022-10-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_060/event/possession> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_060/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_060/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:MonetaryPenalty ;
+    rdfs:label "$25,000" .
+
+<https://caselinker.up.railway.app/resource/platform/facebook> a cacontology-platforms:SocialMediaPlatform ;
+    rdfs:label "Facebook" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_060/admission/1> a cacontology-undercover:IncriminatingStatement ;
+    rdfs:label "was a substitute teacher before that" ;
+    dcterms:source <https://www.modbee.com/news/local/crime/article266913571.html> ;
+    ns1:admissionContext "said. Mendonca was in his second year teaching full time at Yolo Middle School in Newman. Posey said he was a substitute teacher before that" ;
+    ns1:admissionFrame "said_paraphrase" ;
+    ns1:admissionTheme "other" ;
+    ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_060/role/offender/1> ;
+    ns1:evidenceTier "press_release_stated" ;
+    ns1:quoteType "paraphrase" ;
+    uco-core:description "was a substitute teacher before that" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_060/phase/booked> a cacontology:InitialPhase,
+        cac-core:Phase ;
+    cacontology:hasPhaseBeginPoint "2022-10-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_060/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2022-10-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_060/event/possession> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_060/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_060/event/possession> a cacontology:CSAMIncident,
+        cac-core:Event ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/facebook> ;
+    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2022_060/facet/possession> .
+

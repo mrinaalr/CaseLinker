@@ -33,7 +33,8 @@ import os
 import re
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, Union
+from urllib.parse import quote
 
 from rdflib import (
     XSD,
@@ -117,6 +118,20 @@ def _slug(text: str) -> str:
     text = re.sub(r"[\s_]+", "-", text)
     text = text.strip("-")
     return text or "unknown"
+
+
+def _source_url_term(raw_url: str) -> Union[URIRef, Literal]:
+    """Percent-encode a press-release URL so it is a legal Turtle IRI.
+
+    Ingestion often stores PDF filenames with spaces. RDFLib refuses to
+    serialize those as IRIs. If encoding still fails, fall back to a literal
+    so the case graph still writes.
+    """
+    raw = str(raw_url).strip()
+    try:
+        return URIRef(quote(raw, safe=":/?#[]@!$&'()*+,;=%"))
+    except Exception:  # pragma: no cover — last-resort fallback
+        return Literal(raw)
 
 
 def _case_bool_flag(case: Dict[str, Any], key: str) -> bool:
@@ -1011,18 +1026,7 @@ class CaseToCAC:
         if case.get("source"):
             g.add((inv_uri, DCTERMS.source, Literal(case["source"])))
         if case.get("source_url"):
-            # source_url frequently comes back from upstream ingestion with
-            # spaces / unencoded characters (e.g. PDF filenames). RDFLib
-            # rightly refuses to serialize those as IRIs in Turtle, so
-            # percent-encode anything not already safe. If even that fails
-            # we degrade to a plain literal so the case still graphs.
-            from urllib.parse import quote
-            raw_url = str(case["source_url"]).strip()
-            try:
-                safe_url = quote(raw_url, safe=":/?#[]@!$&'()*+,;=%")
-                g.add((inv_uri, DCTERMS.source, URIRef(safe_url)))
-            except Exception:  # pragma: no cover — last-resort fallback
-                g.add((inv_uri, DCTERMS.source, Literal(raw_url)))
+            g.add((inv_uri, DCTERMS.source, _source_url_term(str(case["source_url"]))))
         if case.get("notes"):
             g.add((inv_uri, RDFS.comment, Literal(case["notes"])))
         if case.get("tags"):
@@ -2060,7 +2064,7 @@ class CaseToCAC:
                 g.add((adm_uri, CASELINKER_ADMISSION_CONTEXT, Literal(context)))
 
             if source_url:
-                g.add((adm_uri, DCTERMS.source, URIRef(str(source_url))))
+                g.add((adm_uri, DCTERMS.source, _source_url_term(str(source_url))))
             elif source_label:
                 g.add((adm_uri, DCTERMS.source, Literal(str(source_label))))
 

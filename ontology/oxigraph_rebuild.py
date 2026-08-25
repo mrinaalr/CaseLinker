@@ -12,6 +12,7 @@ default-graph SPARQL still sees the union of those named graphs.
 
 from __future__ import annotations
 
+import sys
 from pathlib import Path
 from typing import Dict, List, Mapping, Optional, Tuple
 
@@ -98,22 +99,34 @@ def put_nquads(
     *,
     timeout_s: float = 300.0,
 ) -> None:
-    """Wholesale-replace the Oxigraph dataset via Graph Store PUT /store."""
+    """Wholesale-replace the Oxigraph dataset via Graph Store PUT /store.
+
+    Holds the rebuild lock for the duration of the PUT so /sparql can 503.
+    """
     import httpx
 
-    base = oxigraph_url.rstrip("/")
-    url = f"{base}/store"
-    with nq_path.open("rb") as handle:
-        response = httpx.put(
-            url,
-            content=handle,
-            headers={"Content-Type": "application/n-quads"},
-            timeout=timeout_s,
-        )
-    if response.status_code >= 400:
-        raise RuntimeError(
-            f"Oxigraph PUT {url} failed: HTTP {response.status_code} {response.text[:2000]}"
-        )
+    _run = Path(__file__).resolve().parent.parent / "run"
+    if str(_run) not in sys.path:
+        sys.path.insert(0, str(_run))
+    from sparql_rebuild_lock import acquire_rebuild_lock, release_rebuild_lock
+
+    acquire_rebuild_lock()
+    try:
+        base = oxigraph_url.rstrip("/")
+        url = f"{base}/store"
+        with nq_path.open("rb") as handle:
+            response = httpx.put(
+                url,
+                content=handle,
+                headers={"Content-Type": "application/n-quads"},
+                timeout=timeout_s,
+            )
+        if response.status_code >= 400:
+            raise RuntimeError(
+                f"Oxigraph PUT {url} failed: HTTP {response.status_code} {response.text[:2000]}"
+            )
+    finally:
+        release_rebuild_lock()
 
 
 def summarize_sources(ttl_by_id: Mapping[str, Path]) -> Dict[str, int]:

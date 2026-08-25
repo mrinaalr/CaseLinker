@@ -1,0 +1,53 @@
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_409> a cacontology:CACInvestigation,
+        cac-core:EnduringEntity ;
+    dcterms:created "2026-08-24T18:01:58.263926" ;
+    dcterms:identifier "ncmec_2023_409" ;
+    dcterms:modified "2026-08-24T18:01:58.263926" ;
+    dcterms:source <https://www.newsandsentinel.com/news/local-news/2022/11/wood-county-grand-jury-issues-indictments-9/>,
+        "NCMEC" ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_409/phase/indicted> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_409/phase/indicted> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_409/event/distribution>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2023_409/event/trust-violation> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_409/event/distribution> a cac-core:Event,
+        cacontology-legal-outcomes:CSAM_Distribution ;
+    cacontology:severityLevel 3 .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_409/event/trust-violation> a cacontology-custodial:CustodialAbuse,
+        cacontology-custodial:TrustViolation ;
+    cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/ncmec_2023_409/relationship/parent> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_409/person/offender/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_409/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_409/relationship/parent> a cacontology-custodial:CaregiverRelationship,
+        cacontology-custodial:CustodialRelationship ;
+    cacontology-custodial:involvesChild <https://caselinker.up.railway.app/resource/case/ncmec_2023_409/role/victim/1> ;
+    cacontology-custodial:involvesCustodian <https://caselinker.up.railway.app/resource/case/ncmec_2023_409/role/offender/1> ;
+    cacontology-custodial:relationshipType "parent" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_409/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_409/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_409/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_409/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_409/phase/indicted> a cacontology:LegalProcessPhase,
+        cac-core:Phase ;
+    cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+

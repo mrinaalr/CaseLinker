@@ -1,0 +1,58 @@
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
+@prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_740> a cacontology:CACInvestigation,
+        cac-core:EnduringEntity ;
+    dcterms:created "2026-08-24T18:25:00.941501" ;
+    dcterms:identifier "ncmec_2025_740" ;
+    dcterms:modified "2026-08-24T18:25:00.941501" ;
+    dcterms:source <https://www.nordaknorth.com/newspapers/central-mclean-news-journal/news/wilton-man-charged-with-sexual-imposition-corruption-of-a-minor/>,
+        "NCMEC" ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_740/phase/charged> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_740/phase/charged> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_740/event/hands-on>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2025_740/event/trust-violation> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_740/event/trust-violation> a cacontology-custodial:CustodialAbuse,
+        cacontology-custodial:TrustViolation ;
+    cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/ncmec_2025_740/relationship/mother> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_740/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 29 .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_740/person/victim/1> a uco-identity:Person ;
+    cacontology-production:victimAge 15 .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_740/relationship/mother> a cacontology-custodial:CustodialRelationship,
+        cacontology-custodial:FamilialRelationship ;
+    cacontology-custodial:involvesChild <https://caselinker.up.railway.app/resource/case/ncmec_2025_740/role/victim/1> ;
+    cacontology-custodial:involvesCustodian <https://caselinker.up.railway.app/resource/case/ncmec_2025_740/role/offender/1> ;
+    cacontology-custodial:relationshipType "mother" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_740/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2024-02-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2025_740/event/hands-on> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_740/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_740/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2024-02-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2025_740/event/hands-on> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_740/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_740/phase/charged> a cacontology:LegalProcessPhase,
+        cac-core:Phase ;
+    cacontology:hasPhaseBeginPoint "2024-02-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_740/event/hands-on> a cacontology:ChildSexualAbuseEvent,
+        cac-core:Event ;
+    cacontology:severityLevel 3 .
+

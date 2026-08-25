@@ -1,0 +1,100 @@
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_949> a cacontology:CACInvestigation,
+        cac-core:EnduringEntity ;
+    dcterms:created "2026-08-24T18:13:14.712954" ;
+    dcterms:identifier "ncmec_2024_949" ;
+    dcterms:modified "2026-08-24T18:13:14.712954" ;
+    dcterms:source <https://www.theadanews.com/news/cofounder-of-local-foster-program-arrested/article_81650504-4b97-11ef-b16c-db82f40c28b5.html>,
+        "NCMEC" ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_949/phase/arrested> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_949/phase/arrested> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_949/event/conspiracy>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_949/event/hands-on>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_949/event/trust-violation>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_949/legal-proceeding> ;
+    cacontology:investigationStatus "unknown" ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/oklahoma-department-of-health-and-human-services>,
+        <https://caselinker.up.railway.app/resource/agency/oklahoma-state-bureau-of-investigation> .
+
+<https://caselinker.up.railway.app/resource/agency/oklahoma-department-of-health-and-human-services> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Oklahoma Department of Health and Human Services" .
+
+<https://caselinker.up.railway.app/resource/agency/oklahoma-state-bureau-of-investigation> a cacontology-multi:StateAgency .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_949/event/trust-violation> a cacontology-custodial:CustodialAbuse,
+        cacontology-custodial:TrustViolation ;
+    cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/ncmec_2024_949/relationship/sister> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_949/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-07-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2024_949/sentence/1> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_949/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 18 .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_949/person/offender/2> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 71 .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_949/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_949/relationship/sister> a cacontology-custodial:CustodialRelationship,
+        cacontology-custodial:FamilialRelationship ;
+    cacontology-custodial:involvesChild <https://caselinker.up.railway.app/resource/case/ncmec_2024_949/role/victim/1> ;
+    cacontology-custodial:involvesCustodian <https://caselinker.up.railway.app/resource/case/ncmec_2024_949/role/offender/1>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_949/role/offender/2> ;
+    cacontology-custodial:relationshipType "sister" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_949/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2024-07-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_949/event/conspiracy>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_949/event/hands-on> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_949/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_949/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:MonetaryPenalty ;
+    rdfs:label "$150,000" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_949/phase/arrested> a cacontology:InitialPhase,
+        cac-core:Phase ;
+    cacontology:hasPhaseBeginPoint "2024-07-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_949/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2024-07-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_949/event/conspiracy>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_949/event/hands-on> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_949/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_949/role/offender/2> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2024-07-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_949/event/conspiracy>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_949/event/hands-on> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_949/person/offender/2> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_949/event/conspiracy> a cacontology:ConspiracyToCommitCSA,
+        cac-core:Event ;
+    cacontology:conspiracyMemberCount 2 ;
+    cacontology:participatesInConspiracy <https://caselinker.up.railway.app/resource/case/ncmec_2024_949/role/offender/1>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_949/role/offender/2> ;
+    cacontology:severityLevel 3 .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_949/event/hands-on> a cacontology:ChildSexualAbuseEvent,
+        cac-core:Event ;
+    cacontology:severityLevel 3 .
+

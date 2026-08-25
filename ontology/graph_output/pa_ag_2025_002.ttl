@@ -1,0 +1,54 @@
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://caselinker.up.railway.app/resource/case/pa_ag_2025_002> a cacontology:CACInvestigation,
+        cac-core:EnduringEntity ;
+    dcterms:created "2026-08-24T18:59:30.792275" ;
+    dcterms:identifier "pa_ag_2025_002" ;
+    dcterms:modified "2026-08-24T18:59:30.792275" ;
+    dcterms:source <https://www.attorneygeneral.gov/taking-action/ag-sundays-child-predator-section-nabs-allegheny-county-man-attempting-to-meet-child/>,
+        "PA AG" ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/pa_ag_2025_002/phase/charged> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/pa_ag_2025_002/phase/charged> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/pa_ag_2025_002/event/hands-on>,
+        <https://caselinker.up.railway.app/resource/case/pa_ag_2025_002/event/trust-violation> .
+
+<https://caselinker.up.railway.app/resource/case/pa_ag_2025_002/event/trust-violation> a cacontology-custodial:CustodialAbuse,
+        cacontology-custodial:TrustViolation ;
+    cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/pa_ag_2025_002/relationship/mother> .
+
+<https://caselinker.up.railway.app/resource/case/pa_ag_2025_002/person/offender/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/pa_ag_2025_002/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/pa_ag_2025_002/relationship/mother> a cacontology-custodial:CustodialRelationship,
+        cacontology-custodial:FamilialRelationship ;
+    cacontology-custodial:involvesChild <https://caselinker.up.railway.app/resource/case/pa_ag_2025_002/role/victim/1> ;
+    cacontology-custodial:involvesCustodian <https://caselinker.up.railway.app/resource/case/pa_ag_2025_002/role/offender/1> ;
+    cacontology-custodial:relationshipType "mother" .
+
+<https://caselinker.up.railway.app/resource/case/pa_ag_2025_002/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/pa_ag_2025_002/event/hands-on> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/pa_ag_2025_002/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/pa_ag_2025_002/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/pa_ag_2025_002/event/hands-on> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/pa_ag_2025_002/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/case/pa_ag_2025_002/phase/charged> a cacontology:LegalProcessPhase,
+        cac-core:Phase ;
+    cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/pa_ag_2025_002/event/hands-on> a cacontology:ChildSexualAbuseEvent,
+        cac-core:Event ;
+    cacontology:severityLevel 3 .
+

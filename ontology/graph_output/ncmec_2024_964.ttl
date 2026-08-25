@@ -1,0 +1,97 @@
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_964> a cacontology:CACInvestigation,
+        cac-core:EnduringEntity ;
+    dcterms:created "2026-08-24T18:13:25.517786" ;
+    dcterms:identifier "ncmec_2024_964" ;
+    dcterms:modified "2026-08-24T18:13:25.517786" ;
+    dcterms:source <https://www.missingkids.org/gethelpnow/cybertipline/cybertiplinedata>,
+        "NCMEC" ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_964/phase/arrested> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_964/phase/arrested> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_964/event/csam>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_964/event/distribution>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_964/event/online-only>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_964/event/trust-violation>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_964/legal-proceeding>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_964/operation> ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/bend-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/oregon-department-of-human-services>,
+        <https://caselinker.up.railway.app/resource/agency/sunriver-police-department> .
+
+<https://caselinker.up.railway.app/resource/agency/bend-police-department> a cacontology-multi:LocalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/oregon-department-of-human-services> a cacontology-multi:LocalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/sunriver-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Sunriver Police Department" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_964/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
+        cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "child pornography" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_964/event/distribution> a cac-core:Event,
+        cacontology-legal-outcomes:CSAM_Distribution .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_964/event/trust-violation> a cacontology-custodial:AuthorityAbuse,
+        cacontology-custodial:TrustViolation ;
+    cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/ncmec_2024_964/relationship/coach> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_964/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_964/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2024_964/charge/1> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_964/operation> a cac-core:Event,
+        cacontology-taskforce:TaskForceOperation .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_964/person/offender/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_964/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_964/relationship/coach> a cacontology-custodial:Coach,
+        cacontology-custodial:CustodialRelationship ;
+    cacontology-custodial:involvesChild <https://caselinker.up.railway.app/resource/case/ncmec_2024_964/role/victim/1> ;
+    cacontology-custodial:involvesCustodian <https://caselinker.up.railway.app/resource/case/ncmec_2024_964/role/offender/1> ;
+    cacontology-custodial:relationshipType "coach" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_964/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_964/event/csam>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_964/event/online-only> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_964/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_964/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_964/event/csam>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_964/event/online-only> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_964/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_964/phase/arrested> a cacontology:InitialPhase,
+        cac-core:Phase ;
+    cacontology:hasPhaseBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_964/event/csam> a cacontology:CSAMIncident,
+        cac-core:Event ;
+    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2024_964/facet/csam> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_964/event/online-only> a cacontology:ChildSexualAbuseEvent,
+        cac-core:Event .
+

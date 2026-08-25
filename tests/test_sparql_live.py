@@ -114,6 +114,18 @@ def test_service_federation_400(client):
     assert "SERVICE" in r.text
 
 
+def test_values_after_where_returns_results_not_400(client):
+    q = (
+        "SELECT ?s WHERE { ?s ?p ?o } "
+        "VALUES ?s { <https://caselinker.up.railway.app/resource/case/nj_ag_2017_001> }"
+    )
+    r = post(client, q)
+    assert r.status_code == 200, r.text
+    assert r.status_code != 400
+    rows = r.json()["results"]["bindings"]
+    assert len(rows) >= 1
+
+
 def test_unbounded_select_injects_limit_1000(client):
     r = post(client, "SELECT * WHERE { ?s ?p ?o }")
     assert r.status_code == 200, r.text

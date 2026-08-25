@@ -1,0 +1,185 @@
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
+@prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
+@prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
+@prefix cacontology-undercover: <https://cacontology.projectvic.org/undercover#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://caselinker.up.railway.app/resource/case/svicac_2026_015/admission/1/extraction-confidence> a cac-core:AssessmentResult ;
+    cac-core:assesses <https://caselinker.up.railway.app/resource/case/svicac_2026_015/admission/1> ;
+    cac-core:generatedBy <https://caselinker.up.railway.app/resource/case/svicac_2026_015> ;
+    cac-core:hasConfidence 0.65 .
+
+<https://caselinker.up.railway.app/resource/case/svicac_2026_015/admission/2/extraction-confidence> a cac-core:AssessmentResult ;
+    cac-core:assesses <https://caselinker.up.railway.app/resource/case/svicac_2026_015/admission/2> ;
+    cac-core:generatedBy <https://caselinker.up.railway.app/resource/case/svicac_2026_015> ;
+    cac-core:hasConfidence 0.65 .
+
+<https://caselinker.up.railway.app/resource/agency/farmington-police-department> a cacontology-multi:LocalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
+
+<https://caselinker.up.railway.app/resource/agency/merrimack-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Merrimack County Sheriff's Office" .
+
+<https://caselinker.up.railway.app/resource/case/svicac_2026_015/charge/1> a cacontology-legal-outcomes:CSAM_Production,
+        cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "manufacturing child sexual abuse images" ;
+    cacontology-legal-outcomes:indictmentCounts 51 .
+
+<https://caselinker.up.railway.app/resource/case/svicac_2026_015/event/trafficking> a cac-core:Event,
+        cacontology-legal-outcomes:SexTrafficking ;
+    cacontology:severityLevel 3 .
+
+<https://caselinker.up.railway.app/resource/case/svicac_2026_015/event/trust-violation> a cacontology-custodial:CustodialAbuse,
+        cacontology-custodial:TrustViolation ;
+    cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/svicac_2026_015/relationship/father> .
+
+<https://caselinker.up.railway.app/resource/case/svicac_2026_015/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+
+<https://caselinker.up.railway.app/resource/case/svicac_2026_015/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/svicac_2026_015/charge/1> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/svicac_2026_015/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 19 .
+
+<https://caselinker.up.railway.app/resource/case/svicac_2026_015/person/offender/2> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 20 .
+
+<https://caselinker.up.railway.app/resource/case/svicac_2026_015/person/offender/3> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 47 .
+
+<https://caselinker.up.railway.app/resource/case/svicac_2026_015/person/victim/1> a uco-identity:Person ;
+    cacontology-production:victimAge 14 .
+
+<https://caselinker.up.railway.app/resource/case/svicac_2026_015/relationship/father> a cacontology-custodial:CustodialRelationship,
+        cacontology-custodial:FamilialRelationship ;
+    cacontology-custodial:involvesChild <https://caselinker.up.railway.app/resource/case/svicac_2026_015/role/victim/1> ;
+    cacontology-custodial:involvesCustodian <https://caselinker.up.railway.app/resource/case/svicac_2026_015/role/offender/1>,
+        <https://caselinker.up.railway.app/resource/case/svicac_2026_015/role/offender/2>,
+        <https://caselinker.up.railway.app/resource/case/svicac_2026_015/role/offender/3> ;
+    cacontology-custodial:relationshipType "father" .
+
+<https://caselinker.up.railway.app/resource/case/svicac_2026_015/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/svicac_2026_015/event/conspiracy>,
+        <https://caselinker.up.railway.app/resource/case/svicac_2026_015/event/possession> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/svicac_2026_015/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/case/svicac_2026_015> a cacontology:CACInvestigation,
+        cac-core:EnduringEntity ;
+    dcterms:created "2026-08-24T19:11:22.774395" ;
+    dcterms:identifier "svicac_2026_015" ;
+    dcterms:modified "2026-08-24T19:11:22.774395" ;
+    dcterms:source <https://www.unionleader.com/news/crime/prosecutor-calls-concord-man-a-serial-predator-for-allegedly-sexually-assaulting-teen-girls/article_72b5f3e0-598f-5b29-ab20-2508fb9d37cb.html>,
+        "SVICAC" ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/svicac_2026_015/phase/charged> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/svicac_2026_015/phase/charged> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/svicac_2026_015/admission/1>,
+        <https://caselinker.up.railway.app/resource/case/svicac_2026_015/admission/2>,
+        <https://caselinker.up.railway.app/resource/case/svicac_2026_015/event/conspiracy>,
+        <https://caselinker.up.railway.app/resource/case/svicac_2026_015/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/svicac_2026_015/event/trafficking>,
+        <https://caselinker.up.railway.app/resource/case/svicac_2026_015/event/trust-violation>,
+        <https://caselinker.up.railway.app/resource/case/svicac_2026_015/legal-proceeding> ;
+    cacontology:investigationStatus "unknown" ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/farmington-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/icac>,
+        <https://caselinker.up.railway.app/resource/agency/merrimack-county-sheriffs-office> .
+
+<https://caselinker.up.railway.app/resource/case/svicac_2026_015/admission/1> a cacontology-undercover:IncriminatingStatement ;
+    rdfs:label "broke things off with the two girls from Farmington after finding out they were underage" ;
+    dcterms:source <https://www.unionleader.com/news/crime/prosecutor-calls-concord-man-a-serial-predator-for-allegedly-sexually-assaulting-teen-girls/article_72b5f3e0-598f-5b29-ab20-2508fb9d37cb.html> ;
+    ns1:admissionContext "he female and to females ages 12-16 in general,” the affidavit reads. Pincoske spoke with detectives and said he broke things off with th..." ;
+    ns1:admissionFrame "said_paraphrase" ;
+    ns1:admissionTheme "other" ;
+    ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/svicac_2026_015/role/offender/1> ;
+    ns1:evidenceTier "press_release_stated" ;
+    ns1:quoteType "paraphrase" ;
+    uco-core:description "broke things off with the two girls from Farmington after finding out they were underage" .
+
+<https://caselinker.up.railway.app/resource/case/svicac_2026_015/admission/2> a cacontology-undercover:IncriminatingStatement ;
+    rdfs:label "is no longer part of the basketball team" ;
+    dcterms:source <https://www.unionleader.com/news/crime/prosecutor-calls-concord-man-a-serial-predator-for-allegedly-sexually-assaulting-teen-girls/article_72b5f3e0-598f-5b29-ab20-2508fb9d37cb.html> ;
+    ns1:admissionContext "ffidavit. A profile of Pincoske on the Colby-Sawyer College website has been removed. The college said he is no longer part of the basket..." ;
+    ns1:admissionFrame "said_paraphrase" ;
+    ns1:admissionTheme "other" ;
+    ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/svicac_2026_015/role/offender/1> ;
+    ns1:evidenceTier "press_release_stated" ;
+    ns1:quoteType "paraphrase" ;
+    uco-core:description "is no longer part of the basketball team" .
+
+<https://caselinker.up.railway.app/resource/case/svicac_2026_015/phase/charged> a cacontology:LegalProcessPhase,
+        cac-core:Phase ;
+    cacontology:hasPhaseBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/svicac_2026_015/role/offender/2> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/svicac_2026_015/event/conspiracy>,
+        <https://caselinker.up.railway.app/resource/case/svicac_2026_015/event/possession> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/svicac_2026_015/person/offender/2> .
+
+<https://caselinker.up.railway.app/resource/case/svicac_2026_015/role/offender/3> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/svicac_2026_015/event/conspiracy>,
+        <https://caselinker.up.railway.app/resource/case/svicac_2026_015/event/possession> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/svicac_2026_015/person/offender/3> .
+
+<https://caselinker.up.railway.app/resource/platform/chat> a cacontology-platforms:AnonymousChatPlatform ;
+    rdfs:label "chat" .
+
+<https://caselinker.up.railway.app/resource/platform/kik> a cacontology-platforms:MessagingService ;
+    rdfs:label "Kik" .
+
+<https://caselinker.up.railway.app/resource/platform/snapchat> a cacontology-platforms:MessagingService ;
+    rdfs:label "Snapchat" .
+
+<https://caselinker.up.railway.app/resource/platform/social-media> a cacontology-platforms:SocialMediaPlatform ;
+    rdfs:label "social media" .
+
+<https://caselinker.up.railway.app/resource/case/svicac_2026_015/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/svicac_2026_015/event/conspiracy>,
+        <https://caselinker.up.railway.app/resource/case/svicac_2026_015/event/possession> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/svicac_2026_015/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/svicac_2026_015/event/conspiracy> a cacontology:ConspiracyToCommitCSA,
+        cac-core:Event ;
+    cacontology:conspiracyMemberCount 3 ;
+    cacontology:participatesInConspiracy <https://caselinker.up.railway.app/resource/case/svicac_2026_015/role/offender/1>,
+        <https://caselinker.up.railway.app/resource/case/svicac_2026_015/role/offender/2>,
+        <https://caselinker.up.railway.app/resource/case/svicac_2026_015/role/offender/3> ;
+    cacontology:severityLevel 3 ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/chat>,
+        <https://caselinker.up.railway.app/resource/platform/kik>,
+        <https://caselinker.up.railway.app/resource/platform/snapchat>,
+        <https://caselinker.up.railway.app/resource/platform/social-media> .
+
+<https://caselinker.up.railway.app/resource/case/svicac_2026_015/event/possession> a cacontology:CSAMIncident,
+        cac-core:Event ;
+    cacontology:severityLevel 3 ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/chat>,
+        <https://caselinker.up.railway.app/resource/platform/kik>,
+        <https://caselinker.up.railway.app/resource/platform/snapchat>,
+        <https://caselinker.up.railway.app/resource/platform/social-media> ;
+    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/svicac_2026_015/facet/possession> .
+

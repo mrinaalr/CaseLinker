@@ -8,6 +8,7 @@ from pydantic import BaseModel, Field
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.gzip import GZipMiddleware
 from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, PlainTextResponse, Response
 from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
@@ -103,7 +104,8 @@ except ImportError:
     def get_cache_key(endpoint, **kwargs):
         return f"caselinker:{endpoint}"
 
-from sparql_proxy import SparqlRejected, prepare_sparql_query
+from sparql_proxy import SparqlRejected, prepare_sparql_query, sparql_cors_allow_origin
+from sparql_rebuild_lock import rebuild_in_progress
 
 _mcp_streamable_enabled = False
 
@@ -144,6 +146,33 @@ app.add_middleware(
 )
 # Compress large ontology merged payloads (e.g. Big Bang merged graph).
 app.add_middleware(GZipMiddleware, minimum_size=1000)
+
+
+class _SparqlCorsMiddleware(BaseHTTPMiddleware):
+    """Overwrite CORSMiddleware's * for /sparql only.
+
+    Same-origin CaseLinker UI does not need CORS. Agents/curl/MCP ignore it.
+    Off-origin browser pages (any site, or YASGUI) cannot fire visitor-browser
+    queries unless listed in SPARQL_CORS_ORIGINS.
+    """
+
+    async def dispatch(self, request, call_next):
+        response = await call_next(request)
+        if request.url.path.rstrip("/") != "/sparql":
+            return response
+        allowed = sparql_cors_allow_origin(request.headers.get("origin"))
+        if allowed:
+            response.headers["Access-Control-Allow-Origin"] = allowed
+            response.headers["Vary"] = "Origin"
+        else:
+            # Starlette MutableHeaders has no pop(); delete keys that CORSMiddleware set.
+            for key in ("access-control-allow-origin", "access-control-allow-credentials"):
+                if key in response.headers:
+                    del response.headers[key]
+        return response
+
+
+app.add_middleware(_SparqlCorsMiddleware)
 
 # Structured logging
 logging.basicConfig(
@@ -4362,6 +4391,11 @@ async def sparql_query(request: Request):
         raise HTTPException(
             status_code=503,
             detail="SPARQL store is not configured (set OXIGRAPH_URL).",
+        )
+    if rebuild_in_progress():
+        raise HTTPException(
+            status_code=503,
+            detail="SPARQL store is being rebuilt. Retry shortly.",
         )
 
     query_text = await _sparql_query_from_request(request)

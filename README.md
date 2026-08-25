@@ -102,7 +102,7 @@ running locally, initially empty
 
 | Included | Path | Local use |
 |-------|------|-----------|
-| Ontology case graphs (~2k+ cases across pools) | `ontology/graph_output/` | `/patterns/graph`, `/api/ontology/*` |
+| Ontology case graphs (~7k+ expressed via CASE/UCO/CAC) | `ontology/graph_output/` | `/patterns/graph`, `/api/ontology/*` |
 | PACER lifecycle state machines (30 cases) | `state_machines/graphs/`, `ontology/PACER/` | `/lifecycle` |
 | L* trajectories / transition matrix | `state_machines/data/lstar_all_cases.json` | `/api/lifecycle/lstar` |
 | Case studies (21 across 4 eras) | `data/case_studies.json` | `/case-studies` |
@@ -377,9 +377,6 @@ ORDER BY DESC(?cases)
 LIMIT 8
 SPARQL
 ```
-
-Set `OXIGRAPH_URL` on the web service to the private Oxigraph base URL (for example `http://oxigraph.railway.internal:7878`).
-
 
 **References**
 - [CAC Ontology repository](https://github.com/Project-VIC-International/CAC-Ontology)

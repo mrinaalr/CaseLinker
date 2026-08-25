@@ -65,3 +65,20 @@ def test_build_nquads_uses_per_case_named_graph(tmp_path: Path):
     assert graph_iri in text
     # Fourth N-Quads slot is the named graph.
     assert text.strip().endswith(f"<{graph_iri}> .")
+
+
+def test_rebuild_lock_round_trip(monkeypatch, tmp_path: Path):
+    run = ROOT / "run"
+    if str(run) not in sys.path:
+        sys.path.insert(0, str(run))
+    import sparql_rebuild_lock as lock
+
+    path = tmp_path / "rebuild.lock"
+    monkeypatch.setenv("SPARQL_REBUILD_LOCK", str(path))
+    assert lock.rebuild_in_progress() is False
+    lock.acquire_rebuild_lock()
+    assert path.is_file()
+    assert lock.rebuild_in_progress() is True
+    lock.release_rebuild_lock()
+    assert lock.rebuild_in_progress() is False
+    assert not path.exists()

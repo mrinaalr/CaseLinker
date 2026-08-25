@@ -1,0 +1,120 @@
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-undercover: <https://cacontology.projectvic.org/undercover#> .
+@prefix cacontology-usa-federal: <https://cacontology.projectvic.org/usa-federal-law#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_521/admission/1/extraction-confidence> a cac-core:AssessmentResult ;
+    cac-core:assesses <https://caselinker.up.railway.app/resource/case/ncmec_2025_521/admission/1> ;
+    cac-core:generatedBy <https://caselinker.up.railway.app/resource/case/ncmec_2025_521> ;
+    cac-core:hasConfidence 0.65 .
+
+<https://caselinker.up.railway.app/resource/agency/oak-grove-police-department> a cacontology-multi:LocalAgency .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_521> a cacontology:CACInvestigation,
+        cac-core:EnduringEntity ;
+    dcterms:created "2026-08-24T18:22:41.964109" ;
+    dcterms:identifier "ncmec_2025_521" ;
+    dcterms:modified "2026-08-24T18:22:41.964109" ;
+    dcterms:source <https://www.kctv5.com/2025/07/28/new-child-sex-crimes-charges-filed-against-former-independence-school-bus-driver/>,
+        "NCMEC" ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_521/phase/sentenced> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_521/phase/sentenced> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_521/admission/1>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2025_521/event/hands-on>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2025_521/event/trust-violation>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2025_521/legal-proceeding>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2025_521/legal-step/sentenced>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2025_521/offense-event/charge-1> ;
+    cacontology:investigationStatus "unknown" ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/oak-grove-police-department> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_521/charge/1> a cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "child molestation" ;
+    rdfs:seeAlso <https://caselinker.up.railway.app/resource/case/ncmec_2025_521/offense-event/charge-1> ;
+    ns1:chargeCluster "child_molestation" ;
+    ns1:chargeOffenseEvent <https://caselinker.up.railway.app/resource/case/ncmec_2025_521/offense-event/charge-1> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_521/event/trust-violation> a cacontology-custodial:CustodialAbuse,
+        cacontology-custodial:TrustViolation ;
+    cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/ncmec_2025_521/relationship/mother> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_521/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_521/charge/1> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-07-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_521/sentence/1> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_521/legal-step/sentenced> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding,
+        cacontology-legal-outcomes:SentencingHearing ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-07-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_521/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 38 .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_521/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_521/relationship/mother> a cacontology-custodial:CustodialRelationship,
+        cacontology-custodial:FamilialRelationship ;
+    cacontology-custodial:involvesChild <https://caselinker.up.railway.app/resource/case/ncmec_2025_521/role/victim/1> ;
+    cacontology-custodial:involvesCustodian <https://caselinker.up.railway.app/resource/case/ncmec_2025_521/role/offender/1> ;
+    cacontology-custodial:relationshipType "mother" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_521/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2025-07-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2025_521/event/hands-on>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2025_521/offense-event/charge-1> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_521/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_521/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:LifeImprisonmentSentence ;
+    rdfs:label "sentenced to life" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_521/phase/sentenced> a cac-core:Phase,
+        cacontology-legal-outcomes:SentencingPhase ;
+    cacontology:hasPhaseBeginPoint "2025-07-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_521/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2025-07-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2025_521/event/hands-on>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2025_521/offense-event/charge-1> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_521/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_521/admission/1> a cacontology-undercover:IncriminatingStatement ;
+    rdfs:label "had sexually assaulted the child while living in Odessa" ;
+    dcterms:source <https://www.kctv5.com/2025/07/28/new-child-sex-crimes-charges-filed-against-former-independence-school-bus-driver/> ;
+    ns1:admissionContext "ed to child sex and pornography crimes. During an interview with investigators, they said Omenski admitted he had sexually assaulted the..." ;
+    ns1:admissionFrame "admitted_he_she" ;
+    ns1:admissionTheme "harm_conduct" ;
+    ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_521/role/offender/1> ;
+    ns1:evidenceTier "press_release_stated" ;
+    ns1:quoteType "paraphrase" ;
+    uco-core:description "had sexually assaulted the child while living in Odessa" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_521/event/hands-on> a cacontology:ChildSexualAbuseEvent,
+        cac-core:Event ;
+    cacontology:producesArtifact <https://caselinker.up.railway.app/resource/case/ncmec_2025_521/admission/1> ;
+    cacontology:severityLevel 3 .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_521/offense-event/charge-1> a cacontology:ChildSexualAbuseEvent,
+        cac-core:Event,
+        cacontology-usa-federal:SexualAbuseOfMinor,
+        uco-action:Crime ;
+    rdfs:label "Inferred offense from charge: child molestation" .
+
