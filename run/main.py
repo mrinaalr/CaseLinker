@@ -4336,6 +4336,99 @@ def api_ontology_cache_warm(
 
 _OXIGRAPH_URL = os.environ.get("OXIGRAPH_URL", "").strip().rstrip("/")
 _SPARQL_HTTP_TIMEOUT_S = float(os.environ.get("SPARQL_HTTP_TIMEOUT_S", "32"))
+_SPARQL_OXIGRAPH_CONCURRENCY = max(1, int(os.environ.get("SPARQL_OXIGRAPH_CONCURRENCY", "2")))
+_SPARQL_OXIGRAPH_QUEUE_S = float(os.environ.get("SPARQL_OXIGRAPH_QUEUE_S", "5"))
+_OXIGRAPH_SEM: Optional[asyncio.Semaphore] = None
+
+
+def _oxigraph_sem() -> asyncio.Semaphore:
+    global _OXIGRAPH_SEM
+    if _OXIGRAPH_SEM is None:
+        _OXIGRAPH_SEM = asyncio.Semaphore(_SPARQL_OXIGRAPH_CONCURRENCY)
+    return _OXIGRAPH_SEM
+
+
+def _sparql_query_log_fields(query_text: str) -> tuple[str, str]:
+    digest = hashlib.sha256(query_text.encode("utf-8", errors="replace")).hexdigest()
+    preview = " ".join(query_text.split())[:200]
+    return digest, preview
+
+
+async def _wait_oxigraph_slot(request: Request) -> str:
+    """Acquire an Oxigraph slot, or 'busy' / 'disconnected' if not."""
+    sem = _oxigraph_sem()
+    deadline = time.monotonic() + _SPARQL_OXIGRAPH_QUEUE_S
+    while True:
+        if await request.is_disconnected():
+            return "disconnected"
+        try:
+            await asyncio.wait_for(sem.acquire(), timeout=0.05)
+            return "acquired"
+        except asyncio.TimeoutError:
+            if time.monotonic() >= deadline:
+                return "busy"
+
+
+async def _watch_client_disconnect(request: Request) -> None:
+    """Block until the HTTP client hangs up.
+
+    Starlette's is_disconnected() polls receive() under a cancelled cancel
+    scope, which misses disconnects that arrive later. After the SPARQL body
+    is consumed, the next ASGI message is http.disconnect — await it.
+    """
+    while True:
+        message = await request._receive()
+        if message.get("type") == "http.disconnect":
+            return
+
+
+async def _post_oxigraph_cancellable(
+    request: Request,
+    *,
+    url: str,
+    query: str,
+    accept: str,
+    digest: str,
+) -> Optional[httpx.Response]:
+    """POST to Oxigraph; cancel immediately if the client hangs up.
+
+    Returns None when the client disconnected (upstream call cancelled).
+    """
+    timeout = httpx.Timeout(_SPARQL_HTTP_TIMEOUT_S, connect=5.0)
+
+    async def _post(client: httpx.AsyncClient) -> httpx.Response:
+        return await client.post(
+            url,
+            content=query.encode("utf-8"),
+            headers={
+                "Content-Type": "application/sparql-query",
+                "Accept": accept,
+            },
+        )
+
+    async with httpx.AsyncClient(timeout=timeout) as client:
+        post_task = asyncio.create_task(_post(client))
+        disc_task = asyncio.create_task(_watch_client_disconnect(request))
+        done, _pending = await asyncio.wait(
+            {post_task, disc_task},
+            return_when=asyncio.FIRST_COMPLETED,
+        )
+        if disc_task in done and not post_task.done():
+            post_task.cancel()
+            await client.aclose()
+            try:
+                await post_task
+            except (asyncio.CancelledError, httpx.RequestError):
+                pass
+            logger.info("SPARQL cancelled (client disconnect) sha256=%s", digest)
+            return None
+        disc_task.cancel()
+        try:
+            await disc_task
+        except asyncio.CancelledError:
+            pass
+        return await post_task
+
 
 
 async def _sparql_query_from_request(request: Request) -> str:
@@ -4405,24 +4498,32 @@ async def sparql_query(request: Request):
         )
 
     query_text = await _sparql_query_from_request(request)
+    digest, preview = _sparql_query_log_fields(query_text)
+    logger.info("SPARQL sha256=%s preview=%r", digest, preview)
     try:
         prepared = prepare_sparql_query(query_text)
     except SparqlRejected as exc:
         raise HTTPException(status_code=exc.status_code, detail=exc.detail) from exc
 
+    slot = await _wait_oxigraph_slot(request)
+    if slot == "disconnected":
+        logger.info("SPARQL client disconnected before Oxigraph sha256=%s", digest)
+        return Response(status_code=499)
+    if slot == "busy":
+        raise HTTPException(
+            status_code=429,
+            detail="SPARQL store is busy (max 2 concurrent queries). Retry shortly.",
+        )
+
     accept = request.headers.get("accept") or "application/sparql-results+json"
     try:
-        async with httpx.AsyncClient(
-            timeout=httpx.Timeout(_SPARQL_HTTP_TIMEOUT_S, connect=5.0)
-        ) as client:
-            upstream = await client.post(
-                f"{_OXIGRAPH_URL}/query",
-                content=prepared.query.encode("utf-8"),
-                headers={
-                    "Content-Type": "application/sparql-query",
-                    "Accept": accept,
-                },
-            )
+        upstream = await _post_oxigraph_cancellable(
+            request,
+            url=f"{_OXIGRAPH_URL}/query",
+            query=prepared.query,
+            accept=accept,
+            digest=digest,
+        )
     except httpx.TimeoutException as exc:
         raise HTTPException(
             status_code=504,
@@ -4433,6 +4534,11 @@ async def sparql_query(request: Request):
             status_code=503,
             detail="SPARQL store is unreachable.",
         ) from exc
+    finally:
+        _oxigraph_sem().release()
+
+    if upstream is None:
+        return Response(status_code=499)
 
     media_type = upstream.headers.get("content-type") or "application/sparql-results+json"
     return Response(
