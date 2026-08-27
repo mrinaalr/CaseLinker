@@ -1,0 +1,87 @@
+# Named graph: <https://caselinker.up.railway.app/resource/case/pacer_texas_ag_2019_013>
+# Source JSON-LD: ontology/PACER/BULK_FOLDER/texas_ag_2019_013/texas_ag_2019_013.jsonld
+# kind: paired
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
+@prefix cacontology-sextortion: <https://cacontology.projectvic.org/sextortion#> .
+@prefix cacontology-usa-federal-law: <https://cacontology.projectvic.org/usa-federal-law#> .
+@prefix case-investigation: <https://ontology.caseontology.org/case/investigation/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix kb: <http://example.org/kb/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-observable: <https://ontology.unifiedcyberontology.org/uco/observable/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+kb:duron-5-19-cr-00804-bundle a uco-core:Bundle ;
+    uco-core:description "Classic mobile-app sextortion: interstate grooming, CSAM production/receipt, and § 875(d) threat to disseminate nude images. Sources: indictment (Doc 17), plea transcript (Doc 73), judgment (Doc 56). Evidentiary basis: PROVEN."^^xsd:string ;
+    uco-core:name "U.S. District Court, Western District of Texas 5:19-cr-00804-FB (CAC Enhanced)" ;
+    uco-core:object kb:duron-5-19-cr-00804-charge-extortion,
+        kb:duron-5-19-cr-00804-charge-production,
+        kb:duron-5-19-cr-00804-coercion-cycle,
+        kb:duron-5-19-cr-00804-investigation,
+        kb:duron-5-19-cr-00804-person-duron,
+        kb:duron-5-19-cr-00804-platform-mobile,
+        kb:duron-5-19-cr-00804-production-event,
+        kb:duron-5-19-cr-00804-provenance,
+        kb:duron-5-19-cr-00804-threat-mechanism .
+
+<https://caselinker.up.railway.app/resource/case/pacer_texas_ag_2019_013> dcterms:identifier "pacer_texas_ag_2019_013" ;
+    prov:wasDerivedFrom <https://caselinker.up.railway.app/resource/case/texas_ag_2019_013> .
+
+kb:duron-5-19-cr-00804-charge-extortion a cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "Convicted by guilty plea — threat to disseminate" ;
+    cacontology-usa-federal-law:chargeStatute "18 U.S.C. 875(d)" ;
+    uco-core:name "Count 4 — interstate extortion" .
+
+kb:duron-5-19-cr-00804-charge-production a cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "Convicted by guilty plea" ;
+    cacontology-usa-federal-law:chargeStatute "18 U.S.C. 2251(a)" ;
+    uco-core:name "Count 2 — CSAM production" .
+
+kb:duron-5-19-cr-00804-investigation a cacontology:CACInvestigation,
+        case-investigation:Investigation ;
+    cacontology:hasStep kb:duron-5-19-cr-00804-coercion-cycle,
+        kb:duron-5-19-cr-00804-production-event,
+        kb:duron-5-19-cr-00804-threat-mechanism ;
+    case-investigation:focus "CSAM Production",
+        "Interstate Extortion",
+        "Sextortion" ;
+    uco-core:description "Defendant in San Antonio coerced Wisconsin minor via mobile applications to produce CSAM; threatened to disseminate nude images; victim reported offender through app after extortion escalation."^^xsd:string ;
+    uco-core:name "United States v. Duron — 5:19-cr-00804-FB" .
+
+kb:duron-5-19-cr-00804-person-duron a uco-identity:Person ;
+    rdfs:label "Defendant" ;
+    uco-core:name "Felipe Jesus Duron" .
+
+kb:duron-5-19-cr-00804-platform-mobile a uco-observable:DigitalService ;
+    rdfs:label "Mobile chat applications" ;
+    cacontology-platforms:affordanceAbused "image_transmission",
+        "interstate_messaging",
+        "victim_in_app_reporting" ;
+    uco-core:name "Mobile applications" .
+
+kb:duron-5-19-cr-00804-provenance a uco-action:Action ;
+    uco-core:description "W.D. Tex. 5:19-cr-00804-FB; Docs 17, 73, 56; pdftotext extraction."^^xsd:string ;
+    uco-core:name "PACER extraction — texas_ag_2019_013" .
+
+kb:duron-5-19-cr-00804-coercion-cycle a cac-core:Event,
+        cacontology-sextortion:CoercionCycle ;
+    uco-core:description "Continued threats via mobile applications to produce and send additional child pornography; victim fear escalated until in-app report."^^xsd:string ;
+    uco-core:name "Continued mobile-app extortion cycle" .
+
+kb:duron-5-19-cr-00804-production-event a cacontology:CSAMIncident ;
+    rdfs:label "Production and receipt — 18 U.S.C. §§ 2251(a), 2252(a)(2)" ;
+    uco-core:description "February–March 2019: defendant coerced CV1 to produce sexually explicit images and videos transmitted via interstate commerce; material saved on mobile devices."^^xsd:string ;
+    uco-core:name "Directed CSAM production and receipt" .
+
+kb:duron-5-19-cr-00804-threat-mechanism a cac-core:Event,
+        cacontology-sextortion:ThreatMechanism ;
+    uco-core:description "Defendant transmitted interstate communications threatening to injure CV1's reputation by disseminating nude and erotic photographs to extort additional images."^^xsd:string ;
+    uco-core:name "Threat to disseminate nude images — § 875(d)" .
+

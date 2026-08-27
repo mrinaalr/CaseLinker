@@ -70,7 +70,7 @@ def main() -> int:
 
     print(
         f"Canonical TTL files: {len(ttl_by_id)} "
-        f"(priority universe > staging > big_bang > analysis)",
+        f"(priority universe > staging > big_bang > analysis > pacer)",
         flush=True,
     )
     result = build_nquads(ttl_by_id, args.output)

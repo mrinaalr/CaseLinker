@@ -1,10 +1,15 @@
 """Build a wholesale N-Quads dataset from canonical per-case Turtle graphs.
 
 Canonical source priority (first match wins):
-  universe > staging (graph_output/*.ttl) > big_bang > analysis
+  universe > staging (graph_output/*.ttl) > big_bang > analysis > pacer
 
 Each case is loaded into named graph
   https://caselinker.up.railway.app/resource/case/{case_id}
+
+PACER court-record graphs live in graph_output/pacer/pacer_{slug}.ttl and
+therefore become named graph …/resource/case/pacer_{slug}. The glob is
+per-directory `*.ttl` (not recursive); pacer is an explicit pool so those
+files are included without swallowing universe/big_bang/analysis.
 
 The public Oxigraph service is expected to run with --union-default-graph so
 default-graph SPARQL still sees the union of those named graphs.
@@ -26,7 +31,13 @@ DEFAULT_NQ = ONTOLOGY / "cache" / "caselinker.nq"
 CASE_GRAPH_BASE = "https://caselinker.up.railway.app/resource/case/"
 
 # Directory name under graph_output/; None means the staging root.
-POOL_PRIORITY: Tuple[Optional[str], ...] = ("universe", None, "big_bang", "analysis")
+POOL_PRIORITY: Tuple[Optional[str], ...] = (
+    "universe",
+    None,
+    "big_bang",
+    "analysis",
+    "pacer",
+)
 
 
 def case_graph_iri(case_id: str) -> URIRef:
@@ -34,7 +45,7 @@ def case_graph_iri(case_id: str) -> URIRef:
 
 
 def canonical_ttl_paths(graph_root: Optional[Path] = None) -> Dict[str, Path]:
-    """Return case_id -> TTL path using universe > staging > big_bang > analysis."""
+    """Return case_id -> TTL path using universe > staging > big_bang > analysis > pacer."""
     root = graph_root or GRAPH_ROOT
     chosen: Dict[str, Path] = {}
     for pool in POOL_PRIORITY:
@@ -54,7 +65,7 @@ def pool_label_for_path(path: Path, graph_root: Optional[Path] = None) -> str:
     parent = path.resolve().parent
     if graph_root is not None and parent == graph_root.resolve():
         return "staging"
-    if parent.name in ("universe", "big_bang", "analysis"):
+    if parent.name in ("universe", "big_bang", "analysis", "pacer"):
         return parent.name
     return "staging"
 

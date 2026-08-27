@@ -1,0 +1,59 @@
+# Named graph: <https://caselinker.up.railway.app/resource/case/pacer_ncmec_2022_586>
+# Source JSON-LD: ontology/PACER/BULK_FOLDER/ncmec_2022_586/ncmec_2022_586.jsonld
+# kind: paired
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
+@prefix case-investigation: <https://ontology.caseontology.org/case/investigation/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix kb: <http://example.org/kb/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-observable: <https://ontology.unifiedcyberontology.org/uco/observable/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+kb:muckelroy-2-21-cr-00130-bundle a uco-core:Bundle ;
+    uco-core:description "NCIS Snapchat/Dropbox case: directed production from 13-year-old Jane Doe 1, enticement of Jane Doe 2, multi-platform CSAM archive. Sources: indictment (Doc 16), statement of facts (Doc 38), judgment (Doc 47). Evidentiary basis: PROVEN."^^xsd:string ;
+    uco-core:name "U.S. District Court, Eastern District of Virginia 2:21-cr-00130-RBS-RJK (CAC Enhanced)" ;
+    uco-core:object kb:muckelroy-2-21-cr-00130-charge-enticement,
+        kb:muckelroy-2-21-cr-00130-investigation,
+        kb:muckelroy-2-21-cr-00130-person-muckelroy,
+        kb:muckelroy-2-21-cr-00130-platform-snapchat,
+        kb:muckelroy-2-21-cr-00130-production-event,
+        kb:muckelroy-2-21-cr-00130-provenance .
+
+<https://caselinker.up.railway.app/resource/case/pacer_ncmec_2022_586> dcterms:identifier "pacer_ncmec_2022_586" ;
+    prov:wasDerivedFrom <https://caselinker.up.railway.app/resource/case/ncmec_2022_586> .
+
+kb:muckelroy-2-21-cr-00130-charge-enticement a cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "18 U.S.C. § 2422(b)" ;
+    uco-core:name "Count 2 — Coercion and enticement" .
+
+kb:muckelroy-2-21-cr-00130-investigation a cacontology:CACInvestigation,
+        case-investigation:Investigation ;
+    cacontology:hasStep kb:muckelroy-2-21-cr-00130-production-event ;
+    case-investigation:focus "Directed Remote Production",
+        "NCIS ICAC Investigation",
+        "Snapchat Enticement" ;
+    uco-core:name "United States v. Muckelroy — 2:21-cr-00130-RBS-RJK" .
+
+kb:muckelroy-2-21-cr-00130-person-muckelroy a uco-identity:Person ;
+    rdfs:label "Defendant" ;
+    uco-core:name "Travis James Muckelroy" .
+
+kb:muckelroy-2-21-cr-00130-platform-snapchat a uco-observable:DigitalService ;
+    cacontology-platforms:affordanceAbused "direct_messaging",
+        "interstate_video_transmission",
+        "minor_solicitation" ;
+    uco-core:name "Snapchat" .
+
+kb:muckelroy-2-21-cr-00130-provenance a uco-core:ProvenanceRecord ;
+    uco-core:description "E.D. Va. 2:21-cr-00130-RBS-RJK; Docs 16, 38, 47; corpus ncmec_2022_586"^^xsd:string .
+
+kb:muckelroy-2-21-cr-00130-production-event a cacontology:CSAMIncident,
+        uco-core:Event ;
+    rdfs:label "18 U.S.C. §§ 2251(a), 2422(b)" ;
+    uco-core:name "Snapchat directed production and enticement" .
+

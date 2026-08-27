@@ -2470,9 +2470,22 @@ def build_enticement_graph(facts: dict[str, Any], slug: str) -> list[dict[str, A
 def write_graph(facts_path: Path, output_path: Path) -> None:
     facts = load_facts(facts_path)
     slug = slug_from_facts_path(facts_path)
-    document = {"@context": CONTEXT, "@graph": build_graph(facts, slug)}
+    ontology_dir = PACER_DIR.parent
+    if str(ontology_dir) not in sys.path:
+        sys.path.insert(0, str(ontology_dir))
+    from pacer_jsonld_to_ttl import pacer_graph_iri  # noqa: E402
+
+    document = {
+        "@context": CONTEXT,
+        "@id": str(pacer_graph_iri(slug)),
+        "@graph": build_graph(facts, slug),
+    }
     output_path.write_text(json.dumps(document, indent=2) + "\n", encoding="utf-8")
     print(f"Wrote {output_path}")
+    from pacer_jsonld_to_ttl import convert_jsonld_file  # noqa: E402
+
+    ttl = convert_jsonld_file(output_path, slug=slug)
+    print(f"Wrote {ttl['destination']}")
 
 
 def validate_graph(output_path: Path) -> bool:

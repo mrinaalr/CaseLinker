@@ -48,6 +48,25 @@ def test_canonical_priority_universe_over_staging_big_bang_analysis(tmp_path: Pa
     assert pool_label_for_path(chosen["only_staging"], graph_root=tmp_path) == "staging"
 
 
+def test_canonical_includes_pacer_pool_without_colliding_press_release(tmp_path: Path):
+    case_id = "ky_sp_2025_038"
+    _write_ttl(
+        tmp_path / "universe" / f"{case_id}.ttl",
+        "http://ex.org/pr",
+        "press-release",
+    )
+    _write_ttl(
+        tmp_path / "pacer" / f"pacer_{case_id}.ttl",
+        "http://ex.org/pacer",
+        "pacer",
+    )
+
+    chosen = canonical_ttl_paths(tmp_path)
+    assert chosen[case_id] == tmp_path / "universe" / f"{case_id}.ttl"
+    assert chosen[f"pacer_{case_id}"] == tmp_path / "pacer" / f"pacer_{case_id}.ttl"
+    assert pool_label_for_path(chosen[f"pacer_{case_id}"]) == "pacer"
+
+
 def test_build_nquads_uses_per_case_named_graph(tmp_path: Path):
     ttl = tmp_path / "universe" / "nj_ag_2017_001.ttl"
     _write_ttl(
