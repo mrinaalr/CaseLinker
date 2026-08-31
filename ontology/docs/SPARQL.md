@@ -74,6 +74,19 @@ Instance IRIs use the same host:
 
 `dcterms:identifier` on a `cac:CACInvestigation` is the CaseLinker `case_id` (e.g. `nj_ag_2017_001`).
 
+### Two PACER named-graph families
+
+Press-release case graphs and PACER court-record graphs modeled by the CASE-UCO SDK MCP server are different datasets:
+
+| Family | Named graph | Source | Load |
+|---|---|---|---|
+| Case / `pacer_{slug}` | `https://caselinker.up.railway.app/resource/case/{case_id}` including `…/resource/case/pacer_{slug}` | Canonical Turtle under `ontology/graph_output/` (old one-file PACER bundles lived in `ontology/PACER/` and compiled to `graph_output/pacer/pacer_{slug}.ttl`) | Wholesale `python3 scripts/rebuild_oxigraph.py` (`PUT /store`) |
+| CASE-UCO SDK modeled PACER KG | `urn:pacer:kg:<relative/path.jsonld>` | `ontology/PACER/` family folders (`BULK_FOLDER/`, `ENTICEMENT/`, `ENTERPRISE/`, `PRODUCTION/`, `SEXTORTION/`, `TRAFFICKING/`; 128 documents, 41 investigations, 128 annotations; modeled by the CASE-UCO SDK MCP server) | Incremental `python3 scripts/load_pacer_jsonld.py --post` (`POST /store`) |
+
+`rebuild_oxigraph.py` only globs `ontology/graph_output/{pool}/*.ttl`. It does not read CASE-UCO SDK JSON-LD under `ontology/PACER/`.
+
+Running a full `rebuild_oxigraph.py` PUT does not restore the `urn:pacer:kg:…` graphs — re-run `load_pacer_jsonld.py --post` after any full rebuild.
+
 ## Namespaces
 
 Graphs are CAC instance data on UCO identity/role/core types. CAC is the CASE-aligned investigation vocabulary ([CAC Ontology](https://github.com/Project-VIC-International/CAC-Ontology)).

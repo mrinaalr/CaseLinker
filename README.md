@@ -103,7 +103,8 @@ running locally, initially empty
 | Included | Path | Local use |
 |-------|------|-----------|
 | Ontology case graphs (~7k+ expressed via CASE/UCO/CAC) | `ontology/graph_output/` | `/patterns/graph`, `/api/ontology/*` |
-| PACER lifecycle state machines (30 cases) | `state_machines/graphs/`, `ontology/PACER/` | `/lifecycle` |
+| PACER lifecycle state machines (30 cases) | `state_machines/graphs/` | `/lifecycle` |
+| PACER knowledge graphs (41 investigations, 128 docs, 297 graph, modeled by the CASE-UCO SDK) | `ontology/PACER/` (`BULK_FOLDER/`, `ENTICEMENT/`, `ENTERPRISE/`, `PRODUCTION/`, `SEXTORTION/`, `TRAFFICKING/`) | queryable via [CASE-UCO SDK MCP Server](https://github.com/vulnmaster/CASE-UCO-SDK/tree/main/mcp_server#available-resources) |
 | L* trajectories / transition matrix | `state_machines/data/lstar_all_cases.json` | `/api/lifecycle/lstar` |
 | Case studies (21 across 4 eras) | `data/case_studies.json` | `/case-studies` |
 | Triage model bundle | `models/triage_bundle.joblib` | `/triage`, `/api/triage-live` |

@@ -119,7 +119,8 @@ def pacer_sources() -> List[Tuple[str, Path, str]]:
         rows.append((slug, path, kind))
     for slug in CANONICAL_SLUGS:
         path = CANONICAL_JSONLD[slug]
-        rows.append((slug, path, "exemplar"))
+        if path.is_file():
+            rows.append((slug, path, "exemplar"))
     return rows
 
 

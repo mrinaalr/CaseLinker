@@ -21,14 +21,10 @@ from pacer_jsonld_to_ttl import (  # noqa: E402
 )
 
 
-def test_pacer_source_catalog_has_30_graphs():
+def test_pacer_source_catalog_old_shape_removed():
+    """Old one-file-per-case JSON-LD is gone; CASE-UCO SDK graphs live under ontology/PACER/ family folders."""
     rows = pacer_sources()
-    assert len(rows) == 30
-    kinds = {kind for _, _, kind in rows}
-    assert kinds == {"paired", "unpaired", "exemplar"}
-    assert sum(1 for _, _, kind in rows if kind == "paired") == 24
-    assert sum(1 for _, _, kind in rows if kind == "unpaired") == 1
-    assert sum(1 for _, _, kind in rows if kind == "exemplar") == 5
+    assert rows == []
 
 
 def test_convert_adds_only_metadata_triples(tmp_path: Path):
