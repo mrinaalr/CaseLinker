@@ -18,7 +18,7 @@
             --accent-dim: rgba(52, 211, 153, 0.12);
             --warn: #f59e0b;
             --rail-w: 280px;
-            --detail-w: 280px;
+            --detail-w: 300px;
         }
 
         * { box-sizing: border-box; }
@@ -572,6 +572,92 @@
         }
         .detail-actions { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px; }
 
+        .detail-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .detail-node { flex: 0 0 auto; }
+        .sparql-panel {
+            flex: 1 1 auto;
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px solid var(--line);
+            min-height: 0;
+        }
+        .sparql-panel .sparql-hint {
+            margin: -4px 0 10px;
+            font-size: 0.72rem;
+            color: var(--text-mute);
+            line-height: 1.4;
+        }
+        .sparql-panel .sparql-hint a {
+            color: #86efac;
+            text-decoration: none;
+        }
+        .sparql-panel .sparql-hint a:hover { text-decoration: underline; }
+        .sparql-query {
+            font-family: Consolas, 'IBM Plex Mono', monospace;
+            font-size: 0.72rem;
+            line-height: 1.45;
+            resize: vertical;
+            min-height: 132px;
+            max-height: 280px;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        .sparql-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin: 0 0 8px;
+        }
+        .sparql-status {
+            font-size: 0.74rem;
+            color: var(--text-mute);
+            margin: 0 0 8px;
+            min-height: 1.1em;
+        }
+        .sparql-status.error { color: #fca5a5; }
+        .sparql-results {
+            max-height: 240px;
+            overflow: auto;
+            border: 1px solid var(--line);
+            border-radius: 4px;
+            background: #0b111a;
+        }
+        .sparql-results:empty { display: none; }
+        .sparql-results table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.7rem;
+            font-family: Consolas, 'IBM Plex Mono', monospace;
+        }
+        .sparql-results th, .sparql-results td {
+            text-align: left;
+            padding: 5px 6px;
+            border-bottom: 1px solid var(--line);
+            vertical-align: top;
+            word-break: break-word;
+        }
+        .sparql-results th {
+            position: sticky;
+            top: 0;
+            background: #121a26;
+            color: var(--text-mute);
+            font-weight: 600;
+            text-transform: none;
+            letter-spacing: 0;
+            font-size: 0.68rem;
+        }
+        .sparql-results td { color: var(--text-dim); }
+        .sparql-boolean {
+            padding: 10px 8px;
+            font-family: Consolas, monospace;
+            font-size: 0.85rem;
+            color: var(--accent);
+        }
+
         .empty-state {
             padding: 48px 20px;
             text-align: center;
@@ -893,9 +979,33 @@
         </section>
 
         <aside class="detail-panel" id="detail-panel">
-            <h3>Node</h3>
-            <p class="placeholder" id="detail-placeholder">Click a node.</p>
-            <div id="detail-content" style="display:none;"></div>
+            <div class="detail-node">
+                <h3>Node</h3>
+                <p class="placeholder" id="detail-placeholder">Click a node.</p>
+                <div id="detail-content" style="display:none;"></div>
+            </div>
+            <div class="sparql-panel">
+                <h3>SPARQL</h3>
+                <p class="sparql-hint">
+                    Query-only over the live store
+                    (<span id="sparql-endpoint-label">/sparql</span>).
+                    <a href="https://github.com/mrinaalr/CaseLinker/blob/main/ontology/docs/SPARQL.md" target="_blank" rel="noopener noreferrer">Docs</a>
+                </p>
+                <label class="field-label" for="sparql-example">Example</label>
+                <select id="sparql-example" class="field" aria-label="SPARQL example">
+                    <option value="platforms">Top platforms by case count</option>
+                    <option value="investigations">Count press-release investigations</option>
+                    <option value="agencies">Top agencies</option>
+                    <option value="ask">ASK — any CACInvestigation?</option>
+                </select>
+                <label class="field-label" for="sparql-query">Query</label>
+                <textarea id="sparql-query" class="field sparql-query" spellcheck="false" aria-label="SPARQL query"></textarea>
+                <div class="sparql-actions">
+                    <button type="button" class="btn primary" id="sparql-run">Run</button>
+                </div>
+                <p class="sparql-status" id="sparql-status" aria-live="polite"></p>
+                <div class="sparql-results" id="sparql-results"></div>
+            </div>
         </aside>
     </div>
 

@@ -48,7 +48,18 @@
     let PACER_CATALOG = [];
     let PACER_MATCHES = [];
     let PACER_LOADED = []; // [{ id, path, flat }] accumulate in Compare Open
-    const SPARQL_URL = '/sparql';
+    const SPARQL_URL = (function resolveSparqlUrl() {
+        // Local uvicorn has no Oxigraph unless OXIGRAPH_URL is set. Prefer the
+        // public store so the Ontology & Graphs SPARQL panel works out of the box.
+        // Deployed same-origin keeps /sparql (and its rate limits / proxy).
+        try {
+            const host = (window.location && window.location.hostname) || '';
+            if (host === 'localhost' || host === '127.0.0.1') {
+                return 'https://caselinker.up.railway.app/sparql';
+            }
+        } catch (_) { /* ignore */ }
+        return '/sparql';
+    })();
     const API_PACER_URL = '/api/ontology/pacer';
 
     // ---------- Vocabulary constants ----------
@@ -1405,6 +1416,162 @@
         return resp.json();
     }
 
+    const SPARQL_PREFIX = [
+        'PREFIX cac: <https://cacontology.projectvic.org#>',
+        'PREFIX cac-multi: <https://cacontology.projectvic.org/multi-jurisdiction#>',
+        'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>',
+        ''
+    ].join('\n');
+
+    const SPARQL_EXAMPLES = {
+        platforms: SPARQL_PREFIX + [
+            'SELECT ?platform ?label (COUNT(DISTINCT ?case) AS ?cases)',
+            'WHERE {',
+            '  ?event cac:usesChannel ?platform .',
+            '  ?platform rdfs:label ?label .',
+            '  ?case a cac:CACInvestigation ; cac:hasStep ?event .',
+            '}',
+            'GROUP BY ?platform ?label',
+            'ORDER BY DESC(?cases)',
+            'LIMIT 8'
+        ].join('\n'),
+        investigations: SPARQL_PREFIX + [
+            'SELECT (COUNT(DISTINCT ?inv) AS ?n)',
+            'WHERE {',
+            '  GRAPH ?g {',
+            '    ?inv a cac:CACInvestigation .',
+            '  }',
+            '  FILTER(STRSTARTS(STR(?g), "https://caselinker.up.railway.app/resource/case/"))',
+            '}'
+        ].join('\n'),
+        agencies: SPARQL_PREFIX + [
+            'SELECT ?agency ?label (COUNT(DISTINCT ?case) AS ?cases)',
+            'WHERE {',
+            '  ?case a cac:CACInvestigation ; cac-multi:involvesAgency ?agency .',
+            '  ?agency rdfs:label ?label .',
+            '}',
+            'GROUP BY ?agency ?label',
+            'ORDER BY DESC(?cases)',
+            'LIMIT 8'
+        ].join('\n'),
+        ask: SPARQL_PREFIX + 'ASK { ?s a cac:CACInvestigation }'
+    };
+
+    function setSparqlStatus(msg, isError) {
+        const el = document.getElementById('sparql-status');
+        if (!el) return;
+        el.textContent = msg || '';
+        el.classList.toggle('error', !!isError);
+    }
+
+    function sparqlCellValue(binding) {
+        if (!binding) return '';
+        if (binding.type === 'uri') {
+            const v = binding.value || '';
+            return localName(v) || v;
+        }
+        return binding.value != null ? String(binding.value) : '';
+    }
+
+    function renderSparqlResults(payload) {
+        const box = document.getElementById('sparql-results');
+        if (!box) return 0;
+        box.innerHTML = '';
+        if (payload && typeof payload.boolean === 'boolean') {
+            box.innerHTML = '<div class="sparql-boolean">' +
+                (payload.boolean ? 'true' : 'false') + '</div>';
+            return 1;
+        }
+        const head = (payload && payload.head && payload.head.vars) || [];
+        const rows = (payload && payload.results && payload.results.bindings) || [];
+        if (!head.length) {
+            box.textContent = 'No variables in result.';
+            return 0;
+        }
+        const table = document.createElement('table');
+        const thead = document.createElement('thead');
+        const hr = document.createElement('tr');
+        head.forEach(v => {
+            const th = document.createElement('th');
+            th.textContent = v;
+            hr.appendChild(th);
+        });
+        thead.appendChild(hr);
+        table.appendChild(thead);
+        const tbody = document.createElement('tbody');
+        rows.forEach(row => {
+            const tr = document.createElement('tr');
+            head.forEach(v => {
+                const td = document.createElement('td');
+                const full = row[v] && row[v].value != null ? String(row[v].value) : '';
+                td.textContent = sparqlCellValue(row[v]);
+                if (full && td.textContent !== full) td.title = full;
+                tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+        box.appendChild(table);
+        return rows.length;
+    }
+
+    async function runSparqlPanelQuery() {
+        const ta = document.getElementById('sparql-query');
+        const runBtn = document.getElementById('sparql-run');
+        const query = ((ta && ta.value) || '').trim();
+        if (!query) {
+            setSparqlStatus('Enter a SELECT or ASK query.', true);
+            return;
+        }
+        if (runBtn) runBtn.disabled = true;
+        setSparqlStatus('Running…');
+        const t0 = performance.now();
+        try {
+            const payload = await runSparqlSelect(query);
+            const n = renderSparqlResults(payload);
+            const ms = Math.round(performance.now() - t0);
+            if (payload && typeof payload.boolean === 'boolean') {
+                setSparqlStatus('ASK · ' + ms + ' ms');
+            } else {
+                setSparqlStatus(n + ' row' + (n === 1 ? '' : 's') + ' · ' + ms + ' ms');
+            }
+        } catch (err) {
+            const box = document.getElementById('sparql-results');
+            if (box) box.innerHTML = '';
+            setSparqlStatus(err && err.message ? err.message : String(err), true);
+        } finally {
+            if (runBtn) runBtn.disabled = false;
+        }
+    }
+
+    function wireSparqlUi() {
+        const example = document.getElementById('sparql-example');
+        const ta = document.getElementById('sparql-query');
+        const runBtn = document.getElementById('sparql-run');
+        if (!ta || !runBtn) return;
+
+        const epLabel = document.getElementById('sparql-endpoint-label');
+        if (epLabel) {
+            epLabel.textContent = SPARQL_URL.indexOf('http') === 0
+                ? 'caselinker.up.railway.app/sparql'
+                : '/sparql';
+        }
+
+        function loadExample() {
+            const key = (example && example.value) || 'platforms';
+            ta.value = SPARQL_EXAMPLES[key] || SPARQL_EXAMPLES.platforms;
+        }
+        loadExample();
+        if (example) example.addEventListener('change', loadExample);
+        runBtn.addEventListener('click', () => { runSparqlPanelQuery(); });
+        ta.addEventListener('keydown', (ev) => {
+            if ((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter') {
+                ev.preventDefault();
+                runSparqlPanelQuery();
+            }
+        });
+    }
+
     async function runOntologyLookup() {
         const classIri = (document.getElementById('lookup-class') || {}).value || '';
         const className = classIri ? localName(classIri) : '';
@@ -2003,6 +2170,7 @@
         buildLegend();
         wireCaseSelectorOnce();
         wireOntologyUi();
+        wireSparqlUi();
         syncCorpusSourceUi();
         fetch('/api/ontology/lookup?pool=compare&limit=1')
             .then(resp => resp.ok ? resp.json() : null)
