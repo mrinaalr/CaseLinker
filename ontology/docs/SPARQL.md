@@ -114,8 +114,9 @@ Other CAC modules appear when the mapped features need them (`grooming#`, `custo
 | Fact | How to read it |
 |---|---|
 | Relational case count | `GET https://caselinker.up.railway.app/api/case-count` |
-| Graph case count | `SELECT (COUNT(?s) AS ?n) WHERE { ?s a cac:CACInvestigation }` (expect **7,426**) |
-| Named graphs | one per case; same count |
+| Graph case count | `SELECT (COUNT(DISTINCT ?s) AS ?n) WHERE { GRAPH ?g { ?s a cac:CACInvestigation } FILTER(STRSTARTS(STR(?g), "https://caselinker.up.railway.app/resource/case/")) }` (expect **7,426**) |
+| PACER KG graphs | `SELECT (COUNT(DISTINCT ?g) AS ?n) WHERE { GRAPH ?g { ?s ?p ?o } FILTER(STRSTARTS(STR(?g), "urn:pacer:kg:")) }` (expect **297**) |
+| Named graphs (press release) | one per case; same **7,426** count |
 | Graph generation time | `dcterms:created` / `dcterms:modified` on the investigation (remap time, not offense date) |
 | Public source | `dcterms:source` (press-release URL and/or source label) |
 | Reload | wholesale `python3 scripts/rebuild_oxigraph.py` (not incremental) |

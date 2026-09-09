@@ -18,25 +18,30 @@
         }
         .nav {
             background: white;
-            padding: 15px 0 15px 20px;
+            padding: 15px 24px 15px 20px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             display: flex;
+            flex-wrap: nowrap;
             align-items: center;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            white-space: nowrap;
+            overflow-x: auto;
         }
         .nav a {
+            white-space: nowrap;
+            flex-shrink: 0;
             color: #4CAF50;
             text-decoration: none;
-            margin-right: 20px;
+            margin-right: 16px;
         }
         .nav a:hover {
             text-decoration: underline;
         }
         .nav a.patterns {
+            margin-left: 10px;
             color: #dc2626;
             font-weight: 700;
 
-            letter-spacing: 0.5px;
             animation: pulseRed 8s ease-in-out infinite;
         }
         @keyframes pulseRed {
@@ -48,13 +53,13 @@
             }
         }
         .hood-link {
+            margin-left: auto;
             background: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ff6b35 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             animation: pulseOrange 6s ease-in-out infinite;
             position: relative;
-            margin-left: auto;
             font-weight: 600;
         }
         @keyframes pulseOrange {
@@ -368,6 +373,7 @@
             line-height: 1.6;
         }
     </style>
+    <link rel="stylesheet" href="/viz-assets/site-nav.css">
 </head>
 <body>
            <div class="nav">
@@ -385,7 +391,7 @@
         <a href="/llm">LLM</a>
         <a href="/sources">Sources</a>
         <a href="/audit">Audit</a>
-        <a href="/patterns" class="patterns">Phase 2: Patterns</a>
+        <a href="/patterns" class="patterns">Ontology & Graphs</a>
         <a href="/under-the-hood" class="hood-link">Look Under the Hood</a>
     </div>
 
@@ -513,23 +519,22 @@
                 </div>
                 <div class="detail-panel" id="storage-detail">
                     <div class="detail-content">
-                        <strong>Case schema & persistence</strong>
+                        <strong>Case store, cache, and graph artifacts</strong>
                         <div class="visual-preview">
                             <div class="code-snippet">
-<span class="comment"># Production: DATABASE_URL → PostgreSQL (Railway).</span><br>
-<span class="comment"># Local/dev: SQLite file (caselinker.db - local).</span><br>
-<span class="keyword">storage</span> = CaseStorage()  <span class="comment"># or CaseStorage("caselinker.db")</span><br>
+<span class="comment"># Cases: PostgreSQL in production (Railway); SQLite locally (caselinker.db)</span><br>
+<span class="keyword">storage</span> = CaseStorage()  <span class="comment"># DATABASE_URL → Postgres, else SQLite</span><br>
 <span class="keyword">storage</span>.store_case(<span class="keyword">case</span>)<br><br>
-<span class="comment"># cases: JSON columns (topics, severity, platforms, …),</span><br>
-<span class="comment"># raw_data (ingestion + case_text), extracted_features (slim schema)</span><br>
-<span class="comment"># Postgres extras: precomputed_clusters, cluster_groups_slim (fast /api/cluster-groups)</span>
+<span class="comment"># Optional Redis (REDIS_URL): /api/cases, facet-tree, cluster-groups, automated-analysis</span><br>
+<span class="comment"># Ontology artifacts on disk: ontology/graph_output/*.ttl|.jsonld · ontology/PACER/</span><br>
+<span class="comment"># RDF store: Oxigraph (backend only) behind OXIGRAPH_URL → public GET|POST /sparql</span>
                             </div>
                         </div>
                         <ul class="detail-list">
                             <li>Deployed on Railway with PostgreSQL; SQLite for local development</li>
                             <li>Normalized columns plus raw_data / extracted_features JSON</li>
-                            <li>Optional slim cluster caches on Postgres for large corpora</li>
-                            <li>Shared CaseStorage interface; hydrate/slim via case_storage_utils</li>
+                            <li>Optional Redis shared cache for quicker API responses</li>
+                            <li>CASE/UCO/CAC graphs on disk; Oxigraph is the SPARQL backend</li>
                         </ul>
                     </div>
                 </div>
@@ -548,25 +553,32 @@
                 </div>
                 <div class="detail-panel" id="analysis-detail">
                     <div class="detail-content">
-                        <strong>Filtering, facets, clustering, triage</strong>
+                        <strong>Filtering, facets, clustering, triage, agents, and CASE/UCO/CAC graphs</strong>
+                        <p style="margin-top: 15px; color: #666; font-size: 14px;">
+                            <strong>How it's done:</strong> Deterministic mapping turns CaseLinker features into CAC entities (no custom predicates). Per-case Turtle + JSON-LD land in <code>ontology/graph_output/</code>, pass SHACL, and load into <strong>Oxigraph</strong> (SPARQL backend). The analyst UI is <a href="/patterns" style="color:#4CAF50;font-weight:600;">Ontology &amp; Graphs</a> at <code>/patterns</code>. PACER investigations are separate CASE-UCO SDK graphs under <code>ontology/PACER/</code>.
+                        </p>
                         <div class="visual-preview">
                             <div class="code-snippet">
-<span class="comment"># Tag intersection (topics, severity, platforms, investigation, relationship, custom)</span><br>
-<span class="keyword">cases</span> = return_tagged_cases(<span class="keyword">all_cases</span>, [<br>
-&nbsp;&nbsp;{<span class="string">'tag'</span>: <span class="string">'production'</span>, <span class="string">'category'</span>: <span class="string">'case_topics'</span>},<br>
-&nbsp;&nbsp;{<span class="string">'tag'</span>: <span class="string">'infant'</span>, <span class="string">'category'</span>: <span class="string">'severity_indicators'</span>},<br>
-])<br><br>
-<span class="comment"># HTTP: /api/facet-tree, /api/facet-distinct, /api/facet-cohort-members</span><br>
-<span class="comment"># (navigable tag combinations + cohort case IDs from live DB)</span><br><br>
-<span class="comment"># Five cluster families + Jaccard “general”; /api/cluster-groups, /api/automated-analysis</span><br>
-<span class="keyword">triaged</span> = triage_cases(<span class="keyword">cases</span>)  <span class="comment"># rule-based 5–10 score</span><br>
-<span class="comment"># Triage ML: saved sklearn bundle; /api/triage-model-corpus (live DB), /api/triage-live</span>
+<span class="comment"># Tag intersection · facet tree · five cluster families + Jaccard</span><br>
+<span class="keyword">cases</span> = return_tagged_cases(<span class="keyword">all_cases</span>, tags)<br>
+<span class="comment"># HTTP: /api/facet-tree, /api/cluster-groups, /api/automated-analysis</span><br><br>
+<span class="keyword">triaged</span> = triage_cases(<span class="keyword">cases</span>)  <span class="comment"># rules + sklearn bundle</span><br>
+<span class="comment"># /api/triage-model-corpus · /api/triage-live (paste-in)</span><br><br>
+<span class="comment"># Agents: MCP at /mcp (SSE) and /mcp-http/ — corpus, facets, triage, case2cac graphs</span><br><br>
+<span class="comment"># features → CAC mapping → RDF (TTL / JSON-LD) → SHACL → Oxigraph</span><br>
+<span class="keyword">python</span> ontology/features_to_cac.py &lt;case_id&gt;<br>
+GET|POST /sparql<br>
+<span class="comment"># Explorer APIs: /api/ontology/cases · /lookup · /pacer · /merged</span><br>
+<span class="comment"># Live store: ~7,426 press-release graphs · ~297 PACER KG graphs</span>
                             </div>
                         </div>
                         <ul class="detail-list">
-                            <li>Filter cases sharing the same tags (intersection logic)</li>
-                            <li>Facet tree APIs for exploration with processed features</li>
-                            <li>Clustering and automated insights in analysis.py; optional ML triage alongside rules</li>
+                            <li>Tag intersection, navigable facet tree, and cohort APIs over the live DB</li>
+                            <li>Clustering + automated analysis; rule-based and ML triage</li>
+                            <li>MCP tool surface for agents (same FastAPI app; SPARQL via /sparql or CASE/UCO SDK)</li>
+                            <li>Vocabulary: CASE / UCO / CAC (Project VIC on the Cyber Domain Ontology stack)</li>
+                            <li>Oxigraph stores RDF; users browse and compare via /patterns + query via /sparql</li>
+                            <li>PACER court-record KGs and Q1–Q3 evidence pages under /patterns/questions/</li>
                         </ul>
                     </div>
                 </div>
@@ -575,7 +587,7 @@
             <!-- Chain Connector 5 -->
             <div class="chain-connector">
                 <div class="chain-link"></div>
-                    </div>
+            </div>
 
             <!-- Visualization Layer -->
             <div class="flow-item">
@@ -585,18 +597,20 @@
                 </div>
                 <div class="detail-panel" id="visualization-detail">
                     <div class="detail-content">
-                        <strong>Analyst UI: static pages + JSON APIs</strong>
+                        <strong>Analyst UI: HTML tabs + JSON / SPARQL APIs</strong>
                         <div class="visual-preview">
                             <div class="code-snippet">
-<span class="comment"># FastAPI serves visualization/ *.html; browser fetches /api/* JSON.</span><br>  <br><br>
-<span class="comment"># Examples: /api/cases (full row on demand), /api/case-count, /api/stats, /api/cluster-groups, /api/facet-tree, /api/triage-eval, /api/triage-live</span><br><br>
-<span class="comment"># D3 (and small helpers) in-page: clusters, stats, search, audit trail, live triage, analysis facet explorer</span>
+<span class="comment"># FastAPI serves visualization/*.html; browser fetches /api/* and /sparql.</span><br><br>
+<span class="comment"># Tabs: Visualization · Analysis · Clusters · Stats · Search · Lifecycle</span><br>
+<span class="comment">#        Query · Triage · Case Studies · Tech Landscape · LLM · Sources</span><br>
+<span class="comment">#        Audit · Ontology &amp; Graphs (/patterns) · Look Under the Hood</span><br><br>
+<span class="comment"># Graph explorer pools: Compare 200 · Universe ~2k · Big Bang · Analysis</span>
                             </div>
                         </div>
                         <ul class="detail-list">
-                            <li>Slim list endpoints where possible; click-through loads full case text from API</li>
-                            <li>Same nav across pages; server-side caching where it helps (e.g. cases list, clusters)</li>
-                            <li>Modular: new views can sit on the same APIs and storage</li>
+                            <li>Same nav across pages; Redis-backed caches where they help</li>
+                            <li>Ontology &amp; Graphs: CAC lookup, press-release + PACER corpora, compare/single canvas</li>
+                            <li>Modular: new views sit on the same storage, APIs, and SPARQL store</li>
                         </ul>
                     </div>
                 </div>

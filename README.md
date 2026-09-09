@@ -83,7 +83,7 @@ Then open your browser to:
 - **Query**: http://localhost:8000/query 
 - **Lifecycle**: http://localhost:8000/lifecycle
 - **Triage**: http://localhost:8000/triage
-- **Patterns (Phase 2)**: http://localhost:8000/patterns
+- **Ontology & Graphs**: http://localhost:8000/patterns
 - **Tech Landscape**: http://localhost:8000/tech-landscape
 - **LLM**: http://localhost:8000/llm
 - **Data Sources**: http://localhost:8000/sources
@@ -102,9 +102,9 @@ running locally, initially empty
 
 | Included | Path | Local use |
 |-------|------|-----------|
-| Ontology case graphs (~7k+ expressed via CASE/UCO/CAC) | `ontology/graph_output/` | `/patterns/graph`, `/api/ontology/*` |
+| Ontology case graphs (~7k+ expressed via CASE/UCO/CAC) | `ontology/graph_output/` | `/patterns`, `/api/ontology/*` |
+| PACER knowledge graphs (41 investigations, 128 docs, 297 graph, modeled by the CASE-UCO SDK) | `ontology/PACER/` | `/patterns` |
 | PACER lifecycle state machines (30 cases) | `state_machines/graphs/` | `/lifecycle` |
-| PACER knowledge graphs (41 investigations, 128 docs, 297 graph, modeled by the CASE-UCO SDK) | `ontology/PACER/` (`BULK_FOLDER/`, `ENTICEMENT/`, `ENTERPRISE/`, `PRODUCTION/`, `SEXTORTION/`, `TRAFFICKING/`) | queryable via [CASE-UCO SDK MCP Server](https://github.com/vulnmaster/CASE-UCO-SDK/tree/main/mcp_server#available-resources) |
 | L* trajectories / transition matrix | `state_machines/data/lstar_all_cases.json` | `/api/lifecycle/lstar` |
 | Case studies (21 across 4 eras) | `data/case_studies.json` | `/case-studies` |
 | Triage model bundle | `models/triage_bundle.joblib` | `/triage`, `/api/triage-live` |
@@ -176,9 +176,11 @@ You can process additional PDFs to add more cases to the database.
 
 ### Finding PDF Sources
 
-Visit the **Sources** page to see links for collecting sources:
+Visit the **Sources** page for agency links and what is already in the corpus:
 - **Live Demo Sources Page**: [https://caselinker.up.railway.app/sources](https://caselinker.up.railway.app/sources)
 - Or visit `/sources` when running locally: http://localhost:8000/sources
+
+Those links are discovery only — they do not download PDFs. To go from an agency listing to a CaseLinker-ready PDF, use the scraper section below.
 
 Processed sources include:
 - **Arizona ICAC (AZICAC)**: Annual case reports and arrests (AZICAC)
@@ -238,6 +240,19 @@ summaries and CyberTipline-related publications
 - **U.S. DOJ CEOS Archives (DOJ ARCHIVES)**: Archived CEOS criminal press releases (2002-2008)
 - **U.S. Secret Service (USSS)**: ICAC-related newsroom press releases (ICAC task forces, CSAM, and child exploitation search results)
 - **U.S. Marshals Service (US MARSHALS)**: Press releases on child predators, sexual-assault fugitives, and recovered minors 
+
+### Agency → PDF (in-house scraper)
+
+Once you selected an agency (from the list above or `/sources`), use the CaseLinker scraping suite to turn its press-release listing into a merged PDF ready for ingestion:
+
+```mermaid
+flowchart LR
+  A["Agency listing / search"] --> B["fetch_source_urls.py<br/>→ urls.txt"]
+  B --> C["scrape_pdf.py<br/>→ merged PDF"]
+  C --> D["src/main.py<br/>→ database"]
+```
+
+Full workflow, flags, and collection framework: **[scripts/scraper/README.md](scripts/scraper/README.md)** / **[PRESS_RELEASE_SCRAPING.md](scripts/scraper/PRESS_RELEASE_SCRAPING.md)**.
 
 ### Processing PDFs to Populate Database
 
@@ -320,34 +335,21 @@ Navigate to [live demo](https://caselinker.up.railway.app/analysis) or run serve
 
 Access Triage via the [live demo](https://caselinker.up.railway.app/triage) or locally at http://localhost:8000/triage. Current implementation uses **rule-based** priority tiers, **ML Classification for triage** (random forest or decision tree trained on features from the database with labels derived from deterministic rules), optionally constrained by the same facet-dimension filtering used in Search, and supports **paste-in live triage** that scores text in memory without writing to the database. For the full triage documentation (rules, bundle paths, APIs, live paste), see **`triage.md`** in the repo root.
 
-## Phase 2: Patterns ([local](http://localhost:8000/patterns) · [live](https://caselinker.up.railway.app/patterns)) is an ongoing stage of research for cross-case pattern analysis ontop of the corpus.
+## Ontology & Graphs ([local](http://localhost:8000/patterns) · [live](https://caselinker.up.railway.app/patterns))
 
-### Section A — The Research Questions
+To answer ***relational*** and ***analytical*** questions at corpus scale, enforcement narratives cannot stay only in relational tables and regex-derived tags. They must be expressed in a **structured, graph-interoperable** format so patterns can be queried, validated, and compared across cases. The [ontology pipeline](#pipeline-flow) maps extracted features from each case narrative onto a standard investigation vocabulary, building validated knowledge graphs as a mechanism for cross-case analysis.
 
-Three questions drive Phase 2; each builds on the last. Findings pages: [`/patterns/questions/q01`](https://caselinker.up.railway.app/patterns/questions/q01) (Q1), [`q02`](https://caselinker.up.railway.app/patterns/questions/q02) (Q2), [`q03`](https://caselinker.up.railway.app/patterns/questions/q03) (Q3).
 
-| Question | Focus | Why it matters |
-|----------|--------|----------------|
-| **Q1 — Platform harm** | What is the platform and what capabilities does it have? How has it been misused in practice, and what surfaces, vectors, and avenues for exploitation does it expose? What specifically about this medium makes it usable for exploitation? Can those properties be  generalized into a framework for stress-testing future platforms? | Press releases and online harms research often name platforms but rarely explain *what about the medium* enabled the offense. Affordance-level analysis turns platform mentions and documented crimes into a transferable framework. Evidence: `ontology/q1/` ([`q1_evidence.json`](ontology/q1/q1_evidence.json)) |
-| **Q2 — Exploitation lifecycle** | What does offending and enforcement look like at scale across offense subsets (familial abuse, grooming, sextortion, production, possession, etc.)? What platforms, methods, and patterns recur within each? | Most ICAC research works in hashing, aggregate counts, or single-case narratives. The lifecycle view, stratified by subset, shows how offending and enforcement unfold across thousands of cases. Evidence: `ontology/q2/` ([`q2_lifecycle.json`](ontology/q2/q2_lifecycle.json), [`q2_evidence.py`](ontology/q2/q2_evidence.py)). |
-| **Q3 — Kill-chain interventions** | Given Q1 and Q2, where can technology, investigation, or enforcement intervene with the most leverage? | Platform mapping and lifecycle analysis exist to answer the operational question: where disruption is most plausible (detection, reporting, warrant execution, prevention). Evidence: `ontology/q3/` ([`q3_interventions.json`](ontology/q3/q3_interventions.json), [`q3_evidence.py`](ontology/q3/q3_evidence.py)). |
+### **What is an ontology:** 
+The [CAC Ontology](https://github.com/Project-VIC-International/CAC-Ontology) (Crimes Against Children Ontology) is a formal vocabulary developed to model the entities of a child-exploitation investigation as typed, related objects: platforms, victims, offenders, investigations, and outcomes. CAC is shepherded by [Project VIC International](https://www.projectvic.org/) and is built on the Linux Foundation's [Cyber Domain Ontology](https://cyberdomainontology.org/) stack ([UCO](https://unifiedcyberontology.org/) and [CASE](https://caseontology.org/)). CaseLinker case data is aligned to this vocabulary so graphs can be shared, validated, and queried with the same tools used in forensic and intelligence workflows.
 
-Rebuild evidence tables locally:
+The ontology and graph interface let us ask deeper questions into ICAC issues, beyond statistical counting and surface-level analysis. Three explored and published questions over the corpus are on [platform harm analysis](https://caselinker.up.railway.app/patterns/questions/q01), [exploitation lifecycles](https://caselinker.up.railway.app/patterns/questions/q02), and [kill-chain interventions](https://caselinker.up.railway.app/patterns/questions/q03).
 
-```bash
-python3 ontology/q1/build_candidates.py && python3 ontology/q1/q1_evidence.py
-python3 ontology/q2/build_candidates.py && python3 ontology/q2/q2_evidence.py
-python3 ontology/q3/build_candidates.py && python3 ontology/q3/q3_evidence.py
-```
 
-### Section B — The Method: Ontology Pipeline
+### **How CaseLinker uses ontologies:** 
+A deterministic mapping layer translates each case's extracted features into CAC entities and relationships, emits per-case RDF graphs, validates them, and merges conformant graphs into a queryable knowledge graph.
 
-To answer Q1–Q3 at corpus scale, enforcement narratives cannot stay only in relational tables and regex-derived tags. They must be expressed in a **structured, graph-queryable** form so patterns can be queried, validated, and compared across cases. CaseLinker already extracts consistent features from each narrative; the **ontology pipeline** maps those features into a standard investigation vocabulary and builds a validated knowledge graph as the mechanism for cross-case analysis.
-
-**What is an ontology:** The [CAC Ontology](https://github.com/Project-VIC-International/CAC-Ontology) (Crimes Against Children Ontology) is a formal vocabulary developed to model the entities of a child-exploitation investigation as typed, related objects: platforms, victims, offenders, investigations, and outcomes. CAC is shepherded by [Project VIC International](https://www.projectvic.org/) and is built on the Linux Foundation's [Cyber Domain Ontology](https://cyberdomainontology.org/) stack ([UCO](https://unifiedcyberontology.org/) and [CASE](https://caseontology.org/)). CaseLinker case data is being aligned to this vocabulary so graphs can be shared, validated, and queried with the same tools used in forensic and intelligence workflows.
-
-**How CaseLinker uses ontologies:** A deterministic mapping layer translates each case's extracted features into CAC entities and relationships, emits per-case RDF graphs, validates them, and merges conformant graphs into a queryable knowledge graph.
-
+<a id="pipeline-flow"></a>
 **Pipeline flow**:
 
 1. **CaseLinker case features** — already extracted (platforms, topics, investigation signals, prosecution outcomes).
@@ -356,10 +358,13 @@ To answer Q1–Q3 at corpus scale, enforcement narratives cannot stay only in re
 4. **SHACL validation** — only conformant graphs enter the merged corpus.
 5. **SPARQL-queryable corpus** — canonical per-case graphs are loaded into Oxigraph (named graph per case; union default graph) and served at `GET|POST /sparql`.
 
-Agents can also build cohort graphs on demand via MCP (`case2cac` → `graph_summarize` → `export_case_graph_ttl`), or query the live store with the [CASE/UCO SDK](https://github.com/vulnmaster/CASE-UCO-SDK) `execute_sparql_query` tool.
+The live store holds **7,426** press-release case graphs (`…/resource/case/{case_id}`) plus **297** PACER court-record graphs (`urn:pacer:kg:…`). Agents can also build cohort graphs on demand via MCP (`case2cac` → `graph_summarize` → `export_case_graph_ttl`), or query the live store with the [CASE/UCO SDK](https://github.com/vulnmaster/CASE-UCO-SDK) `execute_sparql_query` tool.
+
+> **[Graph Interface](https://caselinker.up.railway.app/patterns)**: browse and compare case graphs, look up by CAC class / platform / agency, open PACER investigations, and explore CaseLinker data.
 
 
-**Public SPARQL** (`GET|POST /sparql`) — SPARQL 1.1 Query only (`SELECT`, `CONSTRUCT`, `ASK`, `DESCRIBE`). No auth. Update and `SERVICE` are rejected. Rate limit is **30/minute** per IP. If a query has no outer `LIMIT`, the proxy injects **1000**; outer `LIMIT` above **10,000** is rejected. Each case is named graph `https://caselinker.up.railway.app/resource/case/{case_id}`; default-graph patterns see the union. Request formats, namespaces, errors, and more examples: **[ontology/docs/SPARQL.md](ontology/docs/SPARQL.md)**.
+### **Public SPARQL** 
+(`GET|POST /sparql`) — SPARQL 1.1 Query only (`SELECT`, `CONSTRUCT`, `ASK`, `DESCRIBE`). No auth. Update and `SERVICE` are rejected. Rate limit is **30/minute** per IP. If a query has no outer `LIMIT`, the proxy injects **1000**; outer `LIMIT` above **10,000** is rejected. Each case is named graph `https://caselinker.up.railway.app/resource/case/{case_id}`; default-graph patterns see the union. Request formats, namespaces, errors, and more examples: **[ontology/docs/SPARQL.md](ontology/docs/SPARQL.md)**.
 
 ```bash
 curl -sS -X POST 'https://caselinker.up.railway.app/sparql' \
@@ -380,8 +385,7 @@ LIMIT 8
 SPARQL
 ```
 
-Full ontology documentation (vocabulary, pipeline, graph pools, Q1–Q3, PACER, code map): **[ontology/README.md](ontology/README.md)**.
-
+Full ontology documentation (vocabulary, pipeline, graph pools, Q1–Q3, PACER, code map): **[ontology/README.md](ontology/README.md)**. 
 
 **References**
 - [CAC Ontology repository](https://github.com/Project-VIC-International/CAC-Ontology)
@@ -438,8 +442,9 @@ CaseLinker/
 │   ├── query.html                    # /query
 │   ├── lifecycle.html                # /lifecycle
 │   ├── triage.html                   # /triage
-│   ├── patterns.html                 # /patterns
-│   ├── patterns-graph.html           # /patterns/graph
+│   ├── patterns-graph.html           # /patterns (+ /patterns/graph alias)
+│   ├── patterns.html                 # archived research writeup (not routed)
+│   ├── assets/patterns-graph.js      # Graph viewer logic
 │   ├── questions/                    # /patterns/questions/q01–q03
 │   ├── tech-landscape.html           # /tech-landscape
 │   ├── LLM.html                      # /llm
@@ -526,18 +531,21 @@ When the ML stack is enabled, NER adds organizations, locations, dates, and ages
 - `GET /api/facet-distinct` - Distinct primary-bucket values per facet (for Search prune UI)
 - `POST /api/facet-cohort-members` - Case IDs for a facet path (same prune semantics as tree; small cohorts gated)
 - `GET /triage` - Triage page (rules, model evaluation, corpus model tiers, live paste)
-- `GET /patterns` - Phase 2: Patterns research documentation page
-- `GET /patterns/graph` - Merged CAC ontology graph explorer (compare / Big Bang pools)
-- `GET /patterns/questions/{question_id}` - Q01–Q03 narrative question pages
-- `GET /mcp/sse` - MCP SSE transport (requires `Authorization: Bearer <MCP_ACCESS_KEY>`)
-- `GET|POST /mcp-http/` - MCP Streamable HTTP transport (same auth)
-- `GET|POST /sparql` - SPARQL 1.1 Query proxy over the CASE/UCO/CAC case graphs (public, 30/minute; query-only; [ontology/docs/SPARQL.md](ontology/docs/SPARQL.md))
-- `GET /api/ontology/merged` - Merged graph JSON (`pool=compare|all|universe|analysis`; public, cached)
-- `GET /api/ontology/cases` - Per-case graph catalog (`pool=compare|all|universe|analysis`; public metadata: `case_id`, `path`, `ttl_path`)
-- `GET /ontology/graph_output/{pool}/{case_id}.jsonld|.ttl` - Static per-case CAC graph files (public)
-- `GET /ontology/q1/*`, `/ontology/q2/*`, `/ontology/q3/*`, `/ontology/question_data/*` - Static Q1–Q3 evidence JSON (public)
-- `GET /ontology/q_results.json` - Aggregated question results JSON when present (public)
-- `POST /api/ontology/cache/warm` - Rebuild/warm the merged-graph cache (`pool=compare|all|universe|analysis|both`)
+- `GET /patterns` — Ontology & Graphs explorer (CAC force graph + lookup; research below the fold)
+- `GET /patterns/graph` — same page (alias)
+- `GET /patterns/questions/{question_id}` — Q01–Q03 findings pages
+- `GET /api/ontology/cases` — graph pool catalog (`pool=compare|all|universe|analysis`; metadata only)
+- `GET /api/ontology/merged` — pre-merged flat nodes for a pool (public, cached)
+- `GET /api/ontology/lookup` — find cases by CAC class / text / shared nodes over the merged cache
+- `GET /api/ontology/pacer` — PACER investigation catalog (`ontology/PACER/`)
+- `POST /api/ontology/cache/warm` — rebuild/warm merged-graph cache (`pool=compare|all|universe|analysis|both`)
+- `GET /ontology/graph_output/{pool}/{case_id}.jsonld|.ttl` — static per-case CAC graphs
+- `GET /ontology/PACER/...` — static PACER CASE-UCO JSON-LD
+- `GET /ontology/q1/*`, `/ontology/q2/*`, `/ontology/q3/*`, `/ontology/question_data/*` — Q1–Q3 evidence JSON
+- `GET /ontology/q_results.json` — aggregated question results when present
+- `GET|POST /sparql` — SPARQL 1.1 over CASE/UCO/CAC graphs (public, 30/min; [SPARQL.md](ontology/docs/SPARQL.md))
+- `GET /mcp/sse` — MCP SSE transport (requires `Authorization: Bearer <MCP_ACCESS_KEY>`)
+- `GET|POST /mcp-http/` — MCP Streamable HTTP transport (same auth)
 - `GET /api/triage-eval` - Stratified train/test metrics on live cases (same pipeline as `scripts/verify/test_triage.py`)
 - `GET /api/triage-model-corpus` - Saved bundle predictions over live DB; optional `facet_constraints` JSON query param (rate limited)
 - `POST /api/triage-live` - Classify pasted batch text in memory only; requires bundle; no persistence

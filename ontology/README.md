@@ -7,7 +7,7 @@ CaseLinker maps each extracted case into a **CASE / UCO / CAC** knowledge graph:
 | Live SPARQL | [`https://caselinker.up.railway.app/sparql`](https://caselinker.up.railway.app/sparql) |
 | Protocol, limits, errors, example queries | **[docs/SPARQL.md](docs/SPARQL.md)** |
 | OpenAPI | [`/docs`](https://caselinker.up.railway.app/docs) (`GET\|POST /sparql`) |
-| Graph explorer | [`/patterns/graph`](https://caselinker.up.railway.app/patterns/graph) |
+| Graph explorer | [`/patterns`](https://caselinker.up.railway.app/patterns) (nav: **Ontology & Graphs**; alias `/patterns/graph`) |
 | SDK MCP consumer | [CASE/UCO SDK v1.25.0](https://github.com/vulnmaster/CASE-UCO-SDK/releases/tag/v1.25.0) `execute_sparql_query` |
 | Mapping spec | [MAPPING_PLAN.md](MAPPING_PLAN.md) |
 | Mapper | [features_to_cac.py](features_to_cac.py) |
@@ -76,7 +76,7 @@ flowchart TD
   nq["oxigraph_rebuild N-Quads"]
   ox["Oxigraph --union-default-graph"]
   sparql["Public SPARQL endpoint"]
-  viz["/patterns/graph + /api/ontology/*"]
+  viz["/patterns + /api/ontology/*"]
   mcp["MCP case2cac → session graph"]
 
   db --> map --> rdf --> shacl
@@ -98,15 +98,15 @@ How to query the live store, including GET vs POST, `VALUES` + `LIMIT` ordering,
 
 ## Graph pools
 
-Live SPARQL loads **every** canonical per-case graph (**7,426** `cac:CACInvestigation` as of the current rebuild). Patterns / MCP use smaller locked subsets. Display membership is the txt files — do not edit the counts by hand.
+Live SPARQL loads **every** press-release case graph (**7,426** `cac:CACInvestigation` named graphs as of the current rebuild). Separately, **297** PACER CASE-UCO graphs live under `urn:pacer:kg:…` (see [docs/SPARQL.md](docs/SPARQL.md#two-pacer-named-graph-families)). The Ontology & Graphs UI / MCP use smaller locked viz subsets. Display membership is the txt files — do not edit the counts by hand.
 
 | Pool | ID list | Folder | Used by |
 |---|---|---|---|
 | Full mapped corpus | all sqlite IDs | `graph_output/*.ttl` (staging) | Oxigraph / SPARQL |
-| Universe | [`universe_ids.txt`](universe_ids.txt) (1,969) | `graph_output/universe/` | `/patterns/graph` Universe |
-| Big Bang | [`big_bang_ids.txt`](big_bang_ids.txt) (968) | `graph_output/big_bang/` | `/patterns/graph` Big Bang |
+| Universe | [`universe_ids.txt`](universe_ids.txt) (1,969) | `graph_output/universe/` | `/patterns` Universe |
+| Big Bang | [`big_bang_ids.txt`](big_bang_ids.txt) (968) | `graph_output/big_bang/` | `/patterns` Big Bang |
 | Analysis | [`analysis_ids.txt`](analysis_ids.txt) (124) | `graph_output/analysis/` | MCP / research cohorts |
-| Compare | [`selected_200_ids.txt`](selected_200_ids.txt) (200) | subset of universe | `/patterns/graph` compare chips |
+| Compare | [`selected_200_ids.txt`](selected_200_ids.txt) (200) | subset of universe | `/patterns` compare chips |
 
 Canonical TTL for Oxigraph: **universe > staging > big_bang > analysis** (first match wins). Merged viz JSON: [`merge_graph_cache.py`](merge_graph_cache.py) (`GET /api/ontology/merged?pool=…`).
 
@@ -143,7 +143,7 @@ Rebuild tables: `python3 ontology/q1/q1_evidence.py` (same pattern for q2/q3). N
 
 ## PACER and lifecycle
 
-[`PACER/`](PACER/) pulls public federal docket material into structured records (`corpus2pacer.py`, `cases2records.py`, `build_facts_graphs.py`) for five offense families (enterprise, enticement, production, sextortion, trafficking). Those graphs feed the CAC state machines under `state_machines/` and the `/lifecycle` UI. They are a **lifecycle overlay**, not the 7,426-case SPARQL corpus.
+[`PACER/`](PACER/) holds public federal docket material modeled by the CASE-UCO SDK (41 investigations, 128 documents, annotations across enterprise / enticement / production / sextortion / trafficking). Loaded into Oxigraph as **297** named graphs `urn:pacer:kg:…` via [`scripts/load_pacer_jsonld.py`](../scripts/load_pacer_jsonld.py). Those graphs also feed CAC state machines under `state_machines/` and the `/lifecycle` UI. They are a **court-record overlay**, not a substitute for the 7,426 press-release case graphs.
 
 ## MCP (on-demand cohorts)
 
@@ -167,6 +167,7 @@ One-off: `python3 ontology/features_to_cac.py <case_id>`. Live SPARQL tests: `CA
 
 ## External references
 
+- [Affordances for Harm (AfH)](https://doi.org/10.5281/zenodo.21347781)
 - [CAC Ontology](https://github.com/Project-VIC-International/CAC-Ontology)
 - [CASE](https://github.com/casework/CASE) · [UCO](https://github.com/ucoProject/UCO) · [Project VIC](https://projectvic.org/)
 - [CASE/UCO SDK](https://github.com/vulnmaster/CASE-UCO-SDK) (v1.25.0 SPARQL MCP)

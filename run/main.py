@@ -4003,8 +4003,8 @@ async def serve_under_the_hood():
 
 @app.get("/patterns", response_class=HTMLResponse)
 async def serve_patterns():
-    """Serve the Patterns research documentation page"""
-    html_path = Path(__file__).parent.parent / "visualization" / "patterns.html"
+    """Serve the graph-first Patterns / ontology explorer."""
+    html_path = Path(__file__).parent.parent / "visualization" / "patterns-graph.html"
     if html_path.exists():
         return HTMLResponse(content=read_utf8_text_file(html_path))
     else:
@@ -4013,12 +4013,8 @@ async def serve_patterns():
 
 @app.get("/patterns/graph", response_class=HTMLResponse)
 async def serve_patterns_graph():
-    """Serve the CAC Ontology knowledge graph explorer (Phase 2)"""
-    html_path = Path(__file__).parent.parent / "visualization" / "patterns-graph.html"
-    if html_path.exists():
-        return HTMLResponse(content=read_utf8_text_file(html_path))
-    else:
-        return HTMLResponse(content="<h1>Knowledge graph page not found</h1>", status_code=404)
+    """Alias for the graph / ontology explorer (same as /patterns)."""
+    return await serve_patterns()
 
 
 @app.get("/patterns/questions/{question_id}", response_class=HTMLResponse)
@@ -4058,6 +4054,15 @@ app.mount(
     StaticFiles(directory=str(_graph_output)),
     name="graph_output",
 )
+
+# CASE-UCO SDK modeled PACER investigation / document JSON-LD.
+_pacer_root = Path(__file__).resolve().parent.parent / "ontology" / "PACER"
+if _pacer_root.is_dir():
+    app.mount(
+        "/ontology/PACER",
+        StaticFiles(directory=str(_pacer_root)),
+        name="pacer_kg",
+    )
 
 # Serve ontology/question_data/ JSON files for interactive question pages.
 _question_data = Path(__file__).resolve().parent.parent / "ontology" / "question_data"
@@ -4244,6 +4249,116 @@ def api_ontology_cases(
     raise HTTPException(status_code=400, detail=f"unknown pool: {pool_norm}")
 
 
+@app.get("/api/ontology/pacer")
+def api_ontology_pacer():
+    """
+    Catalog of CASE-UCO SDK modeled PACER investigation graphs under ontology/PACER/.
+
+    Returns metadata (path, family, CASE/UCO/CAC classes, agencies, search text)
+    for client-side lookup. Bodies remain static JSON-LD under /ontology/PACER/...
+    """
+    from fastapi.responses import JSONResponse
+
+    pacer_root = Path(__file__).resolve().parent.parent / "ontology" / "PACER"
+    if not pacer_root.is_dir():
+        return JSONResponse(
+            content={"investigations": [], "n": 0, "class_facets": []},
+            headers={"Cache-Control": "public, max-age=300"},
+        )
+
+    def _local_type(value: Any) -> str:
+        s = str(value or "")
+        if "#" in s:
+            s = s.rsplit("#", 1)[-1]
+        if "/" in s:
+            s = s.rsplit("/", 1)[-1]
+        if ":" in s:
+            s = s.rsplit(":", 1)[-1]
+        return s
+
+    def _as_list(value: Any) -> list:
+        if value is None:
+            return []
+        if isinstance(value, list):
+            return value
+        return [value]
+
+    skip_classes = {
+        "Relationship",
+        "UcoObject",
+        "ObservableObject",
+        "ProvenanceRecord",
+        "FunctionalComplex",
+    }
+    class_facets: Dict[str, int] = {}
+    investigations = []
+
+    for path in sorted(pacer_root.rglob("*-investigation.jsonld")):
+        rel = path.relative_to(pacer_root).as_posix()
+        family = rel.split("/", 1)[0] if "/" in rel else "PACER"
+        slug = path.name.replace("-investigation.jsonld", "")
+        classes: set[str] = set()
+        agencies: list[str] = []
+        text_bits: list[str] = [slug, family, rel]
+
+        try:
+            doc = json.loads(path.read_text(encoding="utf-8"))
+        except Exception:
+            doc = {}
+
+        for node in doc.get("@graph") or []:
+            if not isinstance(node, dict):
+                continue
+            for typ in _as_list(node.get("@type")):
+                local = _local_type(typ)
+                if not local or local in skip_classes:
+                    continue
+                classes.add(local)
+                class_facets[local] = class_facets.get(local, 0) + 1
+            name = node.get("uco-core:name")
+            if isinstance(name, str) and name.strip():
+                text_bits.append(name.strip())
+                types = {_local_type(t) for t in _as_list(node.get("@type"))}
+                if "Organization" in types:
+                    agencies.append(name.strip())
+            for key, val in node.items():
+                if key in ("@id", "@type"):
+                    continue
+                if isinstance(val, str) and len(val) < 120:
+                    lk = key.lower()
+                    if any(tok in lk for tok in ("name", "label", "platform", "channel", "account")):
+                        text_bits.append(val)
+
+        investigations.append(
+            {
+                "id": slug,
+                "family": family,
+                "relpath": rel,
+                "path": f"/ontology/PACER/{rel}",
+                "label": slug.replace("_", " ").replace("-", " "),
+                "classes": sorted(classes),
+                "agencies": sorted(set(agencies)),
+                "search_text": " ".join(text_bits).casefold(),
+            }
+        )
+
+    return JSONResponse(
+        content={
+            "investigations": investigations,
+            "n": len(investigations),
+            "class_facets": [
+                {"name": name, "count": count}
+                for name, count in sorted(class_facets.items(), key=lambda x: (-x[1], x[0]))[:60]
+            ],
+            "note": (
+                "CASE-UCO compact JSON-LD (CASE/UCO/CAC). Also queryable in Oxigraph as "
+                "urn:pacer:kg:… after scripts/load_pacer_jsonld.py --post."
+            ),
+        },
+        headers={"Cache-Control": "public, max-age=600"},
+    )
+
+
 _ontology_catalog_mem: Dict[str, Any] = {}
 _ontology_merged_mem: Dict[str, Dict[str, Any]] = {}
 
@@ -4293,6 +4408,60 @@ def api_ontology_merged(
         "n_nodes": payload.get("n_nodes"),
         "flat_nodes": payload.get("flat_nodes"),
         "cache": payload.get("cache"),
+    }
+
+
+def _ontology_lookup_text(value: Any) -> str:
+    """Return a compact searchable representation of a JSON-LD value."""
+    if isinstance(value, dict):
+        return " ".join(_ontology_lookup_text(v) for v in value.values())
+    if isinstance(value, (list, tuple)):
+        return " ".join(_ontology_lookup_text(v) for v in value)
+    return str(value or "")
+
+
+@app.get("/api/ontology/lookup")
+def api_ontology_lookup(
+    q: str = Query("", max_length=160),
+    class_name: str = Query("", max_length=120),
+    shared_only: bool = Query(False),
+    pool: str = Query("universe"),
+    limit: int = Query(120, ge=1, le=200),
+):
+    """Facet-friendly lookup over the existing merged ontology graph cache."""
+    pool_norm = (pool or "universe").strip().lower()
+    if pool_norm not in ("compare", "all", "universe", "analysis"):
+        raise HTTPException(status_code=400, detail="unknown graph pool")
+    if str(_ontology_dir) not in sys.path:
+        sys.path.insert(0, str(_ontology_dir))
+    from merge_graph_cache import get_or_build_merged  # noqa: E402
+    try:
+        payload = get_or_build_merged(
+            pool_norm,
+            redis_get=get_cached,
+            redis_set=lambda k, v, ttl=604800: set_cached(k, v, ttl=ttl),
+        )
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+    query, wanted_class = (q or "").strip().casefold(), (class_name or "").strip().casefold()
+    matched_cases: set[str] = set()
+    class_facets: Dict[str, int] = {}
+    for node in payload.get("flat_nodes") or []:
+        types = node.get("@type") or []
+        if not isinstance(types, list): types = [types]
+        local_types = [str(t).rsplit("#", 1)[-1].rsplit("/", 1)[-1] for t in types]
+        for item in set(local_types): class_facets[item] = class_facets.get(item, 0) + 1
+        if wanted_class and wanted_class not in {t.casefold() for t in local_types}: continue
+        if shared_only and not node.get("_isShared"): continue
+        if query and query not in _ontology_lookup_text(node).casefold(): continue
+        matched_cases.update(str(cid) for cid in node.get("_cases", []) if cid)
+
+    entries = _ontology_graph_case_entries("all" if pool_norm == "all" else pool_norm)
+    return {
+        "pool": pool_norm, "matched_case_count": len(matched_cases),
+        "cases": [entries[cid] for cid in sorted(matched_cases) if cid in entries][:limit],
+        "class_facets": [{"name": name, "count": count} for name, count in sorted(class_facets.items(), key=lambda x: (-x[1], x[0]))[:80]],
     }
 
 
