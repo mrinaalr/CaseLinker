@@ -7,6 +7,7 @@ to classify queries, reject Update and SERVICE, and decide LIMIT injection.
 from __future__ import annotations
 
 import os
+import re
 from dataclasses import dataclass
 from typing import Optional
 
@@ -258,6 +259,36 @@ def sparql_cors_allow_origin(origin: Optional[str]) -> Optional[str]:
         *extra,
     }
     return origin if origin in allowed else None
+
+
+def extract_sparql_from_llm_text(raw: str) -> str:
+    """Pull a SPARQL query out of an LLM reply (optional markdown fence / prose)."""
+    text = (raw or "").strip()
+    if not text:
+        raise ValueError("LLM returned an empty SPARQL reply.")
+    fence = re.search(r"```(?:sparql|SPARQL)?\s*([\s\S]*?)```", text)
+    if fence:
+        text = fence.group(1).strip()
+    m = re.search(
+        r"(?is)\b(?:PREFIX|BASE|SELECT|ASK|CONSTRUCT|DESCRIBE)\b",
+        text,
+    )
+    if m:
+        text = text[m.start() :].strip()
+    # Drop trailing prose only when a blank-line-separated segment already
+    # contains a query form (do not cut PREFIX blocks before SELECT).
+    if re.search(r"(?is)\b(?:SELECT|ASK|CONSTRUCT|DESCRIBE)\b", text):
+        # Trim obvious trailing explanation paragraphs after the query.
+        # Keep blank lines that appear between PREFIX and the query form.
+        trail = re.search(
+            r"(?is)\n\s*\n(?=(?:Sure|Here|Hope|This query|Note:|Explanation:))",
+            text,
+        )
+        if trail:
+            text = text[: trail.start()].strip()
+    else:
+        raise ValueError("LLM reply did not contain a SPARQL query form.")
+    return text
 
 
 def _algebra_has_service(node: object) -> bool:

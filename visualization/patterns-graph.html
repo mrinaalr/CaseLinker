@@ -606,6 +606,10 @@
             white-space: pre;
             overflow-x: auto;
         }
+        .sparql-query.sparql-nl-mode {
+            font-family: inherit;
+            white-space: pre-wrap;
+        }
         .sparql-actions {
             display: flex;
             flex-wrap: wrap;
@@ -870,14 +874,14 @@
                 </div>
                 <div class="mode-block">
                     <span class="mode-block-label">CASE</span>
-                    <div class="mode-toggle" id="mode-toggle" role="tablist" aria-label="Selection mode">
+                <div class="mode-toggle" id="mode-toggle" role="tablist" aria-label="Selection mode">
                         <button type="button" data-mode="single" class="active" role="tab" aria-selected="true">Single</button>
                         <button type="button" data-mode="compare" role="tab" aria-selected="false">Compare</button>
-                    </div>
                 </div>
             </div>
-            <div class="case-selector" id="case-selector" hidden></div>
         </div>
+            <div class="case-selector" id="case-selector" hidden></div>
+            </div>
 
         <aside class="lookup-rail" aria-label="Lookup">
             <p class="rail-title">Lookup</p>
@@ -887,8 +891,8 @@
                 <div class="chip-row" id="corpus-source-row">
                     <button type="button" class="facet-chip active" data-corpus="cases">Press releases</button>
                     <button type="button" class="facet-chip" data-corpus="pacer">PACER</button>
-                </div>
-            </div>
+    </div>
+        </div>
 
             <div class="rail-section" id="lookup-case-section">
                 <h3>Find cases</h3>
@@ -997,8 +1001,9 @@
                     <option value="investigations">Count press-release investigations</option>
                     <option value="agencies">Top agencies</option>
                     <option value="ask">ASK — any CACInvestigation?</option>
+                    <option value="llm">LLM — natural language → SPARQL</option>
                 </select>
-                <label class="field-label" for="sparql-query">Query</label>
+                <label class="field-label" id="sparql-query-label" for="sparql-query">Query</label>
                 <textarea id="sparql-query" class="field sparql-query" spellcheck="false" aria-label="SPARQL query"></textarea>
                 <div class="sparql-actions">
                     <button type="button" class="btn primary" id="sparql-run">Run</button>

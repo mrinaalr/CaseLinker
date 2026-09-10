@@ -1457,6 +1457,14 @@
         ask: SPARQL_PREFIX + 'ASK { ?s a cac:CACInvestigation }'
     };
 
+    const SPARQL_LLM_PLACEHOLDER =
+        'Ask in plain English, then press Generate.\n' +
+        'Example: Which platforms appear in the most cases?';
+
+    function looksLikeSparql(text) {
+        return /^(PREFIX|BASE|SELECT|ASK|CONSTRUCT|DESCRIBE)\b/i.test((text || '').trim());
+    }
+
     function setSparqlStatus(msg, isError) {
         const el = document.getElementById('sparql-status');
         if (!el) return;
@@ -1544,10 +1552,54 @@
         }
     }
 
+    async function generateSparqlFromNl() {
+        const ta = document.getElementById('sparql-query');
+        const runBtn = document.getElementById('sparql-run');
+        const question = ((ta && ta.value) || '').trim();
+        if (!question) {
+            setSparqlStatus('Describe what you want to query in plain English.', true);
+            return;
+        }
+        if (runBtn) runBtn.disabled = true;
+        setSparqlStatus('Generating SPARQL via Groq…');
+        const box = document.getElementById('sparql-results');
+        if (box) box.innerHTML = '';
+        try {
+            const resp = await fetch('/api/sparql/from-nl', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+                body: JSON.stringify({ question: question })
+            });
+            const data = await resp.json().catch(() => ({}));
+            if (!resp.ok) {
+                const detail = (data && data.detail) ? data.detail : ('HTTP ' + resp.status);
+                throw new Error(typeof detail === 'string' ? detail : JSON.stringify(detail));
+            }
+            const sparql = (data && data.sparql) || '';
+            if (!sparql.trim()) throw new Error('No SPARQL returned.');
+            ta.value = sparql;
+            ta.classList.remove('sparql-nl-mode');
+            ta.spellcheck = false;
+            const label = document.getElementById('sparql-query-label');
+            if (label) label.textContent = 'Query';
+            if (runBtn) runBtn.textContent = 'Run';
+            setSparqlStatus(
+                'SPARQL ready' +
+                (data.kind ? ' (' + data.kind + ')' : '') +
+                ' · press Run to execute'
+            );
+        } catch (err) {
+            setSparqlStatus(err && err.message ? err.message : String(err), true);
+        } finally {
+            if (runBtn) runBtn.disabled = false;
+        }
+    }
+
     function wireSparqlUi() {
         const example = document.getElementById('sparql-example');
         const ta = document.getElementById('sparql-query');
         const runBtn = document.getElementById('sparql-run');
+        const label = document.getElementById('sparql-query-label');
         if (!ta || !runBtn) return;
 
         const epLabel = document.getElementById('sparql-endpoint-label');
@@ -1557,17 +1609,59 @@
                 : '/sparql';
         }
 
+        function isLlmMode() {
+            return example && example.value === 'llm';
+        }
+
+        function syncSparqlModeUi() {
+            if (isLlmMode() && !looksLikeSparql(ta.value)) {
+                ta.classList.add('sparql-nl-mode');
+                ta.spellcheck = true;
+                if (label) label.textContent = 'Question';
+                runBtn.textContent = 'Generate';
+            } else {
+                ta.classList.remove('sparql-nl-mode');
+                ta.spellcheck = false;
+                if (label) label.textContent = 'Query';
+                runBtn.textContent = 'Run';
+            }
+        }
+
         function loadExample() {
             const key = (example && example.value) || 'platforms';
-            ta.value = SPARQL_EXAMPLES[key] || SPARQL_EXAMPLES.platforms;
+            if (key === 'llm') {
+                ta.value = '';
+                ta.placeholder = SPARQL_LLM_PLACEHOLDER;
+                setSparqlStatus('LLM mode: write a question, Generate → SPARQL, Run again to execute.');
+            } else {
+                ta.placeholder = '';
+                ta.value = SPARQL_EXAMPLES[key] || SPARQL_EXAMPLES.platforms;
+                setSparqlStatus('');
+            }
+            const box = document.getElementById('sparql-results');
+            if (box) box.innerHTML = '';
+            syncSparqlModeUi();
         }
+
+        async function onSparqlRun() {
+            if (isLlmMode() && !looksLikeSparql(ta.value)) {
+                await generateSparqlFromNl();
+                syncSparqlModeUi();
+                return;
+            }
+            await runSparqlPanelQuery();
+        }
+
         loadExample();
         if (example) example.addEventListener('change', loadExample);
-        runBtn.addEventListener('click', () => { runSparqlPanelQuery(); });
+        ta.addEventListener('input', () => {
+            if (isLlmMode()) syncSparqlModeUi();
+        });
+        runBtn.addEventListener('click', () => { onSparqlRun(); });
         ta.addEventListener('keydown', (ev) => {
             if ((ev.metaKey || ev.ctrlKey) && ev.key === 'Enter') {
                 ev.preventDefault();
-                runSparqlPanelQuery();
+                onSparqlRun();
             }
         });
     }

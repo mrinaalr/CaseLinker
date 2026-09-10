@@ -104,7 +104,12 @@ except ImportError:
     def get_cache_key(endpoint, **kwargs):
         return f"caselinker:{endpoint}"
 
-from sparql_proxy import SparqlRejected, prepare_sparql_query, sparql_cors_allow_origin
+from sparql_proxy import (
+    SparqlRejected,
+    extract_sparql_from_llm_text,
+    prepare_sparql_query,
+    sparql_cors_allow_origin,
+)
 from sparql_rebuild_lock import rebuild_in_progress
 
 _mcp_streamable_enabled = False
@@ -434,6 +439,13 @@ class LlmChatBody(BaseModel):
     provider: Optional[str] = Field(None, max_length=32)
 
 
+class SparqlFromNlBody(BaseModel):
+    """Natural-language question → SPARQL 1.1 Query (Groq); no DB tools."""
+
+    question: str = Field(..., min_length=1, max_length=4000)
+    model: Optional[str] = Field(None, max_length=128)
+
+
 # Request logging middleware
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
@@ -478,7 +490,7 @@ else:
 
 _GROQ_CHAT_URL = "https://api.groq.com/openai/v1/chat/completions"
 _GEMINI_CHAT_URL = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions"
-_NL_DEFAULT_GROQ_MODEL = "llama-3.3-70b-versatile"
+_NL_DEFAULT_GROQ_MODEL = "openai/gpt-oss-120b"
 _NL_DEFAULT_GEMINI_MODEL = "gemini-2.0-flash"
 _NL_MAX_SQL_LEN = 4000
 _NL_MAX_TOOL_ROUNDS = 8
@@ -3431,6 +3443,110 @@ def api_llm_chat(request: Request, body: LlmChatBody):
         raise HTTPException(status_code=502, detail=f"LLM upstream error: {detail}") from e
     except requests.RequestException as e:
         raise HTTPException(status_code=502, detail=f"Upstream request failed: {e}") from e
+    except RuntimeError as e:
+        raise HTTPException(status_code=502, detail=str(e)) from e
+
+
+_SPARQL_NL_SYSTEM = """You translate natural-language questions into SPARQL 1.1 Query for the CaseLinker CASE/UCO/CAC graph store.
+
+Rules:
+- Output ONLY a single SPARQL query. No prose, no markdown fences, no comments outside SPARQL.
+- Query forms only: SELECT, ASK, CONSTRUCT, or DESCRIBE. Never Update, INSERT, DELETE, LOAD, CLEAR, DROP, or SERVICE.
+- Prefer SELECT with an outer LIMIT <= 50 unless the user asks for a count/ASK.
+- Use the union default graph (no GRAPH) unless the user asks about one case; then use GRAPH <https://caselinker.up.railway.app/resource/case/{case_id}>.
+- Case ids look like nj_ag_2017_001. dcterms:identifier on cac:CACInvestigation holds the case_id.
+- Platform IRIs: https://caselinker.up.railway.app/resource/platform/{slug}
+- Agency IRIs: https://caselinker.up.railway.app/resource/agency/{slug}
+
+Prefixes (use as needed):
+PREFIX cac: <https://cacontology.projectvic.org#>
+PREFIX cac-multi: <https://cacontology.projectvic.org/multi-jurisdiction#>
+PREFIX cac-plat: <https://cacontology.projectvic.org/platforms#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+
+Useful patterns:
+- Investigation: ?case a cac:CACInvestigation
+- Platform use: ?event cac:usesChannel ?platform . ?case cac:hasStep ?event . ?platform rdfs:label ?label
+- Agency: ?case cac-multi:involvesAgency ?agency . ?agency rdfs:label ?label
+- Press-release graphs only: FILTER(STRSTARTS(STR(?g), "https://caselinker.up.railway.app/resource/case/"))
+"""
+
+
+def nl_sparql_from_text(
+    question: str,
+    *,
+    api_key: str,
+    model_override: Optional[str] = None,
+    timeout_per_request: float = 60.0,
+) -> Dict[str, Any]:
+    """Groq chat → SPARQL string, validated with ``prepare_sparql_query``."""
+    model = _nl_pick_groq_model(None, model_override)
+    data = _nl_openai_compatible_chat(
+        chat_url=_GROQ_CHAT_URL,
+        api_key=api_key,
+        model=model,
+        messages=[
+            {"role": "system", "content": _SPARQL_NL_SYSTEM},
+            {"role": "user", "content": question.strip()},
+        ],
+        tools=None,
+        timeout=timeout_per_request,
+        log_label="Groq-SPARQL",
+    )
+    msg = _nl_message_from_response(data)
+    content = msg.get("content") or ""
+    if isinstance(content, list):
+        content = "".join(
+            (p.get("text") or "") if isinstance(p, dict) else str(p) for p in content
+        )
+    sparql = extract_sparql_from_llm_text(str(content))
+    try:
+        prepared = prepare_sparql_query(sparql)
+    except SparqlRejected as exc:
+        raise ValueError(f"Generated SPARQL rejected: {exc.detail}") from exc
+    return {
+        "sparql": prepared.query,
+        "kind": prepared.kind,
+        "model": model,
+        "limit_injected": prepared.limit_injected,
+    }
+
+
+@app.post("/api/sparql/from-nl")
+@limiter.limit("15/minute")
+def api_sparql_from_nl(request: Request, body: SparqlFromNlBody):
+    """
+    Convert natural language to a SPARQL 1.1 Query via Groq (no SQL tools).
+    Requires ``GROQ_API_KEY``. Disabled with ``CASLINKER_DISABLE_LLM_CHAT=1``.
+    Shares the same daily LLM cap as ``/api/llm/chat``.
+    """
+    off = os.getenv("CASLINKER_DISABLE_LLM_CHAT", "").strip().lower()
+    if off in ("1", "true", "yes", "on"):
+        raise HTTPException(status_code=403, detail="LLM chat is disabled by the operator.")
+    _nl_reload_dotenv_for_llm()
+    key = os.getenv("GROQ_API_KEY", "").strip()
+    if not key:
+        raise HTTPException(
+            status_code=503,
+            detail="SPARQL NL is not configured (set GROQ_API_KEY on the server).",
+        )
+    _enforce_llm_daily_limit(request)
+    try:
+        return nl_sparql_from_text(
+            body.question.strip(),
+            api_key=key,
+            model_override=body.model,
+        )
+    except requests.HTTPError as e:
+        detail = str(e)
+        if e.response is not None and e.response.text:
+            detail = e.response.text[:800]
+        raise HTTPException(status_code=502, detail=f"LLM upstream error: {detail}") from e
+    except requests.RequestException as e:
+        raise HTTPException(status_code=502, detail=f"Upstream request failed: {e}") from e
+    except ValueError as e:
+        raise HTTPException(status_code=422, detail=str(e)) from e
     except RuntimeError as e:
         raise HTTPException(status_code=502, detail=str(e)) from e
 
