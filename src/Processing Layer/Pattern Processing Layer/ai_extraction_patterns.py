@@ -9,11 +9,14 @@ from __future__ import annotations
 import re
 
 # AI-CSAM offense product (case_topics: ai_csam)
+# Lexical only — do not promote from embedding scores alone (see merge_processing).
 AI_CSAM_TOPIC_RE = re.compile(
     r"""
     \bai[- ]generated\b
     | \bai\s+created\b
     | \bai\s*[-\s]?created\b
+    | \bartificially[- ]generated\b
+    | \bartificially\s+generated\b
     | \bcomputer[- ]generated\b.*\b(?:child|minor|pornograph|sexual|csam|exploit)\b
     | \b(?:child|minor|pornograph|sexual|csam|exploit).*\bcomputer[- ]generated\b
     | \bdigitally[- ]generated\b.*\b(?:child|minor|pornograph|sexual|csam|exploit)\b
@@ -21,13 +24,16 @@ AI_CSAM_TOPIC_RE = re.compile(
     | \bdeepfake
     | \bobscene\s+visual\s+represent
     | \bai\s+csam\b
-    | \bartificial\s+intelligence\b.*\b(?:to\s+)?(?:creat|generat|produc|manufactur)\w*\b.*\b(?:child|minor|pornograph|csam|sexual)\b
-    | \bartificial\s+intelligence\b.*\b(?:child|minor|pornograph|csam|sexual\s+abuse\s+material|exploitative)\b
-    | \b(?:child|minor|pornograph|csam|sexual\s+abuse\s+material|exploitative).*\bartificial\s+intelligence\b
+    | \bartificial\s+intelligence\b(?:(?!\beasier\b)[^.]){0,60}\bto\s+(?:creat|generat|produc|manufactur)\w*
+    | \bartificial\s+intelligence\b[^.]{0,60}\b(?:created|generated|produced|manufactured)\b
+    | \b(?:created|generated|produced|manufactured)\b[^.]{0,100}\b(?:using|with|by|via|through)\s+(?:generative\s+)?artificial\s+intelligence\b
+    | \b(?:creat|generat|manufactur)\w*[^.]{0,100}\bartificial\s+intelligence\b
     | \bimages?\s+(?:and\s+videos?\s+)?(?:were\s+|was\s+)?(?:created|generated|produced|made)\s+(?:using|through|with)\s+artificial\s+intelligence\b
-    | \bartificial\s+intelligence\s*[\(\s,]*\s*ai\s*[\)\s,]*.*\b(?:child|minor|pornograph|csam|sexual|exploit|generat|creat)\b
+    | \bartificial\s+intelligence\s*[\(\s,]*\s*ai\s*[\)\s,]*(?:(?!\beasier\b)[^.]){0,40}\bto\s+(?:creat|generat|produc|manufactur)\w*
     | \b(?:possess|possession|possessed|distribut|receiv|trading|collect|manufactur|produc|creat|generat)\w*[^.]{0,80}\bai[- ]generated\b
+    | \b(?:possess|possession|possessed|distribut|receiv|trading|collect)\w*[^.]{0,80}\bartificially[- ]generated\b
     | \bai[- ]generated\b[^.]{0,80}\b(?:possess|possession|possessed|distribut|child|minor|csam|pornograph|sexual|exploit|depict)\w*
+    | \bartificially[- ]generated\b[^.]{0,80}\b(?:possess|possession|possessed|distribut|child|minor|csam|pornograph|sexual|exploit|file|material|image)\w*
     | \bexploitative\s+images?\b[^.]{0,40}\bai[- ]generated\b
     | \bai[- ]generated\b[^.]{0,40}\bexploitative\s+images?\b
     | \bmachine\s+learning\s+models?\b[^.]{0,60}\b(?:child|minor|csam|sexual|pornograph)\b
@@ -38,6 +44,7 @@ AI_CSAM_TOPIC_RE = re.compile(
     | \bchild\s+pornograph\w*\s+using\s+(?:a[-\s]?i|artificial\s+intelligence)\b
     | \bgenerated\s+(?:using|by)\s+an?\s+(?:ai\s+computer\s+program|artificial\s+intelligence)\b
     | \bbe(?:en)?\s+generated\s+by\s+artificial\s+intelligence\b
+    | \bgenerated\s+artificial\s+intelligence\s+child\b
     | \bai\s+technology\s+applications?\s+to\s+produc
     | \bdeep\s+fakes?\b
     | \breported\s+to\s+be\s+artificial\s+intelligence\b
@@ -73,10 +80,13 @@ AI_CSAM_IMPLIES_TOOL_RE = re.compile(
     | \bdall[\s-]?e\b
     | \bai\s+chatbot
     | \bmachine\s+learning\b
+    | \bartificially[- ]generated\b
     """,
     re.IGNORECASE | re.VERBOSE,
 )
 
+# Deprecated: embedding scores alone must not set case_topics ai_csam (false positives
+# on ordinary CSAM digests). Kept for reference / older callers; unused by merge.
 AI_CSAM_SEMANTIC_THRESHOLD = 0.50
 
 # Sextortion offense (case_topics: sextortion) — regex only; not promoted from NLP scores.

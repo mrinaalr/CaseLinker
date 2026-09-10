@@ -436,7 +436,6 @@ _CSAM_TOPIC_RE = re.compile(
 
 from ai_extraction_patterns import (
     AI_CSAM_IMPLIES_TOOL_RE,
-    AI_CSAM_SEMANTIC_THRESHOLD,
     AI_CSAM_TOPIC_RE,
     GEN_AI_TOOL_RE,
     SEXTORTION_TOPIC_RE,

@@ -110,8 +110,9 @@ def _agency_context_gate():
     return _agency_gate_mod
 
 
-# Promote case_topics ai_csam when semantic concept ai_and_internet_tools clears this bar.
-AI_CSAM_SEMANTIC_THRESHOLD = 0.50
+# AI-CSAM (case_topics) is lexical/regex only — see AI_CSAM_TOPIC_RE.
+# Do not promote from embedding concept ai_and_internet_tools; scores ~0.50 on
+# ordinary pre-GenAI CSAM digests caused widespread false positives.
 
 _US_STATES = (
     "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut",
@@ -277,6 +278,7 @@ class MergeProcessing:
         - Production topic: pattern/regex only (no semantic override).
         - Possession: if possession_csam is strong, ensure 'possession' tag exists.
         - Severity: add 'grooming' when the semantic concept score is present.
+        - AI-CSAM topic: pattern/regex only (never promote from ai_and_internet_tools).
         - Sextortion topic: pattern/regex only (see SEXTORTION_TOPIC_RE in processing).
         """
         ml_features = merged.get('ml_features') or {}
@@ -309,17 +311,8 @@ class MergeProcessing:
         if severity:
             merged['severity_indicators'] = list(dict.fromkeys(severity))
 
-        # AI-CSAM offense (semantic gate); Gen AI tool is regex in platforms_used
-        ai_score = float(scores.get('ai_and_internet_tools', 0.0))
-        if ai_score >= AI_CSAM_SEMANTIC_THRESHOLD:
-            if 'ai_csam' not in topics:
-                topics.append('ai_csam')
-
-        if topics:
-            merged['case_topics'] = list(dict.fromkeys(topics))
-
         return merged
-    
+
     def _merge_ages(
         self,
         merged: Dict[str, Any],
