@@ -76,6 +76,83 @@
     return h >= 0 ? iri.slice(h + 1) : iri.split("/").pop();
   }
 
+  /** Local name for full IRIs or CURIEs like cacontology-grooming:SexualizationPhase. */
+  function typeLocal(s) {
+    if (!s) return "";
+    const str = String(s);
+    if (str.indexOf("#") >= 0) return str.slice(str.indexOf("#") + 1);
+    if (str.indexOf(":") >= 0 && !str.startsWith("http")) {
+      return str.slice(str.lastIndexOf(":") + 1);
+    }
+    return shortType(str);
+  }
+
+  function isGenericCorePhase(t) {
+    const loc = typeLocal(t);
+    // Parent-class rows from SPARQL double-count specific phase transitions.
+    return loc === "Phase";
+  }
+
+  function samePhaseType(annotationType, phaseType) {
+    return typeLocal(annotationType) === typeLocal(phaseType);
+  }
+
+  function lifecycleCases() {
+    return [...(payload.canonical_cases || payload.cases || []), ...(payload.expansion_cases || [])];
+  }
+
+  function lifecycleDenom() {
+    return (
+      payload.n_lifecycle
+      || payload.n_cases
+      || lifecycleCases().length
+      || 0
+    );
+  }
+
+  /**
+   * Affordance transitions at this phase across all lifecycle cases (canonical +
+   * expansion). Aggregates by affordance with unique case counts — not the
+   * SPARQL annotation dump (parent-class duplicates, /5 denominators).
+   */
+  function transitionsForPhase(phase, direction) {
+    const endpoint = direction === "in" ? "to_type" : "from_type";
+    const peerKey = direction === "in" ? "from_type" : "to_type";
+    const byAffordance = new Map();
+
+    for (const caseData of lifecycleCases()) {
+      for (const edge of caseData.transitions || []) {
+        if (!edge || !samePhaseType(edge[endpoint], phase.type)) continue;
+        if (isGenericCorePhase(edge.from_type) || isGenericCorePhase(edge.to_type)) continue;
+        const aff = edge.affordance_name || typeLocal(edge.affordance) || "—";
+        const peer = typeLocal(edge[peerKey]) || "—";
+        if (isGenericCorePhase(peer)) continue;
+        let group = byAffordance.get(aff);
+        if (!group) {
+          group = { affordance: aff, caseIds: new Set(), peers: new Map() };
+          byAffordance.set(aff, group);
+        }
+        group.caseIds.add(caseData.id);
+        if (!group.peers.has(peer)) group.peers.set(peer, new Set());
+        group.peers.get(peer).add(caseData.id);
+      }
+    }
+
+    return Array.from(byAffordance.values())
+      .map((g) => {
+        const peers = Array.from(g.peers.entries())
+          .map(([label, ids]) => ({ label, count: ids.size }))
+          .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
+        return {
+          affordance: g.affordance,
+          case_count: g.caseIds.size,
+          peers,
+          peer_summary: peers.map((p) => p.label).join(", "),
+        };
+      })
+      .sort((a, b) => b.case_count - a.case_count || a.affordance.localeCompare(b.affordance));
+  }
+
   function columnIndex(phase) {
     const t = phase.type;
     if (phase.is_terminal && t === GROOMING + "ExploitationPhase") {
@@ -294,22 +371,22 @@
     updateOffenseSummary();
   }
 
+  function formatTransitionRow(t, denom, direction) {
+    const aff = AFFORDANCE_LABELS[t.affordance] || t.affordance;
+    const prep = direction === "in" ? "from" : "to";
+    const peers = t.peer_summary ? ` ${prep} ${t.peer_summary}` : "";
+    return `<li><strong>${escapeHtml(aff)}</strong> (${t.case_count}/${denom})${
+      peers ? `<span class="panel-transition-peers">${escapeHtml(peers)}</span>` : ""
+    }</li>`;
+  }
+
   function openPanel(phase, caseData) {
     const crossAll = (payload.cross_case_all || {})[phase.type] || { count: 0, cases: [] };
-    const nLifecycle =
-      payload.n_lifecycle
-      || payload.n_cases
-      || (payload.canonical_cases || payload.cases || []).length
-        + (payload.expansion_cases || []).length
-      || 0;
+    const denom = lifecycleDenom();
     const coverageCount = crossAll.count ?? 0;
     const offenseTypes = crossAll.offense_types || [];
-    const ins = (payload.affordance_annotations || []).filter(
-      (a) => a.to && a.to.includes(shortType(phase.type))
-    );
-    const outs = (payload.affordance_annotations || []).filter(
-      (a) => a.from && a.from.includes(shortType(phase.type))
-    );
+    const ins = transitionsForPhase(phase, "in");
+    const outs = transitionsForPhase(phase, "out");
 
     panelEl.innerHTML = `
       <h3>${escapeHtml(phase.label || shortType(phase.type))}</h3>
@@ -330,16 +407,26 @@
       }
       <div class="panel-section">
         <h4>Coverage</h4>
-        <p>${coverageCount}/${nLifecycle} cases: ${offenseTypes.join(", ") || "—"}</p>
+        <p>${coverageCount}/${denom} cases: ${offenseTypes.join(", ") || "—"}</p>
         ${phase.is_fundamental ? "<p><strong>Appears in all 5 canonical offense types</strong> (fundamental)</p>" : ""}
       </div>
       <div class="panel-section">
         <h4>Transitions in</h4>
-        <ul>${ins.length ? ins.map((t) => `<li>${escapeHtml(t.affordance)} (${t.case_count}/${payload.n_canonical || 5})</li>`).join("") : "<li>—</li>"}</ul>
+        <p class="panel-section-note">Affordances used to reach this stage (${denom} lifecycle cases)</p>
+        <ul>${
+          ins.length
+            ? ins.map((t) => formatTransitionRow(t, denom, "in")).join("")
+            : "<li>—</li>"
+        }</ul>
       </div>
       <div class="panel-section">
         <h4>Transitions out</h4>
-        <ul>${outs.length ? outs.map((t) => `<li>→ ${escapeHtml(t.affordance)} (${t.case_count}/${payload.n_canonical || 5})</li>`).join("") : "<li>—</li>"}</ul>
+        <p class="panel-section-note">Affordances used leaving this stage (${denom} lifecycle cases)</p>
+        <ul>${
+          outs.length
+            ? outs.map((t) => formatTransitionRow(t, denom, "out")).join("")
+            : "<li>—</li>"
+        }</ul>
       </div>
       <div class="panel-section">
         <h4>Case</h4>
