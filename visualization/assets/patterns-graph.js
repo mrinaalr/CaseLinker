@@ -245,6 +245,30 @@
     // ``flatNodes`` is a deduplicated array of plain JSON-LD node objects
     // (each with @id, @type, properties). Node objects may also carry our
     // own bookkeeping fields ``_isNlp`` / ``_isShared`` / ``_cases``.
+    function caseIdFromNodeUri(uri) {
+        const m = String(uri || '').match(/\/case\/([^/#?]+)/);
+        return m ? decodeURIComponent(m[1]) : null;
+    }
+
+    function annotateFlatNodesWithCase(flat, caseId) {
+        if (!caseId || !Array.isArray(flat)) return flat;
+        flat.forEach(n => {
+            if (!Array.isArray(n._cases) || !n._cases.length) {
+                n._cases = [caseId];
+            }
+        });
+        return flat;
+    }
+
+    function resolveNodeCaseId(node) {
+        if (node && node.cases && node.cases[0]) return node.cases[0];
+        if (CURRENT_CASE_ID) return CURRENT_CASE_ID;
+        if (node && node.raw && Array.isArray(node.raw._cases) && node.raw._cases[0]) {
+            return node.raw._cases[0];
+        }
+        return caseIdFromNodeUri(node && (node.id || (node.raw && node.raw['@id'])));
+    }
+
     function buildGraphModel(flatNodes) {
         const idSet     = new Set(flatNodes.map(n => n['@id']).filter(Boolean));
         const idToLabel = {};
@@ -254,13 +278,21 @@
             const types     = Array.isArray(n['@type']) ? n['@type'] : (n['@type'] ? [n['@type']] : []);
             const isInvNode = types.some(t => /CACInvestigation/.test(localName(t)))
                               || /\/case\/[^/]+$/.test(n['@id']);
+            let cases = Array.isArray(n._cases) ? n._cases.slice() : [];
+            // Single-case loads historically omitted ``_cases`` (Compare stamps
+            // them in mergeAcrossCases). Fall back so Open case text works.
+            if (!cases.length && CURRENT_CASE_ID) cases = [CURRENT_CASE_ID];
+            if (!cases.length) {
+                const fromUri = caseIdFromNodeUri(n['@id']);
+                if (fromUri) cases = [fromUri];
+            }
             return {
                 id:        n['@id'],
                 label:     nodeLabel(n),
                 spine:     inferSpineBranch(n),
                 isNlp:     !!n._isNlp || n['@id'].includes('/nlp/'),
                 isShared:  !!n._isShared,
-                cases:     Array.isArray(n._cases) ? n._cases.slice() : [],
+                cases:     cases,
                 isInvestigation: isInvNode,
                 raw:       n,
                 shortType: shortType(n['@type'])
@@ -313,6 +345,7 @@
     // single-graph form), merges its named graphs, and returns the model.
     function parseJsonLdGraph(jsonLd) {
         const flat = mergeNamedGraphs(jsonLd);
+        annotateFlatNodesWithCase(flat, CURRENT_CASE_ID);
         CURRENT_FLAT_NODES = flat;
         return buildGraphModel(flat);
     }
@@ -571,13 +604,14 @@
             : '';
 
         const typeHint = shortType(raw['@type']);
+        const openCaseId = resolveNodeCaseId(node);
         const actions =
             '<div class="detail-actions">' +
               '<button type="button" class="btn" id="detail-find-similar" data-type="' +
                 escapeHtml(typeHint) + '">Find similar cases</button>' +
-              (node.cases && node.cases[0]
+              (openCaseId
                 ? '<button type="button" class="btn" id="detail-open-case" data-case="' +
-                  escapeHtml(node.cases[0]) + '">Open case text</button>'
+                  escapeHtml(openCaseId) + '">Open case text</button>'
                 : '') +
             '</div>';
 
@@ -1342,6 +1376,8 @@
 
     // Allow renderGraph to accept either a JSON-LD doc or a pre-merged flat array.
     function renderGraphFromFlat(flatNodes) {
+        // Preserve case lineage when Single-mode filters rebuild from flat nodes.
+        annotateFlatNodesWithCase(flatNodes, CURRENT_CASE_ID);
         CURRENT_FLAT_NODES = Array.isArray(flatNodes) ? flatNodes : null;
         renderGraph({ __preMerged: flatNodes });
     }

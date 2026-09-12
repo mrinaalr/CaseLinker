@@ -103,3 +103,36 @@ SEXTORTION_TOPIC_RE = re.compile(
     """,
     re.IGNORECASE | re.VERBOSE,
 )
+
+# Project Safe Childhood (case_topics: project_safe_childhood) — lexical only.
+# Federal DOJ/ICE/CEOS press boilerplate; do not infer from embeddings.
+PROJECT_SAFE_CHILDHOOD_TOPIC_RE = re.compile(
+    r"\bProject\s+Safe\s+Childhood\b",
+    re.IGNORECASE,
+)
+
+# Registered / previously-convicted sex offender — not bare "sex offender"
+# (ICE/HSI footers often say "sex offenders and child sex traffickers").
+REGISTERED_SEX_OFFENDER_RE = re.compile(
+    r"\bregistered\s+sex\s+offender\b",
+    re.IGNORECASE,
+)
+PREVIOUSLY_CONVICTED_SEX_OFFENDER_RE = re.compile(
+    r"""
+    \b(?:previously|prior(?:ly)?)\s+convicted\s+sex\s+offender\b
+    | \ba\s+convicted\s+sex\s+offender\b
+    | \bconvicted\s+sex\s+offender\b
+    """,
+    re.IGNORECASE | re.VERBOSE,
+)
+# Prior conviction language (previous_conviction.has_prior_conviction) — not RSO alone.
+PRIOR_CONVICTION_RE = re.compile(
+    r"""
+    \b(?:previous(?:ly)?|prior)\s+conviction\b
+    | \bpreviously\s+(?:been\s+)?convicted\b
+    | \bprior\s+conviction\b
+    | \brepeat\s+(?:CSAM\s+|child\s+pornograph\w*\s+|sex\s+)?offenses?\b
+    | \bdue\s+to\s+(?:his|her|their)\s+prior\s+conviction\b
+    """,
+    re.IGNORECASE | re.VERBOSE,
+)

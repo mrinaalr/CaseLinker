@@ -56,6 +56,12 @@ AGENCY_CANONICAL_ALIASES: Dict[str, str] = {
     # Tier C — CEOS dedup
     "Justice Department's Child Exploitation and Obscenity Section": "CEOS",
     "Justice Department\u2019s Child Exploitation and Obscenity Section": "CEOS",
+    # USAO
+    "U.S. Attorneys Office": "U.S. Attorney's Office",
+    "United States Attorney's Office": "U.S. Attorney's Office",
+    "United States Attorneys Office": "U.S. Attorney's Office",
+    "Office of the United States Attorney": "U.S. Attorney's Office",
+    "USAO": "U.S. Attorney's Office",
 }
 AGENCY_CANONICAL_ALIASES_CASEFOLD: Dict[str, str] = {
     k.casefold(): v for k, v in AGENCY_CANONICAL_ALIASES.items()

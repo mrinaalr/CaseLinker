@@ -54,6 +54,14 @@ AGENCY_CANONICAL_ALIASES_CASEFOLD: Dict[str, str] = {
     "illinois attorney general\u2019s office high tech crimes bureau": "Illinois High Tech Crimes Bureau",
     "justice department's child exploitation and obscenity section": "CEOS",
     "justice department\u2019s child exploitation and obscenity section": "CEOS",
+    "u.s. attorney's office": "U.S. Attorney's Office",
+    "u.s. attorneys office": "U.S. Attorney's Office",
+    "u.s. attorney’s office": "U.S. Attorney's Office",
+    "united states attorney's office": "U.S. Attorney's Office",
+    "united states attorneys office": "U.S. Attorney's Office",
+    "office of the united states attorney": "U.S. Attorney's Office",
+    "office of the u.s. attorney": "U.S. Attorney's Office",
+    "usao": "U.S. Attorney's Office",
 }
 
 # Merge-glued split patterns (deterministic).
@@ -290,6 +298,15 @@ def canonicalize_agency_label_for_storage(label: str) -> str:
         if prefix_m and prefix_m.group(1).strip():
             return f"{prefix_m.group(1).strip().title()} Attorney General's Office"
         return "Attorney General's Office"
+
+    # USAO / Assistant U.S. Attorney (person bylines) → office singleton
+    if re.match(
+        r"^(?:assistant\s+)?(?:u\.s\.|united\s+states)\s+attorneys?(?:['\u2019]?s)?(?:\s+office)?\b",
+        low,
+    ) or low == "usao":
+        return "U.S. Attorney's Office"
+    if re.match(r"^office of the (?:u\.s\.|united states) attorney\b", low):
+        return "U.S. Attorney's Office"
 
     return s
 

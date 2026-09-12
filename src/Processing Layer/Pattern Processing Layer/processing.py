@@ -13,7 +13,8 @@ Design Ideas from Architecture:
   - Technology & Methods: platforms_used (column; includes Gen AI tool); investigation_technology,
     anonymization_network, p2p_clients (in extracted_features JSON)
   - Content Classification: case_topics includes ``ai_csam`` (AI-generated / synthetic CSAM product),
-    ``sextortion`` (regex: sextort*, sexual extortion, related blackmail/threat phrasing)
+    ``sextortion`` (regex: sextort*, sexual extortion, related blackmail/threat phrasing),
+    ``project_safe_childhood`` (Project Safe Childhood initiative mention)
   - Law Enforcement: prosecution_outcome (agencies/orgs in extracted_features)
   - Content Classification: severity_indicators, case_topics
   - Raw/Original Data: raw_data, extracted_features
@@ -438,12 +439,20 @@ from ai_extraction_patterns import (
     AI_CSAM_IMPLIES_TOOL_RE,
     AI_CSAM_TOPIC_RE,
     GEN_AI_TOOL_RE,
+    PREVIOUSLY_CONVICTED_SEX_OFFENDER_RE,
+    PRIOR_CONVICTION_RE,
+    PROJECT_SAFE_CHILDHOOD_TOPIC_RE,
+    REGISTERED_SEX_OFFENDER_RE,
     SEXTORTION_TOPIC_RE,
 )
 
 _AI_CSAM_TOPIC_RE = AI_CSAM_TOPIC_RE
 _GEN_AI_TOOL_RE = GEN_AI_TOOL_RE
 _AI_CSAM_IMPLIES_TOOL_RE = AI_CSAM_IMPLIES_TOOL_RE
+_PROJECT_SAFE_CHILDHOOD_TOPIC_RE = PROJECT_SAFE_CHILDHOOD_TOPIC_RE
+_REGISTERED_SEX_OFFENDER_RE = REGISTERED_SEX_OFFENDER_RE
+_PREVIOUSLY_CONVICTED_SEX_OFFENDER_RE = PREVIOUSLY_CONVICTED_SEX_OFFENDER_RE
+_PRIOR_CONVICTION_RE = PRIOR_CONVICTION_RE
 
 
 def process_cases(df: pd.DataFrame) -> List[Dict[str, Any]]:
@@ -1387,7 +1396,8 @@ def _collect_perp_comma_ages(text: str) -> Tuple[List[int], Set[Tuple[int, int]]
             _PERP_COMMA_OF_PATTERNS,
             min_age=18,
             max_age=99,
-            verb_anchored=False,
+            # of-anchored datelines are person ages; later "was sentenced" must not wipe them
+            verb_anchored=True,
             claimed_spans=claimed,
         )
     )
@@ -1506,7 +1516,7 @@ def extract_perpetrator_demographics(case: Dict[str, Any]) -> Optional[Dict[str,
     - "21 year old Goodyear, AZ resident" (supports "resident" as well as man/woman/male/female)
     - "30 year old man" (simple case)
     - ", 60, of Ardmore" / ", 35, headed" / ", 39, was arrested" (ICAC bulletin lists)
-    - "registered sex offender"
+    - "registered sex offender" / "previously convicted sex offender" (not bare "sex offender")
     """
     case_text = _normalize_comma_age_datelines(case.get('case_text', '') or '')
     if not case_text:
@@ -1553,8 +1563,11 @@ def extract_perpetrator_demographics(case: Dict[str, Any]) -> Optional[Dict[str,
         case_text, demographics['ages']
     )
 
-    # Check for registered sex offender
-    if re.search(r'registered\s+sex\s+offender', case_text, re.IGNORECASE):
+    # Registry / prior-offender status (strict — no bare "sex offender")
+    if (
+        _REGISTERED_SEX_OFFENDER_RE.search(case_text)
+        or _PREVIOUSLY_CONVICTED_SEX_OFFENDER_RE.search(case_text)
+    ):
         demographics['is_registered'] = True
     
     return demographics if demographics['ages'] or demographics['is_registered'] else None
@@ -1615,7 +1628,11 @@ def extract_relationship(case: Dict[str, Any]) -> Optional[str]:
 def extract_previous_conviction(case: Dict[str, Any]) -> Optional[Dict[str, Any]]:
     """
     Extract previous conviction information.
-    Patterns: "registered sex offender", "arrested when he was 16 years old"
+
+    Patterns:
+    - "registered sex offender" / "previously convicted sex offender"
+    - "prior conviction" / "previously convicted" / "repeat … offense"
+    - "arrested when he was 16 years old"
     """
     case_text = case.get('case_text', '')
     if not case_text:
@@ -1623,12 +1640,17 @@ def extract_previous_conviction(case: Dict[str, Any]) -> Optional[Dict[str, Any]
     
     prev_conviction = {
         'is_registered': False,
-        'age_at_first_offense': None
+        'has_prior_conviction': False,
+        'age_at_first_offense': None,
     }
     
-    # Check for registered sex offender
-    if re.search(r'registered\s+sex\s+offender', case_text, re.IGNORECASE):
+    if _REGISTERED_SEX_OFFENDER_RE.search(case_text):
         prev_conviction['is_registered'] = True
+    if _PREVIOUSLY_CONVICTED_SEX_OFFENDER_RE.search(case_text):
+        prev_conviction['is_registered'] = True
+        prev_conviction['has_prior_conviction'] = True
+    if _PRIOR_CONVICTION_RE.search(case_text):
+        prev_conviction['has_prior_conviction'] = True
     
     # Extract age at first offense: "arrested when he was 16 years old"
     age_pattern = r'arrested\s+when\s+(he|she|they)\s+was\s+(\d+)\s+years?\s+old'
@@ -1639,7 +1661,13 @@ def extract_previous_conviction(case: Dict[str, Any]) -> Optional[Dict[str, Any]
         except (ValueError, IndexError):
             pass
     
-    return prev_conviction if prev_conviction['is_registered'] or prev_conviction['age_at_first_offense'] else None
+    if (
+        prev_conviction['is_registered']
+        or prev_conviction['has_prior_conviction']
+        or prev_conviction['age_at_first_offense'] is not None
+    ):
+        return prev_conviction
+    return None
 
 
 # Ordered (most specific first): canonical label shown in viz / facets, regex against case_text.
@@ -1983,6 +2011,7 @@ def extract_investigation_info(case: Dict[str, Any]) -> Optional[Dict[str, Any]]
     agencies = [
         'AZICAC', 'FBI', 'Phoenix Police', 'ICAC', 'HSI', 'MCSO', 'DPS',
         'NCMEC', 'CEOS', 'USMS', 'USSS', 'ICE', 'DOJ',
+        "U.S. Attorney's Office",
     ]
 
     for agency in agencies:
@@ -2004,6 +2033,19 @@ _AGENCY_EXTRA_PATTERNS: Dict[str, List[Tuple[str, int]]] = {
              (r"United States Secret Service", re.I)],
     "DOJ": [(r"Department of Justice", re.I)],
     "ICE": [(r"Immigration and Customs Enforcement", re.I)],
+    "U.S. Attorney's Office": [
+        # Case-action forms — not plural "U.S. Attorneys' Offices" PSC boilerplate
+        (r"Assistant\s+U\.?\s*S\.?\s+Attorneys?\b", re.I),
+        (r"Assistant\s+United\s+States\s+Attorneys?\b", re.I),
+        (r"U\.?\s*S\.?\s+Attorney['\u2019]s\s+Office\b", re.I),
+        (r"United\s+States\s+Attorney['\u2019]s\s+Office\b", re.I),
+        (r"U\.?\s*S\.?\s+Attorney\s+for\s+the\b", re.I),
+        (r"United\s+States\s+Attorney\s+for\s+the\b", re.I),
+        (r"U\.?\s*S\.?\s+Attorney\s+[A-Z]", re.I),
+        (r"United\s+States\s+Attorney\s+[A-Z]", re.I),
+        (r"\bUSAO\b", re.I),
+        (r"Office\s+of\s+the\s+United\s+States\s+Attorney\b", re.I),
+    ],
 }
 
 
@@ -2459,7 +2501,8 @@ def extract_topics(case: Dict[str, Any]) -> List[str]:
     """
     Extract case topics/themes using pattern-based matching.
     Topics: production, possession, distribution, trafficking, international, multi_state, hands_on,
-    online_only, family, stranger, csam, ai_csam (AI-generated / synthetic CSAM product), sextortion (regex only)
+    online_only, family, stranger, csam, ai_csam (AI-generated / synthetic CSAM product),
+    sextortion (regex only), project_safe_childhood (Project Safe Childhood initiative)
 
     Production requires phrase-level cues (e.g. "production of", "minor production", "created … videos",
     "produced child …"); bare "created"/"produced" alone do not tag production.
@@ -2521,6 +2564,9 @@ def extract_topics(case: Dict[str, Any]) -> List[str]:
 
     if SEXTORTION_TOPIC_RE.search(case_text):
         topics.append('sextortion')
+
+    if _PROJECT_SAFE_CHILDHOOD_TOPIC_RE.search(case_text):
+        topics.append('project_safe_childhood')
 
     return list(set(topics))  # Remove duplicates
 

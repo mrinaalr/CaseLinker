@@ -392,6 +392,10 @@ TOPIC_MAP: Dict[str, Dict[str, Any]] = {
         "secondary_class": CAC_AI.AIGeneratedCSAM,
         "severity": 3,
     },
+    "project_safe_childhood": {
+        "class": CAC_MULTI.ProjectSafeChildhoodOperation,
+        "severity": 0,
+    },
 }
 
 # ---------------------------------------------------------------------------
@@ -804,7 +808,10 @@ NLP_CONCEPT_MAP: Dict[str, Tuple[float, URIRef]] = {
     "exploitive_positions":  (0.45, CAC_CUSTODIAL.PositionOfTrust),
     "registered_sex_offender":(0.45, None),   # applied as flag on OffenderRole
     "evidence_seizure":      (0.45, CAC_PRODUCTION.ProducedContent),
-    "ai_and_internet_tools": (0.50, CAC.DigitallyGeneratedCSAMIncident),
+    # Do not promote DigitallyGeneratedCSAMIncident from this vague embedding —
+    # same false-positive class as case_topics ai_csam. AI-CSAM graph nodes come
+    # from case_topics ai_csam / phrase cues only.
+    # "ai_and_internet_tools": (0.50, CAC.DigitallyGeneratedCSAMIncident),
 }
 
 # Regex-extracted perpetrator admission confidence → numeric score for AssessmentResult.
