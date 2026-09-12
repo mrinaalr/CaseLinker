@@ -1707,8 +1707,7 @@
         const className = classIri ? localName(classIri) : '';
         const platform = ((document.getElementById('lookup-platform') || {}).value || '').trim();
         const agency = ((document.getElementById('lookup-agency') || {}).value || '').trim();
-        const q = [platform, agency].filter(Boolean).join(' ').trim();
-        if (!className && !q) {
+        if (!className && !platform && !agency) {
             setLookupStatus('Pick a CAC class and/or enter platform or agency text.');
             return;
         }
@@ -1716,10 +1715,12 @@
         const runBtn = document.getElementById('lookup-run');
         if (runBtn) runBtn.disabled = true;
         try {
-            // Prefer the existing merged-graph lookup API (pool-scoped, no SPARQL quota).
+            // Prefer the existing lookup API (pool-scoped). Platform/agency filter
+            // case features server-side — do not join into one substring ``q``.
             const params = new URLSearchParams({ pool: 'universe', limit: '80' });
             if (className) params.set('class_name', className);
-            if (q) params.set('q', q);
+            if (platform) params.set('platform', platform);
+            if (agency) params.set('agency', agency);
             let ids = [];
             let usedSparql = false;
             try {

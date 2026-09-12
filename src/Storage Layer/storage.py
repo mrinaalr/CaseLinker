@@ -881,6 +881,66 @@ class CaseStorage:
             print(f"❌ Error get_cases_by_ids: {e}")
             return []
 
+    def get_ontology_lookup_rows(self) -> List[Dict[str, Any]]:
+        """
+        Minimal case rows for Ontology & Graphs Find-cases.
+
+        Avoids get_all_cases demographics/prosecution joins and full feature merge —
+        only id, source, platforms_used, agencies_involved, organizations.
+        """
+        try:
+            db_path_obj = Path(self.db_path)
+            if not db_path_obj.exists():
+                return []
+            conn = get_connection(self.db_path)
+            cursor = conn.cursor()
+            cursor.execute(
+                """
+                SELECT id, source, platforms_used, extracted_features
+                FROM cases
+                ORDER BY id
+                """
+            )
+            rows = cursor.fetchall()
+            conn.close()
+            out: List[Dict[str, Any]] = []
+            for cid, source, platforms_used, extracted_features in rows:
+                platforms = platforms_used
+                if isinstance(platforms, str):
+                    try:
+                        platforms = json.loads(platforms)
+                    except (json.JSONDecodeError, TypeError):
+                        platforms = []
+                if not isinstance(platforms, list):
+                    platforms = []
+                feats = extracted_features
+                if isinstance(feats, str):
+                    try:
+                        feats = json.loads(feats)
+                    except (json.JSONDecodeError, TypeError):
+                        feats = {}
+                if not isinstance(feats, dict):
+                    feats = {}
+                agencies = feats.get("agencies_involved") or []
+                organizations = feats.get("organizations") or []
+                if not isinstance(agencies, list):
+                    agencies = []
+                if not isinstance(organizations, list):
+                    organizations = []
+                out.append(
+                    {
+                        "id": cid,
+                        "source": source or "",
+                        "platforms_used": platforms,
+                        "agencies_involved": agencies,
+                        "organizations": organizations,
+                    }
+                )
+            return out
+        except Exception as e:
+            print(f"Error get_ontology_lookup_rows: {e}")
+            return []
+
     def get_cases_slim_chunk(self, offset: int, limit: int) -> List[Dict[str, Any]]:
         """Page through cases without raw_data."""
         offset = max(0, int(offset))

@@ -4246,6 +4246,9 @@ def _graph_pool_subdir(pool: str) -> str:
     raise ValueError(f"unknown graph pool: {pool}")
 
 
+_ontology_entries_mem: Dict[str, Dict[str, Any]] = {}
+
+
 def _ontology_graph_case_entries(
     pool: str = "all",
 ) -> Dict[str, Dict[str, Any]]:
@@ -4256,15 +4259,26 @@ def _ontology_graph_case_entries(
     url_prefix = f"/ontology/graph_output/{subdir}"
     if not scan_dir.is_dir():
         return by_id
+    # Assume paired .ttl next to each .jsonld (avoids thousands of exists() stats on Railway FS).
     for entry in scan_dir.glob("*.jsonld"):
         case_id = entry.stem
-        ttl = entry.with_suffix(".ttl")
         by_id[case_id] = {
             "case_id": case_id,
             "path": f"{url_prefix}/{entry.name}",
-            "ttl_path": f"{url_prefix}/{ttl.name}" if ttl.exists() else None,
+            "ttl_path": f"{url_prefix}/{case_id}.ttl",
         }
     return by_id
+
+
+def _ontology_graph_case_entries_cached(pool: str) -> Dict[str, Dict[str, Any]]:
+    """Process-local catalog cache — Railway graph_output walks are multi-second."""
+    pool_norm = (pool or "all").strip().lower()
+    hit = _ontology_entries_mem.get(pool_norm)
+    if isinstance(hit, dict):
+        return hit
+    built = _ontology_graph_case_entries(pool_norm)
+    _ontology_entries_mem[pool_norm] = built
+    return built
 
 
 def _universe_graph_count() -> int:
@@ -4536,48 +4550,235 @@ def _ontology_lookup_text(value: Any) -> str:
     return str(value or "")
 
 
+def _ontology_parse_list_field(field: Any) -> list:
+    if isinstance(field, str):
+        try:
+            field = json.loads(field)
+        except Exception:
+            return []
+    return field if isinstance(field, list) else []
+
+
+def _ontology_local_types(node: Dict[str, Any]) -> list:
+    types = node.get("@type") or []
+    if not isinstance(types, list):
+        types = [types]
+    return [str(t).rsplit("#", 1)[-1].rsplit("/", 1)[-1] for t in types if t]
+
+
+_ontology_class_facet_mem: Dict[str, Any] = {}
+_ontology_class_index_mem: Dict[str, Any] = {}
+_ontology_feature_rows_mem: Optional[List[Dict[str, Any]]] = None
+_ontology_feature_rows_count: int = -1
+
+
+def _ontology_feature_rows_cached() -> List[Dict[str, Any]]:
+    """Lean id/platform/agency rows; invalidated when corpus case count changes."""
+    global _ontology_feature_rows_mem, _ontology_feature_rows_count
+    count = get_case_count()
+    if (
+        _ontology_feature_rows_mem is not None
+        and _ontology_feature_rows_count == count
+    ):
+        return _ontology_feature_rows_mem
+    getter = getattr(storage, "get_ontology_lookup_rows", None)
+    if callable(getter):
+        rows = getter() or []
+    else:
+        # Fallback for older storage builds: still better than full get_all_cases path
+        # when demographics joins dominate, but prefer the lean method.
+        rows = []
+        for case in storage.get_all_cases(include_raw_data=False) or []:
+            rows.append(
+                {
+                    "id": case.get("id"),
+                    "source": case.get("source") or "",
+                    "platforms_used": _ontology_parse_list_field(case.get("platforms_used")),
+                    "agencies_involved": _ontology_parse_list_field(
+                        case.get("agencies_involved")
+                    ),
+                    "organizations": _ontology_parse_list_field(case.get("organizations")),
+                }
+            )
+    _ontology_feature_rows_mem = rows
+    _ontology_feature_rows_count = count
+    return rows
+
+
+def _ontology_class_index_cached(pool_norm: str, payload: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Build class facets + type→case_ids (+ shared cases) once per merged manifest.
+    Avoids rescanning flat_nodes on every class_name lookup.
+    """
+    manifest = payload.get("manifest") or ""
+    mem_key = f"{pool_norm}:{manifest}"
+    hit = _ontology_class_index_mem.get(mem_key)
+    if isinstance(hit, dict) and "by_class" in hit:
+        return hit
+
+    class_facets: Dict[str, int] = {}
+    by_class: Dict[str, set] = {}
+    shared_cases: set = set()
+    for node in payload.get("flat_nodes") or []:
+        local_types = _ontology_local_types(node)
+        case_ids = [str(cid) for cid in (node.get("_cases") or []) if cid]
+        if node.get("_isShared"):
+            shared_cases.update(case_ids)
+        for item in set(local_types):
+            class_facets[item] = class_facets.get(item, 0) + 1
+            key = item.casefold()
+            bucket = by_class.get(key)
+            if bucket is None:
+                bucket = set()
+                by_class[key] = bucket
+            bucket.update(case_ids)
+
+    facets_out = [
+        {"name": name, "count": count}
+        for name, count in sorted(class_facets.items(), key=lambda x: (-x[1], x[0]))[:80]
+    ]
+    out = {
+        "facets": facets_out,
+        "by_class": by_class,
+        "shared_cases": shared_cases,
+    }
+    _ontology_class_index_mem[mem_key] = out
+    _ontology_class_facet_mem[mem_key] = facets_out
+    return out
+
+
+def _ontology_class_facets_cached(pool_norm: str, payload: Dict[str, Any]) -> list:
+    """Build CAC class facets once per merged-graph manifest (not every lookup)."""
+    return _ontology_class_index_cached(pool_norm, payload)["facets"]
+
+
+def _ontology_merged_for_lookup(pool_norm: str) -> Dict[str, Any]:
+    """Prefer in-process merged payload; fall back to disk/redis/build."""
+    mem = _ontology_merged_mem.get(pool_norm)
+    if isinstance(mem, dict) and mem.get("flat_nodes") is not None:
+        return mem
+    if str(_ontology_dir) not in sys.path:
+        sys.path.insert(0, str(_ontology_dir))
+    from merge_graph_cache import get_or_build_merged  # noqa: E402
+    payload = get_or_build_merged(
+        pool_norm,
+        redis_get=get_cached,
+        redis_set=lambda k, v, ttl=604800: set_cached(k, v, ttl=ttl),
+    )
+    _ontology_merged_mem[pool_norm] = payload
+    return payload
+
+
 @app.get("/api/ontology/lookup")
 def api_ontology_lookup(
     q: str = Query("", max_length=160),
+    platform: str = Query("", max_length=120),
+    agency: str = Query("", max_length=160),
     class_name: str = Query("", max_length=120),
     shared_only: bool = Query(False),
     pool: str = Query("universe"),
     limit: int = Query(120, ge=1, le=200),
 ):
-    """Facet-friendly lookup over the existing merged ontology graph cache."""
+    """
+    Case lookup for Ontology & Graphs.
+
+    Platform / agency / free-text ``q`` filter lean stored features (not get_all_cases).
+    ``class_name`` / ``shared_only`` use a cached type→cases index over the merged graph.
+    Feature-only searches never touch the merged universe payload or graph_manifest.
+    """
     pool_norm = (pool or "universe").strip().lower()
     if pool_norm not in ("compare", "all", "universe", "analysis"):
         raise HTTPException(status_code=400, detail="unknown graph pool")
-    if str(_ontology_dir) not in sys.path:
-        sys.path.insert(0, str(_ontology_dir))
-    from merge_graph_cache import get_or_build_merged  # noqa: E402
-    try:
-        payload = get_or_build_merged(
-            pool_norm,
-            redis_get=get_cached,
-            redis_set=lambda k, v, ttl=604800: set_cached(k, v, ttl=ttl),
-        )
-    except Exception as exc:
-        raise HTTPException(status_code=500, detail=str(exc)) from exc
 
-    query, wanted_class = (q or "").strip().casefold(), (class_name or "").strip().casefold()
-    matched_cases: set[str] = set()
-    class_facets: Dict[str, int] = {}
-    for node in payload.get("flat_nodes") or []:
-        types = node.get("@type") or []
-        if not isinstance(types, list): types = [types]
-        local_types = [str(t).rsplit("#", 1)[-1].rsplit("/", 1)[-1] for t in types]
-        for item in set(local_types): class_facets[item] = class_facets.get(item, 0) + 1
-        if wanted_class and wanted_class not in {t.casefold() for t in local_types}: continue
-        if shared_only and not node.get("_isShared"): continue
-        if query and query not in _ontology_lookup_text(node).casefold(): continue
-        matched_cases.update(str(cid) for cid in node.get("_cases", []) if cid)
+    plat = (platform or "").strip().casefold()
+    ag = (agency or "").strip().casefold()
+    query = (q or "").strip().casefold()
+    wanted_class = (class_name or "").strip().casefold()
 
-    entries = _ontology_graph_case_entries("all" if pool_norm == "all" else pool_norm)
+    entries = _ontology_graph_case_entries_cached(
+        "all" if pool_norm == "all" else pool_norm
+    )
+    if pool_norm == "compare":
+        compare_ids = set(_compare_pool_id_order())
+        entries = {cid: meta for cid, meta in entries.items() if cid in compare_ids}
+
+    matched_cases: Optional[set[str]] = None
+    need_feature_filter = bool(plat or ag or query)
+
+    if need_feature_filter:
+        feature_hits: set[str] = set()
+        for case in _ontology_feature_rows_cached():
+            cid = case.get("id")
+            if not cid or cid not in entries:
+                continue
+            platforms = [
+                str(p).casefold()
+                for p in _ontology_parse_list_field(case.get("platforms_used"))
+                if p
+            ]
+            agencies = [
+                str(a).casefold()
+                for a in _ontology_parse_list_field(case.get("agencies_involved"))
+                if a
+            ]
+            organizations = [
+                str(o).casefold()
+                for o in _ontology_parse_list_field(case.get("organizations"))
+                if o
+            ]
+            agency_blob = agencies + organizations
+            if plat and not any(plat in p for p in platforms):
+                continue
+            if ag and not any(ag in a for a in agency_blob):
+                continue
+            if query:
+                hay = " ".join(
+                    [
+                        str(cid).casefold(),
+                        str(case.get("source") or "").casefold(),
+                        " ".join(platforms),
+                        " ".join(agency_blob),
+                    ]
+                )
+                if query not in hay:
+                    continue
+            feature_hits.add(str(cid))
+        matched_cases = feature_hits
+
+    class_facets: list = []
+    if wanted_class or shared_only:
+        try:
+            payload = _ontology_merged_for_lookup(pool_norm)
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+        index = _ontology_class_index_cached(pool_norm, payload)
+        class_facets = index["facets"]
+        graph_hits: set[str]
+        if wanted_class and shared_only:
+            graph_hits = index["by_class"].get(wanted_class, set()) & index["shared_cases"]
+        elif wanted_class:
+            graph_hits = set(index["by_class"].get(wanted_class, set()))
+        else:
+            graph_hits = set(index["shared_cases"])
+        matched_cases = graph_hits if matched_cases is None else (matched_cases & graph_hits)
+    else:
+        # Feature-only / bare catalog: never call graph_manifest or gunzip merged cache.
+        # Reuse facets only when already warm in this process.
+        for key, facets in _ontology_class_facet_mem.items():
+            if key.startswith(f"{pool_norm}:") and isinstance(facets, list):
+                class_facets = facets
+                break
+
+    if matched_cases is None:
+        matched_cases = set(entries.keys())
+
+    ordered = sorted(cid for cid in matched_cases if cid in entries)
     return {
-        "pool": pool_norm, "matched_case_count": len(matched_cases),
-        "cases": [entries[cid] for cid in sorted(matched_cases) if cid in entries][:limit],
-        "class_facets": [{"name": name, "count": count} for name, count in sorted(class_facets.items(), key=lambda x: (-x[1], x[0]))[:80]],
+        "pool": pool_norm,
+        "matched_case_count": len(ordered),
+        "cases": [entries[cid] for cid in ordered[:limit]],
+        "class_facets": class_facets,
     }
 
 
@@ -4586,6 +4787,7 @@ def api_ontology_cache_warm(
     pool: str = Query("all", description="compare, all, universe, analysis, or both (all four)"),
 ):
     """Rebuild merged graph disk/redis caches (run after batch graph generation)."""
+    global _ontology_feature_rows_mem, _ontology_feature_rows_count
     ontology_dir = Path(__file__).resolve().parent.parent / "ontology"
     if str(ontology_dir) not in sys.path:
         sys.path.insert(0, str(ontology_dir))
@@ -4593,6 +4795,11 @@ def api_ontology_cache_warm(
 
     _ontology_catalog_mem.clear()
     _ontology_merged_mem.clear()
+    _ontology_class_facet_mem.clear()
+    _ontology_class_index_mem.clear()
+    _ontology_entries_mem.clear()
+    _ontology_feature_rows_mem = None
+    _ontology_feature_rows_count = -1
     pool_arg = pool.strip().lower()
     pools = (
         ["compare", "all", "universe", "analysis"]
@@ -4608,6 +4815,9 @@ def api_ontology_cache_warm(
             redis_get=get_cached,
             redis_set=lambda k, v, ttl=604800: set_cached(k, v, ttl=ttl),
         )
+        # Keep lookup class index warm after rebuild.
+        _ontology_merged_mem[p] = payload
+        _ontology_class_index_cached(p, payload)
         results.append(
             {
                 "pool": p,

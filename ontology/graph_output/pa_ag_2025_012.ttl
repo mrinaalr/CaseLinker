@@ -3,6 +3,7 @@
 @prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
@@ -12,9 +13,9 @@
 
 <https://caselinker.up.railway.app/resource/case/pa_ag_2025_012> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-08-24T18:59:42.932057" ;
+    dcterms:created "2026-09-10T20:04:07.780602" ;
     dcterms:identifier "pa_ag_2025_012" ;
-    dcterms:modified "2026-08-24T18:59:42.932057" ;
+    dcterms:modified "2026-09-10T20:04:07.780602" ;
     dcterms:source <https://www.attorneygeneral.gov/taking-action/somerset-county-man-charged-with-having-child-sexual-abuse-material-including-artificially-generated-files/>,
         "PA AG" ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/pa_ag_2025_012/phase/charged> ;
@@ -71,13 +72,18 @@
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
+<https://caselinker.up.railway.app/resource/platform/gen-ai> a cacontology-platforms:FileHostingService ;
+    rdfs:label "Gen AI" .
+
 <https://caselinker.up.railway.app/resource/case/pa_ag_2025_012/event/ai-csam> a cacontology:DigitallyGeneratedCSAMIncident,
         <https://cacontology.projectvic.org/ai-csam#AIGeneratedCSAM>,
         cac-core:Event ;
-    cacontology:severityLevel 3 .
+    cacontology:severityLevel 3 ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/gen-ai> .
 
 <https://caselinker.up.railway.app/resource/case/pa_ag_2025_012/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
     cacontology:severityLevel 3 ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/gen-ai> ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/pa_ag_2025_012/facet/possession> .
 

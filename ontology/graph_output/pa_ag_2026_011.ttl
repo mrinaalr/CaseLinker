@@ -3,6 +3,7 @@
 @prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -13,14 +14,15 @@
 
 <https://caselinker.up.railway.app/resource/case/pa_ag_2026_011> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-08-24T18:59:28.951942" ;
+    dcterms:created "2026-09-10T20:03:56.158482" ;
     dcterms:identifier "pa_ag_2026_011" ;
-    dcterms:modified "2026-08-24T18:59:28.951942" ;
+    dcterms:modified "2026-09-10T20:03:56.158482" ;
     dcterms:source <https://www.attorneygeneral.gov/taking-action/ag-sundays-child-predator-section-charges-men-in-beaver-washington-counties-for-child-sexual-abuse-material-both-involving-a-i-generated-files/>,
         "PA AG" ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/pa_ag_2026_011/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/pa_ag_2026_011/phase/charged> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/pa_ag_2026_011/event/conspiracy>,
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/pa_ag_2026_011/event/ai-csam>,
+        <https://caselinker.up.railway.app/resource/case/pa_ag_2026_011/event/conspiracy>,
         <https://caselinker.up.railway.app/resource/case/pa_ag_2026_011/event/distribution>,
         <https://caselinker.up.railway.app/resource/case/pa_ag_2026_011/event/possession>,
         <https://caselinker.up.railway.app/resource/case/pa_ag_2026_011/legal-proceeding>,
@@ -30,7 +32,8 @@
 <https://caselinker.up.railway.app/resource/case/pa_ag_2026_011/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
     cacontology:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/pa_ag_2026_011/event/conspiracy>,
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/pa_ag_2026_011/event/ai-csam>,
+        <https://caselinker.up.railway.app/resource/case/pa_ag_2026_011/event/conspiracy>,
         <https://caselinker.up.railway.app/resource/case/pa_ag_2026_011/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/pa_ag_2026_011/person/victim/1> .
 
@@ -68,14 +71,16 @@
 <https://caselinker.up.railway.app/resource/case/pa_ag_2026_011/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
     cacontology:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/pa_ag_2026_011/event/conspiracy>,
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/pa_ag_2026_011/event/ai-csam>,
+        <https://caselinker.up.railway.app/resource/case/pa_ag_2026_011/event/conspiracy>,
         <https://caselinker.up.railway.app/resource/case/pa_ag_2026_011/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/pa_ag_2026_011/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/pa_ag_2026_011/role/offender/2> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
     cacontology:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/pa_ag_2026_011/event/conspiracy>,
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/pa_ag_2026_011/event/ai-csam>,
+        <https://caselinker.up.railway.app/resource/case/pa_ag_2026_011/event/conspiracy>,
         <https://caselinker.up.railway.app/resource/case/pa_ag_2026_011/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/pa_ag_2026_011/person/offender/2> .
 
@@ -91,15 +96,26 @@
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
+<https://caselinker.up.railway.app/resource/platform/gen-ai> a cacontology-platforms:FileHostingService ;
+    rdfs:label "Gen AI" .
+
+<https://caselinker.up.railway.app/resource/case/pa_ag_2026_011/event/ai-csam> a cacontology:DigitallyGeneratedCSAMIncident,
+        <https://cacontology.projectvic.org/ai-csam#AIGeneratedCSAM>,
+        cac-core:Event ;
+    cacontology:severityLevel 3 ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/gen-ai> .
+
 <https://caselinker.up.railway.app/resource/case/pa_ag_2026_011/event/conspiracy> a cacontology:ConspiracyToCommitCSA,
         cac-core:Event ;
     cacontology:conspiracyMemberCount 2 ;
     cacontology:participatesInConspiracy <https://caselinker.up.railway.app/resource/case/pa_ag_2026_011/role/offender/1>,
         <https://caselinker.up.railway.app/resource/case/pa_ag_2026_011/role/offender/2> ;
-    cacontology:severityLevel 3 .
+    cacontology:severityLevel 3 ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/gen-ai> .
 
 <https://caselinker.up.railway.app/resource/case/pa_ag_2026_011/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
     cacontology:severityLevel 3 ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/gen-ai> ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/pa_ag_2026_011/facet/possession> .
 
