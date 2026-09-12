@@ -4635,7 +4635,7 @@ def _ontology_class_index_cached(pool_norm: str, payload: Dict[str, Any]) -> Dic
 
     facets_out = [
         {"name": name, "count": count}
-        for name, count in sorted(class_facets.items(), key=lambda x: (-x[1], x[0]))[:80]
+        for name, count in sorted(class_facets.items(), key=lambda x: (-x[1], x[0]))[:150]
     ]
     out = {
         "facets": facets_out,
@@ -4746,14 +4746,35 @@ def api_ontology_lookup(
         matched_cases = feature_hits
 
     class_facets: list = []
-    if wanted_class or shared_only:
-        try:
-            payload = _ontology_merged_for_lookup(pool_norm)
-        except Exception as exc:
-            raise HTTPException(status_code=500, detail=str(exc)) from exc
-
+    # Always return class facets for the Find-cases dropdown. Feature-only searches
+    # used to skip this, leaving the UI stuck on the ~10 hardcoded <option>s.
+    # Facets are memoized per merged manifest after the first load.
+    index: Optional[Dict[str, Any]] = None
+    try:
+        payload = _ontology_merged_for_lookup(pool_norm)
         index = _ontology_class_index_cached(pool_norm, payload)
         class_facets = index["facets"]
+    except Exception:
+        # Fall back to any already-warm facets for this pool (e.g. compare boot).
+        for key, facets in _ontology_class_facet_mem.items():
+            if key.startswith(f"{pool_norm}:") and isinstance(facets, list):
+                class_facets = facets
+                break
+        if not class_facets:
+            for facets in _ontology_class_facet_mem.values():
+                if isinstance(facets, list) and facets:
+                    class_facets = facets
+                    break
+
+    if wanted_class or shared_only:
+        if index is None:
+            try:
+                payload = _ontology_merged_for_lookup(pool_norm)
+                index = _ontology_class_index_cached(pool_norm, payload)
+                class_facets = index["facets"]
+            except Exception as exc:
+                raise HTTPException(status_code=500, detail=str(exc)) from exc
+
         graph_hits: set[str]
         if wanted_class and shared_only:
             graph_hits = index["by_class"].get(wanted_class, set()) & index["shared_cases"]
@@ -4762,13 +4783,6 @@ def api_ontology_lookup(
         else:
             graph_hits = set(index["shared_cases"])
         matched_cases = graph_hits if matched_cases is None else (matched_cases & graph_hits)
-    else:
-        # Feature-only / bare catalog: never call graph_manifest or gunzip merged cache.
-        # Reuse facets only when already warm in this process.
-        for key, facets in _ontology_class_facet_mem.items():
-            if key.startswith(f"{pool_norm}:") and isinstance(facets, list):
-                class_facets = facets
-                break
 
     if matched_cases is None:
         matched_cases = set(entries.keys())

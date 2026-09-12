@@ -1781,7 +1781,8 @@
         if (!select || !Array.isArray(facets) || !facets.length) return;
         const current = select.value;
         const known = new Set(Array.from(select.options).map(o => localName(o.value || o.textContent)));
-        facets.slice(0, 40).forEach(f => {
+        // API returns up to ~150 corpus class facets; do not truncate further here.
+        facets.forEach(f => {
             const name = f.name || f;
             if (!name || known.has(name)) return;
             known.add(name);
