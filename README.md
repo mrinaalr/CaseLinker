@@ -89,6 +89,7 @@ Then open your browser to:
 - **Data Sources**: http://localhost:8000/sources
 - **Data Audit**: http://localhost:8000/audit
 - **Look Under the Hood**: http://localhost:8000/under-the-hood
+- **Crash Course**: http://localhost:8000/crash-course
 - **Case Studies**: http://localhost:8000/case-studies
 - **API Documentation**: http://localhost:8000/docs
 
@@ -451,7 +452,8 @@ CaseLinker/
 │   ├── sources.html                  # /sources
 │   ├── case-studies.html             # /case-studies
 │   ├── audit.html                    # /audit
-│   └── under-the-hood.html           # /under-the-hood
+│   ├── under-the-hood.html           # /under-the-hood
+│   └── crash-course.html             # /crash-course
 ├── ontology/
 │   ├── README.md                     # Ontology docs (vocabulary, pipeline, pools)
 │   ├── docs/SPARQL.md                # Public SPARQL 1.1 API guide
@@ -566,6 +568,7 @@ When the ML stack is enabled, NER adds organizations, locations, dates, and ages
 - `GET /clusters` - Cluster explorer page
 - `GET /tech-landscape` - Technology landscape page
 - `GET /under-the-hood` - Architecture/methodology page
+- `GET /crash-course` - Crash course (atlas + slides); linked from Under the Hood
 - `GET /llm` - LLM chat page
 - `POST /api/llm/chat` - LLM chat endpoint (public; per-IP daily cap, exempt for localhost/trusted key)
 - `POST /api/cache/clear` - Clear server caches (rate limited 10/hour)

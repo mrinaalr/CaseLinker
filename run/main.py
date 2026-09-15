@@ -4128,6 +4128,16 @@ async def serve_under_the_hood():
     else:
         return HTMLResponse(content="<h1>Under the Hood</h1><p>Page not found</p>", status_code=404)
 
+
+@app.get("/crash-course", response_class=HTMLResponse)
+async def serve_crash_course():
+    """Serve the crash-course briefing (slides + atlas). Linked from Under the Hood."""
+    html_path = Path(__file__).parent.parent / "visualization" / "crash-course.html"
+    if html_path.exists():
+        return HTMLResponse(content=read_utf8_text_file(html_path))
+    else:
+        return HTMLResponse(content="<h1>Crash course</h1><p>Page not found</p>", status_code=404)
+
 @app.get("/patterns", response_class=HTMLResponse)
 async def serve_patterns():
     """Serve the graph-first Patterns / ontology explorer."""
