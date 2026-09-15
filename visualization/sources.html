@@ -993,6 +993,19 @@
                     ]
                 },
                 {
+                    name: "U.S. DOJ Project Safe Childhood – USAO prosecutions",
+                    url: "https://www.justice.gov/psc",
+                    description: "Federal USAO/OPA press releases brought as Project Safe Childhood prosecutions (sentencing and plea/conviction stage).",
+                    type: "Official website",
+                    yearLinks: [
+                        {
+                            year: "Press room",
+                            url: "https://www.justice.gov/psc/press-room",
+                            casesUsed: 0
+                        }
+                    ]
+                },
+                {
                     name: "U.S. DOJ CEOS – Child Exploitation & Obscenity Section News",
                     url: "https://www.justice.gov/criminal/child-exploitation-obscenity-section-news",
                     description: "Federal CEOS press releases.",
@@ -1897,6 +1910,25 @@
                         }
                         if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
                             staticSource.yearLinks[0].casesUsed = armyCidCases.length;
+                        }
+                    } else if (staticSource.name.includes('Project Safe Childhood')) {
+                        const pscCases = cases.filter(c => {
+                            const s = (c.source || c.raw_data?.source || '')
+                                .toUpperCase()
+                                .replace(/_/g, ' ')
+                                .trim();
+                            return s === 'DOJ SAFE CHILDHOOD';
+                        });
+                        staticSource.cases = pscCases;
+                        const pscRange = getDateRange(pscCases);
+                        if (pscRange) {
+                            staticSource.dateRangeDisplay = pscRange;
+                            if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
+                                staticSource.yearLinks[0].year = pscRange;
+                            }
+                        }
+                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
+                            staticSource.yearLinks[0].casesUsed = pscCases.length;
                         }
                     } else if (staticSource.name.includes('U.S. DOJ CEOS')) {
                         const ceosCases = cases.filter(c => {

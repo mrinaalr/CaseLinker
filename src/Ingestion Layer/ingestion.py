@@ -223,6 +223,21 @@ def detect_source_from_content(text: str, filename: str) -> str:
         return 'ARKANSAS DPS'
     elif 'alea' in filename_lower and 'icac' in filename_lower:
         return 'ALEA'
+    elif (
+        'doj_ai_csam' in filename_lower
+        or ('doj' in filename_lower and 'ai' in filename_lower and 'csam' in filename_lower)
+    ):
+        return 'DOJ AI CSAM'
+    elif (
+        'safe_childhood' in filename_lower
+        or 'safe-childhood' in filename_lower
+        or (
+            'doj' in filename_lower
+            and 'safe' in filename_lower
+            and 'childhood' in filename_lower
+        )
+    ):
+        return 'DOJ SAFE CHILDHOOD'
     elif 'doj_ceos' in filename_lower or ('doj' in filename_lower and 'ceos' in filename_lower):
         return 'DOJ CEOS'
     elif 'doj_archives' in filename_lower or ('doj' in filename_lower and 'archive' in filename_lower):
@@ -580,6 +595,33 @@ def detect_source_from_content(text: str, filename: str) -> str:
     ):
         return 'ALEA'
 
+    # DOJ AI-CSAM supplemental bundle (justice.gov USAO/OPA AI-generated CSAM PRs)
+    if re.search(r'justice\.gov', text_sample, re.I) and re.search(
+        r'AI[- ]generated|artificial intelligence|deepfake|computer[- ]generated',
+        text_sample,
+        re.I,
+    ) and re.search(
+        r'child\s+pornograph|child\s+sexual\s+abuse|CSAM|minors?\s+engaged',
+        text_sample,
+        re.I,
+    ) and (
+        'doj_ai_csam' in filename_lower
+        or ('ai' in filename_lower and 'csam' in filename_lower)
+    ):
+        return 'DOJ AI CSAM'
+
+    # U.S. DOJ Project Safe Childhood USAO/OPA prosecutions (dedicated harvest)
+    if re.search(r'justice\.gov', text_sample, re.I) and re.search(
+        r'Project\s+Safe\s+Childhood',
+        text_sample,
+        re.I,
+    ) and (
+        'safe_childhood' in filename_lower
+        or 'safe-childhood' in filename_lower
+        or ('safe' in filename_lower and 'childhood' in filename_lower)
+    ):
+        return 'DOJ SAFE CHILDHOOD'
+
     # U.S. DOJ CEOS news (federal child exploitation press releases; supplemental source)
     if re.search(r'justice\.gov', text_sample, re.I) and re.search(
         r'Child Exploitation\s*&\s*Obscenity Section|CEOS|Press Release',
@@ -806,6 +848,8 @@ def _load_source_url_fallbacks_from_sources_html() -> Dict[str, str]:
             mapping["ARKANSAS DPS"] = url_clean
         elif "alabama law enforcement agency" in n:
             mapping["ALEA"] = url_clean
+        elif "project safe childhood" in n:
+            mapping["DOJ SAFE CHILDHOOD"] = url_clean
         elif "child exploitation & obscenity section news" in n:
             mapping["DOJ CEOS"] = url_clean
         elif "u.s. doj archives" in n or (

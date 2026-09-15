@@ -197,10 +197,12 @@ class NERExtractor:
             raise ValueError(f"Unknown backend: {backend}. Use 'stanza', 'transformers', or 'spacy'")
 
         self._stanza_batch_size = int(os.environ.get("STANZA_NER_BATCH_SIZE", "16"))
-        self._stanza_use_bulk = os.environ.get("STANZA_NER_BATCH", "").lower() in (
-            "1",
-            "true",
-            "yes",
+        # Bulk is the default. Set STANZA_NER_BATCH=0 to force serial.
+        self._stanza_use_bulk = os.environ.get("STANZA_NER_BATCH", "1").lower() not in (
+            "0",
+            "false",
+            "no",
+            "off",
         )
     
     def process_batched_cases_with_ner(

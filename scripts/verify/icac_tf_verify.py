@@ -154,7 +154,7 @@ def _tf_text_hit(label: str, needles: Sequence[str | re.Pattern], hay: str, sour
 
 
 # Federal / national feeds (name-drops common; not “state pipeline” for TF rows).
-AGGREGATOR_SOURCES = frozenset({"NCMEC", "DOJ CEOS", "DOJ ARCHIVES"})
+AGGREGATOR_SOURCES = frozenset({"NCMEC", "DOJ CEOS", "DOJ ARCHIVES", "DOJ SAFE CHILDHOOD"})
 
 # Any CaseLinker source we treat as a state / regional ICAC-style ingest (excludes NCMEC + DOJ).
 ICAC_LIKE_SOURCES = frozenset(
@@ -276,7 +276,7 @@ TF_TO_ALIGNED_SOURCES: Dict[str, Set[str]] = {
     "WV — West Virginia State Police": set(),
     "WI — Wisconsin Department of Justice": set(),
     "WY — Wyoming Division of Criminal Investigation": {"WY DCI"},
-    "U.S. — Armed Forces / military investigative agencies": {"ARMY CID", "DOJ CEOS", "DOJ ARCHIVES"},
+    "U.S. — Armed Forces / military investigative agencies": {"ARMY CID", "DOJ CEOS", "DOJ ARCHIVES", "DOJ SAFE CHILDHOOD"},
 }
 
 

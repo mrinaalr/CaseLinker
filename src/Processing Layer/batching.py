@@ -117,7 +117,7 @@ def case_batching(text: str, org_name: str = "case", source: str = None, source_
     - AZICAC: Split by month patterns ("In [Month]" or "[Month] [Year],")
     - GBI: Georgia Bureau of Investigation press releases split on "# # # # #" then by release date lines
     - Texas AG: Texas Attorney General CEU releases split by date-line starts and "Back to Top"
-    - SVICAC / TBI ICAC / SCAG ICAC / NEWYORK SP / ILLINOIS AG / NJ AG / PA AG / VT AG / OHIO AG / DE AG / UT AG / WA AG / OREGON DOJ / MS AG / MT DOJ / NM AG / NC SBI / LA AG / HI AG / CCSAO / IA DCI / WY DCI / SD AG / RI AG / FL AG / KY SP / NE SP / ARMY CID / USSS / ICE / LVMPD / SJPD / ARKANSAS DPS / ALEA / DOJ CEOS / DOJ ARCHIVES / WCSO / FRESNO SO / OSCEOLA SO / SEDGWICK SO / ANCHORAGE PD / LAPD / CSPD / SPD / SDPD / SOUTH FLORIDA ICAC / same-layout merged scrapes: split on ``Source: https://`` per article
+    - SVICAC / TBI ICAC / SCAG ICAC / NEWYORK SP / ILLINOIS AG / NJ AG / PA AG / VT AG / OHIO AG / DE AG / UT AG / WA AG / OREGON DOJ / MS AG / MT DOJ / NM AG / NC SBI / LA AG / HI AG / CCSAO / IA DCI / WY DCI / SD AG / RI AG / FL AG / KY SP / NE SP / ARMY CID / USSS / ICE / LVMPD / SJPD / ARKANSAS DPS / ALEA / DOJ CEOS / DOJ ARCHIVES / DOJ SAFE CHILDHOOD / WCSO / FRESNO SO / OSCEOLA SO / SEDGWICK SO / ANCHORAGE PD / LAPD / CSPD / SPD / SDPD / SOUTH FLORIDA ICAC / same-layout merged scrapes: split on ``Source: https://`` per article
     - Other / External: Delimited narratives: "Case 1 : ... Case 2 : ..." (news scrapes, LinkedIn, international, misc.)
     - Default: If text matches ``Case N :`` markers, falls back to external batching; otherwise AZICAC month-splitting
     
@@ -190,7 +190,9 @@ def case_batching(text: str, org_name: str = "case", source: str = None, source_
     is_arkansas_dps = False
     is_alea = False
     is_doj_ceos = False
+    is_doj_ai_csam = False
     is_doj_archives = False
+    is_doj_safe_childhood = False
     is_other_external = False
     
     if source:
@@ -303,13 +305,21 @@ def case_batching(text: str, org_name: str = "case", source: str = None, source_
             is_alea = True
         elif source_upper == 'DOJ CEOS':
             is_doj_ceos = True
+        elif source_upper == 'DOJ AI CSAM':
+            is_doj_ai_csam = True
         elif source_upper == 'DOJ ARCHIVES':
             is_doj_archives = True
+        elif source_upper == 'DOJ SAFE CHILDHOOD':
+            is_doj_safe_childhood = True
         elif source_upper in ('OTHER'):
             is_other_external = True
     
     # Route to appropriate batch function
+    # Rebuilt NCMEC yearbooks may be Source:-layout (exact-dup cleanup); use merged splitter.
     if is_ncmec:
+        source_line_hits = len(re.findall(r'(?m)^\s*Source:\s*https?://', text or ''))
+        if source_line_hits >= 5:
+            return _batch_merged_icac_news_cases(text, org_name, source_file, "NCMEC")
         return _batch_ncmec_cases(text, org_name, source_file)
     elif is_idaho_icac:
         return _batch_idaho_icac_cases(text, org_name, source_file)
@@ -417,8 +427,12 @@ def case_batching(text: str, org_name: str = "case", source: str = None, source_
         return _batch_merged_icac_news_cases(text, org_name, source_file, "ALEA")
     elif is_doj_ceos:
         return _batch_merged_icac_news_cases(text, org_name, source_file, "DOJ CEOS")
+    elif is_doj_ai_csam:
+        return _batch_merged_icac_news_cases(text, org_name, source_file, "DOJ AI CSAM")
     elif is_doj_archives:
         return _batch_merged_icac_news_cases(text, org_name, source_file, "DOJ ARCHIVES")
+    elif is_doj_safe_childhood:
+        return _batch_merged_icac_news_cases(text, org_name, source_file, "DOJ SAFE CHILDHOOD")
     elif is_other_external:
         return _batch_external_cases(text, org_name, source_file)
     else:
@@ -1578,7 +1592,12 @@ _MERGED_ICAC_NEWS_PDF_CANDIDATES: Dict[str, List[str]] = {
     "ARKANSAS DPS": ["ARKDPS_ICAC_All.pdf", "arkansas_dps_output/ARKDPS_ICAC_All.pdf"],
     "ALEA": ["alea_icac_news.pdf", "data/ingestion/alea/alea_icac_news.pdf"],
     "DOJ CEOS": ["DOJ_CEOS_All.pdf", "doj_ceos_output/DOJ_CEOS_All.pdf"],
+    "DOJ AI CSAM": ["DOJ_AI_CSAM_All.pdf", "scripts/scraper/state/ai_csam_backfill/AI_CSAM_DOJ_batch.pdf"],
     "DOJ ARCHIVES": ["DOJ_ARCHIVES_All.pdf", "doj_archives_output/DOJ_ARCHIVES_All.pdf"],
+    "DOJ SAFE CHILDHOOD": [
+        "DOJ_SAFE_CHILDHOOD.pdf",
+        "DOJ_SAFE_CHILDHOOD_All.pdf",
+    ],
 }
 
 

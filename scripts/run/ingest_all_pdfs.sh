@@ -14,7 +14,7 @@
 # first, then ingest NCMEC / DOJ separately. Skips when the PDF basename (case-
 # insensitive) matches:
 #   NCMEC / CyberTipline: *ncmec*, *cybertipline*, *cyber*tipline*
-#   DOJ CEOS / Archives: *doj*ceos*, *doj*archiv*
+#   DOJ CEOS / AI-CSAM / Archives / PSC: *doj*ceos*, *doj*ai*csam*, *doj*archiv*, *doj*safe*childhood*
 #
 set -e
 
@@ -59,7 +59,7 @@ filtered_sorted_pdf_paths() {
       bn=$(basename "$f" | tr '[:upper:]' '[:lower:]')
       case "$bn" in
         *ncmec* | *cybertipline* | *cyber*tipline*) continue ;;
-        *doj*ceos* | *doj*archiv*) continue ;;
+        *doj*ceos* | *doj*ai*csam* | *doj*archiv* | *doj*safe*childhood*) continue ;;
       esac
     fi
     printf '%s\n' "$f"

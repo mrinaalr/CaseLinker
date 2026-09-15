@@ -291,7 +291,7 @@ def _filter_incoming_cases_by_novelty(
     except Exception:
         calculate_case_similarity = None
 
-    DOJ_SOURCES = {"DOJ CEOS", "DOJ ARCHIVES"}
+    DOJ_SOURCES = {"DOJ CEOS", "DOJ AI CSAM", "DOJ ARCHIVES", "DOJ SAFE CHILDHOOD"}
 
     pool: List[Dict[str, Any]] = list(storage.get_all_cases(include_raw_data=True))
     norm_seen: set[str] = set()
@@ -320,7 +320,11 @@ def _filter_incoming_cases_by_novelty(
                 continue
             if calculate_case_similarity is not None:
                 max_sim = 0.0
+                # Only compare to other DOJ press rows — not the full AG/ICAC pool.
                 for ex in pool:
+                    ex_src = str(ex.get("source", "")).upper().replace("_", " ")
+                    if ex_src not in DOJ_SOURCES:
+                        continue
                     try:
                         sim = float(calculate_case_similarity(c, ex))
                     except Exception:
