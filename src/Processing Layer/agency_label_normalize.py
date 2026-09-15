@@ -8,7 +8,7 @@ tier fixes → canonical map (DOJ/AG/ICAC/acronyms, aligned with stats chart).
 from __future__ import annotations
 
 import re
-from typing import Dict, List
+from typing import Dict, Iterable, List
 
 from agency_possessive_repair import apply_possessive_tier_fixes
 
@@ -333,6 +333,294 @@ def dedupe_generic_state_police(agencies: List[str]) -> List[str]:
 def drop_non_le_agencies(agencies: List[str]) -> List[str]:
     """Remove known non-LE participant-list orgs (e.g. Rahab Ministries)."""
     return [a for a in agencies if (a or "").strip() not in _NON_LE_AGENCY_LABELS]
+
+
+# Unlabeled buckets — not a distinct named agency.
+_BARE_GENERIC_AGENCY_LABELS = frozenset(
+    {
+        "police department",
+        "sheriff's office",
+        "sheriff's department",
+        "attorney general's office",
+        "office of the attorney general",
+        "district attorney's office",
+        "prosecutor's office",
+        "state police department",
+        "federal agencies",
+        "federal agents",
+        "federal and international",
+        "federal and state",
+        "federal law enforcement partners",
+        "investigation division",
+        "computer crimes investigation",
+        "criminal investigation division",
+        "detective bureau",
+        "county attorney's office",
+        "district attorneys",
+        "these task forces",
+    }
+)
+_NON_AGENCY_LABELS = frozenset(
+    {
+        "federal express",
+        "honeywell federal manufacturing and technology",
+        "federal crime victims fund",
+    }
+)
+_PERSON_AGENCY_RE = re.compile(
+    r"^(Detective|Agent|Officer|Special Agent|Prosecutor|SA)\s+[A-Z][a-z]+\b",
+    re.I,
+)
+_DISTINCT_AGENCY_ALIASES = {
+    "u.s. marshals": "U.S. Marshals Service",
+    "ice": "U.S. Immigration and Customs Enforcement",
+    "dhs": "Department of Homeland Security",
+    "dea": "DEA",
+    "drug enforcement agency": "DEA",
+    "drug enforcement administration": "DEA",
+    "atf": "ATF",
+    "fbi": "FBI",
+    "hsi": "HSI",
+}
+
+
+# Core criminal-justice tokens: police, sheriffs, prosecutors, investigators, custody.
+_LE_CORE_RE = re.compile(
+    r"(?:"
+    r"police|polce|\bpo\s+lice\b|sheriff|sherriff|constable|marshal|marshals|trooper|"
+    r"highway\s+patrol|state\s+patrol|state\s+police|"
+    r"prosecutors?|prosecuting|prosecution|"
+    r"district\s+attorneys?|county\s+attorneys?|state'?s?\s+attorneys?|"
+    r"commonwealth(?:'s)?\s+attorneys?|"
+    r"attorney\s+genera|"
+    r"u\.?s\.?\s+attorneys?|united\s+states\s+attorneys?|"
+    r"icac|azicac|task\s*force|fusion\s+center|"
+    r"correction(?:s|al)?|paroles?|probation|penitentiary|prisons?|"
+    r"detectives?|investigators?|investigations?|investigative|"
+    r"narcotics?|"
+    r"homeland\s+security|secret\s+service|postal\s+inspection|"
+    r"inspector\s+general|internal\s+affairs|"
+    r"public\s+safety|campus\s+safety|campus\s+police|"
+    r"rangers?|game\s+warden|fish\s+and\s+game|fish\s+&\s+game|wildlife|"
+    r"natural\s+resources|border\s+patrol|customs|"
+    r"coast\s+guard|criminal\s+apprehension|bureau\s+of\s+apprehension|"
+    r"high[\s-]?tech\s+crime|organized\s+crime|special\s+crimes?|"
+    r"major\s+crimes?|sex\s+crimes?|child\s+abuse|"
+    r"human\s+trafficking|medicaid\s+fraud|community\s+supervision|"
+    r"adult\s+correction|juvenile\s+justice|"
+    r"national\s+crime\s+agency|national\s+central\s+bureau|interpol|"
+    r"national\s+operations|"
+    r"child\s+exploitation|obscenity\s+section|"
+    r"bureau\s+of\s+investigation|division\s+of\s+criminal|"
+    r"department\s+of\s+public\s+safety|department\s+of\s+law|"
+    r"department\s+of\s+criminal\s+justice|criminal\s+justice|"
+    r"law\s+enforcement|cyber\s*crimes?|computer\s+crimes?|"
+    r"special\s+agent|enforcement\s+bureau|enforcement\s+agency|"
+    r"special\s+services\s+bureau|"
+    r"crime\s+lab|forensic(?:\s+lab|\s+services)?|swat|vice\s+squad|"
+    r"bureau\s+of\s+prisons|bureau\s+of\s+indian\s+affairs|"
+    r"bureau\s+of\s+alcohol|firearms\s+and\s+explosives|"
+    r"office\s+of\s+special\s+investigations|criminal\s+intelligence|"
+    r"justice\s+department|pardons\s+and\s+parole"
+    r")",
+    re.I,
+)
+_LE_ACRONYM_RE = re.compile(
+    r"\b(?:atf|dea|fbi|ice|dhs|dps|hsi|usss|bop|bia|cbp|ncis|cid|osi|"
+    r"irs-ci|doj|mcso|bcso|epa|ceos|opta|opia)\b",
+    re.I,
+)
+_LE_RESCUE_RE = re.compile(
+    r"federal\s+bureau\s+of|criminal\s+investigation\s+division|"
+    r"\bcid\b|\bncis\b|\bosi\b|diplomatic\s+security|"
+    r"air\s+force\s+office\s+of\s+special|army\s+criminal|"
+    r"naval\s+criminal|marine\s+corps\s+cid|"
+    r"immigration\s+and\s+customs|customs\s+and\s+border|"
+    r"u\.s\.\s+department\s+of\s+justice|department\s+of\s+justice|"
+    r"u\.s\.\s+marshals|secret\s+service",
+    re.I,
+)
+
+# Non-LE orgs. Overridden when a stronger cop/prosecutor/task-force token is present.
+_NON_LE_OVERRIDE_RE = re.compile(
+    r"police|sheriff|sherriff|marshal|prosecutor|prosecuting|"
+    r"district\s+attorney|attorney\s+general|task\s*force|icac|"
+    r"campus\s+police|campus\s+safety|inspector\s+general|"
+    r"criminal\s+investigation|criminal\s+intelligence|\bcid\b|\bncis\b|\bosi\b|"
+    r"military\s+police|diplomatic\s+security|office\s+of\s+special\s+investigations|"
+    r"county\s+attorney|firearms|bureau\s+of\s+prisons|\bfbi\b|\bhsi\b|\batf\b",
+    re.I,
+)
+_NON_LE_DROP_RE = re.compile(
+    r"fire\s+(?:department|dept|rescue|protection)|volunteer\s+fire|firefighter|"
+    r"child\s+welfare|children\s+(?:and|&)\s+famil|"
+    r"department\s+of\s+children|dept\.?\s+of\s+children|"
+    r"child\s+protect(?:ive|ion)|(?:^|\s)dcfs(?:\s|$)|child\s+safety|child\s+services|"
+    r"family\s+services|human\s+services|social\s+services|youth\s+services|"
+    r"children'?s?\s+services|department\s+of\s+family|community\s+based\s+services|"
+    r"department\s+of\s+education|school\s+district|board\s+of\s+education|"
+    r"cyber\s+security\s+department|"
+    r"department\s+of\s+transportation|\bdot\b|"
+    r"department\s+of\s+motor\s+vehicle|bureau\s+of\s+motor\s+vehicle|\bdmv\b|\bbmv\b|"
+    r"department\s+of\s+health|health\s+department|"
+    r"department\s+of\s+labor|department\s+of\s+commerce|"
+    r"department\s+of\s+agriculture|department\s+of\s+energy|"
+    r"department\s+of\s+housing|department\s+of\s+the\s+interior|"
+    r"u\.s\.\s+department\s+of\s+state|united\s+states\s+department\s+of\s+state|"
+    r"^state\s+department$|^department\s+of\s+state$|"
+    r"department\s+of\s+defense|department\s+of\s+the\s+(?:army|navy|air\s+force)|"
+    r"department\s+of\s+veterans|department\s+of\s+revenue|"
+    r"department\s+of\s+human\s+resources|department\s+of\s+health\s+and\s+welfare|"
+    r"building\s+(?:department|and\s+zoning)|building\s+and\s+inspections|"
+    r"code\s+enforcement|public\s+works|neighborhood\s+empowerment|"
+    r"department\s+of\s+philosophy|psychiatry\s+department|"
+    r"bureau\s+of\s+justice(?:\s+(?:assistance|statistics))?|"
+    r"federal\s+express|\bfedex\b|finance\s+administration|"
+    r"victim\s+service|advocacy|children'?s?\s+rights|"
+    r"agency\s+for\s+international\s+development|\busaid\b|"
+    r"defense\s+attorney|public\s+defender|"
+    r"investigation\s+fund|ongoing\s+investigation|"
+    r"these\s+task\s+forces|task\s+forcethat|justice\s+department\s+announces|"
+    r"^office\s+of\s+attorney$|"
+    r"hospital|medical\s+center|ministr(?:y|ies)|"
+    r"ncmec|national\s+center\s+for\s+missing|"
+    r"honeywell|federal\s+crime\s+victims\s+fund",
+    re.I,
+)
+
+
+def _is_counted_law_enforcement_agency(label: str) -> bool:
+    """True for police, sheriffs, prosecutors, investigators, task forces, custody.
+
+    Fire, child-welfare, education, public-health, and generic cabinet departments
+    without a criminal-investigative mandate are excluded from the public count.
+    """
+    t = (label or "").strip()
+    if not t:
+        return False
+    low = t.casefold()
+    if _NON_LE_DROP_RE.search(t) and not _NON_LE_OVERRIDE_RE.search(t):
+        return False
+    if _LE_CORE_RE.search(t) or _LE_ACRONYM_RE.search(t) or _LE_RESCUE_RE.search(t):
+        return True
+    if low in {
+        "georgia bureau",
+        "federal bureau of",
+        "federal investigation agency",
+        "texas department of safety",
+        "u.s. investigation and customs enforcement",
+        "drug enforcement agency",
+        "illinois high tech crimes bureau",
+        "illinois sexually violent persons bureau",
+        "financial & computer crimes bureau",
+        "financial and computer crimes bureau",
+        "human trafficking bureau",
+        "gangs & organized crime bureau",
+        "westshore enforcement bureau",
+        "mississippi bureau of narcotics",
+        "bureau of identification",
+        "minnesota bureau of apprehension",
+        "university of iowa department of campus safety",
+        "idaho department of fish and game",
+        "georgia department of natural resources",
+        "louisiana department of wildlife and fisheries",
+        "environmental protection agency",
+        "u.s. environmental protection agency",
+    }:
+        return True
+    return False
+
+
+def _tidy_distinct_agency_label(label: str) -> str | None:
+    """Collapse field-office aliases and drop non-LE labels for corpus unique counts."""
+    t = (label or "").strip().lstrip("#-_ ").strip()
+    if not t:
+        return None
+    t = re.sub(r"\s+", " ", t)
+    t = re.sub(r"'s$", "", t)
+    t = re.sub(r"\bDivison\b", "Division", t, flags=re.I)
+    t = re.sub(r"\blnvestigation\b", "Investigation", t, flags=re.I)
+    t = _DISTINCT_AGENCY_ALIASES.get(t.casefold(), t)
+    low = t.casefold()
+    if "resident agency" in low:
+        t = "FBI"
+        low = "fbi"
+    elif re.search(r"field office", low) and (
+        "child exploitation" in low or "fbi" in low or low.endswith("field office")
+    ):
+        t = "FBI"
+        low = "fbi"
+    elif "federal bureau of" in low and "investigation" in low:
+        t = "FBI"
+        low = "fbi"
+    elif re.search(r"\bfbi\b", low) and not re.search(
+        r"police|sheriff|prosecutor|hsi|task\s*force", low
+    ):
+        t = "FBI"
+        low = "fbi"
+    elif (
+        (
+            "firearms" in low
+            and ("alcohol" in low or "tobacco" in low or "explosives" in low)
+        )
+        or low.startswith("bureau of alcohol")
+    ) and not re.search(r"police|sheriff|parole|probation|task\s*force", low):
+        t = "ATF"
+        low = "atf"
+    elif "bureau of prisons" in low:
+        t = "Bureau of Prisons"
+        low = t.casefold()
+    elif re.search(r"\bhsi\b", low) and not re.search(
+        r"police|sheriff|\bpd\b|task\s*force", low
+    ):
+        t = "HSI"
+        low = "hsi"
+    elif low in {"u.s. dhs", "u.s. department of homeland security"}:
+        t = "Department of Homeland Security"
+        low = t.casefold()
+    elif "immigration and customs" in low or "investigation and customs enforcement" in low:
+        t = "U.S. Immigration and Customs Enforcement"
+        low = t.casefold()
+    elif "justice department" in low and "announce" not in low:
+        t = FEDERAL_DOJ_CANONICAL
+        low = t.casefold()
+    if "announce" in low:
+        return None
+    if low in _BARE_GENERIC_AGENCY_LABELS or low in _NON_AGENCY_LABELS:
+        return None
+    if _PERSON_AGENCY_RE.match(t) or re.match(r"^a\s+", t, re.I) or re.match(r"^\d", t):
+        return None
+    if "court" in low and "marshal" not in low and "police" not in low:
+        return None
+    if "federal express" in low or "honeywell" in low:
+        return None
+    if len(t) < 3:
+        return None
+    if not _is_counted_law_enforcement_agency(t):
+        return None
+    return t
+
+
+def distinct_named_agencies(labels: Iterable[str]) -> List[str]:
+    """Unique law-enforcement agencies after ingest normalize and alias collapse.
+
+    Splits glued labels, applies storage canonicalization (FBI/ICAC/DOJ/USAO),
+    collapses FBI resident/field offices to FBI, and drops unlabeled generics,
+    person names, courts, and non-LE orgs (fire, child-welfare, education).
+    Used for the public distinct-agency count.
+    """
+    expanded: List[str] = []
+    for label in labels:
+        if label and str(label).strip():
+            expanded.extend(normalize_agency_label_for_ingest(str(label)))
+    expanded = drop_non_le_agencies(dedupe_generic_state_police(expanded))
+    kept: Dict[str, str] = {}
+    for raw in expanded:
+        tidy = _tidy_distinct_agency_label(raw)
+        if tidy is None:
+            continue
+        kept[tidy.casefold()] = tidy
+    return sorted(kept.values(), key=str.casefold)
 
 
 def normalize_agency_label_for_ingest(label: str) -> List[str]:

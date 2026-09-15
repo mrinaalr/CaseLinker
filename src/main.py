@@ -115,22 +115,28 @@ def main():
         print("\n" + "="*60)
         print("Step 5: Pre-computing clusters...")
         print("="*60)
-        try:
-            from analysis import run_automated_analysis
-            cluster_data = run_automated_analysis(all_stored_cases)
-            if db_path:
-                storage = CaseStorage(db_path)  # SQLite
-            else:
-                storage = CaseStorage()  # PostgreSQL
-            stored = storage.store_precomputed_clusters(cluster_data, len(all_stored_cases))
-            if stored:
-                print(f"✓ Pre-computed clusters stored ({len(all_stored_cases)} cases)")
-            else:
-                print(f"❌ Failed to store pre-computed clusters ({len(all_stored_cases)} cases)")
-        except Exception as e:
-            print(f"⚠️  Warning: Could not pre-compute clusters: {e}")
-            import traceback
-            traceback.print_exc()
+        skip_clusters = os.environ.get("SKIP_PRECOMPUTE_CLUSTERS", "").strip().lower() in (
+            "1", "true", "yes", "on",
+        )
+        if skip_clusters:
+            print("Skipping cluster pre-compute (SKIP_PRECOMPUTE_CLUSTERS is set).")
+        else:
+            try:
+                from analysis import run_automated_analysis
+                cluster_data = run_automated_analysis(all_stored_cases)
+                if db_path:
+                    storage = CaseStorage(db_path)  # SQLite
+                else:
+                    storage = CaseStorage()  # PostgreSQL
+                stored = storage.store_precomputed_clusters(cluster_data, len(all_stored_cases))
+                if stored:
+                    print(f"✓ Pre-computed clusters stored ({len(all_stored_cases)} cases)")
+                else:
+                    print(f"❌ Failed to store pre-computed clusters ({len(all_stored_cases)} cases)")
+            except Exception as e:
+                print(f"⚠️  Warning: Could not pre-compute clusters: {e}")
+                import traceback
+                traceback.print_exc()
         
     except Exception as e:
         print(f"\n❌ Error: {e}")

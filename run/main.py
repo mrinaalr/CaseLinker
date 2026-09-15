@@ -84,6 +84,7 @@ from facet_tree import (
     max_tree_depth,
 )
 from case_storage_utils import investigation_types_for_case
+from agency_label_normalize import distinct_named_agencies
 from analysis import tag_threader, return_tagged_cases, run_automated_analysis
 # Import Redis cache helper
 try:
@@ -185,6 +186,17 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
+
+
+# Project Safe Childhood is a separate /sources card but the same U.S. DOJ family as
+# DOJ CEOS, so it does not increment the published source_count (56 agencies).
+_SOURCE_COUNT_FAMILY = {
+    "DOJ SAFE CHILDHOOD": "DOJ CEOS",
+}
+
+
+def _source_count_key(source: str) -> str:
+    return _SOURCE_COUNT_FAMILY.get(source, source)
 
 
 def read_utf8_text_file(path: Path) -> str:
@@ -2081,14 +2093,13 @@ def get_stats(request: Request):
                     return []
             return field if field else []
         
-        unique_orgs = set()
+        agency_labels: List[str] = []
         for case in cases:
             agencies = parse_field(case.get('agencies_involved', []))
-            organizations = parse_field(case.get('organizations', []))
-            # Organizations are already normalized at ingestion time, just count unique ones
-            for org in agencies + organizations:
-                if org and isinstance(org, str) and org.strip():
-                    unique_orgs.add(org.strip())
+            if isinstance(agencies, list):
+                for org in agencies:
+                    if org and isinstance(org, str) and org.strip():
+                        agency_labels.append(org.strip())
             
             # Count single-value features (1 if exists)
             if case.get('investigation_type'):
@@ -2127,9 +2138,9 @@ def get_stats(request: Request):
         result = {
             "total_cases": len(cases),
             "sources": list(sources),
-            "source_count": len(sources),
+            "source_count": len({_source_count_key(s) for s in sources}),
             "unique_features": total_features,
-            "unique_organizations": len(unique_orgs),
+            "unique_organizations": len(distinct_named_agencies(agency_labels)),
             "date_range": {
                 "start": min((c.get('date_range', {}).get('start') for c in cases if c.get('date_range', {}).get('start')), default=None),
                 "end": max((c.get('date_range', {}).get('end') for c in cases if c.get('date_range', {}).get('end')), default=None)

@@ -237,18 +237,42 @@ class CaseStorage:
                     except:
                         pass
                 
-                # If source files differ, this is a conflict - don't overwrite
+                # If source files differ, keep both rows: mint the next free id.
                 if new_source_file and existing_source_file and new_source_file != existing_source_file:
-                    print(f"⚠️  Warning: Case ID conflict detected for {case_id}")
-                    print(f"   Existing case from: {existing_source_file}")
-                    print(f"   New case from: {new_source_file}")
-                    print(f"   Skipping new case to prevent data loss")
-                    conn.close()
-                    return False
-                
-                # Case exists from same source: preserve original created_at, update updated_at
-                created_at = existing_created_at
-                updated_at = current_time  # Update timestamp since we're modifying existing case
+                    prefix, sep, seq_s = case_id.rpartition("_")
+                    try:
+                        seq = int(seq_s)
+                        width = max(3, len(seq_s))
+                    except ValueError:
+                        prefix, seq, width = case_id, 0, 3
+                    while True:
+                        seq += 1
+                        cand = f"{prefix}_{seq:0{width}d}"
+                        cursor.execute("SELECT 1 FROM cases WHERE id = ?", (cand,))
+                        if not cursor.fetchone():
+                            print(
+                                f"⚠️  Case ID {case_id} already used by {existing_source_file}; "
+                                f"storing as {cand} from {new_source_file}"
+                            )
+                            case_id = cand
+                            case["id"] = cand
+                            existing_case = None
+                            existing_document_version_id = None
+                            existing_extraction_run_id = None
+                            break
+                    if not existing_case:
+                        created_at = case.get("created_at") or current_time
+                        updated_at = case.get("updated_at") or created_at
+                        document_version_id = case.get("document_version_id")
+                        extraction_run_id = case.get("extraction_run_id")
+                        # Fall through to INSERT below with the new id.
+                    else:
+                        conn.close()
+                        return False
+                else:
+                    # Case exists from same source: preserve original created_at, update updated_at
+                    created_at = existing_created_at
+                    updated_at = current_time  # Update timestamp since we're modifying existing case
             else:
                 # New case: use created_at from case dict if provided, otherwise use current time
                 created_at = case.get('created_at') or current_time

@@ -1591,7 +1591,7 @@ _MERGED_ICAC_NEWS_PDF_CANDIDATES: Dict[str, List[str]] = {
     ],
     "ARKANSAS DPS": ["ARKDPS_ICAC_All.pdf", "arkansas_dps_output/ARKDPS_ICAC_All.pdf"],
     "ALEA": ["alea_icac_news.pdf", "data/ingestion/alea/alea_icac_news.pdf"],
-    "DOJ CEOS": ["DOJ_CEOS_All.pdf", "doj_ceos_output/DOJ_CEOS_All.pdf"],
+    "DOJ CEOS": ["DOJ_CEOS_All.pdf", "DOJ_BULK.pdf", "doj_ceos_output/DOJ_CEOS_All.pdf"],
     "DOJ AI CSAM": ["DOJ_AI_CSAM_All.pdf", "scripts/scraper/state/ai_csam_backfill/AI_CSAM_DOJ_batch.pdf"],
     "DOJ ARCHIVES": ["DOJ_ARCHIVES_All.pdf", "doj_archives_output/DOJ_ARCHIVES_All.pdf"],
     "DOJ SAFE CHILDHOOD": [

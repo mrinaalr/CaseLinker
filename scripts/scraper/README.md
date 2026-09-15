@@ -1,43 +1,46 @@
 # Press-release scraping suite
 
-This directory turns press-release **URLs** (or, for DOJ, structured **API records**) into clean, structured **PDFs** for CaseLinker ingestion. This file is the onboarding doc: what each script does, and how they fit together. For the deep mechanics of extraction (host-specific selectors, Jina fallback, troubleshooting) see `PRESS_RELEASE_SCRAPING.md`. For the source-expansion priority queue and the crime-verify quality gate, see `EXPAND_SOURCES.md`.
+This directory turns **any public press release** — a URL list or a DOJ News API harvest — into a structured **PDF** for CaseLinker. ICAC/CAC filters are optional gates, not the engine. Onboarding is this file; extractors and DOJ API quirks are `PRESS_RELEASE_SCRAPING.md`; the ICAC expansion queue is `EXPAND_SOURCES.md`.
 
 ## The pipeline, in one picture
 
 ```mermaid
 flowchart LR
-    A["Listing / search page<br/>(agency newsroom, site search)"] -->|"fetch_source_urls.py<br/>or a one-off harvest_*.py"| B["sources/urls.txt<br/>(one URL per line)"]
+    A["Listing / search page<br/>(any agency newsroom)"] -->|"fetch_source_urls.py"| B["sources/urls.txt"]
+    API["DOJ News API<br/>(no URL list yet)"] -->|"harvest_doj_psc.py<br/>title terms + filters"| F["*_resolved.json<br/>mode: resolved"]
     B -->|"scrape_doj.py"| C{"justice.gov?"}
-    C -->|"yes"| D["DOJ API<br/>(title search + exact slug match)"]
-    C -->|"no"| E["pass-through<br/>(mode: scrape)"]
-    D --> F["urls_resolved.json"]
+    C -->|"yes"| D["DOJ API slug match"]
+    C -->|"no"| E["mode: scrape"]
+    D --> F
     E --> F
     F -->|"scrape_pdf.py --doj-file"| G["merged PDF"]
-    B -.->|"scrape_pdf.py --url-file<br/>(no justice.gov URLs, skip scrape_doj.py)"| G
-    G --> H["filter_merged_pdf.py /<br/>remove_pdf_pages_by_text.py<br/>(drop noise pages)"]
-    H --> I["check_expand_novelty.py<br/>(dedupe vs existing corpus)"]
-    I --> J["verify_cac.py<br/>(quality gate, ICAC sources)"]
-    J --> K["ready for ingestion"]
+    B -.->|"scrape_pdf.py --url-file<br/>(no justice.gov)"| G
+    G --> H["filter / novelty"]
+    H --> I["verify_cac.py<br/>ICAC topics only"]
+    I --> J["ingest"]
 ```
+
+The suite is **press-release → PDF**, not ICAC-only. Topic filters (`verify_cac.py`, PSC body regex, “child sexual” listing queries) are **optional gates** for the ICAC corpus. `scrape_pdf.py` will turn any public article URL — or any DOJ API resolved record — into the same `Title / Publication date / Source: https:// / body` layout.
 
 Two things to notice:
 
-1. **URL collection and PDF conversion are separate steps, done by separate tools.** `fetch_source_urls.py` extracts URLs from sites with multiple press release embedded. `scrape_doj.py` and `scrape_pdf.py` turns URLs into PDFs. Neither step invents the other's data — an empty/wrong `urls.txt` produces an empty/wrong PDF no matter how good the extractor is.
-2. **`scrape_doj.py` is a router, not a replacement for `scrape_pdf.py`.** It only exists because `justice.gov` cannot be scraped directly (see "Why DOJ is different" below). Every other source flows through unchanged — you can skip `scrape_doj.py` entirely if your `urls.txt` has no `justice.gov` links.
+1. **Discovery and PDF conversion are separate.** Empty/wrong inputs produce empty/wrong PDFs. HTML listings go through `fetch_source_urls.py`. DOJ **discovery** (you do not already have URLs) goes through `harvest_doj_psc.py`. DOJ **resolution** of URLs you already have goes through `scrape_doj.py`.
+2. **`scrape_doj.py` is a router, not a search harvester.** It looks up known `justice.gov` URLs in the API (max 6 pages / 300 hits per query). It will not page 14k “child pornography” titles. Use `harvest_doj_psc.py` for that. Skip `scrape_doj.py` entirely when the url-file has no `justice.gov` links.
 
 ## Suite map
 
 | File | Role |
 |---|---|
-| `scrape_pdf.py` | **The core engine.** Fetches a URL (or reads a `--doj-file` record), extracts title/byline/body/date, lays out one PDF page with ReportLab, and merges all pages into one PDF with `pypdf`. Has per-host extractor logic for ~20 agency sites, a Jina Reader fallback for bot-gated hosts, and native-PDF handling (`pdfplumber`) for sources that publish `.pdf` directly. |
-| `scrape_doj.py` | **DOJ API bridge / recommended entry point.** Reads a url-file; routes `justice.gov` URLs to the DOJ press-release API instead of scraping them live (Akamai-gated — see below), and passes every other URL through unchanged. Outputs JSON that `scrape_pdf.py --doj-file` consumes. |
-| `fetch_source_urls.py` | **URL harvester.** Turns a listing/search page (or paginated template) into a deduplicated URL list — the input `scrape_doj.py`/`scrape_pdf.py` need. Handles plain HTML pagination, Squarespace search API, Google CSE, search.usa.gov, and more. |
-| `filter_merged_pdf.py` | Post-hoc noise filter: drop pages from an already-merged PDF by URL pattern or body keyword, rebuilding from the per-URL `tmp/` cache (no re-scrape needed), and optionally rewrite a cleaned url-file. |
-| `remove_pdf_pages_by_text.py` | Simpler variant: drop pages from a merged PDF whose extracted text matches an exclude regex. |
-| `check_expand_novelty.py` | **Dedup / novelty gate.** Before appending a new scrape batch to an existing merged corpus, confirms the new URLs/bodies are actually novel (not already in the baseline PDF) and that the batch itself has no internal duplicate Source URLs. Required step in the `EXPAND_SOURCES.md` workflow. |
-| `sources/urls.txt` | Active input list — one URL per line, `#` comments allowed. What you hand to `scrape_doj.py` or `scrape_pdf.py --url-file`. |
-| `PRESS_RELEASE_SCRAPING.md` | Deep guide: extraction internals, the full host-by-host selector table, the DOJ-API rationale in detail, troubleshooting table, weekly-refresh automation pattern. Read this when an extractor needs fixing or you're adding a new host. |
-| `EXPAND_SOURCES.md` | ICAC source-expansion tracking table (which agencies are done / queued) and the required CAC-verify workflow (`scripts/verify/verify_cac.py`) before a new source's merged PDF is considered ingestion-ready. |
+| `scrape_pdf.py` | **The core engine.** Any press-release URL, or a `--doj-file` resolved record → one ReportLab page → merged PDF. Host extractors, Jina fallback, native `.pdf` via pdfplumber. Topic-agnostic. |
+| `harvest_doj_psc.py` | **DOJ API discovery.** Pages `parameters[title]` (newest first), optional body regex, optional CAC gate, stage collapse, novelty vs existing DOJ PDFs. Emits `--doj-file` JSON. Defaults are Project Safe Childhood; same script does fentanyl/fraud/etc. with flags. |
+| `scrape_doj.py` | **DOJ API URL resolver.** You already have `justice.gov` URLs. Looks each one up (slug match, 6 pages max). Passes non-DOJ URLs through as `mode: scrape`. |
+| `fetch_source_urls.py` | **HTML listing harvester.** Paginated newsrooms, Squarespace, Google CSE, search.usa.gov → url-file. Not the DOJ API. |
+| `filter_merged_pdf.py` | Post-hoc noise filter from the per-URL `tmp/` cache. |
+| `remove_pdf_pages_by_text.py` | Drop merged-PDF pages by regex / exact-text dedupe / page list. |
+| `check_expand_novelty.py` | Dedup vs an existing merged PDF (ICAC expansion workflow). |
+| `sources/urls.txt` | Active URL list for `scrape_doj.py` / `scrape_pdf.py --url-file`. |
+| `PRESS_RELEASE_SCRAPING.md` | Agent guide: extractors, DOJ API quirks, discovery vs resolve, troubleshooting. |
+| `EXPAND_SOURCES.md` | ICAC source queue + CAC-verify. Not required for non-ICAC DOJ pulls. |
 
 ## Install
 
@@ -85,9 +88,41 @@ python3 scrape_pdf.py --url-file sources/example_trafficking_urls.txt \
 
 Smoke-test with `--limit 3` before running a full list. See `PRESS_RELEASE_SCRAPING.md` → "Canonical workflow" for the full step-by-step (verify one article in a browser, harvest hygiene, one-URL extractor probe) before scraping hundreds of URLs.
 
+### You want DOJ cases by topic (no URL list yet)
+
+Do **not** crawl `justice.gov/psc/press-room` (page>0 is HTTP 403). Do **not** call `scrape_doj.py` with an empty url-file. Page the public News API, then `--doj-file`:
+
+```bash
+cd scripts/scraper
+
+# Next 2,000+ Project Safe Childhood records (newest-first; skip URLs already in DOJ_*.pdf):
+python3 harvest_doj_psc.py --max-keep 0 --baseline-pdf ../../DOJ_SAFE_CHILDHOOD.pdf
+python3 scrape_pdf.py --doj-file sources/doj_psc_resolved_novel.json \
+  --out-dir ../.. --out-name DOJ_SAFE_CHILDHOOD_MORE.pdf
+
+# Any other DOJ topic — same tools, CAC gate off:
+python3 harvest_doj_psc.py --slug doj_fentanyl --skip-cac \
+  --require 'fentanyl' --title-term fentanyl --title-term 'fentanyl analogue' \
+  --max-keep 2200
+python3 scrape_pdf.py --doj-file sources/doj_fentanyl_resolved_novel.json \
+  --out-dir ../.. --out-name DOJ_FENTANYL_All.pdf
+```
+
+`--max-keep` (default 2200) stops after that many **kept** records, newest first. The 2022–2026 PSC pull used that cap. **Another 2,000+ PSC records** means `--max-keep 0` (or a higher cap) with `DOJ_SAFE_CHILDHOOD.pdf` as `--baseline-pdf` so already-ingested URLs are marked not-novel. Feed only `*_resolved_novel.json` to `scrape_pdf.py`.
+
+Title `"Project Safe Childhood"` is only ~87 API hits (mostly rollups). Real PSC signal is the body footer. `parameters[topic]`, `body`, and `component` are **ignored** by the API — title substring only. Probe counts with `pagesize=1` before a long page.
+
 ## Why DOJ (`justice.gov`) is different
 
-`www.justice.gov/usao-*/pr/*` sits behind an Akamai Bot Manager JS interstitial (a proof-of-work challenge page, confirmed host-wide, not per-release) — direct `requests`/`curl` gets a ~2.4KB challenge shell, not the article, and even Jina Reader can independently refuse anonymous requests on network-reputation grounds. Solving that challenge would be bot-wall evasion, which this suite does not do. Instead, DOJ publishes a public press-release API (`/api/v1/press_releases.json`, no key required, 4 req/s limit) that returns the same content as structured JSON. `scrape_doj.py` resolves `justice.gov` URLs against that API by matching the URL's slug exactly against API results (title-substring search alone isn't precise — DOJ sometimes republishes the same case under different title wording). Full details, including the API's undocumented query-param quirks, are in `PRESS_RELEASE_SCRAPING.md`.
+`www.justice.gov/usao-*/pr/*` sits behind an Akamai Bot Manager JS interstitial (host-wide). Direct `requests`/`curl` gets a ~2.4KB challenge shell. Do not solve it. Use the public API (`/api/v1/press_releases.json`, no key, 4 req/s):
+
+| You have | Tool |
+|---|---|
+| Topic / title phrasing, no URLs | `harvest_doj_psc.py` → `--doj-file` |
+| A list of `justice.gov` URLs | `scrape_doj.py` → `--doj-file` |
+| Only non-DOJ URLs | `scrape_pdf.py --url-file` |
+
+`scrape_doj.py` matches URL slugs (title search alone is too fuzzy — DOJ republishes the same matter under slightly different titles). Full quirks: `PRESS_RELEASE_SCRAPING.md`.
 
 ## Output & caching
 
@@ -96,9 +131,11 @@ Smoke-test with `--limit 3` before running a full list. See `PRESS_RELEASE_SCRAP
 - To force a re-scrape (e.g. after fixing an extractor), delete the relevant `tmp/NNNN_{hash}.pdf` or the whole `tmp/` directory.
 - Both `scrape_pdf.py` output PDFs and any `sources/*.json` intermediate files are covered by the repo's blanket `.gitignore` rules (`*.pdf`, `*.json`) — nothing generated by this suite needs to be committed by hand.
 
-## After the merge: quality gates (ICAC sources)
+## After the merge: quality gates
 
-For sources going into the ICAC/CAC corpus specifically, `EXPAND_SOURCES.md` documents the required post-merge steps: `check_expand_novelty.py` (no duplicate/already-seen cases) and `scripts/verify/verify_cac.py --all-failures --default-fail-csv` (every case must actually be a CAC-relevant press release, not a grant announcement, fugitive manhunt, or policy letter that slipped through the harvest filters). Not every source needs this — it's specific to the ICAC expansion workflow — but it's the right pattern to reuse for any topic corpus (elder fraud, trafficking, etc.) where you're appending to an existing merged PDF over time.
+**ICAC / CAC corpus** (child-sexual sources): `EXPAND_SOURCES.md` — `check_expand_novelty.py` then `scripts/verify/verify_cac.py --all-failures --default-fail-csv`. Do not ingest until failures are removed.
+
+**Any other topic** (DOJ drugs, elder fraud, mixed USAO): skip `verify_cac.py` (`harvest_doj_psc.py --skip-cac`). Still drop grants/rollups/speeches, collapse arrest vs sentencing when the same matter appears twice, and novelty-check against existing merged PDFs. `scrape_pdf.py` does not care what the crime is.
 
 ## When to stop and ask a human
 

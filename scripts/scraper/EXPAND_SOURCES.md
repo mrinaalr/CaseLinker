@@ -91,13 +91,21 @@ DB counts (approx., pre-expansion): see `visualization/query.html` ICAC-search t
 
 ## DOJ (justice.gov) — API source, not a URL-harvest source
 
-Different mechanism from every row above: `justice.gov` is Akamai-gated for direct scraping (see `PRESS_RELEASE_SCRAPING.md`), so it is not harvested with `fetch_source_urls.py` and does not go through the novelty-gate/CAC-verify steps 1–7 above as written (those assume a scraped-URL batch). Instead:
+`justice.gov` is Akamai-gated (see `PRESS_RELEASE_SCRAPING.md`). Do not use `fetch_source_urls.py` on USAO HTML. Two entry points:
 
-| Source key | Endpoint | Entry point | Notes |
-|------------|----------|-------------|-------|
-| DOJ press releases | `https://www.justice.gov/api/v1/press_releases.json` (docs: `.../developer/api-documentation/api_v1`) | `scrape_doj.py` → `scrape_pdf.py --doj-file` | Title-substring search + exact URL-slug match, not a listing crawl. No API key. 4 req/s limit. |
+| Job | Entry point | Then |
+|-----|-------------|------|
+| Discover by title/topic (PSC, drugs, fraud, …) | `harvest_doj_psc.py` | `scrape_pdf.py --doj-file sources/<slug>_resolved_novel.json` |
+| You already have `justice.gov` URLs | `scrape_doj.py --url-file …` | `scrape_pdf.py --doj-file …` |
 
-**Recon (counts only, no records pulled) as of 2026-07-18** — `parameters[title]` substring search, single term vs. phrasing variants, to scope wording sensitivity before any batch pull:
+`verify_cac.py` is **ICAC-topic only**. PSC defaults keep it on. `--skip-cac` for drugs / other federal crime types. Novelty vs existing `DOJ_*.pdf` still applies.
+
+| Source key | Endpoint | Notes |
+|------------|----------|-------|
+| DOJ SAFE CHILDHOOD | `https://www.justice.gov/api/v1/press_releases.json` | First pull: `--max-keep 2200` → 2,192 novel vs CEOS/archives/AI-CSAM. Next batch: `--max-keep 0 --baseline-pdf ../../DOJ_SAFE_CHILDHOOD.pdf`. |
+| Any other DOJ topic | same API | `--slug … --skip-cac --title-term … --require …` |
+
+**Recon (title-substring counts)** — probe with `pagesize=1` before paging. Counts move; 2026-07-18 snapshot:
 
 | Category | Term | Count |
 |---|---|---:|
@@ -113,9 +121,9 @@ Different mechanism from every row above: `justice.gov` is Akamai-gated for dire
 | | `"child pornography"` (legacy statutory term) | 13,997 |
 | | `"child sexual abuse material"` (modern term) | 1,123 |
 
-Takeaways: single-term search both **undercounts** (elder fraud: DOJ republishes the same case under "fraud" vs "abuse" wording — confirmed via a literal duplicate case in testing) and **overcounts** (bare `"trafficking"` is mostly drug/arms/wildlife trafficking, not human/sex trafficking — 7x the combined human+sex count). CSAM has the widest single gap: the legacy term outnumbers the modern term ~12x. Any batch pull needs multiple phrasing variants per topic, deduped by API `uuid`, not a single term.
+Single-term search **undercounts** (same matter under “fraud” vs “abuse”) and **overcounts** (bare `"trafficking"` is mostly drugs/arms/wildlife). CSAM: legacy title term outnumbers the modern name ~12x. Always page **multiple phrasing variants**, dedupe by API `uuid`. `parameters[topic]`/`body`/`component` are ignored.
 
-This is reconnaissance only — no batch harvest logic exists yet for the DOJ API (deliberately out of scope until URL-collection volume is scoped; see the one-article pipeline test in `scripts/scraper/PRESS_RELEASE_SCRAPING.md`).
+`harvest_doj_psc.py` is the batch harvester. `scrape_doj.py` remains URL lookup only (6 pages/query).
 
 ---
 
@@ -125,6 +133,6 @@ This is reconnaissance only — no batch harvest logic exists yet for the DOJ AP
 
 **Standing first step, not a one-off insight.** The DOJ case revealed a pattern that should now be checked for *every* new agency before writing a scraper for it: does a public API already exist? Many .gov sites (especially Drupal-based ones, which a large share of state AG and federal agency sites are) expose one whether or not it's advertised — check `/api/v1/...`, `/jsonapi/...`, search "`[agency] developer API`", and view-source for Drupal meta tags (`Drupal.settings`, `X-Generator: Drupal`, `/jsonapi` links in `<head>`) before assuming a site needs HTML scraping. Finding an API before building a harvester avoids exactly the class of problem `justice.gov` posed (bot-wall-gated HTML with a perfectly good API sitting behind it, unused).
 
-**`fetch_source_urls.py`'s current scope** is HTML-listing-page harvesting only: plain pagination (`--url-template` + `--page-range`), Squarespace's search API (`--squarespace-search-page`), Google Programmable Search / CSE (`--google-cse-search-page`), and `search.usa.gov` (`--usa-search`). All four output the same thing — a deduplicated list of bare URLs to a text file. None of them talk to an agency's own structured data API the way `scrape_doj.py` now does for DOJ.
+**`fetch_source_urls.py`'s current scope** is HTML-listing-page harvesting only: plain pagination (`--url-template` + `--page-range`), Squarespace's search API (`--squarespace-search-page`), Google Programmable Search / CSE (`--google-cse-search-page`), and `search.usa.gov` (`--usa-search`). All four output a deduplicated URL list. They do not talk to an agency's own structured data API.
 
-**What "beefing it up" means concretely:** extending `fetch_source_urls.py` so that, for a source with a real API, it can emit the same *resolved-record* shape `scrape_doj.py` already proved out for DOJ — `{title, byline, body, pub_date, agency, source_url}` — instead of just a bare URL list. That resolved-record shape is already a first-class input to `scrape_pdf.py` via `--doj-file`, so a harvester that speaks a new agency's API directly could hand its output straight to `scrape_pdf.py` without an intermediate scrape step at all, the same way DOJ records skip fetch/extract entirely today. Concretely, this would mean: (1) detecting/declaring which agencies in the expansion queue have a usable API, (2) adding a per-API harvest mode to `fetch_source_urls.py` (or a sibling module) that queries it and normalizes results into the resolved-record shape, and (3) feeding that output into the existing `--doj-file` path unchanged. No changes to `scrape_pdf.py`'s conversion logic would be needed — that part is already source-agnostic; this is purely about widening what feeds it.
+**DOJ discovery is already the sibling:** `harvest_doj_psc.py` queries the News API and emits the resolved-record shape `scrape_pdf.py --doj-file` already accepts. Other agencies still need the same pattern (detect API → normalize to `{title, byline, body, pub_date, agency, source_url}` → `--doj-file`). No changes to `scrape_pdf.py` conversion logic.

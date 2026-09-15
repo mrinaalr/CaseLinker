@@ -98,6 +98,69 @@ class TestUsaoAgency(unittest.TestCase):
         self.assertEqual(out2, "U.S. Attorney's Office")
 
 
+class TestDistinctNamedAgenciesLeOnly(unittest.TestCase):
+    def test_drops_fire_and_child_welfare(self):
+        kept = set(
+            norm.distinct_named_agencies(
+                [
+                    "Austin Police Department",
+                    "Travis County Sheriff's Office",
+                    "Austin Fire Department",
+                    "Miramar Fire Rescue Department",
+                    "Illinois Department of Children and Family Services",
+                    "California Department of Education",
+                    "NCMEC",
+                    "Federal Express",
+                ]
+            )
+        )
+        self.assertIn("Austin Police Department", kept)
+        self.assertIn("Travis County Sheriff's Office", kept)
+        self.assertFalse(any("fire" in x.casefold() for x in kept))
+        self.assertFalse(any("children and family" in x.casefold() for x in kept))
+        self.assertNotIn("NCMEC", kept)
+        self.assertFalse(any("express" in x.casefold() for x in kept))
+
+    def test_keeps_prosecutors_corrections_campus_safety(self):
+        kept = set(
+            norm.distinct_named_agencies(
+                [
+                    "Hudson County Prosecutor's Office",
+                    "Ohio Attorney General's Office",
+                    "U.S. Attorney's Office",
+                    "Tennessee Department of Correction",
+                    "University of Iowa Department of Campus Safety",
+                    "Illinois High Tech Crimes Bureau",
+                    "New Jersey Department of Children and Families Hudson County Prosecutor's Office",
+                ]
+            )
+        )
+        self.assertTrue(any("prosecutor" in x.casefold() for x in kept))
+        self.assertTrue(any("attorney general" in x.casefold() for x in kept))
+        self.assertIn("U.S. Attorney's Office", kept)
+        self.assertTrue(any("correction" in x.casefold() for x in kept))
+        self.assertTrue(any("campus safety" in x.casefold() for x in kept))
+        self.assertIn("Illinois High Tech Crimes Bureau", kept)
+
+    def test_keeps_atf_and_county_attorneys_not_fire(self):
+        kept = set(
+            norm.distinct_named_agencies(
+                [
+                    "Bureau of Alcohol, Tobacco, Firearms and Explosives",
+                    "Maricopa County Attorney's Office",
+                    "Baltimore HSI",
+                    "Chicago Fire Department",
+                    "Arizona Department of Child Safety",
+                ]
+            )
+        )
+        self.assertIn("ATF", kept)
+        self.assertTrue(any("maricopa" in x.casefold() for x in kept))
+        self.assertIn("HSI", kept)
+        self.assertFalse(any("fire" in x.casefold() for x in kept))
+        self.assertFalse(any("child safety" in x.casefold() for x in kept))
+
+
 class TestRsoAndPriorConviction(unittest.TestCase):
     def test_registered_sex_offender(self):
         text = "Smith, a registered sex offender, was arrested after an investigation."

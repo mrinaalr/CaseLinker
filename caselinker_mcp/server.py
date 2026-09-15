@@ -180,7 +180,7 @@ _SOURCES: list[dict[str, str]] = [
     {"code": "PA AG", "name": "Pennsylvania Office of the Attorney General", "description": "Child Predator / ICAC-related releases"},
     {"code": "NJ AG", "name": "New Jersey Office of the Attorney General", "description": "ICAC site search"},
     {"code": "WCSO", "name": "Washoe County Sheriff's Office", "description": "Nevada ICAC newsroom search"},
-    {"code": "DOJ CEOS", "name": "U.S. DOJ CEOS", "description": "Child Exploitation and Obscenity Section press releases"},
+    {"code": "DOJ CEOS", "name": "U.S. DOJ CEOS", "description": "Child Exploitation and Obscenity Section press releases; Project Safe Childhood USAO prosecutions are a DOJ-family card (DOJ SAFE CHILDHOOD)"},
     {"code": "DOJ ARCHIVES", "name": "U.S. DOJ CEOS Archives", "description": "Archived CEOS criminal press releases (2002-2008)"},
     {"code": "USSS", "name": "U.S. Secret Service", "description": "ICAC-related newsroom press releases"},
     {"code": "US MARSHALS", "name": "U.S. Marshals Service", "description": "Press releases on child predators and recovered minors"},

@@ -20,6 +20,11 @@ No API key. Self-throttles under the documented 4 req/s cap.
 usage:
     python3 harvest_doj_psc.py
     python3 harvest_doj_psc.py --limit-pages 2   # smoke
+    python3 harvest_doj_psc.py --max-keep 0      # no cap (older than the last 2,200)
+
+    # Same pipeline, different topic (CAC gate off — that filter is ICAC-specific):
+    python3 harvest_doj_psc.py --slug doj_fentanyl --skip-cac \\
+        --require 'fentanyl|methamphetamine' --title-term fentanyl --max-keep 2200
 """
 
 from __future__ import annotations
@@ -140,11 +145,17 @@ def _urls_from_pdf_bytes(path: Path) -> set[str]:
     return out
 
 
-def existing_doj_urls() -> set[str]:
+def existing_doj_urls(extra: list[Path] | None = None) -> set[str]:
     urls: set[str] = set()
-    for path in EXISTING_DOJ_PDFS:
-        if not path.is_file():
+    paths = list(EXISTING_DOJ_PDFS)
+    if extra:
+        paths.extend(extra)
+    seen_paths: set[Path] = set()
+    for path in paths:
+        path = path.resolve()
+        if path in seen_paths or not path.is_file():
             continue
+        seen_paths.add(path)
         found = {u for u in _urls_from_pdf_bytes(path) if "justice.gov" in u}
         print(f"  baseline {path.name}: {len(found)} justice.gov URLs", file=sys.stderr)
         urls |= found
@@ -232,7 +243,13 @@ def canonical_url(raw: str) -> str:
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser(description="Harvest PSC prosecutions from the DOJ News API.")
+    ap = argparse.ArgumentParser(
+        description=(
+            "Page the DOJ News API by title terms, filter, emit scrape_pdf.py --doj-file JSON. "
+            "Defaults are the Project Safe Childhood recipe; override --title-term/--require/--skip-cac "
+            "for any other DOJ topic (drugs, fraud, …)."
+        )
+    )
     ap.add_argument("--limit-pages", type=int, default=None, help="Max pages per title term (smoke).")
     ap.add_argument(
         "--keep-early",
@@ -250,14 +267,62 @@ def main() -> None:
         default=2200,
         help="Stop after this many kept records (newest first). 0 = no cap.",
     )
+    ap.add_argument(
+        "--title-term",
+        action="append",
+        dest="title_terms",
+        help="Title substring to page (repeatable). Default: built-in CAC prosecution phrasing.",
+    )
+    ap.add_argument(
+        "--require",
+        default=None,
+        help="Regex that title or body must match. Default: Project Safe Childhood.",
+    )
+    ap.add_argument(
+        "--skip-cac",
+        action="store_true",
+        help="Do not run verify_cac.py (required for non-ICAC topics: drugs, fraud, …).",
+    )
+    ap.add_argument(
+        "--slug",
+        default="doj_psc",
+        help="Output filename prefix (doj_psc_resolved_novel.json, …).",
+    )
+    ap.add_argument(
+        "--source",
+        default="DOJ SAFE CHILDHOOD",
+        help="Source label stored on CAC-gate probe records (ingest uses the PDF filename).",
+    )
+    ap.add_argument(
+        "--baseline-pdf",
+        action="append",
+        type=Path,
+        default=[],
+        help="Extra merged PDF to treat as already-seen justice.gov URLs (repeatable).",
+    )
+    ap.add_argument(
+        "--until",
+        default=None,
+        help="Keep records with pub_date strictly before this YYYY-MM-DD (e.g. 2010-01-01).",
+    )
+    ap.add_argument(
+        "--direction",
+        choices=("ASC", "DESC"),
+        default=None,
+        help="API date sort. Default DESC; ASC when --until is set so old years are first.",
+    )
     args = ap.parse_args()
 
     scrape_doj = _load_scrape_doj()
-    verify_cac = _load_verify_cac()
+    verify_cac = None if args.skip_cac else _load_verify_cac()
+    require_re = re.compile(args.require, re.I) if args.require else PSC_RE
+    title_terms = tuple(args.title_terms) if args.title_terms else TITLE_TERMS
+    sort_dir = args.direction or ("ASC" if args.until else "DESC")
+    until_s = args.until
 
     args.out_dir.mkdir(parents=True, exist_ok=True)
     print("Loading existing DOJ PDF URLs for novelty…", file=sys.stderr)
-    seen_urls = existing_doj_urls()
+    seen_urls = existing_doj_urls(args.baseline_pdf)
     print(f"  baseline unique justice.gov URLs: {len(seen_urls)}", file=sys.stderr)
     other_hits = justice_gov_in_other_corpus_pdfs()
     if other_hits:
@@ -285,9 +350,14 @@ def main() -> None:
         title = (rec.get("title") or "").strip()
         raw_body = rec.get("body") or ""
         url = canonical_url(rec.get("url") or "")
+        pub_date = scrape_doj._epoch_to_date(rec.get("date"))
+        if until_s:
+            if not pub_date or pub_date.isoformat() >= until_s:
+                stats["drop_until"] += 1
+                return False
         blob = f"{title}\n{raw_body}"
-        if not PSC_RE.search(blob):
-            stats["drop_no_psc"] += 1
+        if not require_re.search(blob):
+            stats["drop_no_require"] += 1
             return False
         if NOISE_RE.search(title) or NOISE_RE.search(raw_body[:800]):
             if NOISE_RE.search(title) or classify_stage(title) in {"early", "other"}:
@@ -307,20 +377,20 @@ def main() -> None:
         if not url:
             stats["drop_no_url"] += 1
             return False
-        cac_case = {
-            "id": uid,
-            "source": "DOJ SAFE CHILDHOOD",
-            "source_url": url,
-            "case_text": f"{title}\n{body}",
-        }
-        if not verify_cac.is_cac_case(cac_case):
-            stats["drop_cac"] += 1
-            return False
+        if verify_cac is not None:
+            cac_case = {
+                "id": uid,
+                "source": args.source,
+                "source_url": url,
+                "case_text": f"{title}\n{body}",
+            }
+            if not verify_cac.is_cac_case(cac_case):
+                stats["drop_cac"] += 1
+                return False
         norm = _normalize_url(url)
         novel = norm not in seen_urls
         if not novel:
             stats["already_in_doj_pdf"] += 1
-        pub_date = scrape_doj._epoch_to_date(rec.get("date"))
         components = rec.get("component") or []
         agency = ""
         if components and isinstance(components[0], dict):
@@ -344,7 +414,7 @@ def main() -> None:
             return True
         return False
 
-    for term in TITLE_TERMS:
+    for term in title_terms:
         print(f"\n=== title term: {term} (kept {len(kept)}) ===", file=sys.stderr)
         page = 0
         while True:
@@ -355,7 +425,7 @@ def main() -> None:
                         "pagesize": PAGESIZE,
                         "page": page,
                         "sort": "date",
-                        "direction": "DESC",
+                        "direction": sort_dir,
                     }
                 )
             except Exception as exc:
@@ -369,11 +439,19 @@ def main() -> None:
                 f"    [{term}] page {page} +{len(results)} scanned={stats['api_records']} kept={len(kept)}/{total}",
                 file=sys.stderr,
             )
+            page_past_until = 0
             for rec in results:
                 if consider(rec):
                     hit_cap = True
                     break
+                if until_s:
+                    pd = scrape_doj._epoch_to_date(rec.get("date"))
+                    if pd and pd.isoformat() >= until_s:
+                        page_past_until += 1
             if hit_cap or not results:
+                break
+            if until_s and sort_dir == "ASC" and results and page_past_until == len(results):
+                print(f"    [{term}] reached --until {until_s}; next term.", file=sys.stderr)
                 break
             if (page + 1) * PAGESIZE >= total:
                 break
@@ -387,10 +465,10 @@ def main() -> None:
     kept.sort(key=lambda r: (r.get("pub_date") or "", r["title"]), reverse=True)
     novel = [r for r in kept if r["novel_vs_doj_pdfs"]]
 
-    resolved_path = args.out_dir / "doj_psc_resolved.json"
-    urls_path = args.out_dir / "doj_psc_urls.txt"
-    novel_path = args.out_dir / "doj_psc_resolved_novel.json"
-    summary_path = args.out_dir / "doj_psc_harvest_summary.json"
+    resolved_path = args.out_dir / f"{args.slug}_resolved.json"
+    urls_path = args.out_dir / f"{args.slug}_urls.txt"
+    novel_path = args.out_dir / f"{args.slug}_resolved_novel.json"
+    summary_path = args.out_dir / f"{args.slug}_harvest_summary.json"
 
     resolved_path.write_text(json.dumps(kept, indent=2), encoding="utf-8")
     novel_path.write_text(json.dumps(novel, indent=2), encoding="utf-8")
@@ -406,6 +484,10 @@ def main() -> None:
         "justice_gov_in_ag_icac_pdfs": other_hits,
         "hit_max_keep": hit_cap,
         "max_keep": args.max_keep,
+        "slug": args.slug,
+        "skip_cac": args.skip_cac,
+        "require": args.require or r"\bProject\s+Safe\s+Childhood\b",
+        "title_terms": list(title_terms),
         "by_stage": {
             "sentenced": stats["keep_sentenced"],
             "plea_or_convicted": stats["keep_plea_or_convicted"],
@@ -417,7 +499,7 @@ def main() -> None:
     }
     summary_path.write_text(json.dumps(summary, indent=2), encoding="utf-8")
 
-    print("\n======== PSC harvest ========")
+    print("\n======== DOJ harvest ========")
     print(json.dumps(summary, indent=2))
     print(f"Wrote {resolved_path}")
     print(f"Wrote {novel_path}")

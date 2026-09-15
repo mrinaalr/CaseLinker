@@ -98,7 +98,7 @@ How to query the live store, including GET vs POST, `VALUES` + `LIMIT` ordering,
 
 ## Graph pools
 
-Live SPARQL loads **every** press-release case graph (**7,426** `cac:CACInvestigation` named graphs as of the current rebuild). Separately, **297** PACER CASE-UCO graphs live under `urn:pacer:kg:…` (see [docs/SPARQL.md](docs/SPARQL.md#two-pacer-named-graph-families)). The Ontology & Graphs UI / MCP use smaller locked viz subsets. Display membership is the txt files — do not edit the counts by hand.
+The repo holds **10,000** press-release case graphs (`cac:CACInvestigation`, one named graph per case) for the **10,000 case reports** / **120,272 extracted features** corpus. Live SPARQL on Railway updates when those graphs are loaded. Separately, **297** PACER CASE-UCO graphs live under `urn:pacer:kg:…` (see [docs/SPARQL.md](docs/SPARQL.md#two-pacer-named-graph-families)). The Ontology & Graphs UI / MCP use smaller locked viz subsets. Display membership is the txt files — do not edit the counts by hand.
 
 | Pool | ID list | Folder | Used by |
 |---|---|---|---|
@@ -143,7 +143,7 @@ Rebuild tables: `python3 ontology/q1/q1_evidence.py` (same pattern for q2/q3). N
 
 ## PACER and lifecycle
 
-[`PACER/`](PACER/) holds public federal docket material modeled by the CASE-UCO SDK (41 investigations, 128 documents, annotations across enterprise / enticement / production / sextortion / trafficking). Loaded into Oxigraph as **297** named graphs `urn:pacer:kg:…` via [`scripts/load_pacer_jsonld.py`](../scripts/load_pacer_jsonld.py). Those graphs also feed CAC state machines under `state_machines/` and the `/lifecycle` UI. They are a **court-record overlay**, not a substitute for the 7,426 press-release case graphs.
+[`PACER/`](PACER/) holds public federal docket material modeled by the CASE-UCO SDK (41 investigations, 128 documents, annotations across enterprise / enticement / production / sextortion / trafficking). Loaded into Oxigraph as **297** named graphs `urn:pacer:kg:…` via [`scripts/load_pacer_jsonld.py`](../scripts/load_pacer_jsonld.py). Those graphs also feed CAC state machines under `state_machines/` and the `/lifecycle` UI. They are a **court-record overlay**, not a substitute for the 10,000 press-release case graphs.
 
 ## MCP (on-demand cohorts)
 

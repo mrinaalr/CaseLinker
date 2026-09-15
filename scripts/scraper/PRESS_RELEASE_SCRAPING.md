@@ -2,7 +2,9 @@
 
 This document is for **agents and humans** who add or refresh **press-release sources** for CaseLinker. It covers:
 
-**listing/search page → article URLs → per-article PDFs → one merged PDF**
+**listing/search page or DOJ API → article records → per-article PDFs → one merged PDF**
+
+The PDF engine is **topic-agnostic**. ICAC listing queries (`child sexual`) and `verify_cac.py` are filters for the CAC corpus, not a limit on what `scrape_pdf.py` will convert. Any public press release (DOJ, USAO, state AG, sheriff, ICE, …) uses the same layout.
 
 ---
 
@@ -28,13 +30,52 @@ Instead, DOJ publishes a public press-release API that needs no bot-wall workaro
 - Docs: `https://www.justice.gov/developer/api-documentation/api_v1`
 - `parameters[title]` does a **substring** match against the title — not exact/quoted, despite how the docs example reads
 - `page=` and `pagesize=` are **top-level** query params, *not* nested under `parameters[...]`
-- Rate limit per the docs: **4 requests/second** (`scrape_doj.py` self-throttles to ~3.3 req/s to stay comfortably under it)
+- Rate limit per the docs: **4 requests/second** (`harvest_doj_psc.py` and `scrape_doj.py` self-throttle to ~3 req/s)
 - No API key required
-- The `body` field is raw HTML — `<p>` blocks, `&nbsp;`, embedded `<a>`/`<br>`, and sometimes an addendum `<table>` (defendant / role / charges / status rows). A naive "grab all `<p>` text" strip silently **drops the table** — real content, not noise. `scrape_doj.py`'s `clean_doj_api_body()` walks `<p>` and `<tr>` in document order so table rows survive as their own line.
+- `parameters[topic]`, `body`, and `component` **do nothing** — title + date only. Confirm with a `pagesize=1` count before a long harvest.
+- Title `"Project Safe Childhood"` is ~87 hits (mostly quarterly rollups). Most PSC prosecutions hide the phrase in the **body** footer.
+- `justice.gov/psc/press-room` is a curated listing (~12/page) but **page>0 returns HTTP 403**. Do not crawl it.
+- The `body` field is raw HTML — `<p>` blocks, `&nbsp;`, embedded `<a>`/`<br>`, and sometimes an addendum `<table>` (defendant / role / charges / status rows). A naive "grab all `<p>` text" strip silently **drops the table**. `scrape_doj.py`'s `clean_doj_api_body()` walks `<p>` and `<tr>` in document order so table rows survive as their own line.
 
-There's no direct "search by URL" API parameter, so matching a specific `justice.gov` URL to its API record works by: deriving search keywords from the URL's slug, querying `parameters[title]`, then confirming an **exact slug match** against each candidate's `url` field (title-substring search alone returns too many near-miss titles to trust blindly — DOJ often republishes the same case under slightly different titles, e.g. "...Elder **Fraud** Scheme" vs "...Elder **Abuse** Scheme" for the same prosecution).
+There is **no** “search by URL” parameter. Two tools, two jobs — do not mix them up:
 
-`scrape_doj.py` (see below) is the entry point that does this resolution automatically — you should not need to call the DOJ API by hand.
+| Job | Tool | What it does |
+|-----|------|----------------|
+| Discover records by topic | `harvest_doj_psc.py` | Pages each `--title-term` newest-first until `--max-keep` or the resultset ends. Filters. Writes `--doj-file` JSON. |
+| Resolve URLs you already have | `scrape_doj.py` | For each `justice.gov` URL: derive slug keywords, query title, **exact slug match**. Max **6 pages (300 hits)** per URL — enough for lookup, not for a 14k title crawl. |
+
+Do not call the API from a one-off `urllib` script unless you are probing a count (`pagesize=1`). Harvest and resolve already exist.
+
+### `harvest_doj_psc.py` — DOJ discovery (PSC recipe, any topic)
+
+Defaults keep Project Safe Childhood prosecutions (CAC title terms, PSC in title/body, drop grants/rollups, sentencing over plea, `verify_cac.py`). Override flags for the next PSC batch or a different crime type.
+
+```bash
+cd scripts/scraper
+
+# Smoke
+python3 harvest_doj_psc.py --limit-pages 1 --max-keep 20
+
+# Another 2,000+ PSC records (no cap; skip URLs already in the merged PDF)
+python3 harvest_doj_psc.py --max-keep 0 --baseline-pdf ../../DOJ_SAFE_CHILDHOOD.pdf
+python3 scrape_pdf.py --doj-file sources/doj_psc_resolved_novel.json \
+  --out-dir ../.. --out-name DOJ_SAFE_CHILDHOOD_MORE.pdf
+
+# DOJ drugs / any other title universe — same PDF path, no CAC gate
+python3 harvest_doj_psc.py --slug doj_fentanyl --skip-cac \
+  --require 'fentanyl' --title-term fentanyl --title-term 'controlled substance' \
+  --max-keep 2200
+python3 scrape_pdf.py --doj-file sources/doj_fentanyl_resolved_novel.json \
+  --out-dir ../.. --out-name DOJ_FENTANYL_All.pdf
+```
+
+Useful flags: `--title-term` (repeatable; replaces built-in CAC phrasing), `--require` (regex on title+body), `--skip-cac`, `--keep-early` (keep arrest/indictment titles), `--slug` (output prefix), `--source` (label on CAC-gate probes), `--baseline-pdf` (repeatable extra novelty PDF), `--max-keep 0` (exhaust the paged terms).
+
+Novelty is **URL vs existing DOJ PDFs** (`DOJ_CEOS_All.pdf`, `DOJ_ARCHIVES_All.pdf`, `DOJ_AI_CSAM_All.pdf`, `DOJ_SAFE_CHILDHOOD.pdf`, plus `--baseline-pdf`). Use `*_resolved_novel.json` for the PDF. Dedup inside the harvest is by API `uuid`. This is **not** unique-offender identity.
+
+`--max-keep` counts **kept** records, newest first. The first PSC ingest capped at 2,200 (2,192 novel vs then-existing DOJ PDFs). Raising/removing the cap is how you pull older years.
+
+After the PDF: wire a new source like CEOS (`ingestion.py`, `batching.py`, `src/main.py` `DOJ_SOURCES`, `agency_context_gate.py`, `visualization/sources.html`) if it is a new CaseLinker source key. Reuse `DOJ SAFE CHILDHOOD` only when appending more PSC.
 
 ---
 
@@ -60,6 +101,7 @@ Identify where the agency publishes what you care about:
 
 | Pattern | Examples |
 |--------|----------|
+| **DOJ News API** (no HTML listing) | `harvest_doj_psc.py` — see justice.gov section above |
 | Site search `?s=…` / `?q=…` | Osceola `?s=ICAC`, Iowa DPS `?q=ICAC` |
 | Dedicated news index | `/news/`, `/media-relations/`, `/press-releases/` |
 | Paginated search template | `…&page={page}`, `start=0,20,40`, `start_rank=1:91:10` |
@@ -306,9 +348,10 @@ python3 scrape_pdf.py --url-file <(echo 'https://...') --out-dir /tmp/scrape-tes
 
 ```
 scripts/scraper/
-  scrape_pdf.py              # HTML/PDF → per-article PDF → merge
-  scrape_doj.py             # DOJ API bridge → resolved/scrape-mode JSON for scrape_pdf.py --doj-file
-  fetch_source_urls.py         # listing pages → url list
+  scrape_pdf.py              # HTML/PDF / --doj-file → per-article PDF → merge
+  scrape_doj.py              # known justice.gov URLs → resolved JSON
+  harvest_doj_psc.py         # DOJ API discovery (PSC defaults; any topic via flags)
+  fetch_source_urls.py       # listing pages → url list
   urls.txt                     # optional: active run list (often copied from sources/)
   sources/
     urls.txt                   # active run list (scrape_doj.py / scrape_pdf.py input)
@@ -459,10 +502,15 @@ python3 filter_merged_pdf.py \
 # Clear cache for one host
 rm -rf ../../tmp ../scrape_output/tmp  # adjust path to your --out-dir/tmp
 
-# DOJ (justice.gov) mixed in with other sources — resolve via API, then scrape the rest
+# DOJ — already have justice.gov URLs
 python3 scrape_doj.py --url-file sources/urls.txt --out sources/urls_resolved.json
 python3 scrape_pdf.py --doj-file sources/urls_resolved.json \
   --out-dir ../.. --out-name MIXED_BATCH_All.pdf
+
+# DOJ — discovery by topic (no URL list). Next PSC batch or any crime type.
+python3 harvest_doj_psc.py --max-keep 0 --baseline-pdf ../../DOJ_SAFE_CHILDHOOD.pdf
+python3 scrape_pdf.py --doj-file sources/doj_psc_resolved_novel.json \
+  --out-dir ../.. --out-name DOJ_SAFE_CHILDHOOD_MORE.pdf
 ```
 
 ---
@@ -481,7 +529,8 @@ python3 scrape_pdf.py --doj-file sources/urls_resolved.json \
 | File | Role |
 |------|------|
 | `scrape_pdf.py` | Extract, PDF layout, merge, cache, Jina, native PDF, `--doj-file` intake |
-| `scrape_doj.py` | DOJ API bridge — resolves justice.gov URLs via the API, passes everything else through unchanged |
+| `harvest_doj_psc.py` | DOJ API discovery → `--doj-file` JSON (PSC defaults; `--skip-cac` / `--title-term` for other topics) |
+| `scrape_doj.py` | Resolves known justice.gov URLs via the API; passes everything else through |
 | `fetch_source_urls.py` | Pagination, filters, Squarespace search API |
 | `urls.txt` | Example active list (often copied per run) |
 

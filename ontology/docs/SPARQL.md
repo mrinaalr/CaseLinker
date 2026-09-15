@@ -113,10 +113,11 @@ Other CAC modules appear when the mapped features need them (`grooming#`, `custo
 
 | Fact | How to read it |
 |---|---|
-| Relational case count | `GET https://caselinker.up.railway.app/api/case-count` |
-| Graph case count | `SELECT (COUNT(DISTINCT ?s) AS ?n) WHERE { GRAPH ?g { ?s a cac:CACInvestigation } FILTER(STRSTARTS(STR(?g), "https://caselinker.up.railway.app/resource/case/")) }` (expect **7,426**) |
+| Relational case count | `GET https://caselinker.up.railway.app/api/case-count` (local sqlite **10,000**) |
+| Extracted features / agencies | `GET /api/stats` → `unique_features` **120,272**, `unique_organizations` **4,000+** distinct LE agencies after ingest normalize plus LE-only filter (`source_count` **56**, Project Safe Childhood counted in the DOJ family) |
+| Graph case count | `SELECT (COUNT(DISTINCT ?s) AS ?n) WHERE { GRAPH ?g { ?s a cac:CACInvestigation } FILTER(STRSTARTS(STR(?g), "https://caselinker.up.railway.app/resource/case/")) }` (local set **10,000**; hosted SPARQL matches after Oxigraph load) |
 | PACER KG graphs | `SELECT (COUNT(DISTINCT ?g) AS ?n) WHERE { GRAPH ?g { ?s ?p ?o } FILTER(STRSTARTS(STR(?g), "urn:pacer:kg:")) }` (expect **297**) |
-| Named graphs (press release) | one per case; same **7,426** count |
+| Named graphs (press release) | one per case; **10,000** locally |
 | Graph generation time | `dcterms:created` / `dcterms:modified` on the investigation (remap time, not offense date) |
 | Public source | `dcterms:source` (press-release URL and/or source label) |
 | Reload | wholesale `python3 scripts/rebuild_oxigraph.py` (not incremental) |

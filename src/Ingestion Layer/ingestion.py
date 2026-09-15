@@ -240,6 +240,10 @@ def detect_source_from_content(text: str, filename: str) -> str:
         return 'DOJ SAFE CHILDHOOD'
     elif 'doj_ceos' in filename_lower or ('doj' in filename_lower and 'ceos' in filename_lower):
         return 'DOJ CEOS'
+    elif 'doj_bulk' in filename_lower or (
+        'doj' in filename_lower and 'bulk' in filename_lower
+    ):
+        return 'DOJ CEOS'
     elif 'doj_archives' in filename_lower or ('doj' in filename_lower and 'archive' in filename_lower):
         return 'DOJ ARCHIVES'
     elif 'fbi' in filename_lower:
