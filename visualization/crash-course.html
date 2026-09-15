@@ -197,7 +197,7 @@
 
     .flow {
       display: grid;
-      grid-template-columns: 1fr 18px 1fr 18px 1fr;
+      grid-template-columns: 1fr 18px 1fr 18px 1fr 18px 1fr;
       gap: 12px 0;
       align-items: stretch;
       margin: 8px 0 32px;
@@ -351,7 +351,7 @@
       background: var(--paper);
     }
     .chip:hover { border-color: var(--pine); color: var(--pine); }
-    .chip.repo { font-family: "IBM Plex Mono", monospace; font-weight: 400; }
+    .chip.repo, .chip.ext { font-family: "IBM Plex Mono", monospace; font-weight: 400; }
     .nav-row {
       display: flex;
       justify-content: space-between;
@@ -475,6 +475,13 @@
             <button class="node" data-go="sparql"><strong>SPARQL</strong><span>Query language for graphs. SQL’s analogue.</span></button>
             <button class="node" data-go="tools"><strong>App, REST, MCP</strong><span>37 tools. Read-only.</span></button>
           </div>
+          <div class="arrow" aria-hidden="true">→</div>
+          <div class="col">
+            <h2>Analyze</h2>
+            <button class="node" data-go="questions"><strong>Q1–Q3</strong><span>Platform harm, offense subsets, Affordances for Harm</span></button>
+            <button class="node" data-go="harm"><strong>Platform harm</strong><span>/visualization · affordance → misuse → harm</span></button>
+            <button class="node" data-go="lstar"><strong>Lifecycle / L*</strong><span>PACER state machines · Bellman L*</span></button>
+          </div>
         </div>
       </section>
 
@@ -510,6 +517,7 @@
     const GH = "https://github.com/mrinaalr/CaseLinker/blob/main/";
     const repo = (path, label) => ({ href: GH + path, label: label || path, kind: "repo" });
     const app = (href, label) => ({ href, label, kind: "app" });
+    const ext = (href, label) => ({ href, label, kind: "ext" });
 
     const SLIDES = [
       {
@@ -563,7 +571,7 @@
         station: "collect",
         kicker: "The crash · 04",
         title: "Collection is press-release → PDF",
-        lede: "The scraper suite turns any public press release — a URL list or a DOJ News API harvest — into a structured PDF. ICAC/CAC filters are optional gates, not the engine.",
+        lede: "The scraper suite turns any public press release — a URL list or a DOJ News API harvest — into a structured PDF. The engine is topic-agnostic; ICAC/CAC filters are optional gates.",
         points: [
           ["Topic-agnostic engine", "scrape_pdf.py will convert any public article URL, or any DOJ API resolved record, into the same Title / Publication date / Source: https:// / body layout."],
           ["Two things to notice", "Discovery and PDF conversion are separate. Empty or wrong inputs produce empty or wrong PDFs."]
@@ -626,11 +634,11 @@
         station: "onto",
         kicker: "The crash · 08",
         title: "Ontology layer",
-        lede: "An ontology here is a formal vocabulary of typed, related objects. CaseLinker does not invent predicates; it binds extracted features to CAC classes and CASE/UCO types.",
+        lede: "An ontology here is a formal vocabulary of typed, related objects. CaseLinker binds extracted features to CAC classes and CASE/UCO types.",
         points: [
           ["Vocabulary", "CAC Ontology (Project VIC) on the Linux Foundation Cyber Domain Ontology stack: CASE and UCO."],
           ["Pipeline", "Case features → deterministic mapping (features_to_cac.py) → per-case Turtle and JSON-LD → SHACL → Oxigraph. Only conformant graphs enter the merged corpus."],
-          ["Why graphs", "To answer relational and analytical questions at corpus scale, enforcement narratives cannot stay only in relational tables and regex-derived tags."]
+          ["Why graphs", "Relational and analytical questions at corpus scale need typed entities and edges — beyond relational tables and regex-derived tags."]
         ],
         links: [repo("README.md", "README.md · Ontology & Graphs"), repo("ontology/README.md"), repo("ontology/MAPPING_PLAN.md"), repo("ontology/features_to_cac.py", "features_to_cac.py")]
       },
@@ -645,7 +653,7 @@
           ["Endpoint", "GET|POST /sparql. SELECT, CONSTRUCT, ASK, DESCRIBE. No auth. Update and SERVICE are rejected."],
           ["Limits", "30 requests / minute / client IP. Default outer LIMIT 1000; max outer LIMIT 10,000. Store timeout 32s."],
           ["Named graphs", "Each case is one named graph. Oxigraph runs with --union-default-graph. Triple patterns without GRAPH see the union."],
-          ["MCP does not execute SPARQL", "Use curl, OpenAPI /docs, or the CASE/UCO SDK execute_sparql_query tool against the published store."]
+          ["SPARQL clients", "curl, OpenAPI /docs, or the CASE/UCO SDK execute_sparql_query tool against the published store. MCP builds session graphs from case IDs."]
         ],
         figure: "ASK { ?s a cac:CACInvestigation }",
         links: [repo("ontology/docs/SPARQL.md"), app("/docs", "OpenAPI /docs"), app("/sparql", "/sparql"), repo("run/sparql_proxy.py", "sparql_proxy.py")]
@@ -656,13 +664,14 @@
         station: "tools",
         kicker: "The crash · 10",
         title: "Tools you will actually use",
-        lede: "Same store, three surfaces.",
+        lede: "Same data, three entry points.",
         points: [
-          ["Web", "Home, Visualization, Search (facet decision tree), Analysis, Clusters, Stats, Query, Lifecycle, Triage, Ontology & Graphs, Tech Landscape, LLM, Sources, Audit, Case Studies, Look Under the Hood."],
-          ["REST", "Interactive API documentation at /docs. Public routes are rate limited. Trusted CaseLinker-Key for bulk export and unsanitized narratives."],
-          ["MCP", "37 tools: 32 public, 5 trusted-key sensitive. 29 REST wrappers, 8 MCP-only."],
+          ["Web — pick by job", "Cohorts: Search. Tag intersection and grouping: Analysis. Rank a narrative: Triage. Extraction QA: Audit. Platform affordances: Visualization. Court-record phases: Lifecycle. Typed relations: Ontology & Graphs. Era narratives: Case Studies. Tech-by-era: Tech Landscape. NL over stats: LLM. Browser API lab: Query."],
+          ["REST", "Interactive docs at /docs. The UI and MCP wrap the same routes. Public is rate limited. CaseLinker-Key unlocks bulk export, full narratives, lifecycle JSON, and L*."],
+          ["MCP", "37 tools, read-only, no database mutation. 29 REST wrappers, 8 MCP-only. 32 public, 5 trusted-key sensitive. SPARQL stays on curl, /docs, or the CASE/UCO SDK."]
         ],
-        links: [repo("README.md", "README.md · Other Features"), repo("caselinker_mcp/README.md"), repo("caselinker_mcp/tool_registry.md"), app("/docs", "/docs"), app("/under-the-hood", "Under the Hood")]
+        figure: "Job  →  Web page  ·  same job  →  /api/*  ·  agent  →  MCP tool",
+        links: [repo("caselinker_mcp/tool_registry.md"), app("/docs", "/docs"), app("/under-the-hood", "Under the Hood"), app("/crash-course#s/surfaces", "Deeper · surfaces")]
       },
       {
         id: "pdf-layout",
@@ -673,7 +682,7 @@
         title: "What the PDF must look like",
         lede: "Every article in the merged PDF must be a self-contained press-release page with a predictable header block.",
         points: [
-          ["Required layout", "Title. Optional byline. Publication date: YYYY-MM-DD when resolvable. Source: https://… — required; downstream splitting keys off this line. Body: paragraphs of the release, not site chrome."],
+          ["Required layout", "Title. Optional byline. Publication date: YYYY-MM-DD when resolvable. Source: https://… — required; downstream splitting keys off this line. Body: paragraphs of the release."],
           ["How it is built", "scrape_pdf.py uses ReportLab, then merges with pypdf. Generic HTML works for many sites; some hosts need host-specific extractors or Jina cleanup."],
           ["Healthy probe", "Title looks like the headline. Body well above 80 characters (MIN_BODY_CHARS). Preview reads like a press release."]
         ],
@@ -690,8 +699,8 @@
         points: [
           ["scrape_pdf.py", "The core engine. Any press-release URL, or a --doj-file resolved record → one ReportLab page → merged PDF. Topic-agnostic."],
           ["harvest_doj_psc.py", "DOJ API discovery. Pages parameters[title], newest first. Defaults are Project Safe Childhood; same script does other topics with flags."],
-          ["scrape_doj.py", "A router, not a search harvester. Looks up known justice.gov URLs in the API (max 6 pages / 300 hits per query). Passes non-DOJ URLs through as mode: scrape."],
-          ["fetch_source_urls.py", "HTML listing harvester. Paginated newsrooms, Squarespace, Google CSE, search.usa.gov. Not the DOJ API."],
+          ["scrape_doj.py", "Resolves known justice.gov URLs in the News API (max 6 pages / 300 hits per query). Passes non-DOJ URLs through as mode: scrape."],
+          ["fetch_source_urls.py", "HTML listing harvester. Paginated newsrooms, Squarespace, Google CSE, search.usa.gov."],
           ["After merge", "filter_merged_pdf.py, remove_pdf_pages_by_text.py, check_expand_novelty.py."]
         ],
         links: [repo("scripts/scraper/README.md", "scripts/scraper/README.md · Suite map")]
@@ -718,11 +727,11 @@
         kicker: "Deeper · collection",
         nav: "justice.gov",
         title: "justice.gov is different",
-        lede: "Direct requests get a ~2.4KB challenge shell. Do not attempt to solve the challenge. That is bot-wall evasion, not scraping, and this repo does not do that.",
+        lede: "Direct requests get a ~2.4KB challenge shell. This repo uses the public News API.",
         points: [
           ["Public News API", "No key. Title substring only. parameters[topic], body, and component are ignored. Rate ~3–4 req/s. Probe counts with pagesize=1 before a long page."],
-          ["Two jobs", "Discover records by topic: harvest_doj_psc.py. Resolve URLs you already have: scrape_doj.py. Do not mix them up."],
-          ["Novelty", "URL vs existing DOJ PDFs. Dedup inside the harvest is by API uuid. This is not unique-offender identity."]
+          ["Two jobs", "Discover records by topic: harvest_doj_psc.py. Resolve URLs you already have: scrape_doj.py."],
+          ["Novelty", "URL vs existing DOJ PDFs. Dedup inside the harvest is by API uuid."]
         ],
         links: [repo("scripts/scraper/README.md", "Why DOJ is different"), repo("scripts/scraper/PRESS_RELEASE_SCRAPING.md"), repo("scripts/scraper/harvest_doj_psc.py", "harvest_doj_psc.py"), repo("scripts/scraper/scrape_doj.py", "scrape_doj.py")]
       },
@@ -733,7 +742,7 @@
         kicker: "Deeper · collection",
         nav: "New-source workflow",
         title: "Canonical new-source workflow",
-        lede: "Do these steps in order. Do not skip verification.",
+        lede: "Do these steps in order. Verification is required before ingest.",
         points: [
           ["1–3", "Find the listing surface. Verify one article in the browser (real press release, body roughly ≥ 80 characters, plausible publication date). Harvest URLs with require/exclude; open 2–3 at random."],
           ["4–6", "One-URL extract() probe. Build the merged PDF. QA: one article per section, each with Source: https://. Succeeded: N | Failed: M. Investigate every failed URL."],
@@ -748,11 +757,11 @@
         kicker: "Deeper · collection",
         nav: "Cache and gates",
         title: "Cache, then quality gates",
-        lede: "Cache is keyed by URL hash, not position — safe to re-run with a different url-file.",
+        lede: "Cache is keyed by URL hash — safe to re-run with a different url-file.",
         points: [
           ["Output", "One PDF per URL under {out-dir}/tmp/{index}_{sha256(url)[:16]}.pdf, then a merge. Re-running an unchanged URL prints [cached]."],
-          ["ICAC / CAC corpus", "check_expand_novelty.py then verify_cac.py --all-failures --default-fail-csv. Do not ingest until failures are removed."],
-          ["Any other topic", "Skip verify_cac.py (harvest_doj_psc.py --skip-cac). Still drop grants, rollups, speeches; collapse arrest vs sentencing; novelty-check against existing merged PDFs. scrape_pdf.py does not care what the crime is."]
+          ["ICAC / CAC corpus", "check_expand_novelty.py then verify_cac.py --all-failures --default-fail-csv. Remove failures before ingest."],
+          ["Any other topic", "Skip verify_cac.py (harvest_doj_psc.py --skip-cac). Still drop grants, rollups, speeches; collapse arrest vs sentencing; novelty-check against existing merged PDFs. scrape_pdf.py is topic-agnostic."]
         ],
         links: [repo("scripts/scraper/README.md", "Output & caching"), repo("scripts/scraper/EXPAND_SOURCES.md"), repo("scripts/scraper/check_expand_novelty.py", "check_expand_novelty.py"), repo("scripts/verify/verify_cac.py", "verify_cac.py")]
       },
@@ -763,7 +772,7 @@
         kicker: "Deeper · court records",
         nav: "PACER / RECAP",
         title: "PACER / RECAP collection",
-        lede: "Federal dockets are a court-record overlay, not a substitute for the 10,000 press-release case graphs. Collection goes through CourtListener’s RECAP archive.",
+        lede: "Federal dockets are a court-record overlay beside the 10,000 press-release case graphs. Collection goes through CourtListener’s RECAP archive.",
         points: [
           ["Who might have a docket", "corpus2pacer.py. Tier A: federal ingestion source. B: federal prosecuting or investigating agency. C: narrative signals (U.S. District Court, federal indictment language, criminal docket pattern). Any tier includes the case; confidence is high / medium / low."],
           ["Fetch", "cases2records.py. By default downloads only free docs already in RECAP (is_available=True). PACER purchases are off unless you pass --charge-pacer. Court records run $3–5 each; this collection is 41 records for $154. --key-docs pulls indictment / plea / sentencing, max 4 per case. --dry-run audits free vs needs PACER with no downloads and no charges."],
@@ -789,12 +798,13 @@
         kicker: "Deeper · ingest",
         nav: "Batching",
         title: "Batching and case IDs",
-        lede: "Large text blocks become individual cases before features are filled.",
+        lede: "Batching splits a PDF into cases, then assigns IDs. The splitter depends on how the PDF was built.",
         points: [
-          ["Split patterns", "Primary: “In [Month]” (case-sensitive In). Secondary: “[Month] [Year],”."],
-          ["IDs", "Unique case IDs in the form org_name_year_month_number."],
-          ["Source line", "The scraper’s Source: https:// line is the splitter key. Missing that line breaks downstream splitting."]
+          ["Scraped PDFs", "Split on Source: https:// — one article, one case. That line is the splitter key. Missing it breaks downstream splitting."],
+          ["Non-scraped PDFs", "Source-specific. AZICAC: “In [Month]” (case-sensitive In), else “[Month] [Year],”. NCMEC yearbooks use their own split."],
+          ["IDs", "Assigned after the split. Form: org_name_year_month_number."]
         ],
+        figure: "Source: https://  →  cases  →  org_name_year_month_number",
         links: [repo("Architecture design.md", "Case Batching"), repo("src/Processing Layer/batching.py", "batching.py"), repo("scripts/scraper/PRESS_RELEASE_SCRAPING.md", "Source line")]
       },
       {
@@ -811,6 +821,87 @@
           ["Semantic scores", "Most concept scores are kept for analysis. Merge-layer examples: possession_csam ≥ 0.5 appends possession; grooming ≥ 0.35 appends grooming to severity_indicators."]
         ],
         links: [repo("README.md", "Case Schema & Feature Extraction"), repo("Architecture design.md"), repo("ontology/MAPPING_PLAN.md", "MAPPING_PLAN.md · NLP / semantic")]
+      },
+      {
+        id: "merge",
+        chapter: "deeper",
+        station: "schema",
+        kicker: "Deeper · schema",
+        nav: "Merge and agencies",
+        title: "Merge layer and agency names",
+        lede: "Pattern output and ML output meet in merge_processing.py. Pattern wins when both have data; NER fills gaps.",
+        points: [
+          ["Ages", "NER ages merge by rule: age ≥ 18 → perpetrator_age; age ≤ 17 → case_demographics.ages. Raw NER stays in ml_features.ner_entities."],
+          ["Agency labels", "Canonical aliases, possessive repair (person-name weld → unit name), drop non-LE orgs, dedupe generic state police. Persists across re-ingest."],
+          ["Agency context gate", "Program-context DOJ/AG mentions vs case-level involvement. Same gate named on crash slide 07."]
+        ],
+        links: [
+          repo("src/Processing Layer/merge_processing.py", "merge_processing.py"),
+          repo("src/Processing Layer/agency_possessive_repair.py", "agency_possessive_repair.py"),
+          repo("src/Processing Layer/agency_label_normalize.py", "agency_label_normalize.py"),
+          repo("src/Processing Layer/agency_context_gate.py", "agency_context_gate.py")
+        ]
+      },
+      {
+        id: "aicsam",
+        chapter: "deeper",
+        station: "schema",
+        kicker: "Deeper · schema",
+        nav: "Gen AI / AI-CSAM",
+        title: "Gen AI tools vs AI-CSAM topics",
+        lede: "Two different extractions. AI-CSAM is lexical only.",
+        points: [
+          ["Offense product", "case_topics: ai_csam. Lexical patterns in ai_extraction_patterns.py — AI-generated, deepfake, synthetic CSAM language, and related phrasing."],
+          ["Tool citation", "Named Gen AI tools land on the platform / technology side when the narrative cites them. Distinct from the offense-product tag."],
+          ["Merge rule", "Lexical only for ai_csam. Semantic scores can reinforce other topics (possession, grooming) at documented thresholds."]
+        ],
+        links: [repo("src/Processing Layer/Pattern Processing Layer/ai_extraction_patterns.py", "ai_extraction_patterns.py"), repo("src/Processing Layer/merge_processing.py", "merge_processing.py")]
+      },
+      {
+        id: "provenance",
+        chapter: "deeper",
+        station: "ingest",
+        kicker: "Deeper · ingest",
+        nav: "Provenance",
+        title: "Document provenance",
+        lede: "Sidecar tables record which PDF version a case came from. Ingest and API behavior are unchanged when no sidecar exists.",
+        points: [
+          ["Identity", "source_documents and source_document_versions: URL canonicalization, SHA-256 content addressing, parser name/version (scrape_pdf, Jina)."],
+          ["Extraction runs", "extraction_runs tokens for pattern layer, NER backend, semantic model, victim-age gate version."],
+          ["Stdlib-only", "provenance.py is stdlib-only. Optional; no migrations directory."]
+        ],
+        links: [repo("src/Storage Layer/provenance.py", "provenance.py"), repo("src/Storage Layer/storage.py", "storage.py")]
+      },
+      {
+        id: "sanitization",
+        chapter: "deeper",
+        station: "schema",
+        kicker: "Deeper · schema",
+        nav: "Sanitization",
+        title: "Clean-case sanitization",
+        lede: "Optional ML path for safer viewing and stakeholder presentation. Analytical facts stay; explicit detail is reduced.",
+        points: [
+          ["ContentSanitizer", "Summarization plus redaction. HuggingFace summarization when the ML stack is on; rule-based fallback otherwise."],
+          ["Scope", "A processing helper for cleaner case views. Live pages still gate raw_data; trusted CaseLinker-Key unlocks full narratives."],
+          ["Why it exists", "Cross-case work concentrates disturbing text. Features, graphs, and cohorts are the primary analysis surface."]
+        ],
+        links: [repo("src/Processing Layer/ML Processing Layer/content_sanitization.py", "content_sanitization.py"), repo("src/Processing Layer/ML Processing Layer/ml_models.py", "ml_models.py")]
+      },
+      {
+        id: "import",
+        chapter: "deeper",
+        station: "ingest",
+        kicker: "Deeper · ingest",
+        nav: "Trusted import",
+        title: "Two ways to fill a local DB",
+        lede: "A fresh clone starts empty. Either ingest PDFs you collected, or pull the production corpus with a trusted key.",
+        points: [
+          ["PDF ingest", "python3 src/main.py path.pdf — or scripts/run/ingest_all_pdfs.sh after PDFs are in the repo. --no-aggregate skips NCMEC/DOJ on a first pass."],
+          ["Trusted API export", "CASELINKER_KEY then python3 scripts/run/import_corpus_from_api.py. Request a key at mramachandra@umass.edu."],
+          ["What a clone already has", "Ontology graphs, PACER KGs, lifecycle machines, L* JSON, case studies, triage bundle — even with an empty SQLite file."]
+        ],
+        figure: "PDFs → src/main.py    or    CASELINKER_KEY → import_corpus_from_api.py",
+        links: [repo("README.md", "README.md · Reproduce the local corpus"), repo("scripts/run/import_corpus_from_api.py", "import_corpus_from_api.py"), repo("scripts/run/ingest_all_pdfs.sh", "ingest_all_pdfs.sh")]
       },
       {
         id: "graph",
@@ -844,6 +935,29 @@
         links: [repo("ontology/README.md", "Graph pools"), repo("ontology/docs/SPARQL.md", "Two PACER named-graph families"), repo("scripts/rebuild_oxigraph.py", "rebuild_oxigraph.py"), app("/patterns", "Ontology & Graphs")]
       },
       {
+        id: "questions",
+        chapter: "deeper",
+        station: "questions",
+        kicker: "Deeper · research",
+        nav: "Q1–Q3",
+        title: "Three questions the graphs exist to answer",
+        lede: "Relational questions at corpus scale.",
+        points: [
+          ["Q1", "What about a platform (affordance / surface / harm) made exploitation possible? Evidence in ontology/q1/. UI: /visualization and /patterns/questions/q01."],
+          ["Q2", "What does offending and enforcement look like across offense subsets? ontology/q2/ — lifecycle tables. Page: /patterns/questions/q02."],
+          ["Q3 — Affordances for Harm", "Where can technology or enforcement intervene along the kill chain? Framework and preprint: Affordances for Harm (AfH). Evidence in ontology/q3/; page /patterns/questions/q03."]
+        ],
+        figure: "Q1 platform harm   ·   Q2 offense subsets   ·   Q3 Affordances for Harm (AfH)",
+        links: [
+          repo("ontology/README.md", "ontology/README.md · Q1–Q3"),
+          app("/patterns/questions/q01", "Q01"),
+          app("/patterns/questions/q02", "Q02"),
+          app("/patterns/questions/q03", "Q03"),
+          ext("https://doi.org/10.5281/zenodo.21347781", "AfH preprint · Zenodo"),
+          repo("ontology/q1/q1_evidence.json", "q1_evidence.json")
+        ]
+      },
+      {
         id: "mcp",
         chapter: "deeper",
         station: "tools",
@@ -866,14 +980,209 @@
         kicker: "Deeper · tools",
         nav: "Surfaces",
         title: "Surfaces on the same store",
-        lede: "Search, analysis, triage, and graphs read the same case store. They are not separate corpora.",
+        lede: "Search, analysis, triage, graphs, and the research UIs read the same case store. They are not separate corpora.",
         points: [
-          ["Search", "Facet decision tree over stored cases. Deterministic partition from structured facets, not a precomputed file. D3. Small cohorts (fewer than three cases) have IDs gated behind a demo access key."],
-          ["Analysis", "Tag intersection (ALL selected tags). Automated analysis: similarity groups, priority scores, insights."],
-          ["Triage", "Rule-based priority, optional random forest or decision tree trained on labels from those rules. Live paste scores text in memory and never writes to the database."],
-          ["Audit", "Review extracted features case-by-case with interactive highlighting."]
+          ["Partition", "Search: facet decision tree. Analysis: tag intersection (ALL selected tags) plus automated grouping."],
+          ["Rank and QA", "Clusters: precomputed similarity. Triage: rules plus optional classifier; live paste never writes. Audit: extraction highlighting."],
+          ["Research UIs", "Visualization (Q1), Tech Landscape, Lifecycle / L*, Case Studies, Query lab, LLM, Stats, Sources."]
         ],
-        links: [repo("README.md", "Using Search / Analysis"), repo("triage.md"), repo("src/Storage Layer/facet_tree.py", "facet_tree.py"), app("/search", "/search"), app("/triage", "/triage"), app("/audit", "/audit")]
+        figure: "SQLite / PostgreSQL  →  every page and every MCP tool",
+        links: [app("/search", "/search"), app("/analysis", "/analysis"), app("/visualization", "/visualization"), app("/patterns", "/patterns")]
+      },
+      {
+        id: "search-tree",
+        chapter: "deeper",
+        station: "tools",
+        kicker: "Deeper · search",
+        nav: "Facet tree",
+        title: "Search is a facet decision tree",
+        lede: "The server builds a deterministic partition from structured facets. Not a precomputed file on disk.",
+        points: [
+          ["Order", "Topic → Severity → Platform → Inv. type → Source → Agency → Prosecution → Location → Severity phrase → Perp admission → Date range (era). max_depth cuts the list."],
+          ["Counts", "Any-tag semantics: a node counts every case that has that value anywhere in the field, not only the primary bucket. Prune filters restrict allowed values."],
+          ["IDs", "Click a node for cohort case IDs. Cohorts smaller than three are gated behind a demo access key."]
+        ],
+        links: [repo("src/Storage Layer/facet_tree.py", "facet_tree.py"), app("/search", "/search"), repo("README.md", "README.md · Using Search")]
+      },
+      {
+        id: "clusters",
+        chapter: "deeper",
+        station: "tools",
+        kicker: "Deeper · analysis",
+        nav: "Clusters and tags",
+        title: "Similarity clusters and tag threading",
+        lede: "Comparison vectors are stored on ingest. Clustering is precomputed so the UI is a read.",
+        points: [
+          ["Similarity", "Weighted overlap on comparison_values: platforms, demographics, investigation, evidence, topics, severity, date. Default group threshold 0.45."],
+          ["Automated analysis", "Groups, priority ranking, insights, patterns, top keywords. Expand a box for highlighted raw text and why it ranked."],
+          ["tag_threader", "POST /api/tag-threader — co-occurrence threads across selected tags, not only strict intersection."]
+        ],
+        links: [
+          repo("src/Clustering & Analysis Layer/analysis.py", "analysis.py"),
+          app("/clusters", "/clusters"),
+          app("/analysis", "/analysis"),
+          app("/stats", "/stats")
+        ]
+      },
+      {
+        id: "triage-deep",
+        chapter: "deeper",
+        station: "tools",
+        kicker: "Deeper · triage",
+        nav: "Triage stack",
+        title: "Triage: rules, then a classifier",
+        lede: "Auditable priority first. The model approximates tier labels from those rules — not a parallel black-box policy.",
+        points: [
+          ["Rule score", "Severity indicators, victim count, case type, severity phrases, evidence volume, registered-offender status. Normalized for ranking."],
+          ["Supervised tiers", "Scores binned → Random Forest or decision tree (joblib bundle). GET /api/triage-eval and /api/triage-model-corpus; optional facet_constraints."],
+          ["Live paste", "POST /api/triage-live. Same extraction path, in memory only. Missing bundle is an error, not a silent fallback."]
+        ],
+        links: [repo("triage.md"), repo("scripts/run/train_triage_model.py", "train_triage_model.py"), app("/triage", "/triage")]
+      },
+      {
+        id: "harm",
+        chapter: "deeper",
+        station: "harm",
+        kicker: "Deeper · Q1",
+        nav: "Platform harm",
+        title: "Platform harm dashboard",
+        lede: "Q1 in the UI: what a medium enables, how it is abused, and the victim-facing harm path — with quotes back to cases.",
+        points: [
+          ["Lifecycle map", "Platforms on six exploitation lanes: distribution, storage, communities, discovery, messaging, production."],
+          ["Detail panel", "Four tabs: Affordances, Misuse Surface, Harm Vectors, Case Evidence. Evidence from q1_evidence.json; Audit for full case review."],
+          ["API", "GET /api/q1/platform-evidence — index or per-platform cohort (platform, optional tier). MCP: q1_platform_evidence."]
+        ],
+        links: [app("/visualization", "/visualization"), repo("ontology/q1/q1_evidence.json", "q1_evidence.json"), app("/patterns/questions/q01", "Q01 writeup")]
+      },
+      {
+        id: "tech",
+        chapter: "deeper",
+        station: "tools",
+        kicker: "Deeper · tech",
+        nav: "Tech landscape",
+        title: "Technology revolver",
+        lede: "Investigation tooling, anonymization, P2P, and named platforms, bucketed by era — stored separately from the platform list on each case.",
+        points: [
+          ["Signals", "PhotoDNA / hash matching / CyberTipline language; Tor / dark web / cryptocurrency; P2P clients; named apps."],
+          ["Eras", "Same four buckets as Search and Case Studies: 2010–2014, 2015–2018, 2019–2022, 2023–2026."],
+          ["API", "GET /api/technology-revolver. Precomputed slim table technology_revolver_slim for the page."]
+        ],
+        links: [app("/tech-landscape", "/tech-landscape"), repo("README.md", "README.md · Tech Landscape")]
+      },
+      {
+        id: "lstar",
+        chapter: "deeper",
+        station: "lstar",
+        kicker: "Deeper · lifecycle",
+        nav: "L* / Bellman",
+        title: "Lifecycle state machines and L*",
+        lede: "PACER graphs become CAC phase sequences. L* is computed over those sequences — not over press-release tags.",
+        points: [
+          ["Machines", "state_machines/: five offense types as canonical PACER cases, plus expansion from full federal dockets (30 cases in the UI payload)."],
+          ["L*", "compute_lstar.py + bellman.py. Goal-conditioned values for enticement, sextortion, production, enterprise, trafficking. Transition matrix, intervention deltas, trajectories."],
+          ["APIs", "/lifecycle is public (payload embedded). GET /api/lifecycle/canonical is public. Full cases and L* JSON need CaseLinker-Key or localhost."]
+        ],
+        figure: "PACER JSON-LD  →  phase sequence  →  L*_{g,A}  →  /lifecycle",
+        links: [
+          app("/lifecycle", "/lifecycle"),
+          repo("state_machines/compute_lstar.py", "compute_lstar.py"),
+          repo("state_machines/bellman.py", "bellman.py"),
+          repo("state_machines/data/lstar_all_cases.json", "lstar_all_cases.json")
+        ]
+      },
+      {
+        id: "studies",
+        chapter: "deeper",
+        station: "tools",
+        kicker: "Deeper · studies",
+        nav: "Case studies",
+        title: "Four-era case studies",
+        lede: "Narrative studies, not a second database. data/case_studies.json; eras aligned with facet_tree.py buckets.",
+        points: [
+          ["Eras", "I 2010–2014 pre-mobile. II 2015–2018 mobile-first. III 2019–2022 platform proliferation. IV 2023–2026 generative AI."],
+          ["Five dimensions", "Platform context, perpetrator methodology, investigative approach, prosecutorial outcome, relationship to the era. Optional takeaway; optional linked_case_id into the corpus."],
+          ["Notes", "GET/POST /api/case-studies/notes/{id} — community notes, rate limited. POST is not an MCP tool."]
+        ],
+        links: [app("/case-studies", "/case-studies"), repo("data/case_studies.json", "case_studies.json"), repo("README.md", "README.md · Report #4")]
+      },
+      {
+        id: "querylab",
+        chapter: "deeper",
+        station: "tools",
+        kicker: "Deeper · query",
+        nav: "Query lab",
+        title: "Query is a browser lab",
+        lede: "Custom analysis in the page. JavaScript calls public APIs. No extra server language.",
+        points: [
+          ["What it is", "/query — examples on the page. Same rate limits as other public routes."],
+          ["What it is not", "Not SPARQL. Not the LLM chat. Not trusted bulk export."],
+          ["Sister pages", "Stats and location aggregates: /stats, GET /api/stats-detailed, GET /api/location-stats."]
+        ],
+        links: [app("/query", "/query"), app("/stats", "/stats"), app("/docs", "/docs")]
+      },
+      {
+        id: "llm",
+        chapter: "deeper",
+        station: "tools",
+        kicker: "Deeper · LLM",
+        nav: "LLM chat",
+        title: "LLM chat over case statistics",
+        lede: "Natural-language questions, SQL-backed against the live store. Rate limited on production.",
+        points: [
+          ["Endpoint", "POST /api/llm/chat. MCP tool llm_chat. Internal helper query_cases_database is not a separate MCP tool."],
+          ["Caps", "Public: 50 requests / IP / day plus slowapi 15/min. Trusted CaseLinker-Key: daily cap exempt; 15/min still applies. Localhost exempt."],
+          ["Scope", "Statistics and structured fields. Not a substitute for SPARQL over CAC graphs."]
+        ],
+        links: [app("/llm", "/llm"), repo("caselinker_mcp/tool_registry.md", "tool_registry.md · llm_chat")]
+      },
+      {
+        id: "audit",
+        chapter: "deeper",
+        station: "tools",
+        kicker: "Deeper · audit",
+        nav: "Audit",
+        title: "Audit extracted features",
+        lede: "Case-by-case highlighting so you can see what the regex and merge actually bound in the narrative.",
+        points: [
+          ["Job", "Verify extraction accuracy before trusting a cohort, a cluster, or a graph mapping."],
+          ["Same store", "Reads stored cases. Does not re-ingest."],
+          ["Small cohorts", "Search still gates IDs under three cases; Audit is the review surface once you have an id."]
+        ],
+        links: [app("/audit", "/audit")]
+      },
+      {
+        id: "paper",
+        chapter: "deeper",
+        station: "tools",
+        kicker: "Deeper · verify",
+        nav: "Paper claims",
+        title: "Claim verification harness",
+        lede: "Published numbers are registered claims, then re-run against the live DB and artifacts.",
+        points: [
+          ["Registry", "scripts/verify/paper/claims.md — catalog generated from the paper text. Verifiers in verifiers.py."],
+          ["Run", "python3 scripts/verify/paper/verify_paper.py. Optional --snapshot for a content-addressed corpus pin; --against-snapshot for drift."],
+          ["Also", "verify_cac.py (topic gate), validate_case_uniqueness.py, icac_tf_verify.py, test_triage.py."]
+        ],
+        links: [
+          repo("scripts/verify/paper/claims.md", "claims.md"),
+          repo("scripts/verify/paper/verify_paper.py", "verify_paper.py"),
+          repo("scripts/verify/verify_cac.py", "verify_cac.py")
+        ]
+      },
+      {
+        id: "reports",
+        chapter: "deeper",
+        station: "tools",
+        kicker: "Deeper · framing",
+        nav: "Reports and ethics",
+        title: "Reports, ethics, public domain",
+        lede: "Five technical reports. Public press material only. HRPO Determination #7668.",
+        points: [
+          ["Reports", "#1 prototype (arXiv 2603.18020). #2 NER + 207 cases. #3 five sources / facet tree. #4 four-era case-study framework. #5 visual briefing on the scaled corpus."],
+          ["Ethics", "No PII processed. Sources already public and redacted. UMass Amherst HRPO: this research does not contain private or identifiable information under 45 CFR 46.102(f)(1), (2)."],
+          ["Disclaimer", "Full usage disclaimer lives on /sources. The crash-course callout on radioactive material is the operational version of the same fact."]
+        ],
+        links: [repo("README.md", "README.md · Technical Reports"), app("/sources", "/sources")]
       },
       {
         id: "stop",
@@ -903,7 +1212,10 @@
       { id: "onto", label: "Ontology" },
       { id: "sparql", label: "SPARQL" },
       { id: "tools", label: "Tools" },
-      { id: "pacer", label: "PACER / RECAP" }
+      { id: "pacer", label: "PACER / RECAP" },
+      { id: "questions", label: "Q1–Q3" },
+      { id: "harm", label: "Platform harm" },
+      { id: "lstar", label: "Lifecycle / L*" }
     ];
 
     const state = {
@@ -992,7 +1304,7 @@
       const figure = s.figure ? `<pre class="figure">${escapeHtml(s.figure)}</pre>` : "";
       const note = s.note ? `<p class="note">${escapeHtml(s.note)}</p>` : "";
       const chips = (s.links || [])
-        .map((l) => `<a class="chip ${l.kind}" href="${l.href}" ${l.kind === "repo" ? 'target="_blank" rel="noopener noreferrer"' : ""}>${escapeHtml(l.label)}</a>`)
+        .map((l) => `<a class="chip ${l.kind}" href="${l.href}" ${l.kind === "app" ? "" : 'target="_blank" rel="noopener noreferrer"'}>${escapeHtml(l.label)}</a>`)
         .join("");
       $("slide").innerHTML =
         `<p class="kicker">${escapeHtml(s.kicker)}</p>` +
