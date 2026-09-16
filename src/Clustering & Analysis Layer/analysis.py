@@ -1047,15 +1047,19 @@ def find_severe_cases(all_cases: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
 
 def find_similar_cases_general(all_cases: List[Dict[str, Any]], similarity_threshold: float = 0.45) -> List[Dict[str, Any]]:
     """
-    Similarity clustering via blocked candidate edges + Union-Find components.
+    Similarity clustering via blocked candidate edges + greedy clique packing.
 
-    Replaces the legacy O(n²) full matrix + O(n³) clique-growth loop:
+    Replaces the legacy full O(n²) matrix while preserving the old *tight* moons
+    the clusters.html satellites need (similar-to-all growth), instead of
+    single-linkage Union-Find which collapsed 10k cases into 1–3 giant blobs.
+
+    Fast path:
       1. Precompute feature frozensets once
       2. Inverted-index blocking on topics/platforms/severity (stopwords dropped)
       3. Cap candidates per case; keep edges with sim >= threshold
-      4. Connected components (single-linkage at threshold) as internal groups
+      4. Greedy clique packing on that sparse graph (deterministic seed order)
 
-    Deterministic: cases sorted by id; candidate caps take lowest ids first.
+    Deterministic: cases sorted by id; seeds by (-degree, id).
     """
     if not all_cases:
         return []
@@ -1072,8 +1076,8 @@ def find_similar_cases_general(all_cases: List[Dict[str, Any]], similarity_thres
         for tok in f["block"]:
             index[tok].append(i)
 
-    uf = _UnionFind(n)
-    # Candidate pairs (i < j) via shared block tokens; cap per case for O(n·C)
+    # Sparse undirected adjacency for edges with sim >= threshold
+    adj: List[set] = [set() for _ in range(n)]
     seen_pairs: set = set()
     for i, f in enumerate(feats):
         cand: set = set()
@@ -1081,7 +1085,6 @@ def find_similar_cases_general(all_cases: List[Dict[str, Any]], similarity_thres
             bucket = index.get(tok)
             if not bucket:
                 continue
-            # Huge generic buckets already filtered; still skip enormous leftovers
             if len(bucket) > 2500:
                 continue
             for j in bucket:
@@ -1092,7 +1095,6 @@ def find_similar_cases_general(all_cases: List[Dict[str, Any]], similarity_thres
             if len(cand) >= _CANDIDATE_CAP_PER_CASE:
                 break
         if not cand and not f["block"]:
-            # No block tokens: light fallback — compare to next K by id order
             for j in range(i + 1, min(n, i + 1 + _CANDIDATE_CAP_PER_CASE)):
                 cand.add(j)
         for j in sorted(cand)[:_CANDIDATE_CAP_PER_CASE]:
@@ -1101,19 +1103,54 @@ def find_similar_cases_general(all_cases: List[Dict[str, Any]], similarity_thres
                 continue
             seen_pairs.add(key)
             if _feat_similarity(feats[i], feats[j]) >= similarity_threshold:
-                uf.union(i, j)
+                adj[i].add(j)
+                adj[j].add(i)
 
-    components: Dict[int, List[int]] = defaultdict(list)
-    for i in range(n):
-        components[uf.find(i)].append(i)
+    # Greedy cliques: seed by connectivity (desc), then id — same spirit as legacy
+    used = [False] * n
+    order = sorted(range(n), key=lambda i: (-len(adj[i]), feats[i]["id"] or ""))
 
     groups: List[Dict[str, Any]] = []
-    for idxs in components.values():
-        if len(idxs) < 2:
+    for seed in order:
+        if used[seed]:
             continue
-        idxs = sorted(idxs)  # stable by original id order (feats already id-sorted)
-        group_cases = [feats[k]["case"] for k in idxs]
-        group_feats = [feats[k] for k in idxs]
+        # Need at least one unused neighbor to form a moon
+        if not any((not used[j]) for j in adj[seed]):
+            continue
+
+        clique = [seed]
+        used[seed] = True
+        # Candidates: neighbors of seed, sorted by id for determinism
+        frontier = sorted(
+            (j for j in adj[seed] if not used[j]),
+            key=lambda j: feats[j]["id"] or "",
+        )
+        changed = True
+        while changed:
+            changed = False
+            still: List[int] = []
+            for j in frontier:
+                if used[j]:
+                    continue
+                # Must be adjacent to every member (complete-linkage / old similar-to-all)
+                if all(j in adj[m] for m in clique):
+                    clique.append(j)
+                    used[j] = True
+                    changed = True
+                else:
+                    still.append(j)
+            frontier = still
+
+        if len(clique) < 2:
+            # Seed had neighbors but none formed a pair under complete-linkage —
+            # leave them unused for a later seed (or singleton).
+            for idx in clique:
+                used[idx] = False
+            continue
+
+        clique = sorted(clique)  # stable by feature index / id order
+        group_cases = [feats[k]["case"] for k in clique]
+        group_feats = [feats[k] for k in clique]
         metrics = _metrics_from_feats(group_feats)
         characteristics = analyze_group_characteristics(group_cases)
         groups.append({
@@ -1131,6 +1168,44 @@ def find_similar_cases_general(all_cases: List[Dict[str, Any]], similarity_thres
         })
 
     return sorted(groups, key=lambda g: (-g["size"], g["group_id"]))
+
+
+# Satellite moons for /clusters: keep the page scannable (old full-matrix cliques
+# produced tens of moons per hub; sparse packing made hundreds of size-2/3 moons).
+_MAX_MOONS_PER_HUB = 42
+_MIN_MOON_SIZE = 10
+
+
+def _curate_internal_groups(
+    internal_clusters: List[Dict[str, Any]],
+    unclustered_cases: Optional[List[Dict[str, Any]]] = None,
+    *,
+    max_moons: int = _MAX_MOONS_PER_HUB,
+    min_size: int = _MIN_MOON_SIZE,
+) -> List[Dict[str, Any]]:
+    """
+    Keep the largest tight moons for the bubble chart; fold the rest into one overflow moon.
+
+    Hub ``cases`` still holds every member — this only shapes ``internal_groups`` satellites.
+    """
+    moons: List[Dict[str, Any]] = []
+    overflow: List[Dict[str, Any]] = []
+    for cluster in internal_clusters or []:
+        cases = list(cluster.get("cases") or [])
+        if len(cases) >= min_size:
+            moons.append({"cases": cases, "size": len(cases)})
+        else:
+            overflow.extend(cases)
+    if unclustered_cases:
+        overflow.extend(unclustered_cases)
+
+    moons.sort(key=lambda m: (-m["size"], str((m["cases"][0] or {}).get("id", "") if m["cases"] else "")))
+    if len(moons) > max_moons:
+        moons = moons[:max_moons]
+
+    # Do not emit a giant overflow satellite (reads as a second hub / kills layout).
+    # Tiny cliques + unclustered remain on the main hub bubble for click-through.
+    return moons
 
 
 def group_similar_cases(all_cases: List[Dict[str, Any]], similarity_threshold: float = 0.45) -> List[Dict[str, Any]]:
@@ -1188,11 +1263,8 @@ def group_similar_cases(all_cases: List[Dict[str, Any]], similarity_threshold: f
                 all_online_only_cases.append(case)
                 unclustered_cases.append(case)
         
-        # Build internal_groups list - include all clusters plus unclustered cases as a separate group
-        internal_groups_list = [{'cases': cluster['cases'], 'size': len(cluster['cases'])} for cluster in internal_clusters]
-        # Add unclustered cases as a separate internal group if any exist
-        if unclustered_cases:
-            internal_groups_list.append({'cases': unclustered_cases, 'size': len(unclustered_cases)})
+        # Curate moons for /clusters (cap + min size); overflow folded into one satellite
+        internal_groups_list = _curate_internal_groups(internal_clusters, unclustered_cases)
         
         # Calculate cluster-level metrics (across all cases)
         similarity_metrics = calculate_group_similarity_metrics(all_online_only_cases)
@@ -1244,11 +1316,8 @@ def group_similar_cases(all_cases: List[Dict[str, Any]], similarity_threshold: f
                 all_possession_cases.append(case)
                 unclustered_cases.append(case)
         
-        # Build internal_groups list - include all clusters plus unclustered cases as a separate group
-        internal_groups_list = [{'cases': cluster['cases'], 'size': len(cluster['cases'])} for cluster in internal_clusters]
-        # Add unclustered cases as a separate internal group if any exist
-        if unclustered_cases:
-            internal_groups_list.append({'cases': unclustered_cases, 'size': len(unclustered_cases)})
+        # Curate moons for /clusters (cap + min size); overflow folded into one satellite
+        internal_groups_list = _curate_internal_groups(internal_clusters, unclustered_cases)
         
         # Calculate cluster-level metrics (across all cases)
         similarity_metrics = calculate_group_similarity_metrics(all_possession_cases)
@@ -1302,11 +1371,8 @@ def group_similar_cases(all_cases: List[Dict[str, Any]], similarity_threshold: f
                 all_investigation_cases.append(case)
                 unclustered_cases.append(case)
         
-        # Build internal_groups list - include all clusters plus unclustered cases as a separate group
-        internal_groups_list = [{'cases': cluster['cases'], 'size': len(cluster['cases'])} for cluster in internal_clusters]
-        # Add unclustered cases as a separate internal group if any exist
-        if unclustered_cases:
-            internal_groups_list.append({'cases': unclustered_cases, 'size': len(unclustered_cases)})
+        # Curate moons for /clusters (cap + min size); overflow folded into one satellite
+        internal_groups_list = _curate_internal_groups(internal_clusters, unclustered_cases)
         
         # Calculate cluster-level metrics (across all cases)
         similarity_metrics = calculate_group_similarity_metrics(all_investigation_cases)
@@ -1353,11 +1419,8 @@ def group_similar_cases(all_cases: List[Dict[str, Any]], similarity_threshold: f
                 all_severe_cases.append(case)
                 unclustered_cases.append(case)
         
-        # Build internal_groups list - include all clusters plus unclustered cases as a separate group
-        internal_groups_list = [{'cases': cluster['cases'], 'size': len(cluster['cases'])} for cluster in internal_clusters]
-        # Add unclustered cases as a separate internal group if any exist
-        if unclustered_cases:
-            internal_groups_list.append({'cases': unclustered_cases, 'size': len(unclustered_cases)})
+        # Curate moons for /clusters (cap + min size); overflow folded into one satellite
+        internal_groups_list = _curate_internal_groups(internal_clusters, unclustered_cases)
         
         # Calculate cluster-level metrics (across all cases)
         if len(all_severe_cases) == 1:
@@ -1411,7 +1474,9 @@ def group_similar_cases(all_cases: List[Dict[str, Any]], similarity_threshold: f
             'group_name': 'General Cluster',
             'description': f"All {len(all_general_cases)} cases grouped by Jaccard similarity",
             'statistics': characteristics.get('statistics', {}),
-            'internal_groups': [{'cases': cluster['cases'], 'size': len(cluster['cases'])} for cluster in general_clusters]
+            'internal_groups': _curate_internal_groups(general_clusters, [
+                c for c in all_cases if c.get('id') not in clustered_general_ids
+            ])
         })
     
     return sorted(groups, key=lambda g: g['size'], reverse=True)

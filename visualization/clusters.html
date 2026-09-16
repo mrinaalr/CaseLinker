@@ -481,7 +481,26 @@
         }
 
         function packSatellitesLocal(hubR, groups, clusterId) {
-            const items = (groups || []).map((group, idx) => ({
+            // Keep layout butter-smooth: at most ~40 moons per hub (backend also caps).
+            const MAX_RENDER = 42;
+            const MIN_SIZE = 10;
+            let raw = (groups || []).filter((g) => (g.size || 0) >= MIN_SIZE);
+            raw = raw.slice().sort((a, b) => (b.size || 0) - (a.size || 0));
+            if (raw.length > MAX_RENDER) {
+                const head = raw.slice(0, MAX_RENDER - 1);
+                const tail = raw.slice(MAX_RENDER - 1);
+                const overflowCases = [];
+                let overflowSize = 0;
+                tail.forEach((g) => {
+                    overflowSize += g.size || 0;
+                    if (Array.isArray(g.cases)) overflowCases.push(...g.cases);
+                });
+                if (overflowSize >= MIN_SIZE) {
+                    head.push({ cases: overflowCases, size: overflowSize });
+                }
+                raw = head;
+            }
+            const items = raw.map((group, idx) => ({
                 group,
                 idx,
                 r: groupRadius(group.size, clusterId)
@@ -491,10 +510,10 @@
             items.sort((a, b) => b.r - a.r);
             const placed = [];
             const gap = HUB_SATELLITE_GAP;
-            let relaxIters = items.length > 100 ? 110 : items.length > 50 ? 85 : 65;
+            let relaxIters = items.length > 40 ? 55 : items.length > 25 ? 70 : 85;
             const packGap = clusterId === 'possession_cluster' ? INTRA_MOON_GAP : CLUSTER_GAP;
             if (clusterId === 'possession_cluster') {
-                relaxIters = Math.round(relaxIters * 1.3);
+                relaxIters = Math.round(relaxIters * 1.15);
             }
 
             items.forEach((item, i) => {
@@ -1057,11 +1076,12 @@
                     .text(`${d.cluster.size} cases`);
             });
             
-            // Sub-cluster labels: always show case count (original look)
+            // Sub-cluster labels: skip tiny moons (DOM text was killing scroll FPS)
             groupBubbles.each(function(d) {
+                if (d.r < 14 || (d.group && d.group.size < 12)) return;
                 const g = d3.select(this);
                 const label = `${d.group.size} cases`;
-                const fontPx = d.r < 16 ? Math.max(8, Math.round(d.r * 0.62)) : 11;
+                const fontPx = d.r < 18 ? Math.max(9, Math.round(d.r * 0.55)) : 11;
                 g.append('text')
                     .attr('class', 'group-label')
                     .attr('dy', 4)
@@ -1078,7 +1098,8 @@
             });
 
             const satCount = window.__clusterLayoutMeta?.totalSatellites || 0;
-            if (satCount > 0) {
+            // Jiggle on 2k SVG nodes tanks scroll — only animate a modest moon field
+            if (satCount > 0 && satCount <= 220) {
                 startJiggleAnimation(satCount);
             }
         }

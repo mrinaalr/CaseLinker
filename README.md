@@ -464,7 +464,7 @@ CaseLinker/
 │   ├── PACER/                        # PACER → lifecycle facts
 │   └── graph_output/                 # staging + universe/ + big_bang/ + analysis/
 ├── caselinker_mcp/                   # MCP server (37 tools; SSE + Streamable HTTP on Railway)
-│   ├── server.py                     # FastMCP entry point
+│   ├── server.py                     # MCPServer (mcp 2.x) entry point
 │   ├── README.md                     # Hosted auth, Cursor config, graph workflow
 │   └── tool_registry.md              # Full tool catalog
 ├── models/                           # triage_bundle.joblib (optional; see /triage)

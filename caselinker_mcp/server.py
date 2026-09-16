@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
-from mcp.server.fastmcp import FastMCP
+from mcp.server.mcpserver import MCPServer
 from mcp.server.transport_security import TransportSecuritySettings
 
 from caselinker_mcp.client import BULK_TIMEOUT, DEFAULT_TIMEOUT, api_get, api_post, require_caselinker_key
@@ -49,9 +49,14 @@ logging.basicConfig(
 )
 logger = logging.getLogger("caselinker_mcp")
 
+# mcp 2.x: transport paths/security are passed to sse_app()/streamable_http_app(), not the ctor.
 # message_path without trailing slash: Mount("/messages/") 307-redirects POST /messages,
 # which breaks MCP clients that strip the slash when parsing the SSE endpoint event.
-mcp = FastMCP("CaseLinker", message_path="/messages")
+mcp = MCPServer("CaseLinker")
+_mcp_transport_security: TransportSecuritySettings | None = None
+_MCP_SSE_MESSAGE_PATH = "/messages"
+_MCP_STREAMABLE_HTTP_PATH = "/"
+_MCP_SSE_PATH = "/sse"
 
 # Tag string -> API category for POST /api/return-tagged-cases
 _TAG_CATEGORIES: dict[str, str] = {
@@ -223,19 +228,22 @@ def _public_base_url() -> str | None:
     return None
 
 
-def configure_mcp_deployment() -> None:
-    """Configure FastMCP SSE for reverse-proxy deployment (Railway, etc.).
+def configure_mcp_deployment() -> TransportSecuritySettings | None:
+    """Build TransportSecuritySettings for reverse-proxy deployment (Railway, etc.).
 
-    FastMCP 1.27.x has no base_url setting. Session POST paths are relative and
-    built from ASGI root_path + message_path in mcp.server.sse. The Railway 421
-    comes from transport_security rejecting Host headers outside localhost defaults.
+    mcp 2.x no longer stores transport_security on ``mcp.settings`` — callers pass the
+    returned object into ``sse_app()`` / ``streamable_http_app()``. Session POST paths are
+    relative and built from ASGI root_path + message_path. Railway 421 comes from
+    transport_security rejecting Host headers outside the allowlist.
     """
+    global _mcp_transport_security
+
     if _truthy_env("MCP_DISABLE_DNS_REBINDING"):
-        mcp.settings.transport_security = TransportSecuritySettings(
+        _mcp_transport_security = TransportSecuritySettings(
             enable_dns_rebinding_protection=False,
         )
         logger.info("MCP DNS rebinding protection disabled")
-        return
+        return _mcp_transport_security
 
     allowed_hosts: list[str] = [
         h.strip() for h in os.getenv("MCP_ALLOWED_HOSTS", "").split(",") if h.strip()
@@ -257,20 +265,26 @@ def configure_mcp_deployment() -> None:
                     allowed_origins = [f"{scheme}://{host}{port}", f"{scheme}://{host}:*"]
 
     if allowed_hosts:
-        mcp.settings.transport_security = TransportSecuritySettings(
+        _mcp_transport_security = TransportSecuritySettings(
             enable_dns_rebinding_protection=True,
             allowed_hosts=allowed_hosts,
             allowed_origins=allowed_origins,
         )
         logger.info("MCP transport_security hosts=%s origins=%s", allowed_hosts, allowed_origins)
     else:
-        logger.info("MCP transport_security unchanged (localhost defaults)")
+        # Mounted apps default host=127.0.0.1 which auto-enables localhost-only
+        # DNS protection — pass an explicit disable when no public host is known.
+        _mcp_transport_security = TransportSecuritySettings(
+            enable_dns_rebinding_protection=False,
+        )
+        logger.info("MCP transport_security: DNS rebinding off (no public host configured)")
+    return _mcp_transport_security
 
 
 def _fix_mcp_message_post_routes(starlette_app: Any) -> Any:
     """Serve POST /messages?session_id=... without a 307 trailing-slash redirect.
 
-    FastMCP may register Mount("/messages/", ...) which redirects bare /messages.
+    MCPServer may register Mount("/messages/", ...) which redirects bare /messages.
     Normalize to Mount("/messages", ...) so the ASGI handler is invoked directly.
 
     With ``redirect_slashes=False`` on the inner router, Starlette no longer 307s
@@ -279,7 +293,7 @@ def _fix_mcp_message_post_routes(starlette_app: Any) -> Any:
     URL advertised in the SSE ``endpoint`` event is handled without a redirect.
 
     The Route wrapper must not return a Starlette Response — ``handle_post_message``
-    is an ASGI app that sends the response itself (same pattern as FastMCP's Mount).
+    is an ASGI app that sends the response itself (same pattern as MCPServer's Mount).
     """
     from starlette.routing import Mount, Route
 
@@ -359,14 +373,24 @@ def _wrap_sse_misroute_hint(asgi_app: Any) -> Any:
 def build_mcp_sse_app(mount_path: str | None = None) -> Any:
     """Build the MCP SSE Starlette app with deployment + auth middleware.
 
-    When mounted under FastAPI at ``/mcp``, leave *mount_path* as ``None`` (default ``/``).
-    FastMCP only prepends *mount_path* to the client-facing message URL in the SSE event;
-    actual Starlette routes stay at ``/sse`` and ``/messages``. ASGI ``root_path`` from the
-    FastAPI mount (``/mcp``) completes the client URL: ``/mcp/messages?session_id=...``.
-    Do not pass ``mount_path="/mcp"`` here or the SSE event doubles the prefix.
+    When mounted under FastAPI at ``/mcp``, do not pass a mount_path (removed in mcp 2.x).
+    ASGI ``root_path`` from the FastAPI mount (``/mcp``) completes the client URL:
+    ``/mcp/messages?session_id=...``. Routes stay at ``/sse`` and ``/messages``.
     """
-    configure_mcp_deployment()
-    sse_app = mcp.sse_app(mount_path=mount_path)
+    if mount_path is not None:
+        logger.warning(
+            "build_mcp_sse_app(mount_path=...) is ignored under mcp 2.x; "
+            "ASGI root_path from the FastAPI mount supplies the prefix"
+        )
+    security = configure_mcp_deployment()
+    # host="0.0.0.0" avoids auto localhost-only DNS protection when security is None;
+    # we always pass an explicit TransportSecuritySettings from configure_mcp_deployment.
+    sse_app = mcp.sse_app(
+        sse_path=_MCP_SSE_PATH,
+        message_path=_MCP_SSE_MESSAGE_PATH,
+        transport_security=security,
+        host="0.0.0.0",
+    )
     # Starlette Router default redirect_slashes=True 307s POST /messages → /messages/
     # before the Mount handler runs; the SSE endpoint event advertises bare /messages.
     sse_app.router.redirect_slashes = False
@@ -392,9 +416,12 @@ def build_mcp_streamable_app() -> Any:
     if _mcp_streamable_app is not None:
         return _mcp_streamable_app
 
-    configure_mcp_deployment()
-    mcp.settings.streamable_http_path = "/"
-    inner = mcp.streamable_http_app()
+    security = configure_mcp_deployment()
+    inner = mcp.streamable_http_app(
+        streamable_http_path=_MCP_STREAMABLE_HTTP_PATH,
+        transport_security=security,
+        host="0.0.0.0",
+    )
     # Mounted sub-app lifespans are not run by FastAPI; main startup runs session_manager.run().
     inner.router.lifespan_context = None
     _mcp_streamable_app = wrap_mcp_with_auth(inner)
@@ -1320,8 +1347,6 @@ async def llm_chat(question: str, model: str = "", provider: str = "") -> dict[s
 
 if __name__ == "__main__":
     if MCP_TRANSPORT == "sse":
-        mcp.settings.host = "0.0.0.0"
-        mcp.settings.port = PORT
         _sse_app = build_mcp_sse_app()
         import uvicorn
 

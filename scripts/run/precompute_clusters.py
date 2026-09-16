@@ -86,34 +86,31 @@ def main() -> int:
     ok_cg = pg.store_precomputed_clusters(analysis, case_count)
     print(f"  store automated_analysis_slim={ok_aa} cluster_groups_slim={ok_cg}", flush=True)
 
-    # Redis warm (optional)
+    # Redis warm (optional) — must include internal_groups (satellite moons for /clusters)
     try:
         from redis_cache import get_cache_key, set_cached
 
         result = {"success": True, "analysis": analysis, "cached": True, "source": "precompute_script"}
         set_cached(get_cache_key("automated-analysis", version=case_count), result, ttl=86400)
-        # slim cluster-groups shape
-        case_groups = analysis.get("case_groups") or []
-        slim = []
-        for g in case_groups:
-            if not isinstance(g, dict):
-                continue
-            slim.append(
-                {
-                    "group_id": g.get("group_id"),
-                    "size": g.get("size"),
-                    "average_similarity": g.get("average_similarity"),
-                    "min_similarity": g.get("min_similarity"),
-                    "max_similarity": g.get("max_similarity"),
-                    "case_ids": g.get("case_ids") or [],
-                }
-            )
+        # Re-read Postgres slim so Redis matches what /api/cluster-groups serves
+        # (includes internal_groups). Do not hand-roll a cases-only payload.
+        slim_groups = pg.get_cluster_groups_slim(case_count) or []
         set_cached(
             get_cache_key("cluster-groups", version=case_count),
-            {"success": True, "case_groups": slim, "cached": True, "source": "precompute_script"},
+            {
+                "success": True,
+                "case_groups": slim_groups,
+                "cached": True,
+                "source": "precompute_script",
+            },
             ttl=86400,
         )
-        print("  Redis warmed for automated-analysis + cluster-groups", flush=True)
+        print(
+            f"  Redis warmed for automated-analysis + cluster-groups "
+            f"({len(slim_groups)} hubs, "
+            f"{sum(len(g.get('internal_groups') or []) for g in slim_groups)} moons)",
+            flush=True,
+        )
     except Exception as e:
         print(f"  Redis warm skipped: {e}", flush=True)
 
