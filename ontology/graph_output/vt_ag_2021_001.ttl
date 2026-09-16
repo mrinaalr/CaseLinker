@@ -11,16 +11,19 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2021_001> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:24:06.448162" ;
+    dcterms:created "2026-09-15T20:39:17.453753" ;
     dcterms:identifier "vt_ag_2021_001" ;
-    dcterms:modified "2026-09-10T20:24:06.448162" ;
+    dcterms:modified "2026-09-15T20:39:17.453753" ;
     dcterms:source <https://ago.vermont.gov/blog/2021/07/13/bennington-man-arrested-promotion-and-possession-child-sex-abuse-materials>,
         "VT AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/bennington>,
+        <https://caselinker.up.railway.app/resource/location/vermont> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/vt_ag_2021_001/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/vt_ag_2021_001/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/vt_ag_2021_001/cybertip>,
@@ -34,7 +37,10 @@
         <https://caselinker.up.railway.app/resource/agency/hsi>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/vermont-state-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/usao>,
+        <https://caselinker.up.railway.app/resource/agency/vermont-state-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/bennington>,
+        <https://caselinker.up.railway.app/resource/location/vermont> .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2021_001/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -50,11 +56,15 @@
 
 <https://caselinker.up.railway.app/resource/agency/attorney-generals-office> a cacontology-multi:StateAgency .
 
-<https://caselinker.up.railway.app/resource/agency/bennington-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/bennington-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Bennington Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/hsi> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
+
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/agency/vermont-state-police-department> a cacontology-multi:StateAgency .
 
@@ -80,7 +90,8 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/vt_ag_2021_001/charge/1>,
         <https://caselinker.up.railway.app/resource/case/vt_ag_2021_001/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/vt_ag_2021_001/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2021_001/operation> a cac-core:Event,
         cacontology-taskforce:TaskForceOperation .
@@ -90,14 +101,21 @@
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2021_001/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/vt_ag_2021_001/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/vt_ag_2021_001/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
 
-<https://caselinker.up.railway.app/resource/platform/instagram> a cacontology-platforms:SocialMediaPlatform ;
+<https://caselinker.up.railway.app/resource/platform/instagram> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:SocialMediaPlatform ;
     rdfs:label "Instagram" .
 
-<https://caselinker.up.railway.app/resource/platform/snapchat> a cacontology-platforms:MessagingService ;
-    rdfs:label "Snapchat" .
+<https://caselinker.up.railway.app/resource/platform/snapchat> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:MessagingService ;
+    rdfs:label "Snapchat" ;
+    cacontology-platforms:encryptionLevel "end-to-end" .
 
 <https://caselinker.up.railway.app/resource/platform/social-media> a cacontology-platforms:SocialMediaPlatform ;
     rdfs:label "social media" .
@@ -107,6 +125,14 @@
 <https://caselinker.up.railway.app/resource/case/vt_ag_2021_001/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/bennington> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Bennington" ;
+    uco-core:name "Bennington" .
+
+<https://caselinker.up.railway.app/resource/location/vermont> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2021_001/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

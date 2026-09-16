@@ -1,39 +1,61 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix cacontology-undercover: <https://cacontology.projectvic.org/undercover#> .
-@prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
+@prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_485/admission/1/extraction-confidence> a cac-core:AssessmentResult ;
-    cac-core:assesses <https://caselinker.up.railway.app/resource/case/ncmec_2022_485/admission/1> ;
-    cac-core:generatedBy <https://caselinker.up.railway.app/resource/case/ncmec_2022_485> ;
-    cac-core:hasConfidence 0.65 .
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_485> a cacontology:CACInvestigation,
+        cac-core:EnduringEntity ;
+    dcterms:created "2026-09-15T20:45:06.411173" ;
+    dcterms:identifier "ncmec_2022_485" ;
+    dcterms:modified "2026-09-15T20:45:06.411173" ;
+    dcterms:source <https://www.lakemchenryscanner.com/2022/08/20/lake-forest-man-charged-after-allegedly-uploading-child-pornography-to-server/>,
+        "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/lake-forest> ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_485/phase/charged> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_485/phase/charged> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2022_485/event/distribution>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_485/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_485/legal-proceeding> ;
+    cacontology:investigationStatus "unknown" ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
+        <https://caselinker.up.railway.app/resource/agency/lake-forest-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/lake-forest> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_485/admission/2/extraction-confidence> a cac-core:AssessmentResult ;
-    cac-core:assesses <https://caselinker.up.railway.app/resource/case/ncmec_2022_485/admission/2> ;
-    cac-core:generatedBy <https://caselinker.up.railway.app/resource/case/ncmec_2022_485> ;
-    cac-core:hasConfidence 0.65 .
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_485/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2022-08-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_485/event/possession> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_485/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_485/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:hasRoleBeginPoint "2022-08-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_485/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_485/person/victim/1> .
 
+<https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
+
+<https://caselinker.up.railway.app/resource/agency/lake-forest-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Lake Forest Police Department" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_485/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "child porn" .
+    rdfs:label "possession of child pornography" ;
+    cacontology-legal-outcomes:indictmentCounts 2 .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_485/cybertip> a cacontology-us-ncmec:NCMECCybertipReport ;
-    cacontology-us-ncmec:supportedBy <https://caselinker.up.railway.app/resource/agency/ncmec> .
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_485/event/distribution> a cac-core:Event,
+        cacontology-legal-outcomes:CSAM_Distribution .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_485/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
@@ -41,65 +63,28 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2022_485/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-08-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2022_485/sentence/1> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_485/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_485/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 41 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_485/person/victim/1> a uco-identity:Person .
 
-<https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_485/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:MonetaryPenalty ;
+    rdfs:label "[\"$200,000\"]" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_485> a cacontology:CACInvestigation,
-        cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:08:06.385017" ;
-    dcterms:identifier "ncmec_2022_485" ;
-    dcterms:modified "2026-09-10T19:08:06.385017" ;
-    dcterms:source <https://www.wcjb.com/2022/06/02/ocala-police-arrest-man-multiple-child-porn-possession-charges/>,
-        "NCMEC" ;
-    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_485/phase/arrested> ;
-    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_485/phase/arrested> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2022_485/admission/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_485/admission/2>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_485/cybertip>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_485/event/possession>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_485/legal-proceeding> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ncmec> .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_485/phase/arrested> a cacontology:InitialPhase,
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_485/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
-    cacontology:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology:hasPhaseBeginPoint "2022-08-01T00:00:00Z"^^xsd:dateTimeStamp .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_485/role/offender/1> a cacontology:OffenderRole,
-        uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_485/event/possession> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_485/person/offender/1> .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_485/admission/1> a cacontology-undercover:IncriminatingStatement ;
-    rdfs:label "having more than one hundred videos of the pornography on his phone" ;
-    dcterms:source <https://www.wcjb.com/2022/06/02/ocala-police-arrest-man-multiple-child-porn-possession-charges/> ;
-    ns1:admissionContext "Children. When SWAT arrived at his home, Kissner initially denied having any child porn. After stating detectives would search all of the..." ;
-    ns1:admissionFrame "admitted_to" ;
-    ns1:admissionTheme "harm_conduct" ;
-    ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_485/role/offender/1> ;
-    ns1:evidenceTier "press_release_stated" ;
-    ns1:quoteType "paraphrase" ;
-    uco-core:description "having more than one hundred videos of the pornography on his phone" .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_485/admission/2> a cacontology-undercover:IncriminatingStatement ;
-    rdfs:label "to having more than one hundred videos of the pornography on his phone" ;
-    dcterms:source <https://www.wcjb.com/2022/06/02/ocala-police-arrest-man-multiple-child-porn-possession-charges/> ;
-    ns1:admissionContext "ild porn. After stating detectives would search all of the electronics in his possession, he admitted to having more than one hundred vid..." ;
-    ns1:admissionFrame "he_admitted_paraphrase" ;
-    ns1:admissionTheme "harm_conduct" ;
-    ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_485/role/offender/1> ;
-    ns1:evidenceTier "press_release_stated" ;
-    ns1:quoteType "paraphrase" ;
-    uco-core:description "to having more than one hundred videos of the pornography on his phone" .
+<https://caselinker.up.railway.app/resource/location/lake-forest> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Lake Forest" ;
+    uco-core:name "Lake Forest" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_485/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
-    cacontology:producesArtifact <https://caselinker.up.railway.app/resource/case/ncmec_2022_485/admission/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_485/admission/2> ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2022_485/facet/possession> .
 

@@ -10,6 +10,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -32,17 +33,23 @@
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
-<https://caselinker.up.railway.app/resource/agency/vermont-department-of-corrections> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/vermont-department-of-corrections> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Vermont Department of Corrections" .
 
 <https://caselinker.up.railway.app/resource/agency/vermont-state-police-department> a cacontology-multi:StateAgency .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2021_002> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:24:10.656526" ;
+    dcterms:created "2026-09-15T20:39:17.459458" ;
     dcterms:identifier "vt_ag_2021_002" ;
-    dcterms:modified "2026-09-10T20:24:10.656526" ;
+    dcterms:modified "2026-09-15T20:39:17.459458" ;
     dcterms:source <https://ago.vermont.gov/blog/2021/08/20/burlington-man-arrested-possession-child-sex-abuse-materials-second-offense>,
         "VT AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/burlington>,
+        <https://caselinker.up.railway.app/resource/location/vermont> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/vt_ag_2021_002/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/vt_ag_2021_002/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/vt_ag_2021_002/admission/1>,
@@ -54,8 +61,11 @@
         <https://caselinker.up.railway.app/resource/agency/burlington-police-department>,
         <https://caselinker.up.railway.app/resource/agency/hsi>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
+        <https://caselinker.up.railway.app/resource/agency/usao>,
         <https://caselinker.up.railway.app/resource/agency/vermont-department-of-corrections>,
-        <https://caselinker.up.railway.app/resource/agency/vermont-state-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/vermont-state-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/burlington>,
+        <https://caselinker.up.railway.app/resource/location/vermont> .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2021_002/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -77,8 +87,7 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/vt_ag_2021_002/charge/1>,
         <https://caselinker.up.railway.app/resource/case/vt_ag_2021_002/charge/2> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/vt_ag_2021_002/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/vt_ag_2021_002/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/vt_ag_2021_002/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2021_002/operation> a cac-core:Event,
         cacontology-taskforce:TaskForceOperation .
@@ -96,15 +105,19 @@
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2021_002/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:ProbationSentence ;
-    rdfs:label "Probation" .
-
-<https://caselinker.up.railway.app/resource/case/vt_ag_2021_002/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$50,000" .
+    rdfs:label "[\"Probation\", \"$50,000\"]" .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2021_002/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/burlington> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Burlington" ;
+    uco-core:name "Burlington" .
+
+<https://caselinker.up.railway.app/resource/location/vermont> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2021_002/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "his probation officer that he had accessed child sex abuse materials, commonly referred to as “child pornography" ;

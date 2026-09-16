@@ -8,6 +8,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -25,18 +26,24 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_057> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:05:11.838201" ;
+    dcterms:created "2026-09-15T20:45:06.035165" ;
     dcterms:identifier "ncmec_2022_057" ;
-    dcterms:modified "2026-09-10T19:05:11.838201" ;
+    dcterms:modified "2026-09-15T20:45:06.035165" ;
     dcterms:source <https://www.wndu.com/2022/03/02/michigan-city-man-pleads-guilty-production-child-pornography/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/ind>,
+        <https://caselinker.up.railway.app/resource/location/michigan-city>,
+        <https://caselinker.up.railway.app/resource/location/south-bend> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_057/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_057/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2022_057/admission/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_057/event/csam>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_057/event/production>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_057/legal-proceeding>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_057/legal-step/sentenced> .
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_057/legal-step/sentenced> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/ind>,
+        <https://caselinker.up.railway.app/resource/location/michigan-city>,
+        <https://caselinker.up.railway.app/resource/location/south-bend> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_057/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -51,8 +58,7 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2022_057/charge/1> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2022_057/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_057/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2022_057/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_057/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -73,15 +79,24 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_057/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MandatoryMinimumSentencing ;
-    rdfs:label "mandatory minimum sentence" .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_057/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "15 years" .
+    rdfs:label "[\"mandatory minimum sentence\", \"15 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_057/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/ind> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/michigan-city> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Michigan City" ;
+    uco-core:name "Michigan City" .
+
+<https://caselinker.up.railway.app/resource/location/south-bend> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "South Bend" ;
+    uco-core:name "South Bend" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_057/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

@@ -6,19 +6,25 @@
 @prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/nj_ag_2025_003> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:58:29.802884" ;
+    dcterms:created "2026-09-15T20:03:12.516246" ;
     dcterms:identifier "nj_ag_2025_003" ;
-    dcterms:modified "2026-09-10T19:58:29.802884" ;
+    dcterms:modified "2026-09-15T20:03:12.516246" ;
     dcterms:source <https://www.njoag.gov/ocean-county-man-charged-with-human-trafficking-in-attempt-to-lure-underage-girls-for-sex>,
         "NJ AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/lanoka-harbor>,
+        <https://caselinker.up.railway.app/resource/location/new-jersey>,
+        <https://caselinker.up.railway.app/resource/location/ocean-county>,
+        <https://caselinker.up.railway.app/resource/location/trenton> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/nj_ag_2025_003/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/nj_ag_2025_003/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/nj_ag_2025_003/event/csam>,
@@ -27,7 +33,11 @@
         <https://caselinker.up.railway.app/resource/case/nj_ag_2025_003/event/trafficking>,
         <https://caselinker.up.railway.app/resource/case/nj_ag_2025_003/legal-proceeding> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/new-jersey-state-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/new-jersey-state-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/lanoka-harbor>,
+        <https://caselinker.up.railway.app/resource/location/new-jersey>,
+        <https://caselinker.up.railway.app/resource/location/ocean-county>,
+        <https://caselinker.up.railway.app/resource/location/trenton> .
 
 <https://caselinker.up.railway.app/resource/case/nj_ag_2025_003/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -64,10 +74,7 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/nj_ag_2025_003/charge/1> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/nj_ag_2025_003/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/nj_ag_2025_003/sentence/2>,
-        <https://caselinker.up.railway.app/resource/case/nj_ag_2025_003/sentence/3>,
-        <https://caselinker.up.railway.app/resource/case/nj_ag_2025_003/sentence/4> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/nj_ag_2025_003/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/nj_ag_2025_003/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 39 .
@@ -77,23 +84,25 @@
 
 <https://caselinker.up.railway.app/resource/case/nj_ag_2025_003/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$200,000" .
-
-<https://caselinker.up.railway.app/resource/case/nj_ag_2025_003/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "10 years" .
-
-<https://caselinker.up.railway.app/resource/case/nj_ag_2025_003/sentence/3> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$150,000" .
-
-<https://caselinker.up.railway.app/resource/case/nj_ag_2025_003/sentence/4> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$15,000" .
+    rdfs:label "[\"$200,000\", \"10 years\", \"$150,000\", \"$15,000\"]" .
 
 <https://caselinker.up.railway.app/resource/case/nj_ag_2025_003/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/lanoka-harbor> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Lanoka Harbor" ;
+    uco-core:name "Lanoka Harbor" .
+
+<https://caselinker.up.railway.app/resource/location/new-jersey> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/ocean-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/trenton> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/nj_ag_2025_003/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

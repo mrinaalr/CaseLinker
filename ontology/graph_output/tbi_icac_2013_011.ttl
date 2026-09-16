@@ -5,24 +5,35 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_011> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:16:28.048521" ;
+    dcterms:created "2026-09-15T20:31:48.048328" ;
     dcterms:identifier "tbi_icac_2013_011" ;
-    dcterms:modified "2026-09-10T20:16:28.048521" ;
+    dcterms:modified "2026-09-15T20:31:48.048328" ;
     dcterms:source <https://tbinewsroom.com/2013/09/24/tbi-arrests-sequatchie-county-constable/>,
         "TBI ICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/chattanooga>,
+        <https://caselinker.up.railway.app/resource/location/sequatchie-county>,
+        <https://caselinker.up.railway.app/resource/location/signal-mountain>,
+        <https://caselinker.up.railway.app/resource/location/tenn> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_011/phase/indicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_011/phase/indicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_011/event/hands-on>,
         <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_011/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/tennessee-bureau-of-investigation> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/tennessee-bureau-of-investigation> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/chattanooga>,
+        <https://caselinker.up.railway.app/resource/location/sequatchie-county>,
+        <https://caselinker.up.railway.app/resource/location/signal-mountain>,
+        <https://caselinker.up.railway.app/resource/location/tenn> .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_011/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -41,8 +52,8 @@
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_011/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Sequatchie County Jail" ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_011/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_011/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 61 .
@@ -50,9 +61,29 @@
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_011/person/victim/1> a uco-identity:Person ;
     cacontology-production:victimAge 8 .
 
+<https://caselinker.up.railway.app/resource/case/tbi_icac_2013_011/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_011/phase/indicted> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/chattanooga> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/sequatchie-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Sequatchie County" ;
+    uco-core:name "Sequatchie County" .
+
+<https://caselinker.up.railway.app/resource/location/signal-mountain> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Signal Mountain" ;
+    uco-core:name "Signal Mountain" .
+
+<https://caselinker.up.railway.app/resource/location/tenn> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_011/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

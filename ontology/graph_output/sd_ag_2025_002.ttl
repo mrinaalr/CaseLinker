@@ -5,19 +5,24 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/sd_ag_2025_002> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:11:44.865213" ;
+    dcterms:created "2026-09-15T20:25:38.737730" ;
     dcterms:identifier "sd_ag_2025_002" ;
-    dcterms:modified "2026-09-10T20:11:44.865213" ;
+    dcterms:modified "2026-09-15T20:25:38.737730" ;
     dcterms:source <https://atg.sd.gov/OurOffice/Media/pressreleasesdetail.aspx?id=2875>,
         "SD AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/davison-county>,
+        <https://caselinker.up.railway.app/resource/location/sd>,
+        <https://caselinker.up.railway.app/resource/location/south-dakota> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/sd_ag_2025_002/phase/indicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/sd_ag_2025_002/phase/indicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/sd_ag_2025_002/event/hands-on>,
@@ -26,7 +31,10 @@
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/attorney-generals-office>,
         <https://caselinker.up.railway.app/resource/agency/mitchell-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/south-dakotas-division-of-criminal-investigation> .
+        <https://caselinker.up.railway.app/resource/agency/south-dakotas-division-of-criminal-investigation> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/davison-county>,
+        <https://caselinker.up.railway.app/resource/location/sd>,
+        <https://caselinker.up.railway.app/resource/location/south-dakota> .
 
 <https://caselinker.up.railway.app/resource/case/sd_ag_2025_002/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -62,8 +70,7 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/sd_ag_2025_002/charge/1> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/sd_ag_2025_002/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/sd_ag_2025_002/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/sd_ag_2025_002/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/sd_ag_2025_002/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 48 .
@@ -72,16 +79,23 @@
     cacontology-production:victimAge 13 .
 
 <https://caselinker.up.railway.app/resource/case/sd_ag_2025_002/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "10 years" .
-
-<https://caselinker.up.railway.app/resource/case/sd_ag_2025_002/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:LifeImprisonmentSentence ;
-    rdfs:label "life in prison" .
+    rdfs:label "[\"10 years\", \"life in prison\"]" .
 
 <https://caselinker.up.railway.app/resource/case/sd_ag_2025_002/phase/indicted> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/davison-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Davison County" ;
+    uco-core:name "Davison County" .
+
+<https://caselinker.up.railway.app/resource/location/sd> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/south-dakota> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/sd_ag_2025_002/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

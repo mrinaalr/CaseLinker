@@ -1,22 +1,29 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_316> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:11:27.761843" ;
+    dcterms:created "2026-09-15T20:55:01.023086" ;
     dcterms:identifier "ncmec_2023_316" ;
-    dcterms:modified "2026-09-10T19:11:27.761843" ;
+    dcterms:modified "2026-09-15T20:55:01.023086" ;
     dcterms:source <https://secureflorida.org/Family-Safety/BPParents.htm>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/fla>,
+        <https://caselinker.up.railway.app/resource/location/florida>,
+        <https://caselinker.up.railway.app/resource/location/holmes-county>,
+        <https://caselinker.up.railway.app/resource/location/westville> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_316/phase/booked> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_316/phase/booked> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_316/cybertip>,
@@ -24,7 +31,11 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_316/legal-proceeding> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/department-of-law-enforcement>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/office-of-the-state-attorney> .
+        <https://caselinker.up.railway.app/resource/agency/office-of-the-state-attorney> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/fla>,
+        <https://caselinker.up.railway.app/resource/location/florida>,
+        <https://caselinker.up.railway.app/resource/location/holmes-county>,
+        <https://caselinker.up.railway.app/resource/location/westville> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_316/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -40,7 +51,9 @@
 
 <https://caselinker.up.railway.app/resource/agency/department-of-law-enforcement> a cacontology-multi:LocalAgency .
 
-<https://caselinker.up.railway.app/resource/agency/office-of-the-state-attorney> a cacontology-multi:StateAgency .
+<https://caselinker.up.railway.app/resource/agency/office-of-the-state-attorney> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:StateAgency ;
+    rdfs:label "Office of the State Attorney" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_316/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -54,19 +67,40 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_316/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Walton County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_316/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-09-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-09-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_316/sentence/1> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_316/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_316/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 31 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_316/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_316/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_316/phase/booked> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-09-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/fla> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/florida> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/holmes-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Holmes County" ;
+    uco-core:name "Holmes County" .
+
+<https://caselinker.up.railway.app/resource/location/westville> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Westville" ;
+    uco-core:name "Westville" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_316/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

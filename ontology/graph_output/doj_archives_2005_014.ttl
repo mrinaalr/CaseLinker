@@ -10,16 +10,20 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2005_014> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:39:48.268922" ;
+    dcterms:created "2026-09-15T21:42:39.721519" ;
     dcterms:identifier "doj_archives_2005_014" ;
-    dcterms:modified "2026-09-10T19:39:48.268922" ;
+    dcterms:modified "2026-09-15T21:42:39.721519" ;
     dcterms:source <https://www.justice.gov/archive/criminal/ceos/pressreleases/downloads/DC%20Schiffer%20PR_061305.pdf>,
-        "DOJ ARCHIVES" ;
+        "DOJ CEOS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/dc>,
+        <https://caselinker.up.railway.app/resource/location/the-district-of-columbia>,
+        <https://caselinker.up.railway.app/resource/location/washington> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_archives_2005_014/phase/convicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_archives_2005_014/phase/convicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_archives_2005_014/event/distribution>,
@@ -32,7 +36,11 @@
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ceos>,
         <https://caselinker.up.railway.app/resource/agency/fbi>,
-        <https://caselinker.up.railway.app/resource/agency/pennsylvania-state-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/pennsylvania-state-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/dc>,
+        <https://caselinker.up.railway.app/resource/location/the-district-of-columbia>,
+        <https://caselinker.up.railway.app/resource/location/washington> .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2005_014/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -55,6 +63,8 @@
 <https://caselinker.up.railway.app/resource/agency/fbi> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/agency/pennsylvania-state-police-department> a cacontology-multi:StateAgency .
+
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2005_014/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -80,8 +90,7 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/doj_archives_2005_014/charge/1>,
         <https://caselinker.up.railway.app/resource/case/doj_archives_2005_014/charge/2> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2005-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_archives_2005_014/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_archives_2005_014/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_archives_2005_014/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2005_014/legal-step/convicted> a cac-core:Event,
         cac-core:LegalEvent,
@@ -96,15 +105,20 @@
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2005_014/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MandatoryMinimumSentencing ;
-    rdfs:label "mandatory minimum" .
-
-<https://caselinker.up.railway.app/resource/case/doj_archives_2005_014/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MandatoryMinimumSentencing ;
-    rdfs:label "mandatory minimum sentence" .
+    rdfs:label "[\"mandatory minimum\", \"mandatory minimum sentence\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2005_014/phase/convicted> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2005-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/dc> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/the-district-of-columbia> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/washington> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2005_014/event/online-only> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

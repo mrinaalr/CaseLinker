@@ -7,17 +7,22 @@
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ut_ag_2026_001> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:21:47.722967" ;
+    dcterms:created "2026-09-15T20:38:01.162657" ;
     dcterms:identifier "ut_ag_2026_001" ;
-    dcterms:modified "2026-09-10T20:21:47.722967" ;
+    dcterms:modified "2026-09-15T20:38:01.162657" ;
     dcterms:source <https://attorneygeneral.utah.gov/icac-and-local-law-enforcement-collaboration-leads-to-multiple-arrests/>,
         "UT AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/north-salt-lake>,
+        <https://caselinker.up.railway.app/resource/location/provo>,
+        <https://caselinker.up.railway.app/resource/location/utah> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ut_ag_2026_001/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ut_ag_2026_001/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ut_ag_2026_001/event/trafficking>,
@@ -26,7 +31,10 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/orem-police-department>,
         <https://caselinker.up.railway.app/resource/agency/provo-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/utah-attorney-generals-office> .
+        <https://caselinker.up.railway.app/resource/agency/utah-attorney-generals-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/north-salt-lake>,
+        <https://caselinker.up.railway.app/resource/location/provo>,
+        <https://caselinker.up.railway.app/resource/location/utah> .
 
 <https://caselinker.up.railway.app/resource/case/ut_ag_2026_001/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -72,15 +80,33 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ut_ag_2026_001/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ut_ag_2026_001/charge/2>,
         <https://caselinker.up.railway.app/resource/case/ut_ag_2026_001/charge/3> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ut_ag_2026_001/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ut_ag_2026_001/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ut_ag_2026_001/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ut_ag_2026_001/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ut_ag_2026_001/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/north-salt-lake> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "North Salt Lake" ;
+    uco-core:name "North Salt Lake" .
+
+<https://caselinker.up.railway.app/resource/location/provo> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Provo" ;
+    uco-core:name "Provo" .
+
+<https://caselinker.up.railway.app/resource/location/utah> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ut_ag_2026_001/offense-event/charge-3> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event,

@@ -1,75 +1,91 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
-@prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
-@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_213> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:06:12.547848" ;
+    dcterms:created "2026-09-15T20:45:06.152945" ;
     dcterms:identifier "ncmec_2022_213" ;
-    dcterms:modified "2026-09-10T19:06:12.547848" ;
-    dcterms:source <https://naughtyteacherlist.com/2022/09/16/erik-ekstrom-bend-la-pine-schools-elementary-music-teacher-accused-of-possessing-explicit-child-images/>,
+    dcterms:modified "2026-09-15T20:45:06.152945" ;
+    dcterms:source <https://www.clickorlando.com/news/local/2022/02/11/adventhealth-employee-arrested-over-possession-of-child-pornography-seminole-county-deputies-say/>,
         "NCMEC" ;
-    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_213/phase/booked> ;
-    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_213/phase/booked> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2022_213/event/multi-jurisdiction>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_213/event/possession>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_213/event/trust-violation>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_213/legal-proceeding> .
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/altamonte-springs>,
+        <https://caselinker.up.railway.app/resource/location/fla>,
+        <https://caselinker.up.railway.app/resource/location/seminole-county> ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_213/phase/charged> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_213/phase/charged> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2022_213/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_213/legal-proceeding> ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/seminole-county-sheriffs-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/altamonte-springs>,
+        <https://caselinker.up.railway.app/resource/location/fla>,
+        <https://caselinker.up.railway.app/resource/location/seminole-county> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_213/event/multi-jurisdiction> a cac-core:Event,
-        cacontology-multi:MultiJurisdictionalInvestigation ;
-    cacontology:severityLevel 3 .
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_213/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2022-02-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_213/event/possession> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_213/person/offender/1> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_213/event/trust-violation> a cacontology-custodial:CustodialAbuse,
-        cacontology-custodial:TrustViolation ;
-    cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/ncmec_2022_213/relationship/father> .
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_213/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2022-02-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_213/event/possession> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_213/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/agency/seminole-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Seminole County Sheriff's Office" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_213/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
+        cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "child pornography" ;
+    cacontology-legal-outcomes:indictmentCounts 12 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_213/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_213/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Deschutes County Jail" ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-09-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2022_213/charge/1> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-02-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2022_213/sentence/1> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_213/person/offender/1> a uco-identity:Person ;
-    cacontology-detection:ageEstimate 35 .
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_213/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_213/person/victim/1> a uco-identity:Person .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_213/relationship/father> a cacontology-custodial:CustodialRelationship,
-        cacontology-custodial:FamilialRelationship ;
-    cacontology-custodial:involvesChild <https://caselinker.up.railway.app/resource/case/ncmec_2022_213/role/victim/1> ;
-    cacontology-custodial:involvesCustodian <https://caselinker.up.railway.app/resource/case/ncmec_2022_213/role/offender/1> ;
-    cacontology-custodial:relationshipType "father" .
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_213/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_213/role/offender/1> a cacontology:OffenderRole,
-        uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2022-09-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_213/event/possession> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_213/person/offender/1> .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_213/role/victim/1> a cacontology:VictimRole,
-        uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2022-09-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_213/event/possession> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_213/person/victim/1> .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_213/phase/booked> a cacontology:InitialPhase,
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_213/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
-    cacontology:hasPhaseBeginPoint "2022-09-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology:hasPhaseBeginPoint "2022-02-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/altamonte-springs> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Altamonte Springs" ;
+    uco-core:name "Altamonte Springs" .
+
+<https://caselinker.up.railway.app/resource/location/fla> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/seminole-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Seminole County" ;
+    uco-core:name "Seminole County" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_213/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
-    cacontology:severityLevel 3 ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2022_213/facet/possession> .
 

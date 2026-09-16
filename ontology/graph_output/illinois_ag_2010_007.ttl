@@ -10,16 +10,21 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2010_007> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:46:59.850282" ;
+    dcterms:created "2026-09-15T19:40:56.394747" ;
     dcterms:identifier "illinois_ag_2010_007" ;
-    dcterms:modified "2026-09-10T19:46:59.850282" ;
+    dcterms:modified "2026-09-15T19:49:04.562910" ;
     dcterms:source <https://illinoisattorneygeneral.gov/News-Room/2006-2018-Press-Archive/201009-29%20SEX%20OFFENDER%20ARRESTED%20ON%20CHILD%20PORNOGRAPHY%20CHARGE.pdf>,
         "ILLINOIS AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/danville>,
+        <https://caselinker.up.railway.app/resource/location/illinois>,
+        <https://caselinker.up.railway.app/resource/location/tilton>,
+        <https://caselinker.up.railway.app/resource/location/vermilion-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/illinois_ag_2010_007/phase/convicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/illinois_ag_2010_007/phase/convicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/illinois_ag_2010_007/cybertip>,
@@ -33,7 +38,11 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/illinois-department-of-corrections>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/tilton-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/tilton-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/danville>,
+        <https://caselinker.up.railway.app/resource/location/illinois>,
+        <https://caselinker.up.railway.app/resource/location/tilton>,
+        <https://caselinker.up.railway.app/resource/location/vermilion-county> .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2010_007/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -84,10 +93,10 @@
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2010_007/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Vermilion County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/illinois_ag_2010_007/charge/1>,
         <https://caselinker.up.railway.app/resource/case/illinois_ag_2010_007/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2010-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2010-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/illinois_ag_2010_007/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2010_007/legal-step/convicted> a cac-core:Event,
         cac-core:LegalEvent,
@@ -99,11 +108,33 @@
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2010_007/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/illinois_ag_2010_007/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2010_007/phase/convicted> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2010-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/danville> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Danville" ;
+    uco-core:name "Danville" .
+
+<https://caselinker.up.railway.app/resource/location/illinois> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/tilton> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Tilton" ;
+    uco-core:name "Tilton" .
+
+<https://caselinker.up.railway.app/resource/location/vermilion-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Vermilion County" ;
+    uco-core:name "Vermilion County" .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2010_007/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

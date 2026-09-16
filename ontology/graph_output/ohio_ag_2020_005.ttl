@@ -1,27 +1,35 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2020_005> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:02:38.797430" ;
+    dcterms:created "2026-09-15T20:10:06.564886" ;
     dcterms:identifier "ohio_ag_2020_005" ;
-    dcterms:modified "2026-09-10T20:02:38.797430" ;
+    dcterms:modified "2026-09-15T20:10:06.564886" ;
     dcterms:source <https://www.ohioattorneygeneral.gov/Media/News-Releases/May-2020/Charges-Filed-in-Preble-County-Attempted-Rape-Case>,
         "OHIO AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/ohio>,
+        <https://caselinker.up.railway.app/resource/location/preble-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ohio_ag_2020_005/phase/convicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ohio_ag_2020_005/phase/convicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ohio_ag_2020_005/event/hands-on>,
         <https://caselinker.up.railway.app/resource/case/ohio_ag_2020_005/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/ohio_ag_2020_005/legal-step/convicted> ;
     cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/bureau-of-criminal-investigation> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/bureau-of-criminal-investigation> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/ohio>,
+        <https://caselinker.up.railway.app/resource/location/preble-county> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2020_005/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -49,17 +57,26 @@
         cacontology-legal-outcomes:SentencingHearing ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2020-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
-<https://caselinker.up.railway.app/resource/case/ohio_ag_2020_005/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/ohio_ag_2020_005/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 32 .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2020_005/person/victim/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2020_005/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:LifeImprisonmentSentence ;
-    rdfs:label "life in prison" .
+    rdfs:label "[\"life in prison\"]" .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2020_005/phase/convicted> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2020-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/ohio> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/preble-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Preble County" ;
+    uco-core:name "Preble County" .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2020_005/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

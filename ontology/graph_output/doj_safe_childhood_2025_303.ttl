@@ -12,6 +12,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -34,17 +35,22 @@
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
-<https://caselinker.up.railway.app/resource/agency/missoula-county-sheriffs-office> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/missoula-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Missoula County Sheriff's Office" .
 
 <https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_303> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T21:22:31.714878" ;
+    dcterms:created "2026-09-15T22:12:26.915482" ;
     dcterms:identifier "doj_safe_childhood_2025_303" ;
-    dcterms:modified "2026-09-14T21:22:31.714878" ;
+    dcterms:modified "2026-09-15T22:12:26.915482" ;
     dcterms:source <https://www.justice.gov/usao-mt/pr/lolo-man-sentenced-to2-20-years-prison-distributing-child-pornography-0>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/missoula>,
+        <https://caselinker.up.railway.app/resource/location/missoula-county>,
+        <https://caselinker.up.railway.app/resource/location/montana> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_303/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_303/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_303/admission/1>,
@@ -62,7 +68,10 @@
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/missoula-county-sheriffs-office>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/usao> .
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/missoula>,
+        <https://caselinker.up.railway.app/resource/location/missoula-county>,
+        <https://caselinker.up.railway.app/resource/location/montana> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_303/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -97,8 +106,7 @@
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_303/charge/2>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_303/charge/3> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_303/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_303/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_303/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_303/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -118,12 +126,8 @@
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_303/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_303/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "240 months" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_303/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "supervised release" .
+    rdfs:label "[\"240 months\", \"supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_303/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -136,6 +140,19 @@
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_303/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/missoula> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/missoula-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Missoula County" ;
+    uco-core:name "Missoula County" .
+
+<https://caselinker.up.railway.app/resource/location/montana> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Montana" ;
+    uco-core:name "Montana" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_303/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "the Snapchat account involved in the cyber tip belonged to him and that he received images depicting children engaged..." ;

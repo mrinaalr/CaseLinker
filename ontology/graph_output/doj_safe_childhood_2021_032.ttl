@@ -12,6 +12,7 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -75,8 +76,7 @@
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_032/charge/2>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_032/charge/3> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_032/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_032/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_032/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_032/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -90,20 +90,19 @@
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_032/person/victim/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_032/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "540 months" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_032/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "supervised release" .
+    rdfs:label "[\"540 months\", \"supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_032> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T22:24:25.762705" ;
+    dcterms:created "2026-09-15T22:12:29.269669" ;
     dcterms:identifier "doj_safe_childhood_2021_032" ;
-    dcterms:modified "2026-09-14T22:24:25.762705" ;
+    dcterms:modified "2026-09-15T22:12:29.269669" ;
     dcterms:source <https://www.justice.gov/archives/opa/pr/man-sentenced-45-years-federal-prison-sexual-abuse-two-and-seven-year-old-children-produce>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/maryland>,
+        <https://caselinker.up.railway.app/resource/location/owings-mills>,
+        <https://caselinker.up.railway.app/resource/location/the-district-of-maryland> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_032/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_032/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_032/admission/1>,
@@ -118,7 +117,10 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/doj>,
         <https://caselinker.up.railway.app/resource/agency/fbi>,
         <https://caselinker.up.railway.app/resource/agency/justice-departments-criminal-division>,
-        <https://caselinker.up.railway.app/resource/agency/prince-georges-county-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/prince-georges-county-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/maryland>,
+        <https://caselinker.up.railway.app/resource/location/owings-mills>,
+        <https://caselinker.up.railway.app/resource/location/the-district-of-maryland> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_032/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "having produced both videos" ;
@@ -154,6 +156,15 @@
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_032/offense-event/charge-3> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_032/person/offender/1> .
 
+<https://caselinker.up.railway.app/resource/location/maryland> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/owings-mills> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/the-district-of-maryland> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_032/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
     cacontology:severityLevel 3 ;
@@ -168,12 +179,10 @@
         <https://caselinker.up.railway.app/resource/platform/tor> ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_032/facet/production> .
 
-<https://caselinker.up.railway.app/resource/platform/dark-web> a cac-core:DigitalSystemEntity,
-        cacontology-platforms:DarkWebService ;
+<https://caselinker.up.railway.app/resource/platform/dark-web> a cacontology-platforms:DarkWebService ;
     rdfs:label "dark web" .
 
-<https://caselinker.up.railway.app/resource/platform/tor> a cac-core:DigitalSystemEntity,
-        cacontology-platforms:DarkWebService ;
+<https://caselinker.up.railway.app/resource/platform/tor> a cacontology-platforms:DarkWebService ;
     rdfs:label "Tor" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_032/offense-event/charge-3> a cacontology:ChildSexualAbuseEvent,

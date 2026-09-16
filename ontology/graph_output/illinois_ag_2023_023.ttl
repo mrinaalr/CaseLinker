@@ -10,16 +10,20 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_023> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:48:46.077345" ;
+    dcterms:created "2026-09-15T19:40:56.802246" ;
     dcterms:identifier "illinois_ag_2023_023" ;
-    dcterms:modified "2026-09-10T19:48:46.077345" ;
+    dcterms:modified "2026-09-15T19:49:58.140280" ;
     dcterms:source <https://illinoisattorneygeneral.gov/news/story/attorney-general-raoul-obtains-guilty-plea-in-case-of-champaign-man-charged-with-possessing-child-pornography>,
         "ILLINOIS AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/champaign>,
+        <https://caselinker.up.railway.app/resource/location/illinois>,
+        <https://caselinker.up.railway.app/resource/location/springfield> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_023/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_023/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_023/cybertip>,
@@ -34,7 +38,10 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/champaign-police-department>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/office-of-the-attorney-general> .
+        <https://caselinker.up.railway.app/resource/agency/office-of-the-attorney-general> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/champaign>,
+        <https://caselinker.up.railway.app/resource/location/illinois>,
+        <https://caselinker.up.railway.app/resource/location/springfield> .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_023/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -86,13 +93,11 @@
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_023/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility: Champaign County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_023/charge/1>,
         <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_023/charge/2>,
         <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_023/charge/3> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_023/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_023/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_023/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_023/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -109,11 +114,7 @@
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_023/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:ProbationSentence ;
-    rdfs:label "probation" .
-
-<https://caselinker.up.railway.app/resource/case/illinois_ag_2023_023/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "18 years" .
+    rdfs:label "[\"probation\", \"18 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_023/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -123,6 +124,17 @@
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_023/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/champaign> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Champaign" ;
+    uco-core:name "Champaign" .
+
+<https://caselinker.up.railway.app/resource/location/illinois> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/springfield> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_023/event/online-only> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event .

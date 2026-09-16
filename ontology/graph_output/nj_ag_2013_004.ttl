@@ -10,6 +10,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -26,11 +27,14 @@
 
 <https://caselinker.up.railway.app/resource/case/nj_ag_2013_004> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:56:49.159881" ;
+    dcterms:created "2026-09-15T20:03:12.217407" ;
     dcterms:identifier "nj_ag_2013_004" ;
-    dcterms:modified "2026-09-10T19:56:49.159881" ;
+    dcterms:modified "2026-09-15T20:03:12.217407" ;
     dcterms:source <https://www.njoag.gov/former-rutgers-instructor-sentenced-to-prison-for-using-university-computer-to-share-videos-of-child-pornography-over-internet>,
         "NJ AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/hillsborough>,
+        <https://caselinker.up.railway.app/resource/location/new-brunswick>,
+        <https://caselinker.up.railway.app/resource/location/new-jersey> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/nj_ag_2013_004/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/nj_ag_2013_004/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/nj_ag_2013_004/admission/1>,
@@ -43,7 +47,10 @@
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/new-jersey-state-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/rutgers-university-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/rutgers-university-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/hillsborough>,
+        <https://caselinker.up.railway.app/resource/location/new-brunswick>,
+        <https://caselinker.up.railway.app/resource/location/new-jersey> .
 
 <https://caselinker.up.railway.app/resource/case/nj_ag_2013_004/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -68,7 +75,8 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/nj_ag_2013_004/charge/1>,
         <https://caselinker.up.railway.app/resource/case/nj_ag_2013_004/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/nj_ag_2013_004/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/nj_ag_2013_004/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -93,6 +101,10 @@
         <https://caselinker.up.railway.app/resource/case/nj_ag_2013_004/event/hands-on> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/nj_ag_2013_004/person/victim/1> .
 
+<https://caselinker.up.railway.app/resource/case/nj_ag_2013_004/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/nj_ag_2013_004/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp .
@@ -103,6 +115,15 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/nj_ag_2013_004/event/csam>,
         <https://caselinker.up.railway.app/resource/case/nj_ag_2013_004/event/hands-on> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/nj_ag_2013_004/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/location/hillsborough> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/new-brunswick> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/new-jersey> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/nj_ag_2013_004/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

@@ -11,27 +11,36 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_028> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:59:59.275240" ;
+    dcterms:created "2026-09-15T20:06:35.718680" ;
     dcterms:identifier "newyork_sp_2025_028" ;
-    dcterms:modified "2026-09-10T19:59:59.275240" ;
+    dcterms:modified "2026-09-15T20:06:35.718680" ;
     dcterms:source <https://troopers.ny.gov/news/local-teacher-arrested-sex-crimes-against-children>,
         "NEWYORK SP" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/amherst>,
+        <https://caselinker.up.railway.app/resource/location/fairfax>,
+        <https://caselinker.up.railway.app/resource/location/new-york>,
+        <https://caselinker.up.railway.app/resource/location/virginia> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_028/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_028/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_028/event/csam>,
         <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_028/event/distribution>,
         <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_028/event/trust-violation>,
         <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_028/legal-proceeding>,
-        <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_028/offense-event/charge-2> ;
+        <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_028/offense-event/charge-3> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/a-police-department>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/sp-clarence-bureau-of-criminal-investigation> .
+        <https://caselinker.up.railway.app/resource/agency/sp-clarence-bureau-of-criminal-investigation> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/amherst>,
+        <https://caselinker.up.railway.app/resource/location/fairfax>,
+        <https://caselinker.up.railway.app/resource/location/new-york>,
+        <https://caselinker.up.railway.app/resource/location/virginia> .
 
 <https://caselinker.up.railway.app/resource/agency/a-police-department> a cac-core:OrganizationLikeEntity,
         cacontology-multi:LocalAgency ;
@@ -48,10 +57,14 @@
     rdfs:label "child sexual abuse material" .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_028/charge/2> a cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "sexual exploitation" ;
+    ns1:chargeCluster "sexual_exploitation_unspecified" .
+
+<https://caselinker.up.railway.app/resource/case/newyork_sp_2025_028/charge/3> a cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "child exploitation" ;
-    rdfs:seeAlso <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_028/offense-event/charge-2> ;
+    rdfs:seeAlso <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_028/offense-event/charge-3> ;
     ns1:chargeCluster "child_exploitation" ;
-    ns1:chargeOffenseEvent <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_028/offense-event/charge-2> .
+    ns1:chargeOffenseEvent <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_028/offense-event/charge-3> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_028/event/distribution> a cac-core:Event,
         cacontology-legal-outcomes:CSAM_Distribution ;
@@ -67,8 +80,10 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_028/charge/1>,
-        <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_028/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+        <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_028/charge/2>,
+        <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_028/charge/3> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_028/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_028/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 45 .
@@ -85,26 +100,44 @@
         uco-role:OffenderRole ;
     cacontology:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_028/event/csam>,
-        <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_028/offense-event/charge-2> ;
+        <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_028/offense-event/charge-3> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_028/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_028/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
     cacontology:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_028/event/csam>,
-        <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_028/offense-event/charge-2> ;
+        <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_028/offense-event/charge-3> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_028/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/case/newyork_sp_2025_028/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_028/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/amherst> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/fairfax> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Fairfax" ;
+    uco-core:name "Fairfax" .
+
+<https://caselinker.up.railway.app/resource/location/new-york> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/virginia> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_028/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;
     cacontology:severityLevel 3 ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_028/facet/csam> .
 
-<https://caselinker.up.railway.app/resource/case/newyork_sp_2025_028/offense-event/charge-2> a cacontology:ChildSexualAbuseEvent,
+<https://caselinker.up.railway.app/resource/case/newyork_sp_2025_028/offense-event/charge-3> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event,
         uco-action:Crime ;
     rdfs:label "Inferred offense from charge: child exploitation" .

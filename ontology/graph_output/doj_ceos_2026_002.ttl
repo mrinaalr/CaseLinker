@@ -11,6 +11,7 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -36,18 +37,23 @@
 
 <https://caselinker.up.railway.app/resource/agency/justice-departments-criminal-division> a cacontology-multi:LocalAgency .
 
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
+
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_002> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:42:52.735817" ;
+    dcterms:created "2026-09-15T21:50:56.907074" ;
     dcterms:identifier "doj_ceos_2026_002" ;
-    dcterms:modified "2026-09-10T19:42:52.735817" ;
+    dcterms:modified "2026-09-15T21:50:56.907074" ;
     dcterms:source <https://www.justice.gov/opa/pr/colombian-national-sentenced-eight-years-receipt-child-sexual-abuse-material>,
         "DOJ CEOS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/leesburg>,
+        <https://caselinker.up.railway.app/resource/location/virginia> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_002/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_002/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_002/admission/1>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_002/event/distribution>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_002/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_002/event/project-safe-childhood>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_002/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_002/legal-step/sentenced>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_002/offense-event/charge-3> ;
@@ -56,7 +62,10 @@
         <https://caselinker.up.railway.app/resource/agency/doj>,
         <https://caselinker.up.railway.app/resource/agency/hsi>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/justice-departments-criminal-division> .
+        <https://caselinker.up.railway.app/resource/agency/justice-departments-criminal-division>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/leesburg>,
+        <https://caselinker.up.railway.app/resource/location/virginia> .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_002/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -74,6 +83,10 @@
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_002/event/distribution> a cac-core:Event,
         cacontology-legal-outcomes:CSAM_Distribution ;
+    cacontology:severityLevel 3 .
+
+<https://caselinker.up.railway.app/resource/case/doj_ceos_2026_002/event/project-safe-childhood> a cac-core:Event,
+        cacontology-multi:ProjectSafeChildhoodOperation ;
     cacontology:severityLevel 3 .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_002/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
@@ -106,7 +119,7 @@
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_002/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "15 years of supervised release" .
+    rdfs:label "[\"15 years of supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_002/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "using BitTorrent to search for images of young girls" ;
@@ -122,6 +135,12 @@
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_002/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/leesburg> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/virginia> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/platform/bittorrent> a cacontology-platforms:FileHostingService ;
     rdfs:label "BitTorrent" .

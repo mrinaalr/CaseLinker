@@ -9,16 +9,19 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ice_2013_005> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:45:35.971005" ;
+    dcterms:created "2026-09-15T19:35:19.129763" ;
     dcterms:identifier "ice_2013_005" ;
-    dcterms:modified "2026-09-10T19:45:35.971005" ;
+    dcterms:modified "2026-09-15T19:35:19.129763" ;
     dcterms:source <https://www.ice.gov/news/releases/white-lake-man-charged-production-distribution-child-pornography>,
         "ICE" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/ireland>,
+        <https://caselinker.up.railway.app/resource/location/white-lake> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ice_2013_005/phase/convicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ice_2013_005/phase/convicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ice_2013_005/cybertip>,
@@ -33,7 +36,9 @@
         <https://caselinker.up.railway.app/resource/agency/ice>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
         <https://caselinker.up.railway.app/resource/agency/virtual-global-taskforce>,
-        <https://caselinker.up.railway.app/resource/agency/white-lake-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/white-lake-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/ireland>,
+        <https://caselinker.up.railway.app/resource/location/white-lake> .
 
 <https://caselinker.up.railway.app/resource/case/ice_2013_005/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -94,8 +99,7 @@
         <https://caselinker.up.railway.app/resource/case/ice_2013_005/charge/2>,
         <https://caselinker.up.railway.app/resource/case/ice_2013_005/charge/3> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ice_2013_005/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/ice_2013_005/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ice_2013_005/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ice_2013_005/legal-step/convicted> a cac-core:Event,
         cac-core:LegalEvent,
@@ -112,17 +116,23 @@
 
 <https://caselinker.up.railway.app/resource/case/ice_2013_005/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MandatoryMinimumSentencing ;
-    rdfs:label "mandatory minimum" .
-
-<https://caselinker.up.railway.app/resource/case/ice_2013_005/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "15 years" .
+    rdfs:label "[\"mandatory minimum\", \"15 years\"]" .
 
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/ice_2013_005/phase/convicted> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/ireland> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Ireland" ;
+    uco-core:name "Ireland" .
+
+<https://caselinker.up.railway.app/resource/location/white-lake> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "White Lake" ;
+    uco-core:name "White Lake" .
 
 <https://caselinker.up.railway.app/resource/case/ice_2013_005/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

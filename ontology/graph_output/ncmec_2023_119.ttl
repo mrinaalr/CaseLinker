@@ -4,19 +4,22 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_119> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:09:57.909722" ;
+    dcterms:created "2026-09-15T20:55:00.849145" ;
     dcterms:identifier "ncmec_2023_119" ;
-    dcterms:modified "2026-09-10T19:09:57.909722" ;
+    dcterms:modified "2026-09-15T20:55:00.849145" ;
     dcterms:source <https://www.baldwin-bulletin.com/news/woodville-man-charged-with-two-counts-of-possession-of-child-pornography/article_95fd6aa6-0abb-11ee-b46a-07665b671950.html>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/st-croix-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_119/phase/convicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_119/phase/convicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_119/event/distribution>,
@@ -25,7 +28,8 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_119/legal-step/convicted> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/minnesota-bureau-of-criminal-apprehension>,
-        <https://caselinker.up.railway.app/resource/agency/st-croix-county-sheriffs-office> .
+        <https://caselinker.up.railway.app/resource/agency/st-croix-county-sheriffs-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/st-croix-county> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_119/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -39,7 +43,9 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_119/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_119/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/minnesota-bureau-of-criminal-apprehension> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/minnesota-bureau-of-criminal-apprehension> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Minnesota Bureau of Criminal Apprehension" .
 
 <https://caselinker.up.railway.app/resource/agency/st-croix-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
         cacontology-multi:LocalAgency ;
@@ -74,7 +80,7 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_119/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$100,000" .
+    rdfs:label "[\"$100,000\"]" .
 
 <https://caselinker.up.railway.app/resource/platform/snapchat> a cacontology-platforms:MessagingService ;
     rdfs:label "Snapchat" .
@@ -82,6 +88,11 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_119/phase/convicted> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/st-croix-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "St. Croix County" ;
+    uco-core:name "St. Croix County" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_119/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

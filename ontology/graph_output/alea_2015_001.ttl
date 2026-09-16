@@ -9,19 +9,25 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/alea_2015_001> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:26:21.965429" ;
+    dcterms:created "2026-09-15T19:23:52.964188" ;
     dcterms:identifier "alea_2015_001" ;
-    dcterms:modified "2026-09-10T20:26:21.965429" ;
+    dcterms:modified "2026-09-15T19:23:52.964188" ;
     dcterms:source <https://www.alea.gov/news/aleas-icac-unit-arrests-five-statewide-internet-child-pornography-takedown>,
         "ALEA" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/ardmore>,
+        <https://caselinker.up.railway.app/resource/location/decatur>,
+        <https://caselinker.up.railway.app/resource/location/eufaula>,
+        <https://caselinker.up.railway.app/resource/location/rainbow-city> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/alea_2015_001/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/alea_2015_001/phase/charged> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/alea_2015_001/event/distribution>,
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/alea_2015_001/event/conspiracy>,
+        <https://caselinker.up.railway.app/resource/case/alea_2015_001/event/distribution>,
         <https://caselinker.up.railway.app/resource/case/alea_2015_001/event/possession>,
         <https://caselinker.up.railway.app/resource/case/alea_2015_001/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
@@ -37,18 +43,17 @@
         <https://caselinker.up.railway.app/resource/agency/limestone-county-sheriffs-office>,
         <https://caselinker.up.railway.app/resource/agency/morgan-county-sheriffs-office>,
         <https://caselinker.up.railway.app/resource/agency/phenix-city-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/tallapoosa-county-sheriffs-office> .
-
-<https://caselinker.up.railway.app/resource/case/alea_2015_001/role/offender/1> a cacontology:OffenderRole,
-        uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2015-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/alea_2015_001/event/possession> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/alea_2015_001/person/offender/1> .
+        <https://caselinker.up.railway.app/resource/agency/tallapoosa-county-sheriffs-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/ardmore>,
+        <https://caselinker.up.railway.app/resource/location/decatur>,
+        <https://caselinker.up.railway.app/resource/location/eufaula>,
+        <https://caselinker.up.railway.app/resource/location/rainbow-city> .
 
 <https://caselinker.up.railway.app/resource/case/alea_2015_001/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
     cacontology:hasRoleBeginPoint "2015-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/alea_2015_001/event/possession> ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/alea_2015_001/event/conspiracy>,
+        <https://caselinker.up.railway.app/resource/case/alea_2015_001/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/alea_2015_001/person/victim/1> .
 
 <https://caselinker.up.railway.app/resource/agency/aleas-state-bureau-of-investigations> a cac-core:OrganizationLikeEntity,
@@ -108,33 +113,100 @@
     rdfs:label "possession of child pornography" ;
     cacontology-legal-outcomes:indictmentCounts 2 .
 
-<https://caselinker.up.railway.app/resource/case/alea_2015_001/charge/2> a cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "sexual exploitation" ;
-    ns1:chargeCluster "sexual_exploitation_unspecified" .
-
 <https://caselinker.up.railway.app/resource/case/alea_2015_001/event/distribution> a cac-core:Event,
-        cacontology-legal-outcomes:CSAM_Distribution .
+        cacontology-legal-outcomes:CSAM_Distribution ;
+    cacontology:severityLevel 1 .
 
 <https://caselinker.up.railway.app/resource/case/alea_2015_001/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
 <https://caselinker.up.railway.app/resource/case/alea_2015_001/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Limestone County Jail" ;
-    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/alea_2015_001/charge/1>,
-        <https://caselinker.up.railway.app/resource/case/alea_2015_001/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2015-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/alea_2015_001/charge/1> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2015-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/alea_2015_001/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/alea_2015_001/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 26 .
+
+<https://caselinker.up.railway.app/resource/case/alea_2015_001/person/offender/2> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 35 .
+
+<https://caselinker.up.railway.app/resource/case/alea_2015_001/person/offender/3> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 37 .
+
+<https://caselinker.up.railway.app/resource/case/alea_2015_001/person/offender/4> a uco-identity:Person ;
     cacontology-detection:ageEstimate 60 .
 
 <https://caselinker.up.railway.app/resource/case/alea_2015_001/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/alea_2015_001/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2015-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/alea_2015_001/event/conspiracy>,
+        <https://caselinker.up.railway.app/resource/case/alea_2015_001/event/possession> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/alea_2015_001/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/alea_2015_001/role/offender/2> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2015-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/alea_2015_001/event/conspiracy>,
+        <https://caselinker.up.railway.app/resource/case/alea_2015_001/event/possession> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/alea_2015_001/person/offender/2> .
+
+<https://caselinker.up.railway.app/resource/case/alea_2015_001/role/offender/3> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2015-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/alea_2015_001/event/conspiracy>,
+        <https://caselinker.up.railway.app/resource/case/alea_2015_001/event/possession> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/alea_2015_001/person/offender/3> .
+
+<https://caselinker.up.railway.app/resource/case/alea_2015_001/role/offender/4> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2015-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/alea_2015_001/event/conspiracy>,
+        <https://caselinker.up.railway.app/resource/case/alea_2015_001/event/possession> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/alea_2015_001/person/offender/4> .
+
+<https://caselinker.up.railway.app/resource/case/alea_2015_001/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/case/alea_2015_001/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2015-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
+<https://caselinker.up.railway.app/resource/location/ardmore> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Ardmore" ;
+    uco-core:name "Ardmore" .
+
+<https://caselinker.up.railway.app/resource/location/decatur> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Decatur" ;
+    uco-core:name "Decatur" .
+
+<https://caselinker.up.railway.app/resource/location/eufaula> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Eufaula" ;
+    uco-core:name "Eufaula" .
+
+<https://caselinker.up.railway.app/resource/location/rainbow-city> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Rainbow City" ;
+    uco-core:name "Rainbow City" .
+
+<https://caselinker.up.railway.app/resource/case/alea_2015_001/event/conspiracy> a cacontology:ConspiracyToCommitCSA,
+        cac-core:Event ;
+    cacontology:conspiracyMemberCount 4 ;
+    cacontology:participatesInConspiracy <https://caselinker.up.railway.app/resource/case/alea_2015_001/role/offender/1>,
+        <https://caselinker.up.railway.app/resource/case/alea_2015_001/role/offender/2>,
+        <https://caselinker.up.railway.app/resource/case/alea_2015_001/role/offender/3>,
+        <https://caselinker.up.railway.app/resource/case/alea_2015_001/role/offender/4> ;
+    cacontology:severityLevel 1 .
+
 <https://caselinker.up.railway.app/resource/case/alea_2015_001/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
+    cacontology:severityLevel 1 ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/alea_2015_001/facet/possession> .
 

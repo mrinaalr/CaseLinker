@@ -1,118 +1,110 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
-@prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
-@prefix cacontology-undercover: <https://cacontology.projectvic.org/undercover#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_328/admission/1/extraction-confidence> a cac-core:AssessmentResult ;
-    cac-core:assesses <https://caselinker.up.railway.app/resource/case/ncmec_2024_328/admission/1> ;
-    cac-core:generatedBy <https://caselinker.up.railway.app/resource/case/ncmec_2024_328> ;
-    cac-core:hasConfidence 0.65 .
-
-<https://caselinker.up.railway.app/resource/agency/illinois-department-of-human-services> a cac-core:OrganizationLikeEntity,
-        cacontology-multi:LocalAgency ;
-    rdfs:label "Illinois Department of Human Services" .
-
-<https://caselinker.up.railway.app/resource/agency/illinois-state-police-department> a cacontology-multi:StateAgency .
-
-<https://caselinker.up.railway.app/resource/agency/quincy-police-department> a cacontology-multi:LocalAgency .
-
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_328> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:17:04.683563" ;
+    dcterms:created "2026-09-15T21:08:10.460125" ;
     dcterms:identifier "ncmec_2024_328" ;
-    dcterms:modified "2026-09-10T19:17:04.683563" ;
-    dcterms:source <https://ipmnewsroom.org/co-manager-of-champaigns-the-beat-program-arrested-on-child-pornography-charges/>,
+    dcterms:modified "2026-09-15T21:08:10.460125" ;
+    dcterms:source <https://www.fox32chicago.com/news/illinois-man-gets-8-years-for-child-pornography-in-exchange-for-guilty-plea-prosecutors>,
         "NCMEC" ;
-    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_328/phase/arrested> ;
-    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_328/phase/arrested> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_328/admission/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_328/event/possession>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_328/event/trust-violation>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_328/legal-proceeding> ;
-    cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/illinois-department-of-human-services>,
-        <https://caselinker.up.railway.app/resource/agency/illinois-state-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/quincy-police-department> .
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/champaign>,
+        <https://caselinker.up.railway.app/resource/location/ill>,
+        <https://caselinker.up.railway.app/resource/location/illinois>,
+        <https://caselinker.up.railway.app/resource/location/kane-county>,
+        <https://caselinker.up.railway.app/resource/location/manhattan> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_328/event/csam>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_328/event/distribution>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_328/legal-proceeding>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_328/offense-event/charge-2> ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/illinois-state-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/champaign>,
+        <https://caselinker.up.railway.app/resource/location/ill>,
+        <https://caselinker.up.railway.app/resource/location/illinois>,
+        <https://caselinker.up.railway.app/resource/location/kane-county>,
+        <https://caselinker.up.railway.app/resource/location/manhattan> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_328/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_328/event/csam>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_328/offense-event/charge-2> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_328/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_328/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_328/event/csam>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_328/offense-event/charge-2> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_328/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/agency/illinois-state-police-department> a cacontology-multi:StateAgency .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_328/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_328/event/trust-violation> a cacontology-custodial:CustodialAbuse,
-        cacontology-custodial:TrustViolation ;
-    cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/ncmec_2024_328/relationship/mother> .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_328/charge/2> a cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "child exploitation" ;
+    rdfs:seeAlso <https://caselinker.up.railway.app/resource/case/ncmec_2024_328/offense-event/charge-2> ;
+    ns1:chargeCluster "child_exploitation" ;
+    ns1:chargeOffenseEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_328/offense-event/charge-2> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_328/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_328/event/distribution> a cac-core:Event,
+        cacontology-legal-outcomes:CSAM_Distribution .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_328/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_328/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility: Adams County Jail" ;
-    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2024_328/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-06-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2024_328/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_328/sentence/2> .
+    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2024_328/charge/1>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_328/charge/2> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2024_328/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_328/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_328/person/victim/1> a uco-identity:Person .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_328/relationship/mother> a cacontology-custodial:CustodialRelationship,
-        cacontology-custodial:FamilialRelationship ;
-    cacontology-custodial:involvesChild <https://caselinker.up.railway.app/resource/case/ncmec_2024_328/role/victim/1> ;
-    cacontology-custodial:involvesCustodian <https://caselinker.up.railway.app/resource/case/ncmec_2024_328/role/offender/1> ;
-    cacontology-custodial:relationshipType "mother" .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_328/role/victim/1> a cacontology:VictimRole,
-        uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2023-06-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_328/event/possession> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_328/person/victim/1> .
-
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_328/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:ProbationSentence ;
-    rdfs:label "probation" .
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_328/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$100,000" .
+<https://caselinker.up.railway.app/resource/location/champaign> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
-<https://caselinker.up.railway.app/resource/platform/snapchat> a cacontology-platforms:MessagingService ;
-    rdfs:label "Snapchat" .
+<https://caselinker.up.railway.app/resource/location/ill> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_328/admission/1> a cacontology-undercover:IncriminatingStatement ;
-    rdfs:label "had “significant concerns” that Davis would be a candidate to re- offend and questioned his honesty throughout the co..." ;
-    dcterms:source <https://ipmnewsroom.org/co-manager-of-champaigns-the-beat-program-arrested-on-child-pornography-charges/> ;
-    ns1:admissionContext "pacity to be honest or to engage in an honest exercise in that regard.” Assistant State’s Attorney Laura Keck said she had “significant c..." ;
-    ns1:admissionFrame "said_paraphrase" ;
-    ns1:admissionTheme "other" ;
-    ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_328/role/offender/1> ;
-    ns1:evidenceTier "press_release_stated" ;
-    ns1:quoteType "paraphrase" ;
-    uco-core:description "had “significant concerns” that Davis would be a candidate to re- offend and questioned his honesty throughout the court process" .
+<https://caselinker.up.railway.app/resource/location/illinois> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_328/phase/arrested> a cacontology:InitialPhase,
-        cac-core:Phase ;
-    cacontology:hasPhaseBeginPoint "2023-06-01T00:00:00Z"^^xsd:dateTimeStamp .
+<https://caselinker.up.railway.app/resource/location/kane-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_328/role/offender/1> a cacontology:OffenderRole,
-        uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2023-06-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_328/event/possession> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_328/person/offender/1> .
+<https://caselinker.up.railway.app/resource/location/manhattan> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Manhattan" ;
+    uco-core:name "Manhattan" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_328/event/possession> a cacontology:CSAMIncident,
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_328/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;
-    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/snapchat> ;
-    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2024_328/facet/possession> .
+    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2024_328/facet/csam> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_328/offense-event/charge-2> a cacontology:ChildSexualAbuseEvent,
+        cac-core:Event,
+        uco-action:Crime ;
+    rdfs:label "Inferred offense from charge: child exploitation" .
 

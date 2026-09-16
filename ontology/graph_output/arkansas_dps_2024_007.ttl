@@ -5,26 +5,31 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_007> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:36:15.985226" ;
+    dcterms:created "2026-09-15T19:25:07.418395" ;
     dcterms:identifier "arkansas_dps_2024_007" ;
-    dcterms:modified "2026-09-10T19:36:15.985226" ;
+    dcterms:modified "2026-09-15T19:25:07.418395" ;
     dcterms:source <https://dps.arkansas.gov/news/icac-team-arrests-hot-springs-man-on-40-counts-of-csam/>,
         "ARKANSAS DPS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/ark>,
+        <https://caselinker.up.railway.app/resource/location/hot-springs> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_007/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_007/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_007/event/distribution>,
         <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_007/event/possession>,
         <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_007/legal-proceeding> ;
-    cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/ark>,
+        <https://caselinker.up.railway.app/resource/location/hot-springs> .
 
 <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_007/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -75,11 +80,19 @@
 
 <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_007/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$150,000" .
+    rdfs:label "[\"$150,000\"]" .
 
 <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_007/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/ark> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/hot-springs> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Hot Springs" ;
+    uco-core:name "Hot Springs" .
 
 <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_007/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

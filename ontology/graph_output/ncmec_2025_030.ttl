@@ -12,6 +12,7 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -37,11 +38,15 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_030/offense-event/charge-2> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_030/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/department-of-defense> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/department-of-defense> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Department of Defense" .
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
-<https://caselinker.up.railway.app/resource/agency/maricopa-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/maricopa-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Maricopa Police Department" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_030/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -65,8 +70,7 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_030/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_030/charge/2> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_030/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2025_030/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_030/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_030/legal-step/convicted> a cac-core:Event,
         cac-core:LegalEvent,
@@ -80,11 +84,7 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_030/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$20" .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2025_030/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$40" .
+    rdfs:label "[\"$20\", \"$40\"]" .
 
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
@@ -92,19 +92,39 @@
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
-<https://caselinker.up.railway.app/resource/platform/chat> a cacontology-platforms:AnonymousChatPlatform ;
-    rdfs:label "chat" .
+<https://caselinker.up.railway.app/resource/location/arizona> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Arizona" ;
+    uco-core:name "Arizona" .
+
+<https://caselinker.up.railway.app/resource/location/grove> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Grove" ;
+    uco-core:name "Grove" .
+
+<https://caselinker.up.railway.app/resource/location/pinal-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Pinal County" ;
+    uco-core:name "Pinal County" .
+
+<https://caselinker.up.railway.app/resource/platform/chat> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:AnonymousChatPlatform ;
+    rdfs:label "chat" ;
+    cacontology-platforms:platformSpecificity "generic" .
 
 <https://caselinker.up.railway.app/resource/platform/kik> a cacontology-platforms:MessagingService ;
     rdfs:label "Kik" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_030> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:25:29.121063" ;
+    dcterms:created "2026-09-15T21:27:13.178931" ;
     dcterms:identifier "ncmec_2025_030" ;
-    dcterms:modified "2026-09-10T19:25:29.121063" ;
+    dcterms:modified "2026-09-15T21:27:13.178931" ;
     dcterms:source <https://www.inmaricopa.com/police-uncovered-a-decades-worth-of-child-porn-in-cobblestone-farms/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/arizona>,
+        <https://caselinker.up.railway.app/resource/location/grove>,
+        <https://caselinker.up.railway.app/resource/location/pinal-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_030/phase/convicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_030/phase/convicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_030/admission/1>,
@@ -119,12 +139,15 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/department-of-defense>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/maricopa-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/arizona>,
+        <https://caselinker.up.railway.app/resource/location/grove>,
+        <https://caselinker.up.railway.app/resource/location/pinal-county> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_030/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "had more child pornography on his cell phone, and when officers checked they found more than 50 files dated November ..." ;
     dcterms:source <https://www.inmaricopa.com/police-uncovered-a-decades-worth-of-child-porn-in-cobblestone-farms/> ;
-    ns1:admissionContext "hases the material from people in Kik group chats for anywhere between $20 to $40 a file. Grove admitted he had more child pornography on..." ;
+    ns1:admissionContext "ases the material from people in Kik group chats for anywhere between $20 to $40 a file. Grove admitted he had more child pornography on..." ;
     ns1:admissionFrame "admitted_he_she" ;
     ns1:admissionTheme "harm_conduct" ;
     ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_030/role/offender/1> ;
@@ -147,7 +170,7 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_030/admission/3> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "has been addicted to child porn for the last four years, and admitted to uploading illegal porn on the Kik account fo..." ;
     dcterms:source <https://www.inmaricopa.com/police-uncovered-a-decades-worth-of-child-porn-in-cobblestone-farms/> ;
-    ns1:admissionContext "Grove. Officers arrested Grove near his Cobblestone Farms home on Celtic Avenue, where he reportedly said he has been addicted to child p..." ;
+    ns1:admissionContext "rove. Officers arrested Grove near his Cobblestone Farms home on Celtic Avenue, where he reportedly said he has been addicted to child po..." ;
     ns1:admissionFrame "said_paraphrase" ;
     ns1:admissionTheme "harm_conduct",
         "tech_use" ;

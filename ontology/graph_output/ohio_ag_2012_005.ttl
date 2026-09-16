@@ -6,18 +6,25 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2012_005> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:03:34.532076" ;
+    dcterms:created "2026-09-15T20:10:06.723515" ;
     dcterms:identifier "ohio_ag_2012_005" ;
-    dcterms:modified "2026-09-10T20:03:34.532076" ;
+    dcterms:modified "2026-09-15T20:10:06.723515" ;
     dcterms:source <https://www.ohioattorneygeneral.gov/Media/News-Releases/June-2012/Wanted-Sex-Offender-Featured-in-Attorney-General>,
         "OHIO AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/akron>,
+        <https://caselinker.up.railway.app/resource/location/cincinnati>,
+        <https://caselinker.up.railway.app/resource/location/ohio>,
+        <https://caselinker.up.railway.app/resource/location/springfield> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ohio_ag_2012_005/phase/convicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ohio_ag_2012_005/phase/convicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ohio_ag_2012_005/event/trust-violation>,
@@ -28,9 +35,15 @@
         <https://caselinker.up.railway.app/resource/agency/attorney-generals-office>,
         <https://caselinker.up.railway.app/resource/agency/bureau-of-criminal-investigation>,
         <https://caselinker.up.railway.app/resource/agency/marshals-northern-ohio-fugitive-task-force>,
-        <https://caselinker.up.railway.app/resource/agency/norton-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/norton-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/akron>,
+        <https://caselinker.up.railway.app/resource/location/cincinnati>,
+        <https://caselinker.up.railway.app/resource/location/ohio>,
+        <https://caselinker.up.railway.app/resource/location/springfield> .
 
-<https://caselinker.up.railway.app/resource/agency/akron-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/akron-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Akron Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/attorney-generals-office> a cacontology-multi:StateAgency .
 
@@ -51,8 +64,8 @@
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2012_005/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Summit County Jail" ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2012-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2012-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ohio_ag_2012_005/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2012_005/legal-step/convicted> a cac-core:Event,
         cac-core:LegalEvent,
@@ -82,7 +95,27 @@
     cacontology:hasRoleBeginPoint "2012-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ohio_ag_2012_005/person/victim/1> .
 
+<https://caselinker.up.railway.app/resource/case/ohio_ag_2012_005/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2012_005/phase/convicted> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2012-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/akron> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Akron" ;
+    uco-core:name "Akron" .
+
+<https://caselinker.up.railway.app/resource/location/cincinnati> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/ohio> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/springfield> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Springfield" ;
+    uco-core:name "Springfield" .
 

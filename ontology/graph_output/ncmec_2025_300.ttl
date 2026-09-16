@@ -5,19 +5,24 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_300> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:27:54.554422" ;
+    dcterms:created "2026-09-15T21:27:13.440161" ;
     dcterms:identifier "ncmec_2025_300" ;
-    dcterms:modified "2026-09-10T19:27:54.554422" ;
+    dcterms:modified "2026-09-15T21:27:13.440161" ;
     dcterms:source <https://www.fox32chicago.com/news/plainfield-child-porn-arrest>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/ill>,
+        <https://caselinker.up.railway.app/resource/location/plainfield>,
+        <https://caselinker.up.railway.app/resource/location/suburban-chicago> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_300/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_300/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_300/cybertip>,
@@ -26,7 +31,10 @@
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/fbi>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/plainfield-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/plainfield-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/ill>,
+        <https://caselinker.up.railway.app/resource/location/plainfield>,
+        <https://caselinker.up.railway.app/resource/location/suburban-chicago> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_300/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -42,7 +50,9 @@
 
 <https://caselinker.up.railway.app/resource/agency/fbi> a cacontology-multi:FederalAgency .
 
-<https://caselinker.up.railway.app/resource/agency/plainfield-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/plainfield-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Plainfield Police Department" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_300/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -57,20 +67,39 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_300/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Will County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_300/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-02-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-02-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_300/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_300/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 35 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_300/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_300/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_300/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-02-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/ill> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Ill." ;
+    uco-core:name "Ill." .
+
+<https://caselinker.up.railway.app/resource/location/plainfield> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Plainfield" ;
+    uco-core:name "Plainfield" .
+
+<https://caselinker.up.railway.app/resource/location/suburban-chicago> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Suburban Chicago" ;
+    uco-core:name "Suburban Chicago" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_300/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

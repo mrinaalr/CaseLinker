@@ -11,6 +11,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -31,11 +32,14 @@
 
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2024_004> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:14:45.346346" ;
+    dcterms:created "2026-09-15T20:27:39.170181" ;
     dcterms:identifier "south_florida_icac_2024_004" ;
-    dcterms:modified "2026-09-10T20:14:45.346346" ;
+    dcterms:modified "2026-09-15T20:27:39.170181" ;
     dcterms:source <https://tamaractalk.com/man-arrested-child-pornography-53624>,
         "SOUTH FLORIDA ICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/coral-springs>,
+        <https://caselinker.up.railway.app/resource/location/lauderhill>,
+        <https://caselinker.up.railway.app/resource/location/south-florida> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/south_florida_icac_2024_004/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/south_florida_icac_2024_004/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/south_florida_icac_2024_004/admission/1>,
@@ -47,7 +51,10 @@
     cacontology:investigationStatus "unknown" ;
     cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/south_florida_icac_2024_004/tech/cybertipline> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/coral-springs>,
+        <https://caselinker.up.railway.app/resource/location/lauderhill>,
+        <https://caselinker.up.railway.app/resource/location/south-florida> .
 
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2024_004/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -62,7 +69,8 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/south_florida_icac_2024_004/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/south_florida_icac_2024_004/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2024_004/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 30 .
@@ -79,6 +87,10 @@
         <https://caselinker.up.railway.app/resource/case/south_florida_icac_2024_004/event/csam>,
         <https://caselinker.up.railway.app/resource/case/south_florida_icac_2024_004/event/hands-on> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/south_florida_icac_2024_004/person/offender/2> .
+
+<https://caselinker.up.railway.app/resource/case/south_florida_icac_2024_004/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2024_004/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -107,6 +119,17 @@
         <https://caselinker.up.railway.app/resource/case/south_florida_icac_2024_004/event/csam>,
         <https://caselinker.up.railway.app/resource/case/south_florida_icac_2024_004/event/hands-on> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/south_florida_icac_2024_004/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/location/coral-springs> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Coral Springs" ;
+    uco-core:name "Coral Springs" .
+
+<https://caselinker.up.railway.app/resource/location/lauderhill> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/south-florida> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2024_004/event/conspiracy> a cacontology:ConspiracyToCommitCSA,
         cac-core:Event ;

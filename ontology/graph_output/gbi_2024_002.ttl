@@ -11,16 +11,19 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/gbi_2024_002> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:45:01.679185" ;
+    dcterms:created "2026-09-15T19:33:11.402811" ;
     dcterms:identifier "gbi_2024_002" ;
-    dcterms:modified "2026-09-10T19:45:01.679185" ;
+    dcterms:modified "2026-09-15T19:33:11.402811" ;
     dcterms:source <https://gbi.georgia.gov/search/results?query=CEACC>,
         "GBI" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/coffee-county>,
+        <https://caselinker.up.railway.app/resource/location/georgia> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/gbi_2024_002/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/gbi_2024_002/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/gbi_2024_002/cybertip>,
@@ -34,7 +37,9 @@
         <https://caselinker.up.railway.app/resource/agency/georgia-bureau-of-investigation-child-exploitation-unit>,
         <https://caselinker.up.railway.app/resource/agency/georgia-bureau-of-investigations-child-exploitation-and-computer-crimes>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/coffee-county>,
+        <https://caselinker.up.railway.app/resource/location/georgia> .
 
 <https://caselinker.up.railway.app/resource/case/gbi_2024_002/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -90,12 +95,12 @@
 <https://caselinker.up.railway.app/resource/case/gbi_2024_002/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Coffee County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/gbi_2024_002/charge/1>,
         <https://caselinker.up.railway.app/resource/case/gbi_2024_002/charge/2>,
         <https://caselinker.up.railway.app/resource/case/gbi_2024_002/charge/3>,
         <https://caselinker.up.railway.app/resource/case/gbi_2024_002/charge/4> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-02-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-02-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/gbi_2024_002/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/gbi_2024_002/operation> a cac-core:Event,
         cacontology-taskforce:TaskForceOperation .
@@ -105,6 +110,10 @@
 
 <https://caselinker.up.railway.app/resource/case/gbi_2024_002/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/gbi_2024_002/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/gbi_2024_002/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
 
@@ -113,6 +122,14 @@
 <https://caselinker.up.railway.app/resource/case/gbi_2024_002/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2024-02-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/coffee-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Coffee County" ;
+    uco-core:name "Coffee County" .
+
+<https://caselinker.up.railway.app/resource/location/georgia> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/gbi_2024_002/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

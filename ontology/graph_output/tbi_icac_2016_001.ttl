@@ -6,23 +6,31 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2016_001> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:16:43.126999" ;
+    dcterms:created "2026-09-15T20:31:48.066964" ;
     dcterms:identifier "tbi_icac_2016_001" ;
-    dcterms:modified "2026-09-10T20:16:43.126999" ;
+    dcterms:modified "2026-09-15T20:31:48.066964" ;
     dcterms:source <https://tbinewsroom.com/2016/02/21/trousdale-county-man-arrested-on-child-rape-charge/>,
         "TBI ICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/bethpage>,
+        <https://caselinker.up.railway.app/resource/location/nashville>,
+        <https://caselinker.up.railway.app/resource/location/trousdale-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/tbi_icac_2016_001/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/tbi_icac_2016_001/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/tbi_icac_2016_001/event/hands-on>,
         <https://caselinker.up.railway.app/resource/case/tbi_icac_2016_001/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/tennessee-bureau-of-investigation> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/tennessee-bureau-of-investigation> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/bethpage>,
+        <https://caselinker.up.railway.app/resource/location/nashville>,
+        <https://caselinker.up.railway.app/resource/location/trousdale-county> .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2016_001/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -38,23 +46,11 @@
 
 <https://caselinker.up.railway.app/resource/agency/tennessee-bureau-of-investigation> a cacontology-multi:StateAgency .
 
-<https://caselinker.up.railway.app/resource/case/tbi_icac_2016_001/charge/1> a cacontology-legal-outcomes:CriminalCharge,
-        cacontology-legal-outcomes:StateCharge ;
-    rdfs:label "sexual exploitation of a minor" .
-
-<https://caselinker.up.railway.app/resource/case/tbi_icac_2016_001/charge/2> a cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "sexual exploitation" ;
-    ns1:chargeCluster "sexual_exploitation_unspecified" .
-
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2016_001/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility: Rutherford County Jail" ;
-    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/tbi_icac_2016_001/charge/1>,
-        <https://caselinker.up.railway.app/resource/case/tbi_icac_2016_001/charge/2> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2016-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/tbi_icac_2016_001/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/tbi_icac_2016_001/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/tbi_icac_2016_001/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2016_001/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 58 .
@@ -63,15 +59,22 @@
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2016_001/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$750,000" .
-
-<https://caselinker.up.railway.app/resource/case/tbi_icac_2016_001/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$120,000" .
+    rdfs:label "[\"$120,000\"]" .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2016_001/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2016-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/bethpage> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Bethpage" ;
+    uco-core:name "Bethpage" .
+
+<https://caselinker.up.railway.app/resource/location/nashville> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/trousdale-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2016_001/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

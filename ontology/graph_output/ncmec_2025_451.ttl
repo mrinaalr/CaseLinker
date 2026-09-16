@@ -3,19 +3,25 @@
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_451> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:29:13.553367" ;
+    dcterms:created "2026-09-15T21:27:13.572108" ;
     dcterms:identifier "ncmec_2025_451" ;
-    dcterms:modified "2026-09-10T19:29:13.553367" ;
+    dcterms:modified "2026-09-15T21:27:13.572108" ;
     dcterms:source <https://www2.montgomerycountymd.gov/mcgportalapps/Press_Detail_Pol.aspx?Item_ID=47349>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/carroll-county>,
+        <https://caselinker.up.railway.app/resource/location/gaithersburg>,
+        <https://caselinker.up.railway.app/resource/location/maryland>,
+        <https://caselinker.up.railway.app/resource/location/montgomery-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_451/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_451/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_451/event/possession>,
@@ -24,7 +30,11 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/carroll-county-sheriffs-office>,
         <https://caselinker.up.railway.app/resource/agency/department-of-police-department>,
         <https://caselinker.up.railway.app/resource/agency/montgomery-county-department-of-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/montgomery-county-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/montgomery-county-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/carroll-county>,
+        <https://caselinker.up.railway.app/resource/location/gaithersburg>,
+        <https://caselinker.up.railway.app/resource/location/maryland>,
+        <https://caselinker.up.railway.app/resource/location/montgomery-county> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_451/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -48,7 +58,9 @@
         cacontology-multi:LocalAgency ;
     rdfs:label "Montgomery County Department of Police Department" .
 
-<https://caselinker.up.railway.app/resource/agency/montgomery-county-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/montgomery-county-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Montgomery County Police Department" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_451/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -61,15 +73,36 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_451/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-07-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-07-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_451/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_451/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_451/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_451/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_451/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-07-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/carroll-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/gaithersburg> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Gaithersburg" ;
+    uco-core:name "Gaithersburg" .
+
+<https://caselinker.up.railway.app/resource/location/maryland> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/montgomery-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Montgomery County" ;
+    uco-core:name "Montgomery County" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_451/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

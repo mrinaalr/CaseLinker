@@ -4,19 +4,23 @@
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_474> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:29:28.797268" ;
+    dcterms:created "2026-09-15T21:27:13.592708" ;
     dcterms:identifier "ncmec_2025_474" ;
-    dcterms:modified "2026-09-10T19:29:28.797268" ;
+    dcterms:modified "2026-09-15T21:27:13.592708" ;
     dcterms:source <https://www.missingkids.org/gethelpnow/cybertipline/cybertiplinedata>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/massachusetts>,
+        <https://caselinker.up.railway.app/resource/location/pittsfield---dononeil-nebar> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_474/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_474/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_474/event/csam>,
@@ -24,7 +28,9 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_474/event/hands-on>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_474/event/trust-violation>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_474/legal-proceeding> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/state-police-department> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/state-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/massachusetts>,
+        <https://caselinker.up.railway.app/resource/location/pittsfield---dononeil-nebar> .
 
 <https://caselinker.up.railway.app/resource/agency/state-police-department> a cacontology-multi:StateAgency .
 
@@ -46,7 +52,8 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_474/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_474/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_474/person/offender/1> a uco-identity:Person .
 
@@ -72,9 +79,21 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_474/event/hands-on> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_474/person/victim/1> .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_474/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_474/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/massachusetts> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/pittsfield---dononeil-nebar> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Pittsfield - Dononeil Nebar" ;
+    uco-core:name "Pittsfield - Dononeil Nebar" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_474/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

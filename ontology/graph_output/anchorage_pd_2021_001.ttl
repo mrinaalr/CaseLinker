@@ -11,6 +11,7 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -40,13 +41,18 @@
         cacontology-multi:LocalAgency ;
     rdfs:label "Task Force Officers" .
 
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
+
 <https://caselinker.up.railway.app/resource/case/anchorage_pd_2021_001> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:36:04.105447" ;
+    dcterms:created "2026-09-15T19:24:25.553396" ;
     dcterms:identifier "anchorage_pd_2021_001" ;
-    dcterms:modified "2026-09-10T19:36:04.105447" ;
+    dcterms:modified "2026-09-15T19:24:25.553396" ;
     dcterms:source <https://www.anchoragepolice.com/news/kotzebue-man-sentenced-to-20-years-in-prison-for-sexually-abusing-a-minor>,
         "ANCHORAGE PD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/alaska>,
+        <https://caselinker.up.railway.app/resource/location/kotzebue>,
+        <https://caselinker.up.railway.app/resource/location/the-district-of-alaska> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/anchorage_pd_2021_001/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/anchorage_pd_2021_001/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/anchorage_pd_2021_001/admission/1>,
@@ -59,7 +65,11 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/anchorage-police-department>,
         <https://caselinker.up.railway.app/resource/agency/fbi>,
         <https://caselinker.up.railway.app/resource/agency/kotzebue-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/task-force-officers> .
+        <https://caselinker.up.railway.app/resource/agency/task-force-officers>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/alaska>,
+        <https://caselinker.up.railway.app/resource/location/kotzebue>,
+        <https://caselinker.up.railway.app/resource/location/the-district-of-alaska> .
 
 <https://caselinker.up.railway.app/resource/case/anchorage_pd_2021_001/charge/1> a cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "child exploitation" ;
@@ -76,8 +86,7 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/anchorage_pd_2021_001/charge/1> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/anchorage_pd_2021_001/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/anchorage_pd_2021_001/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/anchorage_pd_2021_001/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/anchorage_pd_2021_001/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -99,16 +108,27 @@
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/anchorage_pd_2021_001/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/anchorage_pd_2021_001/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "20 Years" .
-
-<https://caselinker.up.railway.app/resource/case/anchorage_pd_2021_001/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "supervised release" .
+    rdfs:label "[\"20 Years\", \"supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/case/anchorage_pd_2021_001/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/alaska> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Alaska" ;
+    uco-core:name "Alaska" .
+
+<https://caselinker.up.railway.app/resource/location/kotzebue> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Kotzebue" ;
+    uco-core:name "Kotzebue" .
+
+<https://caselinker.up.railway.app/resource/location/the-district-of-alaska> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "the District of Alaska" ;
+    uco-core:name "the District of Alaska" .
 
 <https://caselinker.up.railway.app/resource/case/anchorage_pd_2021_001/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "sexually abusing the minor victim multiple times, giving her money after each instance and often giving her alcohol a..." ;

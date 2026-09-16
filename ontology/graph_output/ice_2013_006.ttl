@@ -10,16 +10,21 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ice_2013_006> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:45:39.460678" ;
+    dcterms:created "2026-09-15T19:35:19.137520" ;
     dcterms:identifier "ice_2013_006" ;
-    dcterms:modified "2026-09-10T19:45:39.460678" ;
+    dcterms:modified "2026-09-15T19:35:19.137520" ;
     dcterms:source <https://www.ice.gov/news/releases/jane-doe-child-pornography-suspect-arrested-los-angeles>,
         "ICE" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/chicago>,
+        <https://caselinker.up.railway.app/resource/location/los-angeles>,
+        <https://caselinker.up.railway.app/resource/location/north-hills>,
+        <https://caselinker.up.railway.app/resource/location/the-san-fernando-valley> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ice_2013_006/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ice_2013_006/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ice_2013_006/cybertip>,
@@ -35,7 +40,12 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/hsi>,
         <https://caselinker.up.railway.app/resource/agency/ice>,
         <https://caselinker.up.railway.app/resource/agency/los-angeles-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/chicago>,
+        <https://caselinker.up.railway.app/resource/location/los-angeles>,
+        <https://caselinker.up.railway.app/resource/location/north-hills>,
+        <https://caselinker.up.railway.app/resource/location/the-san-fernando-valley> .
 
 <https://caselinker.up.railway.app/resource/case/ice_2013_006/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -59,7 +69,11 @@
 
 <https://caselinker.up.railway.app/resource/agency/ice> a cacontology-multi:FederalAgency .
 
-<https://caselinker.up.railway.app/resource/agency/los-angeles-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/los-angeles-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Los Angeles Police Department" .
+
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/ice_2013_006/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -106,17 +120,42 @@
         <https://caselinker.up.railway.app/resource/case/ice_2013_006/charge/2>,
         <https://caselinker.up.railway.app/resource/case/ice_2013_006/charge/3>,
         <https://caselinker.up.railway.app/resource/case/ice_2013_006/charge/4> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ice_2013_006/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ice_2013_006/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ice_2013_006/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/ice_2013_006/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/ice_2013_006/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/chicago> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Chicago" ;
+    uco-core:name "Chicago" .
+
+<https://caselinker.up.railway.app/resource/location/los-angeles> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Los Angeles" ;
+    uco-core:name "Los Angeles" .
+
+<https://caselinker.up.railway.app/resource/location/north-hills> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "North Hills" ;
+    uco-core:name "North Hills" .
+
+<https://caselinker.up.railway.app/resource/location/the-san-fernando-valley> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "the San Fernando Valley" ;
+    uco-core:name "the San Fernando Valley" .
 
 <https://caselinker.up.railway.app/resource/case/ice_2013_006/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

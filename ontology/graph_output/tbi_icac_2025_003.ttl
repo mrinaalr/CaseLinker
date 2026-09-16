@@ -11,16 +11,19 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_003> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:15:45.635417" ;
+    dcterms:created "2026-09-15T20:31:47.979359" ;
     dcterms:identifier "tbi_icac_2025_003" ;
-    dcterms:modified "2026-09-10T20:15:45.635417" ;
+    dcterms:modified "2026-09-15T20:31:47.979359" ;
     dcterms:source <https://tbinewsroom.com/2025/08/29/cybertip-leads-to-arrest-of-sequatchie-county-man-on-charges-of-sexual-exploitation-of-a-minor/>,
         "TBI ICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/sequatchie-county>,
+        <https://caselinker.up.railway.app/resource/location/sequatchie-county-man> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_003/phase/convicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_003/phase/convicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_003/cybertip>,
@@ -38,7 +41,9 @@
         <https://caselinker.up.railway.app/resource/agency/judicial-district-drug-task-force>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
         <https://caselinker.up.railway.app/resource/agency/tennessee-bureau-of-investigation>,
-        <https://caselinker.up.railway.app/resource/agency/tennessee-bureau-of-investigation-tipline> .
+        <https://caselinker.up.railway.app/resource/agency/tennessee-bureau-of-investigation-tipline> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/sequatchie-county>,
+        <https://caselinker.up.railway.app/resource/location/sequatchie-county-man> .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_003/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -104,13 +109,13 @@
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_003/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Sequatchie County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_003/charge/1>,
         <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_003/charge/2>,
         <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_003/charge/3>,
         <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_003/charge/4>,
         <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_003/charge/5> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_003/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_003/legal-step/convicted> a cac-core:Event,
         cac-core:LegalEvent,
@@ -125,6 +130,10 @@
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_003/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/tbi_icac_2025_003/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_003/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
 
@@ -133,6 +142,14 @@
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_003/phase/convicted> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/sequatchie-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/sequatchie-county-man> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Sequatchie County Man" ;
+    uco-core:name "Sequatchie County Man" .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_003/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

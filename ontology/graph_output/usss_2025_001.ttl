@@ -10,6 +10,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -25,19 +26,28 @@
         <https://caselinker.up.railway.app/resource/case/usss_2025_001/event/production> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/usss_2025_001/person/victim/1> .
 
+<https://caselinker.up.railway.app/resource/agency/missouri-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Missouri Police Department" .
+
 <https://caselinker.up.railway.app/resource/agency/raytown-missouri-police-department> a cac-core:OrganizationLikeEntity,
         cacontology-multi:LocalAgency ;
     rdfs:label "Raytown Missouri Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/us-secret-service> a cacontology-multi:FederalAgency .
 
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
+
 <https://caselinker.up.railway.app/resource/case/usss_2025_001> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:20:30.039145" ;
+    dcterms:created "2026-09-15T20:36:46.000177" ;
     dcterms:identifier "usss_2025_001" ;
-    dcterms:modified "2026-09-10T20:20:30.039145" ;
+    dcterms:modified "2026-09-15T20:36:46.000177" ;
     dcterms:source <https://www.secretservice.gov/newsroom/releases/2025/08/raytown-man-sentenced-35-years-producing-child-pornography>,
         "USSS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/kansas-city>,
+        <https://caselinker.up.railway.app/resource/location/missouri>,
+        <https://caselinker.up.railway.app/resource/location/raytown> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/usss_2025_001/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/usss_2025_001/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/usss_2025_001/admission/1>,
@@ -46,8 +56,13 @@
         <https://caselinker.up.railway.app/resource/case/usss_2025_001/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/usss_2025_001/legal-step/sentenced> ;
     cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/raytown-missouri-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/us-secret-service> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/missouri-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/raytown-missouri-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/us-secret-service>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/kansas-city>,
+        <https://caselinker.up.railway.app/resource/location/missouri>,
+        <https://caselinker.up.railway.app/resource/location/raytown> .
 
 <https://caselinker.up.railway.app/resource/case/usss_2025_001/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -63,8 +78,7 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/usss_2025_001/charge/1> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/usss_2025_001/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/usss_2025_001/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/usss_2025_001/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/usss_2025_001/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -85,16 +99,23 @@
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/usss_2025_001/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/usss_2025_001/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "35 Years" .
-
-<https://caselinker.up.railway.app/resource/case/usss_2025_001/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "supervised release" .
+    rdfs:label "[\"35 Years\", \"supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/case/usss_2025_001/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/kansas-city> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/missouri> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/raytown> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Raytown" ;
+    uco-core:name "Raytown" .
 
 <https://caselinker.up.railway.app/resource/case/usss_2025_001/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

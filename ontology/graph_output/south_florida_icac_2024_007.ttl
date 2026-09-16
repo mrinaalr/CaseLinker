@@ -11,16 +11,20 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2024_007> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:14:50.474592" ;
+    dcterms:created "2026-09-15T20:27:39.177447" ;
     dcterms:identifier "south_florida_icac_2024_007" ;
-    dcterms:modified "2026-09-10T20:14:50.474592" ;
+    dcterms:modified "2026-09-15T20:27:39.177447" ;
     dcterms:source <https://www.local10.com/news/local/2024/01/23/north-bay-village-man-accused-of-sharing-child-sexual-abuse-material-on-kik/>,
         "SOUTH FLORIDA ICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/fla>,
+        <https://caselinker.up.railway.app/resource/location/hallandale-beach>,
+        <https://caselinker.up.railway.app/resource/location/north-bay-village> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/south_florida_icac_2024_007/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/south_florida_icac_2024_007/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/south_florida_icac_2024_007/event/distribution>,
@@ -29,7 +33,10 @@
         <https://caselinker.up.railway.app/resource/case/south_florida_icac_2024_007/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/florida-department-of-law-enforcement>,
-        <https://caselinker.up.railway.app/resource/agency/icac> .
+        <https://caselinker.up.railway.app/resource/agency/icac> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/fla>,
+        <https://caselinker.up.railway.app/resource/location/hallandale-beach>,
+        <https://caselinker.up.railway.app/resource/location/north-bay-village> .
 
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2024_007/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -80,11 +87,22 @@
 
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2024_007/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$500,000" .
+    rdfs:label "[\"$500,000\"]" .
 
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2024_007/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/fla> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/hallandale-beach> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Hallandale Beach" ;
+    uco-core:name "Hallandale Beach" .
+
+<https://caselinker.up.railway.app/resource/location/north-bay-village> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/platform/chat> a cacontology-platforms:AnonymousChatPlatform ;
     rdfs:label "chat" .
@@ -92,7 +110,8 @@
 <https://caselinker.up.railway.app/resource/platform/kik> a cacontology-platforms:MessagingService ;
     rdfs:label "Kik" .
 
-<https://caselinker.up.railway.app/resource/platform/telegram> a cacontology-platforms:MessagingService ;
+<https://caselinker.up.railway.app/resource/platform/telegram> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:MessagingService ;
     rdfs:label "Telegram" .
 
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2024_007/event/hands-on> a cacontology:ChildSexualAbuseEvent,

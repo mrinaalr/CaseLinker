@@ -1,5 +1,6 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
@@ -8,16 +9,22 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2022_004> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:02:26.877954" ;
+    dcterms:created "2026-09-15T20:10:06.527226" ;
     dcterms:identifier "ohio_ag_2022_004" ;
-    dcterms:modified "2026-09-10T20:02:26.877954" ;
+    dcterms:modified "2026-09-15T20:10:06.527226" ;
     dcterms:source <https://www.ohioattorneygeneral.gov/Media/News-Releases/February-2022/Public-s-Help-Sought-After-Lawrence-County-Indictm>,
         "OHIO AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/chesapeake>,
+        <https://caselinker.up.railway.app/resource/location/ironton>,
+        <https://caselinker.up.railway.app/resource/location/lawrence-county>,
+        <https://caselinker.up.railway.app/resource/location/ohio>,
+        <https://caselinker.up.railway.app/resource/location/south-point> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ohio_ag_2022_004/phase/indicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ohio_ag_2022_004/phase/indicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ohio_ag_2022_004/event/csam>,
@@ -25,7 +32,12 @@
         <https://caselinker.up.railway.app/resource/case/ohio_ag_2022_004/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/ohio_ag_2022_004/offense-event/charge-2> ;
     cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/bureau-of-criminal-investigation> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/bureau-of-criminal-investigation> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/chesapeake>,
+        <https://caselinker.up.railway.app/resource/location/ironton>,
+        <https://caselinker.up.railway.app/resource/location/lawrence-county>,
+        <https://caselinker.up.railway.app/resource/location/ohio>,
+        <https://caselinker.up.railway.app/resource/location/south-point> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2022_004/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -70,15 +82,42 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ohio_ag_2022_004/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ohio_ag_2022_004/charge/2>,
         <https://caselinker.up.railway.app/resource/case/ohio_ag_2022_004/charge/3> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ohio_ag_2022_004/sentence/1> .
 
-<https://caselinker.up.railway.app/resource/case/ohio_ag_2022_004/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/ohio_ag_2022_004/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 68 .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2022_004/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/ohio_ag_2022_004/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2022_004/phase/indicted> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/chesapeake> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Chesapeake" ;
+    uco-core:name "Chesapeake" .
+
+<https://caselinker.up.railway.app/resource/location/ironton> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Ironton" ;
+    uco-core:name "Ironton" .
+
+<https://caselinker.up.railway.app/resource/location/lawrence-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/ohio> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/south-point> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "South Point" ;
+    uco-core:name "South Point" .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2022_004/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

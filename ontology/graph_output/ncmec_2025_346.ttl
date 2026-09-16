@@ -3,23 +3,32 @@
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_346> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:28:20.996893" ;
+    dcterms:created "2026-09-15T21:27:13.485357" ;
     dcterms:identifier "ncmec_2025_346" ;
-    dcterms:modified "2026-09-10T19:28:20.996893" ;
+    dcterms:modified "2026-09-15T21:27:13.485357" ;
     dcterms:source <https://www.kmaland.com/news/red-oak-man-charged-with-homicide-by-vehicle-from-pott-co-incident/article_5f262f77-9b59-4b9d-abf2-1096b208bda3.html>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/iowa>,
+        <https://caselinker.up.railway.app/resource/location/pottawattamie-county>,
+        <https://caselinker.up.railway.app/resource/location/red-oak> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_346/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_346/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_346/legal-proceeding> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/montgomery-county-sheriffs-office>,
-        <https://caselinker.up.railway.app/resource/agency/red-oak-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/red-oak-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/iowa>,
+        <https://caselinker.up.railway.app/resource/location/pottawattamie-county>,
+        <https://caselinker.up.railway.app/resource/location/red-oak> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_346/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -31,7 +40,9 @@
     cacontology:hasRoleBeginPoint "2025-06-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_346/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/montgomery-county-sheriffs-office> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/montgomery-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Montgomery County Sheriff's Office" .
 
 <https://caselinker.up.railway.app/resource/agency/red-oak-police-department> a cac-core:OrganizationLikeEntity,
         cacontology-multi:LocalAgency ;
@@ -40,7 +51,6 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_346/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility: Montgomery County Jail" ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2025-06-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_346/sentence/1> .
 
@@ -50,9 +60,22 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_346/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$50,000" .
+    rdfs:label "[\"$50,000\"]" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_346/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-06-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/iowa> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/pottawattamie-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Pottawattamie County" ;
+    uco-core:name "Pottawattamie County" .
+
+<https://caselinker.up.railway.app/resource/location/red-oak> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Red Oak" ;
+    uco-core:name "Red Oak" .
 

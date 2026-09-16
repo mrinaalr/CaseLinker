@@ -4,26 +4,34 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2025_014> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:51:04.835927" ;
+    dcterms:created "2026-09-15T19:52:04.204223" ;
     dcterms:identifier "ky_sp_2025_014" ;
-    dcterms:modified "2026-09-10T19:51:04.835927" ;
+    dcterms:modified "2026-09-15T19:52:04.204223" ;
     dcterms:source <https://www.kentuckystatepolice.ky.gov/news/ecb-5-20-2025/>,
         "KY SP" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/fort-knox>,
+        <https://caselinker.up.railway.app/resource/location/hardin-county>,
+        <https://caselinker.up.railway.app/resource/location/ky> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ky_sp_2025_014/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ky_sp_2025_014/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ky_sp_2025_014/event/csam>,
         <https://caselinker.up.railway.app/resource/case/ky_sp_2025_014/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/ky_sp_2025_014/operation> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/kentucky-state-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/kentucky-state-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/fort-knox>,
+        <https://caselinker.up.railway.app/resource/location/hardin-county>,
+        <https://caselinker.up.railway.app/resource/location/ky> .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2025_014/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -51,7 +59,8 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ky_sp_2025_014/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ky_sp_2025_014/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2025_014/operation> a cac-core:Event,
         cacontology-taskforce:UndercoverUnit .
@@ -60,9 +69,24 @@
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2025_014/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ky_sp_2025_014/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ky_sp_2025_014/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/fort-knox> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Fort Knox" ;
+    uco-core:name "Fort Knox" .
+
+<https://caselinker.up.railway.app/resource/location/hardin-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/ky> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2025_014/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

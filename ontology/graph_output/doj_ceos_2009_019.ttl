@@ -3,6 +3,7 @@
 @prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix cacontology-undercover: <https://cacontology.projectvic.org/undercover#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
@@ -10,6 +11,7 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -25,15 +27,22 @@
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_019/offense-event/charge-3> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_019/person/victim/1> .
 
+<https://caselinker.up.railway.app/resource/agency/ceos> a cacontology-multi:FederalAgency .
+
 <https://caselinker.up.railway.app/resource/agency/doj> a cacontology-multi:FederalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_019> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T22:32:49.989268" ;
+    dcterms:created "2026-09-15T21:47:04.254380" ;
     dcterms:identifier "doj_ceos_2009_019" ;
-    dcterms:modified "2026-09-14T22:32:49.989268" ;
+    dcterms:modified "2026-09-15T21:47:04.254380" ;
     dcterms:source <https://www.justice.gov/archives/opa/pr/arizona-man-sentenced-five-years-prison-receipt-child-pornography>,
         "DOJ CEOS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/ariz>,
+        <https://caselinker.up.railway.app/resource/location/arizona>,
+        <https://caselinker.up.railway.app/resource/location/the-district-of-arizona> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_019/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_019/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_019/admission/1>,
@@ -41,8 +50,14 @@
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_019/event/project-safe-childhood>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_019/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_019/legal-step/sentenced>,
-        <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_019/offense-event/charge-3> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/doj> .
+        <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_019/offense-event/charge-3>,
+        <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_019/operation> ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ceos>,
+        <https://caselinker.up.railway.app/resource/agency/doj>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/ariz>,
+        <https://caselinker.up.railway.app/resource/location/arizona>,
+        <https://caselinker.up.railway.app/resource/location/the-district-of-arizona> .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_019/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -79,6 +94,9 @@
         cacontology-legal-outcomes:SentencingHearing ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2009-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
+<https://caselinker.up.railway.app/resource/case/doj_ceos_2009_019/operation> a cac-core:Event,
+        cacontology-taskforce:UndercoverUnit .
+
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_019/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 54 .
 
@@ -93,11 +111,20 @@
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_019/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "supervised release" .
+    rdfs:label "[\"supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_019/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2009-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/ariz> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/arizona> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/the-district-of-arizona> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_019/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "ordering from the undercover inspector a video containing child pornography" ;

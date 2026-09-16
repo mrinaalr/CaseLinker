@@ -5,25 +5,29 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_078> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:05:20.071782" ;
+    dcterms:created "2026-09-15T20:45:06.051162" ;
     dcterms:identifier "ncmec_2022_078" ;
-    dcterms:modified "2026-09-10T19:05:20.071782" ;
+    dcterms:modified "2026-09-15T20:45:06.051162" ;
     dcterms:source <https://www.whio.com/news/local/kettering-man-faces-30-child-porn-related-charges-following-indictment/HMCPPCRLZBBSRK3AIT557IZLY4/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/kettering> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_078/phase/indicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_078/phase/indicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2022_078/event/csam>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_078/event/distribution>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_078/legal-proceeding> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/kettering> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_078/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -52,18 +56,27 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_078/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Montgomery County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2022_078/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-03-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-03-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2022_078/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_078/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 52 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_078/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_078/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_078/phase/indicted> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2022-03-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/kettering> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Kettering" ;
+    uco-core:name "Kettering" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_078/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

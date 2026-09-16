@@ -5,18 +5,27 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2025_005> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:18:04.954230" ;
+    dcterms:created "2026-09-15T20:35:06.171362" ;
     dcterms:identifier "us_marshals_2025_005" ;
-    dcterms:modified "2026-09-10T20:18:04.954230" ;
+    dcterms:modified "2026-09-15T20:35:06.171362" ;
     dcterms:source <https://www.usmarshals.gov/news/press-release/us-marshals-service-chicago-pd-recover-child-missing-over-7-years>,
         "US MARSHALS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/chicago>,
+        <https://caselinker.up.railway.app/resource/location/chicagos-humble-park>,
+        <https://caselinker.up.railway.app/resource/location/illinois>,
+        <https://caselinker.up.railway.app/resource/location/indiana>,
+        <https://caselinker.up.railway.app/resource/location/the-northern-district>,
+        <https://caselinker.up.railway.app/resource/location/wisconsin> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/us_marshals_2025_005/phase/booked> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/us_marshals_2025_005/phase/booked> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/us_marshals_2025_005/event/trafficking>,
@@ -28,11 +37,21 @@
         <https://caselinker.up.railway.app/resource/agency/great-lakes-regional-fugitive-task-force>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/u-s-marshals>,
-        <https://caselinker.up.railway.app/resource/agency/usms> .
+        <https://caselinker.up.railway.app/resource/agency/usms> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/chicago>,
+        <https://caselinker.up.railway.app/resource/location/chicagos-humble-park>,
+        <https://caselinker.up.railway.app/resource/location/illinois>,
+        <https://caselinker.up.railway.app/resource/location/indiana>,
+        <https://caselinker.up.railway.app/resource/location/the-northern-district>,
+        <https://caselinker.up.railway.app/resource/location/wisconsin> .
 
-<https://caselinker.up.railway.app/resource/agency/chicago-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/chicago-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Chicago Police Department" .
 
-<https://caselinker.up.railway.app/resource/agency/department-of-children-and-family-services> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/department-of-children-and-family-services> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Department of Children and Family Services" .
 
 <https://caselinker.up.railway.app/resource/agency/great-lakes-regional-fugitive-task-force> a cacontology-multi:LocalAgency .
 
@@ -55,8 +74,8 @@
 <https://caselinker.up.railway.app/resource/case/us_marshals_2025_005/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Cook County Jail" ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/us_marshals_2025_005/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2025_005/person/offender/1> a uco-identity:Person .
 
@@ -78,7 +97,31 @@
     cacontology:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/us_marshals_2025_005/person/victim/1> .
 
+<https://caselinker.up.railway.app/resource/case/us_marshals_2025_005/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/us_marshals_2025_005/phase/booked> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/chicago> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/chicagos-humble-park> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Chicago’s Humble Park" ;
+    uco-core:name "Chicago’s Humble Park" .
+
+<https://caselinker.up.railway.app/resource/location/illinois> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/indiana> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/the-northern-district> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/wisconsin> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 

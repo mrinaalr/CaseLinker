@@ -8,17 +8,23 @@
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2017_002> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:02:54.701033" ;
+    dcterms:created "2026-09-15T20:10:06.611861" ;
     dcterms:identifier "ohio_ag_2017_002" ;
-    dcterms:modified "2026-09-10T20:02:54.701033" ;
+    dcterms:modified "2026-09-15T20:10:06.611861" ;
     dcterms:source <https://www.ohioattorneygeneral.gov/Media/News-Releases/May-2017/Ohio-Man-Pleads-Guilty-to-Sexual-Assaulting-Child>,
         "OHIO AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/gallia-county>,
+        <https://caselinker.up.railway.app/resource/location/gallipolis>,
+        <https://caselinker.up.railway.app/resource/location/ohio>,
+        <https://caselinker.up.railway.app/resource/location/rio-grande> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ohio_ag_2017_002/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ohio_ag_2017_002/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ohio_ag_2017_002/event/hands-on>,
@@ -31,9 +37,11 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/attorney-generals-bureau-of-criminal-investigation-crimes-against-children-unit>,
         <https://caselinker.up.railway.app/resource/agency/fbi>,
         <https://caselinker.up.railway.app/resource/agency/gallia-county-sheriffs-office>,
-        <https://caselinker.up.railway.app/resource/agency/montpelier-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/ohio-attorney-generals>,
-        <https://caselinker.up.railway.app/resource/agency/ohio-bureau-of-criminal-investigation> .
+        <https://caselinker.up.railway.app/resource/agency/ohio-bureau-of-criminal-investigation> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/gallia-county>,
+        <https://caselinker.up.railway.app/resource/location/gallipolis>,
+        <https://caselinker.up.railway.app/resource/location/ohio>,
+        <https://caselinker.up.railway.app/resource/location/rio-grande> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2017_002/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -60,10 +68,6 @@
 <https://caselinker.up.railway.app/resource/agency/fbi> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/agency/gallia-county-sheriffs-office> a cacontology-multi:LocalAgency .
-
-<https://caselinker.up.railway.app/resource/agency/montpelier-police-department> a cacontology-multi:LocalAgency .
-
-<https://caselinker.up.railway.app/resource/agency/ohio-attorney-generals> a cacontology-multi:StateAgency .
 
 <https://caselinker.up.railway.app/resource/agency/ohio-bureau-of-criminal-investigation> a cacontology-multi:LocalAgency .
 
@@ -94,8 +98,7 @@
         <https://caselinker.up.railway.app/resource/case/ohio_ag_2017_002/charge/2>,
         <https://caselinker.up.railway.app/resource/case/ohio_ag_2017_002/charge/3> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2017-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ohio_ag_2017_002/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/ohio_ag_2017_002/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ohio_ag_2017_002/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2017_002/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -109,16 +112,26 @@
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2017_002/person/victim/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2017_002/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "15 years" .
-
-<https://caselinker.up.railway.app/resource/case/ohio_ag_2017_002/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:LifeImprisonmentSentence ;
-    rdfs:label "life in prison" .
+    rdfs:label "[\"15 years\", \"life in prison\"]" .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2017_002/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2017-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/gallia-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/gallipolis> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/ohio> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/rio-grande> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Rio Grande" ;
+    uco-core:name "Rio Grande" .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2017_002/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

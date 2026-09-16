@@ -10,6 +10,7 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -29,17 +30,21 @@
 
 <https://caselinker.up.railway.app/resource/agency/fbi> a cacontology-multi:FederalAgency .
 
-<https://caselinker.up.railway.app/resource/agency/ice> a cacontology-multi:FederalAgency .
-
 <https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_024> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T22:32:50.106594" ;
+    dcterms:created "2026-09-15T21:47:04.259838" ;
     dcterms:identifier "doj_ceos_2009_024" ;
-    dcterms:modified "2026-09-14T22:32:50.106594" ;
+    dcterms:modified "2026-09-15T21:47:04.259838" ;
     dcterms:source <https://www.justice.gov/archives/opa/pr/florida-man-sentenced-87-months-receiving-child-pornography>,
         "DOJ CEOS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/fla>,
+        <https://caselinker.up.railway.app/resource/location/florida>,
+        <https://caselinker.up.railway.app/resource/location/fort-lauderdale>,
+        <https://caselinker.up.railway.app/resource/location/the-northern-district-of-alabama>,
+        <https://caselinker.up.railway.app/resource/location/the-southern-district>,
+        <https://caselinker.up.railway.app/resource/location/washington> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_024/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_024/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_024/admission/1>,
@@ -51,8 +56,13 @@
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ceos>,
         <https://caselinker.up.railway.app/resource/agency/fbi>,
-        <https://caselinker.up.railway.app/resource/agency/ice>,
-        <https://caselinker.up.railway.app/resource/agency/usao> .
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/fla>,
+        <https://caselinker.up.railway.app/resource/location/florida>,
+        <https://caselinker.up.railway.app/resource/location/fort-lauderdale>,
+        <https://caselinker.up.railway.app/resource/location/the-northern-district-of-alabama>,
+        <https://caselinker.up.railway.app/resource/location/the-southern-district>,
+        <https://caselinker.up.railway.app/resource/location/washington> .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_024/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -75,8 +85,7 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_024/charge/1>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_024/charge/2> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2009-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_024/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_024/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_024/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_024/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -97,12 +106,8 @@
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_024/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_024/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "87 Months" .
-
-<https://caselinker.up.railway.app/resource/case/doj_ceos_2009_024/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "supervised release" .
+    rdfs:label "[\"87 Months\", \"supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_024/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "received images that depict prepubescent children and children engaged in sadistic or masochistic conduct" ;
@@ -118,6 +123,24 @@
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_024/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2009-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/fla> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/florida> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/fort-lauderdale> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/the-northern-district-of-alabama> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/the-southern-district> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/washington> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_024/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

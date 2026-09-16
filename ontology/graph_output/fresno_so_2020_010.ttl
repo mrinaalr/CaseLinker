@@ -4,25 +4,31 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/fresno_so_2020_010> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:44:05.911665" ;
+    dcterms:created "2026-09-15T19:31:21.275602" ;
     dcterms:identifier "fresno_so_2020_010" ;
-    dcterms:modified "2026-09-10T19:44:05.911665" ;
+    dcterms:modified "2026-09-15T19:31:21.275602" ;
     dcterms:source <https://www.fresnosheriff.org/media-relations/detectives-arrest-sex-offender-for-living-out-of-the-area-possessing-child-pornography.html>,
         "FRESNO SO" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/clovis>,
+        <https://caselinker.up.railway.app/resource/location/stockton> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/fresno_so_2020_010/phase/booked> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/fresno_so_2020_010/phase/booked> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/fresno_so_2020_010/event/possession>,
         <https://caselinker.up.railway.app/resource/case/fresno_so_2020_010/legal-proceeding> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/fresno-county-sheriffs-office>,
-        <https://caselinker.up.railway.app/resource/agency/icac> .
+        <https://caselinker.up.railway.app/resource/agency/icac> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/clovis>,
+        <https://caselinker.up.railway.app/resource/location/stockton> .
 
 <https://caselinker.up.railway.app/resource/case/fresno_so_2020_010/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -51,17 +57,27 @@
 <https://caselinker.up.railway.app/resource/case/fresno_so_2020_010/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Fresno County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/fresno_so_2020_010/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2020-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2020-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/fresno_so_2020_010/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/fresno_so_2020_010/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/fresno_so_2020_010/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/fresno_so_2020_010/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/fresno_so_2020_010/phase/booked> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2020-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/clovis> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/stockton> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/fresno_so_2020_010/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

@@ -10,6 +10,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -30,11 +31,13 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_289> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:27:46.765076" ;
+    dcterms:created "2026-09-15T21:27:13.422988" ;
     dcterms:identifier "ncmec_2025_289" ;
-    dcterms:modified "2026-09-10T19:27:46.765076" ;
+    dcterms:modified "2026-09-15T21:27:13.422988" ;
     dcterms:source <https://www.eastidahonews.com/2025/05/iona-man-arrested-for-allegedly-having-child-porn/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/east-idaho>,
+        <https://caselinker.up.railway.app/resource/location/idaho> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_289/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_289/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_289/admission/1>,
@@ -47,7 +50,9 @@
     cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/ncmec_2025_289/tech/cybertipline> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/bonneville-county-sheriffs-office>,
         <https://caselinker.up.railway.app/resource/agency/department-of-homeland-security>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/east-idaho>,
+        <https://caselinker.up.railway.app/resource/location/idaho> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_289/charge/1> a cacontology-legal-outcomes:CriminalCharge,
         cacontology-legal-outcomes:StateCharge ;
@@ -77,8 +82,7 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_289/charge/2>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_289/charge/3> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2025-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_289/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2025_289/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_289/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_289/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -100,11 +104,7 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_289/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:ProbationSentence ;
-    rdfs:label "probation" .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2025_289/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "30 years" .
+    rdfs:label "[\"probation\", \"30 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_289/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -115,10 +115,16 @@
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2025-05-01T00:00:00Z"^^xsd:dateTimeStamp .
 
+<https://caselinker.up.railway.app/resource/location/east-idaho> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/idaho> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_289/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "being the owner of the email account but stated that the email hadn’t worked in a while" ;
     dcterms:source <https://www.eastidahonews.com/2025/05/iona-man-arrested-for-allegedly-having-child-porn/> ;
-    ns1:admissionContext "a pre-obtained search warrant on his person and vehicle for electronic devices and media. Court documents state Hughes admitted to being..." ;
+    ns1:admissionContext "pre-obtained search warrant on his person and vehicle for electronic devices and media. Court documents state Hughes admitted to being th..." ;
     ns1:admissionFrame "admitted_to" ;
     ns1:admissionTheme "tech_use" ;
     ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_289/role/offender/1> ;

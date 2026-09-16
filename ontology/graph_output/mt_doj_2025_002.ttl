@@ -1,6 +1,7 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
 @prefix cacontology-undercover: <https://cacontology.projectvic.org/undercover#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
@@ -8,6 +9,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -21,25 +23,38 @@
     cacontology:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/mt_doj_2025_002/person/victim/1> .
 
+<https://caselinker.up.railway.app/resource/agency/division-of-criminal-investigation> a cacontology-multi:LocalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/lake-county-sheriffs-office> a cacontology-multi:LocalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/prosecution-services-bureau> a cacontology-multi:LocalAgency .
+
 <https://caselinker.up.railway.app/resource/case/mt_doj_2025_002> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:55:06.306887" ;
+    dcterms:created "2026-09-15T19:59:52.361018" ;
     dcterms:identifier "mt_doj_2025_002" ;
-    dcterms:modified "2026-09-10T19:55:06.306887" ;
+    dcterms:modified "2026-09-15T19:59:52.361018" ;
     dcterms:source <https://dojmt.gov/attorney-generals-office-secures-guilty-plea-from-former-polson-police-officer-charged-with-sexual-abuse-of-children-and-incest/>,
         "MT DOJ" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/lake-county>,
+        <https://caselinker.up.railway.app/resource/location/polson> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/mt_doj_2025_002/phase/pleaded-guilty> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/mt_doj_2025_002/phase/pleaded-guilty> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/mt_doj_2025_002/admission/1>,
         <https://caselinker.up.railway.app/resource/case/mt_doj_2025_002/legal-proceeding>,
-        <https://caselinker.up.railway.app/resource/case/mt_doj_2025_002/legal-step/pleaded-guilty> .
+        <https://caselinker.up.railway.app/resource/case/mt_doj_2025_002/legal-step/pleaded-guilty> ;
+    cacontology:investigationStatus "unknown" ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/division-of-criminal-investigation>,
+        <https://caselinker.up.railway.app/resource/agency/lake-county-sheriffs-office>,
+        <https://caselinker.up.railway.app/resource/agency/prosecution-services-bureau> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/lake-county>,
+        <https://caselinker.up.railway.app/resource/location/polson> .
 
 <https://caselinker.up.railway.app/resource/case/mt_doj_2025_002/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/mt_doj_2025_002/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/mt_doj_2025_002/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/mt_doj_2025_002/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/mt_doj_2025_002/legal-step/pleaded-guilty> a cac-core:Event,
         cac-core:LegalEvent,
@@ -59,11 +74,7 @@
 
 <https://caselinker.up.railway.app/resource/case/mt_doj_2025_002/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "30 years" .
-
-<https://caselinker.up.railway.app/resource/case/mt_doj_2025_002/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "10 years" .
+    rdfs:label "[\"30 years\", \"10 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/mt_doj_2025_002/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "knowingly photographing and filming a girl under the age of 18 between January 2017 and March 2023" ;
@@ -79,4 +90,14 @@
 <https://caselinker.up.railway.app/resource/case/mt_doj_2025_002/phase/pleaded-guilty> a cac-core:Phase,
         cacontology-legal-outcomes:PreTrialPhase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/lake-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Lake County" ;
+    uco-core:name "Lake County" .
+
+<https://caselinker.up.railway.app/resource/location/polson> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Polson" ;
+    uco-core:name "Polson" .
 

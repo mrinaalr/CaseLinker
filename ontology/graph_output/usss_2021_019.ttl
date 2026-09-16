@@ -7,19 +7,26 @@
 @prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/usss_2021_019> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:21:40.424683" ;
+    dcterms:created "2026-09-15T20:36:46.115200" ;
     dcterms:identifier "usss_2021_019" ;
-    dcterms:modified "2026-09-10T20:21:40.424683" ;
+    dcterms:modified "2026-09-15T20:36:46.115200" ;
     dcterms:source <https://www.secretservice.gov/newsroom/releases/2021/03/elizabethtown-man-sentenced-25-years-federal-prison-child-exploitation>,
         "USSS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/elizabethtown>,
+        <https://caselinker.up.railway.app/resource/location/kentucky>,
+        <https://caselinker.up.railway.app/resource/location/ky>,
+        <https://caselinker.up.railway.app/resource/location/louisville>,
+        <https://caselinker.up.railway.app/resource/location/united-states> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/usss_2021_019/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/usss_2021_019/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/usss_2021_019/event/distribution>,
@@ -37,7 +44,13 @@
         <https://caselinker.up.railway.app/resource/agency/kentucky-office-of-attorney-generals-department-of-criminal-investigations>,
         <https://caselinker.up.railway.app/resource/agency/radcliff-pd-detective>,
         <https://caselinker.up.railway.app/resource/agency/radcliff-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/us-secret-service> .
+        <https://caselinker.up.railway.app/resource/agency/us-secret-service>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/elizabethtown>,
+        <https://caselinker.up.railway.app/resource/location/kentucky>,
+        <https://caselinker.up.railway.app/resource/location/ky>,
+        <https://caselinker.up.railway.app/resource/location/louisville>,
+        <https://caselinker.up.railway.app/resource/location/united-states> .
 
 <https://caselinker.up.railway.app/resource/case/usss_2021_019/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -57,13 +70,17 @@
         cacontology-multi:LocalAgency ;
     rdfs:label "DCI Detective" .
 
-<https://caselinker.up.railway.app/resource/agency/department-of-criminal-investigations> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/department-of-criminal-investigations> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Department of Criminal Investigations" .
 
 <https://caselinker.up.railway.app/resource/agency/elizabethtown-police-department> a cac-core:OrganizationLikeEntity,
         cacontology-multi:LocalAgency ;
     rdfs:label "Elizabethtown Police Department" .
 
-<https://caselinker.up.railway.app/resource/agency/kentucky-attorney-generals-office> a cacontology-multi:StateAgency .
+<https://caselinker.up.railway.app/resource/agency/kentucky-attorney-generals-office> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:StateAgency ;
+    rdfs:label "Kentucky Attorney General's Office" .
 
 <https://caselinker.up.railway.app/resource/agency/kentucky-attorney-generals-office-department-of-criminal-investigations> a cac-core:OrganizationLikeEntity,
         cacontology-multi:StateAgency ;
@@ -82,6 +99,8 @@
     rdfs:label "Radcliff Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/us-secret-service> a cacontology-multi:FederalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/usss_2021_019/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -120,8 +139,7 @@
         <https://caselinker.up.railway.app/resource/case/usss_2021_019/charge/3>,
         <https://caselinker.up.railway.app/resource/case/usss_2021_019/charge/4> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/usss_2021_019/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/usss_2021_019/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/usss_2021_019/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/usss_2021_019/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -139,16 +157,29 @@
     cacontology-production:victimAge 14 .
 
 <https://caselinker.up.railway.app/resource/case/usss_2021_019/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "25 Years" .
-
-<https://caselinker.up.railway.app/resource/case/usss_2021_019/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "Supervised Release" .
+    rdfs:label "[\"25 Years\", \"Supervised Release\"]" .
 
 <https://caselinker.up.railway.app/resource/case/usss_2021_019/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/elizabethtown> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Elizabethtown" ;
+    uco-core:name "Elizabethtown" .
+
+<https://caselinker.up.railway.app/resource/location/kentucky> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/ky> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/louisville> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/platform/chat> a cacontology-platforms:AnonymousChatPlatform ;
     rdfs:label "chat" .

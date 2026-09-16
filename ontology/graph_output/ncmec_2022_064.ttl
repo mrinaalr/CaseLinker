@@ -9,16 +9,21 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_064> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:05:14.314154" ;
+    dcterms:created "2026-09-15T20:45:06.039815" ;
     dcterms:identifier "ncmec_2022_064" ;
-    dcterms:modified "2026-09-10T19:05:14.314154" ;
+    dcterms:modified "2026-09-15T20:45:06.039815" ;
     dcterms:source <https://who13.com/news/former-isu-student-extradited-to-ames-on-child-pornography-charges/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/iowa>,
+        <https://caselinker.up.railway.app/resource/location/iowa-state>,
+        <https://caselinker.up.railway.app/resource/location/story-county>,
+        <https://caselinker.up.railway.app/resource/location/wisconsin> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_064/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_064/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2022_064/event/possession>,
@@ -27,7 +32,11 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/iowa-state-police-department>,
         <https://caselinker.up.railway.app/resource/agency/iowa-state-university-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/lafayette-county-sheriffs-office> .
+        <https://caselinker.up.railway.app/resource/agency/lafayette-county-sheriffs-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/iowa>,
+        <https://caselinker.up.railway.app/resource/location/iowa-state>,
+        <https://caselinker.up.railway.app/resource/location/story-county>,
+        <https://caselinker.up.railway.app/resource/location/wisconsin> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_064/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -47,7 +56,9 @@
         cacontology-multi:StateAgency ;
     rdfs:label "Iowa State Police Department" .
 
-<https://caselinker.up.railway.app/resource/agency/iowa-state-university-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/iowa-state-university-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Iowa State University Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/lafayette-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
         cacontology-multi:LocalAgency ;
@@ -74,16 +85,39 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2022_064/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_064/charge/2>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_064/charge/3> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2022_064/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_064/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 22 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_064/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_064/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_064/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/iowa> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Iowa" ;
+    uco-core:name "Iowa" .
+
+<https://caselinker.up.railway.app/resource/location/iowa-state> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Iowa State" ;
+    uco-core:name "Iowa State" .
+
+<https://caselinker.up.railway.app/resource/location/story-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Story County" ;
+    uco-core:name "Story County" .
+
+<https://caselinker.up.railway.app/resource/location/wisconsin> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_064/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

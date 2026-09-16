@@ -6,19 +6,25 @@
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_209> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:27:05.337962" ;
+    dcterms:created "2026-09-15T21:27:13.349480" ;
     dcterms:identifier "ncmec_2025_209" ;
-    dcterms:modified "2026-09-10T19:27:05.337962" ;
+    dcterms:modified "2026-09-15T21:27:13.349480" ;
     dcterms:source <https://www.nbcmiami.com/news/local/palm-beach-county-substitute-of-almost-30-years-arrested-on-child-porn-charges/3535884/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/lake-worth-beach>,
+        <https://caselinker.up.railway.app/resource/location/palm-beach-county>,
+        <https://caselinker.up.railway.app/resource/location/penttila>,
+        <https://caselinker.up.railway.app/resource/location/school-district> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_209/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_209/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_209/cybertip>,
@@ -27,7 +33,11 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_209/event/trust-violation>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_209/legal-proceeding> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/lake-worth-beach>,
+        <https://caselinker.up.railway.app/resource/location/palm-beach-county>,
+        <https://caselinker.up.railway.app/resource/location/penttila>,
+        <https://caselinker.up.railway.app/resource/location/school-district> .
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
@@ -53,7 +63,8 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_209/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-02-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-02-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_209/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_209/person/offender/1> a uco-identity:Person .
 
@@ -77,11 +88,33 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2025_209/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_209/person/victim/1> .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_209/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_209/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-02-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/lake-worth-beach> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Lake Worth Beach" ;
+    uco-core:name "Lake Worth Beach" .
+
+<https://caselinker.up.railway.app/resource/location/palm-beach-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/penttila> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Penttila" ;
+    uco-core:name "Penttila" .
+
+<https://caselinker.up.railway.app/resource/location/school-district> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "School District" ;
+    uco-core:name "School District" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_209/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

@@ -10,16 +10,18 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_011> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:09:10.016953" ;
+    dcterms:created "2026-09-15T20:55:00.747603" ;
     dcterms:identifier "ncmec_2023_011" ;
-    dcterms:modified "2026-09-10T19:09:10.016953" ;
+    dcterms:modified "2026-09-15T20:55:00.747603" ;
     dcterms:source <https://www.orlando-news.com/2023/06/05/18-year-old-arrested-with-child-porn-after-multi-month-investigation/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/clermont> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_011/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_011/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_011/cybertip>,
@@ -31,7 +33,8 @@
         <https://caselinker.up.railway.app/resource/agency/florida-department-of-law-enforcement>,
         <https://caselinker.up.railway.app/resource/agency/florida-department-of-law-enforcement-cybercrime-task-force>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/clermont> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_011/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -78,16 +81,20 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_011/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Lake County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_011/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_011/charge/2>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_011/charge/3> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-06-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-06-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_011/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_011/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 18 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_011/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_011/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_011/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -97,6 +104,11 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_011/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-06-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/clermont> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Clermont" ;
+    uco-core:name "Clermont" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_011/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

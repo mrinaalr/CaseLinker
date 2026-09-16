@@ -5,18 +5,26 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-sextortion: <https://cacontology.projectvic.org/sextortion#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2021_001> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:18:36.741797" ;
+    dcterms:created "2026-09-15T20:35:06.225020" ;
     dcterms:identifier "us_marshals_2021_001" ;
-    dcterms:modified "2026-09-10T20:18:36.741797" ;
+    dcterms:modified "2026-09-15T20:35:06.225020" ;
     dcterms:source <https://www.usmarshals.gov/news/press-release/southern-iowa-fugitive-task-force-brings-end-three-week-manhunt>,
         "US MARSHALS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/alabama>,
+        <https://caselinker.up.railway.app/resource/location/des-moines>,
+        <https://caselinker.up.railway.app/resource/location/iowa>,
+        <https://caselinker.up.railway.app/resource/location/southern-iowa>,
+        <https://caselinker.up.railway.app/resource/location/the-southern-district> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/us_marshals_2021_001/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/us_marshals_2021_001/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/us_marshals_2021_001/event/hands-on>,
@@ -32,7 +40,12 @@
         <https://caselinker.up.railway.app/resource/agency/pottawattamie-county-sheriffs-office>,
         <https://caselinker.up.railway.app/resource/agency/southern-iowa-fugitive-task-force>,
         <https://caselinker.up.railway.app/resource/agency/southern-iowa-fugitive-task-forces>,
-        <https://caselinker.up.railway.app/resource/agency/usms> .
+        <https://caselinker.up.railway.app/resource/agency/usms> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/alabama>,
+        <https://caselinker.up.railway.app/resource/location/des-moines>,
+        <https://caselinker.up.railway.app/resource/location/iowa>,
+        <https://caselinker.up.railway.app/resource/location/southern-iowa>,
+        <https://caselinker.up.railway.app/resource/location/the-southern-district> .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2021_001/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -62,7 +75,9 @@
         cacontology-multi:LocalAgency ;
     rdfs:label "Fourth Judicial District Department of Correctional Services" .
 
-<https://caselinker.up.railway.app/resource/agency/iowa-division-of-criminal-investigation> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/iowa-division-of-criminal-investigation> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Iowa Division of Criminal Investigation" .
 
 <https://caselinker.up.railway.app/resource/agency/polk-county-sheriffs-office> a cacontology-multi:LocalAgency .
 
@@ -83,17 +98,44 @@
 <https://caselinker.up.railway.app/resource/case/us_marshals_2021_001/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Polk County Jail" ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/us_marshals_2021_001/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2021_001/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 21 .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2021_001/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/us_marshals_2021_001/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/us_marshals_2021_001/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/alabama> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/des-moines> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Des Moines" ;
+    uco-core:name "Des Moines" .
+
+<https://caselinker.up.railway.app/resource/location/iowa> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Iowa" ;
+    uco-core:name "Iowa" .
+
+<https://caselinker.up.railway.app/resource/location/southern-iowa> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Southern Iowa" ;
+    uco-core:name "Southern Iowa" .
+
+<https://caselinker.up.railway.app/resource/location/the-southern-district> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "the Southern District" ;
+    uco-core:name "the Southern District" .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2021_001/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

@@ -10,6 +10,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -34,7 +35,9 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2025_379/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_379/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/nicholasville-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/nicholasville-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Nicholasville Police Department" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_379/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -54,11 +57,16 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_379/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-03-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-03-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_379/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_379/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_379/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_379/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/platform/social-media> a cacontology-platforms:SocialMediaPlatform ;
     rdfs:label "social media" .
@@ -69,13 +77,23 @@
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-03-01T00:00:00Z"^^xsd:dateTimeStamp .
 
+<https://caselinker.up.railway.app/resource/location/ky> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/nicholasville> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Nicholasville" ;
+    uco-core:name "Nicholasville" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_379> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:28:37.580213" ;
+    dcterms:created "2026-09-15T21:27:13.513985" ;
     dcterms:identifier "ncmec_2025_379" ;
-    dcterms:modified "2026-09-10T19:28:37.580213" ;
+    dcterms:modified "2026-09-15T21:27:13.513985" ;
     dcterms:source <https://fox56news.com/news/local/nicholasville-man-allegedly-uploaded-child-porn-onto-social-media-told-police-it-was-stupid/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/ky>,
+        <https://caselinker.up.railway.app/resource/location/nicholasville> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_379/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_379/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_379/admission/1>,
@@ -86,7 +104,9 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_379/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_379/legal-proceeding> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/nicholasville-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/nicholasville-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/ky>,
+        <https://caselinker.up.railway.app/resource/location/nicholasville> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_379/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "he was stupid for downloading and uploading the videos" ;
@@ -102,7 +122,7 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_379/admission/2> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "uploading child sexual abuse material (CSAM) using social media apps" ;
     dcterms:source <https://fox56news.com/news/local/nicholasville-man-allegedly-uploaded-child-porn-onto-social-media-told-police-it-was-stupid/> ;
-    ns1:admissionContext "child-porn-onto-social- media-told-police-it-was-stupid/ NICHOLASVILLE, Ky. (FOX 56) — On Tuesday, a Nicholasville man was charged after..." ;
+    ns1:admissionContext "hild-porn-onto-social- media-told-police-it-was-stupid/ NICHOLASVILLE, Ky. (FOX 56) — On Tuesday, a Nicholasville man was charged after h..." ;
     ns1:admissionFrame "admitted_to" ;
     ns1:admissionTheme "harm_conduct",
         "tech_use" ;
@@ -114,7 +134,7 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_379/admission/3> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "to using an email account that had uploaded four videos containing child sex abuse material" ;
     dcterms:source <https://fox56news.com/news/local/nicholasville-man-allegedly-uploaded-child-porn-onto-social-media-told-police-it-was-stupid/> ;
-    ns1:admissionContext "n the 500 block of Hillbrook Drive to find Dylan Zabriskie, 22. Court documents show that Zabriskie allegedly confessed to using an email..." ;
+    ns1:admissionContext "the 500 block of Hillbrook Drive to find Dylan Zabriskie, 22. Court documents show that Zabriskie allegedly confessed to using an email a..." ;
     ns1:admissionFrame "confessed_paraphrase" ;
     ns1:admissionTheme "harm_conduct",
         "tech_use" ;

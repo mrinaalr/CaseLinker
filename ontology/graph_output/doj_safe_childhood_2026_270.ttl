@@ -8,16 +8,20 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_270> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T21:22:19.455323" ;
+    dcterms:created "2026-09-15T22:12:26.198265" ;
     dcterms:identifier "doj_safe_childhood_2026_270" ;
-    dcterms:modified "2026-09-14T21:22:19.455323" ;
+    dcterms:modified "2026-09-15T22:12:26.198265" ;
     dcterms:source <https://www.justice.gov/usao-ri/pr/pawtucket-man-pleads-guilty-child-pornography-charges>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/pawtucket>,
+        <https://caselinker.up.railway.app/resource/location/providence>,
+        <https://caselinker.up.railway.app/resource/location/united-states> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_270/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_270/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_270/event/distribution>,
@@ -26,7 +30,10 @@
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_270/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_270/legal-step/sentenced> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/doj>,
-        <https://caselinker.up.railway.app/resource/agency/fbi> .
+        <https://caselinker.up.railway.app/resource/agency/fbi> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/pawtucket>,
+        <https://caselinker.up.railway.app/resource/location/providence>,
+        <https://caselinker.up.railway.app/resource/location/united-states> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_270/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -69,9 +76,7 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_270/charge/1>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_270/charge/2> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_270/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_270/sentence/2>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_270/sentence/3> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_270/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_270/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -85,20 +90,25 @@
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_270/person/victim/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_270/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "20 years" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_270/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$250,000," .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_270/sentence/3> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "supervised release" .
+    rdfs:label "[\"20 years\", \"$250,000,\", \"supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_270/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/pawtucket> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Pawtucket" ;
+    uco-core:name "Pawtucket" .
+
+<https://caselinker.up.railway.app/resource/location/providence> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Providence" ;
+    uco-core:name "Providence" .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_270/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

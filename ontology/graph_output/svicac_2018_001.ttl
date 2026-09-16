@@ -7,19 +7,25 @@
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2018_001> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:14:28.211852" ;
+    dcterms:created "2026-09-15T20:29:58.197714" ;
     dcterms:identifier "svicac_2018_001" ;
-    dcterms:modified "2026-09-10T20:14:28.211852" ;
+    dcterms:modified "2026-09-15T20:29:58.197714" ;
     dcterms:source <https://www.mercurynews.com/2018/02/22/double-trouble-san-jose-twin-brothers-arrested-on-child-porn-charges/>,
         "SVICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/alexandria>,
+        <https://caselinker.up.railway.app/resource/location/san-jose>,
+        <https://caselinker.up.railway.app/resource/location/santa-clara-county>,
+        <https://caselinker.up.railway.app/resource/location/virginia> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/svicac_2018_001/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/svicac_2018_001/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/svicac_2018_001/cybertip>,
@@ -30,7 +36,11 @@
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/silicon-valley-crimes-against-children-task-force> .
+        <https://caselinker.up.railway.app/resource/agency/silicon-valley-crimes-against-children-task-force> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/alexandria>,
+        <https://caselinker.up.railway.app/resource/location/san-jose>,
+        <https://caselinker.up.railway.app/resource/location/santa-clara-county>,
+        <https://caselinker.up.railway.app/resource/location/virginia> .
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
@@ -56,7 +66,8 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/svicac_2018_001/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2018-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2018-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/svicac_2018_001/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2018_001/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 20 .
@@ -83,11 +94,37 @@
         <https://caselinker.up.railway.app/resource/case/svicac_2018_001/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/svicac_2018_001/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
+<https://caselinker.up.railway.app/resource/case/svicac_2018_001/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
+<https://caselinker.up.railway.app/resource/agency/ncmec> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:FederalAgency ;
+    rdfs:label "NCMEC" .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2018_001/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2018-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/alexandria> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Alexandria" ;
+    uco-core:name "Alexandria" .
+
+<https://caselinker.up.railway.app/resource/location/san-jose> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "San Jose" ;
+    uco-core:name "San Jose" .
+
+<https://caselinker.up.railway.app/resource/location/santa-clara-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Santa Clara County" ;
+    uco-core:name "Santa Clara County" .
+
+<https://caselinker.up.railway.app/resource/location/virginia> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Virginia" ;
+    uco-core:name "Virginia" .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2018_001/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

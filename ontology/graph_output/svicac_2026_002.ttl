@@ -5,19 +5,27 @@
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2026_002> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:13:30.348747" ;
+    dcterms:created "2026-09-15T20:29:58.097432" ;
     dcterms:identifier "svicac_2026_002" ;
-    dcterms:modified "2026-09-10T20:13:30.348747" ;
+    dcterms:modified "2026-09-15T20:29:58.097432" ;
     dcterms:source <https://www.mymotherlode.com/news/local/3215939/mariposa-sheriffs-office-assists-in-fresno-child-porn-arrest.html>,
         "SVICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/california>,
+        <https://caselinker.up.railway.app/resource/location/fresno>,
+        <https://caselinker.up.railway.app/resource/location/fresno-county>,
+        <https://caselinker.up.railway.app/resource/location/friant>,
+        <https://caselinker.up.railway.app/resource/location/mariposa-county>,
+        <https://caselinker.up.railway.app/resource/location/millerton-lake> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/svicac_2026_002/phase/booked> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/svicac_2026_002/phase/booked> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/svicac_2026_002/cybertip>,
@@ -27,7 +35,13 @@
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/mariposa-county-sheriffs-office>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/california>,
+        <https://caselinker.up.railway.app/resource/location/fresno>,
+        <https://caselinker.up.railway.app/resource/location/fresno-county>,
+        <https://caselinker.up.railway.app/resource/location/friant>,
+        <https://caselinker.up.railway.app/resource/location/mariposa-county>,
+        <https://caselinker.up.railway.app/resource/location/millerton-lake> .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2026_002/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -62,17 +76,44 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/svicac_2026_002/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/svicac_2026_002/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2026_002/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2026_002/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/svicac_2026_002/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2026_002/phase/booked> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/california> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/fresno> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/fresno-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/friant> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Friant" ;
+    uco-core:name "Friant" .
+
+<https://caselinker.up.railway.app/resource/location/mariposa-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/millerton-lake> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Millerton Lake" ;
+    uco-core:name "Millerton Lake" .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2026_002/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

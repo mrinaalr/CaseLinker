@@ -10,6 +10,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -30,11 +31,13 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_235> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:10:51.484210" ;
+    dcterms:created "2026-09-15T20:55:00.954417" ;
     dcterms:identifier "ncmec_2023_235" ;
-    dcterms:modified "2026-09-10T19:10:51.484210" ;
+    dcterms:modified "2026-09-15T20:55:00.954417" ;
     dcterms:source <https://fox42kptm.com/news/local/fbi-omaha-man-sentenced-to-ten-years-for-child-pornography-receipt-and-distribution>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/neb>,
+        <https://caselinker.up.railway.app/resource/location/omaha> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_235/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_235/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_235/admission/1>,
@@ -44,7 +47,9 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_235/legal-step/sentenced> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/fbi>,
-        <https://caselinker.up.railway.app/resource/agency/hsi> .
+        <https://caselinker.up.railway.app/resource/agency/hsi> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/neb>,
+        <https://caselinker.up.railway.app/resource/location/omaha> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_235/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -61,7 +66,8 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_235/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_235/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_235/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -80,12 +86,22 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_235/event/csam> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_235/person/offender/1> .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_235/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/platform/omegle> a cacontology-platforms:AnonymousChatPlatform ;
     rdfs:label "Omegle" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_235/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/neb> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/omaha> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_235/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "looking at images and videos of child porn" ;

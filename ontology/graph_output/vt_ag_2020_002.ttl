@@ -8,16 +8,19 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2020_002> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:22:25.933275" ;
+    dcterms:created "2026-09-15T20:39:17.329016" ;
     dcterms:identifier "vt_ag_2020_002" ;
-    dcterms:modified "2026-09-10T20:22:25.933275" ;
+    dcterms:modified "2026-09-15T20:39:17.329016" ;
     dcterms:source <https://ago.vermont.gov/blog/2020/05/21/randolph-man-arrested-aggravated-sexual-assault-child-promotion-child-pornography-voyeurism>,
         "VT AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/randolph>,
+        <https://caselinker.up.railway.app/resource/location/vermont> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/vt_ag_2020_002/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/vt_ag_2020_002/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/vt_ag_2020_002/event/csam>,
@@ -29,7 +32,10 @@
         <https://caselinker.up.railway.app/resource/agency/hsi>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/orange-county-sheriffs-department>,
-        <https://caselinker.up.railway.app/resource/agency/vermont-state-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/usao>,
+        <https://caselinker.up.railway.app/resource/agency/vermont-state-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/randolph>,
+        <https://caselinker.up.railway.app/resource/location/vermont> .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2020_002/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -45,13 +51,19 @@
 
 <https://caselinker.up.railway.app/resource/agency/attorney-generals-office> a cacontology-multi:StateAgency .
 
-<https://caselinker.up.railway.app/resource/agency/burlington-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/burlington-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Burlington Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/hsi> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
-<https://caselinker.up.railway.app/resource/agency/orange-county-sheriffs-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/orange-county-sheriffs-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Orange County Sheriff's Department" .
+
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/agency/vermont-state-police-department> a cacontology-multi:StateAgency .
 
@@ -74,15 +86,28 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/vt_ag_2020_002/charge/1>,
         <https://caselinker.up.railway.app/resource/case/vt_ag_2020_002/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2020-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2020-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/vt_ag_2020_002/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2020_002/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2020_002/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/vt_ag_2020_002/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/vt_ag_2020_002/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2020-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/randolph> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Randolph" ;
+    uco-core:name "Randolph" .
+
+<https://caselinker.up.railway.app/resource/location/vermont> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2020_002/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

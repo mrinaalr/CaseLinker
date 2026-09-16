@@ -2,59 +2,133 @@
 @prefix cacontology: <https://cacontology.projectvic.org#> .
 @prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
+@prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_033> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:14:24.866749" ;
+    dcterms:created "2026-09-15T21:08:10.047567" ;
     dcterms:identifier "ncmec_2024_033" ;
-    dcterms:modified "2026-09-10T19:14:24.866749" ;
-    dcterms:source <https://www.arkansasonline.com/news/2024/nov/16/two-people-arrested-in-connection-with-various/>,
+    dcterms:modified "2026-09-15T21:08:10.047567" ;
+    dcterms:source <https://www.kark.com/crime/arkansas-state-police-arrest-two-in-separate-child-porn-cases/>,
         "NCMEC" ;
-    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_033/phase/arrested> ;
-    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_033/phase/arrested> ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/ark>,
+        <https://caselinker.up.railway.app/resource/location/arkansas>,
+        <https://caselinker.up.railway.app/resource/location/benton>,
+        <https://caselinker.up.railway.app/resource/location/saline-county>,
+        <https://caselinker.up.railway.app/resource/location/texarkana>,
+        <https://caselinker.up.railway.app/resource/location/westbrook> ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_033/phase/charged> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_033/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_033/event/distribution>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_033/event/possession>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_033/legal-proceeding> .
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_033/legal-proceeding> ;
+    cacontology:investigationStatus "unknown" ;
+    cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/ncmec_2024_033/tech/cybertipline> ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/arkansas-state-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/icac>,
+        <https://caselinker.up.railway.app/resource/agency/texarkana-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/ark>,
+        <https://caselinker.up.railway.app/resource/location/arkansas>,
+        <https://caselinker.up.railway.app/resource/location/benton>,
+        <https://caselinker.up.railway.app/resource/location/saline-county>,
+        <https://caselinker.up.railway.app/resource/location/texarkana>,
+        <https://caselinker.up.railway.app/resource/location/westbrook> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_033/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2024-11-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:hasRoleBeginPoint "2024-03-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_033/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_033/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_033/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2024-11-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:hasRoleBeginPoint "2024-03-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_033/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_033/person/victim/1> .
 
+<https://caselinker.up.railway.app/resource/agency/arkansas-state-police-department> a cacontology-multi:StateAgency .
+
+<https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
+
+<https://caselinker.up.railway.app/resource/agency/texarkana-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Texarkana Police Department" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_033/charge/1> a cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "distributing" ;
+    cacontology-legal-outcomes:indictmentCounts 100 .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_033/charge/2> a cacontology-legal-outcomes:CSAM_Possession,
+        cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "child pornography" ;
+    cacontology-legal-outcomes:indictmentCounts 2 .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_033/event/distribution> a cac-core:Event,
-        cacontology-legal-outcomes:CSAM_Distribution .
+        cacontology-legal-outcomes:CSAM_Distribution ;
+    cacontology:severityLevel 3 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_033/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_033/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Benton County Jail" ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-11-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2024_033/charge/1>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_033/charge/2> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-03-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2024_033/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_033/person/offender/1> a uco-identity:Person ;
-    cacontology-detection:ageEstimate 26 .
+    cacontology-detection:ageEstimate 18 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_033/person/victim/1> a uco-identity:Person .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_033/phase/arrested> a cacontology:InitialPhase,
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_033/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_033/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
+    rdfs:label "CyberTipline" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_033/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
-    cacontology:hasPhaseBeginPoint "2024-11-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology:hasPhaseBeginPoint "2024-03-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/ark> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/arkansas> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/benton> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/saline-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Saline County" ;
+    uco-core:name "Saline County" .
+
+<https://caselinker.up.railway.app/resource/location/texarkana> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Texarkana" ;
+    uco-core:name "Texarkana" .
+
+<https://caselinker.up.railway.app/resource/location/westbrook> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Westbrook" ;
+    uco-core:name "Westbrook" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_033/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
+    cacontology:severityLevel 3 ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2024_033/facet/possession> .
 

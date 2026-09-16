@@ -4,19 +4,24 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_016> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:17:44.217252" ;
+    dcterms:created "2026-09-15T20:31:48.118728" ;
     dcterms:identifier "tbi_icac_2025_016" ;
-    dcterms:modified "2026-09-10T20:17:44.217252" ;
+    dcterms:modified "2026-09-15T20:31:48.118728" ;
     dcterms:source <https://tbinewsroom.com/2025/02/05/fayetteville-man-arrested-charged-in-tbi-csam-investigation/>,
         "TBI ICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/coffee-county>,
+        <https://caselinker.up.railway.app/resource/location/fayetteville>,
+        <https://caselinker.up.railway.app/resource/location/lincoln-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_016/phase/convicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_016/phase/convicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_016/cybertip>,
@@ -27,7 +32,10 @@
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ncmec>,
         <https://caselinker.up.railway.app/resource/agency/tbi-csam-investigation>,
-        <https://caselinker.up.railway.app/resource/agency/tennessee-bureau-of-investigations-cybercrime-digital-evidence-unit> .
+        <https://caselinker.up.railway.app/resource/agency/tennessee-bureau-of-investigations-cybercrime-digital-evidence-unit> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/coffee-county>,
+        <https://caselinker.up.railway.app/resource/location/fayetteville>,
+        <https://caselinker.up.railway.app/resource/location/lincoln-county> .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_016/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -61,7 +69,6 @@
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_016/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility: Lincoln County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_016/charge/1> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_016/sentence/1> .
@@ -78,13 +85,24 @@
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_016/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$140,000" .
+    rdfs:label "[\"$140,000\"]" .
 
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_016/phase/convicted> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/coffee-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/fayetteville> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Fayetteville" ;
+    uco-core:name "Fayetteville" .
+
+<https://caselinker.up.railway.app/resource/location/lincoln-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_016/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

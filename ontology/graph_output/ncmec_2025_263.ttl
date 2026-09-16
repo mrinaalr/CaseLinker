@@ -8,24 +8,34 @@
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_263> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:27:31.475628" ;
+    dcterms:created "2026-09-15T21:27:13.391650" ;
     dcterms:identifier "ncmec_2025_263" ;
-    dcterms:modified "2026-09-10T19:27:31.475628" ;
+    dcterms:modified "2026-09-15T21:27:13.391650" ;
     dcterms:source <https://nowhabersham.com/former-metro-atlanta-police-officer-faces-child-exploitation-charges-in-north-georgia/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/atlanta>,
+        <https://caselinker.up.railway.app/resource/location/gilmer-county>,
+        <https://caselinker.up.railway.app/resource/location/habersham>,
+        <https://caselinker.up.railway.app/resource/location/north-georgia> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_263/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_263/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_263/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_263/offense-event/charge-1> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/gilmer-county-sheriffs-office>,
-        <https://caselinker.up.railway.app/resource/agency/icac> .
+        <https://caselinker.up.railway.app/resource/agency/icac> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/atlanta>,
+        <https://caselinker.up.railway.app/resource/location/gilmer-county>,
+        <https://caselinker.up.railway.app/resource/location/habersham>,
+        <https://caselinker.up.railway.app/resource/location/north-georgia> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_263/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -55,16 +65,39 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_263/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-05-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_263/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_263/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 30 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_263/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_263/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_263/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-05-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/atlanta> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/gilmer-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Gilmer County" ;
+    uco-core:name "Gilmer County" .
+
+<https://caselinker.up.railway.app/resource/location/habersham> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Habersham" ;
+    uco-core:name "Habersham" .
+
+<https://caselinker.up.railway.app/resource/location/north-georgia> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "North Georgia" ;
+    uco-core:name "North Georgia" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_263/offense-event/charge-1> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event,

@@ -6,26 +6,36 @@
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_320> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:11:29.639952" ;
+    dcterms:created "2026-09-15T20:55:01.026383" ;
     dcterms:identifier "ncmec_2023_320" ;
-    dcterms:modified "2026-09-10T19:11:29.639952" ;
+    dcterms:modified "2026-09-15T20:55:01.026383" ;
     dcterms:source <https://www.kiro7.com/news/trending/florida-man-charged-with-nearly-1200-counts-child-pornography/J3TYE7CD4ZE7ZCXWRG2GLNYCVQ/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/avon-park>,
+        <https://caselinker.up.railway.app/resource/location/fla>,
+        <https://caselinker.up.railway.app/resource/location/florida>,
+        <https://caselinker.up.railway.app/resource/location/highlands-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_320/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_320/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_320/event/online-only>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_320/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_320/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_320/operation> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/highlands-county-sheriffs-office> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/highlands-county-sheriffs-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/avon-park>,
+        <https://caselinker.up.railway.app/resource/location/fla>,
+        <https://caselinker.up.railway.app/resource/location/florida>,
+        <https://caselinker.up.railway.app/resource/location/highlands-county> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_320/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -59,10 +69,10 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_320/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Highlands County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_320/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_320/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_320/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_320/operation> a cac-core:Event,
         cacontology-taskforce:TaskForceOperation .
@@ -72,9 +82,29 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_320/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_320/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_320/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/avon-park> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Avon Park" ;
+    uco-core:name "Avon Park" .
+
+<https://caselinker.up.railway.app/resource/location/fla> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/florida> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/highlands-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Highlands County" ;
+    uco-core:name "Highlands County" .
 
 <https://caselinker.up.railway.app/resource/platform/discord> a cacontology-platforms:MessagingService ;
     rdfs:label "Discord" .

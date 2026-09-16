@@ -1,6 +1,7 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
 @prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
@@ -10,20 +11,29 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2007_030> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:41:12.772049" ;
+    dcterms:created "2026-09-15T21:42:39.874764" ;
     dcterms:identifier "doj_archives_2007_030" ;
-    dcterms:modified "2026-09-10T19:41:12.772049" ;
+    dcterms:modified "2026-09-15T21:42:39.874764" ;
     dcterms:source <https://www.justice.gov/archive/criminal/ceos/pressreleases/downloads/EDVA%20Rust-Tierney%20indict%20PR_051007.pdf>,
-        "DOJ ARCHIVES" ;
+        "DOJ CEOS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/alexandria>,
+        <https://caselinker.up.railway.app/resource/location/arlington>,
+        <https://caselinker.up.railway.app/resource/location/newport>,
+        <https://caselinker.up.railway.app/resource/location/norfolk>,
+        <https://caselinker.up.railway.app/resource/location/richmond>,
+        <https://caselinker.up.railway.app/resource/location/united-states>,
+        <https://caselinker.up.railway.app/resource/location/virginia> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_archives_2007_030/phase/convicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_archives_2007_030/phase/convicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_archives_2007_030/event/online-only>,
         <https://caselinker.up.railway.app/resource/case/doj_archives_2007_030/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/doj_archives_2007_030/event/project-safe-childhood>,
         <https://caselinker.up.railway.app/resource/case/doj_archives_2007_030/event/trust-violation>,
         <https://caselinker.up.railway.app/resource/case/doj_archives_2007_030/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/doj_archives_2007_030/legal-step/convicted>,
@@ -32,7 +42,15 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/arlington-county-police-department>,
         <https://caselinker.up.railway.app/resource/agency/ceos>,
         <https://caselinker.up.railway.app/resource/agency/doj>,
-        <https://caselinker.up.railway.app/resource/agency/ice> .
+        <https://caselinker.up.railway.app/resource/agency/ice>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/alexandria>,
+        <https://caselinker.up.railway.app/resource/location/arlington>,
+        <https://caselinker.up.railway.app/resource/location/newport>,
+        <https://caselinker.up.railway.app/resource/location/norfolk>,
+        <https://caselinker.up.railway.app/resource/location/richmond>,
+        <https://caselinker.up.railway.app/resource/location/united-states>,
+        <https://caselinker.up.railway.app/resource/location/virginia> .
 
 <https://caselinker.up.railway.app/resource/agency/arlington-county-police-department> a cacontology-multi:LocalAgency .
 
@@ -41,6 +59,8 @@
 <https://caselinker.up.railway.app/resource/agency/doj> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/agency/ice> a cacontology-multi:FederalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2007_030/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -52,6 +72,10 @@
     rdfs:seeAlso <https://caselinker.up.railway.app/resource/case/doj_archives_2007_030/offense-event/charge-2> ;
     ns1:chargeCluster "child_exploitation" ;
     ns1:chargeOffenseEvent <https://caselinker.up.railway.app/resource/case/doj_archives_2007_030/offense-event/charge-2> .
+
+<https://caselinker.up.railway.app/resource/case/doj_archives_2007_030/event/project-safe-childhood> a cac-core:Event,
+        cacontology-multi:ProjectSafeChildhoodOperation ;
+    cacontology:severityLevel 2 .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2007_030/event/trust-violation> a cacontology-custodial:AuthorityAbuse,
         cacontology-custodial:TrustViolation ;
@@ -65,11 +89,7 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/doj_archives_2007_030/charge/1>,
         <https://caselinker.up.railway.app/resource/case/doj_archives_2007_030/charge/2> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2007-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_archives_2007_030/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_archives_2007_030/sentence/2>,
-        <https://caselinker.up.railway.app/resource/case/doj_archives_2007_030/sentence/3>,
-        <https://caselinker.up.railway.app/resource/case/doj_archives_2007_030/sentence/4>,
-        <https://caselinker.up.railway.app/resource/case/doj_archives_2007_030/sentence/5> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_archives_2007_030/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2007_030/legal-step/convicted> a cac-core:Event,
         cac-core:LegalEvent,
@@ -80,7 +100,8 @@
 <https://caselinker.up.railway.app/resource/case/doj_archives_2007_030/operation> a cac-core:Event,
         cacontology-taskforce:TaskForceOperation .
 
-<https://caselinker.up.railway.app/resource/case/doj_archives_2007_030/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/doj_archives_2007_030/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 51 .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2007_030/person/victim/1> a uco-identity:Person .
 
@@ -107,28 +128,33 @@
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_archives_2007_030/person/victim/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2007_030/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "12 years" .
-
-<https://caselinker.up.railway.app/resource/case/doj_archives_2007_030/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MandatoryMinimumSentencing ;
-    rdfs:label "mandatory minimum sentence" .
-
-<https://caselinker.up.railway.app/resource/case/doj_archives_2007_030/sentence/3> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "5 years" .
-
-<https://caselinker.up.railway.app/resource/case/doj_archives_2007_030/sentence/4> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "20 years" .
-
-<https://caselinker.up.railway.app/resource/case/doj_archives_2007_030/sentence/5> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "10 years" .
+    rdfs:label "[\"12 years\", \"mandatory minimum sentence\", \"5 years\", \"20 years\", \"10 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2007_030/phase/convicted> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2007-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/alexandria> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/arlington> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/newport> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/norfolk> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/richmond> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/virginia> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2007_030/event/online-only> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

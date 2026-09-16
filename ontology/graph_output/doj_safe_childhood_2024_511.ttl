@@ -12,16 +12,19 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_511> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T21:22:49.362086" ;
+    dcterms:created "2026-09-15T22:12:27.772379" ;
     dcterms:identifier "doj_safe_childhood_2024_511" ;
-    dcterms:modified "2026-09-14T21:22:49.362086" ;
+    dcterms:modified "2026-09-15T22:12:27.772379" ;
     dcterms:source <https://www.justice.gov/usao-mn/pr/st-paul-man-pleads-guilty-producing-child-pornography-cyberstalking-and-child>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/minn>,
+        <https://caselinker.up.railway.app/resource/location/st-paul> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_511/phase/pleaded-guilty> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_511/phase/pleaded-guilty> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_511/event/csam>,
@@ -37,7 +40,9 @@
         <https://caselinker.up.railway.app/resource/agency/doj>,
         <https://caselinker.up.railway.app/resource/agency/fbi>,
         <https://caselinker.up.railway.app/resource/agency/st-paul-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/usao> .
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/minn>,
+        <https://caselinker.up.railway.app/resource/location/st-paul> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_511/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -63,7 +68,9 @@
 
 <https://caselinker.up.railway.app/resource/agency/fbi> a cacontology-multi:FederalAgency .
 
-<https://caselinker.up.railway.app/resource/agency/st-paul-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/st-paul-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "St. Paul Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
@@ -94,7 +101,8 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_511/charge/1>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_511/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_511/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_511/legal-step/pleaded-guilty> a cac-core:Event,
         cac-core:LegalEvent,
@@ -109,9 +117,23 @@
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_511/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_511/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_511/phase/pleaded-guilty> a cac-core:Phase,
         cacontology-legal-outcomes:PreTrialPhase ;
     cacontology:hasPhaseBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/minn> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Minn." ;
+    uco-core:name "Minn." .
+
+<https://caselinker.up.railway.app/resource/location/st-paul> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "St. Paul" ;
+    uco-core:name "St. Paul" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_511/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;
@@ -133,7 +155,8 @@
     cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/discord>,
         <https://caselinker.up.railway.app/resource/platform/snapchat> .
 
-<https://caselinker.up.railway.app/resource/platform/discord> a cacontology-platforms:MessagingService ;
+<https://caselinker.up.railway.app/resource/platform/discord> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:MessagingService ;
     rdfs:label "Discord" .
 
 <https://caselinker.up.railway.app/resource/platform/snapchat> a cacontology-platforms:MessagingService ;

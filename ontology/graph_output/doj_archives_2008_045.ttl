@@ -1,5 +1,6 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
@@ -11,6 +12,7 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -28,24 +30,40 @@
 
 <https://caselinker.up.railway.app/resource/agency/fbi> a cacontology-multi:FederalAgency .
 
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
+
 <https://caselinker.up.railway.app/resource/case/doj_archives_2008_045> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:42:15.765565" ;
+    dcterms:created "2026-09-15T21:42:39.966111" ;
     dcterms:identifier "doj_archives_2008_045" ;
-    dcterms:modified "2026-09-10T19:42:15.765565" ;
+    dcterms:modified "2026-09-15T21:42:39.966111" ;
     dcterms:source <https://www.justice.gov/archive/criminal/ceos/pressreleases/downloads/DMD_CARPENTER-SENTENCED_06-26-08.pdf>,
-        "DOJ ARCHIVES" ;
+        "DOJ CEOS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/baltimore>,
+        <https://caselinker.up.railway.app/resource/location/dundalk>,
+        <https://caselinker.up.railway.app/resource/location/maryland>,
+        <https://caselinker.up.railway.app/resource/location/md>,
+        <https://caselinker.up.railway.app/resource/location/the-district-of-maryland>,
+        <https://caselinker.up.railway.app/resource/location/washington> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_archives_2008_045/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_archives_2008_045/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_archives_2008_045/admission/1>,
         <https://caselinker.up.railway.app/resource/case/doj_archives_2008_045/event/distribution>,
         <https://caselinker.up.railway.app/resource/case/doj_archives_2008_045/event/multi-jurisdiction>,
         <https://caselinker.up.railway.app/resource/case/doj_archives_2008_045/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/doj_archives_2008_045/event/project-safe-childhood>,
         <https://caselinker.up.railway.app/resource/case/doj_archives_2008_045/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/doj_archives_2008_045/legal-step/sentenced>,
         <https://caselinker.up.railway.app/resource/case/doj_archives_2008_045/offense-event/charge-2>,
         <https://caselinker.up.railway.app/resource/case/doj_archives_2008_045/operation> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/fbi> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/fbi>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/baltimore>,
+        <https://caselinker.up.railway.app/resource/location/dundalk>,
+        <https://caselinker.up.railway.app/resource/location/maryland>,
+        <https://caselinker.up.railway.app/resource/location/md>,
+        <https://caselinker.up.railway.app/resource/location/the-district-of-maryland>,
+        <https://caselinker.up.railway.app/resource/location/washington> .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2008_045/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -64,6 +82,10 @@
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2008_045/event/multi-jurisdiction> a cac-core:Event,
         cacontology-multi:MultiJurisdictionalInvestigation ;
+    cacontology:severityLevel 3 .
+
+<https://caselinker.up.railway.app/resource/case/doj_archives_2008_045/event/project-safe-childhood> a cac-core:Event,
+        cacontology-multi:ProjectSafeChildhoodOperation ;
     cacontology:severityLevel 3 .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2008_045/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
@@ -85,7 +107,8 @@
 <https://caselinker.up.railway.app/resource/case/doj_archives_2008_045/operation> a cac-core:Event,
         cacontology-taskforce:UndercoverUnit .
 
-<https://caselinker.up.railway.app/resource/case/doj_archives_2008_045/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/doj_archives_2008_045/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 44 .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2008_045/person/victim/1> a uco-identity:Person .
 
@@ -98,11 +121,29 @@
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2008_045/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "supervised release" .
+    rdfs:label "[\"supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2008_045/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2008-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/baltimore> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/dundalk> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/maryland> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/md> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/the-district-of-maryland> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/washington> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/platform/limewire> a cac-core:DigitalSystemEntity,
         cacontology-platforms:FileHostingService ;

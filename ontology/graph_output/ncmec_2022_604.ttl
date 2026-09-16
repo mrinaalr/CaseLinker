@@ -2,7 +2,9 @@
 @prefix cacontology: <https://cacontology.projectvic.org#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
+@prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix cacontology-undercover: <https://cacontology.projectvic.org/undercover#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
@@ -10,6 +12,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -20,43 +23,65 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_604/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:hasRoleBeginPoint "2022-04-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_604/event/csam>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_604/event/hands-on> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_604/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/department-of-homeland-security> a cacontology-multi:LocalAgency .
-
-<https://caselinker.up.railway.app/resource/agency/garvin-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
+<https://caselinker.up.railway.app/resource/agency/delaware-child-predator-task-force> a cac-core:OrganizationLikeEntity,
         cacontology-multi:LocalAgency ;
-    rdfs:label "Garvin County Sheriff's Office" .
+    rdfs:label "Delaware Child Predator Task Force" .
+
+<https://caselinker.up.railway.app/resource/agency/delaware-department-of-justice> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:StateAgency ;
+    rdfs:label "Delaware Department of Justice" .
+
+<https://caselinker.up.railway.app/resource/agency/us-department-of-justice> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "U.S. Department of Justice" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_604> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:09:00.142683" ;
+    dcterms:created "2026-09-15T20:45:06.518357" ;
     dcterms:identifier "ncmec_2022_604" ;
-    dcterms:modified "2026-09-10T19:09:00.142683" ;
-    dcterms:source <https://kfor.com/news/local/child-pornography-ring-exposed-by-investigation-in-pauls-valley/>,
+    dcterms:modified "2026-09-15T20:45:06.518357" ;
+    dcterms:source <https://6abc.com/william-ushler-arrested-child-porn-tower-hill-school-wilmington-delaware/11777515/>,
         "NCMEC" ;
-    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_604/phase/arrested> ;
-    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_604/phase/arrested> ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/delaware>,
+        <https://caselinker.up.railway.app/resource/location/pennsylvania>,
+        <https://caselinker.up.railway.app/resource/location/tower-hill>,
+        <https://caselinker.up.railway.app/resource/location/wilmington> ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_604/phase/sentenced> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_604/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2022_604/admission/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_604/cybertip>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_604/event/csam>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_604/event/hands-on>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_604/legal-proceeding> ;
-    cacontology:investigationStatus "unknown" ;
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_604/event/multi-jurisdiction>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_604/legal-proceeding>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_604/legal-step/sentenced>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_604/operation> ;
     cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/ncmec_2022_604/tech/cybertipline> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/department-of-homeland-security>,
-        <https://caselinker.up.railway.app/resource/agency/garvin-county-sheriffs-office>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/delaware-child-predator-task-force>,
+        <https://caselinker.up.railway.app/resource/agency/delaware-department-of-justice>,
+        <https://caselinker.up.railway.app/resource/agency/ncmec>,
+        <https://caselinker.up.railway.app/resource/agency/us-department-of-justice> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/delaware>,
+        <https://caselinker.up.railway.app/resource/location/pennsylvania>,
+        <https://caselinker.up.railway.app/resource/location/tower-hill>,
+        <https://caselinker.up.railway.app/resource/location/wilmington> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_604/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "child pornography" .
+    rdfs:label "child pornography" ;
+    cacontology-legal-outcomes:indictmentCounts 27 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_604/cybertip> a cacontology-us-ncmec:NCMECCybertipReport ;
     cacontology-us-ncmec:supportedBy <https://caselinker.up.railway.app/resource/agency/ncmec> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_604/event/multi-jurisdiction> a cac-core:Event,
+        cacontology-multi:MultiJurisdictionalInvestigation ;
+    cacontology:severityLevel 3 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_604/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
@@ -64,7 +89,17 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2022_604/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-04-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2022_604/sentence/1> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_604/legal-step/sentenced> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding,
+        cacontology-legal-outcomes:SentencingHearing ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-04-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_604/operation> a cac-core:Event,
+        cacontology-taskforce:ReactiveOperation .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_604/person/offender/1> a uco-identity:Person .
 
@@ -73,10 +108,14 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_604/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:hasRoleBeginPoint "2022-04-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_604/event/csam>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_604/event/hands-on> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_604/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_604/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:MonetaryPenalty ;
+    rdfs:label "[\"$250,000\", \"50 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_604/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -84,26 +123,49 @@
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_604/admission/1> a cacontology-undercover:IncriminatingStatement ;
-    rdfs:label "has a son that likes to ride his bike around the neighborhood" ;
-    dcterms:source <https://kfor.com/news/local/child-pornography-ring-exposed-by-investigation-in-pauls-valley/> ;
-    ns1:admissionContext "in a rental house with other people. She has three children with one being 3 months old. Youman said she has a son that likes to ride his..." ;
-    ns1:admissionFrame "said_paraphrase" ;
+    rdfs:label "had sent similar images, including those depicting minors" ;
+    dcterms:source <https://6abc.com/william-ushler-arrested-child-porn-tower-hill-school-wilmington-delaware/11777515/> ;
+    ns1:admissionContext "t he had engaged in online chats with people who would send him images of naked females. Ushler also admitted he had sent similar images,..." ;
+    ns1:admissionFrame "admitted_he_she" ;
     ns1:admissionTheme "other" ;
     ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_604/role/offender/1> ;
     ns1:evidenceTier "press_release_stated" ;
     ns1:quoteType "paraphrase" ;
-    uco-core:description "has a son that likes to ride his bike around the neighborhood" .
+    uco-core:description "had sent similar images, including those depicting minors" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_604/phase/arrested> a cacontology:InitialPhase,
-        cac-core:Phase ;
-    cacontology:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_604/phase/sentenced> a cac-core:Phase,
+        cacontology-legal-outcomes:SentencingPhase ;
+    cacontology:hasPhaseBeginPoint "2022-04-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/delaware> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Delaware" ;
+    uco-core:name "Delaware" .
+
+<https://caselinker.up.railway.app/resource/location/pennsylvania> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/tower-hill> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Tower Hill" ;
+    uco-core:name "Tower Hill" .
+
+<https://caselinker.up.railway.app/resource/location/wilmington> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Wilmington" ;
+    uco-core:name "Wilmington" .
+
+<https://caselinker.up.railway.app/resource/platform/chat> a cacontology-platforms:AnonymousChatPlatform ;
+    rdfs:label "chat" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_604/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;
     cacontology:severityLevel 3 ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/chat> ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2022_604/facet/csam> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_604/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;
-    cacontology:severityLevel 3 .
+    cacontology:severityLevel 3 ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/chat> .
 

@@ -1,70 +1,115 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
-@prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_532> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:29:56.921609" ;
+    dcterms:created "2026-09-15T21:27:13.634185" ;
     dcterms:identifier "ncmec_2025_532" ;
-    dcterms:modified "2026-09-10T19:29:56.921609" ;
-    dcterms:source <https://www.krmsradio.com/kansas-city-man-charged-in-morgan-county-with-promoting-child-pornography/>,
+    dcterms:modified "2026-09-15T21:27:13.634185" ;
+    dcterms:source <https://www.komu.com/news/midmissourinews/callaway-county-man-charged-with-several-child-sex-crimes-still-on-bond/article_eb7b60fe-dda1-11ef-bc92-b32d89088152.html>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/audrain-county>,
+        <https://caselinker.up.railway.app/resource/location/boone-county>,
+        <https://caselinker.up.railway.app/resource/location/callaway-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_532/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_532/phase/charged> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_532/event/csam>,
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_532/event/distribution>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2025_532/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2025_532/event/trust-violation>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_532/legal-proceeding> ;
-    cacontology:investigationStatus "unknown" ;
-    cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/ncmec_2025_532/tech/cybertipline> .
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/audrain-county>,
+        <https://caselinker.up.railway.app/resource/location/boone-county>,
+        <https://caselinker.up.railway.app/resource/location/callaway-county> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2025_532/role/offender/1> a cacontology:OffenderRole,
-        uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2025-07-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2025_532/event/csam> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_532/person/offender/1> .
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_532/charge/1> a cacontology-legal-outcomes:CriminalCharge,
+        cacontology-legal-outcomes:StateCharge ;
+    rdfs:label "sexual exploitation of a minor" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2025_532/role/victim/1> a cacontology:VictimRole,
-        uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2025-07-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2025_532/event/csam> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_532/person/victim/1> .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2025_532/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_532/charge/2> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "child pornography" .
+    rdfs:label "possession of child pornography" ;
+    cacontology-legal-outcomes:indictmentCounts 2 .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2025_532/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_532/charge/3> a cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "sexual exploitation" ;
+    ns1:chargeCluster "sexual_exploitation_unspecified" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_532/event/distribution> a cac-core:Event,
+        cacontology-legal-outcomes:CSAM_Distribution ;
+    cacontology:severityLevel 3 .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_532/event/trust-violation> a cacontology-custodial:CustodialAbuse,
+        cacontology-custodial:TrustViolation ;
+    cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/ncmec_2025_532/relationship/father> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_532/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_532/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Morgan County Jail" ;
-    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_532/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-07-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_532/charge/1>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2025_532/charge/2>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2025_532/charge/3> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_532/sentence/1> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2025_532/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_532/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 18 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_532/person/victim/1> a uco-identity:Person .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2025_532/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
-    rdfs:label "CyberTipline" .
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_532/relationship/father> a cacontology-custodial:CustodialRelationship,
+        cacontology-custodial:FamilialRelationship ;
+    cacontology-custodial:involvesChild <https://caselinker.up.railway.app/resource/case/ncmec_2025_532/role/victim/1> ;
+    cacontology-custodial:involvesCustodian <https://caselinker.up.railway.app/resource/case/ncmec_2025_532/role/offender/1> ;
+    cacontology-custodial:relationshipType "father" .
 
-<https://caselinker.up.railway.app/resource/platform/facebook> a cacontology-platforms:SocialMediaPlatform ;
-    rdfs:label "Facebook" .
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_532/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2025_532/event/possession> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_532/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_532/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2025_532/event/possession> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_532/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_532/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:MonetaryPenalty ;
+    rdfs:label "[\"$100,000\"]" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_532/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
-    cacontology:hasPhaseBeginPoint "2025-07-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2025_532/event/csam> a cacontology:CSAMIncident,
+<https://caselinker.up.railway.app/resource/location/audrain-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Audrain County" ;
+    uco-core:name "Audrain County" .
+
+<https://caselinker.up.railway.app/resource/location/boone-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/callaway-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Callaway County" ;
+    uco-core:name "Callaway County" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_532/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
-    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/facebook> ;
-    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2025_532/facet/csam> .
+    cacontology:severityLevel 3 ;
+    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2025_532/facet/possession> .
 

@@ -6,26 +6,36 @@
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_303> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:27:55.573081" ;
+    dcterms:created "2026-09-15T21:27:13.441367" ;
     dcterms:identifier "ncmec_2025_303" ;
-    dcterms:modified "2026-09-10T19:27:55.573081" ;
+    dcterms:modified "2026-09-15T21:27:13.441367" ;
     dcterms:source <https://www.kfvs12.com/2025/02/14/mt-vernon-ill-man-facing-child-porn-charge/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/ill>,
+        <https://caselinker.up.railway.app/resource/location/illinois>,
+        <https://caselinker.up.railway.app/resource/location/mount-vernon>,
+        <https://caselinker.up.railway.app/resource/location/mt-vernon> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_303/phase/booked> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_303/phase/booked> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_303/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_303/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/jefferson-county-sheriffs-office> .
+        <https://caselinker.up.railway.app/resource/agency/jefferson-county-sheriffs-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/ill>,
+        <https://caselinker.up.railway.app/resource/location/illinois>,
+        <https://caselinker.up.railway.app/resource/location/mount-vernon>,
+        <https://caselinker.up.railway.app/resource/location/mt-vernon> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_303/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -52,14 +62,18 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_303/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Jefferson County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_303/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-02-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-02-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_303/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_303/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 21 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_303/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_303/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/platform/social-media> a cacontology-platforms:SocialMediaPlatform ;
     rdfs:label "social media" .
@@ -67,6 +81,22 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_303/phase/booked> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-02-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/ill> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/illinois> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/mount-vernon> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Mount Vernon" ;
+    uco-core:name "Mount Vernon" .
+
+<https://caselinker.up.railway.app/resource/location/mt-vernon> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Mt. Vernon" ;
+    uco-core:name "Mt. Vernon" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_303/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

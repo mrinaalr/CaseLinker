@@ -10,16 +10,20 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_280> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T21:22:19.744936" ;
+    dcterms:created "2026-09-15T22:12:26.224185" ;
     dcterms:identifier "doj_safe_childhood_2026_280" ;
-    dcterms:modified "2026-09-14T21:22:19.744936" ;
+    dcterms:modified "2026-09-15T22:12:26.224185" ;
     dcterms:source <https://www.justice.gov/usao-ndms/pr/blue-springs-man-sentenced-distribution-child-pornography>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/aberdeen>,
+        <https://caselinker.up.railway.app/resource/location/blue-springs>,
+        <https://caselinker.up.railway.app/resource/location/mississippi> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_280/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_280/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_280/event/distribution>,
@@ -33,7 +37,10 @@
         <https://caselinker.up.railway.app/resource/agency/hsi>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/mississippi-attorney-generals-office>,
-        <https://caselinker.up.railway.app/resource/agency/usao> .
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/aberdeen>,
+        <https://caselinker.up.railway.app/resource/location/blue-springs>,
+        <https://caselinker.up.railway.app/resource/location/mississippi> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_280/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -55,7 +62,9 @@
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
-<https://caselinker.up.railway.app/resource/agency/mississippi-attorney-generals-office> a cacontology-multi:StateAgency .
+<https://caselinker.up.railway.app/resource/agency/mississippi-attorney-generals-office> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:StateAgency ;
+    rdfs:label "Mississippi Attorney General's Office" .
 
 <https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
@@ -96,8 +105,7 @@
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_280/charge/3>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_280/charge/4> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_280/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_280/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_280/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_280/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -112,15 +120,22 @@
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_280/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "supervised release" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_280/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "120 months" .
+    rdfs:label "[\"supervised release\", \"120 months\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_280/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/aberdeen> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/blue-springs> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Blue Springs" ;
+    uco-core:name "Blue Springs" .
+
+<https://caselinker.up.railway.app/resource/location/mississippi> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_280/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

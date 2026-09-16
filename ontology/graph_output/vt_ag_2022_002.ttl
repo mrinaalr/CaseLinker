@@ -11,16 +11,19 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2022_002> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:24:11.450388" ;
+    dcterms:created "2026-09-15T20:39:17.461103" ;
     dcterms:identifier "vt_ag_2022_002" ;
-    dcterms:modified "2026-09-10T20:24:11.450388" ;
+    dcterms:modified "2026-09-15T20:39:17.461103" ;
     dcterms:source <https://ago.vermont.gov/blog/2022/01/13/claremont-new-hampshire-man-charged-aggravated-sexual-assault-child>,
         "VT AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/claremont>,
+        <https://caselinker.up.railway.app/resource/location/new-hampshire> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/vt_ag_2022_002/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/vt_ag_2022_002/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/vt_ag_2022_002/cybertip>,
@@ -36,8 +39,11 @@
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
         <https://caselinker.up.railway.app/resource/agency/new-hampshire-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/usao>,
         <https://caselinker.up.railway.app/resource/agency/vermont-attorney-generals-office>,
-        <https://caselinker.up.railway.app/resource/agency/vermont-state-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/vermont-state-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/claremont>,
+        <https://caselinker.up.railway.app/resource/location/new-hampshire> .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2022_002/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -62,6 +68,8 @@
 <https://caselinker.up.railway.app/resource/agency/new-hampshire-police-department> a cac-core:OrganizationLikeEntity,
         cacontology-multi:LocalAgency ;
     rdfs:label "New Hampshire Police Department" .
+
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/agency/vermont-attorney-generals-office> a cacontology-multi:StateAgency .
 
@@ -95,7 +103,8 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/vt_ag_2022_002/charge/1>,
         <https://caselinker.up.railway.app/resource/case/vt_ag_2022_002/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/vt_ag_2022_002/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2022_002/operation> a cac-core:Event,
         cacontology-taskforce:TaskForceOperation .
@@ -105,6 +114,10 @@
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2022_002/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/vt_ag_2022_002/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/vt_ag_2022_002/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
 
@@ -113,6 +126,16 @@
 <https://caselinker.up.railway.app/resource/case/vt_ag_2022_002/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/claremont> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Claremont" ;
+    uco-core:name "Claremont" .
+
+<https://caselinker.up.railway.app/resource/location/new-hampshire> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "New Hampshire" ;
+    uco-core:name "New Hampshire" .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2022_002/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

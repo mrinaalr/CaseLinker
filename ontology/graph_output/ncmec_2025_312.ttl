@@ -7,23 +7,28 @@
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_312> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:28:02.066237" ;
+    dcterms:created "2026-09-15T21:27:13.458972" ;
     dcterms:identifier "ncmec_2025_312" ;
-    dcterms:modified "2026-09-10T19:28:02.066237" ;
+    dcterms:modified "2026-09-15T21:27:13.458972" ;
     dcterms:source <https://cwbchicago.com/2025/05/cps-teacher-sought-sex-with-13-year-old-student-in-graphic-online-chats-prosecutors-allege.html>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/chicago> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_312/cybertip>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_312/event/online-only>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_312/event/trust-violation>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_312/operation> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ncmec> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/chicago> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_312/cybertip> a cacontology-us-ncmec:NCMECCybertipReport ;
     cacontology-us-ncmec:supportedBy <https://caselinker.up.railway.app/resource/agency/ncmec> .
@@ -61,10 +66,17 @@
 <https://caselinker.up.railway.app/resource/platform/chat> a cacontology-platforms:AnonymousChatPlatform ;
     rdfs:label "chat" .
 
-<https://caselinker.up.railway.app/resource/platform/roblox> a cacontology-platforms:GamePlatform ;
-    rdfs:label "Roblox" .
+<https://caselinker.up.railway.app/resource/platform/roblox> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:GamePlatform ;
+    rdfs:label "Roblox" ;
+    cacontology-platforms:allowsAnonymousChat "true" .
 
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
+
+<https://caselinker.up.railway.app/resource/location/chicago> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Chicago" ;
+    uco-core:name "Chicago" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_312/event/online-only> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

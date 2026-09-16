@@ -1,6 +1,7 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
 @prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
@@ -9,16 +10,26 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2008_051> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:42:20.654693" ;
+    dcterms:created "2026-09-15T21:42:39.972566" ;
     dcterms:identifier "doj_archives_2008_051" ;
-    dcterms:modified "2026-09-10T19:42:20.654693" ;
+    dcterms:modified "2026-09-15T21:42:39.972566" ;
     dcterms:source <https://www.justice.gov/archive/criminal/ceos/pressreleases/downloads/MDGA_LOWERY-SENTENCED_05-22-08.pdf>,
-        "DOJ ARCHIVES" ;
+        "DOJ CEOS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/albany>,
+        <https://caselinker.up.railway.app/resource/location/americus>,
+        <https://caselinker.up.railway.app/resource/location/florida>,
+        <https://caselinker.up.railway.app/resource/location/ga>,
+        <https://caselinker.up.railway.app/resource/location/georgia>,
+        <https://caselinker.up.railway.app/resource/location/los-angeles>,
+        <https://caselinker.up.railway.app/resource/location/the-middle-district-of-georgia>,
+        <https://caselinker.up.railway.app/resource/location/toronto-canada>,
+        <https://caselinker.up.railway.app/resource/location/washington> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_archives_2008_051/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_archives_2008_051/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_archives_2008_051/event/hands-on>,
@@ -28,11 +39,35 @@
         <https://caselinker.up.railway.app/resource/case/doj_archives_2008_051/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/doj_archives_2008_051/legal-step/sentenced>,
         <https://caselinker.up.railway.app/resource/case/doj_archives_2008_051/offense-event/charge-2> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/sumter-county-sheriffs-office> .
+    cacontology:investigationStatus "unknown" ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/department-of-homeland-security>,
+        <https://caselinker.up.railway.app/resource/agency/georgia-bureau-of-investigation>,
+        <https://caselinker.up.railway.app/resource/agency/ice>,
+        <https://caselinker.up.railway.app/resource/agency/sumter-county-sheriffs-office>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/albany>,
+        <https://caselinker.up.railway.app/resource/location/americus>,
+        <https://caselinker.up.railway.app/resource/location/florida>,
+        <https://caselinker.up.railway.app/resource/location/ga>,
+        <https://caselinker.up.railway.app/resource/location/georgia>,
+        <https://caselinker.up.railway.app/resource/location/los-angeles>,
+        <https://caselinker.up.railway.app/resource/location/the-middle-district-of-georgia>,
+        <https://caselinker.up.railway.app/resource/location/toronto-canada>,
+        <https://caselinker.up.railway.app/resource/location/washington> .
+
+<https://caselinker.up.railway.app/resource/agency/department-of-homeland-security> a cacontology-multi:LocalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/georgia-bureau-of-investigation> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:StateAgency ;
+    rdfs:label "Georgia Bureau of Investigation" .
+
+<https://caselinker.up.railway.app/resource/agency/ice> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/agency/sumter-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
         cacontology-multi:LocalAgency ;
     rdfs:label "Sumter County Sheriff's Office" .
+
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2008_051/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -59,8 +94,7 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/doj_archives_2008_051/charge/1>,
         <https://caselinker.up.railway.app/resource/case/doj_archives_2008_051/charge/2> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2008-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_archives_2008_051/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_archives_2008_051/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_archives_2008_051/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2008_051/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -68,7 +102,8 @@
         cacontology-legal-outcomes:SentencingHearing ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2008-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
-<https://caselinker.up.railway.app/resource/case/doj_archives_2008_051/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/doj_archives_2008_051/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 48 .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2008_051/person/victim/1> a uco-identity:Person .
 
@@ -95,16 +130,43 @@
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_archives_2008_051/person/victim/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2008_051/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "235 months" .
-
-<https://caselinker.up.railway.app/resource/case/doj_archives_2008_051/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "supervised release" .
+    rdfs:label "[\"235 months\", \"supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2008_051/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2008-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/albany> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/americus> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Americus" ;
+    uco-core:name "Americus" .
+
+<https://caselinker.up.railway.app/resource/location/florida> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/ga> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/georgia> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/los-angeles> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/the-middle-district-of-georgia> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/toronto-canada> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Toronto, Canada" ;
+    uco-core:name "Toronto, Canada" .
+
+<https://caselinker.up.railway.app/resource/location/washington> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2008_051/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event .

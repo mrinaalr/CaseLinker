@@ -11,28 +11,36 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_012> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:43:32.731841" ;
+    dcterms:created "2026-09-15T21:50:56.984744" ;
     dcterms:identifier "doj_ceos_2026_012" ;
-    dcterms:modified "2026-09-10T19:43:32.731841" ;
+    dcterms:modified "2026-09-15T21:50:56.984744" ;
     dcterms:source <https://www.justice.gov/opa/pr/wisconsin-man-pleads-guilty-after-requesting-person-philippines-sexually-abuse-child-and>,
         "DOJ CEOS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/oshkosh>,
+        <https://caselinker.up.railway.app/resource/location/philippines>,
+        <https://caselinker.up.railway.app/resource/location/wisconsin> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_012/phase/pleaded-guilty> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_012/phase/pleaded-guilty> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_012/event/distribution>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_012/event/multi-jurisdiction>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_012/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_012/event/project-safe-childhood>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_012/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_012/legal-step/pleaded-guilty>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_012/offense-event/charge-2> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/doj>,
         <https://caselinker.up.railway.app/resource/agency/fbi>,
         <https://caselinker.up.railway.app/resource/agency/justice-departments-criminal-division>,
-        <https://caselinker.up.railway.app/resource/agency/winnebago-county-sheriffs-office> .
+        <https://caselinker.up.railway.app/resource/agency/winnebago-county-sheriffs-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/oshkosh>,
+        <https://caselinker.up.railway.app/resource/location/philippines>,
+        <https://caselinker.up.railway.app/resource/location/wisconsin> .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_012/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -77,6 +85,10 @@
     cacontology:severityLevel 3 ;
     cacontology-multi:crossesBorders true .
 
+<https://caselinker.up.railway.app/resource/case/doj_ceos_2026_012/event/project-safe-childhood> a cac-core:Event,
+        cacontology-multi:ProjectSafeChildhoodOperation ;
+    cacontology:severityLevel 3 .
+
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_012/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_012/legal-proceeding> a cac-core:Event,
@@ -84,7 +96,8 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_012/charge/1>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_012/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_012/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_012/legal-step/pleaded-guilty> a cac-core:Event,
         cac-core:LegalEvent,
@@ -98,9 +111,24 @@
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_012/person/victim/1> a uco-identity:Person ;
     cacontology-production:victimAge 13 .
 
+<https://caselinker.up.railway.app/resource/case/doj_ceos_2026_012/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_012/phase/pleaded-guilty> a cac-core:Phase,
         cacontology-legal-outcomes:PreTrialPhase ;
     cacontology:hasPhaseBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/oshkosh> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Oshkosh" ;
+    uco-core:name "Oshkosh" .
+
+<https://caselinker.up.railway.app/resource/location/philippines> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/wisconsin> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/platform/social-media> a cacontology-platforms:SocialMediaPlatform ;
     rdfs:label "social media" .

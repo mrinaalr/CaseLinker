@@ -9,16 +9,20 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_010> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:04:53.105217" ;
+    dcterms:created "2026-09-15T20:45:05.993296" ;
     dcterms:identifier "ncmec_2022_010" ;
-    dcterms:modified "2026-09-10T19:04:53.105217" ;
+    dcterms:modified "2026-09-15T20:45:05.993296" ;
     dcterms:source <https://www.wtvm.com/2022/01/31/two-columbus-men-arrested-multiple-counts-child-pornography/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/columbus>,
+        <https://caselinker.up.railway.app/resource/location/ga>,
+        <https://caselinker.up.railway.app/resource/location/muscogee-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_010/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_010/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2022_010/cybertip>,
@@ -29,7 +33,10 @@
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/georgia-bureau-of-investigation-child-exploitation-and-computer-crimes-unit>,
         <https://caselinker.up.railway.app/resource/agency/georgia-bureau-of-investigations-child-exploitation-and-computer-crimes-unit>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/columbus>,
+        <https://caselinker.up.railway.app/resource/location/ga>,
+        <https://caselinker.up.railway.app/resource/location/muscogee-county> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_010/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -45,9 +52,13 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_010/offense-event/charge-2> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_010/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/georgia-bureau-of-investigation-child-exploitation-and-computer-crimes-unit> a cacontology-multi:StateAgency .
+<https://caselinker.up.railway.app/resource/agency/georgia-bureau-of-investigation-child-exploitation-and-computer-crimes-unit> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:StateAgency ;
+    rdfs:label "Georgia Bureau of Investigation Child Exploitation and Computer Crimes Unit" .
 
-<https://caselinker.up.railway.app/resource/agency/georgia-bureau-of-investigations-child-exploitation-and-computer-crimes-unit> a cacontology-multi:StateAgency .
+<https://caselinker.up.railway.app/resource/agency/georgia-bureau-of-investigations-child-exploitation-and-computer-crimes-unit> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:StateAgency ;
+    rdfs:label "Georgia Bureau of Investigation's Child Exploitation and Computer Crimes Unit" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_010/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -72,20 +83,39 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_010/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Muscogee County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2022_010/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_010/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2022_010/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_010/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_010/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_010/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_010/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/columbus> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Columbus" ;
+    uco-core:name "Columbus" .
+
+<https://caselinker.up.railway.app/resource/location/ga> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Ga." ;
+    uco-core:name "Ga." .
+
+<https://caselinker.up.railway.app/resource/location/muscogee-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Muscogee County" ;
+    uco-core:name "Muscogee County" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_010/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

@@ -12,16 +12,20 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_181> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:26:50.230782" ;
+    dcterms:created "2026-09-15T21:27:13.321704" ;
     dcterms:identifier "ncmec_2025_181" ;
-    dcterms:modified "2026-09-10T19:26:50.230782" ;
+    dcterms:modified "2026-09-15T21:27:13.321704" ;
     dcterms:source <https://cbs12.com/news/local/boca-raton-man-arrested-for-child-pornography-and-sexual-exploitation-charges-exploitation-photos-videos-evidence-south-florida-news-march-7-2025#>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/boca-raton>,
+        <https://caselinker.up.railway.app/resource/location/fla>,
+        <https://caselinker.up.railway.app/resource/location/palm-beach-county-jail> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_181/phase/booked> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_181/phase/booked> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_181/cybertip>,
@@ -31,7 +35,10 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_181/offense-event/charge-2> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/palm-beach-county-sheriffs-office> .
+        <https://caselinker.up.railway.app/resource/agency/palm-beach-county-sheriffs-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/boca-raton>,
+        <https://caselinker.up.railway.app/resource/location/fla>,
+        <https://caselinker.up.railway.app/resource/location/palm-beach-county-jail> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_181/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -72,10 +79,10 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_181/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Palm Beach County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_181/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_181/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-03-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-03-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_181/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_181/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 22 .
@@ -83,11 +90,28 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_181/person/victim/1> a uco-identity:Person ;
     cacontology-production:victimAge 15 .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_181/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_181/phase/booked> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-03-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/boca-raton> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Boca Raton" ;
+    uco-core:name "Boca Raton" .
+
+<https://caselinker.up.railway.app/resource/location/fla> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/palm-beach-county-jail> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Palm Beach County Jail" ;
+    uco-core:name "Palm Beach County Jail" .
 
 <https://caselinker.up.railway.app/resource/platform/kik> a cacontology-platforms:MessagingService ;
     rdfs:label "Kik" .

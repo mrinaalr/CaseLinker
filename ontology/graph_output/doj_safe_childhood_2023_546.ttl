@@ -10,16 +10,21 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_546> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T21:23:04.762205" ;
+    dcterms:created "2026-09-15T22:12:28.474531" ;
     dcterms:identifier "doj_safe_childhood_2023_546" ;
-    dcterms:modified "2026-09-14T21:23:04.762205" ;
+    dcterms:modified "2026-09-15T22:12:28.474531" ;
     dcterms:source <https://www.justice.gov/usao-edmo/pr/st-charles-county-man-sentenced-4-years-prison-downloading-and-sharing-child>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/missouri>,
+        <https://caselinker.up.railway.app/resource/location/st-charles-county>,
+        <https://caselinker.up.railway.app/resource/location/st-louis>,
+        <https://caselinker.up.railway.app/resource/location/st-peters> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_546/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_546/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_546/cybertip>,
@@ -32,7 +37,11 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/doj>,
         <https://caselinker.up.railway.app/resource/agency/fbi>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/st-charles-county-cyber-crime-task-force> .
+        <https://caselinker.up.railway.app/resource/agency/st-charles-county-cyber-crime-task-force> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/missouri>,
+        <https://caselinker.up.railway.app/resource/location/st-charles-county>,
+        <https://caselinker.up.railway.app/resource/location/st-louis>,
+        <https://caselinker.up.railway.app/resource/location/st-peters> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_546/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -52,7 +61,9 @@
 
 <https://caselinker.up.railway.app/resource/agency/fbi> a cacontology-multi:FederalAgency .
 
-<https://caselinker.up.railway.app/resource/agency/st-charles-county-cyber-crime-task-force> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/st-charles-county-cyber-crime-task-force> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "St. Charles County Cyber Crime Task Force" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_546/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -103,22 +114,46 @@
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_546/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "supervised release" .
+    rdfs:label "[\"supervised release\"]" .
 
-<https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
+<https://caselinker.up.railway.app/resource/agency/ncmec> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:FederalAgency ;
+    rdfs:label "NCMEC" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_546/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
+<https://caselinker.up.railway.app/resource/location/missouri> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Missouri" ;
+    uco-core:name "Missouri" .
+
+<https://caselinker.up.railway.app/resource/location/st-charles-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "St. Charles County" ;
+    uco-core:name "St. Charles County" .
+
+<https://caselinker.up.railway.app/resource/location/st-louis> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/st-peters> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "St. Peters" ;
+    uco-core:name "St. Peters" .
+
 <https://caselinker.up.railway.app/resource/platform/kik> a cacontology-platforms:MessagingService ;
     rdfs:label "Kik" .
 
-<https://caselinker.up.railway.app/resource/platform/social-media> a cacontology-platforms:SocialMediaPlatform ;
-    rdfs:label "social media" .
+<https://caselinker.up.railway.app/resource/platform/social-media> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:SocialMediaPlatform ;
+    rdfs:label "social media" ;
+    cacontology-platforms:platformSpecificity "generic" .
 
-<https://caselinker.up.railway.app/resource/platform/whatsapp> a cacontology-platforms:MessagingService ;
-    rdfs:label "WhatsApp" .
+<https://caselinker.up.railway.app/resource/platform/whatsapp> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:MessagingService ;
+    rdfs:label "WhatsApp" ;
+    cacontology-platforms:encryptionLevel "end-to-end" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_546/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

@@ -11,6 +11,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -59,7 +60,8 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/idaho_icac_2026_004/charge/1>,
         <https://caselinker.up.railway.app/resource/case/idaho_icac_2026_004/charge/2>,
         <https://caselinker.up.railway.app/resource/case/idaho_icac_2026_004/charge/3> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/idaho_icac_2026_004/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2026_004/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -71,16 +73,24 @@
 
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2026_004/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/idaho_icac_2026_004/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2026_004/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
 
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2026_004> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:50:24.438161" ;
+    dcterms:created "2026-09-15T19:36:56.106539" ;
     dcterms:identifier "idaho_icac_2026_004" ;
-    dcterms:modified "2026-09-10T19:50:24.438161" ;
+    dcterms:modified "2026-09-15T19:36:56.106539" ;
     dcterms:source <https://www.ag.idaho.gov/newsroom/category/icac/?showall=true>,
         "Idaho ICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/ada-county>,
+        <https://caselinker.up.railway.app/resource/location/bonneville-county>,
+        <https://caselinker.up.railway.app/resource/location/canyon-county>,
+        <https://caselinker.up.railway.app/resource/location/idaho> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/idaho_icac_2026_004/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/idaho_icac_2026_004/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/idaho_icac_2026_004/admission/1>,
@@ -93,7 +103,11 @@
     cacontology:investigationStatus "unknown" ;
     cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/idaho_icac_2026_004/tech/cybertipline> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/idaho-falls-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/idaho-falls-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/ada-county>,
+        <https://caselinker.up.railway.app/resource/location/bonneville-county>,
+        <https://caselinker.up.railway.app/resource/location/canyon-county>,
+        <https://caselinker.up.railway.app/resource/location/idaho> .
 
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2026_004/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
@@ -105,6 +119,18 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/idaho_icac_2026_004/event/hands-on>,
         <https://caselinker.up.railway.app/resource/case/idaho_icac_2026_004/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/idaho_icac_2026_004/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/location/ada-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/bonneville-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/canyon-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/idaho> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/platform/chat> a cacontology-platforms:AnonymousChatPlatform ;
     rdfs:label "chat" .
@@ -127,7 +153,7 @@
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2026_004/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "knowingly seeking out images of children being abused in chat rooms" ;
     dcterms:source <https://www.ag.idaho.gov/newsroom/category/icac/?showall=true> ;
-    ns1:admissionContext "rTips indicating he had been sharing child sexual abuse material with other users online. Bingham admitted to knowingly seeking out image..." ;
+    ns1:admissionContext "out Receive Updates from Our Office OFFICE of the ATTORNEY GENERAL State of Idaho Raúl R. Labrador … admitted to knowingly seeking out im..." ;
     ns1:admissionFrame "admitted_to" ;
     ns1:admissionTheme "harm_conduct",
         "tech_use" ;

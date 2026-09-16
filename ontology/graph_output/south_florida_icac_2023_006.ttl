@@ -10,6 +10,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -27,15 +28,23 @@
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
-<https://caselinker.up.railway.app/resource/agency/plantation-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/plantation-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Plantation Police Department" .
 
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2023_006> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:14:34.874671" ;
+    dcterms:created "2026-09-15T20:27:39.146394" ;
     dcterms:identifier "south_florida_icac_2023_006" ;
-    dcterms:modified "2026-09-10T20:14:34.874671" ;
+    dcterms:modified "2026-09-15T20:27:39.146394" ;
     dcterms:source <https://www.local10.com/news/local/2023/11/21/broward-woman-shared-child-sex-abuse-videos-also-sexually-abused-own-dog-police-say/>,
         "SOUTH FLORIDA ICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/broward>,
+        <https://caselinker.up.railway.app/resource/location/broward-county>,
+        <https://caselinker.up.railway.app/resource/location/fla>,
+        <https://caselinker.up.railway.app/resource/location/fort-lauderdale>,
+        <https://caselinker.up.railway.app/resource/location/plantation>,
+        <https://caselinker.up.railway.app/resource/location/rio> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/south_florida_icac_2023_006/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/south_florida_icac_2023_006/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/south_florida_icac_2023_006/admission/1>,
@@ -45,7 +54,13 @@
         <https://caselinker.up.railway.app/resource/case/south_florida_icac_2023_006/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/south_florida_icac_2023_006/operation> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/plantation-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/plantation-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/broward>,
+        <https://caselinker.up.railway.app/resource/location/broward-county>,
+        <https://caselinker.up.railway.app/resource/location/fla>,
+        <https://caselinker.up.railway.app/resource/location/fort-lauderdale>,
+        <https://caselinker.up.railway.app/resource/location/plantation>,
+        <https://caselinker.up.railway.app/resource/location/rio> .
 
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2023_006/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -62,7 +77,8 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/south_florida_icac_2023_006/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/south_florida_icac_2023_006/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2023_006/operation> a cac-core:Event,
         cacontology-taskforce:TaskForceOperation .
@@ -77,6 +93,10 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/south_florida_icac_2023_006/event/hands-on>,
         <https://caselinker.up.railway.app/resource/case/south_florida_icac_2023_006/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/south_florida_icac_2023_006/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/south_florida_icac_2023_006/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2023_006/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "fantasized about drowning a child in one instance" ;
@@ -93,13 +113,39 @@
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
+<https://caselinker.up.railway.app/resource/location/broward> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Broward" ;
+    uco-core:name "Broward" .
+
+<https://caselinker.up.railway.app/resource/location/broward-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/fla> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/fort-lauderdale> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/plantation> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Plantation" ;
+    uco-core:name "Plantation" .
+
+<https://caselinker.up.railway.app/resource/location/rio> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Rio" ;
+    uco-core:name "Rio" .
+
 <https://caselinker.up.railway.app/resource/platform/chat> a cacontology-platforms:AnonymousChatPlatform ;
     rdfs:label "chat" .
 
-<https://caselinker.up.railway.app/resource/platform/kik> a cacontology-platforms:MessagingService ;
+<https://caselinker.up.railway.app/resource/platform/kik> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:MessagingService ;
     rdfs:label "Kik" .
 
-<https://caselinker.up.railway.app/resource/platform/reddit> a cacontology-platforms:SocialMediaPlatform ;
+<https://caselinker.up.railway.app/resource/platform/reddit> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:SocialMediaPlatform ;
     rdfs:label "Reddit" .
 
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2023_006/event/hands-on> a cacontology:ChildSexualAbuseEvent,

@@ -1,130 +1,127 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
-@prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
 @prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
-@prefix cacontology-undercover: <https://cacontology.projectvic.org/undercover#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_610/admission/1/extraction-confidence> a cac-core:AssessmentResult ;
-    cac-core:assesses <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/admission/1> ;
-    cac-core:generatedBy <https://caselinker.up.railway.app/resource/case/ncmec_2022_610> ;
-    cac-core:hasConfidence 0.65 .
-
-<https://caselinker.up.railway.app/resource/agency/dupage-county-sheriffs-office> a cacontology-multi:LocalAgency .
-
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_610> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:09:03.333857" ;
+    dcterms:created "2026-09-15T20:45:06.525381" ;
     dcterms:identifier "ncmec_2022_610" ;
-    dcterms:modified "2026-09-10T19:09:03.333857" ;
-    dcterms:source <https://abc7chicago.com/downers-grove-news-child-pornography-wyatt-kopka/11939635/>,
+    dcterms:modified "2026-09-15T20:45:06.525381" ;
+    dcterms:source <https://morganton.com/news/local/crime-and-courts/connelly-springs-man-faces-child-porn-charge/article_b7e9974a-5944-11ec-bb1f-e78c2d883e5c.html>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/connelly-springs>,
+        <https://caselinker.up.railway.app/resource/location/north-carolina> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/phase/charged> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/admission/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/event/conspiracy>,
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/event/distribution>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/event/multi-jurisdiction>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/event/possession>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/event/trust-violation>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/dupage-county-sheriffs-office> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/burke-county-sheriffs-office>,
+        <https://caselinker.up.railway.app/resource/agency/department-of-public-safety>,
+        <https://caselinker.up.railway.app/resource/agency/department-of-public-safety-k-9>,
+        <https://caselinker.up.railway.app/resource/agency/morganton-department-of-public-safety>,
+        <https://caselinker.up.railway.app/resource/agency/state-bureau-of-investigation> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/connelly-springs>,
+        <https://caselinker.up.railway.app/resource/location/north-carolina> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_610/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_610/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/event/possession> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_610/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/event/possession> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/agency/burke-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Burke County Sheriff's Office" .
+
+<https://caselinker.up.railway.app/resource/agency/department-of-public-safety> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:StateAgency ;
+    rdfs:label "Department of Public Safety" .
+
+<https://caselinker.up.railway.app/resource/agency/department-of-public-safety-k-9> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:StateAgency ;
+    rdfs:label "Department of Public Safety K-9" .
+
+<https://caselinker.up.railway.app/resource/agency/morganton-department-of-public-safety> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:StateAgency ;
+    rdfs:label "Morganton Department of Public Safety" .
+
+<https://caselinker.up.railway.app/resource/agency/state-bureau-of-investigation> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:StateAgency ;
+    rdfs:label "State Bureau of Investigation" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_610/charge/1> a cacontology-legal-outcomes:CriminalCharge,
+        cacontology-legal-outcomes:StateCharge ;
+    rdfs:label "sexual exploitation of a minor" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_610/charge/2> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "child pornography" .
+    rdfs:label "child porn" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_610/event/trust-violation> a cacontology-custodial:AuthorityAbuse,
-        cacontology-custodial:TrustViolation ;
-    cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/relationship/coach> .
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_610/charge/3> a cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "sexual exploitation" ;
+    ns1:chargeCluster "sexual_exploitation_unspecified" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_610/event/distribution> a cac-core:Event,
+        cacontology-legal-outcomes:CSAM_Distribution .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_610/event/multi-jurisdiction> a cac-core:Event,
+        cacontology-multi:MultiJurisdictionalInvestigation ;
+    cacontology-multi:crossesBorders true .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-06-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/sentence/2> .
+    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/charge/1>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/charge/2>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/charge/3> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/person/offender/1> a uco-identity:Person ;
-    cacontology-detection:ageEstimate 18 .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_610/person/offender/2> a uco-identity:Person ;
-    cacontology-detection:ageEstimate 30 .
+    cacontology-detection:ageEstimate 26 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/person/victim/1> a uco-identity:Person ;
-    cacontology-production:victimAge 13 .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_610/relationship/coach> a cacontology-custodial:Coach,
-        cacontology-custodial:CustodialRelationship ;
-    cacontology-custodial:involvesChild <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/role/victim/1> ;
-    cacontology-custodial:involvesCustodian <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/role/offender/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/role/offender/2> ;
-    cacontology-custodial:relationshipType "coach" .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_610/role/victim/1> a cacontology:VictimRole,
-        uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2022-06-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/event/conspiracy>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/event/possession> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/person/victim/1> .
+    cacontology-production:victimAge 2 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$600,000" .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_610/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "120 years" .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_610/admission/1> a cacontology-undercover:IncriminatingStatement ;
-    rdfs:label "was a long-time employee of about 10 years, but was not employed at the time of his arrest; he resigned days earlier" ;
-    dcterms:source <https://abc7chicago.com/downers-grove-news-child-pornography-wyatt-kopka/11939635/> ;
-    ns1:admissionContext "ymnastics coach and also a daycare employee at the Elite Sports Complex in Downers Grove. Elite Sports Complex said he was a long-time em..." ;
-    ns1:admissionFrame "said_paraphrase" ;
-    ns1:admissionTheme "other" ;
-    ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/role/offender/1> ;
-    ns1:evidenceTier "press_release_stated" ;
-    ns1:quoteType "paraphrase" ;
-    uco-core:description "was a long-time employee of about 10 years, but was not employed at the time of his arrest; he resigned days earlier" .
+    rdfs:label "[\"$100,000\"]" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
-    cacontology:hasPhaseBeginPoint "2022-06-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_610/role/offender/2> a cacontology:OffenderRole,
-        uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2022-06-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/event/conspiracy>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/event/possession> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/person/offender/2> .
+<https://caselinker.up.railway.app/resource/location/connelly-springs> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Connelly Springs" ;
+    uco-core:name "Connelly Springs" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_610/role/offender/1> a cacontology:OffenderRole,
-        uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2022-06-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/event/conspiracy>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/event/possession> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/person/offender/1> .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_610/event/conspiracy> a cacontology:ConspiracyToCommitCSA,
-        cac-core:Event ;
-    cacontology:conspiracyMemberCount 2 ;
-    cacontology:participatesInConspiracy <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/role/offender/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/role/offender/2> ;
-    cacontology:severityLevel 1 .
+<https://caselinker.up.railway.app/resource/location/north-carolina> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
-    cacontology:severityLevel 1 ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2022_610/facet/possession> .
 

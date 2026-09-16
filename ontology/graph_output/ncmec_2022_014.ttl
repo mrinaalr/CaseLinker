@@ -9,6 +9,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -25,15 +26,18 @@
 
 <https://caselinker.up.railway.app/resource/agency/hsi> a cacontology-multi:FederalAgency .
 
-<https://caselinker.up.railway.app/resource/agency/tulsa-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/tulsa-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Tulsa Police Department" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_014> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:04:54.510440" ;
+    dcterms:created "2026-09-15T20:45:05.995360" ;
     dcterms:identifier "ncmec_2022_014" ;
-    dcterms:modified "2026-09-10T19:04:54.510440" ;
+    dcterms:modified "2026-09-15T20:45:05.995360" ;
     dcterms:source <https://www.shorenewsnetwork.com/2022/01/21/tulsa-man-charged-for-child-pornography/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/tulsa> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_014/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_014/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2022_014/admission/1>,
@@ -42,7 +46,8 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_014/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/hsi>,
-        <https://caselinker.up.railway.app/resource/agency/tulsa-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/tulsa-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/tulsa> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_014/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -57,7 +62,8 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2022_014/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2022_014/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_014/person/offender/1> a uco-identity:Person .
 
@@ -69,6 +75,10 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_014/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_014/person/offender/1> .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_014/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/platform/social-media> a cacontology-platforms:SocialMediaPlatform ;
     rdfs:label "social media" .
 
@@ -76,10 +86,15 @@
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
+<https://caselinker.up.railway.app/resource/location/tulsa> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Tulsa" ;
+    uco-core:name "Tulsa" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_014/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "trading child pornography on multiple occasions on the internet" ;
     dcterms:source <https://www.shorenewsnetwork.com/2022/01/21/tulsa-man-charged-for-child-pornography/> ;
-    ns1:admissionContext "receiving and sharing child pornography over email and social media app messaging. At the scene, Arrazola admitted to trading child porno..." ;
+    ns1:admissionContext "eceiving and sharing child pornography over email and social media app messaging. At the scene, Arrazola admitted to trading child pornog..." ;
     ns1:admissionFrame "admitted_to" ;
     ns1:admissionTheme "harm_conduct",
         "tech_use" ;

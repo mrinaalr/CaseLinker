@@ -6,6 +6,7 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
+@prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix cacontology-undercover: <https://cacontology.projectvic.org/undercover#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
@@ -13,6 +14,7 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -21,15 +23,31 @@
     cac-core:generatedBy <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_248> ;
     cac-core:hasConfidence 0.65 .
 
+<https://caselinker.up.railway.app/resource/agency/ceos> a cacontology-multi:FederalAgency .
+
 <https://caselinker.up.railway.app/resource/agency/doj> a cacontology-multi:FederalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/fbi> a cacontology-multi:FederalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/sauk-centre-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Sauk Centre Police Department" .
+
+<https://caselinker.up.railway.app/resource/agency/stearns-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Stearns County Sheriff's Office" .
+
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_248> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T21:22:41.926830" ;
+    dcterms:created "2026-09-15T22:12:27.430516" ;
     dcterms:identifier "doj_safe_childhood_2024_248" ;
-    dcterms:modified "2026-09-14T21:22:41.926830" ;
+    dcterms:modified "2026-09-15T22:12:27.430516" ;
     dcterms:source <https://www.justice.gov/usao-mn/pr/sauk-centre-man-sentenced-more-19-years-prison-producing-child-pornography>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/minneapolis>,
+        <https://caselinker.up.railway.app/resource/location/united-states> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_248/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_248/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_248/admission/1>,
@@ -40,8 +58,16 @@
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_248/event/trust-violation>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_248/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_248/legal-step/sentenced>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_248/offense-event/charge-4> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/doj> .
+        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_248/offense-event/charge-4>,
+        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_248/operation> ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ceos>,
+        <https://caselinker.up.railway.app/resource/agency/doj>,
+        <https://caselinker.up.railway.app/resource/agency/fbi>,
+        <https://caselinker.up.railway.app/resource/agency/sauk-centre-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/stearns-county-sheriffs-office>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/minneapolis>,
+        <https://caselinker.up.railway.app/resource/location/united-states> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_248/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -80,15 +106,16 @@
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_248/charge/3>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_248/charge/4> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_248/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_248/sentence/2>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_248/sentence/3> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_248/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_248/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding,
         cacontology-legal-outcomes:SentencingHearing ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_248/operation> a cac-core:Event,
+        cacontology-taskforce:TaskForceOperation .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_248/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 32 .
@@ -111,16 +138,8 @@
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_248/person/victim/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_248/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "19 Years" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_248/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "235 months" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_248/sentence/3> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "10 years of supervised release" .
+    rdfs:label "[\"19 Years\", \"235 months\", \"10 years of supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_248/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
@@ -134,6 +153,14 @@
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_248/event/production>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_248/offense-event/charge-4> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_248/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/location/minneapolis> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Minneapolis" ;
+    uco-core:name "Minneapolis" .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_248/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

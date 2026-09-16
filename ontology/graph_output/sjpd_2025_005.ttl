@@ -10,16 +10,20 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/sjpd_2025_005> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:12:31.329022" ;
+    dcterms:created "2026-09-15T20:26:31.783876" ;
     dcterms:identifier "sjpd_2025_005" ;
-    dcterms:modified "2026-09-10T20:12:31.329022" ;
+    dcterms:modified "2026-09-15T20:26:31.783876" ;
     dcterms:source <https://www.sjpd.org/Home/Components/News/News/2283/>,
         "SJPD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/san-josé>,
+        <https://caselinker.up.railway.app/resource/location/santa-clara>,
+        <https://caselinker.up.railway.app/resource/location/santa-clara-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/sjpd_2025_005/phase/booked> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/sjpd_2025_005/phase/booked> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/sjpd_2025_005/event/distribution>,
@@ -27,7 +31,10 @@
         <https://caselinker.up.railway.app/resource/case/sjpd_2025_005/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/sjpd_2025_005/offense-event/charge-2> ;
     cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/san-josé>,
+        <https://caselinker.up.railway.app/resource/location/santa-clara>,
+        <https://caselinker.up.railway.app/resource/location/santa-clara-county> .
 
 <https://caselinker.up.railway.app/resource/case/sjpd_2025_005/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -66,16 +73,30 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/sjpd_2025_005/charge/1>,
         <https://caselinker.up.railway.app/resource/case/sjpd_2025_005/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/sjpd_2025_005/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/sjpd_2025_005/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 31 .
 
 <https://caselinker.up.railway.app/resource/case/sjpd_2025_005/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/sjpd_2025_005/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/sjpd_2025_005/phase/booked> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/san-josé> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/santa-clara> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/santa-clara-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/sjpd_2025_005/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

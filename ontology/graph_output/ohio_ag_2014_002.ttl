@@ -4,28 +4,42 @@
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2014_002> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:03:12.049676" ;
+    dcterms:created "2026-09-15T20:10:06.655960" ;
     dcterms:identifier "ohio_ag_2014_002" ;
-    dcterms:modified "2026-09-10T20:03:12.049676" ;
+    dcterms:modified "2026-09-15T20:10:06.655960" ;
     dcterms:source <https://www.ohioattorneygeneral.gov/Media/News-Releases/October-2014/Ohio-Parents-to-Serve-Prison-Time-for-Assault-of-I>,
         "OHIO AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/new-lexington>,
+        <https://caselinker.up.railway.app/resource/location/ohio> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ohio_ag_2014_002/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ohio_ag_2014_002/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ohio_ag_2014_002/event/trust-violation>,
+        <https://caselinker.up.railway.app/resource/case/ohio_ag_2014_002/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/ohio_ag_2014_002/legal-step/sentenced> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/new-lexington-police-department> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/new-lexington-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/new-lexington>,
+        <https://caselinker.up.railway.app/resource/location/ohio> .
 
 <https://caselinker.up.railway.app/resource/agency/new-lexington-police-department> a cacontology-multi:LocalAgency .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2014_002/event/trust-violation> a cacontology-custodial:CustodialAbuse,
         cacontology-custodial:TrustViolation ;
     cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/ohio_ag_2014_002/relationship/father> .
+
+<https://caselinker.up.railway.app/resource/case/ohio_ag_2014_002/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2014-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ohio_ag_2014_002/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2014_002/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -53,7 +67,17 @@
     cacontology:hasRoleBeginPoint "2014-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ohio_ag_2014_002/person/victim/1> .
 
+<https://caselinker.up.railway.app/resource/case/ohio_ag_2014_002/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2014_002/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2014-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/new-lexington> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/ohio> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 

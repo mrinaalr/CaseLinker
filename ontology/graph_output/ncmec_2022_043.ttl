@@ -4,26 +4,36 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_043> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:05:06.582314" ;
+    dcterms:created "2026-09-15T20:45:06.024409" ;
     dcterms:identifier "ncmec_2022_043" ;
-    dcterms:modified "2026-09-10T19:05:06.582314" ;
+    dcterms:modified "2026-09-15T20:45:06.024409" ;
     dcterms:source <https://dailyvoice.com/new-jersey/southpassaic/news/clifton-auto-tech-25-charged-with-trafficking-child-porn/831900/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/morris-county>,
+        <https://caselinker.up.railway.app/resource/location/parsippany>,
+        <https://caselinker.up.railway.app/resource/location/passaic-county>,
+        <https://caselinker.up.railway.app/resource/location/paterson> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_043/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_043/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2022_043/event/distribution>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_043/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_043/event/trafficking>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_043/legal-proceeding> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/sheriffs-internet-crime-against-children-task-force> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/sheriffs-internet-crime-against-children-task-force> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/morris-county>,
+        <https://caselinker.up.railway.app/resource/location/parsippany>,
+        <https://caselinker.up.railway.app/resource/location/passaic-county>,
+        <https://caselinker.up.railway.app/resource/location/paterson> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_043/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -59,20 +69,42 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_043/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Passaic County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2022_043/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2022_043/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_043/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_043/person/victim/1> a uco-identity:Person .
 
-<https://caselinker.up.railway.app/resource/platform/chat> a cacontology-platforms:AnonymousChatPlatform ;
-    rdfs:label "chat" .
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_043/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
+<https://caselinker.up.railway.app/resource/platform/chat> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:AnonymousChatPlatform ;
+    rdfs:label "chat" ;
+    cacontology-platforms:platformSpecificity "generic" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_043/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/morris-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Morris County" ;
+    uco-core:name "Morris County" .
+
+<https://caselinker.up.railway.app/resource/location/parsippany> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Parsippany" ;
+    uco-core:name "Parsippany" .
+
+<https://caselinker.up.railway.app/resource/location/passaic-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/paterson> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_043/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

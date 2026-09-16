@@ -1,36 +1,57 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
-@prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_922> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:21:57.391876" ;
+    dcterms:created "2026-09-15T21:08:10.951518" ;
     dcterms:identifier "ncmec_2024_922" ;
-    dcterms:modified "2026-09-10T19:21:57.391876" ;
-    dcterms:source <https://www.whbc.com/former-fairless-teacher-sent-to-prison-on-child-sex-charges/>,
+    dcterms:modified "2026-09-15T21:08:10.951518" ;
+    dcterms:source <https://www.hometownstations.com/news/raymond-carter-sentenced-to-life-in-prison-for-raping-a-child/article_27813bc2-491a-11ef-9dbb-ef874f6c5770.html#:~:text=HANCOCK%20COUNTY%2C%20OH%20(WLIO),along%20with%20child%20pornography%20charges>,
         "NCMEC" ;
-    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_922/phase/pleaded-guilty> ;
-    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_922/phase/pleaded-guilty> ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/franklin>,
+        <https://caselinker.up.railway.app/resource/location/franklin-county>,
+        <https://caselinker.up.railway.app/resource/location/hancock-county>,
+        <https://caselinker.up.railway.app/resource/location/ohio>,
+        <https://caselinker.up.railway.app/resource/location/perrysburg> ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_922/phase/sentenced> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_922/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_922/event/csam>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_922/event/trust-violation>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_922/event/hands-on>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_922/legal-proceeding>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_922/legal-step/pleaded-guilty> .
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_922/legal-step/sentenced> ;
+    cacontology:investigationStatus "unknown" ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/franklin>,
+        <https://caselinker.up.railway.app/resource/location/franklin-county>,
+        <https://caselinker.up.railway.app/resource/location/hancock-county>,
+        <https://caselinker.up.railway.app/resource/location/ohio>,
+        <https://caselinker.up.railway.app/resource/location/perrysburg> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_922/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2024-07-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_922/event/csam>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_922/event/hands-on> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_922/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_922/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2024-07-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_922/event/csam>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_922/event/hands-on> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_922/person/victim/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_922/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "child pornography" ;
-    cacontology-legal-outcomes:indictmentCounts 4 .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_922/event/trust-violation> a cacontology-custodial:AuthorityAbuse,
-        cacontology-custodial:TrustViolation ;
-    cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/ncmec_2024_922/relationship/teacher> .
+    rdfs:label "child pornography" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_922/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
@@ -38,41 +59,50 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2024_922/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-07-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2024_922/sentence/1> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_922/legal-step/pleaded-guilty> a cac-core:Event,
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_922/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding,
-        cacontology-legal-outcomes:PleaBargaining ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+        cacontology-legal-outcomes:SentencingHearing ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-07-01T00:00:00Z"^^xsd:dateTimeStamp .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_922/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_922/person/victim/1> a uco-identity:Person .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_922/relationship/teacher> a cacontology-custodial:CustodialRelationship,
-        cacontology-custodial:Teacher ;
-    cacontology-custodial:involvesChild <https://caselinker.up.railway.app/resource/case/ncmec_2024_922/role/victim/1> ;
-    cacontology-custodial:involvesCustodian <https://caselinker.up.railway.app/resource/case/ncmec_2024_922/role/offender/1> ;
-    cacontology-custodial:relationshipType "teacher" .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_922/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:LifeImprisonmentSentence ;
+    rdfs:label "[\"SENTENCED TO LIFE\"]" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_922/role/offender/1> a cacontology:OffenderRole,
-        uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_922/event/csam> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_922/person/offender/1> .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_922/phase/sentenced> a cac-core:Phase,
+        cacontology-legal-outcomes:SentencingPhase ;
+    cacontology:hasPhaseBeginPoint "2024-07-01T00:00:00Z"^^xsd:dateTimeStamp .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_922/role/victim/1> a cacontology:VictimRole,
-        uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_922/event/csam> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_922/person/victim/1> .
+<https://caselinker.up.railway.app/resource/location/franklin> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_922/phase/pleaded-guilty> a cac-core:Phase,
-        cacontology-legal-outcomes:PreTrialPhase ;
-    cacontology:hasPhaseBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+<https://caselinker.up.railway.app/resource/location/franklin-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/hancock-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Hancock County" ;
+    uco-core:name "Hancock County" .
+
+<https://caselinker.up.railway.app/resource/location/ohio> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/perrysburg> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_922/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;
+    cacontology:severityLevel 3 ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2024_922/facet/csam> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_922/event/hands-on> a cacontology:ChildSexualAbuseEvent,
+        cac-core:Event ;
+    cacontology:severityLevel 3 .
 

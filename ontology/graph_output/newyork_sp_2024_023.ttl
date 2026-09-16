@@ -10,26 +10,38 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_023> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:00:22.904350" ;
+    dcterms:created "2026-09-15T20:06:35.744554" ;
     dcterms:identifier "newyork_sp_2024_023" ;
-    dcterms:modified "2026-09-10T20:00:22.904350" ;
-    dcterms:source <https://troopers.ny.gov/news/child-exploitation-investigation-leads-arrest-corning-man>,
+    dcterms:modified "2026-09-15T20:06:35.744554" ;
+    dcterms:source <https://troopers.ny.gov/news/cyber-tip-leads-arrest-chemung-county-child-abuse-material-case>,
         "NEWYORK SP" ;
-    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_023/phase/charged> ;
-    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_023/phase/charged> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_023/cybertip>,
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/chemung-county>,
+        <https://caselinker.up.railway.app/resource/location/elmira>,
+        <https://caselinker.up.railway.app/resource/location/horseheads>,
+        <https://caselinker.up.railway.app/resource/location/new-york>,
+        <https://caselinker.up.railway.app/resource/location/southport> ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_023/phase/arrested> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_023/phase/arrested> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_023/event/multi-jurisdiction>,
         <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_023/event/possession>,
         <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_023/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_023/offense-event/charge-2> ;
     cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/new-york-state-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/troop-e-forensic-investigation-unit> .
+    cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_023/tech/cybertipline> ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/new-york-state-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/sp-horseheads-bureau-of-criminal-investigation>,
+        <https://caselinker.up.railway.app/resource/agency/troop-e-forensic-investigation-unit> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/chemung-county>,
+        <https://caselinker.up.railway.app/resource/location/elmira>,
+        <https://caselinker.up.railway.app/resource/location/horseheads>,
+        <https://caselinker.up.railway.app/resource/location/new-york>,
+        <https://caselinker.up.railway.app/resource/location/southport> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_023/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -47,6 +59,10 @@
 
 <https://caselinker.up.railway.app/resource/agency/new-york-state-police-department> a cacontology-multi:StateAgency .
 
+<https://caselinker.up.railway.app/resource/agency/sp-horseheads-bureau-of-criminal-investigation> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "SP Horseheads Bureau of Criminal Investigation" .
+
 <https://caselinker.up.railway.app/resource/agency/troop-e-forensic-investigation-unit> a cacontology-multi:LocalAgency .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_023/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
@@ -59,8 +75,9 @@
     ns1:chargeCluster "child_exploitation" ;
     ns1:chargeOffenseEvent <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_023/offense-event/charge-2> .
 
-<https://caselinker.up.railway.app/resource/case/newyork_sp_2024_023/cybertip> a cacontology-us-ncmec:NCMECCybertipReport ;
-    cacontology-us-ncmec:supportedBy <https://caselinker.up.railway.app/resource/agency/ncmec> .
+<https://caselinker.up.railway.app/resource/case/newyork_sp_2024_023/event/multi-jurisdiction> a cac-core:Event,
+        cacontology-multi:MultiJurisdictionalInvestigation ;
+    cacontology:severityLevel 3 .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_023/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
@@ -69,18 +86,45 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_023/charge/1>,
         <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_023/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_023/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_023/person/offender/1> a uco-identity:Person ;
-    cacontology-detection:ageEstimate 53 .
+    cacontology-detection:ageEstimate 19 .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_023/person/victim/1> a uco-identity:Person .
 
-<https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
+<https://caselinker.up.railway.app/resource/case/newyork_sp_2024_023/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:MonetaryPenalty ;
+    rdfs:label "[\"$5,000\", \"$10,000\", \"$20,000\"]" .
 
-<https://caselinker.up.railway.app/resource/case/newyork_sp_2024_023/phase/charged> a cacontology:LegalProcessPhase,
+<https://caselinker.up.railway.app/resource/case/newyork_sp_2024_023/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
+    rdfs:label "CyberTipline" .
+
+<https://caselinker.up.railway.app/resource/case/newyork_sp_2024_023/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/chemung-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Chemung County" ;
+    uco-core:name "Chemung County" .
+
+<https://caselinker.up.railway.app/resource/location/elmira> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Elmira" ;
+    uco-core:name "Elmira" .
+
+<https://caselinker.up.railway.app/resource/location/horseheads> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/new-york> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/southport> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Southport" ;
+    uco-core:name "Southport" .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_023/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

@@ -12,16 +12,22 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_010> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:59:48.779996" ;
+    dcterms:created "2026-09-15T20:06:35.699768" ;
     dcterms:identifier "newyork_sp_2025_010" ;
-    dcterms:modified "2026-09-10T19:59:48.779996" ;
+    dcterms:modified "2026-09-15T20:06:35.699768" ;
     dcterms:source <https://troopers.ny.gov/news/cayuga-county-man-arrested-child-exploitation-charges>,
         "NEWYORK SP" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/auburn>,
+        <https://caselinker.up.railway.app/resource/location/cayuga>,
+        <https://caselinker.up.railway.app/resource/location/cayuga-county>,
+        <https://caselinker.up.railway.app/resource/location/cayuga-county-jail>,
+        <https://caselinker.up.railway.app/resource/location/new-york> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_010/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_010/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_010/cybertip>,
@@ -33,7 +39,12 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/district-attorneys-office>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/new-york-state-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/new-york-state-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/auburn>,
+        <https://caselinker.up.railway.app/resource/location/cayuga>,
+        <https://caselinker.up.railway.app/resource/location/cayuga-county>,
+        <https://caselinker.up.railway.app/resource/location/cayuga-county-jail>,
+        <https://caselinker.up.railway.app/resource/location/new-york> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_010/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -75,12 +86,17 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_010/charge/1>,
         <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_010/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_010/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_010/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 23 .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_010/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/newyork_sp_2025_010/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_010/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -90,6 +106,23 @@
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_010/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/auburn> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/cayuga> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/cayuga-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/cayuga-county-jail> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Cayuga County Jail" ;
+    uco-core:name "Cayuga County Jail" .
+
+<https://caselinker.up.railway.app/resource/location/new-york> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/platform/social-media> a cacontology-platforms:SocialMediaPlatform ;
     rdfs:label "social media" .

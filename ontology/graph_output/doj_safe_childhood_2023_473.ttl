@@ -10,6 +10,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -33,17 +34,21 @@
 
 <https://caselinker.up.railway.app/resource/agency/hsi> a cacontology-multi:FederalAgency .
 
-<https://caselinker.up.railway.app/resource/agency/tulsa-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/tulsa-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Tulsa Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_473> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T21:23:02.813659" ;
+    dcterms:created "2026-09-15T22:12:28.388809" ;
     dcterms:identifier "doj_safe_childhood_2023_473" ;
-    dcterms:modified "2026-09-14T21:23:02.813659" ;
+    dcterms:modified "2026-09-15T22:12:28.388809" ;
     dcterms:source <https://www.justice.gov/usao-ndok/pr/inola-man-and-tulsa-man-plead-guilty-child-pornography-charges>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/inola>,
+        <https://caselinker.up.railway.app/resource/location/tulsa> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_473/phase/pleaded-guilty> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_473/phase/pleaded-guilty> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_473/admission/1>,
@@ -59,7 +64,9 @@
         <https://caselinker.up.railway.app/resource/agency/doj>,
         <https://caselinker.up.railway.app/resource/agency/hsi>,
         <https://caselinker.up.railway.app/resource/agency/tulsa-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/usao> .
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/inola>,
+        <https://caselinker.up.railway.app/resource/location/tulsa> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_473/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -111,7 +118,7 @@
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_473/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:ProbationSentence ;
-    rdfs:label "Probation" .
+    rdfs:label "[\"Probation\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_473/phase/pleaded-guilty> a cac-core:Phase,
         cacontology-legal-outcomes:PreTrialPhase ;
@@ -123,6 +130,14 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_473/event/conspiracy>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_473/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_473/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/location/inola> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Inola" ;
+    uco-core:name "Inola" .
+
+<https://caselinker.up.railway.app/resource/location/tulsa> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/platform/dark-web> a cacontology-platforms:DarkWebService ;
     rdfs:label "dark web" .

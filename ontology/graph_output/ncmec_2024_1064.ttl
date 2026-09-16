@@ -3,81 +3,79 @@
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1064> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:23:10.066779" ;
+    dcterms:created "2026-09-15T21:08:11.079096" ;
     dcterms:identifier "ncmec_2024_1064" ;
-    dcterms:modified "2026-09-10T19:23:10.066779" ;
-    dcterms:source <https://www.msn.com/en-us/news/crime/rapid-city-man-sentenced-after-unclassified-ai-child-pornography-is-found/ar-AA1uxa4L?apiversion=v2&noservercache=1&domshim=1&renderwebcomponents=1&wcseo=1&batchservertelemetry=1&noservertelemetry=1>,
+    dcterms:modified "2026-09-15T21:08:11.079096" ;
+    dcterms:source <https://www.kotatv.com/2024/12/06/rapid-city-man-sentenced-15-years-federal-prison/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/rapid-city>,
+        <https://caselinker.up.railway.app/resource/location/sd> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_1064/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_1064/phase/sentenced> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_1064/event/ai-csam>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1064/event/possession>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1064/legal-proceeding>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1064/legal-step/sentenced> .
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_1064/legal-proceeding>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1064/legal-step/sentenced> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/rapid-city>,
+        <https://caselinker.up.railway.app/resource/location/sd> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1064/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_1064/event/ai-csam>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1064/event/possession> ;
+    cacontology:hasRoleBeginPoint "2024-12-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_1064/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1064/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_1064/event/ai-csam>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1064/event/possession> ;
+    cacontology:hasRoleBeginPoint "2024-12-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_1064/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1064/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
-        cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "child pornography" .
+<https://caselinker.up.railway.app/resource/platform/snapchat> a cacontology-platforms:MessagingService ;
+    rdfs:label "Snapchat" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1064/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1064/charge/1> a cacontology-legal-outcomes:CriminalCharge,
+        cacontology-legal-outcomes:StateCharge ;
+    rdfs:label "sexual exploitation of a minor" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1064/charge/2> a cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "sexual exploitation" ;
+    ns1:chargeCluster "sexual_exploitation_unspecified" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1064/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2024_1064/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2024_1064/charge/1>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1064/charge/2> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-12-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2024_1064/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1064/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding,
         cacontology-legal-outcomes:SentencingHearing ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-12-01T00:00:00Z"^^xsd:dateTimeStamp .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1064/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1064/person/victim/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1064/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:ProbationSentence ;
-    rdfs:label "probation" .
+        cacontology-legal-outcomes:SupervisedRelease ;
+    rdfs:label "[\"180 months\", \"supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1064/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
-    cacontology:hasPhaseBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology:hasPhaseBeginPoint "2024-12-01T00:00:00Z"^^xsd:dateTimeStamp .
 
-<https://caselinker.up.railway.app/resource/platform/gen-ai> a cacontology-platforms:FileHostingService ;
-    rdfs:label "Gen AI" .
+<https://caselinker.up.railway.app/resource/location/rapid-city> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1064/event/ai-csam> a cacontology:DigitallyGeneratedCSAMIncident,
-        <https://cacontology.projectvic.org/ai-csam#AIGeneratedCSAM>,
-        cac-core:Event ;
-    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/gen-ai> .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1064/event/possession> a cacontology:CSAMIncident,
-        cac-core:Event ;
-    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/gen-ai> ;
-    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2024_1064/facet/possession> .
+<https://caselinker.up.railway.app/resource/location/sd> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 

@@ -7,19 +7,25 @@
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_014> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:59:50.859255" ;
+    dcterms:created "2026-09-15T20:06:35.704433" ;
     dcterms:identifier "newyork_sp_2025_014" ;
-    dcterms:modified "2026-09-10T19:59:50.859255" ;
+    dcterms:modified "2026-09-15T20:06:35.704433" ;
     dcterms:source <https://troopers.ny.gov/news/state-police-arrest-newburgh-man-possession-child-sexual-abuse-material>,
         "NEWYORK SP" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/iglesias>,
+        <https://caselinker.up.railway.app/resource/location/montgomery>,
+        <https://caselinker.up.railway.app/resource/location/new-york>,
+        <https://caselinker.up.railway.app/resource/location/newburgh> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_014/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_014/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_014/cybertip>,
@@ -30,7 +36,11 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
         <https://caselinker.up.railway.app/resource/agency/new-york-state-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/troop-f-bureau-of-criminal-investigation> .
+        <https://caselinker.up.railway.app/resource/agency/troop-f-bureau-of-criminal-investigation> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/iglesias>,
+        <https://caselinker.up.railway.app/resource/location/montgomery>,
+        <https://caselinker.up.railway.app/resource/location/new-york>,
+        <https://caselinker.up.railway.app/resource/location/newburgh> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_014/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -63,13 +73,18 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_014/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_014/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_014/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 27 .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_014/person/victim/1> a uco-identity:Person ;
     cacontology-production:victimAge 16 .
+
+<https://caselinker.up.railway.app/resource/case/newyork_sp_2025_014/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_014/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -79,6 +94,20 @@
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_014/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/iglesias> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Iglesias’" ;
+    uco-core:name "Iglesias’" .
+
+<https://caselinker.up.railway.app/resource/location/montgomery> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/new-york> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/newburgh> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_014/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

@@ -11,16 +11,19 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2024_001> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:22:17.538900" ;
+    dcterms:created "2026-09-15T20:39:17.316551" ;
     dcterms:identifier "vt_ag_2024_001" ;
-    dcterms:modified "2026-09-10T20:22:17.538900" ;
+    dcterms:modified "2026-09-15T20:39:17.316551" ;
     dcterms:source <https://ago.vermont.gov/blog/2024/08/13/derby-resident-arrested-attempted-luring-child-and-possession-child-sexual-abuse-material>,
         "VT AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/derby>,
+        <https://caselinker.up.railway.app/resource/location/vermont> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/vt_ag_2024_001/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/vt_ag_2024_001/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/vt_ag_2024_001/cybertip>,
@@ -33,7 +36,9 @@
     cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/vt_ag_2024_001/tech/cybertipline> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/attorney-generals-office>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/derby>,
+        <https://caselinker.up.railway.app/resource/location/vermont> .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2024_001/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -89,12 +94,17 @@
         <https://caselinker.up.railway.app/resource/case/vt_ag_2024_001/charge/2>,
         <https://caselinker.up.railway.app/resource/case/vt_ag_2024_001/charge/3>,
         <https://caselinker.up.railway.app/resource/case/vt_ag_2024_001/charge/4> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/vt_ag_2024_001/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2024_001/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 35 .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2024_001/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/vt_ag_2024_001/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2024_001/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -104,6 +114,14 @@
 <https://caselinker.up.railway.app/resource/case/vt_ag_2024_001/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/derby> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Derby" ;
+    uco-core:name "Derby" .
+
+<https://caselinker.up.railway.app/resource/location/vermont> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/platform/snapchat> a cacontology-platforms:MessagingService ;
     rdfs:label "Snapchat" .

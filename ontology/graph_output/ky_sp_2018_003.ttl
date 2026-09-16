@@ -4,18 +4,27 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2018_003> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:53:46.764485" ;
+    dcterms:created "2026-09-15T19:52:04.520596" ;
     dcterms:identifier "ky_sp_2018_003" ;
-    dcterms:modified "2026-09-10T19:53:46.764485" ;
+    dcterms:modified "2026-09-15T19:52:04.520596" ;
     dcterms:source <https://www.kentuckystatepolice.ky.gov/news/hq-12-17-18/>,
         "KY SP" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/bay-county>,
+        <https://caselinker.up.railway.app/resource/location/bay-county-fl>,
+        <https://caselinker.up.railway.app/resource/location/daviess-county>,
+        <https://caselinker.up.railway.app/resource/location/florida>,
+        <https://caselinker.up.railway.app/resource/location/ky>,
+        <https://caselinker.up.railway.app/resource/location/owensboro> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ky_sp_2018_003/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ky_sp_2018_003/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ky_sp_2018_003/event/distribution>,
@@ -23,7 +32,13 @@
         <https://caselinker.up.railway.app/resource/case/ky_sp_2018_003/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/ky_sp_2018_003/operation> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/bay-county-sheriffs-department>,
-        <https://caselinker.up.railway.app/resource/agency/kentucky-state-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/kentucky-state-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/bay-county>,
+        <https://caselinker.up.railway.app/resource/location/bay-county-fl>,
+        <https://caselinker.up.railway.app/resource/location/daviess-county>,
+        <https://caselinker.up.railway.app/resource/location/florida>,
+        <https://caselinker.up.railway.app/resource/location/ky>,
+        <https://caselinker.up.railway.app/resource/location/owensboro> .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2018_003/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -49,10 +64,8 @@
 <https://caselinker.up.railway.app/resource/case/ky_sp_2018_003/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility: Bay County Jail" ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2018-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ky_sp_2018_003/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/ky_sp_2018_003/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ky_sp_2018_003/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2018_003/operation> a cac-core:Event,
         cacontology-taskforce:UndercoverUnit .
@@ -63,15 +76,37 @@
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2018_003/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "15 years" .
-
-<https://caselinker.up.railway.app/resource/case/ky_sp_2018_003/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "5 years" .
+    rdfs:label "[\"15 years\", \"5 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2018_003/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2018-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/bay-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Bay County" ;
+    uco-core:name "Bay County" .
+
+<https://caselinker.up.railway.app/resource/location/bay-county-fl> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Bay County, Fl." ;
+    uco-core:name "Bay County, Fl." .
+
+<https://caselinker.up.railway.app/resource/location/daviess-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Daviess County" ;
+    uco-core:name "Daviess County" .
+
+<https://caselinker.up.railway.app/resource/location/florida> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/ky> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/owensboro> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Owensboro" ;
+    uco-core:name "Owensboro" .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2018_003/event/online-only> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event .

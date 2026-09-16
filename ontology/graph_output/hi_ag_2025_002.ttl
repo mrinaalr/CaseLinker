@@ -7,17 +7,20 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/hi_ag_2025_002> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:45:29.002725" ;
+    dcterms:created "2026-09-15T19:34:18.993422" ;
     dcterms:identifier "hi_ag_2025_002" ;
-    dcterms:modified "2026-09-10T19:45:29.002725" ;
+    dcterms:modified "2026-09-15T19:34:18.993422" ;
     dcterms:source <https://governor.hawaii.gov/newsroom/ag-news-release-operation-keiki-shield-29-nets-three-internet-predators-on-o%CA%BBahu/>,
         "HI AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/oiahu-honolulu> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/hi_ag_2025_002/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/hi_ag_2025_002/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/hi_ag_2025_002/legal-proceeding> ;
@@ -25,11 +28,12 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/army-criminal-investigation-division>,
         <https://caselinker.up.railway.app/resource/agency/fbi>,
         <https://caselinker.up.railway.app/resource/agency/hawaii-department>,
-        <https://caselinker.up.railway.app/resource/agency/hawaini-attorney-general-special-investigation-and-prosecution-division>,
+        <https://caselinker.up.railway.app/resource/agency/hawaiii-attorney-general-special-investigation-and-prosecution-division>,
         <https://caselinker.up.railway.app/resource/agency/honolulu-police-department>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/taskforce>,
-        <https://caselinker.up.railway.app/resource/agency/us-secret-service> .
+        <https://caselinker.up.railway.app/resource/agency/us-secret-service> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/oiahu-honolulu> .
 
 <https://caselinker.up.railway.app/resource/case/hi_ag_2025_002/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -47,15 +51,17 @@
 
 <https://caselinker.up.railway.app/resource/agency/hawaii-department> a cacontology-multi:LocalAgency .
 
-<https://caselinker.up.railway.app/resource/agency/hawaini-attorney-general-special-investigation-and-prosecution-division> a cac-core:OrganizationLikeEntity,
+<https://caselinker.up.railway.app/resource/agency/hawaiii-attorney-general-special-investigation-and-prosecution-division> a cac-core:OrganizationLikeEntity,
         cacontology-multi:StateAgency ;
-    rdfs:label "Hawaini Attorney General Special Investigation and Prosecution Division" .
+    rdfs:label "HawaiIi Attorney General Special Investigation and Prosecution Division" .
 
 <https://caselinker.up.railway.app/resource/agency/honolulu-police-department> a cacontology-multi:LocalAgency .
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
-<https://caselinker.up.railway.app/resource/agency/taskforce> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/taskforce> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Taskforce" .
 
 <https://caselinker.up.railway.app/resource/agency/us-secret-service> a cacontology-multi:FederalAgency .
 
@@ -72,14 +78,24 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/hi_ag_2025_002/charge/1>,
         <https://caselinker.up.railway.app/resource/case/hi_ag_2025_002/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/hi_ag_2025_002/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/hi_ag_2025_002/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 26 .
 
 <https://caselinker.up.railway.app/resource/case/hi_ag_2025_002/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/hi_ag_2025_002/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/hi_ag_2025_002/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/oiahu-honolulu> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Oiahu Honolulu" ;
+    uco-core:name "Oiahu Honolulu" .
 

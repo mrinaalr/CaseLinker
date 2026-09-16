@@ -3,62 +3,113 @@
 @prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
+@prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_280> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:16:37.975779" ;
+    dcterms:created "2026-09-15T21:08:10.412423" ;
     dcterms:identifier "ncmec_2024_280" ;
-    dcterms:modified "2026-09-10T19:16:37.975779" ;
-    dcterms:source <https://www.mdjonline.com/news/police_fire/acworth-man-accused-of-sexual-exploitation-of-a-child/article_1551d64a-4385-11ef-95c6-b72a7ded233c.html>,
+    dcterms:modified "2026-09-15T21:08:10.412423" ;
+    dcterms:source <https://www.fox5atlanta.com/news/church-minister-arrested-on-child-porn-charges-in-coweta-county>,
         "NCMEC" ;
-    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_280/phase/charged> ;
-    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_280/phase/charged> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_280/event/distribution>,
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/atlanta>,
+        <https://caselinker.up.railway.app/resource/location/coweta>,
+        <https://caselinker.up.railway.app/resource/location/coweta-county>,
+        <https://caselinker.up.railway.app/resource/location/ga>,
+        <https://caselinker.up.railway.app/resource/location/newnan> ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_280/phase/arrested> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_280/phase/arrested> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_280/cybertip>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_280/event/csam>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_280/legal-proceeding> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/cobb-county-police-department> .
+    cacontology:investigationStatus "unknown" ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/coweta-county-sheriffs-office>,
+        <https://caselinker.up.railway.app/resource/agency/icac>,
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/atlanta>,
+        <https://caselinker.up.railway.app/resource/location/coweta>,
+        <https://caselinker.up.railway.app/resource/location/coweta-county>,
+        <https://caselinker.up.railway.app/resource/location/ga>,
+        <https://caselinker.up.railway.app/resource/location/newnan> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_280/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2024-07-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:hasRoleBeginPoint "2024-04-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_280/event/csam> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_280/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_280/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2024-07-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:hasRoleBeginPoint "2024-04-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_280/event/csam> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_280/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/cobb-county-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/coweta-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Coweta County Sheriff's Office" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_280/charge/1> a cacontology-legal-outcomes:CriminalCharge,
-        cacontology-legal-outcomes:StateCharge ;
-    rdfs:label "sexual exploitation of a child" .
+<https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_280/charge/2> a cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "sexual exploitation" ;
-    ns1:chargeCluster "sexual_exploitation_unspecified" .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_280/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
+        cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "child sexual abuse material" ;
+    cacontology-legal-outcomes:indictmentCounts 2 .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_280/event/distribution> a cac-core:Event,
-        cacontology-legal-outcomes:CSAM_Distribution .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_280/cybertip> a cacontology-us-ncmec:NCMECCybertipReport ;
+    cacontology-us-ncmec:supportedBy <https://caselinker.up.railway.app/resource/agency/ncmec> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_280/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_280/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2024_280/charge/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_280/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-07-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2024_280/charge/1> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-04-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2024_280/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_280/person/offender/1> a uco-identity:Person ;
-    cacontology-detection:ageEstimate 29 .
+    cacontology-detection:ageEstimate 38 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_280/person/victim/1> a uco-identity:Person .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_280/phase/charged> a cacontology:LegalProcessPhase,
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_280/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:MonetaryPenalty ;
+    rdfs:label "[\"$12,000\"]" .
+
+<https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_280/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;
-    cacontology:hasPhaseBeginPoint "2024-07-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology:hasPhaseBeginPoint "2024-04-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/atlanta> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/coweta> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/coweta-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/ga> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/newnan> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Newnan" ;
+    uco-core:name "Newnan" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_280/event/csam> a cacontology:CSAMIncident,
+        cac-core:Event ;
+    cacontology:severityLevel 3 ;
+    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2024_280/facet/csam> .
 

@@ -95,6 +95,9 @@ CASELINKER_ADMISSION_THEME = BASE["vocab/admissionTheme"]
 CASELINKER_ADMISSION_CONTEXT = BASE["vocab/admissionContext"]
 CASELINKER_ATTRIBUTED_TO_ROLE = BASE["vocab/attributedToOffenderRole"]
 CASELINKER_EVIDENCE_TIER = BASE["vocab/evidenceTier"]
+# NER geographic mentions → uco-location:Location (CAC has no dedicated geo class;
+# PlaceLikeEntity is the CAC spine branch; PACER graphs use the same UCO type).
+CASELINKER_MENTIONS_LOCATION = BASE["vocab/mentionsLocation"]
 
 UCO_CORE = Namespace("https://ontology.unifiedcyberontology.org/uco/core/")
 UCO_ACTION = Namespace("https://ontology.unifiedcyberontology.org/uco/action/")
@@ -850,6 +853,7 @@ class CaseToCAC:
         # In-process singleton registry: slug → URIRef (shared across calls)
         self._platform_registry: Dict[str, URIRef] = {}
         self._agency_registry: Dict[str, URIRef] = {}
+        self._location_registry: Dict[str, URIRef] = {}
 
     # ------------------------------------------------------------------
     # Public API
@@ -915,6 +919,7 @@ class CaseToCAC:
             det_g, case, event_uris
         )
         self.map_agencies(det_g, case, inv_uri, warnings)
+        self.map_locations(det_g, case, inv_uri, warnings)
         self.map_technology(det_g, case, inv_uri, event_uris, warnings)
         self.map_investigation_type(det_g, case, inv_uri, warnings)
 
@@ -1836,6 +1841,78 @@ class CaseToCAC:
 
         return uris
 
+    # ------------------------------------------------------------------
+    # Step 7b: Geographic locations (NER)
+    # ------------------------------------------------------------------
+
+    def map_locations(
+        self,
+        g: Graph,
+        case: Dict[str, Any],
+        inv_uri: URIRef,
+        warnings: List[str],
+    ) -> List[URIRef]:
+        """Create shared ``uco-location:Location`` nodes from NER ``locations``.
+
+        CAC modules reference ``uco-location:Location`` (and ``cac-core:PlaceLikeEntity``)
+        but have no press-release geo class of their own. PACER graphs already emit the
+        same UCO type. Link each location to the investigation via ``dcterms:spatial``
+        (standard SPARQL) and ``caselinker:mentionsLocation`` (NER provenance).
+        """
+        locations_raw = case.get("locations") or []
+        if isinstance(locations_raw, str):
+            try:
+                locations_raw = json.loads(locations_raw)
+            except (json.JSONDecodeError, TypeError):
+                locations_raw = [locations_raw]
+        if not isinstance(locations_raw, list):
+            warnings.append(
+                f"locations: expected list, got {type(locations_raw).__name__} — skipped"
+            )
+            return []
+
+        uris: List[URIRef] = []
+        seen_slugs: set = set()
+
+        for raw in locations_raw:
+            if raw is None:
+                continue
+            label = str(raw).strip()
+            if len(label) < 2:
+                continue
+            slug = _slug(label)
+            if slug in seen_slugs:
+                continue
+            seen_slugs.add(slug)
+
+            loc_uri = self._get_or_create_location(g, slug, label)
+            g.add((inv_uri, DCTERMS.spatial, loc_uri))
+            g.add((inv_uri, CASELINKER_MENTIONS_LOCATION, loc_uri))
+            uris.append(loc_uri)
+
+        return uris
+
+    def _get_or_create_location(
+        self,
+        g: Graph,
+        slug: str,
+        label: str,
+    ) -> URIRef:
+        """Return shared singleton location URIRef, creating it if new."""
+        uri = self._location_registry.get(slug)
+        if uri is None:
+            uri = BASE[f"location/{slug}"]
+            self._location_registry[slug] = uri
+            g.add((uri, RDF.type, UCO_LOCATION.Location))
+            g.add((uri, RDF.type, CAC_CORE.PlaceLikeEntity))
+            g.add((uri, RDFS.label, Literal(label)))
+            g.add((uri, UCO_CORE.name, Literal(label)))
+        else:
+            # Ensure types present in this graph even if registry hit from prior case
+            g.add((uri, RDF.type, UCO_LOCATION.Location))
+            g.add((uri, RDF.type, CAC_CORE.PlaceLikeEntity))
+        return uri
+
     def _classify_agency(
         self, name: str, source: Optional[str] = None, case_text: str = ""
     ) -> Tuple[str, URIRef]:
@@ -2536,6 +2613,8 @@ _EXPECTED_NODE_TYPES = {
     "FederalAgency",
     "StateICACtaskForce",
     "StateAgency",
+    "Location",                 # NER locations → uco-location:Location
+    "PlaceLikeEntity",
     "CSAM_Production",
     "PrisonSentence",
     "SentencingPhase",

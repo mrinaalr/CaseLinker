@@ -7,17 +7,22 @@
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/army_cid_2023_002> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:36:27.945962" ;
+    dcterms:created "2026-09-15T19:25:48.037335" ;
     dcterms:identifier "army_cid_2023_002" ;
-    dcterms:modified "2026-09-10T19:36:27.945962" ;
+    dcterms:modified "2026-09-15T19:25:48.037335" ;
     dcterms:source <https://www.cid.army.mil/Media-Resources/Releases/Article-Display/Article/3337496/five-suspects-identified-in-fort-carson-child-exploitation-joint-operation/>,
         "ARMY CID" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/colorado>,
+        <https://caselinker.up.railway.app/resource/location/fort-carson>,
+        <https://caselinker.up.railway.app/resource/location/va> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/army_cid_2023_002/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/army_cid_2023_002/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/army_cid_2023_002/event/online-only>,
@@ -28,7 +33,10 @@
         <https://caselinker.up.railway.app/resource/agency/department-of-the-army>,
         <https://caselinker.up.railway.app/resource/agency/department-of-the-army-criminal-investigation-divisions-rocky-mountain-field-office>,
         <https://caselinker.up.railway.app/resource/agency/fort-carson-child-exploitation-joint-operation-department>,
-        <https://caselinker.up.railway.app/resource/agency/hsi> .
+        <https://caselinker.up.railway.app/resource/agency/hsi> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/colorado>,
+        <https://caselinker.up.railway.app/resource/location/fort-carson>,
+        <https://caselinker.up.railway.app/resource/location/va> .
 
 <https://caselinker.up.railway.app/resource/case/army_cid_2023_002/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -72,7 +80,8 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/army_cid_2023_002/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/army_cid_2023_002/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/army_cid_2023_002/operation> a cac-core:Event,
         cacontology-taskforce:TaskForceOperation .
@@ -81,9 +90,24 @@
 
 <https://caselinker.up.railway.app/resource/case/army_cid_2023_002/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/army_cid_2023_002/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/army_cid_2023_002/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/colorado> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/fort-carson> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Fort Carson" ;
+    uco-core:name "Fort Carson" .
+
+<https://caselinker.up.railway.app/resource/location/va> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/army_cid_2023_002/event/online-only> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event .

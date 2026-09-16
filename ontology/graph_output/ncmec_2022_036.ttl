@@ -11,16 +11,20 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_036> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:05:04.031929" ;
+    dcterms:created "2026-09-15T20:45:06.020267" ;
     dcterms:identifier "ncmec_2022_036" ;
-    dcterms:modified "2026-09-10T19:05:04.031929" ;
+    dcterms:modified "2026-09-15T20:45:06.020267" ;
     dcterms:source <https://www.ksl.com/article/50425038/utah-sex-offender-arrested-on-new-allegations-of-making-child-pornography>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/salt-lake-county-jail>,
+        <https://caselinker.up.railway.app/resource/location/utah>,
+        <https://caselinker.up.railway.app/resource/location/west-jordan> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_036/phase/pleaded-guilty> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_036/phase/pleaded-guilty> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2022_036/cybertip>,
@@ -31,7 +35,10 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_036/legal-step/pleaded-guilty> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/salt-lake-county-district-attorneys-office> .
+        <https://caselinker.up.railway.app/resource/agency/salt-lake-county-district-attorneys-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/salt-lake-county-jail>,
+        <https://caselinker.up.railway.app/resource/location/utah>,
+        <https://caselinker.up.railway.app/resource/location/west-jordan> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_036/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -89,7 +96,6 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_036/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility: Salt Lake County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2022_036/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_036/charge/2>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_036/charge/3>,
@@ -111,13 +117,28 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_036/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:ProbationSentence ;
-    rdfs:label "probation" .
+    rdfs:label "[\"probation\"]" .
 
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_036/phase/pleaded-guilty> a cac-core:Phase,
         cacontology-legal-outcomes:PreTrialPhase ;
     cacontology:hasPhaseBeginPoint "2022-06-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/salt-lake-county-jail> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Salt Lake County Jail" ;
+    uco-core:name "Salt Lake County Jail" .
+
+<https://caselinker.up.railway.app/resource/location/utah> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Utah" ;
+    uco-core:name "Utah" .
+
+<https://caselinker.up.railway.app/resource/location/west-jordan> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "West Jordan" ;
+    uco-core:name "West Jordan" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_036/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

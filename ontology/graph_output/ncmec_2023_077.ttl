@@ -9,16 +9,20 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_077> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:09:38.978260" ;
+    dcterms:created "2026-09-15T20:55:00.805618" ;
     dcterms:identifier "ncmec_2023_077" ;
-    dcterms:modified "2026-09-10T19:09:38.978260" ;
+    dcterms:modified "2026-09-15T20:55:00.805618" ;
     dcterms:source <https://www.lexingtonchronicle.com/stories/lexington-county-men-arrested-for-internet-crimes-against-children,38182>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/cayce>,
+        <https://caselinker.up.railway.app/resource/location/lexington-county>,
+        <https://caselinker.up.railway.app/resource/location/west-columbia> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_077/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_077/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_077/cybertip>,
@@ -31,7 +35,10 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/attorney-generals-office>,
         <https://caselinker.up.railway.app/resource/agency/lexington-county-sheriffs-department>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/state-attorney-generals-office> .
+        <https://caselinker.up.railway.app/resource/agency/state-attorney-generals-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/cayce>,
+        <https://caselinker.up.railway.app/resource/location/lexington-county>,
+        <https://caselinker.up.railway.app/resource/location/west-columbia> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_077/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
@@ -46,7 +53,9 @@
         cacontology-multi:LocalAgency ;
     rdfs:label "Lexington County Sheriff's Department" .
 
-<https://caselinker.up.railway.app/resource/agency/state-attorney-generals-office> a cacontology-multi:StateAgency .
+<https://caselinker.up.railway.app/resource/agency/state-attorney-generals-office> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:StateAgency ;
+    rdfs:label "State Attorney General's Office" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_077/charge/1> a cacontology-legal-outcomes:CriminalCharge,
         cacontology-legal-outcomes:StateCharge ;
@@ -103,7 +112,7 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_077/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "10 years" .
+    rdfs:label "[\"10 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_077/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -113,6 +122,21 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_077/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/cayce> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Cayce" ;
+    uco-core:name "Cayce" .
+
+<https://caselinker.up.railway.app/resource/location/lexington-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Lexington County" ;
+    uco-core:name "Lexington County" .
+
+<https://caselinker.up.railway.app/resource/location/west-columbia> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "West Columbia" ;
+    uco-core:name "West Columbia" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_077/event/conspiracy> a cacontology:ConspiracyToCommitCSA,
         cac-core:Event ;

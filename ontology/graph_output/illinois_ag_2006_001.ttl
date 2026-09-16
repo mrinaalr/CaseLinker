@@ -9,17 +9,27 @@
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2006_001> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:47:18.881935" ;
+    dcterms:created "2026-09-15T19:40:56.455585" ;
     dcterms:identifier "illinois_ag_2006_001" ;
-    dcterms:modified "2026-09-10T19:47:18.881935" ;
+    dcterms:modified "2026-09-15T19:49:13.599370" ;
     dcterms:source <https://illinoisattorneygeneral.gov/News-Room/2006-2018-Press-Archive/200607-28%20MISSOURI%20MAN%20ARRESTED%20FOR%20ALLEGED%20ABDUCTION%20AND%20SEXUAL%20ASSAULT%20OF%20SANGAMON%20COUNTY%20CHILD.pdf>,
         "ILLINOIS AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/boone-county>,
+        <https://caselinker.up.railway.app/resource/location/chicago>,
+        <https://caselinker.up.railway.app/resource/location/columbia>,
+        <https://caselinker.up.railway.app/resource/location/divernon>,
+        <https://caselinker.up.railway.app/resource/location/illinois>,
+        <https://caselinker.up.railway.app/resource/location/missouri>,
+        <https://caselinker.up.railway.app/resource/location/sangamon>,
+        <https://caselinker.up.railway.app/resource/location/sangamon-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/illinois_ag_2006_001/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/illinois_ag_2006_001/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/illinois_ag_2006_001/legal-proceeding>,
@@ -30,7 +40,15 @@
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/illinois-department-of-corrections>,
         <https://caselinker.up.railway.app/resource/agency/missouri-sheriffs-department>,
-        <https://caselinker.up.railway.app/resource/agency/sheriffs-department> .
+        <https://caselinker.up.railway.app/resource/agency/sheriffs-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/boone-county>,
+        <https://caselinker.up.railway.app/resource/location/chicago>,
+        <https://caselinker.up.railway.app/resource/location/columbia>,
+        <https://caselinker.up.railway.app/resource/location/divernon>,
+        <https://caselinker.up.railway.app/resource/location/illinois>,
+        <https://caselinker.up.railway.app/resource/location/missouri>,
+        <https://caselinker.up.railway.app/resource/location/sangamon>,
+        <https://caselinker.up.railway.app/resource/location/sangamon-county> .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2006_001/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -56,7 +74,9 @@
         cacontology-multi:LocalAgency ;
     rdfs:label "Missouri Sheriff's Department" .
 
-<https://caselinker.up.railway.app/resource/agency/sheriffs-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/sheriffs-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Sheriff's Department" .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2006_001/charge/1> a cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "child exploitation" ;
@@ -67,14 +87,18 @@
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2006_001/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Boone County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/illinois_ag_2006_001/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2006-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2006-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/illinois_ag_2006_001/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2006_001/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 31 .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2006_001/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/illinois_ag_2006_001/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2006_001/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -82,6 +106,40 @@
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2006_001/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2006-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/boone-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Boone County" ;
+    uco-core:name "Boone County" .
+
+<https://caselinker.up.railway.app/resource/location/chicago> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/columbia> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Columbia" ;
+    uco-core:name "Columbia" .
+
+<https://caselinker.up.railway.app/resource/location/divernon> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Divernon" ;
+    uco-core:name "Divernon" .
+
+<https://caselinker.up.railway.app/resource/location/illinois> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/missouri> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/sangamon> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Sangamon" ;
+    uco-core:name "Sangamon" .
+
+<https://caselinker.up.railway.app/resource/location/sangamon-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Sangamon County" ;
+    uco-core:name "Sangamon County" .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2006_001/offense-event/charge-1> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event,

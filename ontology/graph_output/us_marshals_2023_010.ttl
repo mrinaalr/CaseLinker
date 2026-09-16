@@ -1,25 +1,43 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
 @prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2023_010> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:19:28.251445" ;
+    dcterms:created "2026-09-15T20:35:06.313001" ;
     dcterms:identifier "us_marshals_2023_010" ;
-    dcterms:modified "2026-09-10T20:19:28.251445" ;
+    dcterms:modified "2026-09-15T20:35:06.313001" ;
     dcterms:source <https://www.usmarshals.gov/news/press-release/wv-man-wanted-numerous-sex-offenses-arrested-us-marshals-task-force-md>,
         "US MARSHALS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/berkeley-county>,
+        <https://caselinker.up.railway.app/resource/location/clarksburg>,
+        <https://caselinker.up.railway.app/resource/location/martinsburg>,
+        <https://caselinker.up.railway.app/resource/location/maryland>,
+        <https://caselinker.up.railway.app/resource/location/montgomery-county>,
+        <https://caselinker.up.railway.app/resource/location/west-virginia> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/us_marshals_2023_010/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/us_marshals_2023_010/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/us_marshals_2023_010/event/multi-jurisdiction>,
-        <https://caselinker.up.railway.app/resource/case/us_marshals_2023_010/event/trust-violation> ;
+        <https://caselinker.up.railway.app/resource/case/us_marshals_2023_010/event/trust-violation>,
+        <https://caselinker.up.railway.app/resource/case/us_marshals_2023_010/legal-proceeding> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/berkeley-county-sheriffs-office>,
-        <https://caselinker.up.railway.app/resource/agency/usms> .
+        <https://caselinker.up.railway.app/resource/agency/usms> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/berkeley-county>,
+        <https://caselinker.up.railway.app/resource/location/clarksburg>,
+        <https://caselinker.up.railway.app/resource/location/martinsburg>,
+        <https://caselinker.up.railway.app/resource/location/maryland>,
+        <https://caselinker.up.railway.app/resource/location/montgomery-county>,
+        <https://caselinker.up.railway.app/resource/location/west-virginia> .
 
 <https://caselinker.up.railway.app/resource/agency/berkeley-county-sheriffs-office> a cacontology-multi:LocalAgency .
 
@@ -32,6 +50,12 @@
 <https://caselinker.up.railway.app/resource/case/us_marshals_2023_010/event/trust-violation> a cacontology-custodial:CustodialAbuse,
         cacontology-custodial:TrustViolation ;
     cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/us_marshals_2023_010/relationship/parent> .
+
+<https://caselinker.up.railway.app/resource/case/us_marshals_2023_010/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/us_marshals_2023_010/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2023_010/person/offender/1> a uco-identity:Person .
 
@@ -53,7 +77,35 @@
     cacontology:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/us_marshals_2023_010/person/victim/1> .
 
+<https://caselinker.up.railway.app/resource/case/us_marshals_2023_010/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/us_marshals_2023_010/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/berkeley-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Berkeley County" ;
+    uco-core:name "Berkeley County" .
+
+<https://caselinker.up.railway.app/resource/location/clarksburg> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Clarksburg" ;
+    uco-core:name "Clarksburg" .
+
+<https://caselinker.up.railway.app/resource/location/martinsburg> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Martinsburg" ;
+    uco-core:name "Martinsburg" .
+
+<https://caselinker.up.railway.app/resource/location/maryland> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/montgomery-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/west-virginia> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 

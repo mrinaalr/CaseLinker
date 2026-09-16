@@ -9,23 +9,30 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2021_042> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:52:24.267550" ;
+    dcterms:created "2026-09-15T19:52:04.330397" ;
     dcterms:identifier "ky_sp_2021_042" ;
-    dcterms:modified "2026-09-10T19:52:24.267550" ;
+    dcterms:modified "2026-09-15T19:52:04.330397" ;
     dcterms:source <https://www.kentuckystatepolice.ky.gov/news/p7-2-23-2021/>,
         "KY SP" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/jessamine-county>,
+        <https://caselinker.up.railway.app/resource/location/ky>,
+        <https://caselinker.up.railway.app/resource/location/nicholasville> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ky_sp_2021_042/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ky_sp_2021_042/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ky_sp_2021_042/event/csam>,
         <https://caselinker.up.railway.app/resource/case/ky_sp_2021_042/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/kentucky-state-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/kentucky-state-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/jessamine-county>,
+        <https://caselinker.up.railway.app/resource/location/ky>,
+        <https://caselinker.up.railway.app/resource/location/nicholasville> .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2021_042/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -58,16 +65,32 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ky_sp_2021_042/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ky_sp_2021_042/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ky_sp_2021_042/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2021_042/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 41 .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2021_042/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ky_sp_2021_042/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ky_sp_2021_042/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/jessamine-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Jessamine County" ;
+    uco-core:name "Jessamine County" .
+
+<https://caselinker.up.railway.app/resource/location/ky> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/nicholasville> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2021_042/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

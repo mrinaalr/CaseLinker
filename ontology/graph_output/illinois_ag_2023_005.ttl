@@ -1,5 +1,6 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
@@ -11,16 +12,22 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_005> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:48:33.411466" ;
+    dcterms:created "2026-09-15T19:40:56.737794" ;
     dcterms:identifier "illinois_ag_2023_005" ;
-    dcterms:modified "2026-09-10T19:48:33.411466" ;
+    dcterms:modified "2026-09-15T19:49:50.688484" ;
     dcterms:source <https://illinoisattorneygeneral.gov/news/story/attorney-general-raoul-obtains-prison-sentence-for-jersey-county-man-found-guilty-of-disseminating-child-pornography>,
         "ILLINOIS AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/chicago>,
+        <https://caselinker.up.railway.app/resource/location/eastham>,
+        <https://caselinker.up.railway.app/resource/location/illinois>,
+        <https://caselinker.up.railway.app/resource/location/jersey-county>,
+        <https://caselinker.up.railway.app/resource/location/jerseyville> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_005/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_005/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_005/cybertip>,
@@ -35,7 +42,12 @@
         <https://caselinker.up.railway.app/resource/agency/illinois-high-tech-crimes-bureau>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
         <https://caselinker.up.railway.app/resource/agency/office-of-the-attorney-general>,
-        <https://caselinker.up.railway.app/resource/agency/usms> .
+        <https://caselinker.up.railway.app/resource/agency/usms> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/chicago>,
+        <https://caselinker.up.railway.app/resource/location/eastham>,
+        <https://caselinker.up.railway.app/resource/location/illinois>,
+        <https://caselinker.up.railway.app/resource/location/jersey-county>,
+        <https://caselinker.up.railway.app/resource/location/jerseyville> .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_005/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -101,13 +113,14 @@
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_005/operation> a cac-core:Event,
         cacontology-taskforce:ReactiveOperation .
 
-<https://caselinker.up.railway.app/resource/case/illinois_ag_2023_005/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/illinois_ag_2023_005/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 38 .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_005/person/victim/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_005/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "40 years" .
+    rdfs:label "[\"40 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_005/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -117,6 +130,25 @@
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_005/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/chicago> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/eastham> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Eastham" ;
+    uco-core:name "Eastham" .
+
+<https://caselinker.up.railway.app/resource/location/illinois> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/jersey-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/jerseyville> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Jerseyville" ;
+    uco-core:name "Jerseyville" .
 
 <https://caselinker.up.railway.app/resource/platform/kik> a cacontology-platforms:MessagingService ;
     rdfs:label "Kik" .

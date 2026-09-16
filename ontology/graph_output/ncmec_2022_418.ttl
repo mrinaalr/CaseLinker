@@ -1,53 +1,68 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
+@prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_418> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:07:39.384567" ;
+    dcterms:created "2026-09-15T20:45:06.355593" ;
     dcterms:identifier "ncmec_2022_418" ;
-    dcterms:modified "2026-09-10T19:07:39.384567" ;
-    dcterms:source <https://patch.com/new-jersey/gloucestertownship/child-pornography-possession-charge-filed-against-camden-co-man>,
+    dcterms:modified "2026-09-15T20:45:06.355593" ;
+    dcterms:source <https://www.delcotimes.com/2022/01/14/19-year-old-charged-with-possessing-child-porn/>,
         "NCMEC" ;
-    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_418/phase/arrested> ;
-    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_418/phase/arrested> ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/delaware-county>,
+        <https://caselinker.up.railway.app/resource/location/ridley-park> ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_418/phase/charged> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_418/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2022_418/cybertip>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_418/event/distribution>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_418/event/online-only>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_418/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_418/legal-proceeding> ;
-    cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/gloucester-township-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/delaware-county>,
+        <https://caselinker.up.railway.app/resource/location/ridley-park> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_418/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
     cacontology:hasRoleBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_418/event/possession> ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_418/event/online-only>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_418/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_418/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_418/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
     cacontology:hasRoleBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_418/event/possession> ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_418/event/online-only>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_418/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_418/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/gloucester-township-police-department> a cac-core:OrganizationLikeEntity,
-        cacontology-multi:LocalAgency ;
-    rdfs:label "Gloucester Township Police Department" .
+<https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_418/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "child pornography" .
+    rdfs:label "possession of child pornography" ;
+    cacontology-legal-outcomes:indictmentCounts 28 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_418/cybertip> a cacontology-us-ncmec:NCMECCybertipReport ;
     cacontology-us-ncmec:supportedBy <https://caselinker.up.railway.app/resource/agency/ncmec> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_418/event/distribution> a cac-core:Event,
+        cacontology-legal-outcomes:CSAM_Distribution ;
+    cacontology:severityLevel 3 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_418/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
@@ -55,19 +70,50 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2022_418/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2022_418/sentence/1> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_418/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_418/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 19 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_418/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_418/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_418/phase/arrested> a cacontology:InitialPhase,
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_418/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
+<https://caselinker.up.railway.app/resource/location/delaware-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Delaware County" ;
+    uco-core:name "Delaware County" .
+
+<https://caselinker.up.railway.app/resource/location/ridley-park> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Ridley Park" ;
+    uco-core:name "Ridley Park" .
+
+<https://caselinker.up.railway.app/resource/platform/snapchat> a cacontology-platforms:MessagingService ;
+    rdfs:label "Snapchat" .
+
+<https://caselinker.up.railway.app/resource/platform/social-media> a cacontology-platforms:SocialMediaPlatform ;
+    rdfs:label "social media" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_418/event/online-only> a cacontology:ChildSexualAbuseEvent,
+        cac-core:Event ;
+    cacontology:severityLevel 3 ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/snapchat>,
+        <https://caselinker.up.railway.app/resource/platform/social-media> .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_418/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
+    cacontology:severityLevel 3 ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/snapchat>,
+        <https://caselinker.up.railway.app/resource/platform/social-media> ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2022_418/facet/possession> .
 

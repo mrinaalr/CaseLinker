@@ -4,23 +4,36 @@
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_464> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:29:21.266507" ;
+    dcterms:created "2026-09-15T21:27:13.582906" ;
     dcterms:identifier "ncmec_2025_464" ;
-    dcterms:modified "2026-09-10T19:29:21.266507" ;
+    dcterms:modified "2026-09-15T21:27:13.582906" ;
     dcterms:source <https://www.nbcboston.com/news/local/ny-man-arrested-on-child-rape-enticement-charges-bridgewater-police-say/3797485/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/bridgewater>,
+        <https://caselinker.up.railway.app/resource/location/hicksville>,
+        <https://caselinker.up.railway.app/resource/location/massachusetts>,
+        <https://caselinker.up.railway.app/resource/location/new-york> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_464/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_464/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_464/event/distribution>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_464/event/hands-on>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2025_464/event/multi-jurisdiction> ;
-    cacontology:investigationStatus "unknown" .
+        <https://caselinker.up.railway.app/resource/case/ncmec_2025_464/event/multi-jurisdiction>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2025_464/legal-proceeding> ;
+    cacontology:investigationStatus "unknown" ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/bridgewater>,
+        <https://caselinker.up.railway.app/resource/location/hicksville>,
+        <https://caselinker.up.railway.app/resource/location/massachusetts>,
+        <https://caselinker.up.railway.app/resource/location/new-york> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_464/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -42,14 +55,40 @@
         cacontology-multi:MultiJurisdictionalInvestigation ;
     cacontology:severityLevel 3 .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_464/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-08-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_464/sentence/1> .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_464/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 29 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_464/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_464/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_464/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-08-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/bridgewater> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/hicksville> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Hicksville" ;
+    uco-core:name "Hicksville" .
+
+<https://caselinker.up.railway.app/resource/location/massachusetts> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/new-york> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "New York" ;
+    uco-core:name "New York" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_464/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

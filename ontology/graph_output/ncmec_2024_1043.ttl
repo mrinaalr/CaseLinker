@@ -2,38 +2,54 @@
 @prefix cacontology: <https://cacontology.projectvic.org#> .
 @prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1043> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:22:59.889073" ;
+    dcterms:created "2026-09-15T21:08:11.063711" ;
     dcterms:identifier "ncmec_2024_1043" ;
-    dcterms:modified "2026-09-10T19:22:59.889073" ;
-    dcterms:source <https://gwdtoday.com/sheriff-arrest-greenwood-man-sharing-sexual-explicit-photos-of-minors-onlin-p5288-73.htm>,
+    dcterms:modified "2026-09-15T21:08:11.063711" ;
+    dcterms:source <https://www.wcnc.com/article/news/crime/fort-mill-sc-man-child-abuse-material-charges-11-8-2024/275-1783efba-702d-4708-9a7d-5381f6791fea>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/fort-mill>,
+        <https://caselinker.up.railway.app/resource/location/sc>,
+        <https://caselinker.up.railway.app/resource/location/south-carolina> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_1043/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_1043/phase/charged> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_1043/event/csam>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1043/event/distribution>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1043/legal-proceeding> .
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_1043/cybertip>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1043/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1043/legal-proceeding> ;
+    cacontology:investigationStatus "unknown" ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ncmec>,
+        <https://caselinker.up.railway.app/resource/agency/york-county-sheriffs-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/fort-mill>,
+        <https://caselinker.up.railway.app/resource/location/sc>,
+        <https://caselinker.up.railway.app/resource/location/south-carolina> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1043/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2024-04-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_1043/event/csam> ;
+    cacontology:hasRoleBeginPoint "2024-11-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_1043/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_1043/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1043/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2024-04-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_1043/event/csam> ;
+    cacontology:hasRoleBeginPoint "2024-11-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_1043/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_1043/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/agency/york-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "York County Sheriff's Office" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1043/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -43,30 +59,47 @@
     rdfs:label "sexual exploitation" ;
     ns1:chargeCluster "sexual_exploitation_unspecified" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1043/event/distribution> a cac-core:Event,
-        cacontology-legal-outcomes:CSAM_Distribution ;
-    cacontology:severityLevel 3 .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1043/cybertip> a cacontology-us-ncmec:NCMECCybertipReport ;
+    cacontology-us-ncmec:supportedBy <https://caselinker.up.railway.app/resource/agency/ncmec> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1043/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1043/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1043/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2024_1043/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_1043/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-04-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-11-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2024_1043/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1043/person/offender/1> a uco-identity:Person ;
-    cacontology-detection:ageEstimate 47 .
+    cacontology-detection:ageEstimate 63 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1043/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1043/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[\"50 years\", \"10 years\"]" .
+
+<https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1043/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
-    cacontology:hasPhaseBeginPoint "2024-04-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology:hasPhaseBeginPoint "2024-11-01T00:00:00Z"^^xsd:dateTimeStamp .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1043/event/csam> a cacontology:CSAMIncident,
+<https://caselinker.up.railway.app/resource/location/fort-mill> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Fort Mill" ;
+    uco-core:name "Fort Mill" .
+
+<https://caselinker.up.railway.app/resource/location/sc> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/south-carolina> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1043/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
     cacontology:severityLevel 3 ;
-    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2024_1043/facet/csam> .
+    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2024_1043/facet/possession> .
 

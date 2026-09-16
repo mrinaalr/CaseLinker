@@ -8,16 +8,21 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_370> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:28:33.158347" ;
+    dcterms:created "2026-09-15T21:27:13.507445" ;
     dcterms:identifier "ncmec_2025_370" ;
-    dcterms:modified "2026-09-10T19:28:33.158347" ;
+    dcterms:modified "2026-09-15T21:27:13.507445" ;
     dcterms:source <https://www.kwch.com/2025/10/06/herington-man-arrested-trading-child-pornography/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/dickinson-county>,
+        <https://caselinker.up.railway.app/resource/location/herington>,
+        <https://caselinker.up.railway.app/resource/location/kan>,
+        <https://caselinker.up.railway.app/resource/location/wichita> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_370/phase/booked> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_370/phase/booked> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_370/cybertip>,
@@ -25,7 +30,11 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_370/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_370/legal-proceeding> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/dickinson-county-sheriffs-office>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/dickinson-county>,
+        <https://caselinker.up.railway.app/resource/location/herington>,
+        <https://caselinker.up.railway.app/resource/location/kan>,
+        <https://caselinker.up.railway.app/resource/location/wichita> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_370/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -66,21 +75,41 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_370/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Dickinson County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_370/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_370/charge/2>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_370/charge/3> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-10-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-10-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_370/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_370/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_370/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_370/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_370/phase/booked> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-10-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/dickinson-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Dickinson County" ;
+    uco-core:name "Dickinson County" .
+
+<https://caselinker.up.railway.app/resource/location/herington> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Herington" ;
+    uco-core:name "Herington" .
+
+<https://caselinker.up.railway.app/resource/location/kan> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/wichita> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_370/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

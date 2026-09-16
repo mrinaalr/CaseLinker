@@ -9,16 +9,20 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2020_014> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:52:36.249274" ;
+    dcterms:created "2026-09-15T19:52:04.349443" ;
     dcterms:identifier "ky_sp_2020_014" ;
-    dcterms:modified "2026-09-10T19:52:36.249274" ;
+    dcterms:modified "2026-09-15T19:52:04.349443" ;
     dcterms:source <https://www.kentuckystatepolice.ky.gov/news/p7-8-4-2020/>,
         "KY SP" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/berea>,
+        <https://caselinker.up.railway.app/resource/location/ky>,
+        <https://caselinker.up.railway.app/resource/location/pulsford> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ky_sp_2020_014/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ky_sp_2020_014/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ky_sp_2020_014/event/conspiracy>,
@@ -27,7 +31,10 @@
         <https://caselinker.up.railway.app/resource/case/ky_sp_2020_014/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/ky_sp_2020_014/operation> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/kentucky-state-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/kentucky-state-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/berea>,
+        <https://caselinker.up.railway.app/resource/location/ky>,
+        <https://caselinker.up.railway.app/resource/location/pulsford> .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2020_014/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
@@ -59,7 +66,8 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ky_sp_2020_014/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ky_sp_2020_014/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2020-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2020-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ky_sp_2020_014/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2020_014/operation> a cac-core:Event,
         cacontology-taskforce:UndercoverUnit .
@@ -96,9 +104,26 @@
         <https://caselinker.up.railway.app/resource/case/ky_sp_2020_014/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ky_sp_2020_014/person/offender/3> .
 
+<https://caselinker.up.railway.app/resource/case/ky_sp_2020_014/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ky_sp_2020_014/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2020-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/berea> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Berea" ;
+    uco-core:name "Berea" .
+
+<https://caselinker.up.railway.app/resource/location/ky> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/pulsford> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Pulsford" ;
+    uco-core:name "Pulsford" .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2020_014/event/conspiracy> a cacontology:ConspiracyToCommitCSA,
         cac-core:Event ;

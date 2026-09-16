@@ -1,27 +1,38 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
+@prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
+@prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_644> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:19:41.725598" ;
+    dcterms:created "2026-09-15T21:08:10.732307" ;
     dcterms:identifier "ncmec_2024_644" ;
-    dcterms:modified "2026-09-10T19:19:41.725598" ;
-    dcterms:source <https://www.concordmonitor.com/Concord-NH-Police-arrest-Austin-Holton-58183358>,
+    dcterms:modified "2026-09-15T21:08:10.732307" ;
+    dcterms:source <https://www.facebook.com/INFONH/photos/nashua-man-accused-of-possession-of-child-sexual-abuse-imageson-november-7-2024-/1103453075114346/?_rdr>,
         "NCMEC" ;
-    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_644/phase/charged> ;
-    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_644/phase/charged> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_644/event/possession>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_644/operation> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/belgrade-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/icac> .
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/nashua>,
+        <https://caselinker.up.railway.app/resource/location/new-hampshire> ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_644/phase/arrested> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_644/phase/arrested> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_644/cybertip>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_644/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_644/legal-proceeding> ;
+    cacontology:investigationStatus "unknown" ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/nashua-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/nashua>,
+        <https://caselinker.up.railway.app/resource/location/new-hampshire> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_644/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -35,27 +46,50 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_644/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_644/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/belgrade-police-department> a cac-core:OrganizationLikeEntity,
+<https://caselinker.up.railway.app/resource/agency/nashua-police-department> a cac-core:OrganizationLikeEntity,
         cacontology-multi:LocalAgency ;
-    rdfs:label "Belgrade Police Department" .
+    rdfs:label "Nashua Police Department" .
 
-<https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_644/cybertip> a cacontology-us-ncmec:NCMECCybertipReport ;
+    cacontology-us-ncmec:supportedBy <https://caselinker.up.railway.app/resource/agency/ncmec> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_644/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_644/operation> a cac-core:Event,
-        cacontology-taskforce:TaskForceOperation .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_644/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-11-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2024_644/sentence/1> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_644/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_644/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 56 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_644/person/victim/1> a uco-identity:Person .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_644/phase/charged> a cacontology:LegalProcessPhase,
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_644/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:MonetaryPenalty ;
+    rdfs:label "[\"$1,000\"]" .
+
+<https://caselinker.up.railway.app/resource/platform/facebook> a cacontology-platforms:SocialMediaPlatform ;
+    rdfs:label "Facebook" .
+
+<https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_644/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2024-11-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/nashua> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Nashua" ;
+    uco-core:name "Nashua" .
+
+<https://caselinker.up.railway.app/resource/location/new-hampshire> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_644/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
     cacontology:severityLevel 3 ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/facebook> ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2024_644/facet/possession> .
 

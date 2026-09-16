@@ -8,16 +8,23 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/usss_2020_001> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:20:32.036728" ;
+    dcterms:created "2026-09-15T20:36:46.003441" ;
     dcterms:identifier "usss_2020_001" ;
-    dcterms:modified "2026-09-10T20:20:32.036728" ;
+    dcterms:modified "2026-09-15T20:36:46.003441" ;
     dcterms:source <https://www.secretservice.gov/press/releases/2020/01/jury-convicts-campbellsville-man-child-porn-charges>,
         "USSS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/bowling-green>,
+        <https://caselinker.up.railway.app/resource/location/campbellsville>,
+        <https://caselinker.up.railway.app/resource/location/kentucky>,
+        <https://caselinker.up.railway.app/resource/location/the-western-district>,
+        <https://caselinker.up.railway.app/resource/location/united-states>,
+        <https://caselinker.up.railway.app/resource/location/west-virginia> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/usss_2020_001/phase/pleaded-guilty> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/usss_2020_001/phase/pleaded-guilty> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/usss_2020_001/event/online-only>,
@@ -28,7 +35,13 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/bureau-of-prisons>,
         <https://caselinker.up.railway.app/resource/agency/secret-service>,
         <https://caselinker.up.railway.app/resource/agency/us-secret-service>,
-        <https://caselinker.up.railway.app/resource/agency/usms> .
+        <https://caselinker.up.railway.app/resource/agency/usms> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/bowling-green>,
+        <https://caselinker.up.railway.app/resource/location/campbellsville>,
+        <https://caselinker.up.railway.app/resource/location/kentucky>,
+        <https://caselinker.up.railway.app/resource/location/the-western-district>,
+        <https://caselinker.up.railway.app/resource/location/united-states>,
+        <https://caselinker.up.railway.app/resource/location/west-virginia> .
 
 <https://caselinker.up.railway.app/resource/agency/bureau-of-prisons> a cacontology-multi:LocalAgency .
 
@@ -59,9 +72,7 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/usss_2020_001/charge/1>,
         <https://caselinker.up.railway.app/resource/case/usss_2020_001/charge/2> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2020-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/usss_2020_001/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/usss_2020_001/sentence/2>,
-        <https://caselinker.up.railway.app/resource/case/usss_2020_001/sentence/3> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/usss_2020_001/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/usss_2020_001/legal-step/pleaded-guilty> a cac-core:Event,
         cac-core:LegalEvent,
@@ -95,19 +106,33 @@
 
 <https://caselinker.up.railway.app/resource/case/usss_2020_001/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:ProbationSentence ;
-    rdfs:label "Probation" .
-
-<https://caselinker.up.railway.app/resource/case/usss_2020_001/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "Supervised Release" .
-
-<https://caselinker.up.railway.app/resource/case/usss_2020_001/sentence/3> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "15 years" .
+    rdfs:label "[\"Probation\", \"Supervised Release\", \"15 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/usss_2020_001/phase/pleaded-guilty> a cac-core:Phase,
         cacontology-legal-outcomes:PreTrialPhase ;
     cacontology:hasPhaseBeginPoint "2020-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/bowling-green> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Bowling Green" ;
+    uco-core:name "Bowling Green" .
+
+<https://caselinker.up.railway.app/resource/location/campbellsville> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Campbellsville" ;
+    uco-core:name "Campbellsville" .
+
+<https://caselinker.up.railway.app/resource/location/kentucky> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/the-western-district> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/west-virginia> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/usss_2020_001/event/online-only> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event .

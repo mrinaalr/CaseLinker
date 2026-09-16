@@ -6,18 +6,25 @@
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ice_2013_015> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:46:01.101584" ;
+    dcterms:created "2026-09-15T19:35:19.245641" ;
     dcterms:identifier "ice_2013_015" ;
-    dcterms:modified "2026-09-10T19:46:01.101584" ;
+    dcterms:modified "2026-09-15T19:35:19.245641" ;
     dcterms:source <https://www.ice.gov/news/releases/tulsa-man-sentenced-17-years-federal-prison-child-sex-trafficking>,
         "ICE" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/okla>,
+        <https://caselinker.up.railway.app/resource/location/oklahoma>,
+        <https://caselinker.up.railway.app/resource/location/the-northern-district>,
+        <https://caselinker.up.railway.app/resource/location/tulsa> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ice_2013_015/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ice_2013_015/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ice_2013_015/event/trafficking>,
@@ -27,7 +34,12 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/fbi>,
         <https://caselinker.up.railway.app/resource/agency/hsi>,
         <https://caselinker.up.railway.app/resource/agency/ice>,
-        <https://caselinker.up.railway.app/resource/agency/tulsa-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/tulsa-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/okla>,
+        <https://caselinker.up.railway.app/resource/location/oklahoma>,
+        <https://caselinker.up.railway.app/resource/location/the-northern-district>,
+        <https://caselinker.up.railway.app/resource/location/tulsa> .
 
 <https://caselinker.up.railway.app/resource/case/ice_2013_015/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -51,7 +63,11 @@
 
 <https://caselinker.up.railway.app/resource/agency/ice> a cacontology-multi:FederalAgency .
 
-<https://caselinker.up.railway.app/resource/agency/tulsa-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/tulsa-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Tulsa Police Department" .
+
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/ice_2013_015/charge/1> a cacontology-legal-outcomes:CriminalCharge,
         cacontology-legal-outcomes:SexTrafficking ;
@@ -81,9 +97,27 @@
 
 <https://caselinker.up.railway.app/resource/case/ice_2013_015/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "17 years" .
+    rdfs:label "[\"17 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/ice_2013_015/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/okla> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Okla." ;
+    uco-core:name "Okla." .
+
+<https://caselinker.up.railway.app/resource/location/oklahoma> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Oklahoma" ;
+    uco-core:name "Oklahoma" .
+
+<https://caselinker.up.railway.app/resource/location/the-northern-district> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/tulsa> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Tulsa" ;
+    uco-core:name "Tulsa" .
 

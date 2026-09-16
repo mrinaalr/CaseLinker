@@ -10,6 +10,7 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -66,8 +67,7 @@
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_424/charge/2>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_424/charge/3> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_424/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_424/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_424/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_424/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 36 .
@@ -75,20 +75,19 @@
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_424/person/victim/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_424/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "20 years" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_424/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$250,000" .
+    rdfs:label "[\"20 years\", \"$250,000\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_424> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T21:23:01.459081" ;
+    dcterms:created "2026-09-15T22:12:28.328667" ;
     dcterms:identifier "doj_safe_childhood_2023_424" ;
-    dcterms:modified "2026-09-14T21:23:01.459081" ;
+    dcterms:modified "2026-09-15T22:12:28.328667" ;
     dcterms:source <https://www.justice.gov/usao-sdtx/pr/pharr-man-pleads-guilty-receipt-child-pornography>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/mcallen>,
+        <https://caselinker.up.railway.app/resource/location/pharr>,
+        <https://caselinker.up.railway.app/resource/location/texas> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_424/admission/1>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_424/admission/2>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_424/event/possession>,
@@ -100,7 +99,10 @@
         <https://caselinker.up.railway.app/resource/agency/doj>,
         <https://caselinker.up.railway.app/resource/agency/hsi>,
         <https://caselinker.up.railway.app/resource/agency/us-bureau-of-prisons>,
-        <https://caselinker.up.railway.app/resource/agency/usao> .
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/mcallen>,
+        <https://caselinker.up.railway.app/resource/location/pharr>,
+        <https://caselinker.up.railway.app/resource/location/texas> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_424/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -108,6 +110,19 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_424/event/possession>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_424/offense-event/charge-3> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_424/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/location/mcallen> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Mcallen" ;
+    uco-core:name "Mcallen" .
+
+<https://caselinker.up.railway.app/resource/location/pharr> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Pharr" ;
+    uco-core:name "Pharr" .
+
+<https://caselinker.up.railway.app/resource/location/texas> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_424/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "received videos and images containing child pornography, announced U" ;

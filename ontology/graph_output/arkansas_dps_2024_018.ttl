@@ -9,16 +9,19 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_018> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:36:24.954093" ;
+    dcterms:created "2026-09-15T19:25:07.430659" ;
     dcterms:identifier "arkansas_dps_2024_018" ;
-    dcterms:modified "2026-09-10T19:36:24.954093" ;
+    dcterms:modified "2026-09-15T19:25:07.430659" ;
     dcterms:source <https://dps.arkansas.gov/news/pearcy-man-arrested-on-child-pornography-charges/>,
         "ARKANSAS DPS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/ark>,
+        <https://caselinker.up.railway.app/resource/location/pearcy> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_018/phase/booked> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_018/phase/booked> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_018/event/distribution>,
@@ -26,7 +29,9 @@
         <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_018/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_018/operation> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/arkansas-attorney-generals-office>,
-        <https://caselinker.up.railway.app/resource/agency/icac> .
+        <https://caselinker.up.railway.app/resource/agency/icac> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/ark>,
+        <https://caselinker.up.railway.app/resource/location/pearcy> .
 
 <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_018/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -49,10 +54,6 @@
     rdfs:label "child pornography" ;
     cacontology-legal-outcomes:indictmentCounts 2 .
 
-<https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_018/charge/2> a cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "sexual exploitation" ;
-    ns1:chargeCluster "sexual_exploitation_unspecified" .
-
 <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_018/event/distribution> a cac-core:Event,
         cacontology-legal-outcomes:CSAM_Distribution ;
     cacontology:severityLevel 3 .
@@ -62,8 +63,7 @@
 <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_018/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_018/charge/1>,
-        <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_018/charge/2> ;
+    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_018/charge/1> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_018/sentence/1> .
 
@@ -77,11 +77,19 @@
 
 <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_018/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$500,000" .
+    rdfs:label "[\"$500,000\"]" .
 
 <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_018/phase/booked> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/ark> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/pearcy> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Pearcy" ;
+    uco-core:name "Pearcy" .
 
 <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_018/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

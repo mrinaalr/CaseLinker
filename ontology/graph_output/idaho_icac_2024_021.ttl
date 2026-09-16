@@ -8,16 +8,19 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2024_021> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:50:33.379036" ;
+    dcterms:created "2026-09-15T19:36:56.128697" ;
     dcterms:identifier "idaho_icac_2024_021" ;
-    dcterms:modified "2026-09-10T19:50:33.379036" ;
+    dcterms:modified "2026-09-15T19:36:56.128697" ;
     dcterms:source <https://www.ag.idaho.gov/newsroom/category/icac/?showall=true>,
         "Idaho ICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/butte-county>,
+        <https://caselinker.up.railway.app/resource/location/idaho> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/idaho_icac_2024_021/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/idaho_icac_2024_021/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/idaho_icac_2024_021/event/hands-on>,
@@ -25,7 +28,9 @@
         <https://caselinker.up.railway.app/resource/case/idaho_icac_2024_021/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/idaho_icac_2024_021/legal-step/sentenced> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/attorney-generals-special-prosecutions-unit>,
-        <https://caselinker.up.railway.app/resource/agency/icac> .
+        <https://caselinker.up.railway.app/resource/agency/icac> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/butte-county>,
+        <https://caselinker.up.railway.app/resource/location/idaho> .
 
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2024_021/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -67,7 +72,8 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/idaho_icac_2024_021/charge/1>,
         <https://caselinker.up.railway.app/resource/case/idaho_icac_2024_021/charge/2>,
         <https://caselinker.up.railway.app/resource/case/idaho_icac_2024_021/charge/3> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-06-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-06-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/idaho_icac_2024_021/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2024_021/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -79,9 +85,21 @@
 
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2024_021/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/idaho_icac_2024_021/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2024_021/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2024-06-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/butte-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Butte County" ;
+    uco-core:name "Butte County" .
+
+<https://caselinker.up.railway.app/resource/location/idaho> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2024_021/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

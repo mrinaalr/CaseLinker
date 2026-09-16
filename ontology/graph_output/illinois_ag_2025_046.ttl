@@ -1,5 +1,6 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
@@ -10,16 +11,21 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2025_046> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:48:01.356974" ;
+    dcterms:created "2026-09-15T19:40:56.615096" ;
     dcterms:identifier "illinois_ag_2025_046" ;
-    dcterms:modified "2026-09-10T19:48:01.356974" ;
+    dcterms:modified "2026-09-15T19:49:35.484656" ;
     dcterms:source <https://illinoisattorneygeneral.gov/news/story/attorney-general-raoul-obtains-guilty-plea-prison-sentence-for-kankakee-county-man-who-possessed-child-sexual-abuse-material>,
         "ILLINOIS AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/bourbonnais>,
+        <https://caselinker.up.railway.app/resource/location/chicago>,
+        <https://caselinker.up.railway.app/resource/location/illinois>,
+        <https://caselinker.up.railway.app/resource/location/kankakee-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/illinois_ag_2025_046/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/illinois_ag_2025_046/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/illinois_ag_2025_046/cybertip>,
@@ -35,7 +41,11 @@
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/illinois-high-tech-crimes-bureau>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/office-of-the-attorney-general> .
+        <https://caselinker.up.railway.app/resource/agency/office-of-the-attorney-general> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/bourbonnais>,
+        <https://caselinker.up.railway.app/resource/location/chicago>,
+        <https://caselinker.up.railway.app/resource/location/illinois>,
+        <https://caselinker.up.railway.app/resource/location/kankakee-county> .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2025_046/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -86,7 +96,8 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/illinois_ag_2025_046/charge/1>,
         <https://caselinker.up.railway.app/resource/case/illinois_ag_2025_046/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/illinois_ag_2025_046/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2025_046/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -97,9 +108,14 @@
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2025_046/operation> a cac-core:Event,
         cacontology-taskforce:ReactiveOperation .
 
-<https://caselinker.up.railway.app/resource/case/illinois_ag_2025_046/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/illinois_ag_2025_046/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 38 .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2025_046/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/illinois_ag_2025_046/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2025_046/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -109,6 +125,18 @@
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2025_046/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/bourbonnais> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/chicago> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/illinois> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/kankakee-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2025_046/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

@@ -4,18 +4,26 @@
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2023_001> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:18:11.257634" ;
+    dcterms:created "2026-09-15T20:35:06.179210" ;
     dcterms:identifier "us_marshals_2023_001" ;
-    dcterms:modified "2026-09-10T20:18:11.257634" ;
+    dcterms:modified "2026-09-15T20:35:06.179210" ;
     dcterms:source <https://www.usmarshals.gov/news/press-release/alleged-pa-child-rapist-arrested-us-marshals-manchester>,
         "US MARSHALS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/coatesville>,
+        <https://caselinker.up.railway.app/resource/location/concord>,
+        <https://caselinker.up.railway.app/resource/location/manchester>,
+        <https://caselinker.up.railway.app/resource/location/new-hampshire>,
+        <https://caselinker.up.railway.app/resource/location/pennsylvania> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/us_marshals_2023_001/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/us_marshals_2023_001/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/us_marshals_2023_001/event/hands-on>,
@@ -24,13 +32,17 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/hillsborough-county-department-of-corrections>,
         <https://caselinker.up.railway.app/resource/agency/marshals-service>,
         <https://caselinker.up.railway.app/resource/agency/nh-joint-fugitive-task-force>,
-        <https://caselinker.up.railway.app/resource/agency/usms> .
+        <https://caselinker.up.railway.app/resource/agency/usms> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/coatesville>,
+        <https://caselinker.up.railway.app/resource/location/concord>,
+        <https://caselinker.up.railway.app/resource/location/manchester>,
+        <https://caselinker.up.railway.app/resource/location/new-hampshire>,
+        <https://caselinker.up.railway.app/resource/location/pennsylvania> .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2023_001/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
     cacontology:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/us_marshals_2023_001/event/hands-on> ;
-    cacontology:perpetratorRegisteredSexOffender true ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/us_marshals_2023_001/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2023_001/role/victim/1> a cacontology:VictimRole,
@@ -39,7 +51,9 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/us_marshals_2023_001/event/hands-on> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/us_marshals_2023_001/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/hillsborough-county-department-of-corrections> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/hillsborough-county-department-of-corrections> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Hillsborough County Department of Corrections" .
 
 <https://caselinker.up.railway.app/resource/agency/marshals-service> a cacontology-multi:LocalAgency .
 
@@ -66,11 +80,28 @@
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2023_001/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:ProbationSentence ;
-    rdfs:label "probation" .
+    rdfs:label "[\"probation\"]" .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2023_001/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/coatesville> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Coatesville" ;
+    uco-core:name "Coatesville" .
+
+<https://caselinker.up.railway.app/resource/location/concord> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/manchester> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/new-hampshire> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/pennsylvania> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2023_001/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

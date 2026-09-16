@@ -8,22 +8,32 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1119> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:23:49.151115" ;
+    dcterms:created "2026-09-15T21:08:11.155681" ;
     dcterms:identifier "ncmec_2024_1119" ;
-    dcterms:modified "2026-09-10T19:23:49.151115" ;
+    dcterms:modified "2026-09-15T21:08:11.155681" ;
     dcterms:source <https://www.fox4news.com/news/operation-janus-child-predator-arrests>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/amarillo>,
+        <https://caselinker.up.railway.app/resource/location/dallas>,
+        <https://caselinker.up.railway.app/resource/location/north-texas>,
+        <https://caselinker.up.railway.app/resource/location/texas> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_1119/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_1119/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_1119/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_1119/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_1119/operation> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/dps>,
+        <https://caselinker.up.railway.app/resource/agency/icac> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/amarillo>,
+        <https://caselinker.up.railway.app/resource/location/dallas>,
+        <https://caselinker.up.railway.app/resource/location/north-texas>,
+        <https://caselinker.up.railway.app/resource/location/texas> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1119/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -36,6 +46,8 @@
     cacontology:hasRoleBeginPoint "2024-02-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_1119/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_1119/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/agency/dps> a cacontology-multi:LocalAgency .
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
@@ -55,7 +67,8 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2024_1119/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_1119/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-02-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-02-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2024_1119/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1119/operation> a cac-core:Event,
         cacontology-taskforce:TaskForceOperation .
@@ -64,9 +77,25 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1119/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1119/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1119/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2024-02-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/amarillo> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/dallas> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/north-texas> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/texas> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1119/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

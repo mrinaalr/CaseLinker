@@ -1,5 +1,6 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
@@ -10,16 +11,21 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2021_006> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:46:22.143696" ;
+    dcterms:created "2026-09-15T19:40:56.265088" ;
     dcterms:identifier "illinois_ag_2021_006" ;
-    dcterms:modified "2026-09-10T19:46:22.143696" ;
+    dcterms:modified "2026-09-15T19:48:45.168351" ;
     dcterms:source <https://illinoisattorneygeneral.gov/News-Room/2021-Press-Release-Archive/202108-30%20richland%20county%20man%20sentenced%20to%20prison%20for%20possessing%20child%20pornography.pdf>,
         "ILLINOIS AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/chicago>,
+        <https://caselinker.up.railway.app/resource/location/illinois>,
+        <https://caselinker.up.railway.app/resource/location/olney>,
+        <https://caselinker.up.railway.app/resource/location/richland-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/illinois_ag_2021_006/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/illinois_ag_2021_006/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/illinois_ag_2021_006/event/distribution>,
@@ -30,7 +36,11 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/attorney-generals-office>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/illinois-high-tech-crimes-bureau>,
-        <https://caselinker.up.railway.app/resource/agency/olney-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/olney-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/chicago>,
+        <https://caselinker.up.railway.app/resource/location/illinois>,
+        <https://caselinker.up.railway.app/resource/location/olney>,
+        <https://caselinker.up.railway.app/resource/location/richland-county> .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2021_006/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -76,7 +86,8 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/illinois_ag_2021_006/charge/1>,
         <https://caselinker.up.railway.app/resource/case/illinois_ag_2021_006/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/illinois_ag_2021_006/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2021_006/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -84,13 +95,32 @@
         cacontology-legal-outcomes:SentencingHearing ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
-<https://caselinker.up.railway.app/resource/case/illinois_ag_2021_006/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/illinois_ag_2021_006/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 34 .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2021_006/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/illinois_ag_2021_006/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2021_006/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/chicago> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/illinois> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/olney> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Olney" ;
+    uco-core:name "Olney" .
+
+<https://caselinker.up.railway.app/resource/location/richland-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/platform/skype> a cac-core:DigitalSystemEntity,
         cacontology-platforms:MessagingService ;

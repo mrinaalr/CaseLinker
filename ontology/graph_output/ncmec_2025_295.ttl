@@ -12,6 +12,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -47,10 +48,20 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_295/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_295/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_295/sentence/1> .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_295/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 43 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_295/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_295/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_295/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -67,13 +78,31 @@
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-05-01T00:00:00Z"^^xsd:dateTimeStamp .
 
+<https://caselinker.up.railway.app/resource/location/chubbuck> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Chubbuck" ;
+    uco-core:name "Chubbuck" .
+
+<https://caselinker.up.railway.app/resource/location/pocatello> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Pocatello" ;
+    uco-core:name "Pocatello" .
+
+<https://caselinker.up.railway.app/resource/location/strengths-chubbuck> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Strength’s Chubbuck" ;
+    uco-core:name "Strength’s Chubbuck" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_295> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:27:51.846694" ;
+    dcterms:created "2026-09-15T21:27:13.434069" ;
     dcterms:identifier "ncmec_2025_295" ;
-    dcterms:modified "2026-09-10T19:27:51.846694" ;
+    dcterms:modified "2026-09-15T21:27:13.434069" ;
     dcterms:source <https://www.idahostatejournal.com/news/local/attorney-general-former-school-district-25-employee-william-strength-arrested-for-possession-and-distribution-of/article_5414e2e0-8908-4e95-bde5-de0f91c34a4e.html>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/chubbuck>,
+        <https://caselinker.up.railway.app/resource/location/pocatello>,
+        <https://caselinker.up.railway.app/resource/location/strengths-chubbuck> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_295/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_295/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_295/admission/1>,
@@ -81,16 +110,20 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_295/admission/3>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_295/cybertip>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_295/event/distribution>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2025_295/event/possession> ;
+        <https://caselinker.up.railway.app/resource/case/ncmec_2025_295/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2025_295/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
     cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/ncmec_2025_295/tech/cybertipline> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/chubbuck>,
+        <https://caselinker.up.railway.app/resource/location/pocatello>,
+        <https://caselinker.up.railway.app/resource/location/strengths-chubbuck> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_295/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "sharing child sexual abuse materials online" ;
     dcterms:source <https://www.idahostatejournal.com/news/local/attorney-general-former-school-district-25-employee-william-strength-arrested-for-possession-and-distribution-of/article_5414e2e0-8908-4e95-bde5-de0f91c34a4e.html> ;
-    ns1:admissionContext "ution-of/article_5414e2e0-8908-4e95- bde5-de0f91c34a4e.html POCATELLO — A 43-year-old now former School District 25 employee was arrested..." ;
+    ns1:admissionContext "tion-of/article_5414e2e0-8908-4e95- bde5-de0f91c34a4e.html POCATELLO — A 43-year-old now former School District 25 employee was arrested..." ;
     ns1:admissionFrame "admitted_to" ;
     ns1:admissionTheme "harm_conduct" ;
     ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_295/role/offender/1> ;

@@ -8,20 +8,28 @@
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/sd_ag_2026_006> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:11:44.203991" ;
+    dcterms:created "2026-09-15T20:25:38.735410" ;
     dcterms:identifier "sd_ag_2026_006" ;
-    dcterms:modified "2026-09-10T20:11:44.203991" ;
+    dcterms:modified "2026-09-15T20:25:38.735410" ;
     dcterms:source <https://atg.sd.gov/OurOffice/Media/pressreleasesdetail.aspx?id=2899>,
         "SD AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/hermosa>,
+        <https://caselinker.up.railway.app/resource/location/rapid-city>,
+        <https://caselinker.up.railway.app/resource/location/sd>,
+        <https://caselinker.up.railway.app/resource/location/south-dakota>,
+        <https://caselinker.up.railway.app/resource/location/summerset> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/sd_ag_2026_006/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/sd_ag_2026_006/phase/charged> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/sd_ag_2026_006/legal-proceeding>,
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/sd_ag_2026_006/event/csam>,
+        <https://caselinker.up.railway.app/resource/case/sd_ag_2026_006/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/sd_ag_2026_006/offense-event/charge-2> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/attorney-generals-office>,
@@ -30,18 +38,26 @@
         <https://caselinker.up.railway.app/resource/agency/pennington-county-sheriffs-office>,
         <https://caselinker.up.railway.app/resource/agency/rapid-city-police-department>,
         <https://caselinker.up.railway.app/resource/agency/south-dakota-division-of-criminal-investigation>,
-        <https://caselinker.up.railway.app/resource/agency/usms> .
+        <https://caselinker.up.railway.app/resource/agency/usao>,
+        <https://caselinker.up.railway.app/resource/agency/usms> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/hermosa>,
+        <https://caselinker.up.railway.app/resource/location/rapid-city>,
+        <https://caselinker.up.railway.app/resource/location/sd>,
+        <https://caselinker.up.railway.app/resource/location/south-dakota>,
+        <https://caselinker.up.railway.app/resource/location/summerset> .
 
 <https://caselinker.up.railway.app/resource/case/sd_ag_2026_006/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
     cacontology:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/sd_ag_2026_006/offense-event/charge-2> ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/sd_ag_2026_006/event/csam>,
+        <https://caselinker.up.railway.app/resource/case/sd_ag_2026_006/offense-event/charge-2> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/sd_ag_2026_006/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/sd_ag_2026_006/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
     cacontology:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/sd_ag_2026_006/offense-event/charge-2> ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/sd_ag_2026_006/event/csam>,
+        <https://caselinker.up.railway.app/resource/case/sd_ag_2026_006/offense-event/charge-2> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/sd_ag_2026_006/person/victim/1> .
 
 <https://caselinker.up.railway.app/resource/agency/attorney-generals-office> a cacontology-multi:StateAgency .
@@ -50,17 +66,26 @@
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
-<https://caselinker.up.railway.app/resource/agency/pennington-county-sheriffs-office> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/pennington-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Pennington County Sheriff's Office" .
 
-<https://caselinker.up.railway.app/resource/agency/rapid-city-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/rapid-city-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Rapid City Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/south-dakota-division-of-criminal-investigation> a cacontology-multi:LocalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/usao> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:FederalAgency ;
+    rdfs:label "U.S. Attorney's Office" .
 
 <https://caselinker.up.railway.app/resource/agency/usms> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/sd_ag_2026_006/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "obscene material" .
+    rdfs:label "child pornography" ;
+    cacontology-legal-outcomes:indictmentCounts 2 .
 
 <https://caselinker.up.railway.app/resource/case/sd_ag_2026_006/charge/2> a cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "child exploitation" ;
@@ -68,21 +93,53 @@
     ns1:chargeCluster "child_exploitation" ;
     ns1:chargeOffenseEvent <https://caselinker.up.railway.app/resource/case/sd_ag_2026_006/offense-event/charge-2> .
 
+<https://caselinker.up.railway.app/resource/case/sd_ag_2026_006/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+
 <https://caselinker.up.railway.app/resource/case/sd_ag_2026_006/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/sd_ag_2026_006/charge/1>,
         <https://caselinker.up.railway.app/resource/case/sd_ag_2026_006/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/sd_ag_2026_006/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/sd_ag_2026_006/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/sd_ag_2026_006/person/victim/1> a uco-identity:Person ;
     cacontology-production:victimAge 14 .
 
+<https://caselinker.up.railway.app/resource/case/sd_ag_2026_006/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/sd_ag_2026_006/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/hermosa> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Hermosa" ;
+    uco-core:name "Hermosa" .
+
+<https://caselinker.up.railway.app/resource/location/rapid-city> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Rapid City" ;
+    uco-core:name "Rapid City" .
+
+<https://caselinker.up.railway.app/resource/location/sd> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/south-dakota> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/summerset> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Summerset" ;
+    uco-core:name "Summerset" .
+
+<https://caselinker.up.railway.app/resource/case/sd_ag_2026_006/event/csam> a cacontology:CSAMIncident,
+        cac-core:Event ;
+    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/sd_ag_2026_006/facet/csam> .
 
 <https://caselinker.up.railway.app/resource/case/sd_ag_2026_006/offense-event/charge-2> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event,

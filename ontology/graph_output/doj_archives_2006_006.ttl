@@ -8,16 +8,20 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2006_006> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:40:14.120719" ;
+    dcterms:created "2026-09-15T21:42:39.755867" ;
     dcterms:identifier "doj_archives_2006_006" ;
-    dcterms:modified "2026-09-10T19:40:14.120719" ;
+    dcterms:modified "2026-09-15T21:42:39.755867" ;
     dcterms:source <https://www.justice.gov/archive/criminal/ceos/pressreleases/downloads/DC%20Schiffer%20sentence%20PR_083006.pdf>,
-        "DOJ ARCHIVES" ;
+        "DOJ CEOS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/dc>,
+        <https://caselinker.up.railway.app/resource/location/washington>,
+        <https://caselinker.up.railway.app/resource/location/washington-dc> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_archives_2006_006/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_archives_2006_006/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_archives_2006_006/event/distribution>,
@@ -31,7 +35,11 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ceos>,
         <https://caselinker.up.railway.app/resource/agency/doj>,
         <https://caselinker.up.railway.app/resource/agency/fbi>,
-        <https://caselinker.up.railway.app/resource/agency/pennsylvania-state-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/pennsylvania-state-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/dc>,
+        <https://caselinker.up.railway.app/resource/location/washington>,
+        <https://caselinker.up.railway.app/resource/location/washington-dc> .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2006_006/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -56,6 +64,8 @@
 <https://caselinker.up.railway.app/resource/agency/fbi> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/agency/pennsylvania-state-police-department> a cacontology-multi:StateAgency .
+
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2006_006/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -83,8 +93,7 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/doj_archives_2006_006/charge/1>,
         <https://caselinker.up.railway.app/resource/case/doj_archives_2006_006/charge/2> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2006-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_archives_2006_006/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_archives_2006_006/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_archives_2006_006/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2006_006/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -97,16 +106,21 @@
 <https://caselinker.up.railway.app/resource/case/doj_archives_2006_006/person/victim/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2006_006/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "25 years" .
-
-<https://caselinker.up.railway.app/resource/case/doj_archives_2006_006/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:ProbationSentence ;
-    rdfs:label "probation" .
+    rdfs:label "[\"25 years\", \"probation\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2006_006/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2006-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/dc> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/washington> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/washington-dc> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2006_006/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

@@ -4,19 +4,24 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_293> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:11:18.410906" ;
+    dcterms:created "2026-09-15T20:55:01.003387" ;
     dcterms:identifier "ncmec_2023_293" ;
-    dcterms:modified "2026-09-10T19:11:18.410906" ;
+    dcterms:modified "2026-09-15T20:55:01.003387" ;
     dcterms:source <https://mynbc15.com/news/local/wilmer-man-charged-with-child-sex-abuse-material-secretly-recording-without-permission>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/ala>,
+        <https://caselinker.up.railway.app/resource/location/alabama>,
+        <https://caselinker.up.railway.app/resource/location/wilmer> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_293/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_293/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_293/event/distribution>,
@@ -24,7 +29,10 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_293/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/mcso> .
+        <https://caselinker.up.railway.app/resource/agency/mcso> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/ala>,
+        <https://caselinker.up.railway.app/resource/location/alabama>,
+        <https://caselinker.up.railway.app/resource/location/wilmer> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_293/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -57,15 +65,31 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_293/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-04-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-04-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_293/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_293/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_293/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_293/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_293/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-04-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/ala> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/alabama> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/wilmer> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Wilmer" ;
+    uco-core:name "Wilmer" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_293/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

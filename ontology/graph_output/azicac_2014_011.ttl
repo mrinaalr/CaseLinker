@@ -12,16 +12,20 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/azicac_2014_011> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:04:48.447324" ;
+    dcterms:created "2026-09-15T19:06:28.251171" ;
     dcterms:identifier "azicac_2014_011" ;
-    dcterms:modified "2026-09-10T19:04:48.447324" ;
+    dcterms:modified "2026-09-15T19:23:16.242034" ;
     dcterms:source <https://www.azicac.org/cases-and-arrests/>,
         "AZICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/arizona>,
+        <https://caselinker.up.railway.app/resource/location/australia>,
+        <https://caselinker.up.railway.app/resource/location/maricopa-county-jail> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/azicac_2014_011/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/azicac_2014_011/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/azicac_2014_011/event/distribution>,
@@ -34,7 +38,10 @@
         <https://caselinker.up.railway.app/resource/case/azicac_2014_011/offense-event/charge-3> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/azicac-task-force>,
-        <https://caselinker.up.railway.app/resource/agency/chandler-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/chandler-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/arizona>,
+        <https://caselinker.up.railway.app/resource/location/australia>,
+        <https://caselinker.up.railway.app/resource/location/maricopa-county-jail> .
 
 <https://caselinker.up.railway.app/resource/case/azicac_2014_011/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -95,19 +102,34 @@
 <https://caselinker.up.railway.app/resource/case/azicac_2014_011/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Maricopa County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/azicac_2014_011/charge/1>,
         <https://caselinker.up.railway.app/resource/case/azicac_2014_011/charge/2>,
         <https://caselinker.up.railway.app/resource/case/azicac_2014_011/charge/3> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2014-10-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2014-10-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/azicac_2014_011/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/azicac_2014_011/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/azicac_2014_011/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/azicac_2014_011/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/azicac_2014_011/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2014-10-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/arizona> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/australia> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Australia" ;
+    uco-core:name "Australia" .
+
+<https://caselinker.up.railway.app/resource/location/maricopa-county-jail> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/azicac_2014_011/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

@@ -4,23 +4,32 @@
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_076> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:01:00.757480" ;
+    dcterms:created "2026-09-15T20:06:35.784309" ;
     dcterms:identifier "newyork_sp_2025_076" ;
-    dcterms:modified "2026-09-10T20:01:00.757480" ;
+    dcterms:modified "2026-09-15T20:06:35.784309" ;
     dcterms:source <https://troopers.ny.gov/news/state-police-arrest-jefferson-man-following-child-sexual-abuse-investigation>,
         "NEWYORK SP" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/jefferson>,
+        <https://caselinker.up.railway.app/resource/location/new-york>,
+        <https://caselinker.up.railway.app/resource/location/sp-cobleskill> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_076/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_076/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_076/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/state-police-department> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/state-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/jefferson>,
+        <https://caselinker.up.railway.app/resource/location/new-york>,
+        <https://caselinker.up.railway.app/resource/location/sp-cobleskill> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_076/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -38,9 +47,7 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_076/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_076/sentence/2>,
-        <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_076/sentence/3> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_076/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_076/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 35 .
@@ -49,17 +56,22 @@
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_076/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$5,000" .
-
-<https://caselinker.up.railway.app/resource/case/newyork_sp_2025_076/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$10,000" .
-
-<https://caselinker.up.railway.app/resource/case/newyork_sp_2025_076/sentence/3> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$20,000" .
+    rdfs:label "[\"$5,000\", \"$10,000\", \"$20,000\"]" .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_076/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/jefferson> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Jefferson" ;
+    uco-core:name "Jefferson" .
+
+<https://caselinker.up.railway.app/resource/location/new-york> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/sp-cobleskill> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Sp Cobleskill" ;
+    uco-core:name "Sp Cobleskill" .
 

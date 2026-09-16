@@ -7,19 +7,22 @@
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/usss_2022_003> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:20:21.392859" ;
+    dcterms:created "2026-09-15T20:36:45.987006" ;
     dcterms:identifier "usss_2022_003" ;
-    dcterms:modified "2026-09-10T20:20:21.392859" ;
+    dcterms:modified "2026-09-15T20:36:45.987006" ;
     dcterms:source <https://www.secretservice.gov/newsroom/releases/2022/07/man-who-posed-girls-soccer-recruiter-pleads-guilty-child-pornography>,
         "USSS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/fort-worth> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/usss_2022_003/phase/pleaded-guilty> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/usss_2022_003/phase/pleaded-guilty> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/usss_2022_003/event/csam>,
@@ -32,7 +35,9 @@
         <https://caselinker.up.railway.app/resource/agency/texas-department-of-public-safetys-hurst-special-investigations-unit>,
         <https://caselinker.up.railway.app/resource/agency/us-secret-service>,
         <https://caselinker.up.railway.app/resource/agency/us-secret-services-dallas-field-office>,
-        <https://caselinker.up.railway.app/resource/agency/usms> .
+        <https://caselinker.up.railway.app/resource/agency/usao>,
+        <https://caselinker.up.railway.app/resource/agency/usms> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/fort-worth> .
 
 <https://caselinker.up.railway.app/resource/agency/grand-prairie-police-department> a cacontology-multi:LocalAgency .
 
@@ -47,6 +52,8 @@
 <https://caselinker.up.railway.app/resource/agency/us-secret-services-dallas-field-office> a cac-core:OrganizationLikeEntity,
         cacontology-multi:FederalAgency ;
     rdfs:label "U.S. Secret Service's Dallas Field Office" .
+
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/agency/usms> a cacontology-multi:FederalAgency .
 
@@ -99,14 +106,21 @@
 
 <https://caselinker.up.railway.app/resource/case/usss_2022_003/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "40 years" .
+    rdfs:label "[\"40 years\"]" .
 
-<https://caselinker.up.railway.app/resource/platform/bittorrent> a cacontology-platforms:FileHostingService ;
-    rdfs:label "BitTorrent" .
+<https://caselinker.up.railway.app/resource/platform/bittorrent> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:FileHostingService ;
+    rdfs:label "BitTorrent" ;
+    cacontology-platforms:platformType "p2p" .
 
 <https://caselinker.up.railway.app/resource/case/usss_2022_003/phase/pleaded-guilty> a cac-core:Phase,
         cacontology-legal-outcomes:PreTrialPhase ;
     cacontology:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/fort-worth> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Fort Worth" ;
+    uco-core:name "Fort Worth" .
 
 <https://caselinker.up.railway.app/resource/case/usss_2022_003/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

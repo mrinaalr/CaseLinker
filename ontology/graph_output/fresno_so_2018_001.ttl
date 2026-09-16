@@ -3,22 +3,31 @@
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/fresno_so_2018_001> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:44:09.405548" ;
+    dcterms:created "2026-09-15T19:31:21.284202" ;
     dcterms:identifier "fresno_so_2018_001" ;
-    dcterms:modified "2026-09-10T19:44:09.405548" ;
+    dcterms:modified "2026-09-15T19:31:21.284202" ;
     dcterms:source <https://www.fresnosheriff.org/media-relations/detectives-arrest-registered-sex-offender-on-multiple-charges-of-child-sex-abuse.html>,
         "FRESNO SO" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/fowler>,
+        <https://caselinker.up.railway.app/resource/location/fresno-county>,
+        <https://caselinker.up.railway.app/resource/location/sanger> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/fresno_so_2018_001/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/fresno_so_2018_001/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/fresno_so_2018_001/legal-proceeding> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/fresno-county-sheriffs-office> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/fresno-county-sheriffs-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/fowler>,
+        <https://caselinker.up.railway.app/resource/location/fresno-county>,
+        <https://caselinker.up.railway.app/resource/location/sanger> .
 
 <https://caselinker.up.railway.app/resource/case/fresno_so_2018_001/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -36,7 +45,6 @@
 <https://caselinker.up.railway.app/resource/case/fresno_so_2018_001/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility: Fresno County Jail" ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2018-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/fresno_so_2018_001/sentence/1> .
 
@@ -46,9 +54,20 @@
 
 <https://caselinker.up.railway.app/resource/case/fresno_so_2018_001/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$465,000" .
+    rdfs:label "[\"$465,000\"]" .
 
 <https://caselinker.up.railway.app/resource/case/fresno_so_2018_001/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2018-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/fowler> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/fresno-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/sanger> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Sanger" ;
+    uco-core:name "Sanger" .
 

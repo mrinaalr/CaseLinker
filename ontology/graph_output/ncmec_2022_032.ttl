@@ -9,6 +9,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -30,11 +31,16 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_032> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:05:02.444201" ;
+    dcterms:created "2026-09-15T20:45:06.018172" ;
     dcterms:identifier "ncmec_2022_032" ;
-    dcterms:modified "2026-09-10T19:05:02.444201" ;
+    dcterms:modified "2026-09-15T20:45:06.018172" ;
     dcterms:source <https://www.kptv.com/2022/06/30/osp-terrebonne-man-arrested-sexually-abusing-child-more-victims-possible/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/crooker-river-ranch>,
+        <https://caselinker.up.railway.app/resource/location/jefferson-county>,
+        <https://caselinker.up.railway.app/resource/location/ore>,
+        <https://caselinker.up.railway.app/resource/location/redmond>,
+        <https://caselinker.up.railway.app/resource/location/terrebonne> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_032/phase/booked> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_032/phase/booked> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2022_032/admission/1>,
@@ -42,7 +48,12 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_032/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_032/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/oregon-state-police-department> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/oregon-state-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/crooker-river-ranch>,
+        <https://caselinker.up.railway.app/resource/location/jefferson-county>,
+        <https://caselinker.up.railway.app/resource/location/ore>,
+        <https://caselinker.up.railway.app/resource/location/redmond>,
+        <https://caselinker.up.railway.app/resource/location/terrebonne> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_032/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -53,9 +64,9 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_032/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Deschutes County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2022_032/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2022_032/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_032/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 30 .
@@ -69,9 +80,38 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_032/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_032/person/offender/1> .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_032/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_032/phase/booked> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/crooker-river-ranch> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Crooker River Ranch" ;
+    uco-core:name "Crooker River Ranch" .
+
+<https://caselinker.up.railway.app/resource/location/jefferson-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Jefferson County" ;
+    uco-core:name "Jefferson County" .
+
+<https://caselinker.up.railway.app/resource/location/ore> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Ore." ;
+    uco-core:name "Ore." .
+
+<https://caselinker.up.railway.app/resource/location/redmond> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Redmond" ;
+    uco-core:name "Redmond" .
+
+<https://caselinker.up.railway.app/resource/location/terrebonne> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Terrebonne" ;
+    uco-core:name "Terrebonne" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_032/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;
@@ -87,7 +127,7 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_032/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "sexually molesting a child, who was two years old at the time, at his home in Redmond in late 2020 and early 2021" ;
     dcterms:source <https://www.kptv.com/2022/06/30/osp-terrebonne-man-arrested-sexually-abusing-child-more-victims-possible/> ;
-    ns1:admissionContext "possession hundreds of images of child pornography that was downloaded from the internet. According to OSP, Carrera-Garcia admitted to se..." ;
+    ns1:admissionContext "ossession hundreds of images of child pornography that was downloaded from the internet. According to OSP, Carrera-Garcia admitted to sex..." ;
     ns1:admissionFrame "admitted_to" ;
     ns1:admissionTheme "harm_conduct" ;
     ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_032/role/offender/1> ;

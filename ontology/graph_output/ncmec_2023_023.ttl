@@ -6,28 +6,44 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_023> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:09:15.381671" ;
+    dcterms:created "2026-09-15T20:55:00.761670" ;
     dcterms:identifier "ncmec_2023_023" ;
-    dcterms:modified "2026-09-10T19:09:15.381671" ;
+    dcterms:modified "2026-09-15T20:55:00.761670" ;
     dcterms:source <https://abc7chicago.com/allen-nguyen-huntley-lake-in-the-hills-taekwondo/13980730/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/has-taekwondo>,
+        <https://caselinker.up.railway.app/resource/location/hills>,
+        <https://caselinker.up.railway.app/resource/location/hills-taekwondo>,
+        <https://caselinker.up.railway.app/resource/location/ill>,
+        <https://caselinker.up.railway.app/resource/location/lake-in>,
+        <https://caselinker.up.railway.app/resource/location/the-hills> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_023/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_023/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_023/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_023/event/trust-violation>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_023/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/huntley-police-department> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/huntley-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/has-taekwondo>,
+        <https://caselinker.up.railway.app/resource/location/hills>,
+        <https://caselinker.up.railway.app/resource/location/hills-taekwondo>,
+        <https://caselinker.up.railway.app/resource/location/ill>,
+        <https://caselinker.up.railway.app/resource/location/lake-in>,
+        <https://caselinker.up.railway.app/resource/location/the-hills> .
 
-<https://caselinker.up.railway.app/resource/agency/huntley-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/huntley-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Huntley Police Department" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_023/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -44,7 +60,8 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_023/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-10-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-10-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_023/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_023/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 23 .
@@ -69,12 +86,44 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_023/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_023/person/victim/1> .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_023/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/platform/facebook> a cacontology-platforms:SocialMediaPlatform ;
     rdfs:label "Facebook" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_023/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-10-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/has-taekwondo> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Ha's Taekwondo" ;
+    uco-core:name "Ha's Taekwondo" .
+
+<https://caselinker.up.railway.app/resource/location/hills> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Hills" ;
+    uco-core:name "Hills" .
+
+<https://caselinker.up.railway.app/resource/location/hills-taekwondo> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Hills Taekwondo" ;
+    uco-core:name "Hills Taekwondo" .
+
+<https://caselinker.up.railway.app/resource/location/ill> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/lake-in> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Lake In" ;
+    uco-core:name "Lake In" .
+
+<https://caselinker.up.railway.app/resource/location/the-hills> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "the Hills" ;
+    uco-core:name "the Hills" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_023/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

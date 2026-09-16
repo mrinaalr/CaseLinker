@@ -8,6 +8,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -25,11 +26,13 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_202> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:27:00.843962" ;
+    dcterms:created "2026-09-15T21:27:13.338614" ;
     dcterms:identifier "ncmec_2025_202" ;
-    dcterms:modified "2026-09-10T19:27:00.843962" ;
+    dcterms:modified "2026-09-15T21:27:13.338614" ;
     dcterms:source <https://www.msn.com/en-us/news/crime/seminole-man-arrested-on-child-pornography-and-animal-sex-video-charges/ar-AA1D21Tm>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/fla>,
+        <https://caselinker.up.railway.app/resource/location/seminole> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_202/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_202/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_202/admission/1>,
@@ -37,7 +40,9 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_202/event/online-only>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_202/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_202/legal-proceeding>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2025_202/operation> .
+        <https://caselinker.up.railway.app/resource/case/ncmec_2025_202/operation> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/fla>,
+        <https://caselinker.up.railway.app/resource/location/seminole> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_202/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -51,9 +56,9 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_202/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Pinellas County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_202/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-04-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-04-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_202/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_202/operation> a cac-core:Event,
         cacontology-taskforce:TaskForceOperation .
@@ -69,9 +74,19 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_202/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_202/person/offender/1> .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_202/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_202/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-04-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/fla> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/seminole> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_202/event/online-only> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;
@@ -85,7 +100,7 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_202/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "viewing the child pornography images and the videos involving bestiality" ;
     dcterms:source <https://www.msn.com/en-us/news/crime/seminole-man-arrested-on-child-pornography-and-animal-sex-video-charges/ar-AA1D21Tm> ;
-    ns1:admissionContext "red videos showing adult men and women engaged in sexual intercourse with dogs. During an interview with detectives on Tuesday, Contreras..." ;
+    ns1:admissionContext "ed videos showing adult men and women engaged in sexual intercourse with dogs. During an interview with detectives on Tuesday, Contreras..." ;
     ns1:admissionFrame "admitted_to" ;
     ns1:admissionTheme "harm_conduct" ;
     ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_202/role/offender/1> ;

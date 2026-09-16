@@ -13,6 +13,7 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -25,7 +26,9 @@
 
 <https://caselinker.up.railway.app/resource/agency/doj> a cacontology-multi:FederalAgency .
 
-<https://caselinker.up.railway.app/resource/agency/elk-city-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/elk-city-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Elk City Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/fbi> a cacontology-multi:FederalAgency .
 
@@ -33,11 +36,13 @@
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_243> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T21:22:41.796819" ;
+    dcterms:created "2026-09-15T22:12:27.424541" ;
     dcterms:identifier "doj_safe_childhood_2024_243" ;
-    dcterms:modified "2026-09-14T21:22:41.796819" ;
+    dcterms:modified "2026-09-15T22:12:27.424541" ;
     dcterms:source <https://www.justice.gov/usao-wdok/pr/elk-city-man-sentenced-serve-40-years-federal-prison-production-and-possession-child>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/elk-city>,
+        <https://caselinker.up.railway.app/resource/location/oklahoma-city> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_243/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_243/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_243/admission/1>,
@@ -54,7 +59,9 @@
         <https://caselinker.up.railway.app/resource/agency/doj>,
         <https://caselinker.up.railway.app/resource/agency/elk-city-police-department>,
         <https://caselinker.up.railway.app/resource/agency/fbi>,
-        <https://caselinker.up.railway.app/resource/agency/usao> .
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/elk-city>,
+        <https://caselinker.up.railway.app/resource/location/oklahoma-city> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_243/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -97,8 +104,7 @@
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_243/charge/3>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_243/charge/4> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_243/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_243/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_243/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_243/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -130,12 +136,8 @@
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_243/person/victim/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_243/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "480 months" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_243/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "supervised release" .
+    rdfs:label "[\"480 months\", \"supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_243/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
@@ -148,6 +150,14 @@
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_243/event/production>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_243/offense-event/charge-4> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_243/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/location/elk-city> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Elk City" ;
+    uco-core:name "Elk City" .
+
+<https://caselinker.up.railway.app/resource/location/oklahoma-city> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_243/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

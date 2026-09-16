@@ -1,29 +1,44 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_431> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:29:02.866347" ;
+    dcterms:created "2026-09-15T21:27:13.555378" ;
     dcterms:identifier "ncmec_2025_431" ;
-    dcterms:modified "2026-09-10T19:29:02.866347" ;
+    dcterms:modified "2026-09-15T21:27:13.555378" ;
     dcterms:source <https://www.yahoo.com/news/louisiana-man-arrested-alleged-rape-212412813.html>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/ktalkmss>,
+        <https://caselinker.up.railway.app/resource/location/la>,
+        <https://caselinker.up.railway.app/resource/location/louisiana>,
+        <https://caselinker.up.railway.app/resource/location/noble>,
+        <https://caselinker.up.railway.app/resource/location/sabine-parish> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_431/phase/booked> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_431/phase/booked> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_431/cybertip>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2025_431/event/hands-on> ;
+        <https://caselinker.up.railway.app/resource/case/ncmec_2025_431/event/hands-on>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2025_431/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/la-department-of-wildlife-and-fisheries>,
         <https://caselinker.up.railway.app/resource/agency/louisiana-bureau-of-investigation>,
         <https://caselinker.up.railway.app/resource/agency/louisiana-department-of-wildlife-and-fisheries>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/ktalkmss>,
+        <https://caselinker.up.railway.app/resource/location/la>,
+        <https://caselinker.up.railway.app/resource/location/louisiana>,
+        <https://caselinker.up.railway.app/resource/location/noble>,
+        <https://caselinker.up.railway.app/resource/location/sabine-parish> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_431/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -50,15 +65,46 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_431/cybertip> a cacontology-us-ncmec:NCMECCybertipReport ;
     cacontology-us-ncmec:supportedBy <https://caselinker.up.railway.app/resource/agency/ncmec> .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_431/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_431/sentence/1> .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_431/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_431/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_431/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_431/phase/booked> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-05-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/ktalkmss> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Ktal/kmss" ;
+    uco-core:name "Ktal/kmss" .
+
+<https://caselinker.up.railway.app/resource/location/la> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/louisiana> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/noble> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Noble" ;
+    uco-core:name "Noble" .
+
+<https://caselinker.up.railway.app/resource/location/sabine-parish> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Sabine Parish" ;
+    uco-core:name "Sabine Parish" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_431/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

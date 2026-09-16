@@ -7,19 +7,24 @@
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_443> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:29:08.491805" ;
+    dcterms:created "2026-09-15T21:27:13.562423" ;
     dcterms:identifier "ncmec_2025_443" ;
-    dcterms:modified "2026-09-10T19:29:08.491805" ;
+    dcterms:modified "2026-09-15T21:27:13.562423" ;
     dcterms:source <https://www.frederickcosheriff.com/post/registered-sex-offender-arrested-following-child-pornography-investigation>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/frederick-county>,
+        <https://caselinker.up.railway.app/resource/location/md>,
+        <https://caselinker.up.railway.app/resource/location/middletown> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_443/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_443/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_443/cybertip>,
@@ -31,7 +36,10 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/frederick-county-cyber-crimes-task-force>,
         <https://caselinker.up.railway.app/resource/agency/frederick-county-sheriffs-office>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/frederick-county>,
+        <https://caselinker.up.railway.app/resource/location/md>,
+        <https://caselinker.up.railway.app/resource/location/middletown> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_443/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -46,9 +54,13 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2025_443/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_443/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/frederick-county-cyber-crimes-task-force> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/frederick-county-cyber-crimes-task-force> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Frederick County Cyber Crimes Task Force" .
 
-<https://caselinker.up.railway.app/resource/agency/frederick-county-sheriffs-office> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/frederick-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Frederick County Sheriff's Office" .
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
@@ -76,12 +88,17 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_443/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_443/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-05-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_443/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_443/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 25 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_443/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_443/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_443/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -94,6 +111,21 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_443/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-05-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/frederick-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Frederick County" ;
+    uco-core:name "Frederick County" .
+
+<https://caselinker.up.railway.app/resource/location/md> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Md." ;
+    uco-core:name "Md." .
+
+<https://caselinker.up.railway.app/resource/location/middletown> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Middletown" ;
+    uco-core:name "Middletown" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_443/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

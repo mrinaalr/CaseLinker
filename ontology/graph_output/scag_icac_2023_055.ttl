@@ -10,16 +10,21 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/scag_icac_2023_055> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:10:28.441693" ;
+    dcterms:created "2026-09-15T20:17:54.831735" ;
     dcterms:identifier "scag_icac_2023_055" ;
-    dcterms:modified "2026-09-10T20:10:28.441693" ;
+    dcterms:modified "2026-09-15T20:17:54.831735" ;
     dcterms:source <https://www.scag.gov/about-the-office/news/aiken-man-arrested-on-child-sexual-abuse-material-charges-2/>,
         "SCAG ICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/aiken>,
+        <https://caselinker.up.railway.app/resource/location/columbia>,
+        <https://caselinker.up.railway.app/resource/location/sc>,
+        <https://caselinker.up.railway.app/resource/location/south-carolina> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/scag_icac_2023_055/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/scag_icac_2023_055/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/scag_icac_2023_055/cybertip>,
@@ -32,7 +37,11 @@
         <https://caselinker.up.railway.app/resource/agency/aiken-department-of-public-safety>,
         <https://caselinker.up.railway.app/resource/agency/attorney-generals-office>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/aiken>,
+        <https://caselinker.up.railway.app/resource/location/columbia>,
+        <https://caselinker.up.railway.app/resource/location/sc>,
+        <https://caselinker.up.railway.app/resource/location/south-carolina> .
 
 <https://caselinker.up.railway.app/resource/case/scag_icac_2023_055/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -46,9 +55,13 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/scag_icac_2023_055/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/scag_icac_2023_055/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/aiken-county-sheriffs-office> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/aiken-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Aiken County Sheriff's Office" .
 
-<https://caselinker.up.railway.app/resource/agency/aiken-department-of-public-safety> a cacontology-multi:StateAgency .
+<https://caselinker.up.railway.app/resource/agency/aiken-department-of-public-safety> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:StateAgency ;
+    rdfs:label "Aiken Department of Public Safety" .
 
 <https://caselinker.up.railway.app/resource/agency/attorney-generals-office> a cacontology-multi:StateAgency .
 
@@ -82,8 +95,7 @@
         <https://caselinker.up.railway.app/resource/case/scag_icac_2023_055/charge/2>,
         <https://caselinker.up.railway.app/resource/case/scag_icac_2023_055/charge/3> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/scag_icac_2023_055/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/scag_icac_2023_055/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/scag_icac_2023_055/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/scag_icac_2023_055/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 34 .
@@ -92,11 +104,7 @@
 
 <https://caselinker.up.railway.app/resource/case/scag_icac_2023_055/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "20 years" .
-
-<https://caselinker.up.railway.app/resource/case/scag_icac_2023_055/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "10 years" .
+    rdfs:label "[\"20 years\", \"10 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/scag_icac_2023_055/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -106,6 +114,20 @@
 <https://caselinker.up.railway.app/resource/case/scag_icac_2023_055/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/aiken> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Aiken" ;
+    uco-core:name "Aiken" .
+
+<https://caselinker.up.railway.app/resource/location/columbia> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/sc> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/south-carolina> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/scag_icac_2023_055/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

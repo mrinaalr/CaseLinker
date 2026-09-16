@@ -10,6 +10,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -30,27 +31,51 @@
         cacontology-multi:LocalAgency ;
     rdfs:label "United States Department of State" .
 
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
+
 <https://caselinker.up.railway.app/resource/case/doj_archives_2006_023> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:40:40.342544" ;
+    dcterms:created "2026-09-15T21:42:39.813639" ;
     dcterms:identifier "doj_archives_2006_023" ;
-    dcterms:modified "2026-09-10T19:40:40.342544" ;
+    dcterms:modified "2026-09-15T21:42:39.813639" ;
     dcterms:source <https://www.justice.gov/archive/criminal/ceos/pressreleases/downloads/NDCA%20Obert%20plea%20PR_020106.pdf>,
-        "DOJ ARCHIVES" ;
+        "DOJ CEOS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/california>,
+        <https://caselinker.up.railway.app/resource/location/costa-rica>,
+        <https://caselinker.up.railway.app/resource/location/northern-district>,
+        <https://caselinker.up.railway.app/resource/location/san-francisco>,
+        <https://caselinker.up.railway.app/resource/location/san-jose>,
+        <https://caselinker.up.railway.app/resource/location/santa-cruz>,
+        <https://caselinker.up.railway.app/resource/location/united-states> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_archives_2006_023/phase/pleaded-guilty> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_archives_2006_023/phase/pleaded-guilty> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_archives_2006_023/admission/1>,
         <https://caselinker.up.railway.app/resource/case/doj_archives_2006_023/event/conspiracy>,
         <https://caselinker.up.railway.app/resource/case/doj_archives_2006_023/event/multi-jurisdiction>,
+        <https://caselinker.up.railway.app/resource/case/doj_archives_2006_023/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/doj_archives_2006_023/legal-step/pleaded-guilty> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ice>,
-        <https://caselinker.up.railway.app/resource/agency/united-states-department-of-state> .
+        <https://caselinker.up.railway.app/resource/agency/united-states-department-of-state>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/california>,
+        <https://caselinker.up.railway.app/resource/location/costa-rica>,
+        <https://caselinker.up.railway.app/resource/location/northern-district>,
+        <https://caselinker.up.railway.app/resource/location/san-francisco>,
+        <https://caselinker.up.railway.app/resource/location/san-jose>,
+        <https://caselinker.up.railway.app/resource/location/santa-cruz>,
+        <https://caselinker.up.railway.app/resource/location/united-states> .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2006_023/event/multi-jurisdiction> a cac-core:Event,
         cacontology-multi:MultiJurisdictionalInvestigation ;
     cacontology:severityLevel 3 ;
     cacontology-multi:crossesBorders true .
+
+<https://caselinker.up.railway.app/resource/case/doj_archives_2006_023/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2006-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_archives_2006_023/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2006_023/legal-step/pleaded-guilty> a cac-core:Event,
         cac-core:LegalEvent,
@@ -73,6 +98,10 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/doj_archives_2006_023/event/conspiracy> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_archives_2006_023/person/offender/2> .
 
+<https://caselinker.up.railway.app/resource/case/doj_archives_2006_023/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/doj_archives_2006_023/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "having had sex with the Costa Rican minor" ;
     dcterms:source <https://www.justice.gov/archive/criminal/ceos/pressreleases/downloads/NDCA%20Obert%20plea%20PR_020106.pdf> ;
@@ -93,6 +122,33 @@
     cacontology:hasRoleBeginPoint "2006-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/doj_archives_2006_023/event/conspiracy> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_archives_2006_023/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/location/california> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/costa-rica> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Costa Rica" ;
+    uco-core:name "Costa Rica" .
+
+<https://caselinker.up.railway.app/resource/location/northern-district> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/san-francisco> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/san-jose> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "San Jose" ;
+    uco-core:name "San Jose" .
+
+<https://caselinker.up.railway.app/resource/location/santa-cruz> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Santa Cruz" ;
+    uco-core:name "Santa Cruz" .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2006_023/event/conspiracy> a cacontology:ConspiracyToCommitCSA,
         cac-core:Event ;

@@ -10,16 +10,21 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_059> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:00:48.733823" ;
+    dcterms:created "2026-09-15T20:06:35.771701" ;
     dcterms:identifier "newyork_sp_2025_059" ;
-    dcterms:modified "2026-09-10T20:00:48.733823" ;
+    dcterms:modified "2026-09-15T20:06:35.771701" ;
     dcterms:source <https://troopers.ny.gov/news/state-police-arrest-cohoes-man-possessing-child-sexual-abuse-material>,
         "NEWYORK SP" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/cohoes>,
+        <https://caselinker.up.railway.app/resource/location/easton-new-york>,
+        <https://caselinker.up.railway.app/resource/location/greenwich>,
+        <https://caselinker.up.railway.app/resource/location/new-york> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_059/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_059/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_059/cybertip>,
@@ -29,7 +34,11 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/department-of-homeland-security>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/state-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/state-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/cohoes>,
+        <https://caselinker.up.railway.app/resource/location/easton-new-york>,
+        <https://caselinker.up.railway.app/resource/location/greenwich>,
+        <https://caselinker.up.railway.app/resource/location/new-york> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_059/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -67,18 +76,39 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_059/charge/1>,
         <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_059/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_059/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_059/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 28 .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_059/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/newyork_sp_2025_059/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_059/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/cohoes> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/easton-new-york> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Easton, New York" ;
+    uco-core:name "Easton, New York" .
+
+<https://caselinker.up.railway.app/resource/location/greenwich> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Greenwich" ;
+    uco-core:name "Greenwich" .
+
+<https://caselinker.up.railway.app/resource/location/new-york> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_059/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

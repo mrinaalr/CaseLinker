@@ -2,31 +2,58 @@
 @prefix cacontology: <https://cacontology.projectvic.org#> .
 @prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
 @prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_003> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:16:23.951269" ;
+    dcterms:created "2026-09-15T20:31:48.042750" ;
     dcterms:identifier "tbi_icac_2013_003" ;
-    dcterms:modified "2026-09-10T20:16:23.951269" ;
+    dcterms:modified "2026-09-15T20:31:48.042750" ;
     dcterms:source <https://tbinewsroom.com/2013/04/16/tbi-arrests-algood-man-on-child-rape-and-sexual-battery-charges/>,
         "TBI ICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/algood>,
+        <https://caselinker.up.railway.app/resource/location/jackson-county>,
+        <https://caselinker.up.railway.app/resource/location/nashville>,
+        <https://caselinker.up.railway.app/resource/location/putnam-county>,
+        <https://caselinker.up.railway.app/resource/location/tenn> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_003/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_003/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_003/event/hands-on>,
-        <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_003/event/trust-violation> ;
+        <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_003/event/trust-violation>,
+        <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_003/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/tennessee-bureau-of-investigation> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/jackson-county-sheriffs-office>,
+        <https://caselinker.up.railway.app/resource/agency/tennessee-bureau-of-investigation> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/algood>,
+        <https://caselinker.up.railway.app/resource/location/jackson-county>,
+        <https://caselinker.up.railway.app/resource/location/nashville>,
+        <https://caselinker.up.railway.app/resource/location/putnam-county>,
+        <https://caselinker.up.railway.app/resource/location/tenn> .
+
+<https://caselinker.up.railway.app/resource/agency/jackson-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Jackson County Sheriff's Office" .
 
 <https://caselinker.up.railway.app/resource/agency/tennessee-bureau-of-investigation> a cacontology-multi:StateAgency .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_003/event/trust-violation> a cacontology-custodial:CustodialAbuse,
         cacontology-custodial:TrustViolation ;
     cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_003/relationship/mother> .
+
+<https://caselinker.up.railway.app/resource/case/tbi_icac_2013_003/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_003/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_003/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 47 .
@@ -51,9 +78,34 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_003/event/hands-on> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_003/person/victim/1> .
 
+<https://caselinker.up.railway.app/resource/case/tbi_icac_2013_003/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:MonetaryPenalty ;
+    rdfs:label "[\"$50,000\"]" .
+
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_003/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/algood> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Algood" ;
+    uco-core:name "Algood" .
+
+<https://caselinker.up.railway.app/resource/location/jackson-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Jackson County" ;
+    uco-core:name "Jackson County" .
+
+<https://caselinker.up.railway.app/resource/location/nashville> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/putnam-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Putnam County" ;
+    uco-core:name "Putnam County" .
+
+<https://caselinker.up.railway.app/resource/location/tenn> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_003/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

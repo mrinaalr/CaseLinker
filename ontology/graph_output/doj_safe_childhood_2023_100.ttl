@@ -13,6 +13,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -26,7 +27,9 @@
     cac-core:generatedBy <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_100> ;
     cac-core:hasConfidence 0.65 .
 
-<https://caselinker.up.railway.app/resource/agency/cobb-county-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/cobb-county-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Cobb County Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/fbi> a cacontology-multi:FederalAgency .
 
@@ -57,8 +60,7 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_100/charge/1>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_100/charge/2> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_100/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_100/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_100/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_100/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -90,20 +92,20 @@
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_100/person/victim/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_100/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "20 years" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_100/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "supervised release" .
+    rdfs:label "[\"20 years\", \"supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_100> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T21:22:52.404129" ;
+    dcterms:created "2026-09-15T22:12:27.919856" ;
     dcterms:identifier "doj_safe_childhood_2023_100" ;
-    dcterms:modified "2026-09-14T21:22:52.404129" ;
+    dcterms:modified "2026-09-15T22:12:27.919856" ;
     dcterms:source <https://www.justice.gov/usao-ndga/pr/cobb-county-man-receives-20-year-sentence-producing-child-pornography>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/acworth>,
+        <https://caselinker.up.railway.app/resource/location/atlanta>,
+        <https://caselinker.up.railway.app/resource/location/cobb-county>,
+        <https://caselinker.up.railway.app/resource/location/georgia> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_100/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_100/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_100/admission/1>,
@@ -118,7 +120,11 @@
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_100/operation> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/cobb-county-police-department>,
         <https://caselinker.up.railway.app/resource/agency/fbi>,
-        <https://caselinker.up.railway.app/resource/agency/usao> .
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/acworth>,
+        <https://caselinker.up.railway.app/resource/location/atlanta>,
+        <https://caselinker.up.railway.app/resource/location/cobb-county>,
+        <https://caselinker.up.railway.app/resource/location/georgia> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_100/admission/2> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "was “Zack” and pretended to be a 16-year-old when he learned the girl was 14 years old" ;
@@ -134,6 +140,24 @@
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_100/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/acworth> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Acworth" ;
+    uco-core:name "Acworth" .
+
+<https://caselinker.up.railway.app/resource/location/atlanta> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Atlanta" ;
+    uco-core:name "Atlanta" .
+
+<https://caselinker.up.railway.app/resource/location/cobb-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Cobb County" ;
+    uco-core:name "Cobb County" .
+
+<https://caselinker.up.railway.app/resource/location/georgia> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_100/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

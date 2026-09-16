@@ -7,69 +7,114 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_324> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:06:58.999854" ;
+    dcterms:created "2026-09-15T20:45:06.264001" ;
     dcterms:identifier "ncmec_2022_324" ;
-    dcterms:modified "2026-09-10T19:06:58.999854" ;
-    dcterms:source <https://wach.com/news/local/columbia-man-arrested-on-child-pornography-charges-john-shull>,
+    dcterms:modified "2026-09-15T20:45:06.264001" ;
+    dcterms:source <https://www.bcpo.net/closter-nj-man-charged-with-distribution-and-possession-of-child-pornography/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/bergen-county>,
+        <https://caselinker.up.railway.app/resource/location/closter>,
+        <https://caselinker.up.railway.app/resource/location/englewood>,
+        <https://caselinker.up.railway.app/resource/location/hackensack>,
+        <https://caselinker.up.railway.app/resource/location/new-jersey>,
+        <https://caselinker.up.railway.app/resource/location/paramus-new-jersey> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_324/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_324/phase/charged> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2022_324/event/csam>,
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2022_324/event/distribution>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_324/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_324/legal-proceeding> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/richland-county-sheriffs-department> .
+    cacontology:investigationStatus "unknown" ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/bergen-county-cyber-crimes-task-force>,
+        <https://caselinker.up.railway.app/resource/agency/closter-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/lyndhurst-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/bergen-county>,
+        <https://caselinker.up.railway.app/resource/location/closter>,
+        <https://caselinker.up.railway.app/resource/location/englewood>,
+        <https://caselinker.up.railway.app/resource/location/hackensack>,
+        <https://caselinker.up.railway.app/resource/location/new-jersey>,
+        <https://caselinker.up.railway.app/resource/location/paramus-new-jersey> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_324/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_324/event/csam> ;
+    cacontology:hasRoleBeginPoint "2022-07-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_324/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_324/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_324/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_324/event/csam> ;
+    cacontology:hasRoleBeginPoint "2022-07-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_324/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_324/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/richland-county-sheriffs-department> a cac-core:OrganizationLikeEntity,
+<https://caselinker.up.railway.app/resource/agency/bergen-county-cyber-crimes-task-force> a cacontology-multi:LocalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/closter-police-department> a cac-core:OrganizationLikeEntity,
         cacontology-multi:LocalAgency ;
-    rdfs:label "Richland County Sheriff's Department" .
+    rdfs:label "Closter Police Department" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_324/charge/1> a cacontology-legal-outcomes:CriminalCharge,
-        cacontology-legal-outcomes:StateCharge ;
-    rdfs:label "sexual exploitation of a minor" .
+<https://caselinker.up.railway.app/resource/agency/lyndhurst-police-department> a cacontology-multi:LocalAgency .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_324/charge/2> a cacontology-legal-outcomes:CSAM_Possession,
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_324/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "child pornography" .
+    rdfs:label "possession of child pornography" ;
+    cacontology-legal-outcomes:indictmentCounts 2 .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_324/charge/3> a cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "sexual exploitation" ;
-    ns1:chargeCluster "sexual_exploitation_unspecified" .
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_324/charge/2> a cacontology-legal-outcomes:CSAM_Distribution,
+        cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "distribution of child pornography" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_324/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_324/event/distribution> a cac-core:Event,
+        cacontology-legal-outcomes:CSAM_Distribution .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_324/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_324/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2022_324/charge/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_324/charge/2>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_324/charge/3> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_324/charge/2> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-07-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2022_324/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_324/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_324/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_324/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_324/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
-    cacontology:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology:hasPhaseBeginPoint "2022-07-01T00:00:00Z"^^xsd:dateTimeStamp .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_324/event/csam> a cacontology:CSAMIncident,
+<https://caselinker.up.railway.app/resource/location/bergen-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/closter> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Closter" ;
+    uco-core:name "Closter" .
+
+<https://caselinker.up.railway.app/resource/location/englewood> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/hackensack> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/new-jersey> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/paramus-new-jersey> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_324/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
-    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2022_324/facet/csam> .
+    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2022_324/facet/possession> .
 

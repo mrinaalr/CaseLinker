@@ -9,16 +9,21 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_438> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T21:23:01.849913" ;
+    dcterms:created "2026-09-15T22:12:28.347742" ;
     dcterms:identifier "doj_safe_childhood_2023_438" ;
-    dcterms:modified "2026-09-14T21:23:01.849913" ;
+    dcterms:modified "2026-09-15T22:12:28.347742" ;
     dcterms:source <https://www.justice.gov/usao-ma/pr/recidivist-defendant-sentenced-possessing-child-pornography-while-federal-supervised>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/auburn>,
+        <https://caselinker.up.railway.app/resource/location/new-england>,
+        <https://caselinker.up.railway.app/resource/location/united-states>,
+        <https://caselinker.up.railway.app/resource/location/worcester> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_438/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_438/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_438/event/possession>,
@@ -33,7 +38,11 @@
         <https://caselinker.up.railway.app/resource/agency/fbi>,
         <https://caselinker.up.railway.app/resource/agency/hsi>,
         <https://caselinker.up.railway.app/resource/agency/usao>,
-        <https://caselinker.up.railway.app/resource/agency/worcester-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/worcester-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/auburn>,
+        <https://caselinker.up.railway.app/resource/location/new-england>,
+        <https://caselinker.up.railway.app/resource/location/united-states>,
+        <https://caselinker.up.railway.app/resource/location/worcester> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_438/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -49,7 +58,9 @@
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_438/offense-event/charge-3> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_438/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/auburn-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/auburn-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Auburn Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/ceos> a cacontology-multi:FederalAgency .
 
@@ -89,9 +100,7 @@
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_438/charge/2>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_438/charge/3> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_438/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_438/sentence/2>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_438/sentence/3> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_438/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_438/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -106,19 +115,25 @@
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_438/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "Supervised Release" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_438/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "10 years" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_438/sentence/3> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "68 months" .
+    rdfs:label "[\"Supervised Release\", \"10 years\", \"68 months\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_438/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/auburn> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Auburn" ;
+    uco-core:name "Auburn" .
+
+<https://caselinker.up.railway.app/resource/location/new-england> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/worcester> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_438/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

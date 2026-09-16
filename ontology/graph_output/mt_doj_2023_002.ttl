@@ -3,18 +3,22 @@
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/mt_doj_2023_002> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:55:04.004967" ;
+    dcterms:created "2026-09-15T19:59:52.352069" ;
     dcterms:identifier "mt_doj_2023_002" ;
-    dcterms:modified "2026-09-10T19:55:04.004967" ;
+    dcterms:modified "2026-09-15T19:59:52.352069" ;
     dcterms:source <https://dojmt.gov/former-deputy-sheriff-receives-100-year-prison-sentence-for-child-sexual-abuse/>,
         "MT DOJ" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/wibaux-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/mt_doj_2023_002/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/mt_doj_2023_002/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/mt_doj_2023_002/legal-proceeding>,
@@ -23,7 +27,8 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/department-public-of-health-and-human-services>,
         <https://caselinker.up.railway.app/resource/agency/doj>,
         <https://caselinker.up.railway.app/resource/agency/montana-department-of-justice-division-of-criminal-investigation>,
-        <https://caselinker.up.railway.app/resource/agency/prosecution-services-bureau> .
+        <https://caselinker.up.railway.app/resource/agency/prosecution-services-bureau> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/wibaux-county> .
 
 <https://caselinker.up.railway.app/resource/case/mt_doj_2023_002/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -39,7 +44,9 @@
         cacontology-multi:LocalAgency ;
     rdfs:label "Department Public of Health and Human Services" .
 
-<https://caselinker.up.railway.app/resource/agency/doj> a cacontology-multi:FederalAgency .
+<https://caselinker.up.railway.app/resource/agency/doj> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:FederalAgency ;
+    rdfs:label "U.S. Department of Justice" .
 
 <https://caselinker.up.railway.app/resource/agency/montana-department-of-justice-division-of-criminal-investigation> a cac-core:OrganizationLikeEntity,
         cacontology-multi:StateAgency ;
@@ -53,8 +60,7 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/mt_doj_2023_002/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/mt_doj_2023_002/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/mt_doj_2023_002/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/mt_doj_2023_002/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -68,13 +74,14 @@
 
 <https://caselinker.up.railway.app/resource/case/mt_doj_2023_002/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "80 years" .
-
-<https://caselinker.up.railway.app/resource/case/mt_doj_2023_002/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "20 years" .
+    rdfs:label "[\"80 years\", \"20 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/mt_doj_2023_002/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/wibaux-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Wibaux County" ;
+    uco-core:name "Wibaux County" .
 

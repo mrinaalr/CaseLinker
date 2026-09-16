@@ -8,25 +8,31 @@
 @prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/fresno_so_2022_008> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:44:14.173446" ;
+    dcterms:created "2026-09-15T19:31:21.293703" ;
     dcterms:identifier "fresno_so_2022_008" ;
-    dcterms:modified "2026-09-10T19:44:14.173446" ;
+    dcterms:modified "2026-09-15T19:31:21.293703" ;
     dcterms:source <https://www.fresnosheriff.org/media-relations/detectives-arrest-teacher-s-assistant-for-sexually-harassing-a-child-seek-more-possible-victims.html>,
         "FRESNO SO" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/fresno>,
+        <https://caselinker.up.railway.app/resource/location/juarez> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/fresno_so_2022_008/phase/booked> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/fresno_so_2022_008/phase/booked> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/fresno_so_2022_008/event/hands-on>,
         <https://caselinker.up.railway.app/resource/case/fresno_so_2022_008/event/trust-violation>,
         <https://caselinker.up.railway.app/resource/case/fresno_so_2022_008/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/fresno>,
+        <https://caselinker.up.railway.app/resource/location/juarez> .
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
@@ -37,8 +43,8 @@
 <https://caselinker.up.railway.app/resource/case/fresno_so_2022_008/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Fresno County Jail" ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/fresno_so_2022_008/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/fresno_so_2022_008/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 22 .
@@ -64,12 +70,22 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/fresno_so_2022_008/event/hands-on> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/fresno_so_2022_008/person/victim/1> .
 
+<https://caselinker.up.railway.app/resource/case/fresno_so_2022_008/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/platform/social-media> a cacontology-platforms:SocialMediaPlatform ;
     rdfs:label "social media" .
 
 <https://caselinker.up.railway.app/resource/case/fresno_so_2022_008/phase/booked> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/fresno> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/juarez> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/fresno_so_2022_008/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

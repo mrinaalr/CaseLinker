@@ -2,21 +2,25 @@
 @prefix cacontology: <https://cacontology.projectvic.org#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ice_2026_001> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:45:37.223014" ;
+    dcterms:created "2026-09-15T19:35:19.131062" ;
     dcterms:identifier "ice_2026_001" ;
-    dcterms:modified "2026-09-10T19:45:37.223014" ;
+    dcterms:modified "2026-09-15T19:35:19.131062" ;
     dcterms:source <https://www.ice.gov/news/releases/ice-releases-photos-us-citizen-nevada-charged-4-child-sex-crimes>,
         "ICE" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/nevada>,
+        <https://caselinker.up.railway.app/resource/location/united-states> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ice_2026_001/phase/convicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ice_2026_001/phase/convicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ice_2026_001/event/csam>,
@@ -26,7 +30,9 @@
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/department-of-homeland-security>,
         <https://caselinker.up.railway.app/resource/agency/hsi>,
-        <https://caselinker.up.railway.app/resource/agency/ice> .
+        <https://caselinker.up.railway.app/resource/agency/ice> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/nevada>,
+        <https://caselinker.up.railway.app/resource/location/united-states> .
 
 <https://caselinker.up.railway.app/resource/case/ice_2026_001/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -75,14 +81,29 @@
 
 <https://caselinker.up.railway.app/resource/case/ice_2026_001/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "20 years" .
+    rdfs:label "[\"20 years\"]" .
+
+<https://caselinker.up.railway.app/resource/platform/facebook> a cacontology-platforms:SocialMediaPlatform ;
+    rdfs:label "Facebook" .
+
+<https://caselinker.up.railway.app/resource/platform/instagram> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:SocialMediaPlatform ;
+    rdfs:label "Instagram" .
 
 <https://caselinker.up.railway.app/resource/case/ice_2026_001/phase/convicted> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
+<https://caselinker.up.railway.app/resource/location/nevada> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
 <https://caselinker.up.railway.app/resource/case/ice_2026_001/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;
     cacontology:severityLevel 3 ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/facebook>,
+        <https://caselinker.up.railway.app/resource/platform/instagram> ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ice_2026_001/facet/csam> .
 

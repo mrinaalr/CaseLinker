@@ -2,7 +2,7 @@
 @prefix cacontology: <https://cacontology.projectvic.org#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
+@prefix cacontology-undercover: <https://cacontology.projectvic.org/undercover#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
@@ -10,62 +10,73 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_456/admission/1/extraction-confidence> a cac-core:AssessmentResult ;
+    cac-core:assesses <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/admission/1> ;
+    cac-core:generatedBy <https://caselinker.up.railway.app/resource/case/ncmec_2024_456> ;
+    cac-core:hasConfidence 0.65 .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_456/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2024-11-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/offense-event/charge-3> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/agency/ceos> a cacontology-multi:FederalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/cyber-crime-bureau> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Cyber Crime Bureau" .
+
+<https://caselinker.up.railway.app/resource/agency/division-of-criminal-investigation> a cacontology-multi:LocalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/iowa-department-of-public-safety> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:StateAgency ;
+    rdfs:label "Iowa Department of Public Safety" .
+
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_456> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:18:09.950243" ;
+    dcterms:created "2026-09-15T21:08:10.588666" ;
     dcterms:identifier "ncmec_2024_456" ;
-    dcterms:modified "2026-09-10T19:18:09.950243" ;
-    dcterms:source <https://www.justice.gov/usao-sdia/pr/harlan-man-sentenced-7-years-federal-prison-receiving-child-pornography>,
+    dcterms:modified "2026-09-15T21:08:10.588666" ;
+    dcterms:source <https://www.justice.gov/usao-ndia/pr/cherokee-county-man-sentenced-3-years-federal-prison-possession-child-pornography>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/cherokee>,
+        <https://caselinker.up.railway.app/resource/location/cherokee-county>,
+        <https://caselinker.up.railway.app/resource/location/iowa>,
+        <https://caselinker.up.railway.app/resource/location/sioux-city>,
+        <https://caselinker.up.railway.app/resource/location/united-states> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/phase/sentenced> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/cybertip>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/event/csam>,
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/admission/1>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/event/distribution>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/event/project-safe-childhood>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/legal-step/sentenced>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/offense-event/charge-3> ;
     cacontology:investigationStatus "unknown" ;
     cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/tech/cybertipline> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ceos>,
-        <https://caselinker.up.railway.app/resource/agency/fbi>,
-        <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/iowa-department-of-criminal-investigation-cybercrime-bureau>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/shelby-county-sheriffs-office> .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_456/role/offender/1> a cacontology:OffenderRole,
-        uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2024-12-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/event/csam>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/offense-event/charge-3> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/person/offender/1> .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_456/role/victim/1> a cacontology:VictimRole,
-        uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2024-12-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/event/csam>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/offense-event/charge-3> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/person/victim/1> .
-
-<https://caselinker.up.railway.app/resource/agency/ceos> a cacontology-multi:FederalAgency .
-
-<https://caselinker.up.railway.app/resource/agency/fbi> a cacontology-multi:FederalAgency .
-
-<https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
-
-<https://caselinker.up.railway.app/resource/agency/iowa-department-of-criminal-investigation-cybercrime-bureau> a cac-core:OrganizationLikeEntity,
-        cacontology-multi:LocalAgency ;
-    rdfs:label "Iowa Department of Criminal Investigation-Cybercrime Bureau" .
-
-<https://caselinker.up.railway.app/resource/agency/shelby-county-sheriffs-office> a cacontology-multi:LocalAgency .
+        <https://caselinker.up.railway.app/resource/agency/cyber-crime-bureau>,
+        <https://caselinker.up.railway.app/resource/agency/division-of-criminal-investigation>,
+        <https://caselinker.up.railway.app/resource/agency/iowa-department-of-public-safety>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/cherokee>,
+        <https://caselinker.up.railway.app/resource/location/cherokee-county>,
+        <https://caselinker.up.railway.app/resource/location/iowa>,
+        <https://caselinker.up.railway.app/resource/location/sioux-city>,
+        <https://caselinker.up.railway.app/resource/location/united-states> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "child pornography" ;
-    cacontology-legal-outcomes:indictmentCounts 2 .
+    rdfs:label "child pornography" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/charge/2> a cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "sexual exploitation" ;
@@ -77,10 +88,13 @@
     ns1:chargeCluster "child_exploitation" ;
     ns1:chargeOffenseEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/offense-event/charge-3> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_456/cybertip> a cacontology-us-ncmec:NCMECCybertipReport ;
-    cacontology-us-ncmec:supportedBy <https://caselinker.up.railway.app/resource/agency/ncmec> .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_456/event/distribution> a cac-core:Event,
+        cacontology-legal-outcomes:CSAM_Distribution .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_456/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_456/event/project-safe-childhood> a cac-core:Event,
+        cacontology-multi:ProjectSafeChildhoodOperation .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_456/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
@@ -88,46 +102,73 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/charge/2>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/charge/3> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-12-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/sentence/2>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/sentence/3> .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-11-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding,
         cacontology-legal-outcomes:SentencingHearing ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-12-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-11-01T00:00:00Z"^^xsd:dateTimeStamp .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_456/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2024-11-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/offense-event/charge-3> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/person/offender/1> .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "84 months" .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_456/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "supervised release" .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_456/sentence/3> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$21,000" .
+    rdfs:label "[\"36 months\", \"$6,100\", \"$6,000\", \"supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
 
-<https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
-
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
-    cacontology:hasPhaseBeginPoint "2024-12-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology:hasPhaseBeginPoint "2024-11-01T00:00:00Z"^^xsd:dateTimeStamp .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_456/event/csam> a cacontology:CSAMIncident,
+<https://caselinker.up.railway.app/resource/location/cherokee> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Cherokee" ;
+    uco-core:name "Cherokee" .
+
+<https://caselinker.up.railway.app/resource/location/cherokee-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Cherokee County" ;
+    uco-core:name "Cherokee County" .
+
+<https://caselinker.up.railway.app/resource/location/iowa> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/sioux-city> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Sioux City" ;
+    uco-core:name "Sioux City" .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_456/admission/1> a cacontology-undercover:IncriminatingStatement ;
+    rdfs:label "searching for “teen porn”, as well as possessing videos depicting sadistic and masochistic conduct, prepubescent chil..." ;
+    dcterms:source <https://www.justice.gov/usao-ndia/pr/cherokee-county-man-sentenced-3-years-federal-prison-possession-child-pornography> ;
+    ns1:admissionContext "ons. When law enforcement executed a search at Cordeiro’s residence in September of 2023. Cordeiro admitted to searching for “teen porn”,..." ;
+    ns1:admissionFrame "admitted_to" ;
+    ns1:admissionTheme "harm_conduct" ;
+    ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/role/offender/1> ;
+    ns1:evidenceTier "press_release_stated" ;
+    ns1:quoteType "paraphrase" ;
+    uco-core:description "searching for “teen porn”, as well as possessing videos depicting sadistic and masochistic conduct, prepubescent children, and toddlers" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_456/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
-    cacontology:severityLevel 3 ;
-    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/facet/csam> .
+    cacontology:producesArtifact <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/admission/1> ;
+    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/facet/possession> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_456/offense-event/charge-3> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event,

@@ -6,19 +6,24 @@
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/pa_ag_2026_021> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:04:09.992404" ;
+    dcterms:created "2026-09-15T20:12:06.764196" ;
     dcterms:identifier "pa_ag_2026_021" ;
-    dcterms:modified "2026-09-10T20:04:09.992404" ;
+    dcterms:modified "2026-09-15T20:12:06.764196" ;
     dcterms:source <https://www.attorneygeneral.gov/taking-action/schuylkill-county-man-jailed-up-to-33-years-for-distributing-child-sexual-abuse-material-on-multiple-social-media-platforms/>,
         "PA AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/harrisburg>,
+        <https://caselinker.up.railway.app/resource/location/schuylkill-county>,
+        <https://caselinker.up.railway.app/resource/location/tamaqua> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/pa_ag_2026_021/phase/convicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/pa_ag_2026_021/phase/convicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/pa_ag_2026_021/event/conspiracy>,
@@ -27,7 +32,10 @@
         <https://caselinker.up.railway.app/resource/case/pa_ag_2026_021/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/pa_ag_2026_021/legal-step/convicted>,
         <https://caselinker.up.railway.app/resource/case/pa_ag_2026_021/operation> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/office-of-the-attorney-general> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/office-of-the-attorney-general> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/harrisburg>,
+        <https://caselinker.up.railway.app/resource/location/schuylkill-county>,
+        <https://caselinker.up.railway.app/resource/location/tamaqua> .
 
 <https://caselinker.up.railway.app/resource/case/pa_ag_2026_021/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
@@ -77,6 +85,7 @@
     cacontology:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/pa_ag_2026_021/event/conspiracy>,
         <https://caselinker.up.railway.app/resource/case/pa_ag_2026_021/event/possession> ;
+    cacontology:perpetratorRegisteredSexOffender true ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/pa_ag_2026_021/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/pa_ag_2026_021/role/offender/2> a cacontology:OffenderRole,
@@ -84,15 +93,27 @@
     cacontology:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/pa_ag_2026_021/event/conspiracy>,
         <https://caselinker.up.railway.app/resource/case/pa_ag_2026_021/event/possession> ;
+    cacontology:perpetratorRegisteredSexOffender true ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/pa_ag_2026_021/person/offender/2> .
 
 <https://caselinker.up.railway.app/resource/case/pa_ag_2026_021/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "33 years" .
+    rdfs:label "[\"33 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/pa_ag_2026_021/phase/convicted> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/harrisburg> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/schuylkill-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/tamaqua> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Tamaqua" ;
+    uco-core:name "Tamaqua" .
 
 <https://caselinker.up.railway.app/resource/platform/facebook> a cacontology-platforms:SocialMediaPlatform ;
     rdfs:label "Facebook" .

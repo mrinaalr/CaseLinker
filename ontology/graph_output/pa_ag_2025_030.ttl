@@ -6,25 +6,38 @@
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/pa_ag_2025_030> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:04:28.953599" ;
+    dcterms:created "2026-09-15T20:12:06.802820" ;
     dcterms:identifier "pa_ag_2025_030" ;
-    dcterms:modified "2026-09-10T20:04:28.953599" ;
+    dcterms:modified "2026-09-15T20:12:06.802820" ;
     dcterms:source <https://www.attorneygeneral.gov/taking-action/fayette-county-man-jailed-up-to-15-years-for-using-social-media-to-communicate-with-girl-arrange-meeting/>,
         "PA AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/fayette-county>,
+        <https://caselinker.up.railway.app/resource/location/harrisburg>,
+        <https://caselinker.up.railway.app/resource/location/pennsylvania>,
+        <https://caselinker.up.railway.app/resource/location/strawberry-square>,
+        <https://caselinker.up.railway.app/resource/location/uniontown> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/pa_ag_2025_030/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/pa_ag_2025_030/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/pa_ag_2025_030/event/distribution>,
         <https://caselinker.up.railway.app/resource/case/pa_ag_2025_030/event/online-only>,
         <https://caselinker.up.railway.app/resource/case/pa_ag_2025_030/event/trust-violation>,
         <https://caselinker.up.railway.app/resource/case/pa_ag_2025_030/legal-proceeding>,
-        <https://caselinker.up.railway.app/resource/case/pa_ag_2025_030/legal-step/sentenced> .
+        <https://caselinker.up.railway.app/resource/case/pa_ag_2025_030/legal-step/sentenced> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/fayette-county>,
+        <https://caselinker.up.railway.app/resource/location/harrisburg>,
+        <https://caselinker.up.railway.app/resource/location/pennsylvania>,
+        <https://caselinker.up.railway.app/resource/location/strawberry-square>,
+        <https://caselinker.up.railway.app/resource/location/uniontown> .
 
 <https://caselinker.up.railway.app/resource/case/pa_ag_2025_030/event/distribution> a cac-core:Event,
         cacontology-legal-outcomes:CSAM_Distribution .
@@ -37,9 +50,7 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/pa_ag_2025_030/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/pa_ag_2025_030/sentence/2>,
-        <https://caselinker.up.railway.app/resource/case/pa_ag_2025_030/sentence/3> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/pa_ag_2025_030/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/pa_ag_2025_030/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -72,22 +83,16 @@
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/pa_ag_2025_030/person/victim/1> .
 
 <https://caselinker.up.railway.app/resource/case/pa_ag_2025_030/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "15 years" .
-
-<https://caselinker.up.railway.app/resource/case/pa_ag_2025_030/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:ProbationSentence ;
-    rdfs:label "probation" .
-
-<https://caselinker.up.railway.app/resource/case/pa_ag_2025_030/sentence/3> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "25 years" .
+    rdfs:label "[\"15 years\", \"probation\", \"25 years\"]" .
 
 <https://caselinker.up.railway.app/resource/platform/facebook> a cacontology-platforms:SocialMediaPlatform ;
     rdfs:label "Facebook" .
 
-<https://caselinker.up.railway.app/resource/platform/snapchat> a cacontology-platforms:MessagingService ;
-    rdfs:label "Snapchat" .
+<https://caselinker.up.railway.app/resource/platform/snapchat> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:MessagingService ;
+    rdfs:label "Snapchat" ;
+    cacontology-platforms:encryptionLevel "end-to-end" .
 
 <https://caselinker.up.railway.app/resource/platform/social-media> a cacontology-platforms:SocialMediaPlatform ;
     rdfs:label "social media" .
@@ -95,6 +100,23 @@
 <https://caselinker.up.railway.app/resource/case/pa_ag_2025_030/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/fayette-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/harrisburg> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/pennsylvania> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/strawberry-square> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/uniontown> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Uniontown" ;
+    uco-core:name "Uniontown" .
 
 <https://caselinker.up.railway.app/resource/case/pa_ag_2025_030/event/online-only> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

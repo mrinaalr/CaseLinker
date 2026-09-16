@@ -6,26 +6,38 @@
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_238> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:27:19.763995" ;
+    dcterms:created "2026-09-15T21:27:13.373838" ;
     dcterms:identifier "ncmec_2025_238" ;
-    dcterms:modified "2026-09-10T19:27:19.763995" ;
+    dcterms:modified "2026-09-15T21:27:13.373838" ;
     dcterms:source <https://www.yahoo.com/news/man-arrested-last-child-solicitation-142956515.html>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/camden>,
+        <https://caselinker.up.railway.app/resource/location/camden-county>,
+        <https://caselinker.up.railway.app/resource/location/georgia>,
+        <https://caselinker.up.railway.app/resource/location/jacksonville>,
+        <https://caselinker.up.railway.app/resource/location/kingsland> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_238/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_238/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_238/event/csam>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_238/event/distribution>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_238/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_238/operation> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/camden>,
+        <https://caselinker.up.railway.app/resource/location/camden-county>,
+        <https://caselinker.up.railway.app/resource/location/georgia>,
+        <https://caselinker.up.railway.app/resource/location/jacksonville>,
+        <https://caselinker.up.railway.app/resource/location/kingsland> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_238/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -55,7 +67,8 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_238/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-03-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-03-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_238/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_238/operation> a cac-core:Event,
         cacontology-taskforce:UndercoverUnit .
@@ -65,12 +78,35 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_238/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_238/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/platform/chat> a cacontology-platforms:AnonymousChatPlatform ;
     rdfs:label "chat" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_238/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-03-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/camden> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/camden-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Camden County" ;
+    uco-core:name "Camden County" .
+
+<https://caselinker.up.railway.app/resource/location/georgia> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/jacksonville> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/kingsland> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Kingsland" ;
+    uco-core:name "Kingsland" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_238/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

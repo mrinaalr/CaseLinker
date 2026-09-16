@@ -11,16 +11,20 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2024_010> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:16:01.486016" ;
+    dcterms:created "2026-09-15T20:31:48.014518" ;
     dcterms:identifier "tbi_icac_2024_010" ;
-    dcterms:modified "2026-09-10T20:16:01.486016" ;
+    dcterms:modified "2026-09-15T20:31:48.014518" ;
     dcterms:source <https://tbinewsroom.com/2024/11/12/cybertip-leads-to-arrest-of-gibson-county-teen/>,
         "TBI ICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/gibson-county>,
+        <https://caselinker.up.railway.app/resource/location/humboldt>,
+        <https://caselinker.up.railway.app/resource/location/murfreesboro> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/tbi_icac_2024_010/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/tbi_icac_2024_010/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/tbi_icac_2024_010/cybertip>,
@@ -32,7 +36,10 @@
     cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/tbi_icac_2024_010/tech/cybertipline> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/humboldt-police-department>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/gibson-county>,
+        <https://caselinker.up.railway.app/resource/location/humboldt>,
+        <https://caselinker.up.railway.app/resource/location/murfreesboro> .
 
 <https://caselinker.up.railway.app/resource/agency/humboldt-police-department> a cac-core:OrganizationLikeEntity,
         cacontology-multi:LocalAgency ;
@@ -67,7 +74,8 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/tbi_icac_2024_010/charge/1>,
         <https://caselinker.up.railway.app/resource/case/tbi_icac_2024_010/charge/2>,
         <https://caselinker.up.railway.app/resource/case/tbi_icac_2024_010/charge/3> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/tbi_icac_2024_010/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2024_010/person/offender/1> a uco-identity:Person .
 
@@ -94,6 +102,10 @@
         <https://caselinker.up.railway.app/resource/case/tbi_icac_2024_010/event/hands-on> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/tbi_icac_2024_010/person/victim/1> .
 
+<https://caselinker.up.railway.app/resource/case/tbi_icac_2024_010/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2024_010/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
 
@@ -102,6 +114,15 @@
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2024_010/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/gibson-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/humboldt> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/murfreesboro> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2024_010/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

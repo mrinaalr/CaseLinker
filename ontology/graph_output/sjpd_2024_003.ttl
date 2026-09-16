@@ -8,17 +8,25 @@
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/sjpd_2024_003> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:12:16.810099" ;
+    dcterms:created "2026-09-15T20:26:31.761702" ;
     dcterms:identifier "sjpd_2024_003" ;
-    dcterms:modified "2026-09-10T20:12:16.810099" ;
+    dcterms:modified "2026-09-15T20:26:31.761702" ;
     dcterms:source <https://www.sjpd.org/Home/Components/News/News/1920/>,
         "SJPD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/antioch>,
+        <https://caselinker.up.railway.app/resource/location/los-gatos>,
+        <https://caselinker.up.railway.app/resource/location/san-josé>,
+        <https://caselinker.up.railway.app/resource/location/santa-clara-county-jail>,
+        <https://caselinker.up.railway.app/resource/location/union-city>,
+        <https://caselinker.up.railway.app/resource/location/watsonville> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/sjpd_2024_003/phase/booked> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/sjpd_2024_003/phase/booked> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/sjpd_2024_003/event/conspiracy>,
@@ -26,7 +34,13 @@
         <https://caselinker.up.railway.app/resource/case/sjpd_2024_003/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/sjpd_2024_003/offense-event/charge-1>,
         <https://caselinker.up.railway.app/resource/case/sjpd_2024_003/operation> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/antioch>,
+        <https://caselinker.up.railway.app/resource/location/los-gatos>,
+        <https://caselinker.up.railway.app/resource/location/san-josé>,
+        <https://caselinker.up.railway.app/resource/location/santa-clara-county-jail>,
+        <https://caselinker.up.railway.app/resource/location/union-city>,
+        <https://caselinker.up.railway.app/resource/location/watsonville> .
 
 <https://caselinker.up.railway.app/resource/case/sjpd_2024_003/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
@@ -47,9 +61,9 @@
 <https://caselinker.up.railway.app/resource/case/sjpd_2024_003/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Santa Clara County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/sjpd_2024_003/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/sjpd_2024_003/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/sjpd_2024_003/operation> a cac-core:Event,
         cacontology-taskforce:TaskForceOperation .
@@ -100,9 +114,39 @@
         <https://caselinker.up.railway.app/resource/case/sjpd_2024_003/offense-event/charge-1> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/sjpd_2024_003/person/offender/4> .
 
+<https://caselinker.up.railway.app/resource/case/sjpd_2024_003/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/sjpd_2024_003/phase/booked> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/antioch> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Antioch" ;
+    uco-core:name "Antioch" .
+
+<https://caselinker.up.railway.app/resource/location/los-gatos> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Los Gatos" ;
+    uco-core:name "Los Gatos" .
+
+<https://caselinker.up.railway.app/resource/location/san-josé> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/santa-clara-county-jail> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/union-city> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Union City" ;
+    uco-core:name "Union City" .
+
+<https://caselinker.up.railway.app/resource/location/watsonville> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Watsonville" ;
+    uco-core:name "Watsonville" .
 
 <https://caselinker.up.railway.app/resource/case/sjpd_2024_003/event/conspiracy> a cacontology:ConspiracyToCommitCSA,
         cac-core:Event ;

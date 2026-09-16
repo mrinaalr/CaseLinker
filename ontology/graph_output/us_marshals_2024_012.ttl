@@ -3,19 +3,28 @@
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2024_012> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:19:36.308547" ;
+    dcterms:created "2026-09-15T20:35:06.340058" ;
     dcterms:identifier "us_marshals_2024_012" ;
-    dcterms:modified "2026-09-10T20:19:36.308547" ;
+    dcterms:modified "2026-09-15T20:35:06.340058" ;
     dcterms:source <https://www.usmarshals.gov/news/press-release/multiagency-team-arrests-sex-offender-living-deep-louisiana-swamp>,
         "US MARSHALS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/atchafalaya-basin>,
+        <https://caselinker.up.railway.app/resource/location/baton-rouge>,
+        <https://caselinker.up.railway.app/resource/location/lafayette>,
+        <https://caselinker.up.railway.app/resource/location/louisiana>,
+        <https://caselinker.up.railway.app/resource/location/the-atchafalaya-basin>,
+        <https://caselinker.up.railway.app/resource/location/the-middle-district>,
+        <https://caselinker.up.railway.app/resource/location/the-sherburne-wildlife-management-area> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/us_marshals_2024_012/phase/indicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/us_marshals_2024_012/phase/indicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/us_marshals_2024_012/event/csam>,
@@ -29,7 +38,14 @@
         <https://caselinker.up.railway.app/resource/agency/louisiana-department-of-wildlife-and-fisheries>,
         <https://caselinker.up.railway.app/resource/agency/middle-louisiana-fugitive-task-force>,
         <https://caselinker.up.railway.app/resource/agency/usms>,
-        <https://caselinker.up.railway.app/resource/agency/western-district-of-louisiana-violent-offender-task-force> .
+        <https://caselinker.up.railway.app/resource/agency/western-district-of-louisiana-violent-offender-task-force> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/atchafalaya-basin>,
+        <https://caselinker.up.railway.app/resource/location/baton-rouge>,
+        <https://caselinker.up.railway.app/resource/location/lafayette>,
+        <https://caselinker.up.railway.app/resource/location/louisiana>,
+        <https://caselinker.up.railway.app/resource/location/the-atchafalaya-basin>,
+        <https://caselinker.up.railway.app/resource/location/the-middle-district>,
+        <https://caselinker.up.railway.app/resource/location/the-sherburne-wildlife-management-area> .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2024_012/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -53,7 +69,9 @@
         cacontology-multi:LocalAgency ;
     rdfs:label "Lafayette Office of the Louisiana Department of Wildlife and Fisheries" .
 
-<https://caselinker.up.railway.app/resource/agency/louisiana-department-of-wildlife-and-fisheries> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/louisiana-department-of-wildlife-and-fisheries> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Louisiana Department of Wildlife and Fisheries" .
 
 <https://caselinker.up.railway.app/resource/agency/middle-louisiana-fugitive-task-force> a cac-core:OrganizationLikeEntity,
         cacontology-multi:LocalAgency ;
@@ -84,8 +102,7 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/us_marshals_2024_012/charge/1>,
         <https://caselinker.up.railway.app/resource/case/us_marshals_2024_012/charge/2> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/us_marshals_2024_012/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/us_marshals_2024_012/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/us_marshals_2024_012/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2024_012/person/offender/1> a uco-identity:Person .
 
@@ -93,15 +110,38 @@
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2024_012/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:ProbationSentence ;
-    rdfs:label "Probation" .
-
-<https://caselinker.up.railway.app/resource/case/us_marshals_2024_012/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "supervised release" .
+    rdfs:label "[\"Probation\", \"supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2024_012/phase/indicted> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/atchafalaya-basin> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Atchafalaya Basin" ;
+    uco-core:name "Atchafalaya Basin" .
+
+<https://caselinker.up.railway.app/resource/location/baton-rouge> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/lafayette> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/louisiana> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/the-atchafalaya-basin> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "the Atchafalaya Basin" ;
+    uco-core:name "the Atchafalaya Basin" .
+
+<https://caselinker.up.railway.app/resource/location/the-middle-district> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/the-sherburne-wildlife-management-area> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "the Sherburne Wildlife Management Area" ;
+    uco-core:name "the Sherburne Wildlife Management Area" .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2024_012/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

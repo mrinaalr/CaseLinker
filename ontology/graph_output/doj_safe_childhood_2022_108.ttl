@@ -13,6 +13,7 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -35,19 +36,21 @@
 
 <https://caselinker.up.railway.app/resource/agency/doj> a cacontology-multi:FederalAgency .
 
-<https://caselinker.up.railway.app/resource/agency/fbi> a cacontology-multi:FederalAgency .
-
 <https://caselinker.up.railway.app/resource/agency/hsi> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_108> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T21:23:07.961854" ;
+    dcterms:created "2026-09-15T22:12:28.624883" ;
     dcterms:identifier "doj_safe_childhood_2022_108" ;
-    dcterms:modified "2026-09-14T21:23:07.961854" ;
+    dcterms:modified "2026-09-15T22:12:28.624883" ;
     dcterms:source <https://www.justice.gov/usao-ne/pr/omaha-man-convicted-distributing-child-pornography>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/bellevue>,
+        <https://caselinker.up.railway.app/resource/location/nebraska>,
+        <https://caselinker.up.railway.app/resource/location/omaha>,
+        <https://caselinker.up.railway.app/resource/location/united-states> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_108/phase/convicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_108/phase/convicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_108/admission/1>,
@@ -64,10 +67,13 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/bellevue-police-department>,
         <https://caselinker.up.railway.app/resource/agency/ceos>,
         <https://caselinker.up.railway.app/resource/agency/doj>,
-        <https://caselinker.up.railway.app/resource/agency/fbi>,
         <https://caselinker.up.railway.app/resource/agency/hsi>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/usao> .
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/bellevue>,
+        <https://caselinker.up.railway.app/resource/location/nebraska>,
+        <https://caselinker.up.railway.app/resource/location/omaha>,
+        <https://caselinker.up.railway.app/resource/location/united-states> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_108/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -102,8 +108,7 @@
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_108/charge/2>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_108/charge/3> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_108/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_108/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_108/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_108/legal-step/convicted> a cac-core:Event,
         cac-core:LegalEvent,
@@ -128,12 +133,8 @@
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_108/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_108/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "20 years" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_108/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MandatoryMinimumSentencing ;
-    rdfs:label "mandatory minimum" .
+    rdfs:label "[\"20 years\", \"mandatory minimum\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_108/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -144,24 +145,31 @@
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
+<https://caselinker.up.railway.app/resource/location/bellevue> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/nebraska> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/omaha> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_108/event/online-only> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;
     cacontology:producesArtifact <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_108/admission/1> ;
-    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/chat>,
-        <https://caselinker.up.railway.app/resource/platform/twitter-x> .
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/chat> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_108/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
     cacontology:producesArtifact <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_108/admission/1> ;
-    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/chat>,
-        <https://caselinker.up.railway.app/resource/platform/twitter-x> ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/chat> ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_108/facet/possession> .
 
 <https://caselinker.up.railway.app/resource/platform/chat> a cacontology-platforms:AnonymousChatPlatform ;
     rdfs:label "chat" .
-
-<https://caselinker.up.railway.app/resource/platform/twitter-x> a cacontology-platforms:SocialMediaPlatform ;
-    rdfs:label "Twitter / X" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_108/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "chatting online regarding sexual fantasies and claimed to have received child pornography unintentionally during thos..." ;
@@ -179,6 +187,5 @@
         cac-core:Event,
         uco-action:Crime ;
     rdfs:label "Inferred offense from charge: child exploitation" ;
-    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/chat>,
-        <https://caselinker.up.railway.app/resource/platform/twitter-x> .
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/chat> .
 

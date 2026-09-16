@@ -1,25 +1,35 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
 @prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/pa_ag_2025_025> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:04:22.477387" ;
+    dcterms:created "2026-09-15T20:12:06.790188" ;
     dcterms:identifier "pa_ag_2025_025" ;
-    dcterms:modified "2026-09-10T20:04:22.477387" ;
+    dcterms:modified "2026-09-15T20:12:06.790188" ;
     dcterms:source <https://www.attorneygeneral.gov/taking-action/bedford-county-foster-father-jailed-up-to-eight-years-for-violently-shaking-toddler-causing-serious-injury/>,
         "PA AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/bedford-county>,
+        <https://caselinker.up.railway.app/resource/location/harrisburg>,
+        <https://caselinker.up.railway.app/resource/location/hopewell> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/pa_ag_2025_025/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/pa_ag_2025_025/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/pa_ag_2025_025/event/trust-violation>,
         <https://caselinker.up.railway.app/resource/case/pa_ag_2025_025/legal-proceeding>,
-        <https://caselinker.up.railway.app/resource/case/pa_ag_2025_025/legal-step/sentenced> .
+        <https://caselinker.up.railway.app/resource/case/pa_ag_2025_025/legal-step/sentenced> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/bedford-county>,
+        <https://caselinker.up.railway.app/resource/location/harrisburg>,
+        <https://caselinker.up.railway.app/resource/location/hopewell> .
 
 <https://caselinker.up.railway.app/resource/case/pa_ag_2025_025/event/trust-violation> a cacontology-custodial:CustodialAbuse,
         cacontology-custodial:TrustViolation ;
@@ -37,7 +47,8 @@
         cacontology-legal-outcomes:SentencingHearing ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
-<https://caselinker.up.railway.app/resource/case/pa_ag_2025_025/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/pa_ag_2025_025/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 40 .
 
 <https://caselinker.up.railway.app/resource/case/pa_ag_2025_025/person/victim/1> a uco-identity:Person .
 
@@ -59,9 +70,22 @@
 
 <https://caselinker.up.railway.app/resource/case/pa_ag_2025_025/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:ProbationSentence ;
-    rdfs:label "probation" .
+    rdfs:label "[\"probation\"]" .
 
 <https://caselinker.up.railway.app/resource/case/pa_ag_2025_025/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/bedford-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Bedford County" ;
+    uco-core:name "Bedford County" .
+
+<https://caselinker.up.railway.app/resource/location/harrisburg> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/hopewell> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Hopewell" ;
+    uco-core:name "Hopewell" .
 

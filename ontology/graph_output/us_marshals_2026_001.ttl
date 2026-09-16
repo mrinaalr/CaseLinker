@@ -3,19 +3,30 @@
 @prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2026_001> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:17:52.086327" ;
+    dcterms:created "2026-09-15T20:35:06.157678" ;
     dcterms:identifier "us_marshals_2026_001" ;
-    dcterms:modified "2026-09-10T20:17:52.086327" ;
+    dcterms:modified "2026-09-15T20:35:06.157678" ;
     dcterms:source <https://www.usmarshals.gov/news/press-release/child-sex-assault-fugitive-flees-colorado-tracked-us-marshals-and-arrested-texas>,
         "US MARSHALS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/broomfield>,
+        <https://caselinker.up.railway.app/resource/location/colorado>,
+        <https://caselinker.up.railway.app/resource/location/denver>,
+        <https://caselinker.up.railway.app/resource/location/edinburg>,
+        <https://caselinker.up.railway.app/resource/location/greeley>,
+        <https://caselinker.up.railway.app/resource/location/mcallen>,
+        <https://caselinker.up.railway.app/resource/location/texas> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/us_marshals_2026_001/phase/convicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/us_marshals_2026_001/phase/convicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/us_marshals_2026_001/event/multi-jurisdiction>,
@@ -25,17 +36,28 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/broomfield-police-department>,
         <https://caselinker.up.railway.app/resource/agency/colorado-violent-offender-task-force>,
         <https://caselinker.up.railway.app/resource/agency/southern-district-of-texas-gulf-coast-violent-offender-fugitive-task-force>,
-        <https://caselinker.up.railway.app/resource/agency/usms> .
+        <https://caselinker.up.railway.app/resource/agency/usms> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/broomfield>,
+        <https://caselinker.up.railway.app/resource/location/colorado>,
+        <https://caselinker.up.railway.app/resource/location/denver>,
+        <https://caselinker.up.railway.app/resource/location/edinburg>,
+        <https://caselinker.up.railway.app/resource/location/greeley>,
+        <https://caselinker.up.railway.app/resource/location/mcallen>,
+        <https://caselinker.up.railway.app/resource/location/texas> .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2026_001/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
     cacontology:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:perpetratorRegisteredSexOffender true ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/us_marshals_2026_001/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2026_001/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
     cacontology:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/us_marshals_2026_001/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/platform/twitter-x> a cacontology-platforms:SocialMediaPlatform ;
+    rdfs:label "Twitter / X" .
 
 <https://caselinker.up.railway.app/resource/agency/broomfield-police-department> a cac-core:OrganizationLikeEntity,
         cacontology-multi:LocalAgency ;
@@ -56,8 +78,8 @@
 <https://caselinker.up.railway.app/resource/case/us_marshals_2026_001/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Hidalgo County Jail" ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/us_marshals_2026_001/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2026_001/legal-step/convicted> a cac-core:Event,
         cac-core:LegalEvent,
@@ -70,7 +92,40 @@
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2026_001/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/us_marshals_2026_001/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/us_marshals_2026_001/phase/convicted> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/broomfield> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Broomfield" ;
+    uco-core:name "Broomfield" .
+
+<https://caselinker.up.railway.app/resource/location/colorado> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/denver> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/edinburg> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Edinburg" ;
+    uco-core:name "Edinburg" .
+
+<https://caselinker.up.railway.app/resource/location/greeley> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Greeley" ;
+    uco-core:name "Greeley" .
+
+<https://caselinker.up.railway.app/resource/location/mcallen> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Mcallen" ;
+    uco-core:name "Mcallen" .
+
+<https://caselinker.up.railway.app/resource/location/texas> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 

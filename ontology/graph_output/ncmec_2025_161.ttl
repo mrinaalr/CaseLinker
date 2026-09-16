@@ -10,6 +10,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -65,17 +66,22 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_161/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_161/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-04-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-04-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_161/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_161/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 38 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_161/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_161/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_161/admission/2> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "hadn't used it since around 2020, the complaint said" ;
     dcterms:source <https://www.nbcmiami.com/news/local/plantation-man-arrested-on-federal-child-porn-charges-after-fbi-raids-apartment/3588605/> ;
-    ns1:admissionContext "h warrant at Cunningham's apartment and he was detained. Cunningham admitted he had a Kik account but said he hadn't used it since around..." ;
+    ns1:admissionContext "warrant at Cunningham's apartment and he was detained. Cunningham admitted he had a Kik account but said he hadn't used it since around 2..." ;
     ns1:admissionFrame "said_paraphrase" ;
     ns1:admissionTheme "other" ;
     ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_161/role/offender/1> ;
@@ -87,22 +93,39 @@
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-04-01T00:00:00Z"^^xsd:dateTimeStamp .
 
+<https://caselinker.up.railway.app/resource/location/humble> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Humble" ;
+    uco-core:name "Humble" .
+
+<https://caselinker.up.railway.app/resource/location/plantation> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Plantation" ;
+    uco-core:name "Plantation" .
+
+<https://caselinker.up.railway.app/resource/location/texas> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
 <https://caselinker.up.railway.app/resource/platform/chat> a cacontology-platforms:AnonymousChatPlatform ;
     rdfs:label "chat" .
 
 <https://caselinker.up.railway.app/resource/platform/kik> a cacontology-platforms:MessagingService ;
     rdfs:label "Kik" .
 
-<https://caselinker.up.railway.app/resource/platform/youtube> a cacontology-platforms:VideoStreamingPlatform ;
+<https://caselinker.up.railway.app/resource/platform/youtube> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:VideoStreamingPlatform ;
     rdfs:label "YouTube" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_161> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:26:39.797615" ;
+    dcterms:created "2026-09-15T21:27:13.301703" ;
     dcterms:identifier "ncmec_2025_161" ;
-    dcterms:modified "2026-09-10T19:26:39.797615" ;
+    dcterms:modified "2026-09-15T21:27:13.301703" ;
     dcterms:source <https://www.nbcmiami.com/news/local/plantation-man-arrested-on-federal-child-porn-charges-after-fbi-raids-apartment/3588605/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/humble>,
+        <https://caselinker.up.railway.app/resource/location/plantation>,
+        <https://caselinker.up.railway.app/resource/location/texas> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_161/phase/booked> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_161/phase/booked> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_161/admission/1>,
@@ -114,7 +137,10 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_161/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_161/legal-proceeding> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/fbi>,
-        <https://caselinker.up.railway.app/resource/agency/plantation-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/plantation-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/humble>,
+        <https://caselinker.up.railway.app/resource/location/plantation>,
+        <https://caselinker.up.railway.app/resource/location/texas> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_161/event/online-only> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;
@@ -145,7 +171,7 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_161/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "had a Kik account but said he hadn't used it since around 2020, the complaint said" ;
     dcterms:source <https://www.nbcmiami.com/news/local/plantation-man-arrested-on-federal-child-porn-charges-after-fbi-raids-apartment/3588605/> ;
-    ns1:admissionContext "dnesday, the FBI executed a search warrant at Cunningham's apartment and he was detained. Cunningham admitted he had a Kik account but sa..." ;
+    ns1:admissionContext "nesday, the FBI executed a search warrant at Cunningham's apartment and he was detained. Cunningham admitted he had a Kik account but sai..." ;
     ns1:admissionFrame "admitted_he_she" ;
     ns1:admissionTheme "tech_use" ;
     ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_161/role/offender/1> ;
@@ -156,7 +182,7 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_161/admission/3> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "\"seeks out children for sexual encounters while bragging about his past sexual experiences\" including one with a 12-y..." ;
     dcterms:source <https://www.nbcmiami.com/news/local/plantation-man-arrested-on-federal-child-porn-charges-after-fbi-raids-apartment/3588605/> ;
-    ns1:admissionContext "erested in trading child pornography, the complaint said. They also found a message where he said he \"seeks out children for sexual encou..." ;
+    ns1:admissionContext "rested in trading child pornography, the complaint said. They also found a message where he said he \"seeks out children for sexual encoun..." ;
     ns1:admissionFrame "he_said_paraphrase" ;
     ns1:admissionTheme "harm_conduct" ;
     ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_161/role/offender/1> ;

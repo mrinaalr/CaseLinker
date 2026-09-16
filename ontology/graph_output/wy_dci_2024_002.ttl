@@ -14,6 +14,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -28,11 +29,17 @@
 
 <https://caselinker.up.railway.app/resource/case/wy_dci_2024_002> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:25:30.415248" ;
+    dcterms:created "2026-09-15T20:42:27.123345" ;
     dcterms:identifier "wy_dci_2024_002" ;
-    dcterms:modified "2026-09-10T20:25:30.415248" ;
+    dcterms:modified "2026-09-15T20:42:27.123345" ;
     dcterms:source <https://cowboystatedaily.com/2024/03/30/internet-crimes-against-wyoming-children-surge-up-60-so-far-this-year/>,
         "WY DCI" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/cheyenne>,
+        <https://caselinker.up.railway.app/resource/location/green-river>,
+        <https://caselinker.up.railway.app/resource/location/laramie>,
+        <https://caselinker.up.railway.app/resource/location/montana>,
+        <https://caselinker.up.railway.app/resource/location/sheridan>,
+        <https://caselinker.up.railway.app/resource/location/wyoming> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/wy_dci_2024_002/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/wy_dci_2024_002/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/wy_dci_2024_002/admission/1>,
@@ -49,7 +56,13 @@
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/wyoming-division-of-criminal-investigation> .
+        <https://caselinker.up.railway.app/resource/agency/wyoming-division-of-criminal-investigation> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/cheyenne>,
+        <https://caselinker.up.railway.app/resource/location/green-river>,
+        <https://caselinker.up.railway.app/resource/location/laramie>,
+        <https://caselinker.up.railway.app/resource/location/montana>,
+        <https://caselinker.up.railway.app/resource/location/sheridan>,
+        <https://caselinker.up.railway.app/resource/location/wyoming> .
 
 <https://caselinker.up.railway.app/resource/case/wy_dci_2024_002/charge/1> a cacontology-legal-outcomes:CriminalCharge,
         cacontology-legal-outcomes:StateCharge ;
@@ -104,8 +117,7 @@
         <https://caselinker.up.railway.app/resource/case/wy_dci_2024_002/charge/5>,
         <https://caselinker.up.railway.app/resource/case/wy_dci_2024_002/charge/6> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/wy_dci_2024_002/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/wy_dci_2024_002/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/wy_dci_2024_002/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/wy_dci_2024_002/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -135,11 +147,7 @@
 
 <https://caselinker.up.railway.app/resource/case/wy_dci_2024_002/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$10,000" .
-
-<https://caselinker.up.railway.app/resource/case/wy_dci_2024_002/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "60 years" .
+    rdfs:label "[\"$10,000\", \"60 years\"]" .
 
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
@@ -155,6 +163,30 @@
         <https://caselinker.up.railway.app/resource/case/wy_dci_2024_002/event/production>,
         <https://caselinker.up.railway.app/resource/case/wy_dci_2024_002/event/sextortion> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/wy_dci_2024_002/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/location/cheyenne> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/green-river> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Green River" ;
+    uco-core:name "Green River" .
+
+<https://caselinker.up.railway.app/resource/location/laramie> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Laramie" ;
+    uco-core:name "Laramie" .
+
+<https://caselinker.up.railway.app/resource/location/montana> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/sheridan> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Sheridan" ;
+    uco-core:name "Sheridan" .
+
+<https://caselinker.up.railway.app/resource/location/wyoming> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/wy_dci_2024_002/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;
@@ -186,7 +218,8 @@
     cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/dark-web>,
         <https://caselinker.up.railway.app/resource/platform/social-media> .
 
-<https://caselinker.up.railway.app/resource/platform/dark-web> a cacontology-platforms:DarkWebService ;
+<https://caselinker.up.railway.app/resource/platform/dark-web> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:DarkWebService ;
     rdfs:label "dark web" .
 
 <https://caselinker.up.railway.app/resource/platform/social-media> a cacontology-platforms:SocialMediaPlatform ;

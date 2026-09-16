@@ -5,25 +5,31 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_223> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:10:45.771287" ;
+    dcterms:created "2026-09-15T20:55:00.941252" ;
     dcterms:identifier "ncmec_2023_223" ;
-    dcterms:modified "2026-09-10T19:10:45.771287" ;
+    dcterms:modified "2026-09-15T20:55:00.941252" ;
     dcterms:source <https://kmph.com/news/local/tulare-man-arrested-for-child-pornography-after-snapchat-account-flagged-google-city-of-tulare-california-tulare-county-califoria-crime-isaac-hererra>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/calif>,
+        <https://caselinker.up.railway.app/resource/location/tulare> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_223/phase/booked> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_223/phase/booked> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_223/event/csam>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_223/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/tulare-police-department> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/tulare-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/calif>,
+        <https://caselinker.up.railway.app/resource/location/tulare> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_223/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -50,14 +56,18 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_223/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Tulare County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_223/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_223/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_223/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 39 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_223/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_223/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/platform/snapchat> a cacontology-platforms:MessagingService ;
     rdfs:label "Snapchat" .
@@ -65,6 +75,14 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_223/phase/booked> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/calif> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/tulare> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Tulare" ;
+    uco-core:name "Tulare" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_223/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

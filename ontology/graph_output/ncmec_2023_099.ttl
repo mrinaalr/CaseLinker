@@ -5,19 +5,23 @@
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_099> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:09:50.097223" ;
+    dcterms:created "2026-09-15T20:55:00.834787" ;
     dcterms:identifier "ncmec_2023_099" ;
-    dcterms:modified "2026-09-10T19:09:50.097223" ;
+    dcterms:modified "2026-09-15T20:55:00.834787" ;
     dcterms:source <https://www.wfmd.com/2023/04/26/10-child-pornography-counts-filed-against-new-market-man/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/frederick>,
+        <https://caselinker.up.railway.app/resource/location/maryland> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_099/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_099/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_099/cybertip>,
@@ -26,7 +30,9 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/frederick-county-cyber-crimes-task-force>,
         <https://caselinker.up.railway.app/resource/agency/frederick-county-sheriffs-office>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/frederick>,
+        <https://caselinker.up.railway.app/resource/location/maryland> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_099/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -44,7 +50,9 @@
         cacontology-multi:LocalAgency ;
     rdfs:label "Frederick County Cyber Crimes Task Force" .
 
-<https://caselinker.up.railway.app/resource/agency/frederick-county-sheriffs-office> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/frederick-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Frederick County Sheriff's Office" .
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
@@ -61,17 +69,30 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_099/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-04-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-04-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_099/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_099/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_099/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_099/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_099/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-04-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/frederick> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Frederick" ;
+    uco-core:name "Frederick" .
+
+<https://caselinker.up.railway.app/resource/location/maryland> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_099/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

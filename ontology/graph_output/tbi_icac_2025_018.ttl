@@ -10,20 +10,23 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:17:47.525964" ;
+    dcterms:created "2026-09-15T20:31:48.121189" ;
     dcterms:identifier "tbi_icac_2025_018" ;
-    dcterms:modified "2026-09-10T20:17:47.525964" ;
+    dcterms:modified "2026-09-15T20:31:48.121189" ;
     dcterms:source <https://tbinewsroom.com/2025/03/21/graysville-man-charged-in-tbi-child-sexual-abuse-material-investigation/>,
         "TBI ICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/bethel-springs>,
+        <https://caselinker.up.railway.app/resource/location/tennessee> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/phase/convicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/phase/convicted> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/event/hands-on>,
-        <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/event/possession>,
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/event/csam>,
+        <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/event/hands-on>,
         <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/event/production>,
         <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/legal-step/convicted>,
@@ -33,13 +36,15 @@
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/judicial-district-drug-task-force>,
         <https://caselinker.up.railway.app/resource/agency/sequatchie-county-sheriffs-office>,
-        <https://caselinker.up.railway.app/resource/agency/tennessee-department-of-human-resources> .
+        <https://caselinker.up.railway.app/resource/agency/tennessee-department-of-human-resources> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/bethel-springs>,
+        <https://caselinker.up.railway.app/resource/location/tennessee> .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
     cacontology:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/event/hands-on>,
-        <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/event/possession>,
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/event/csam>,
+        <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/event/hands-on>,
         <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/event/production>,
         <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/offense-event/charge-3> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/person/offender/1> .
@@ -47,13 +52,15 @@
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
     cacontology:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/event/hands-on>,
-        <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/event/possession>,
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/event/csam>,
+        <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/event/hands-on>,
         <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/event/production>,
         <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/offense-event/charge-3> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/criminal-investigation-division> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/criminal-investigation-division> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Criminal Investigation Division" .
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
@@ -81,23 +88,18 @@
     ns1:chargeCluster "child_exploitation" ;
     ns1:chargeOffenseEvent <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/offense-event/charge-3> .
 
-<https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/facet/production> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility: Sequatchie County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/charge/1>,
         <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/charge/2>,
         <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/charge/3> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/sentence/2>,
-        <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/sentence/3>,
-        <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/sentence/4>,
-        <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/sentence/5> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/legal-step/convicted> a cac-core:Event,
         cac-core:LegalEvent,
@@ -110,37 +112,29 @@
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/person/victim/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$25,000" .
-
-<https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$75,000" .
-
-<https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/sentence/3> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:ProbationSentence ;
-    rdfs:label "Probation" .
-
-<https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/sentence/4> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$4,017" .
-
-<https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/sentence/5> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$6,039" .
+    rdfs:label "[\"$25,000\", \"$75,000\", \"Probation\", \"$4,017\", \"$6,039\"]" .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/phase/convicted> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
+<https://caselinker.up.railway.app/resource/location/bethel-springs> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Bethel Springs" ;
+    uco-core:name "Bethel Springs" .
+
+<https://caselinker.up.railway.app/resource/location/tennessee> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/event/csam> a cacontology:CSAMIncident,
+        cac-core:Event ;
+    cacontology:severityLevel 3 ;
+    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/facet/csam> .
+
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;
     cacontology:severityLevel 3 .
-
-<https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/event/possession> a cacontology:CSAMIncident,
-        cac-core:Event ;
-    cacontology:severityLevel 3 ;
-    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/facet/possession> .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2025_018/event/production> a cac-core:Event,
         cacontology-production:ProductionOffense ;

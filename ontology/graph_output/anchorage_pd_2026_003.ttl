@@ -4,26 +4,35 @@
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/anchorage_pd_2026_003> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:36:09.295088" ;
+    dcterms:created "2026-09-15T19:24:25.559638" ;
     dcterms:identifier "anchorage_pd_2026_003" ;
-    dcterms:modified "2026-09-10T19:36:09.295088" ;
+    dcterms:modified "2026-09-15T19:24:25.559638" ;
     dcterms:source <https://www.anchoragepolice.com/news/nathan-makowski-convicted-of-multiple-counts-of-sexual-abuse-of-a-minor>,
         "ANCHORAGE PD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/anchorage>,
+        <https://caselinker.up.railway.app/resource/location/nepal> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/anchorage_pd_2026_003/phase/convicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/anchorage_pd_2026_003/phase/convicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/anchorage_pd_2026_003/event/hands-on>,
         <https://caselinker.up.railway.app/resource/case/anchorage_pd_2026_003/event/trust-violation>,
+        <https://caselinker.up.railway.app/resource/case/anchorage_pd_2026_003/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/anchorage_pd_2026_003/legal-step/convicted> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/anchorage-district-attorneys-office>,
         <https://caselinker.up.railway.app/resource/agency/anchorage-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/usms> .
+        <https://caselinker.up.railway.app/resource/agency/usms> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/anchorage>,
+        <https://caselinker.up.railway.app/resource/location/nepal> .
 
 <https://caselinker.up.railway.app/resource/agency/anchorage-district-attorneys-office> a cacontology-multi:StateAgency .
 
@@ -34,6 +43,12 @@
 <https://caselinker.up.railway.app/resource/case/anchorage_pd_2026_003/event/trust-violation> a cacontology-custodial:CustodialAbuse,
         cacontology-custodial:TrustViolation ;
     cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/anchorage_pd_2026_003/relationship/mother> .
+
+<https://caselinker.up.railway.app/resource/case/anchorage_pd_2026_003/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/anchorage_pd_2026_003/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/anchorage_pd_2026_003/legal-step/convicted> a cac-core:Event,
         cac-core:LegalEvent,
@@ -63,9 +78,21 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/anchorage_pd_2026_003/event/hands-on> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/anchorage_pd_2026_003/person/victim/1> .
 
+<https://caselinker.up.railway.app/resource/case/anchorage_pd_2026_003/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/anchorage_pd_2026_003/phase/convicted> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/anchorage> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/nepal> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Nepal" ;
+    uco-core:name "Nepal" .
 
 <https://caselinker.up.railway.app/resource/case/anchorage_pd_2026_003/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

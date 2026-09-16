@@ -10,6 +10,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -33,11 +34,16 @@
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2013_003> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T22:32:44.772555" ;
+    dcterms:created "2026-09-15T21:47:03.921846" ;
     dcterms:identifier "doj_ceos_2013_003" ;
-    dcterms:modified "2026-09-14T22:32:44.772555" ;
+    dcterms:modified "2026-09-15T21:47:03.921846" ;
     dcterms:source <https://www.justice.gov/usao-nj/pr/ocean-county-nj-man-sentenced-22-years-prison-producing-and-possessing-child-pornography>,
         "DOJ CEOS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/bayville>,
+        <https://caselinker.up.railway.app/resource/location/nj>,
+        <https://caselinker.up.railway.app/resource/location/ocean-county>,
+        <https://caselinker.up.railway.app/resource/location/princeton>,
+        <https://caselinker.up.railway.app/resource/location/trenton> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_ceos_2013_003/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_ceos_2013_003/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_ceos_2013_003/admission/1>,
@@ -49,7 +55,12 @@
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/hsi>,
         <https://caselinker.up.railway.app/resource/agency/ice>,
-        <https://caselinker.up.railway.app/resource/agency/usao> .
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/bayville>,
+        <https://caselinker.up.railway.app/resource/location/nj>,
+        <https://caselinker.up.railway.app/resource/location/ocean-county>,
+        <https://caselinker.up.railway.app/resource/location/princeton>,
+        <https://caselinker.up.railway.app/resource/location/trenton> .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2013_003/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -74,8 +85,7 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/doj_ceos_2013_003/charge/1>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2013_003/charge/2> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_ceos_2013_003/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_ceos_2013_003/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_ceos_2013_003/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2013_003/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -96,16 +106,35 @@
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_ceos_2013_003/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2013_003/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "22 Years" .
-
-<https://caselinker.up.railway.app/resource/case/doj_ceos_2013_003/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "supervised release" .
+    rdfs:label "[\"22 Years\", \"supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2013_003/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/bayville> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Bayville" ;
+    uco-core:name "Bayville" .
+
+<https://caselinker.up.railway.app/resource/location/nj> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/ocean-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Ocean County" ;
+    uco-core:name "Ocean County" .
+
+<https://caselinker.up.railway.app/resource/location/princeton> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Princeton" ;
+    uco-core:name "Princeton" .
+
+<https://caselinker.up.railway.app/resource/location/trenton> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Trenton" ;
+    uco-core:name "Trenton" .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2013_003/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

@@ -5,24 +5,30 @@
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_323> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:11:30.921785" ;
+    dcterms:created "2026-09-15T20:55:01.028281" ;
     dcterms:identifier "ncmec_2023_323" ;
-    dcterms:modified "2026-09-10T19:11:30.921785" ;
+    dcterms:modified "2026-09-15T20:55:01.028281" ;
     dcterms:source <https://waynetimes.com/news/newark-man-arrested-for-child-porn-and-forcible-touching/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/lyons>,
+        <https://caselinker.up.railway.app/resource/location/newark> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_323/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_323/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_323/event/csam>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_323/event/trust-violation>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2023_323/legal-proceeding> .
+        <https://caselinker.up.railway.app/resource/case/ncmec_2023_323/legal-proceeding> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/lyons>,
+        <https://caselinker.up.railway.app/resource/location/newark> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_323/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -38,9 +44,9 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_323/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Wayne County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_323/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-04-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-04-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_323/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_323/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 23 .
@@ -65,12 +71,24 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_323/event/csam> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_323/person/victim/1> .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_323/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/platform/social-media> a cacontology-platforms:SocialMediaPlatform ;
     rdfs:label "social media" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_323/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-04-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/lyons> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Lyons" ;
+    uco-core:name "Lyons" .
+
+<https://caselinker.up.railway.app/resource/location/newark> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_323/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

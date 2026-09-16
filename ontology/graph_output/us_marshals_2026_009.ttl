@@ -7,17 +7,24 @@
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2026_009> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:18:17.947206" ;
+    dcterms:created "2026-09-15T20:35:06.205902" ;
     dcterms:identifier "us_marshals_2026_009" ;
-    dcterms:modified "2026-09-10T20:18:17.947206" ;
+    dcterms:modified "2026-09-15T20:35:06.205902" ;
     dcterms:source <https://www.usmarshals.gov/news/press-release/rhode-island-child-molestation-fugitive-arrested-maine-us-marshals>,
         "US MARSHALS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/maine>,
+        <https://caselinker.up.railway.app/resource/location/massachusetts>,
+        <https://caselinker.up.railway.app/resource/location/north-berwick>,
+        <https://caselinker.up.railway.app/resource/location/portland>,
+        <https://caselinker.up.railway.app/resource/location/rhode-island> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/us_marshals_2026_009/event/hands-on>,
         <https://caselinker.up.railway.app/resource/case/us_marshals_2026_009/event/multi-jurisdiction>,
         <https://caselinker.up.railway.app/resource/case/us_marshals_2026_009/legal-proceeding>,
@@ -29,8 +36,13 @@
         <https://caselinker.up.railway.app/resource/agency/maine-national-guard-counterdrug-task-force>,
         <https://caselinker.up.railway.app/resource/agency/rhode-island-violent-fugitive-task-force>,
         <https://caselinker.up.railway.app/resource/agency/usms>,
-        <https://caselinker.up.railway.app/resource/agency/usmsnled-maine-violent-offender-task-force>,
-        <https://caselinker.up.railway.app/resource/agency/west-warwick-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/usmsiled-maine-violent-offender-task-force>,
+        <https://caselinker.up.railway.app/resource/agency/west-warwick-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/maine>,
+        <https://caselinker.up.railway.app/resource/location/massachusetts>,
+        <https://caselinker.up.railway.app/resource/location/north-berwick>,
+        <https://caselinker.up.railway.app/resource/location/portland>,
+        <https://caselinker.up.railway.app/resource/location/rhode-island> .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2026_009/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -54,15 +66,19 @@
 
 <https://caselinker.up.railway.app/resource/agency/maine-national-guard-counterdrug-task-force> a cacontology-multi:LocalAgency .
 
-<https://caselinker.up.railway.app/resource/agency/rhode-island-violent-fugitive-task-force> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/rhode-island-violent-fugitive-task-force> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Rhode Island Violent Fugitive Task Force" .
 
 <https://caselinker.up.railway.app/resource/agency/usms> a cacontology-multi:FederalAgency .
 
-<https://caselinker.up.railway.app/resource/agency/usmsnled-maine-violent-offender-task-force> a cac-core:OrganizationLikeEntity,
+<https://caselinker.up.railway.app/resource/agency/usmsiled-maine-violent-offender-task-force> a cac-core:OrganizationLikeEntity,
         cacontology-multi:LocalAgency ;
-    rdfs:label "USMSnled Maine Violent Offender Task Force" .
+    rdfs:label "USMSIled Maine Violent Offender Task Force" .
 
-<https://caselinker.up.railway.app/resource/agency/west-warwick-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/west-warwick-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "West Warwick Police Department" .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2026_009/charge/1> a cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "child molestation" ;
@@ -78,11 +94,33 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/us_marshals_2026_009/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/us_marshals_2026_009/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2026_009/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2026_009/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/us_marshals_2026_009/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
+<https://caselinker.up.railway.app/resource/location/maine> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/massachusetts> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/north-berwick> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "North Berwick" ;
+    uco-core:name "North Berwick" .
+
+<https://caselinker.up.railway.app/resource/location/portland> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/rhode-island> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2026_009/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

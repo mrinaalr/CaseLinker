@@ -6,19 +6,23 @@
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_096> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:26:04.654641" ;
+    dcterms:created "2026-09-15T21:27:13.245222" ;
     dcterms:identifier "ncmec_2025_096" ;
-    dcterms:modified "2026-09-10T19:26:04.654641" ;
+    dcterms:modified "2026-09-15T21:27:13.245222" ;
     dcterms:source <https://www.sanluisobispo.com/news/local/crime/article298998740.html>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/san-luis-obispo>,
+        <https://caselinker.up.railway.app/resource/location/san-luis-obispo-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_096/phase/booked> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_096/phase/booked> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_096/cybertip>,
@@ -28,7 +32,9 @@
     cacontology:investigationStatus "unknown" ;
     cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/ncmec_2025_096/tech/cybertipline> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/san-luis-obispo-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/san-luis-obispo-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/san-luis-obispo>,
+        <https://caselinker.up.railway.app/resource/location/san-luis-obispo-county> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_096/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -61,14 +67,18 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_096/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): San Luis Obispo County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_096/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_096/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_096/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 30 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_096/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_096/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_096/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -84,6 +94,12 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_096/phase/booked> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/san-luis-obispo> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/san-luis-obispo-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_096/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

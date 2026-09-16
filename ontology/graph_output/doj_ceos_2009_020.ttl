@@ -7,8 +7,10 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -20,7 +22,8 @@
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_020/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
     cacontology:hasRoleBeginPoint "2009-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_020/event/possession> ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_020/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_020/offense-event/charge-2> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_020/person/victim/1> .
 
 <https://caselinker.up.railway.app/resource/agency/ceos> a cacontology-multi:FederalAgency .
@@ -31,40 +34,56 @@
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_020> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T22:32:50.008759" ;
+    dcterms:created "2026-09-15T21:47:04.255178" ;
     dcterms:identifier "doj_ceos_2009_020" ;
-    dcterms:modified "2026-09-14T22:32:50.008759" ;
+    dcterms:modified "2026-09-15T21:47:04.255178" ;
     dcterms:source <https://www.justice.gov/archives/opa/pr/florida-man-pleads-guilty-receiving-child-pornography>,
         "DOJ CEOS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/fla>,
+        <https://caselinker.up.railway.app/resource/location/florida>,
+        <https://caselinker.up.railway.app/resource/location/fort-lauderdale>,
+        <https://caselinker.up.railway.app/resource/location/miami>,
+        <https://caselinker.up.railway.app/resource/location/the-northern-district-of-alabama>,
+        <https://caselinker.up.railway.app/resource/location/the-southern-district> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_020/phase/pleaded-guilty> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_020/phase/pleaded-guilty> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_020/admission/1>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_020/event/distribution>,
-        <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_020/event/multi-jurisdiction>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_020/event/possession>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_020/legal-proceeding>,
-        <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_020/legal-step/pleaded-guilty> ;
+        <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_020/legal-step/pleaded-guilty>,
+        <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_020/offense-event/charge-2> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ceos>,
         <https://caselinker.up.railway.app/resource/agency/fbi>,
-        <https://caselinker.up.railway.app/resource/agency/usao> .
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/fla>,
+        <https://caselinker.up.railway.app/resource/location/florida>,
+        <https://caselinker.up.railway.app/resource/location/fort-lauderdale>,
+        <https://caselinker.up.railway.app/resource/location/miami>,
+        <https://caselinker.up.railway.app/resource/location/the-northern-district-of-alabama>,
+        <https://caselinker.up.railway.app/resource/location/the-southern-district> .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_020/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "child pornography" .
 
+<https://caselinker.up.railway.app/resource/case/doj_ceos_2009_020/charge/2> a cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "child exploitation" ;
+    rdfs:seeAlso <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_020/offense-event/charge-2> ;
+    ns1:chargeCluster "child_exploitation" ;
+    ns1:chargeOffenseEvent <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_020/offense-event/charge-2> .
+
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_020/event/distribution> a cac-core:Event,
         cacontology-legal-outcomes:CSAM_Distribution .
-
-<https://caselinker.up.railway.app/resource/case/doj_ceos_2009_020/event/multi-jurisdiction> a cac-core:Event,
-        cacontology-multi:MultiJurisdictionalInvestigation .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_020/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_020/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_020/charge/1> ;
+    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_020/charge/1>,
+        <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_020/charge/2> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2009-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_020/sentence/1> .
 
@@ -82,12 +101,13 @@
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_020/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
     cacontology:hasRoleBeginPoint "2009-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_020/event/possession> ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_020/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_020/offense-event/charge-2> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_020/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_020/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "20 years" .
+    rdfs:label "[\"20 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_020/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "received images that depict prepubescent children and children engaged in sadistic or masochistic conduct" ;
@@ -104,7 +124,30 @@
         cacontology-legal-outcomes:PreTrialPhase ;
     cacontology:hasPhaseBeginPoint "2009-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
+<https://caselinker.up.railway.app/resource/location/fla> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/florida> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/fort-lauderdale> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/miami> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/the-northern-district-of-alabama> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/the-southern-district> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_020/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/doj_ceos_2009_020/facet/possession> .
+
+<https://caselinker.up.railway.app/resource/case/doj_ceos_2009_020/offense-event/charge-2> a cacontology:ChildSexualAbuseEvent,
+        cac-core:Event,
+        uco-action:Crime ;
+    rdfs:label "Inferred offense from charge: child exploitation" .
 

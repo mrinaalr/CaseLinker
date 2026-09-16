@@ -8,16 +8,19 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/azicac_2012_006> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:04:41.094795" ;
+    dcterms:created "2026-09-15T19:06:28.225800" ;
     dcterms:identifier "azicac_2012_006" ;
-    dcterms:modified "2026-09-10T19:04:41.094795" ;
+    dcterms:modified "2026-09-15T19:22:21.287366" ;
     dcterms:source <https://www.azicac.org/cases-and-arrests/>,
         "AZICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/casa-grande>,
+        <https://caselinker.up.railway.app/resource/location/greater-phoenix> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/azicac_2012_006/phase/booked> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/azicac_2012_006/phase/booked> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/azicac_2012_006/event/possession>,
@@ -25,7 +28,9 @@
         <https://caselinker.up.railway.app/resource/case/azicac_2012_006/operation> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/azicac>,
         <https://caselinker.up.railway.app/resource/agency/casa-grande-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/phoenix-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/phoenix-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/casa-grande>,
+        <https://caselinker.up.railway.app/resource/location/greater-phoenix> .
 
 <https://caselinker.up.railway.app/resource/case/azicac_2012_006/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -63,11 +68,11 @@
 <https://caselinker.up.railway.app/resource/case/azicac_2012_006/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Pinal County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/azicac_2012_006/charge/1>,
         <https://caselinker.up.railway.app/resource/case/azicac_2012_006/charge/2>,
         <https://caselinker.up.railway.app/resource/case/azicac_2012_006/charge/3> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2012-06-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2012-06-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/azicac_2012_006/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/azicac_2012_006/operation> a cac-core:Event,
         cacontology-taskforce:ProactiveOperation .
@@ -76,9 +81,23 @@
 
 <https://caselinker.up.railway.app/resource/case/azicac_2012_006/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/azicac_2012_006/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/azicac_2012_006/phase/booked> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2012-06-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/casa-grande> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Casa Grande" ;
+    uco-core:name "Casa Grande" .
+
+<https://caselinker.up.railway.app/resource/location/greater-phoenix> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Greater Phoenix" ;
+    uco-core:name "Greater Phoenix" .
 
 <https://caselinker.up.railway.app/resource/case/azicac_2012_006/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

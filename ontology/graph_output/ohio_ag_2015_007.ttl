@@ -4,24 +4,33 @@
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2015_007> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:03:06.218000" ;
+    dcterms:created "2026-09-15T20:10:06.643923" ;
     dcterms:identifier "ohio_ag_2015_007" ;
-    dcterms:modified "2026-09-10T20:03:06.218000" ;
+    dcterms:modified "2026-09-15T20:10:06.643923" ;
     dcterms:source <https://www.ohioattorneygeneral.gov/Media/News-Releases/May-2015/Father-Indicted-on-Endangering-Children-Felonious>,
         "OHIO AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/coshocton>,
+        <https://caselinker.up.railway.app/resource/location/coshocton-county>,
+        <https://caselinker.up.railway.app/resource/location/ohio> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ohio_ag_2015_007/phase/indicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ohio_ag_2015_007/phase/indicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ohio_ag_2015_007/event/trust-violation>,
         <https://caselinker.up.railway.app/resource/case/ohio_ag_2015_007/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/coshocton-county-sheriffs-office> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/coshocton-county-sheriffs-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/coshocton>,
+        <https://caselinker.up.railway.app/resource/location/coshocton-county>,
+        <https://caselinker.up.railway.app/resource/location/ohio> .
 
 <https://caselinker.up.railway.app/resource/agency/coshocton-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
         cacontology-multi:LocalAgency ;
@@ -34,8 +43,8 @@
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2015_007/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Coshocton County Jail" ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2015-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2015-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ohio_ag_2015_007/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2015_007/person/offender/1> a uco-identity:Person .
 
@@ -57,7 +66,24 @@
     cacontology:hasRoleBeginPoint "2015-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ohio_ag_2015_007/person/victim/1> .
 
+<https://caselinker.up.railway.app/resource/case/ohio_ag_2015_007/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2015_007/phase/indicted> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2015-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/coshocton> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Coshocton" ;
+    uco-core:name "Coshocton" .
+
+<https://caselinker.up.railway.app/resource/location/coshocton-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Coshocton County" ;
+    uco-core:name "Coshocton County" .
+
+<https://caselinker.up.railway.app/resource/location/ohio> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 

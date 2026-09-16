@@ -3,44 +3,56 @@
 @prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_580> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:19:11.058191" ;
+    dcterms:created "2026-09-15T21:08:10.681623" ;
     dcterms:identifier "ncmec_2024_580" ;
-    dcterms:modified "2026-09-10T19:19:11.058191" ;
-    dcterms:source <https://www.northernnewsnow.com/2024/05/07/former-umd-employee-charged-possessing-child-pornography/>,
+    dcterms:modified "2026-09-15T21:08:10.681623" ;
+    dcterms:source <https://www.northernnewsnow.com/2024/04/24/brimson-man-sentenced-almost-8-years-possessing-child-pornography/>,
         "NCMEC" ;
-    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_580/phase/charged> ;
-    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_580/phase/charged> ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/brimson>,
+        <https://caselinker.up.railway.app/resource/location/minn>,
+        <https://caselinker.up.railway.app/resource/location/st-louis-county> ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_580/phase/sentenced> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_580/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_580/cybertip>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_580/event/possession>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_580/legal-proceeding> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_580/legal-proceeding>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_580/legal-step/sentenced> ;
+    cacontology:investigationStatus "unknown" ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/minnesota-bureau-of-criminal-apprehension>,
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/brimson>,
+        <https://caselinker.up.railway.app/resource/location/minn>,
+        <https://caselinker.up.railway.app/resource/location/st-louis-county> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_580/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2024-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:hasRoleBeginPoint "2024-04-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_580/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_580/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_580/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2024-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:hasRoleBeginPoint "2024-04-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_580/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_580/person/victim/1> .
 
+<https://caselinker.up.railway.app/resource/agency/minnesota-bureau-of-criminal-apprehension> a cacontology-multi:LocalAgency .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_580/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "child pornography" ;
+    rdfs:label "possession of child pornography" ;
     cacontology-legal-outcomes:indictmentCounts 2 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_580/cybertip> a cacontology-us-ncmec:NCMECCybertipReport ;
@@ -52,30 +64,44 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2024_580/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-04-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2024_580/sentence/1> .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_580/legal-step/sentenced> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding,
+        cacontology-legal-outcomes:SentencingHearing ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-04-01T00:00:00Z"^^xsd:dateTimeStamp .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_580/person/offender/1> a uco-identity:Person ;
-    cacontology-detection:ageEstimate 45 .
+    cacontology-detection:ageEstimate 47 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_580/person/victim/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_580/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "10 years" .
-
-<https://caselinker.up.railway.app/resource/platform/kik> a cacontology-platforms:MessagingService ;
-    rdfs:label "Kik" .
+        cacontology-legal-outcomes:ProbationSentence ;
+    rdfs:label "[\"8 YEARS\", \"probation\", \"10 years\"]" .
 
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_580/phase/charged> a cacontology:LegalProcessPhase,
-        cac-core:Phase ;
-    cacontology:hasPhaseBeginPoint "2024-05-01T00:00:00Z"^^xsd:dateTimeStamp .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_580/phase/sentenced> a cac-core:Phase,
+        cacontology-legal-outcomes:SentencingPhase ;
+    cacontology:hasPhaseBeginPoint "2024-04-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/brimson> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Brimson" ;
+    uco-core:name "Brimson" .
+
+<https://caselinker.up.railway.app/resource/location/minn> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/st-louis-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "St. Louis County" ;
+    uco-core:name "St. Louis County" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_580/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
-    cacontology:severityLevel 3 ;
-    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/kik> ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2024_580/facet/possession> .
 

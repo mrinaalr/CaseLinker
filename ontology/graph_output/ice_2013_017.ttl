@@ -9,16 +9,18 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ice_2013_017> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:46:04.111145" ;
+    dcterms:created "2026-09-15T19:35:19.250850" ;
     dcterms:identifier "ice_2013_017" ;
-    dcterms:modified "2026-09-10T19:46:04.111145" ;
+    dcterms:modified "2026-09-15T19:35:19.250850" ;
     dcterms:source <https://www.ice.gov/news/releases/convicted-sex-offender-sentenced-more-20-years>,
         "ICE" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/detroit> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ice_2013_017/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ice_2013_017/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ice_2013_017/event/distribution>,
@@ -30,12 +32,15 @@
         <https://caselinker.up.railway.app/resource/case/ice_2013_017/operation> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/hsi>,
         <https://caselinker.up.railway.app/resource/agency/ice>,
-        <https://caselinker.up.railway.app/resource/agency/virtual-global-taskforce> .
+        <https://caselinker.up.railway.app/resource/agency/usao>,
+        <https://caselinker.up.railway.app/resource/agency/virtual-global-taskforce> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/detroit> .
 
 <https://caselinker.up.railway.app/resource/case/ice_2013_017/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
     cacontology:hasRoleBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ice_2013_017/event/possession> ;
+    cacontology:perpetratorRegisteredSexOffender true ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ice_2013_017/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/ice_2013_017/role/victim/1> a cacontology:VictimRole,
@@ -47,6 +52,8 @@
 <https://caselinker.up.railway.app/resource/agency/hsi> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/agency/ice> a cacontology-multi:FederalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/agency/virtual-global-taskforce> a cacontology-multi:LocalAgency .
 
@@ -85,8 +92,7 @@
         <https://caselinker.up.railway.app/resource/case/ice_2013_017/charge/2>,
         <https://caselinker.up.railway.app/resource/case/ice_2013_017/charge/3> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ice_2013_017/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/ice_2013_017/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ice_2013_017/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ice_2013_017/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -104,15 +110,16 @@
 
 <https://caselinker.up.railway.app/resource/case/ice_2013_017/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "20 years" .
-
-<https://caselinker.up.railway.app/resource/case/ice_2013_017/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "262 months" .
+    rdfs:label "[\"20 years\", \"262 months\"]" .
 
 <https://caselinker.up.railway.app/resource/case/ice_2013_017/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/detroit> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Detroit" ;
+    uco-core:name "Detroit" .
 
 <https://caselinker.up.railway.app/resource/case/ice_2013_017/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

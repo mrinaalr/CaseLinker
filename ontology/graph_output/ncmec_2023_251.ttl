@@ -1,5 +1,6 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
@@ -9,16 +10,22 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_251> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:10:58.839680" ;
+    dcterms:created "2026-09-15T20:55:00.969792" ;
     dcterms:identifier "ncmec_2023_251" ;
-    dcterms:modified "2026-09-10T19:10:58.839680" ;
+    dcterms:modified "2026-09-15T20:55:00.969792" ;
     dcterms:source <https://www.justice.gov/usao-wdny/pr/former-wyoming-county-corrections-officer-indicted-child-pornography-charges>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/buffalo>,
+        <https://caselinker.up.railway.app/resource/location/depew-new-york>,
+        <https://caselinker.up.railway.app/resource/location/new-york>,
+        <https://caselinker.up.railway.app/resource/location/ny>,
+        <https://caselinker.up.railway.app/resource/location/western-district> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_251/phase/indicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_251/phase/indicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_251/cybertip>,
@@ -30,7 +37,13 @@
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/fbi>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/new-york-state-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/new-york-state-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/buffalo>,
+        <https://caselinker.up.railway.app/resource/location/depew-new-york>,
+        <https://caselinker.up.railway.app/resource/location/new-york>,
+        <https://caselinker.up.railway.app/resource/location/ny>,
+        <https://caselinker.up.railway.app/resource/location/western-district> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_251/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -49,6 +62,8 @@
 <https://caselinker.up.railway.app/resource/agency/fbi> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/agency/new-york-state-police-department> a cacontology-multi:StateAgency .
+
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_251/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -80,19 +95,37 @@
     cacontology-legal-outcomes:hasProceedingBeginPoint "2023-04-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_251/sentence/1> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_251/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_251/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 37 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_251/person/victim/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_251/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "20 years" .
+    rdfs:label "[\"20 years\"]" .
 
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_251/phase/indicted> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-04-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/buffalo> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/depew-new-york> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Depew, New York" ;
+    uco-core:name "Depew, New York" .
+
+<https://caselinker.up.railway.app/resource/location/new-york> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/ny> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/western-district> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_251/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

@@ -11,16 +11,21 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_010> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:48:36.763358" ;
+    dcterms:created "2026-09-15T19:40:56.752570" ;
     dcterms:identifier "illinois_ag_2023_010" ;
-    dcterms:modified "2026-09-10T19:48:36.763358" ;
+    dcterms:modified "2026-09-15T19:49:52.696853" ;
     dcterms:source <https://illinoisattorneygeneral.gov/news/story/attorney-general-raoul-charges-franklin-county-man-with-possession-of-child-pornography-11-1-23>,
         "ILLINOIS AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/benton>,
+        <https://caselinker.up.railway.app/resource/location/chicago>,
+        <https://caselinker.up.railway.app/resource/location/franklin-county>,
+        <https://caselinker.up.railway.app/resource/location/illinois> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_010/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_010/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_010/cybertip>,
@@ -33,7 +38,12 @@
     cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_010/tech/cybertipline> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/benton-police-department>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/benton>,
+        <https://caselinker.up.railway.app/resource/location/chicago>,
+        <https://caselinker.up.railway.app/resource/location/franklin-county>,
+        <https://caselinker.up.railway.app/resource/location/illinois> .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_010/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -57,6 +67,8 @@
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
+
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_010/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "possession of child pornography" ;
@@ -79,10 +91,10 @@
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_010/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Franklin County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_010/charge/1>,
         <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_010/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_010/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_010/operation> a cac-core:Event,
         cacontology-taskforce:ReactiveOperation .
@@ -92,6 +104,10 @@
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_010/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/illinois_ag_2023_010/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_010/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
 
@@ -100,6 +116,20 @@
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_010/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/benton> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Benton" ;
+    uco-core:name "Benton" .
+
+<https://caselinker.up.railway.app/resource/location/chicago> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/franklin-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/illinois> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_010/event/online-only> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event .

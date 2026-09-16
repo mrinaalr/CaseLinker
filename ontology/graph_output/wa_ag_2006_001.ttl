@@ -7,17 +7,24 @@
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/wa_ag_2006_001> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:24:58.518707" ;
+    dcterms:created "2026-09-15T20:41:23.383208" ;
     dcterms:identifier "wa_ag_2006_001" ;
-    dcterms:modified "2026-09-10T20:24:58.518707" ;
+    dcterms:modified "2026-09-15T20:41:23.383208" ;
     dcterms:source <https://www.atg.wa.gov/news/news-releases/ag-s-svp-unit-successfully-prevents-two-sexually-violent-predators-returning>,
         "WA AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/clallam-county>,
+        <https://caselinker.up.railway.app/resource/location/mcneil-island>,
+        <https://caselinker.up.railway.app/resource/location/snohomish-county>,
+        <https://caselinker.up.railway.app/resource/location/utah>,
+        <https://caselinker.up.railway.app/resource/location/washington> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/wa_ag_2006_001/phase/convicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/wa_ag_2006_001/phase/convicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/wa_ag_2006_001/event/hands-on>,
@@ -25,7 +32,12 @@
         <https://caselinker.up.railway.app/resource/case/wa_ag_2006_001/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/wa_ag_2006_001/legal-step/convicted>,
         <https://caselinker.up.railway.app/resource/case/wa_ag_2006_001/offense-event/charge-1> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/attorney-generals-office> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/attorney-generals-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/clallam-county>,
+        <https://caselinker.up.railway.app/resource/location/mcneil-island>,
+        <https://caselinker.up.railway.app/resource/location/snohomish-county>,
+        <https://caselinker.up.railway.app/resource/location/utah>,
+        <https://caselinker.up.railway.app/resource/location/washington> .
 
 <https://caselinker.up.railway.app/resource/case/wa_ag_2006_001/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -57,7 +69,8 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/wa_ag_2006_001/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2006-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2006-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/wa_ag_2006_001/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/wa_ag_2006_001/legal-step/convicted> a cac-core:Event,
         cac-core:LegalEvent,
@@ -69,9 +82,36 @@
 
 <https://caselinker.up.railway.app/resource/case/wa_ag_2006_001/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/wa_ag_2006_001/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/wa_ag_2006_001/phase/convicted> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2006-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/clallam-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Clallam County" ;
+    uco-core:name "Clallam County" .
+
+<https://caselinker.up.railway.app/resource/location/mcneil-island> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/snohomish-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Snohomish County" ;
+    uco-core:name "Snohomish County" .
+
+<https://caselinker.up.railway.app/resource/location/utah> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Utah" ;
+    uco-core:name "Utah" .
+
+<https://caselinker.up.railway.app/resource/location/washington> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Washington" ;
+    uco-core:name "Washington" .
 
 <https://caselinker.up.railway.app/resource/case/wa_ag_2006_001/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

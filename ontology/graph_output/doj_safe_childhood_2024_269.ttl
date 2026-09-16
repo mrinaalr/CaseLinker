@@ -9,16 +9,20 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_269> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T21:22:42.511265" ;
+    dcterms:created "2026-09-15T22:12:27.458008" ;
     dcterms:identifier "doj_safe_childhood_2024_269" ;
-    dcterms:modified "2026-09-14T21:22:42.511265" ;
+    dcterms:modified "2026-09-15T22:12:27.458008" ;
     dcterms:source <https://www.justice.gov/usao-nv/pr/jury-convicts-las-vegas-man-crimes-including-coercion-and-enticement-child-sexual>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/las-vegas>,
+        <https://caselinker.up.railway.app/resource/location/the-district-of-nevada>,
+        <https://caselinker.up.railway.app/resource/location/united-states> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_269/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_269/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_269/event/multi-jurisdiction>,
@@ -27,7 +31,10 @@
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_269/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_269/legal-step/sentenced> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/fbi>,
-        <https://caselinker.up.railway.app/resource/agency/henderson-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/henderson-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/las-vegas>,
+        <https://caselinker.up.railway.app/resource/location/the-district-of-nevada>,
+        <https://caselinker.up.railway.app/resource/location/united-states> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_269/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -72,9 +79,7 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_269/charge/1>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_269/charge/2> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_269/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_269/sentence/2>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_269/sentence/3> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_269/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_269/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -88,16 +93,8 @@
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_269/person/victim/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_269/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MandatoryMinimumSentencing ;
-    rdfs:label "mandatory minimum" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_269/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "15 years" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_269/sentence/3> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:LifeImprisonmentSentence ;
-    rdfs:label "life in prison" .
+    rdfs:label "[\"mandatory minimum\", \"15 years\", \"life in prison\"]" .
 
 <https://caselinker.up.railway.app/resource/platform/chat> a cacontology-platforms:AnonymousChatPlatform ;
     rdfs:label "chat" .
@@ -108,6 +105,17 @@
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_269/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/las-vegas> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/the-district-of-nevada> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "the District of Nevada" ;
+    uco-core:name "the District of Nevada" .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_269/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

@@ -10,6 +10,7 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -29,15 +30,22 @@
 
 <https://caselinker.up.railway.app/resource/agency/fbi> a cacontology-multi:FederalAgency .
 
-<https://caselinker.up.railway.app/resource/agency/west-palm-beach-resident-agency> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/west-palm-beach-resident-agency> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "West Palm Beach Resident Agency" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_118> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T21:22:52.903330" ;
+    dcterms:created "2026-09-15T22:12:27.944512" ;
     dcterms:identifier "doj_safe_childhood_2023_118" ;
-    dcterms:modified "2026-09-14T21:22:52.903330" ;
+    dcterms:modified "2026-09-15T22:12:27.944512" ;
     dcterms:source <https://www.justice.gov/usao-sdfl/pr/palm-beach-gardens-attorney-convicted-possessing-child-pornography>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/florida>,
+        <https://caselinker.up.railway.app/resource/location/miami>,
+        <https://caselinker.up.railway.app/resource/location/palm-beach-gardens>,
+        <https://caselinker.up.railway.app/resource/location/the-southern-district>,
+        <https://caselinker.up.railway.app/resource/location/west-palm-beach> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_118/phase/convicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_118/phase/convicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_118/admission/1>,
@@ -48,7 +56,12 @@
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_118/offense-event/charge-3> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/doj>,
         <https://caselinker.up.railway.app/resource/agency/fbi>,
-        <https://caselinker.up.railway.app/resource/agency/west-palm-beach-resident-agency> .
+        <https://caselinker.up.railway.app/resource/agency/west-palm-beach-resident-agency> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/florida>,
+        <https://caselinker.up.railway.app/resource/location/miami>,
+        <https://caselinker.up.railway.app/resource/location/palm-beach-gardens>,
+        <https://caselinker.up.railway.app/resource/location/the-southern-district>,
+        <https://caselinker.up.railway.app/resource/location/west-palm-beach> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_118/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -76,8 +89,7 @@
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_118/charge/2>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_118/charge/3> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_118/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_118/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_118/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_118/legal-step/convicted> a cac-core:Event,
         cac-core:LegalEvent,
@@ -98,16 +110,29 @@
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_118/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_118/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "20 years" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_118/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "supervised release" .
+    rdfs:label "[\"20 years\", \"supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_118/phase/convicted> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/florida> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/miami> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/palm-beach-gardens> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Palm Beach Gardens" ;
+    uco-core:name "Palm Beach Gardens" .
+
+<https://caselinker.up.railway.app/resource/location/the-southern-district> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/west-palm-beach> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_118/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "downloading child pornography to his personal laptop at his West Palm Beach apartment" ;

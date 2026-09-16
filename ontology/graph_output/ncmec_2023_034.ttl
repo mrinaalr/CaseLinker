@@ -4,26 +4,32 @@
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_034> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:09:19.569643" ;
+    dcterms:created "2026-09-15T20:55:00.770511" ;
     dcterms:identifier "ncmec_2023_034" ;
-    dcterms:modified "2026-09-10T19:09:19.569643" ;
+    dcterms:modified "2026-09-15T20:55:00.770511" ;
     dcterms:source <https://www.abc10.com/article/news/crime/ione-resident-alleged-child-pornography-possession/103-121933f3-64b1-4996-9f35-4b102f3f2dc7>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/amador-county>,
+        <https://caselinker.up.railway.app/resource/location/calif> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_034/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_034/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_034/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_034/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ione-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/sacramento-valley-hi-tech-crimes-task-force> .
+        <https://caselinker.up.railway.app/resource/agency/sacramento-valley-hi-tech-crimes-task-force> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/amador-county>,
+        <https://caselinker.up.railway.app/resource/location/calif> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_034/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -55,16 +61,31 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_034/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_034/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_034/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 27 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_034/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_034/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_034/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/amador-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Amador County" ;
+    uco-core:name "Amador County" .
+
+<https://caselinker.up.railway.app/resource/location/calif> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Calif." ;
+    uco-core:name "Calif." .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_034/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

@@ -9,6 +9,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -38,11 +39,14 @@
 
 <https://caselinker.up.railway.app/resource/case/ut_ag_2015_001> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:22:16.484591" ;
+    dcterms:created "2026-09-15T20:38:01.212841" ;
     dcterms:identifier "ut_ag_2015_001" ;
-    dcterms:modified "2026-09-10T20:22:16.484591" ;
+    dcterms:modified "2026-09-15T20:38:01.212841" ;
     dcterms:source <https://attorneygeneral.utah.gov/utah-supreme-court-affirms-conviction-in-child-pornography-case-state-v-roberts/>,
         "UT AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/emery-county>,
+        <https://caselinker.up.railway.app/resource/location/salt-lake-city>,
+        <https://caselinker.up.railway.app/resource/location/the-seventh-district> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ut_ag_2015_001/phase/convicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ut_ag_2015_001/phase/convicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ut_ag_2015_001/admission/1>,
@@ -57,7 +61,10 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/fbi>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/utah-attorney-generals-criminal-appeals-division>,
-        <https://caselinker.up.railway.app/resource/agency/utah-attorney-generals-internet-crime-against-children> .
+        <https://caselinker.up.railway.app/resource/agency/utah-attorney-generals-internet-crime-against-children> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/emery-county>,
+        <https://caselinker.up.railway.app/resource/location/salt-lake-city>,
+        <https://caselinker.up.railway.app/resource/location/the-seventh-district> .
 
 <https://caselinker.up.railway.app/resource/case/ut_ag_2015_001/charge/1> a cacontology-legal-outcomes:CriminalCharge,
         cacontology-legal-outcomes:StateCharge ;
@@ -88,7 +95,8 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ut_ag_2015_001/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ut_ag_2015_001/charge/2>,
         <https://caselinker.up.railway.app/resource/case/ut_ag_2015_001/charge/3> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2015-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2015-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ut_ag_2015_001/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ut_ag_2015_001/legal-step/convicted> a cac-core:Event,
         cac-core:LegalEvent,
@@ -110,9 +118,28 @@
         <https://caselinker.up.railway.app/resource/case/ut_ag_2015_001/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ut_ag_2015_001/person/offender/1> .
 
+<https://caselinker.up.railway.app/resource/case/ut_ag_2015_001/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ut_ag_2015_001/phase/convicted> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2015-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/emery-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Emery County" ;
+    uco-core:name "Emery County" .
+
+<https://caselinker.up.railway.app/resource/location/salt-lake-city> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Salt Lake City" ;
+    uco-core:name "Salt Lake City" .
+
+<https://caselinker.up.railway.app/resource/location/the-seventh-district> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "the Seventh District" ;
+    uco-core:name "the Seventh District" .
 
 <https://caselinker.up.railway.app/resource/case/ut_ag_2015_001/event/online-only> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

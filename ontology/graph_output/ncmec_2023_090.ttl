@@ -10,16 +10,21 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_090> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:09:45.732810" ;
+    dcterms:created "2026-09-15T20:55:00.825625" ;
     dcterms:identifier "ncmec_2023_090" ;
-    dcterms:modified "2026-09-10T19:09:45.732810" ;
+    dcterms:modified "2026-09-15T20:55:00.825625" ;
     dcterms:source <https://www.news10.com/news/crime/albany-man-arrested-for-possessing-child-pornography/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/albany>,
+        <https://caselinker.up.railway.app/resource/location/latham>,
+        <https://caselinker.up.railway.app/resource/location/ny>,
+        <https://caselinker.up.railway.app/resource/location/sp-latham> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_090/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_090/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_090/cybertip>,
@@ -27,7 +32,11 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_090/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/albany>,
+        <https://caselinker.up.railway.app/resource/location/latham>,
+        <https://caselinker.up.railway.app/resource/location/ny>,
+        <https://caselinker.up.railway.app/resource/location/sp-latham> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_090/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -61,18 +70,39 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_090/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_090/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-05-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_090/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_090/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 62 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_090/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_090/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_090/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-05-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/albany> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/latham> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Latham" ;
+    uco-core:name "Latham" .
+
+<https://caselinker.up.railway.app/resource/location/ny> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/sp-latham> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Sp Latham" ;
+    uco-core:name "Sp Latham" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_090/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

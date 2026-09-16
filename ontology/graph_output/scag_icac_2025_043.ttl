@@ -10,16 +10,22 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/scag_icac_2025_043> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:05:28.174305" ;
+    dcterms:created "2026-09-15T20:17:53.805212" ;
     dcterms:identifier "scag_icac_2025_043" ;
-    dcterms:modified "2026-09-10T20:05:28.174305" ;
+    dcterms:modified "2026-09-15T20:17:53.805212" ;
     dcterms:source <https://www.scag.gov/about-the-office/news/kershaw-county-man-arrested-on-nine-child-sexual-abuse-material-charges-3/>,
         "SCAG ICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/cassat>,
+        <https://caselinker.up.railway.app/resource/location/columbia>,
+        <https://caselinker.up.railway.app/resource/location/horry-county>,
+        <https://caselinker.up.railway.app/resource/location/sc>,
+        <https://caselinker.up.railway.app/resource/location/south-carolina> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/scag_icac_2025_043/phase/convicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/scag_icac_2025_043/phase/convicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/scag_icac_2025_043/cybertip>,
@@ -35,7 +41,12 @@
         <https://caselinker.up.railway.app/resource/agency/kershaw-county-sheriffs-office>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
         <https://caselinker.up.railway.app/resource/agency/sc-department-of-probation>,
-        <https://caselinker.up.railway.app/resource/agency/south-carolina-attorney-generals-office> .
+        <https://caselinker.up.railway.app/resource/agency/south-carolina-attorney-generals-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/cassat>,
+        <https://caselinker.up.railway.app/resource/location/columbia>,
+        <https://caselinker.up.railway.app/resource/location/horry-county>,
+        <https://caselinker.up.railway.app/resource/location/sc>,
+        <https://caselinker.up.railway.app/resource/location/south-carolina> .
 
 <https://caselinker.up.railway.app/resource/case/scag_icac_2025_043/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -57,7 +68,9 @@
 
 <https://caselinker.up.railway.app/resource/agency/kershaw-county-sheriffs-office> a cacontology-multi:LocalAgency .
 
-<https://caselinker.up.railway.app/resource/agency/sc-department-of-probation> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/sc-department-of-probation> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "S.C. Department of Probation" .
 
 <https://caselinker.up.railway.app/resource/agency/south-carolina-attorney-generals-office> a cacontology-multi:StateAgency .
 
@@ -89,8 +102,7 @@
         <https://caselinker.up.railway.app/resource/case/scag_icac_2025_043/charge/2>,
         <https://caselinker.up.railway.app/resource/case/scag_icac_2025_043/charge/3> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/scag_icac_2025_043/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/scag_icac_2025_043/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/scag_icac_2025_043/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/scag_icac_2025_043/legal-step/convicted> a cac-core:Event,
         cac-core:LegalEvent,
@@ -105,11 +117,7 @@
 
 <https://caselinker.up.railway.app/resource/case/scag_icac_2025_043/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:ProbationSentence ;
-    rdfs:label "Probation" .
-
-<https://caselinker.up.railway.app/resource/case/scag_icac_2025_043/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "10 years" .
+    rdfs:label "[\"Probation\", \"10 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/scag_icac_2025_043/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -119,6 +127,23 @@
 <https://caselinker.up.railway.app/resource/case/scag_icac_2025_043/phase/convicted> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/cassat> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Cassat" ;
+    uco-core:name "Cassat" .
+
+<https://caselinker.up.railway.app/resource/location/columbia> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/horry-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/sc> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/south-carolina> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/scag_icac_2025_043/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

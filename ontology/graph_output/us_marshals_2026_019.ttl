@@ -4,18 +4,26 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2026_019> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:19:57.333762" ;
+    dcterms:created "2026-09-15T20:35:06.363596" ;
     dcterms:identifier "us_marshals_2026_019" ;
-    dcterms:modified "2026-09-10T20:19:57.333762" ;
+    dcterms:modified "2026-09-15T20:35:06.363596" ;
     dcterms:source <https://www.usmarshals.gov/news/press-release/six-year-sex-offender-fugitive-arrested-pueblo-after-fleeing-indiana>,
         "US MARSHALS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/colorado>,
+        <https://caselinker.up.railway.app/resource/location/indiana>,
+        <https://caselinker.up.railway.app/resource/location/pueblo>,
+        <https://caselinker.up.railway.app/resource/location/the-district-of-colorado>,
+        <https://caselinker.up.railway.app/resource/location/the-state-of-indiana> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/us_marshals_2026_019/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/us_marshals_2026_019/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/us_marshals_2026_019/legal-proceeding>,
@@ -29,7 +37,12 @@
         <https://caselinker.up.railway.app/resource/agency/pueblo-county-sheriffs-office>,
         <https://caselinker.up.railway.app/resource/agency/united-states-marshals-service-sex-offender-coordinator>,
         <https://caselinker.up.railway.app/resource/agency/united-states-marshals-services-colorado-violent-offender-task-force>,
-        <https://caselinker.up.railway.app/resource/agency/usms> .
+        <https://caselinker.up.railway.app/resource/agency/usms> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/colorado>,
+        <https://caselinker.up.railway.app/resource/location/indiana>,
+        <https://caselinker.up.railway.app/resource/location/pueblo>,
+        <https://caselinker.up.railway.app/resource/location/the-district-of-colorado>,
+        <https://caselinker.up.railway.app/resource/location/the-state-of-indiana> .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2026_019/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -52,9 +65,13 @@
 
 <https://caselinker.up.railway.app/resource/agency/colorado-violent-offender-task-force> a cacontology-multi:LocalAgency .
 
-<https://caselinker.up.railway.app/resource/agency/fountain-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/fountain-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Fountain Police Department" .
 
-<https://caselinker.up.railway.app/resource/agency/hancock-county-sheriffs-office> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/hancock-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Hancock County Sheriff's Office" .
 
 <https://caselinker.up.railway.app/resource/agency/pueblo-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
         cacontology-multi:LocalAgency ;
@@ -88,9 +105,28 @@
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2026_019/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:ProbationSentence ;
-    rdfs:label "probation" .
+    rdfs:label "[\"probation\"]" .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2026_019/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/colorado> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/indiana> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/pueblo> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Pueblo" ;
+    uco-core:name "Pueblo" .
+
+<https://caselinker.up.railway.app/resource/location/the-district-of-colorado> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/the-state-of-indiana> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "the State of Indiana" ;
+    uco-core:name "the State of Indiana" .
 

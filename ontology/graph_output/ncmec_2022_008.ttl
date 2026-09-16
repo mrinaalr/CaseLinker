@@ -10,24 +10,32 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_008> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:04:52.364976" ;
+    dcterms:created "2026-09-15T20:45:05.992106" ;
     dcterms:identifier "ncmec_2022_008" ;
-    dcterms:modified "2026-09-10T19:04:52.364976" ;
+    dcterms:modified "2026-09-15T20:45:05.992106" ;
     dcterms:source <https://www.news4jax.com/news/local/2022/05/12/mayport-sailor-accused-of-possession-child-sexual-abuse-videos/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/atlantic-beach>,
+        <https://caselinker.up.railway.app/resource/location/fla>,
+        <https://caselinker.up.railway.app/resource/location/mayport> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_008/phase/convicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_008/phase/convicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2022_008/event/distribution>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_008/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_008/event/project-safe-childhood>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_008/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_008/legal-step/convicted>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_008/offense-event/charge-1> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/fbi> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/fbi> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/atlantic-beach>,
+        <https://caselinker.up.railway.app/resource/location/fla>,
+        <https://caselinker.up.railway.app/resource/location/mayport> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_008/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -55,6 +63,10 @@
         cacontology-legal-outcomes:CSAM_Distribution ;
     cacontology:severityLevel 3 .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_008/event/project-safe-childhood> a cac-core:Event,
+        cacontology-multi:ProjectSafeChildhoodOperation ;
+    cacontology:severityLevel 3 .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_008/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_008/legal-proceeding> a cac-core:Event,
@@ -77,11 +89,26 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_008/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "20 years" .
+    rdfs:label "[\"20 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_008/phase/convicted> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2022-05-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/atlantic-beach> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Atlantic Beach" ;
+    uco-core:name "Atlantic Beach" .
+
+<https://caselinker.up.railway.app/resource/location/fla> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Fla." ;
+    uco-core:name "Fla." .
+
+<https://caselinker.up.railway.app/resource/location/mayport> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Mayport" ;
+    uco-core:name "Mayport" .
 
 <https://caselinker.up.railway.app/resource/platform/kik> a cacontology-platforms:MessagingService ;
     rdfs:label "Kik" .

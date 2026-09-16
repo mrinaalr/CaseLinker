@@ -12,6 +12,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -32,7 +33,9 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_222/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_222/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/coral-springs-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/coral-springs-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Coral Springs Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
@@ -53,12 +56,17 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_222/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-03-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-03-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_222/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_222/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_222/person/victim/1> a uco-identity:Person ;
     cacontology-production:victimAge 13 .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_222/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_222/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -67,11 +75,13 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_222> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:27:12.197516" ;
+    dcterms:created "2026-09-15T21:27:13.361011" ;
     dcterms:identifier "ncmec_2025_222" ;
-    dcterms:modified "2026-09-10T19:27:12.197516" ;
+    dcterms:modified "2026-09-15T21:27:13.361011" ;
     dcterms:source <https://www.tapinto.net/towns/coral-springs/articles/coral-springs-man-arrested-on-multiple-counts-of-child-pornography-possession-and-distribution>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/coral-springs>,
+        <https://caselinker.up.railway.app/resource/location/florida> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_222/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_222/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_222/admission/1>,
@@ -85,12 +95,14 @@
     cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/ncmec_2025_222/tech/cybertipline> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/coral-springs-police-department>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/coral-springs>,
+        <https://caselinker.up.railway.app/resource/location/florida> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_222/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "to owning one" ;
     dcterms:source <https://www.tapinto.net/towns/coral-springs/articles/coral-springs-man-arrested-on-multiple-counts-of-child-pornography-possession-and-distribution> ;
-    ns1:admissionContext "s Against Children Task Force. During an interview, Recinos initially denied having a KIK account but later confessed to owning one" ;
+    ns1:admissionContext "Against Children Task Force. During an interview, Recinos initially denied having a KIK account but later confessed to owning one" ;
     ns1:admissionFrame "confessed_paraphrase" ;
     ns1:admissionTheme "other" ;
     ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_222/role/offender/1> ;
@@ -108,6 +120,14 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2025_222/event/online-only>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_222/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_222/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/location/coral-springs> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Coral Springs" ;
+    uco-core:name "Coral Springs" .
+
+<https://caselinker.up.railway.app/resource/location/florida> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/platform/chat> a cacontology-platforms:AnonymousChatPlatform ;
     rdfs:label "chat" .

@@ -4,18 +4,23 @@
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2014_007> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:03:16.325821" ;
+    dcterms:created "2026-09-15T20:10:06.678403" ;
     dcterms:identifier "ohio_ag_2014_007" ;
-    dcterms:modified "2026-09-10T20:03:16.325821" ;
+    dcterms:modified "2026-09-15T20:10:06.678403" ;
     dcterms:source <https://www.ohioattorneygeneral.gov/Media/News-Releases/April-2014/Gallipolis-Man-Sentenced-to-15-Years-to-Life-in-Pr>,
         "OHIO AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/gallia-county>,
+        <https://caselinker.up.railway.app/resource/location/gallipolis>,
+        <https://caselinker.up.railway.app/resource/location/ohio> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ohio_ag_2014_007/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ohio_ag_2014_007/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ohio_ag_2014_007/event/hands-on>,
@@ -23,9 +28,11 @@
         <https://caselinker.up.railway.app/resource/case/ohio_ag_2014_007/legal-step/sentenced> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/attorney-generals-crime-against-children-unit>,
-        <https://caselinker.up.railway.app/resource/agency/attorney-generals-office>,
         <https://caselinker.up.railway.app/resource/agency/bureau-of-criminal-investigation>,
-        <https://caselinker.up.railway.app/resource/agency/gallia-county-sheriffs-office> .
+        <https://caselinker.up.railway.app/resource/agency/gallia-county-sheriffs-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/gallia-county>,
+        <https://caselinker.up.railway.app/resource/location/gallipolis>,
+        <https://caselinker.up.railway.app/resource/location/ohio> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2014_007/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -43,8 +50,6 @@
         cacontology-multi:StateAgency ;
     rdfs:label "Attorney General's Crime Against Children Unit" .
 
-<https://caselinker.up.railway.app/resource/agency/attorney-generals-office> a cacontology-multi:StateAgency .
-
 <https://caselinker.up.railway.app/resource/agency/bureau-of-criminal-investigation> a cacontology-multi:LocalAgency .
 
 <https://caselinker.up.railway.app/resource/agency/gallia-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
@@ -55,8 +60,7 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2014-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ohio_ag_2014_007/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/ohio_ag_2014_007/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ohio_ag_2014_007/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2014_007/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -71,15 +75,20 @@
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2014_007/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:LifeImprisonmentSentence ;
-    rdfs:label "life in prison" .
-
-<https://caselinker.up.railway.app/resource/case/ohio_ag_2014_007/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "15 years" .
+    rdfs:label "[\"life in prison\", \"15 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2014_007/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2014-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/gallia-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/gallipolis> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/ohio> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2014_007/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

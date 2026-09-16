@@ -9,6 +9,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -31,11 +32,14 @@
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_355> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T21:22:59.445065" ;
+    dcterms:created "2026-09-15T22:12:28.237883" ;
     dcterms:identifier "doj_safe_childhood_2023_355" ;
-    dcterms:modified "2026-09-14T21:22:59.445065" ;
+    dcterms:modified "2026-09-15T22:12:28.237883" ;
     dcterms:source <https://www.justice.gov/usao-ak/pr/ketchikan-man-pleads-guilty-distribution-child-pornography>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/juneau>,
+        <https://caselinker.up.railway.app/resource/location/ketchikan>,
+        <https://caselinker.up.railway.app/resource/location/the-district-of-alaska> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_355/phase/pleaded-guilty> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_355/phase/pleaded-guilty> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_355/admission/1>,
@@ -47,7 +51,10 @@
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/doj>,
         <https://caselinker.up.railway.app/resource/agency/fbi>,
-        <https://caselinker.up.railway.app/resource/agency/usao> .
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/juneau>,
+        <https://caselinker.up.railway.app/resource/location/ketchikan>,
+        <https://caselinker.up.railway.app/resource/location/the-district-of-alaska> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_355/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -76,9 +83,7 @@
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_355/charge/2>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_355/charge/3> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_355/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_355/sentence/2>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_355/sentence/3> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_355/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_355/legal-step/pleaded-guilty> a cac-core:Event,
         cac-core:LegalEvent,
@@ -97,26 +102,28 @@
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_355/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_355/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MandatoryMinimumSentencing ;
-    rdfs:label "mandatory minimum" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_355/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:LifeImprisonmentSentence ;
-    rdfs:label "life in prison" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_355/sentence/3> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "supervised release" .
+    rdfs:label "[\"mandatory minimum\", \"life in prison\", \"supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/platform/kik> a cacontology-platforms:MessagingService ;
     rdfs:label "Kik" .
 
-<https://caselinker.up.railway.app/resource/platform/twitter-x> a cacontology-platforms:SocialMediaPlatform ;
-    rdfs:label "Twitter / X" .
-
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_355/phase/pleaded-guilty> a cac-core:Phase,
         cacontology-legal-outcomes:PreTrialPhase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/juneau> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Juneau" ;
+    uco-core:name "Juneau" .
+
+<https://caselinker.up.railway.app/resource/location/ketchikan> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Ketchikan" ;
+    uco-core:name "Ketchikan" .
+
+<https://caselinker.up.railway.app/resource/location/the-district-of-alaska> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_355/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "the group where they had complete access to images of children being sexually exploited on the Kik group “Anything Goes" ;
@@ -133,7 +140,6 @@
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_355/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;
     cacontology:producesArtifact <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_355/admission/1> ;
-    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/kik>,
-        <https://caselinker.up.railway.app/resource/platform/twitter-x> ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/kik> ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_355/facet/csam> .
 

@@ -10,16 +10,19 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/lapd_2014_002> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:54:35.074060" ;
+    dcterms:created "2026-09-15T19:58:40.484035" ;
     dcterms:identifier "lapd_2014_002" ;
-    dcterms:modified "2026-09-10T19:54:35.074060" ;
+    dcterms:modified "2026-09-15T19:58:40.484035" ;
     dcterms:source <https://www.lapdonline.org/newsroom/lapd-internet-crimes-against-children-taskforce-arrest-suspect-for-sexual-act-with-child-under-10-years-of-age/>,
         "LAPD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/california>,
+        <https://caselinker.up.railway.app/resource/location/long-beach> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/lapd_2014_002/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/lapd_2014_002/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/lapd_2014_002/cybertip>,
@@ -29,7 +32,9 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/hsi>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/los-angeles-regional-internet-crime-against-children-task-force>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/california>,
+        <https://caselinker.up.railway.app/resource/location/long-beach> .
 
 <https://caselinker.up.railway.app/resource/case/lapd_2014_002/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -69,18 +74,31 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/lapd_2014_002/charge/1>,
         <https://caselinker.up.railway.app/resource/case/lapd_2014_002/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2014-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2014-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/lapd_2014_002/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/lapd_2014_002/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 23 .
 
 <https://caselinker.up.railway.app/resource/case/lapd_2014_002/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/lapd_2014_002/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/lapd_2014_002/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2014-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/california> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/long-beach> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Long Beach" ;
+    uco-core:name "Long Beach" .
 
 <https://caselinker.up.railway.app/resource/case/lapd_2014_002/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

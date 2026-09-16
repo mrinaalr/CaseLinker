@@ -10,6 +10,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -37,11 +38,14 @@
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_009> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:16:27.072578" ;
+    dcterms:created "2026-09-15T20:31:48.046199" ;
     dcterms:identifier "tbi_icac_2013_009" ;
-    dcterms:modified "2026-09-10T20:16:27.072578" ;
+    dcterms:modified "2026-09-15T20:31:48.046199" ;
     dcterms:source <https://tbinewsroom.com/2013/08/08/tbi-arrests-robertson-county-man-for-possession-of-child-pornography/>,
         "TBI ICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/greenbrier>,
+        <https://caselinker.up.railway.app/resource/location/nashville>,
+        <https://caselinker.up.railway.app/resource/location/robertson-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_009/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_009/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_009/admission/1>,
@@ -51,7 +55,10 @@
         <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_009/operation> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/greenbrier-police-department>,
         <https://caselinker.up.railway.app/resource/agency/metro-nashville-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/tennessee-bureau-of-investigation> .
+        <https://caselinker.up.railway.app/resource/agency/tennessee-bureau-of-investigation> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/greenbrier>,
+        <https://caselinker.up.railway.app/resource/location/nashville>,
+        <https://caselinker.up.railway.app/resource/location/robertson-county> .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_009/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -63,9 +70,9 @@
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_009/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Robertson County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_009/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_009/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_009/operation> a cac-core:Event,
         cacontology-taskforce:UndercoverUnit .
@@ -82,9 +89,24 @@
         <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_009/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_009/person/offender/1> .
 
+<https://caselinker.up.railway.app/resource/case/tbi_icac_2013_009/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_009/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/greenbrier> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Greenbrier" ;
+    uco-core:name "Greenbrier" .
+
+<https://caselinker.up.railway.app/resource/location/nashville> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/robertson-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_009/event/online-only> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

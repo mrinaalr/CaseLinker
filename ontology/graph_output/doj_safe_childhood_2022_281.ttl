@@ -11,20 +11,23 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_281> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T21:23:12.671543" ;
+    dcterms:created "2026-09-15T22:12:28.841538" ;
     dcterms:identifier "doj_safe_childhood_2022_281" ;
-    dcterms:modified "2026-09-14T21:23:12.671543" ;
+    dcterms:modified "2026-09-15T22:12:28.841538" ;
     dcterms:source <https://www.justice.gov/usao-edny/pr/brooklyn-high-school-teacher-convicted-production-child-pornography>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/brooklyn>,
+        <https://caselinker.up.railway.app/resource/location/new-york>,
+        <https://caselinker.up.railway.app/resource/location/united-states> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_281/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_281/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_281/event/csam>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_281/event/multi-jurisdiction>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_281/event/online-only>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_281/event/production>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_281/event/project-safe-childhood>,
@@ -37,7 +40,10 @@
         <https://caselinker.up.railway.app/resource/agency/doj>,
         <https://caselinker.up.railway.app/resource/agency/fbi>,
         <https://caselinker.up.railway.app/resource/agency/new-york-city-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/usao> .
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/brooklyn>,
+        <https://caselinker.up.railway.app/resource/location/new-york>,
+        <https://caselinker.up.railway.app/resource/location/united-states> .
 
 <https://caselinker.up.railway.app/resource/agency/ceos> a cacontology-multi:FederalAgency .
 
@@ -45,9 +51,7 @@
 
 <https://caselinker.up.railway.app/resource/agency/fbi> a cacontology-multi:FederalAgency .
 
-<https://caselinker.up.railway.app/resource/agency/new-york-city-police-department> a cac-core:OrganizationLikeEntity,
-        cacontology-multi:LocalAgency ;
-    rdfs:label "New York City Police Department" .
+<https://caselinker.up.railway.app/resource/agency/new-york-city-police-department> a cacontology-multi:LocalAgency .
 
 <https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
@@ -69,11 +73,9 @@
     ns1:chargeCluster "child_exploitation" ;
     ns1:chargeOffenseEvent <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_281/offense-event/charge-4> .
 
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_281/event/multi-jurisdiction> a cac-core:Event,
-        cacontology-multi:MultiJurisdictionalInvestigation .
-
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_281/event/project-safe-childhood> a cac-core:Event,
-        cacontology-multi:ProjectSafeChildhoodOperation .
+        cacontology-multi:ProjectSafeChildhoodOperation ;
+    cacontology:severityLevel 1 .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_281/event/trust-violation> a cacontology-custodial:AuthorityAbuse,
         cacontology-custodial:TrustViolation ;
@@ -130,25 +132,37 @@
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_281/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "15 years" .
+    rdfs:label "[\"15 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_281/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
+<https://caselinker.up.railway.app/resource/location/brooklyn> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/new-york> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_281/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;
+    cacontology:severityLevel 1 ;
     cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/chat>,
         <https://caselinker.up.railway.app/resource/platform/facebook> ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_281/facet/csam> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_281/event/online-only> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;
+    cacontology:severityLevel 1 ;
     cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/chat>,
         <https://caselinker.up.railway.app/resource/platform/facebook> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_281/event/production> a cac-core:Event,
         cacontology-production:ProductionOffense ;
+    cacontology:severityLevel 1 ;
     cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/chat>,
         <https://caselinker.up.railway.app/resource/platform/facebook> ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_281/facet/production> .

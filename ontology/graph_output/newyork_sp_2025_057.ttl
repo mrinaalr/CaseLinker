@@ -4,26 +4,36 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_057> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:00:46.345590" ;
+    dcterms:created "2026-09-15T20:06:35.769435" ;
     dcterms:identifier "newyork_sp_2025_057" ;
-    dcterms:modified "2026-09-10T20:00:46.345590" ;
+    dcterms:modified "2026-09-15T20:06:35.769435" ;
     dcterms:source <https://troopers.ny.gov/news/state-police-arrest-cayuga-county-man-child-pornography-charges-following-cybertip>,
         "NEWYORK SP" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/cayuga>,
+        <https://caselinker.up.railway.app/resource/location/cayuga-county>,
+        <https://caselinker.up.railway.app/resource/location/fleming>,
+        <https://caselinker.up.railway.app/resource/location/sp-auburn> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_057/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_057/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_057/event/csam>,
         <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_057/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
     cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_057/tech/cybertipline> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/state-police-department> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/state-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/cayuga>,
+        <https://caselinker.up.railway.app/resource/location/cayuga-county>,
+        <https://caselinker.up.railway.app/resource/location/fleming>,
+        <https://caselinker.up.railway.app/resource/location/sp-auburn> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_057/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -49,11 +59,16 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_057/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_057/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_057/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_057/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/newyork_sp_2025_057/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_057/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -61,6 +76,20 @@
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_057/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/cayuga> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/cayuga-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/fleming> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Fleming" ;
+    uco-core:name "Fleming" .
+
+<https://caselinker.up.railway.app/resource/location/sp-auburn> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_057/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

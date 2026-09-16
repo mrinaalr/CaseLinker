@@ -3,68 +3,72 @@
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_845> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:21:19.196184" ;
+    dcterms:created "2026-09-15T21:08:10.883215" ;
     dcterms:identifier "ncmec_2024_845" ;
-    dcterms:modified "2026-09-10T19:21:19.196184" ;
-    dcterms:source <https://www.wbtv.com/2024/08/29/convicted-sex-offender-arrested-accused-more-child-sex-crimes/>,
+    dcterms:modified "2026-09-15T21:08:10.883215" ;
+    dcterms:source <https://www.caswellmessenger.com/news/article_065b6706-e858-11ee-95ff-ffb876af743f.html>,
         "NCMEC" ;
-    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_845/phase/convicted> ;
-    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_845/phase/convicted> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_845/event/distribution>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_845/legal-proceeding>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_845/legal-step/convicted> ;
-    cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/burke-county-sheriffs-office> .
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/yanceyville-township> ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_845/phase/charged> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_845/phase/charged> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_845/legal-proceeding> ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/caswell-county-sheriffs-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/yanceyville-township> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_845/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2024-08-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:hasRoleBeginPoint "2024-03-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_845/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_845/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2024-08-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:hasRoleBeginPoint "2024-03-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_845/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/burke-county-sheriffs-office> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/caswell-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Caswell County Sheriff's Office" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_845/event/distribution> a cac-core:Event,
-        cacontology-legal-outcomes:CSAM_Distribution ;
-    cacontology:severityLevel 3 .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_845/charge/1> a cacontology-legal-outcomes:CriminalCharge,
+        cacontology-legal-outcomes:StateCharge ;
+    rdfs:label "sexual exploitation of a minor" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_845/charge/2> a cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "sexual exploitation" ;
+    ns1:chargeCluster "sexual_exploitation_unspecified" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_845/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-08-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2024_845/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_845/sentence/2> .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_845/legal-step/convicted> a cac-core:Event,
-        cac-core:LegalEvent,
-        cacontology-legal-outcomes:LegalProceeding,
-        cacontology-legal-outcomes:SentencingHearing ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-08-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2024_845/charge/1>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_845/charge/2> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-03-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2024_845/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_845/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_845/person/victim/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_845/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:ProbationSentence ;
-    rdfs:label "Probation" .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_845/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$50,000" .
+    rdfs:label "[\"$100,000.00\"]" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_845/phase/convicted> a cac-core:Phase,
-        cacontology-legal-outcomes:SentencingPhase ;
-    cacontology:hasPhaseBeginPoint "2024-08-01T00:00:00Z"^^xsd:dateTimeStamp .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_845/phase/charged> a cacontology:LegalProcessPhase,
+        cac-core:Phase ;
+    cacontology:hasPhaseBeginPoint "2024-03-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/yanceyville-township> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Yanceyville Township" ;
+    uco-core:name "Yanceyville Township" .
 

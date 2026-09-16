@@ -3,23 +3,30 @@
 @prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/pa_ag_2025_026> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:04:23.070005" ;
+    dcterms:created "2026-09-15T20:12:06.790729" ;
     dcterms:identifier "pa_ag_2025_026" ;
-    dcterms:modified "2026-09-10T20:04:23.070005" ;
+    dcterms:modified "2026-09-15T20:12:06.790729" ;
     dcterms:source <https://www.attorneygeneral.gov/taking-action/adams-county-man-pleads-guilty-will-serve-up-to-30-years-in-prison-for-sexual-abuse-of-two-children/>,
         "PA AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/adams-county>,
+        <https://caselinker.up.railway.app/resource/location/harrisburg> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/pa_ag_2025_026/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/pa_ag_2025_026/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/pa_ag_2025_026/event/hands-on>,
         <https://caselinker.up.railway.app/resource/case/pa_ag_2025_026/legal-proceeding>,
-        <https://caselinker.up.railway.app/resource/case/pa_ag_2025_026/legal-step/sentenced> .
+        <https://caselinker.up.railway.app/resource/case/pa_ag_2025_026/legal-step/sentenced> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/adams-county>,
+        <https://caselinker.up.railway.app/resource/location/harrisburg> .
 
 <https://caselinker.up.railway.app/resource/case/pa_ag_2025_026/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -52,11 +59,19 @@
 
 <https://caselinker.up.railway.app/resource/case/pa_ag_2025_026/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "30 Years" .
+    rdfs:label "[\"30 Years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/pa_ag_2025_026/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/adams-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Adams County" ;
+    uco-core:name "Adams County" .
+
+<https://caselinker.up.railway.app/resource/location/harrisburg> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/pa_ag_2025_026/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

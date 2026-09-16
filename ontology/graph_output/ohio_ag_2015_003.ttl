@@ -5,19 +5,23 @@
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2015_003> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:03:03.116286" ;
+    dcterms:created "2026-09-15T20:10:06.638365" ;
     dcterms:identifier "ohio_ag_2015_003" ;
-    dcterms:modified "2026-09-10T20:03:03.116286" ;
+    dcterms:modified "2026-09-15T20:10:06.638365" ;
     dcterms:source <https://www.ohioattorneygeneral.gov/Media/News-Releases/August-2015/Middle-School-Assistant-Coach-Arrested-on-Child-Po>,
         "OHIO AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/austintown>,
+        <https://caselinker.up.railway.app/resource/location/ohio> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ohio_ag_2015_003/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ohio_ag_2015_003/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ohio_ag_2015_003/event/csam>,
@@ -28,7 +32,9 @@
         <https://caselinker.up.railway.app/resource/agency/austintown-township-police-department>,
         <https://caselinker.up.railway.app/resource/agency/fbi>,
         <https://caselinker.up.railway.app/resource/agency/mahoning-county-sheriffs-office>,
-        <https://caselinker.up.railway.app/resource/agency/ohio-bureau-of-criminal-investigation> .
+        <https://caselinker.up.railway.app/resource/agency/ohio-bureau-of-criminal-investigation> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/austintown>,
+        <https://caselinker.up.railway.app/resource/location/ohio> .
 
 <https://caselinker.up.railway.app/resource/agency/attorney-generals-crimes-against-children-unit> a cacontology-multi:StateAgency .
 
@@ -54,9 +60,9 @@
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2015_003/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Mahoning County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ohio_ag_2015_003/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2015-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2015-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ohio_ag_2015_003/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2015_003/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 59 .
@@ -81,9 +87,21 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ohio_ag_2015_003/event/csam> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ohio_ag_2015_003/person/victim/1> .
 
+<https://caselinker.up.railway.app/resource/case/ohio_ag_2015_003/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2015_003/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2015-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/austintown> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Austintown" ;
+    uco-core:name "Austintown" .
+
+<https://caselinker.up.railway.app/resource/location/ohio> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2015_003/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

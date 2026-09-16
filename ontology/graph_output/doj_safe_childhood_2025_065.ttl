@@ -10,6 +10,7 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -35,31 +36,15 @@
 
 <https://caselinker.up.railway.app/resource/agency/doj> a cacontology-multi:FederalAgency .
 
-<https://caselinker.up.railway.app/resource/agency/fbi> a cacontology-multi:FederalAgency .
-
 <https://caselinker.up.railway.app/resource/agency/florida-department-of-law-enforcement> a cacontology-multi:LocalAgency .
 
 <https://caselinker.up.railway.app/resource/agency/hsi> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/agency/ice> a cacontology-multi:FederalAgency .
 
-<https://caselinker.up.railway.app/resource/agency/iowa-division-of-criminal-investigation> a cacontology-multi:LocalAgency .
-
-<https://caselinker.up.railway.app/resource/agency/marshalltown-police-department> a cac-core:OrganizationLikeEntity,
-        cacontology-multi:LocalAgency ;
-    rdfs:label "Marshalltown Police Department" .
-
 <https://caselinker.up.railway.app/resource/agency/office-of-the-state-attorney-for-the-fourteenth-judicial-circuit> a cac-core:OrganizationLikeEntity,
         cacontology-multi:StateAgency ;
     rdfs:label "Office of the State Attorney for the Fourteenth Judicial Circuit" .
-
-<https://caselinker.up.railway.app/resource/agency/tama-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
-        cacontology-multi:LocalAgency ;
-    rdfs:label "Tama County Sheriff's Office" .
-
-<https://caselinker.up.railway.app/resource/agency/tama-police-department> a cac-core:OrganizationLikeEntity,
-        cacontology-multi:LocalAgency ;
-    rdfs:label "Tama Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
@@ -89,7 +74,8 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_065/charge/1>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_065/charge/2>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_065/charge/3> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_065/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_065/legal-step/pleaded-guilty> a cac-core:Event,
         cac-core:LegalEvent,
@@ -102,13 +88,23 @@
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_065/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_065/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_065> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T21:22:24.821528" ;
+    dcterms:created "2026-09-15T22:12:26.562652" ;
     dcterms:identifier "doj_safe_childhood_2025_065" ;
-    dcterms:modified "2026-09-14T21:22:24.821528" ;
+    dcterms:modified "2026-09-15T22:12:26.562652" ;
     dcterms:source <https://www.justice.gov/usao-ndfl/pr/panama-city-man-pleads-guilty-receipt-child-pornography>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/florida>,
+        <https://caselinker.up.railway.app/resource/location/northern-district>,
+        <https://caselinker.up.railway.app/resource/location/panama-city>,
+        <https://caselinker.up.railway.app/resource/location/tallahassee>,
+        <https://caselinker.up.railway.app/resource/location/the-northern-district>,
+        <https://caselinker.up.railway.app/resource/location/united-states> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_065/phase/pleaded-guilty> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_065/phase/pleaded-guilty> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_065/admission/1>,
@@ -122,16 +118,17 @@
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ceos>,
         <https://caselinker.up.railway.app/resource/agency/doj>,
-        <https://caselinker.up.railway.app/resource/agency/fbi>,
         <https://caselinker.up.railway.app/resource/agency/florida-department-of-law-enforcement>,
         <https://caselinker.up.railway.app/resource/agency/hsi>,
         <https://caselinker.up.railway.app/resource/agency/ice>,
-        <https://caselinker.up.railway.app/resource/agency/iowa-division-of-criminal-investigation>,
-        <https://caselinker.up.railway.app/resource/agency/marshalltown-police-department>,
         <https://caselinker.up.railway.app/resource/agency/office-of-the-state-attorney-for-the-fourteenth-judicial-circuit>,
-        <https://caselinker.up.railway.app/resource/agency/tama-county-sheriffs-office>,
-        <https://caselinker.up.railway.app/resource/agency/tama-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/usao> .
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/florida>,
+        <https://caselinker.up.railway.app/resource/location/northern-district>,
+        <https://caselinker.up.railway.app/resource/location/panama-city>,
+        <https://caselinker.up.railway.app/resource/location/tallahassee>,
+        <https://caselinker.up.railway.app/resource/location/the-northern-district>,
+        <https://caselinker.up.railway.app/resource/location/united-states> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_065/phase/pleaded-guilty> a cac-core:Phase,
         cacontology-legal-outcomes:PreTrialPhase ;
@@ -144,6 +141,24 @@
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_065/event/hands-on>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_065/offense-event/charge-3> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_065/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/location/florida> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/northern-district> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/panama-city> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/tallahassee> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/the-northern-district> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_065/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

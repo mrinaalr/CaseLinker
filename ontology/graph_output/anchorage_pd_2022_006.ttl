@@ -9,28 +9,35 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_006> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:35:58.191831" ;
+    dcterms:created "2026-09-15T19:24:25.540375" ;
     dcterms:identifier "anchorage_pd_2022_006" ;
-    dcterms:modified "2026-09-10T19:35:58.191831" ;
+    dcterms:modified "2026-09-15T19:24:25.540375" ;
     dcterms:source <https://www.anchoragepolice.com/news/tristan-grant-sentenced-to-35-years-in-prison-for-sex-trafficking-minors-child-pornography-and-illegal-possession-of-a-firearm>,
         "ANCHORAGE PD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/anchorage>,
+        <https://caselinker.up.railway.app/resource/location/the-district-of-alaska> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_006/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_006/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_006/event/online-only>,
         <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_006/event/possession>,
         <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_006/event/production>,
+        <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_006/event/project-safe-childhood>,
         <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_006/event/trafficking>,
         <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_006/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_006/legal-step/sentenced>,
         <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_006/operation> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/anchorage-police-department>,
         <https://caselinker.up.railway.app/resource/agency/bureau-of-alcohol-tobacco-firearms-and-explosives>,
-        <https://caselinker.up.railway.app/resource/agency/fbi> .
+        <https://caselinker.up.railway.app/resource/agency/fbi>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/anchorage>,
+        <https://caselinker.up.railway.app/resource/location/the-district-of-alaska> .
 
 <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_006/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -56,6 +63,8 @@
 
 <https://caselinker.up.railway.app/resource/agency/fbi> a cacontology-multi:FederalAgency .
 
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
+
 <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_006/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "child pornography" .
@@ -72,6 +81,9 @@
     rdfs:label "sexual exploitation" ;
     ns1:chargeCluster "sexual_exploitation_unspecified" .
 
+<https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_006/event/project-safe-childhood> a cac-core:Event,
+        cacontology-multi:ProjectSafeChildhoodOperation .
+
 <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_006/event/trafficking> a cac-core:Event,
         cacontology-legal-outcomes:SexTrafficking .
 
@@ -87,8 +99,7 @@
         <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_006/charge/3>,
         <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_006/charge/4> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_006/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_006/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_006/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_006/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -105,16 +116,18 @@
     cacontology-production:victimAge 15 .
 
 <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_006/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "35 Years" .
-
-<https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_006/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "supervised release" .
+    rdfs:label "[\"35 Years\", \"supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_006/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/anchorage> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/the-district-of-alaska> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_006/event/online-only> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event .

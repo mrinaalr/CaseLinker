@@ -1,5 +1,6 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-undercover: <https://cacontology.projectvic.org/undercover#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
@@ -7,6 +8,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -22,16 +24,28 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_052> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:05:09.961450" ;
+    dcterms:created "2026-09-15T20:45:06.032486" ;
     dcterms:identifier "ncmec_2022_052" ;
-    dcterms:modified "2026-09-10T19:05:09.961450" ;
+    dcterms:modified "2026-09-15T20:45:06.032486" ;
     dcterms:source <https://www.wiscnews.com/community/baraboonewsrepublic/baraboo-man-sentenced-in-federal-court/article_ce4c4d23-6b17-5128-9337-6eec0233d6a8.html>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/baraboo>,
+        <https://caselinker.up.railway.app/resource/location/ho-chunk>,
+        <https://caselinker.up.railway.app/resource/location/sauk-county>,
+        <https://caselinker.up.railway.app/resource/location/west-baraboo>,
+        <https://caselinker.up.railway.app/resource/location/western-district>,
+        <https://caselinker.up.railway.app/resource/location/wisconsin> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_052/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_052/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2022_052/admission/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_052/legal-proceeding>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_052/legal-step/sentenced> .
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_052/legal-step/sentenced> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/baraboo>,
+        <https://caselinker.up.railway.app/resource/location/ho-chunk>,
+        <https://caselinker.up.railway.app/resource/location/sauk-county>,
+        <https://caselinker.up.railway.app/resource/location/west-baraboo>,
+        <https://caselinker.up.railway.app/resource/location/western-district>,
+        <https://caselinker.up.railway.app/resource/location/wisconsin> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_052/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
@@ -45,7 +59,8 @@
         cacontology-legal-outcomes:SentencingHearing ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_052/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_052/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 29 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_052/person/victim/1> a uco-identity:Person .
 
@@ -56,7 +71,7 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_052/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "37 months" .
+    rdfs:label "[\"37 months\"]" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_052/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "hid the gun where children couldn’t find it" ;
@@ -72,4 +87,34 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_052/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/baraboo> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Baraboo" ;
+    uco-core:name "Baraboo" .
+
+<https://caselinker.up.railway.app/resource/location/ho-chunk> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Ho-chunk" ;
+    uco-core:name "Ho-chunk" .
+
+<https://caselinker.up.railway.app/resource/location/sauk-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Sauk County" ;
+    uco-core:name "Sauk County" .
+
+<https://caselinker.up.railway.app/resource/location/west-baraboo> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "West Baraboo" ;
+    uco-core:name "West Baraboo" .
+
+<https://caselinker.up.railway.app/resource/location/western-district> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Western District" ;
+    uco-core:name "Western District" .
+
+<https://caselinker.up.railway.app/resource/location/wisconsin> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Wisconsin" ;
+    uco-core:name "Wisconsin" .
 

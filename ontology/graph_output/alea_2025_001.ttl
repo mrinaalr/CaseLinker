@@ -7,17 +7,20 @@
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/alea_2025_001> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:26:09.735608" ;
+    dcterms:created "2026-09-15T19:23:52.943248" ;
     dcterms:identifier "alea_2025_001" ;
-    dcterms:modified "2026-09-10T20:26:09.735608" ;
+    dcterms:modified "2026-09-15T19:23:52.943248" ;
     dcterms:source <https://www.alea.gov/news/alea-sbi-investigation-leads-indictment-marion-county-child-exploitation-investigation>,
         "ALEA" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/marion-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/alea_2025_001/phase/booked> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/alea_2025_001/phase/booked> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/alea_2025_001/event/distribution>,
@@ -27,7 +30,8 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/hamilton-police-department>,
         <https://caselinker.up.railway.app/resource/agency/marion-county-child-exploitation-investigation>,
         <https://caselinker.up.railway.app/resource/agency/marion-county-district-attorneys-office>,
-        <https://caselinker.up.railway.app/resource/agency/state-bureau-of-investigation> .
+        <https://caselinker.up.railway.app/resource/agency/state-bureau-of-investigation> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/marion-county> .
 
 <https://caselinker.up.railway.app/resource/case/alea_2025_001/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -71,19 +75,28 @@
 <https://caselinker.up.railway.app/resource/case/alea_2025_001/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Marion County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/alea_2025_001/charge/1>,
         <https://caselinker.up.railway.app/resource/case/alea_2025_001/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/alea_2025_001/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/alea_2025_001/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 31 .
 
 <https://caselinker.up.railway.app/resource/case/alea_2025_001/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/alea_2025_001/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/alea_2025_001/phase/booked> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/marion-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Marion County" ;
+    uco-core:name "Marion County" .
 
 <https://caselinker.up.railway.app/resource/case/alea_2025_001/offense-event/charge-2> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event,

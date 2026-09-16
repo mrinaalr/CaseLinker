@@ -5,18 +5,28 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/nc_sbi_2025_002> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:55:30.425038" ;
+    dcterms:created "2026-09-15T20:00:27.354122" ;
     dcterms:identifier "nc_sbi_2025_002" ;
-    dcterms:modified "2026-09-10T19:55:30.425038" ;
+    dcterms:modified "2026-09-15T20:00:27.354122" ;
     dcterms:source <https://www.ncsbi.gov/Newsroom/News-Releases/Harnett-County-Amber-Alert-Arrests>,
         "NC SBI" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/harnett-county>,
+        <https://caselinker.up.railway.app/resource/location/kitty-hawk>,
+        <https://caselinker.up.railway.app/resource/location/nc>,
+        <https://caselinker.up.railway.app/resource/location/north-carolina>,
+        <https://caselinker.up.railway.app/resource/location/spring-lake>,
+        <https://caselinker.up.railway.app/resource/location/virginia>,
+        <https://caselinker.up.railway.app/resource/location/virginia-beach> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/nc_sbi_2025_002/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/nc_sbi_2025_002/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/nc_sbi_2025_002/event/conspiracy>,
@@ -26,7 +36,14 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/fbi>,
         <https://caselinker.up.railway.app/resource/agency/harnett-county-sheriffs-office>,
         <https://caselinker.up.railway.app/resource/agency/kitty-hawk-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/north-carolina-state-bureau-of-investigation> .
+        <https://caselinker.up.railway.app/resource/agency/north-carolina-state-bureau-of-investigation> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/harnett-county>,
+        <https://caselinker.up.railway.app/resource/location/kitty-hawk>,
+        <https://caselinker.up.railway.app/resource/location/nc>,
+        <https://caselinker.up.railway.app/resource/location/north-carolina>,
+        <https://caselinker.up.railway.app/resource/location/spring-lake>,
+        <https://caselinker.up.railway.app/resource/location/virginia>,
+        <https://caselinker.up.railway.app/resource/location/virginia-beach> .
 
 <https://caselinker.up.railway.app/resource/case/nc_sbi_2025_002/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
@@ -51,8 +68,8 @@
 <https://caselinker.up.railway.app/resource/case/nc_sbi_2025_002/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Harnett County Jail" ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/nc_sbi_2025_002/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/nc_sbi_2025_002/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 23 .
@@ -74,12 +91,47 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/nc_sbi_2025_002/event/conspiracy> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/nc_sbi_2025_002/person/offender/2> .
 
+<https://caselinker.up.railway.app/resource/case/nc_sbi_2025_002/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/platform/social-media> a cacontology-platforms:SocialMediaPlatform ;
     rdfs:label "social media" .
 
 <https://caselinker.up.railway.app/resource/case/nc_sbi_2025_002/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/harnett-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Harnett County" ;
+    uco-core:name "Harnett County" .
+
+<https://caselinker.up.railway.app/resource/location/kitty-hawk> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Kitty Hawk" ;
+    uco-core:name "Kitty Hawk" .
+
+<https://caselinker.up.railway.app/resource/location/nc> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Nc." ;
+    uco-core:name "Nc." .
+
+<https://caselinker.up.railway.app/resource/location/north-carolina> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/spring-lake> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Spring Lake" ;
+    uco-core:name "Spring Lake" .
+
+<https://caselinker.up.railway.app/resource/location/virginia> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/virginia-beach> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Virginia Beach" ;
+    uco-core:name "Virginia Beach" .
 
 <https://caselinker.up.railway.app/resource/case/nc_sbi_2025_002/event/conspiracy> a cacontology:ConspiracyToCommitCSA,
         cac-core:Event ;

@@ -9,6 +9,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -23,7 +24,9 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_048/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_048/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/department-of-defense> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/department-of-defense> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Department of Defense" .
 
 <https://caselinker.up.railway.app/resource/agency/tampa-police-department> a cac-core:OrganizationLikeEntity,
         cacontology-multi:LocalAgency ;
@@ -31,11 +34,12 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_048> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:05:08.215143" ;
+    dcterms:created "2026-09-15T20:45:06.028637" ;
     dcterms:identifier "ncmec_2022_048" ;
-    dcterms:modified "2026-09-10T19:05:08.215143" ;
+    dcterms:modified "2026-09-15T20:45:06.028637" ;
     dcterms:source <https://www.tampa.gov/news/military-contractor-arrested-child-porn-charges-105876#:~:text=Pendleton%20is%20employed%20with%20Seneca,Additional%20charges%20are%20expected>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/tampa> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_048/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_048/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2022_048/admission/1>,
@@ -43,7 +47,8 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_048/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_048/legal-proceeding> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/department-of-defense>,
-        <https://caselinker.up.railway.app/resource/agency/tampa-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/tampa-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/tampa> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_048/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -59,7 +64,8 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2022_048/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2022_048/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_048/person/offender/1> a uco-identity:Person .
 
@@ -71,12 +77,21 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_048/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_048/person/offender/1> .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_048/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/platform/social-media> a cacontology-platforms:SocialMediaPlatform ;
     rdfs:label "social media" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_048/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/tampa> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Tampa" ;
+    uco-core:name "Tampa" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_048/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "to knowingly sharing child pornography" ;

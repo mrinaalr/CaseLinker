@@ -5,26 +5,30 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_028> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:05:00.732011" ;
+    dcterms:created "2026-09-15T20:45:06.013817" ;
     dcterms:identifier "ncmec_2022_028" ;
-    dcterms:modified "2026-09-10T19:05:00.732011" ;
+    dcterms:modified "2026-09-15T20:45:06.013817" ;
     dcterms:source <https://www.theplainsman.com/article/2022/06/auburn-professor-charged-with-possession-of-child-pornography>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/auburn> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_028/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_028/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2022_028/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_028/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/auburn-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/icac> .
+        <https://caselinker.up.railway.app/resource/agency/icac> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/auburn> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_028/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -38,7 +42,9 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_028/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_028/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/auburn-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/auburn-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Auburn Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
@@ -63,11 +69,16 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_028/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$50,000" .
+    rdfs:label "[\"$50,000\"]" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_028/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/auburn> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Auburn" ;
+    uco-core:name "Auburn" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_028/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

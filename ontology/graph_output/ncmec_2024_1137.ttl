@@ -10,19 +10,24 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1137> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:24:03.018957" ;
+    dcterms:created "2026-09-15T21:08:11.186133" ;
     dcterms:identifier "ncmec_2024_1137" ;
-    dcterms:modified "2026-09-10T19:24:03.018957" ;
-    dcterms:source <https://ago.vermont.gov/blog/2024/07/12/st-albans-resident-charged-possession-child-sexual-abuse-material>,
+    dcterms:modified "2026-09-15T21:08:11.186133" ;
+    dcterms:source <https://ago.vermont.gov/blog/2024/01/23/colchester-and-newport-residents-arrested-possession-child-sexual-abuse-material>,
         "NCMEC" ;
-    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/phase/charged> ;
-    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/phase/charged> ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/colchester>,
+        <https://caselinker.up.railway.app/resource/location/newport>,
+        <https://caselinker.up.railway.app/resource/location/vermont> ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/phase/arrested> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/cybertip>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/event/conspiracy>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/event/distribution>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/event/hands-on>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/event/possession>,
@@ -32,21 +37,20 @@
     cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/tech/cybertipline> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/attorney-generals-office>,
         <https://caselinker.up.railway.app/resource/agency/burlington-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/colchester-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/hsi>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/st-albans-city-police-department> .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/role/offender/1> a cacontology:OffenderRole,
-        uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2024-07-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/event/hands-on>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/event/possession> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/person/offender/1> .
+        <https://caselinker.up.railway.app/resource/agency/newport-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/colchester>,
+        <https://caselinker.up.railway.app/resource/location/newport>,
+        <https://caselinker.up.railway.app/resource/location/vermont> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2024-07-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/event/hands-on>,
+    cacontology:hasRoleBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/event/conspiracy>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/event/hands-on>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/person/victim/1> .
 
@@ -54,29 +58,31 @@
 
 <https://caselinker.up.railway.app/resource/agency/burlington-police-department> a cacontology-multi:LocalAgency .
 
+<https://caselinker.up.railway.app/resource/agency/colchester-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Colchester Police Department" .
+
+<https://caselinker.up.railway.app/resource/agency/hsi> a cacontology-multi:FederalAgency .
+
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
-<https://caselinker.up.railway.app/resource/agency/st-albans-city-police-department> a cac-core:OrganizationLikeEntity,
+<https://caselinker.up.railway.app/resource/agency/newport-police-department> a cac-core:OrganizationLikeEntity,
         cacontology-multi:LocalAgency ;
-    rdfs:label "St. Albans City Police Department" .
+    rdfs:label "Newport Police Department" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/charge/1> a cacontology-legal-outcomes:CriminalCharge,
-        cacontology-legal-outcomes:StateCharge ;
-    rdfs:label "sexual exploitation of children" .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/charge/2> a cacontology-legal-outcomes:CSAM_Possession,
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "child sexual abuse material" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/charge/3> a cacontology-legal-outcomes:CriminalCharge,
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/charge/2> a cacontology-legal-outcomes:CriminalCharge,
         cacontology-legal-outcomes:OnlineEnticement ;
     rdfs:label "online enticement" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/charge/4> a cacontology-legal-outcomes:CriminalCharge,
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/charge/3> a cacontology-legal-outcomes:CriminalCharge,
         cacontology-legal-outcomes:SexTrafficking ;
     rdfs:label "sex trafficking" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/charge/5> a cacontology-legal-outcomes:CriminalCharge ;
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/charge/4> a cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "sexual exploitation" ;
     ns1:chargeCluster "sexual_exploitation_unspecified" .
 
@@ -99,23 +105,66 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/charge/2>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/charge/3>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/charge/4>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/charge/5> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-07-01T00:00:00Z"^^xsd:dateTimeStamp .
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/charge/4> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/person/offender/1> a uco-identity:Person ;
-    cacontology-detection:ageEstimate 31 .
+    cacontology-detection:ageEstimate 37 .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/person/offender/2> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 48 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/event/conspiracy>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/event/hands-on>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/event/possession> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/role/offender/2> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/event/conspiracy>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/event/hands-on>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/event/possession> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/person/offender/2> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
 
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/phase/charged> a cacontology:LegalProcessPhase,
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;
-    cacontology:hasPhaseBeginPoint "2024-07-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology:hasPhaseBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/colchester> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Colchester" ;
+    uco-core:name "Colchester" .
+
+<https://caselinker.up.railway.app/resource/location/newport> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Newport" ;
+    uco-core:name "Newport" .
+
+<https://caselinker.up.railway.app/resource/location/vermont> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/event/conspiracy> a cacontology:ConspiracyToCommitCSA,
+        cac-core:Event ;
+    cacontology:conspiracyMemberCount 2 ;
+    cacontology:participatesInConspiracy <https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/role/offender/1>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/role/offender/2> ;
+    cacontology:severityLevel 3 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1137/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

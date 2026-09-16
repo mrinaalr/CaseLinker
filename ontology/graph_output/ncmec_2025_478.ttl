@@ -1,29 +1,39 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
 @prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_478> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:29:30.816221" ;
+    dcterms:created "2026-09-15T21:27:13.595016" ;
     dcterms:identifier "ncmec_2025_478" ;
-    dcterms:modified "2026-09-10T19:29:30.816221" ;
+    dcterms:modified "2026-09-15T21:27:13.595016" ;
     dcterms:source <https://upnorthlive.com/news/local/south-boardman-woman-21-charged-with-possession-of-child-sexually-abusive-material>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/kalkaska-county>,
+        <https://caselinker.up.railway.app/resource/location/mich>,
+        <https://caselinker.up.railway.app/resource/location/south-boardman> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_478/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_478/phase/charged> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_478/event/possession> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_478/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2025_478/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/kalkaska-county-sheriffs-office>,
-        <https://caselinker.up.railway.app/resource/agency/michigan-state-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/michigan-state-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/kalkaska-county>,
+        <https://caselinker.up.railway.app/resource/location/mich>,
+        <https://caselinker.up.railway.app/resource/location/south-boardman> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_478/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -47,14 +57,39 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_478/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_478/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-08-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_478/sentence/1> .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_478/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 21 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_478/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_478/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_478/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-08-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/kalkaska-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Kalkaska County" ;
+    uco-core:name "Kalkaska County" .
+
+<https://caselinker.up.railway.app/resource/location/mich> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Mich." ;
+    uco-core:name "Mich." .
+
+<https://caselinker.up.railway.app/resource/location/south-boardman> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "South Boardman" ;
+    uco-core:name "South Boardman" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_478/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

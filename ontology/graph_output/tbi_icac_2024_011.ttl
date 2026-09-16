@@ -10,16 +10,19 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2024_011> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:16:02.005867" ;
+    dcterms:created "2026-09-15T20:31:48.015083" ;
     dcterms:identifier "tbi_icac_2024_011" ;
-    dcterms:modified "2026-09-10T20:16:02.005867" ;
+    dcterms:modified "2026-09-15T20:31:48.015083" ;
     dcterms:source <https://tbinewsroom.com/2024/11/05/cybertip-leads-to-arrest-of-lawrence-county-man/>,
         "TBI ICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/lawrence-county>,
+        <https://caselinker.up.railway.app/resource/location/summertown> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/tbi_icac_2024_011/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/tbi_icac_2024_011/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/tbi_icac_2024_011/cybertip>,
@@ -32,7 +35,9 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/lawrence-county-sheriffs-office>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/tbi-criminal-investigation-division> .
+        <https://caselinker.up.railway.app/resource/agency/tbi-criminal-investigation-division> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/lawrence-county>,
+        <https://caselinker.up.railway.app/resource/location/summertown> .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2024_011/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -78,10 +83,10 @@
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2024_011/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Lawrence County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/tbi_icac_2024_011/charge/1>,
         <https://caselinker.up.railway.app/resource/case/tbi_icac_2024_011/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/tbi_icac_2024_011/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2024_011/operation> a cac-core:Event,
         cacontology-taskforce:TaskForceOperation .
@@ -89,6 +94,10 @@
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2024_011/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2024_011/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/tbi_icac_2024_011/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2024_011/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -98,6 +107,14 @@
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2024_011/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/lawrence-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/summertown> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Summertown" ;
+    uco-core:name "Summertown" .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2024_011/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

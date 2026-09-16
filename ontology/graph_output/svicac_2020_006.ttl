@@ -5,19 +5,23 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2020_006> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:14:13.258766" ;
+    dcterms:created "2026-09-15T20:29:58.172267" ;
     dcterms:identifier "svicac_2020_006" ;
-    dcterms:modified "2026-09-10T20:14:13.258766" ;
+    dcterms:modified "2026-09-15T20:29:58.172267" ;
     dcterms:source <https://sanfrancisco.cbslocal.com/2020/05/12/pescadero-resident-arrested-for-possession-of-child-pornography/>,
         "SVICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/pescadero>,
+        <https://caselinker.up.railway.app/resource/location/san-mateo-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/svicac_2020_006/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/svicac_2020_006/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/svicac_2020_006/event/possession>,
@@ -25,7 +29,9 @@
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/district-attorneys-office>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/san-mateo-county-sheriffs-office> .
+        <https://caselinker.up.railway.app/resource/agency/san-mateo-county-sheriffs-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/pescadero>,
+        <https://caselinker.up.railway.app/resource/location/san-mateo-county> .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2020_006/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -56,16 +62,29 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/svicac_2020_006/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2020-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2020-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/svicac_2020_006/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2020_006/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 64 .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2020_006/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/svicac_2020_006/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/svicac_2020_006/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2020-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/pescadero> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Pescadero" ;
+    uco-core:name "Pescadero" .
+
+<https://caselinker.up.railway.app/resource/location/san-mateo-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2020_006/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

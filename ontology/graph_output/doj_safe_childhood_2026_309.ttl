@@ -10,6 +10,7 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -31,17 +32,24 @@
 
 <https://caselinker.up.railway.app/resource/agency/fbi> a cacontology-multi:FederalAgency .
 
-<https://caselinker.up.railway.app/resource/agency/parkersburg-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/parkersburg-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Parkersburg Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_309> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T21:22:20.578931" ;
+    dcterms:created "2026-09-15T22:12:26.284810" ;
     dcterms:identifier "doj_safe_childhood_2026_309" ;
-    dcterms:modified "2026-09-14T21:22:20.578931" ;
+    dcterms:modified "2026-09-15T22:12:26.284810" ;
     dcterms:source <https://www.justice.gov/usao-sdwv/pr/huntington-man-sentenced-prison-child-pornography-crime-2>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/huntington>,
+        <https://caselinker.up.railway.app/resource/location/lyons>,
+        <https://caselinker.up.railway.app/resource/location/united-states>,
+        <https://caselinker.up.railway.app/resource/location/west-virginia>,
+        <https://caselinker.up.railway.app/resource/location/wva> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_309/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_309/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_309/admission/1>,
@@ -55,7 +63,12 @@
         <https://caselinker.up.railway.app/resource/agency/doj>,
         <https://caselinker.up.railway.app/resource/agency/fbi>,
         <https://caselinker.up.railway.app/resource/agency/parkersburg-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/usao> .
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/huntington>,
+        <https://caselinker.up.railway.app/resource/location/lyons>,
+        <https://caselinker.up.railway.app/resource/location/united-states>,
+        <https://caselinker.up.railway.app/resource/location/west-virginia>,
+        <https://caselinker.up.railway.app/resource/location/wva> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_309/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -106,7 +119,7 @@
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_309/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "15 years of supervised release" .
+    rdfs:label "[\"15 years of supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_309/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "additional criminal conduct" ;
@@ -122,6 +135,23 @@
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_309/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/huntington> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/lyons> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Lyons’" ;
+    uco-core:name "Lyons’" .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/west-virginia> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/wva> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_309/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

@@ -10,16 +10,22 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_244> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:27:23.174647" ;
+    dcterms:created "2026-09-15T21:27:13.378871" ;
     dcterms:identifier "ncmec_2025_244" ;
-    dcterms:modified "2026-09-10T19:27:23.174647" ;
+    dcterms:modified "2026-09-15T21:27:13.378871" ;
     dcterms:source <https://www.atlantanewsfirst.com/2025/05/02/troup-county-man-charged-with-sexual-exploitation-children-sheriffs-office-says/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/atlanta>,
+        <https://caselinker.up.railway.app/resource/location/ga>,
+        <https://caselinker.up.railway.app/resource/location/haynes>,
+        <https://caselinker.up.railway.app/resource/location/lagrange>,
+        <https://caselinker.up.railway.app/resource/location/troup-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_244/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_244/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_244/cybertip>,
@@ -29,7 +35,12 @@
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/troup-county-sheriffs-office> .
+        <https://caselinker.up.railway.app/resource/agency/troup-county-sheriffs-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/atlanta>,
+        <https://caselinker.up.railway.app/resource/location/ga>,
+        <https://caselinker.up.railway.app/resource/location/haynes>,
+        <https://caselinker.up.railway.app/resource/location/lagrange>,
+        <https://caselinker.up.railway.app/resource/location/troup-county> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_244/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -71,18 +82,44 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_244/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_244/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-05-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_244/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_244/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 25 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_244/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_244/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_244/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-05-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/atlanta> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/ga> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/haynes> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Haynes’" ;
+    uco-core:name "Haynes’" .
+
+<https://caselinker.up.railway.app/resource/location/lagrange> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Lagrange" ;
+    uco-core:name "Lagrange" .
+
+<https://caselinker.up.railway.app/resource/location/troup-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Troup County" ;
+    uco-core:name "Troup County" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_244/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

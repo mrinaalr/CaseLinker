@@ -7,20 +7,27 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_239> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:27:20.144555" ;
+    dcterms:created "2026-09-15T21:27:13.374175" ;
     dcterms:identifier "ncmec_2025_239" ;
-    dcterms:modified "2026-09-10T19:27:20.144555" ;
+    dcterms:modified "2026-09-15T21:27:13.374175" ;
     dcterms:source <https://www.wrdw.com/2025/01/31/columbia-county-man-charged-with-felony-sexual-exploitation-children/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/columbia-county>,
+        <https://caselinker.up.railway.app/resource/location/ga>,
+        <https://caselinker.up.railway.app/resource/location/martinez> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_239/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_239/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_239/event/possession>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2025_239/legal-proceeding> .
+        <https://caselinker.up.railway.app/resource/case/ncmec_2025_239/legal-proceeding> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/columbia-county>,
+        <https://caselinker.up.railway.app/resource/location/ga>,
+        <https://caselinker.up.railway.app/resource/location/martinez> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_239/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -49,16 +56,34 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_239/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_239/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_239/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_239/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 34 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_239/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_239/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_239/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/columbia-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Columbia County" ;
+    uco-core:name "Columbia County" .
+
+<https://caselinker.up.railway.app/resource/location/ga> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/martinez> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Martinez" ;
+    uco-core:name "Martinez" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_239/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

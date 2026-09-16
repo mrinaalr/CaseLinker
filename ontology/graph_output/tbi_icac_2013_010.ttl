@@ -1,27 +1,37 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_010> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:16:27.666847" ;
+    dcterms:created "2026-09-15T20:31:48.046675" ;
     dcterms:identifier "tbi_icac_2013_010" ;
-    dcterms:modified "2026-09-10T20:16:27.666847" ;
+    dcterms:modified "2026-09-15T20:31:48.046675" ;
     dcterms:source <https://tbinewsroom.com/2013/09/12/former-state-contract-employee-working-as-juvenile-counselor-indicted-for-having-sex-with-a-minor/>,
         "TBI ICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/chattanooga>,
+        <https://caselinker.up.railway.app/resource/location/knoxville>,
+        <https://caselinker.up.railway.app/resource/location/monroe-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_010/phase/indicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_010/phase/indicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_010/event/hands-on>,
         <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_010/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/department-of-childrens-services>,
-        <https://caselinker.up.railway.app/resource/agency/monroe-county-sheriffs-department> .
+        <https://caselinker.up.railway.app/resource/agency/monroe-county-sheriffs-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/chattanooga>,
+        <https://caselinker.up.railway.app/resource/location/knoxville>,
+        <https://caselinker.up.railway.app/resource/location/monroe-county> .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_010/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -35,32 +45,45 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_010/event/hands-on> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_010/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/department-of-childrens-services> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/department-of-childrens-services> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Department of Children's Services" .
 
-<https://caselinker.up.railway.app/resource/agency/monroe-county-sheriffs-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/monroe-county-sheriffs-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Monroe County Sheriff's Department" .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_010/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_010/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_010/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_010/sentence/1> .
 
-<https://caselinker.up.railway.app/resource/case/tbi_icac_2013_010/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/tbi_icac_2013_010/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 29 .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_010/person/victim/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_010/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:ProbationSentence ;
-    rdfs:label "probation" .
-
-<https://caselinker.up.railway.app/resource/case/tbi_icac_2013_010/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$25,000" .
+    rdfs:label "[\"probation\", \"$25,000\"]" .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_010/phase/indicted> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/chattanooga> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Chattanooga" ;
+    uco-core:name "Chattanooga" .
+
+<https://caselinker.up.railway.app/resource/location/knoxville> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Knoxville" ;
+    uco-core:name "Knoxville" .
+
+<https://caselinker.up.railway.app/resource/location/monroe-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2013_010/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

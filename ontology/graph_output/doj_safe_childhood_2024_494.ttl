@@ -3,23 +3,27 @@
 @prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_494> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T21:22:48.832621" ;
+    dcterms:created "2026-09-15T22:12:27.752855" ;
     dcterms:identifier "doj_safe_childhood_2024_494" ;
-    dcterms:modified "2026-09-14T21:22:48.832621" ;
+    dcterms:modified "2026-09-15T22:12:27.752855" ;
     dcterms:source <https://www.justice.gov/usao-sdia/pr/davenport-man-sentenced-100-years-federal-prison-production-and-distribution-child>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/davenport>,
+        <https://caselinker.up.railway.app/resource/location/iowa>,
+        <https://caselinker.up.railway.app/resource/location/the-southern-district>,
+        <https://caselinker.up.railway.app/resource/location/united-states> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_494/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_494/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_494/event/distribution>,
@@ -30,7 +34,11 @@
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_494/legal-step/sentenced>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_494/offense-event/charge-4> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/davenport-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/doj> .
+        <https://caselinker.up.railway.app/resource/agency/doj> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/davenport>,
+        <https://caselinker.up.railway.app/resource/location/iowa>,
+        <https://caselinker.up.railway.app/resource/location/the-southern-district>,
+        <https://caselinker.up.railway.app/resource/location/united-states> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_494/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -103,29 +111,35 @@
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_494/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "100 Years" .
+    rdfs:label "[\"100 Years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_494/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
+<https://caselinker.up.railway.app/resource/location/davenport> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/iowa> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/the-southern-district> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_494/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;
-    cacontology:severityLevel 3 ;
-    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/twitter-x> .
+    cacontology:severityLevel 3 .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_494/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
     cacontology:severityLevel 3 ;
-    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/twitter-x> ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_494/facet/possession> .
-
-<https://caselinker.up.railway.app/resource/platform/twitter-x> a cacontology-platforms:SocialMediaPlatform ;
-    rdfs:label "Twitter / X" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_494/offense-event/charge-4> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event,
         uco-action:Crime ;
-    rdfs:label "Inferred offense from charge: child exploitation" ;
-    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/twitter-x> .
+    rdfs:label "Inferred offense from charge: child exploitation" .
 

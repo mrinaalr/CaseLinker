@@ -4,19 +4,24 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_229> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:27:15.584148" ;
+    dcterms:created "2026-09-15T21:27:13.367892" ;
     dcterms:identifier "ncmec_2025_229" ;
-    dcterms:modified "2026-09-10T19:27:15.584148" ;
+    dcterms:modified "2026-09-15T21:27:13.367892" ;
     dcterms:source <https://www.fox13news.com/news/child-porn-suspect-faces-11-charges-more-possible-citrus-county-ccso>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/fla>,
+        <https://caselinker.up.railway.app/resource/location/floral-city>,
+        <https://caselinker.up.railway.app/resource/location/patricoffs-floral-city> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_229/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_229/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_229/cybertip>,
@@ -27,7 +32,10 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ccsos-criminal-investigation-division>,
         <https://caselinker.up.railway.app/resource/agency/citrus-county-sheriffs-office>,
         <https://caselinker.up.railway.app/resource/agency/florida-department-of-law-enforcement>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/fla>,
+        <https://caselinker.up.railway.app/resource/location/floral-city>,
+        <https://caselinker.up.railway.app/resource/location/patricoffs-floral-city> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_229/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -70,20 +78,37 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_229/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Citrus County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_229/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_229/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-02-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-02-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_229/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_229/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_229/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_229/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_229/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-02-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/fla> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/floral-city> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Floral City" ;
+    uco-core:name "Floral City" .
+
+<https://caselinker.up.railway.app/resource/location/patricoffs-floral-city> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Patricoff’s Floral City" ;
+    uco-core:name "Patricoff’s Floral City" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_229/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

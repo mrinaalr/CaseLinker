@@ -1,5 +1,6 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
@@ -9,27 +10,40 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2007_006> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:40:47.606608" ;
+    dcterms:created "2026-09-15T21:42:39.822748" ;
     dcterms:identifier "doj_archives_2007_006" ;
-    dcterms:modified "2026-09-10T19:40:47.606608" ;
+    dcterms:modified "2026-09-15T21:42:39.822748" ;
     dcterms:source <https://www.justice.gov/archive/criminal/ceos/pressreleases/downloads/DMA_CEOS-HERZBERG-SENT_102407.pdf>,
-        "DOJ ARCHIVES" ;
+        "DOJ CEOS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/boston>,
+        <https://caselinker.up.railway.app/resource/location/hingham>,
+        <https://caselinker.up.railway.app/resource/location/mass>,
+        <https://caselinker.up.railway.app/resource/location/the-district-of-massachusetts>,
+        <https://caselinker.up.railway.app/resource/location/washington> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_archives_2007_006/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_archives_2007_006/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_archives_2007_006/event/multi-jurisdiction>,
         <https://caselinker.up.railway.app/resource/case/doj_archives_2007_006/event/online-only>,
         <https://caselinker.up.railway.app/resource/case/doj_archives_2007_006/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/doj_archives_2007_006/event/project-safe-childhood>,
         <https://caselinker.up.railway.app/resource/case/doj_archives_2007_006/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/doj_archives_2007_006/legal-step/sentenced>,
         <https://caselinker.up.railway.app/resource/case/doj_archives_2007_006/offense-event/charge-2>,
         <https://caselinker.up.railway.app/resource/case/doj_archives_2007_006/operation> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ceos>,
-        <https://caselinker.up.railway.app/resource/agency/ice> .
+        <https://caselinker.up.railway.app/resource/agency/ice>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/boston>,
+        <https://caselinker.up.railway.app/resource/location/hingham>,
+        <https://caselinker.up.railway.app/resource/location/mass>,
+        <https://caselinker.up.railway.app/resource/location/the-district-of-massachusetts>,
+        <https://caselinker.up.railway.app/resource/location/washington> .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2007_006/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -51,6 +65,8 @@
 
 <https://caselinker.up.railway.app/resource/agency/ice> a cacontology-multi:FederalAgency .
 
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
+
 <https://caselinker.up.railway.app/resource/case/doj_archives_2007_006/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "possession of child pornography" ;
@@ -65,6 +81,9 @@
 <https://caselinker.up.railway.app/resource/case/doj_archives_2007_006/event/multi-jurisdiction> a cac-core:Event,
         cacontology-multi:MultiJurisdictionalInvestigation .
 
+<https://caselinker.up.railway.app/resource/case/doj_archives_2007_006/event/project-safe-childhood> a cac-core:Event,
+        cacontology-multi:ProjectSafeChildhoodOperation .
+
 <https://caselinker.up.railway.app/resource/case/doj_archives_2007_006/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2007_006/legal-proceeding> a cac-core:Event,
@@ -73,8 +92,7 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/doj_archives_2007_006/charge/1>,
         <https://caselinker.up.railway.app/resource/case/doj_archives_2007_006/charge/2> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2007-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_archives_2007_006/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_archives_2007_006/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_archives_2007_006/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2007_006/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -85,21 +103,35 @@
 <https://caselinker.up.railway.app/resource/case/doj_archives_2007_006/operation> a cac-core:Event,
         cacontology-taskforce:TaskForceOperation .
 
-<https://caselinker.up.railway.app/resource/case/doj_archives_2007_006/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/doj_archives_2007_006/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 50 .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2007_006/person/victim/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2007_006/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "78 MONTHS" .
-
-<https://caselinker.up.railway.app/resource/case/doj_archives_2007_006/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "supervised release" .
+    rdfs:label "[\"78 MONTHS\", \"supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2007_006/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2007-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/boston> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/hingham> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Hingham" ;
+    uco-core:name "Hingham" .
+
+<https://caselinker.up.railway.app/resource/location/mass> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/the-district-of-massachusetts> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/washington> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2007_006/event/online-only> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event .

@@ -1,5 +1,6 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
@@ -12,6 +13,7 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -28,12 +30,15 @@
 <https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
     cacontology:hasRoleBeginPoint "2006-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/offense-event/charge-2> ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/event/conspiracy>,
+        <https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/offense-event/charge-2> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/person/victim/1> .
 
 <https://caselinker.up.railway.app/resource/agency/ceos> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/agency/fbi> a cacontology-multi:FederalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/charge/1> a cacontology-legal-outcomes:CriminalCharge,
         cacontology-legal-outcomes:SexTrafficking ;
@@ -49,10 +54,12 @@
     cacontology-us-ncmec:supportedBy <https://caselinker.up.railway.app/resource/agency/ncmec> .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/event/multi-jurisdiction> a cac-core:Event,
-        cacontology-multi:MultiJurisdictionalInvestigation .
+        cacontology-multi:MultiJurisdictionalInvestigation ;
+    cacontology:severityLevel 1 .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/event/trafficking> a cac-core:Event,
-        cacontology-legal-outcomes:SexTrafficking .
+        cacontology-legal-outcomes:SexTrafficking ;
+    cacontology:severityLevel 1 .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
@@ -60,11 +67,7 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/charge/1>,
         <https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/charge/2> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2006-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/sentence/2>,
-        <https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/sentence/3>,
-        <https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/sentence/4>,
-        <https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/sentence/5> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -75,45 +78,50 @@
 <https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/operation> a cac-core:Event,
         cacontology-taskforce:UndercoverUnit .
 
-<https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 22 .
+
+<https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/person/offender/2> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 25 .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/person/victim/1> a uco-identity:Person ;
     cacontology-production:victimAge 16 .
 
+<https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/role/offender/2> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2006-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/event/conspiracy>,
+        <https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/offense-event/charge-2> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/person/offender/2> .
+
 <https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "14 YEARS" .
-
-<https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "10 years of supervised release" .
-
-<https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/sentence/3> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "282 months" .
-
-<https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/sentence/4> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$15,846.57" .
-
-<https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/sentence/5> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "40 months" .
+    rdfs:label "[\"14 YEARS\", \"10 years of supervised release\", \"282 months\", \"$15,846.57\", \"40 months\"]" .
 
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2006_016> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:40:28.345155" ;
+    dcterms:created "2026-09-15T21:42:39.797501" ;
     dcterms:identifier "doj_archives_2006_016" ;
-    dcterms:modified "2026-09-10T19:40:28.345155" ;
+    dcterms:modified "2026-09-15T21:42:39.797501" ;
     dcterms:source <https://www.justice.gov/archive/criminal/ceos/pressreleases/downloads/SDFL%20Madison%20sentencing%20PR_031506.pdf>,
-        "DOJ ARCHIVES" ;
+        "DOJ CEOS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/dc>,
+        <https://caselinker.up.railway.app/resource/location/florida>,
+        <https://caselinker.up.railway.app/resource/location/madison>,
+        <https://caselinker.up.railway.app/resource/location/miami>,
+        <https://caselinker.up.railway.app/resource/location/miami--dade-county>,
+        <https://caselinker.up.railway.app/resource/location/miami-beach>,
+        <https://caselinker.up.railway.app/resource/location/the-southern-district>,
+        <https://caselinker.up.railway.app/resource/location/united-states>,
+        <https://caselinker.up.railway.app/resource/location/washington> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/admission/1>,
         <https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/admission/2>,
         <https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/cybertip>,
+        <https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/event/conspiracy>,
         <https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/event/multi-jurisdiction>,
         <https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/event/trafficking>,
         <https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/legal-proceeding>,
@@ -122,7 +130,17 @@
         <https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/operation> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ceos>,
         <https://caselinker.up.railway.app/resource/agency/fbi>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/dc>,
+        <https://caselinker.up.railway.app/resource/location/florida>,
+        <https://caselinker.up.railway.app/resource/location/madison>,
+        <https://caselinker.up.railway.app/resource/location/miami>,
+        <https://caselinker.up.railway.app/resource/location/miami--dade-county>,
+        <https://caselinker.up.railway.app/resource/location/miami-beach>,
+        <https://caselinker.up.railway.app/resource/location/the-southern-district>,
+        <https://caselinker.up.railway.app/resource/location/united-states>,
+        <https://caselinker.up.railway.app/resource/location/washington> .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "prostituting minors in the Miami area" ;
@@ -150,11 +168,52 @@
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2006-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
+<https://caselinker.up.railway.app/resource/location/dc> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/florida> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/madison> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Madison" ;
+    uco-core:name "Madison" .
+
+<https://caselinker.up.railway.app/resource/location/miami> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/miami--dade-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Miami- Dade County" ;
+    uco-core:name "Miami- Dade County" .
+
+<https://caselinker.up.railway.app/resource/location/miami-beach> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Miami Beach" ;
+    uco-core:name "Miami Beach" .
+
+<https://caselinker.up.railway.app/resource/location/the-southern-district> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/washington> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
 <https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
     cacontology:hasRoleBeginPoint "2006-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/offense-event/charge-2> ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/event/conspiracy>,
+        <https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/offense-event/charge-2> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/event/conspiracy> a cacontology:ConspiracyToCommitCSA,
+        cac-core:Event ;
+    cacontology:conspiracyMemberCount 2 ;
+    cacontology:participatesInConspiracy <https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/role/offender/1>,
+        <https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/role/offender/2> ;
+    cacontology:severityLevel 1 .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2006_016/offense-event/charge-2> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event,

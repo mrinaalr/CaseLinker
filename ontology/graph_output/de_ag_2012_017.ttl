@@ -6,26 +6,37 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/de_ag_2012_017> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:38:04.218858" ;
+    dcterms:created "2026-09-15T19:29:01.650826" ;
     dcterms:identifier "de_ag_2012_017" ;
-    dcterms:modified "2026-09-10T19:38:04.218858" ;
+    dcterms:modified "2026-09-15T19:29:01.650826" ;
     dcterms:source <https://news.delaware.gov/2012/09/25/delaware-man-arrested-for-sexual-solicitation-of-a-child>,
         "DE AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/delaware>,
+        <https://caselinker.up.railway.app/resource/location/milford>,
+        <https://caselinker.up.railway.app/resource/location/wilmington> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/de_ag_2012_017/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/de_ag_2012_017/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/de_ag_2012_017/event/distribution>,
-        <https://caselinker.up.railway.app/resource/case/de_ag_2012_017/event/trust-violation> ;
+        <https://caselinker.up.railway.app/resource/case/de_ag_2012_017/event/trust-violation>,
+        <https://caselinker.up.railway.app/resource/case/de_ag_2012_017/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/child-predator-task-force>,
         <https://caselinker.up.railway.app/resource/agency/delaware-child-predator-task-force>,
         <https://caselinker.up.railway.app/resource/agency/delaware-department-of-justice>,
-        <https://caselinker.up.railway.app/resource/agency/us-department-of-justice> .
+        <https://caselinker.up.railway.app/resource/agency/us-department-of-justice> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/delaware>,
+        <https://caselinker.up.railway.app/resource/location/milford>,
+        <https://caselinker.up.railway.app/resource/location/wilmington> .
 
 <https://caselinker.up.railway.app/resource/agency/child-predator-task-force> a cacontology-multi:LocalAgency .
 
@@ -41,6 +52,12 @@
 <https://caselinker.up.railway.app/resource/case/de_ag_2012_017/event/trust-violation> a cacontology-custodial:CustodialAbuse,
         cacontology-custodial:TrustViolation ;
     cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/de_ag_2012_017/relationship/mother> .
+
+<https://caselinker.up.railway.app/resource/case/de_ag_2012_017/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2012-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/de_ag_2012_017/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/de_ag_2012_017/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 42 .
@@ -64,7 +81,22 @@
     cacontology:hasRoleBeginPoint "2012-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/de_ag_2012_017/person/victim/1> .
 
+<https://caselinker.up.railway.app/resource/case/de_ag_2012_017/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/de_ag_2012_017/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2012-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/delaware> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/milford> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Milford" ;
+    uco-core:name "Milford" .
+
+<https://caselinker.up.railway.app/resource/location/wilmington> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 

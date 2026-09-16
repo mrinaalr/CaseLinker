@@ -5,19 +5,23 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_001> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:09:05.335899" ;
+    dcterms:created "2026-09-15T20:55:00.735019" ;
     dcterms:identifier "ncmec_2023_001" ;
-    dcterms:modified "2026-09-10T19:09:05.335899" ;
+    dcterms:modified "2026-09-15T20:55:00.735019" ;
     dcterms:source <https://newschannel20.com/news/local/montgomery-county-man-arrested-for-child-phonography-and-aggravated-criminal-sexual-abuse>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/ill>,
+        <https://caselinker.up.railway.app/resource/location/montgomery-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_001/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_001/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_001/event/distribution>,
@@ -27,7 +31,9 @@
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/illinois-state-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/montgomery-county-sheriffs-department> .
+        <https://caselinker.up.railway.app/resource/agency/montgomery-county-sheriffs-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/ill>,
+        <https://caselinker.up.railway.app/resource/location/montgomery-county> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_001/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -65,18 +71,30 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_001/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Montgomery County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_001/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_001/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_001/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 19 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_001/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_001/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_001/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/ill> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/montgomery-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Montgomery County" ;
+    uco-core:name "Montgomery County" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_001/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

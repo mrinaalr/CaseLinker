@@ -1,6 +1,7 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
 @prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
@@ -12,6 +13,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -26,22 +28,32 @@
 
 <https://caselinker.up.railway.app/resource/agency/hsi> a cacontology-multi:FederalAgency .
 
-<https://caselinker.up.railway.app/resource/agency/north-carolina-state-bureau-of-investigation> a cacontology-multi:StateAgency .
+<https://caselinker.up.railway.app/resource/agency/north-carolina-state-bureau-of-investigation> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:StateAgency ;
+    rdfs:label "North Carolina State Bureau of Investigation" .
 
 <https://caselinker.up.railway.app/resource/agency/us-secret-service> a cacontology-multi:FederalAgency .
 
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
+
 <https://caselinker.up.railway.app/resource/case/usss_2021_006> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:21:27.042629" ;
+    dcterms:created "2026-09-15T20:36:46.094690" ;
     dcterms:identifier "usss_2021_006" ;
-    dcterms:modified "2026-09-10T20:21:27.042629" ;
+    dcterms:modified "2026-09-15T20:36:46.094690" ;
     dcterms:source <https://www.secretservice.gov/newsroom/releases/2021/11/repeat-child-sex-offender-rock-hill-sentenced-more-11-and-half-years>,
         "USSS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/columbia>,
+        <https://caselinker.up.railway.app/resource/location/rock-hill>,
+        <https://caselinker.up.railway.app/resource/location/south-carolina>,
+        <https://caselinker.up.railway.app/resource/location/united-states>,
+        <https://caselinker.up.railway.app/resource/location/york-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/usss_2021_006/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/usss_2021_006/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/usss_2021_006/admission/1>,
         <https://caselinker.up.railway.app/resource/case/usss_2021_006/event/csam>,
         <https://caselinker.up.railway.app/resource/case/usss_2021_006/event/multi-jurisdiction>,
+        <https://caselinker.up.railway.app/resource/case/usss_2021_006/event/project-safe-childhood>,
         <https://caselinker.up.railway.app/resource/case/usss_2021_006/event/trust-violation>,
         <https://caselinker.up.railway.app/resource/case/usss_2021_006/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/usss_2021_006/legal-step/sentenced>,
@@ -50,7 +62,13 @@
         <https://caselinker.up.railway.app/resource/agency/fbi>,
         <https://caselinker.up.railway.app/resource/agency/hsi>,
         <https://caselinker.up.railway.app/resource/agency/north-carolina-state-bureau-of-investigation>,
-        <https://caselinker.up.railway.app/resource/agency/us-secret-service> .
+        <https://caselinker.up.railway.app/resource/agency/us-secret-service>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/columbia>,
+        <https://caselinker.up.railway.app/resource/location/rock-hill>,
+        <https://caselinker.up.railway.app/resource/location/south-carolina>,
+        <https://caselinker.up.railway.app/resource/location/united-states>,
+        <https://caselinker.up.railway.app/resource/location/york-county> .
 
 <https://caselinker.up.railway.app/resource/case/usss_2021_006/charge/1> a cacontology-legal-outcomes:CriminalCharge,
         cacontology-legal-outcomes:StateCharge ;
@@ -62,6 +80,10 @@
 
 <https://caselinker.up.railway.app/resource/case/usss_2021_006/event/multi-jurisdiction> a cac-core:Event,
         cacontology-multi:MultiJurisdictionalInvestigation ;
+    cacontology:severityLevel 3 .
+
+<https://caselinker.up.railway.app/resource/case/usss_2021_006/event/project-safe-childhood> a cac-core:Event,
+        cacontology-multi:ProjectSafeChildhoodOperation ;
     cacontology:severityLevel 3 .
 
 <https://caselinker.up.railway.app/resource/case/usss_2021_006/event/trust-violation> a cacontology-custodial:CustodialAbuse,
@@ -76,8 +98,7 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/usss_2021_006/charge/1>,
         <https://caselinker.up.railway.app/resource/case/usss_2021_006/charge/2> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/usss_2021_006/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/usss_2021_006/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/usss_2021_006/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/usss_2021_006/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -88,7 +109,8 @@
 <https://caselinker.up.railway.app/resource/case/usss_2021_006/operation> a cac-core:Event,
         cacontology-taskforce:UndercoverUnit .
 
-<https://caselinker.up.railway.app/resource/case/usss_2021_006/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/usss_2021_006/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 46 .
 
 <https://caselinker.up.railway.app/resource/case/usss_2021_006/person/victim/1> a uco-identity:Person ;
     cacontology-production:victimAge 13 .
@@ -107,11 +129,7 @@
 
 <https://caselinker.up.railway.app/resource/case/usss_2021_006/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "2 years" .
-
-<https://caselinker.up.railway.app/resource/case/usss_2021_006/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "140 months" .
+    rdfs:label "[\"2 years\", \"140 months\"]" .
 
 <https://caselinker.up.railway.app/resource/platform/social-media> a cacontology-platforms:SocialMediaPlatform ;
     rdfs:label "social media" .
@@ -125,6 +143,25 @@
     cacontology:hasRoleBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/usss_2021_006/event/csam> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/usss_2021_006/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/location/columbia> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/rock-hill> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Rock Hill" ;
+    uco-core:name "Rock Hill" .
+
+<https://caselinker.up.railway.app/resource/location/south-carolina> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/york-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "York County" ;
+    uco-core:name "York County" .
 
 <https://caselinker.up.railway.app/resource/case/usss_2021_006/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "the sexual abuse of numerous minors, including children in the foster system, for which he had never been held accoun..." ;

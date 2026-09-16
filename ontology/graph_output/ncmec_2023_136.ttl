@@ -11,22 +11,27 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_136> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:10:04.925883" ;
+    dcterms:created "2026-09-15T20:55:00.861581" ;
     dcterms:identifier "ncmec_2023_136" ;
-    dcterms:modified "2026-09-10T19:10:04.925883" ;
+    dcterms:modified "2026-09-15T20:55:00.861581" ;
     dcterms:source <http://www.imbodenlive.com/2023/09/20/jonesboro-police-announce-arrest-of-man-on-child-pornography-charges/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/craighead-county>,
+        <https://caselinker.up.railway.app/resource/location/jonesboro> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_136/event/csam>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_136/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_136/offense-event/charge-1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_136/operation> ;
     cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/ncmec_2023_136/tech/cybertipline> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/craighead-county>,
+        <https://caselinker.up.railway.app/resource/location/jonesboro> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_136/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -56,7 +61,8 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_136/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_136/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_136/operation> a cac-core:Event,
         cacontology-taskforce:ReactiveOperation .
@@ -65,8 +71,22 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_136/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_136/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_136/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
+
+<https://caselinker.up.railway.app/resource/location/craighead-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Craighead County" ;
+    uco-core:name "Craighead County" .
+
+<https://caselinker.up.railway.app/resource/location/jonesboro> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Jonesboro" ;
+    uco-core:name "Jonesboro" .
 
 <https://caselinker.up.railway.app/resource/platform/facebook> a cacontology-platforms:SocialMediaPlatform ;
     rdfs:label "Facebook" .

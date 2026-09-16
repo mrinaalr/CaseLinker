@@ -4,25 +4,33 @@
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_104> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:09:52.051395" ;
+    dcterms:created "2026-09-15T20:55:00.839144" ;
     dcterms:identifier "ncmec_2023_104" ;
-    dcterms:modified "2026-09-10T19:09:52.051395" ;
+    dcterms:modified "2026-09-15T20:55:00.839144" ;
     dcterms:source <https://www.mystateline.com/news/local-news/dekalb-county-man-arrested-for-child-pornography-police/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/cortland>,
+        <https://caselinker.up.railway.app/resource/location/dekalb-county>,
+        <https://caselinker.up.railway.app/resource/location/ill> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_104/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_104/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_104/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_104/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/illinois-state-police-department> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/illinois-state-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/cortland>,
+        <https://caselinker.up.railway.app/resource/location/dekalb-county>,
+        <https://caselinker.up.railway.app/resource/location/ill> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_104/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -48,18 +56,33 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_104/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Kalb County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_104/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_104/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_104/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 36 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_104/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_104/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_104/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/cortland> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Cortland" ;
+    uco-core:name "Cortland" .
+
+<https://caselinker.up.railway.app/resource/location/dekalb-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/ill> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_104/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

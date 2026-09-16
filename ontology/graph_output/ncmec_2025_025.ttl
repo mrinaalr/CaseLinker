@@ -4,19 +4,23 @@
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_025> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:25:26.673804" ;
+    dcterms:created "2026-09-15T21:27:13.175897" ;
     dcterms:identifier "ncmec_2025_025" ;
-    dcterms:modified "2026-09-10T19:25:26.673804" ;
+    dcterms:modified "2026-09-15T21:27:13.175897" ;
     dcterms:source <https://www.youralaskalink.com/news/crime/multiple-arrests-made-in-historic-child-abuse-investigation-in-metlakatla/article_c32c2444-e819-11ef-89f0-0763e8ecf80a.html>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/alaska>,
+        <https://caselinker.up.railway.app/resource/location/metlakatla> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_025/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_025/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_025/event/conspiracy>,
@@ -24,7 +28,9 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_025/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_025/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/alaska-bureau-of-investigation> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/alaska-bureau-of-investigation> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/alaska>,
+        <https://caselinker.up.railway.app/resource/location/metlakatla> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_025/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
@@ -33,7 +39,9 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_025/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_025/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/alaska-bureau-of-investigation> a cacontology-multi:StateAgency .
+<https://caselinker.up.railway.app/resource/agency/alaska-bureau-of-investigation> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:StateAgency ;
+    rdfs:label "Alaska Bureau of Investigation" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_025/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -49,7 +57,8 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_025/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-02-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-02-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_025/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_025/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 30 .
@@ -83,9 +92,23 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_025/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_025/person/offender/3> .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_025/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_025/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-02-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/alaska> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Alaska" ;
+    uco-core:name "Alaska" .
+
+<https://caselinker.up.railway.app/resource/location/metlakatla> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Metlakatla" ;
+    uco-core:name "Metlakatla" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_025/event/conspiracy> a cacontology:ConspiracyToCommitCSA,
         cac-core:Event ;

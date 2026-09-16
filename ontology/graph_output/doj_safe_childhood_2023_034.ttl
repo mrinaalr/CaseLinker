@@ -11,16 +11,20 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_034> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T21:22:50.568272" ;
+    dcterms:created "2026-09-15T22:12:27.823387" ;
     dcterms:identifier "doj_safe_childhood_2023_034" ;
-    dcterms:modified "2026-09-14T21:22:50.568272" ;
+    dcterms:modified "2026-09-15T22:12:27.823387" ;
     dcterms:source <https://www.justice.gov/usao-edmo/pr/st-charles-county-man-who-obtained-child-pornography-hidden-camera-sentenced-17-years>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/missouri>,
+        <https://caselinker.up.railway.app/resource/location/st-charles-county>,
+        <https://caselinker.up.railway.app/resource/location/st-louis> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_034/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_034/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_034/event/distribution>,
@@ -33,7 +37,10 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/doj>,
         <https://caselinker.up.railway.app/resource/agency/fbi>,
         <https://caselinker.up.railway.app/resource/agency/st-charles-county-cybercrime-task-force>,
-        <https://caselinker.up.railway.app/resource/agency/st-charles-county-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/st-charles-county-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/missouri>,
+        <https://caselinker.up.railway.app/resource/location/st-charles-county>,
+        <https://caselinker.up.railway.app/resource/location/st-louis> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_034/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -59,7 +66,9 @@
         cacontology-multi:LocalAgency ;
     rdfs:label "St. Charles County Cybercrime Task Force" .
 
-<https://caselinker.up.railway.app/resource/agency/st-charles-county-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/st-charles-county-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "St. Charles County Police Department" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_034/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -100,8 +109,7 @@
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_034/charge/3>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_034/charge/4> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_034/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_034/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_034/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_034/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -115,16 +123,27 @@
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_034/person/victim/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_034/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "17 Years" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_034/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "supervised release" .
+    rdfs:label "[\"17 Years\", \"supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_034/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/missouri> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Missouri" ;
+    uco-core:name "Missouri" .
+
+<https://caselinker.up.railway.app/resource/location/st-charles-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "St. Charles County" ;
+    uco-core:name "St. Charles County" .
+
+<https://caselinker.up.railway.app/resource/location/st-louis> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "St. Louis" ;
+    uco-core:name "St. Louis" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_034/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
@@ -138,7 +157,8 @@
     cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/dropbox> ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_034/facet/production> .
 
-<https://caselinker.up.railway.app/resource/platform/dropbox> a cacontology-platforms:FileHostingService ;
+<https://caselinker.up.railway.app/resource/platform/dropbox> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:FileHostingService ;
     rdfs:label "Dropbox" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_034/offense-event/charge-4> a cacontology:ChildSexualAbuseEvent,

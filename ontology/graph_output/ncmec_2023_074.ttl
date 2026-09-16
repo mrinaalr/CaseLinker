@@ -4,25 +4,31 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_074> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:09:37.883306" ;
+    dcterms:created "2026-09-15T20:55:00.802218" ;
     dcterms:identifier "ncmec_2023_074" ;
-    dcterms:modified "2026-09-10T19:09:37.883306" ;
+    dcterms:modified "2026-09-15T20:55:00.802218" ;
     dcterms:source <https://southernillinoisnow.com/2023/05/08/centralia-teen-charged-with-nine-counts-of-class-x-child-pornography/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/centralia>,
+        <https://caselinker.up.railway.app/resource/location/jefferson-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_074/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_074/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_074/event/online-only>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_074/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_074/legal-proceeding> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/illinois-attorney-general-task-force> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/illinois-attorney-general-task-force> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/centralia>,
+        <https://caselinker.up.railway.app/resource/location/jefferson-county> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_074/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -59,17 +65,27 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_074/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$100,000" .
+    rdfs:label "[\"$100,000\"]" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_074/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-05-01T00:00:00Z"^^xsd:dateTimeStamp .
 
+<https://caselinker.up.railway.app/resource/location/centralia> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/jefferson-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Jefferson County" ;
+    uco-core:name "Jefferson County" .
+
 <https://caselinker.up.railway.app/resource/platform/chat> a cacontology-platforms:AnonymousChatPlatform ;
     rdfs:label "chat" .
 
-<https://caselinker.up.railway.app/resource/platform/meganz> a cacontology-platforms:FileHostingService ;
-    rdfs:label "Mega.nz" .
+<https://caselinker.up.railway.app/resource/platform/meganz> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:FileHostingService ;
+    rdfs:label "Mega.nz" ;
+    cacontology-platforms:encryptionLevel "end-to-end" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_074/event/online-only> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

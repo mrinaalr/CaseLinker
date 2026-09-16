@@ -9,6 +9,7 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -36,11 +37,14 @@
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_085> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T22:24:26.948123" ;
+    dcterms:created "2026-09-15T22:12:29.347767" ;
     dcterms:identifier "doj_safe_childhood_2021_085" ;
-    dcterms:modified "2026-09-14T22:24:26.948123" ;
+    dcterms:modified "2026-09-15T22:12:29.347767" ;
     dcterms:source <https://www.justice.gov/usao-mn/pr/st-louis-county-sex-offender-sentenced-192-months-prison-distribution-child-pornography>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/minn>,
+        <https://caselinker.up.railway.app/resource/location/st-louis-county>,
+        <https://caselinker.up.railway.app/resource/location/the-district-of-minnesota> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_085/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_085/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_085/admission/1>,
@@ -55,7 +59,10 @@
         <https://caselinker.up.railway.app/resource/agency/doj>,
         <https://caselinker.up.railway.app/resource/agency/fbi>,
         <https://caselinker.up.railway.app/resource/agency/minnesota-bureau-of-criminal-apprehension>,
-        <https://caselinker.up.railway.app/resource/agency/usao> .
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/minn>,
+        <https://caselinker.up.railway.app/resource/location/st-louis-county>,
+        <https://caselinker.up.railway.app/resource/location/the-district-of-minnesota> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_085/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -93,10 +100,7 @@
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_085/charge/3>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_085/charge/4> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_085/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_085/sentence/2>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_085/sentence/3>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_085/sentence/4> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_085/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_085/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -116,24 +120,23 @@
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_085/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_085/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "192 Months" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_085/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "supervised release" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_085/sentence/3> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:ProbationSentence ;
-    rdfs:label "probation" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_085/sentence/4> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "33 months" .
+    rdfs:label "[\"192 Months\", \"supervised release\", \"probation\", \"33 months\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_085/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/minn> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/st-louis-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "St. Louis County" ;
+    uco-core:name "St. Louis County" .
+
+<https://caselinker.up.railway.app/resource/location/the-district-of-minnesota> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_085/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "the September 20, 2015 distribution of child sexual abuse images" ;

@@ -10,22 +10,25 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_240> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:27:20.693436" ;
+    dcterms:created "2026-09-15T21:27:13.375016" ;
     dcterms:identifier "ncmec_2025_240" ;
-    dcterms:modified "2026-09-10T19:27:20.693436" ;
+    dcterms:modified "2026-09-15T21:27:13.375016" ;
     dcterms:source <https://www.newsbreak.com/marietta-daily-journal-561232/3832568469341-powder-springs-man-accused-of-sexual-exploitation-of-a-child>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/powder-springs> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_240/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_240/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_240/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_240/legal-proceeding> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/cobb-county-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/damon-cobb-county-sheriffs-office> .
+        <https://caselinker.up.railway.app/resource/agency/damon-cobb-county-sheriffs-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/powder-springs> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_240/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -39,7 +42,9 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2025_240/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_240/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/cobb-county-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/cobb-county-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Cobb County Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/damon-cobb-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
         cacontology-multi:LocalAgency ;
@@ -60,13 +65,18 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_240/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_240/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-02-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-02-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_240/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_240/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 18 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_240/person/victim/1> a uco-identity:Person ;
     cacontology-production:victimAge 12 .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_240/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/platform/discord> a cacontology-platforms:MessagingService ;
     rdfs:label "Discord" .
@@ -77,6 +87,11 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_240/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-02-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/powder-springs> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Powder Springs" ;
+    uco-core:name "Powder Springs" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_240/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

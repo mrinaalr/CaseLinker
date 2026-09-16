@@ -9,16 +9,19 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_053> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:05:10.315278" ;
+    dcterms:created "2026-09-15T20:45:06.032990" ;
     dcterms:identifier "ncmec_2022_053" ;
-    dcterms:modified "2026-09-10T19:05:10.315278" ;
+    dcterms:modified "2026-09-15T20:45:06.032990" ;
     dcterms:source <https://tulsaworld.com/news/local/crime-and-courts/tulsa-man-pleads-guilty-to-child-pornography-charges/article_145d99f2-8552-11ec-9d07-f3262765301a.html>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/tulsa>,
+        <https://caselinker.up.railway.app/resource/location/tulsa-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_053/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_053/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2022_053/cybertip>,
@@ -31,7 +34,9 @@
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ncmec>,
         <https://caselinker.up.railway.app/resource/agency/oklahoma-department-of-corrections>,
-        <https://caselinker.up.railway.app/resource/agency/tulsa-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/tulsa-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/tulsa>,
+        <https://caselinker.up.railway.app/resource/location/tulsa-county> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_053/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -49,9 +54,13 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_053/event/production> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_053/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/oklahoma-department-of-corrections> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/oklahoma-department-of-corrections> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Oklahoma Department of Corrections" .
 
-<https://caselinker.up.railway.app/resource/agency/tulsa-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/tulsa-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Tulsa Police Department" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_053/charge/1> a cacontology-legal-outcomes:CriminalCharge,
         cacontology-legal-outcomes:StateCharge ;
@@ -98,13 +107,23 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_053/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "20 years" .
+    rdfs:label "[\"20 years\"]" .
 
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_053/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/tulsa> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Tulsa" ;
+    uco-core:name "Tulsa" .
+
+<https://caselinker.up.railway.app/resource/location/tulsa-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Tulsa County" ;
+    uco-core:name "Tulsa County" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_053/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

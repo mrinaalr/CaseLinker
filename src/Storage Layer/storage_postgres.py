@@ -226,6 +226,197 @@ class CaseStorage:
             cursor.close()
             return_connection(conn)
     
+    def _store_case_on_cursor(self, cursor, case: Dict[str, Any]) -> bool:
+        """
+        Upsert one case (and related demo/prosecution rows) on an open cursor.
+        Does not commit. Returns False on source-file conflict (skip).
+        """
+        date_range = case.get('date_range', {})
+        date_start = date_range.get('start') if isinstance(date_range, dict) else None
+        date_end = date_range.get('end') if isinstance(date_range, dict) else None
+
+        case_id = case.get('id')
+        cursor.execute(
+            'SELECT created_at, raw_data, document_version_id, extraction_run_id '
+            'FROM cases WHERE id = %s',
+            (case_id,),
+        )
+        existing_case = cursor.fetchone()
+
+        current_time = datetime.now().isoformat()
+
+        existing_document_version_id = None
+        existing_extraction_run_id = None
+        if existing_case:
+            existing_created_at = existing_case[0]
+            existing_raw_data_json = existing_case[1]
+            if len(existing_case) > 2:
+                existing_document_version_id = existing_case[2]
+                existing_extraction_run_id = existing_case[3]
+
+            new_source_file = None
+            if isinstance(case.get('raw_data'), dict):
+                new_source_file = case.get('raw_data', {}).get('source_file')
+            elif isinstance(case.get('raw_data'), str):
+                try:
+                    new_source_file = json.loads(case.get('raw_data', '{}')).get('source_file')
+                except Exception:
+                    pass
+
+            existing_source_file = None
+            if existing_raw_data_json:
+                try:
+                    existing_raw_data = json.loads(existing_raw_data_json)
+                    existing_source_file = existing_raw_data.get('source_file')
+                except Exception:
+                    pass
+
+            if new_source_file and existing_source_file and new_source_file != existing_source_file:
+                print(f"⚠️  Warning: Case ID conflict detected for {case_id}")
+                print(f"   Existing case from: {existing_source_file}")
+                print(f"   New case from: {new_source_file}")
+                print(f"   Skipping new case to prevent data loss")
+                return False
+
+            created_at = existing_created_at
+            updated_at = current_time
+        else:
+            created_at = case.get('created_at') or current_time
+            updated_at = case.get('updated_at') or created_at
+
+        document_version_id = case.get('document_version_id') or existing_document_version_id
+        extraction_run_id = case.get('extraction_run_id') or existing_extraction_run_id
+
+        cursor.execute('''
+            INSERT INTO cases (
+                id, source, source_url, date_start, date_end, victim_count, perpetrator_count,
+                relationship_to_victim, platforms_used,
+                severity_indicators, case_topics, tags, notes,
+                raw_data, extracted_features, created_at, updated_at,
+                document_version_id, extraction_run_id
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            ON CONFLICT (id) DO UPDATE SET
+                source = EXCLUDED.source,
+                source_url = EXCLUDED.source_url,
+                date_start = EXCLUDED.date_start,
+                date_end = EXCLUDED.date_end,
+                victim_count = EXCLUDED.victim_count,
+                perpetrator_count = EXCLUDED.perpetrator_count,
+                relationship_to_victim = EXCLUDED.relationship_to_victim,
+                platforms_used = EXCLUDED.platforms_used,
+                severity_indicators = EXCLUDED.severity_indicators,
+                case_topics = EXCLUDED.case_topics,
+                tags = EXCLUDED.tags,
+                notes = EXCLUDED.notes,
+                raw_data = EXCLUDED.raw_data,
+                extracted_features = EXCLUDED.extracted_features,
+                updated_at = EXCLUDED.updated_at,
+                document_version_id = COALESCE(EXCLUDED.document_version_id, cases.document_version_id),
+                extraction_run_id = COALESCE(EXCLUDED.extraction_run_id, cases.extraction_run_id)
+        ''', (
+            case_id,
+            case.get('source', 'unknown'),
+            case.get('source_url') or (case.get('raw_data', {}) if isinstance(case.get('raw_data'), dict) else {}).get('source_url'),
+            date_start,
+            date_end,
+            case.get('victim_count'),
+            None,  # perpetrator_count (deprecated)
+            case.get('relationship_to_victim'),
+            json.dumps(case.get('platforms_used', [])),
+            json.dumps(case.get('severity_indicators', [])),
+            json.dumps(case.get('case_topics', [])),
+            json.dumps(case.get('tags', [])),
+            case.get('notes'),
+            json.dumps(case.get('raw_data', {})),
+            json.dumps(slim_extracted_features_for_storage(case)),
+            created_at,
+            updated_at,
+            document_version_id,
+            extraction_run_id,
+        ))
+
+        case_demo = case.get('case_demographics') or case.get('victim_demographics')
+        if case_demo and isinstance(case_demo, dict):
+            age_range_str = None
+            if case_demo.get('age_range'):
+                age_range_str = json.dumps(case_demo.get('age_range'))
+            elif case_demo.get('ages'):
+                ages = case_demo.get('ages', [])
+                if ages:
+                    age_range_str = json.dumps({'min': min(ages), 'max': max(ages)})
+
+            cursor.execute('''
+                INSERT INTO victim_demographics 
+                (case_id, age_range, region, anonymized_id)
+                VALUES (%s, %s, %s, %s)
+                ON CONFLICT (case_id) DO UPDATE SET
+                    age_range = EXCLUDED.age_range,
+                    region = EXCLUDED.region,
+                    anonymized_id = EXCLUDED.anonymized_id
+            ''', (
+                case.get('id'),
+                age_range_str,
+                case_demo.get('region'),
+                None,
+            ))
+
+        perp_age = case.get('perpetrator_age')
+        perp_registered = case.get('perpetrator_registered_sex_offender', False)
+        perp_demo = case.get('perpetrator_demographics')
+
+        if perp_age is not None or perp_registered or perp_demo:
+            age_range_str = None
+            if perp_age is not None:
+                age_range_str = json.dumps({'min': perp_age, 'max': perp_age})
+            elif perp_demo and isinstance(perp_demo, dict) and perp_demo.get('age'):
+                age = perp_demo.get('age')
+                age_range_str = json.dumps({'min': age, 'max': age})
+
+            prev_conviction = case.get('previous_conviction') or (perp_demo.get('previous_conviction') if isinstance(perp_demo, dict) else None)
+
+            cursor.execute('''
+                INSERT INTO perpetrator_demographics 
+                (case_id, age_range, region, anonymized_id, previous_conviction)
+                VALUES (%s, %s, %s, %s, %s)
+                ON CONFLICT (case_id) DO UPDATE SET
+                    age_range = EXCLUDED.age_range,
+                    region = EXCLUDED.region,
+                    anonymized_id = EXCLUDED.anonymized_id,
+                    previous_conviction = EXCLUDED.previous_conviction
+            ''', (
+                case.get('id'),
+                age_range_str,
+                None,
+                None,
+                json.dumps(prev_conviction) if prev_conviction else None,
+            ))
+
+        prosecution = case.get('prosecution_outcome')
+        if prosecution and isinstance(prosecution, dict):
+            status = prosecution.get('booking_status') or prosecution.get('status')
+            charges = prosecution.get('charges', [])
+            charges_str = json.dumps(charges)
+
+            sentences = prosecution.get('sentences', [])
+            if isinstance(sentences, str):
+                sentences = [sentences] if sentences.strip() else []
+            cursor.execute('''
+                INSERT INTO prosecution_outcomes 
+                (case_id, status, charges, sentences)
+                VALUES (%s, %s, %s, %s)
+                ON CONFLICT (case_id) DO UPDATE SET
+                    status = EXCLUDED.status,
+                    charges = EXCLUDED.charges,
+                    sentences = EXCLUDED.sentences
+            ''', (
+                case.get('id'),
+                status,
+                charges_str,
+                json.dumps(sentences if isinstance(sentences, list) else []),
+            ))
+
+        return True
+
     def store_case(self, case: Dict[str, Any]) -> bool:
         """
         Store a single case in the database.
@@ -237,225 +428,114 @@ class CaseStorage:
         Returns:
             True if successful, False otherwise
         """
+        conn = None
+        cursor = None
         try:
             conn = get_connection()
             cursor = conn.cursor()
-            
-            date_range = case.get('date_range', {})
-            date_start = date_range.get('start') if isinstance(date_range, dict) else None
-            date_end = date_range.get('end') if isinstance(date_range, dict) else None
-            
-            # Check if case already exists to preserve created_at timestamp and prevent conflicts
-            case_id = case.get('id')
-            cursor.execute(
-                'SELECT created_at, raw_data, document_version_id, extraction_run_id '
-                'FROM cases WHERE id = %s',
-                (case_id,),
-            )
-            existing_case = cursor.fetchone()
-            
-            # Use consistent ISO format for timestamps
-            current_time = datetime.now().isoformat()
-            
-            existing_document_version_id = None
-            existing_extraction_run_id = None
-            if existing_case:
-                existing_created_at = existing_case[0]
-                existing_raw_data_json = existing_case[1]
-                if len(existing_case) > 2:
-                    existing_document_version_id = existing_case[2]
-                    existing_extraction_run_id = existing_case[3]
-                
-                # Check if this is from a different source file (conflict detection)
-                new_source_file = None
-                if isinstance(case.get('raw_data'), dict):
-                    new_source_file = case.get('raw_data', {}).get('source_file')
-                elif isinstance(case.get('raw_data'), str):
-                    try:
-                        new_source_file = json.loads(case.get('raw_data', '{}')).get('source_file')
-                    except:
-                        pass
-                
-                existing_source_file = None
-                if existing_raw_data_json:
-                    try:
-                        existing_raw_data = json.loads(existing_raw_data_json)
-                        existing_source_file = existing_raw_data.get('source_file')
-                    except:
-                        pass
-                
-                # If source files differ, this is a conflict - don't overwrite
-                if new_source_file and existing_source_file and new_source_file != existing_source_file:
-                    print(f"⚠️  Warning: Case ID conflict detected for {case_id}")
-                    print(f"   Existing case from: {existing_source_file}")
-                    print(f"   New case from: {new_source_file}")
-                    print(f"   Skipping new case to prevent data loss")
-                    cursor.close()
-                    return_connection(conn)
-                    return False
-                
-                # Case exists from same source: preserve original created_at, update updated_at
-                created_at = existing_created_at
-                updated_at = current_time
-            else:
-                # New case: use created_at from case dict if provided, otherwise use current time
-                created_at = case.get('created_at') or current_time
-                updated_at = case.get('updated_at') or created_at
-
-            document_version_id = case.get('document_version_id') or existing_document_version_id
-            extraction_run_id = case.get('extraction_run_id') or existing_extraction_run_id
-            
-            # PostgreSQL: Use INSERT ... ON CONFLICT DO UPDATE instead of INSERT OR REPLACE
-            cursor.execute('''
-                INSERT INTO cases (
-                    id, source, source_url, date_start, date_end, victim_count, perpetrator_count,
-                    relationship_to_victim, platforms_used,
-                    severity_indicators, case_topics, tags, notes,
-                    raw_data, extracted_features, created_at, updated_at,
-                    document_version_id, extraction_run_id
-                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                ON CONFLICT (id) DO UPDATE SET
-                    source = EXCLUDED.source,
-                    source_url = EXCLUDED.source_url,
-                    date_start = EXCLUDED.date_start,
-                    date_end = EXCLUDED.date_end,
-                    victim_count = EXCLUDED.victim_count,
-                    perpetrator_count = EXCLUDED.perpetrator_count,
-                    relationship_to_victim = EXCLUDED.relationship_to_victim,
-                    platforms_used = EXCLUDED.platforms_used,
-                    severity_indicators = EXCLUDED.severity_indicators,
-                    case_topics = EXCLUDED.case_topics,
-                    tags = EXCLUDED.tags,
-                    notes = EXCLUDED.notes,
-                    raw_data = EXCLUDED.raw_data,
-                    extracted_features = EXCLUDED.extracted_features,
-                    updated_at = EXCLUDED.updated_at,
-                    document_version_id = COALESCE(EXCLUDED.document_version_id, cases.document_version_id),
-                    extraction_run_id = COALESCE(EXCLUDED.extraction_run_id, cases.extraction_run_id)
-            ''', (
-                case_id,
-                case.get('source', 'unknown'),
-                case.get('source_url') or (case.get('raw_data', {}) if isinstance(case.get('raw_data'), dict) else {}).get('source_url'),
-                date_start,
-                date_end,
-                case.get('victim_count'),
-                None,  # perpetrator_count (deprecated)
-                case.get('relationship_to_victim'),
-                json.dumps(case.get('platforms_used', [])),
-                json.dumps(case.get('severity_indicators', [])),
-                json.dumps(case.get('case_topics', [])),
-                json.dumps(case.get('tags', [])),
-                case.get('notes'),
-                json.dumps(case.get('raw_data', {})),
-                json.dumps(slim_extracted_features_for_storage(case)),
-                created_at,
-                updated_at,
-                document_version_id,
-                extraction_run_id,
-            ))
-            
-            case_demo = case.get('case_demographics') or case.get('victim_demographics')
-            if case_demo and isinstance(case_demo, dict):
-                age_range_str = None
-                if case_demo.get('age_range'):
-                    age_range_str = json.dumps(case_demo.get('age_range'))
-                elif case_demo.get('ages'):
-                    ages = case_demo.get('ages', [])
-                    if ages:
-                        age_range_str = json.dumps({'min': min(ages), 'max': max(ages)})
-                
-                cursor.execute('''
-                    INSERT INTO victim_demographics 
-                    (case_id, age_range, region, anonymized_id)
-                    VALUES (%s, %s, %s, %s)
-                    ON CONFLICT (case_id) DO UPDATE SET
-                        age_range = EXCLUDED.age_range,
-                        region = EXCLUDED.region,
-                        anonymized_id = EXCLUDED.anonymized_id
-                ''', (
-                    case.get('id'),
-                    age_range_str,
-                    case_demo.get('region'),
-                    None,
-                ))
-            
-            # Store perpetrator demographics
-            perp_age = case.get('perpetrator_age')
-            perp_registered = case.get('perpetrator_registered_sex_offender', False)
-            perp_demo = case.get('perpetrator_demographics')
-            
-            if perp_age is not None or perp_registered or perp_demo:
-                age_range_str = None
-                if perp_age is not None:
-                    age_range_str = json.dumps({'min': perp_age, 'max': perp_age})
-                elif perp_demo and isinstance(perp_demo, dict) and perp_demo.get('age'):
-                    age = perp_demo.get('age')
-                    age_range_str = json.dumps({'min': age, 'max': age})
-                
-                prev_conviction = case.get('previous_conviction') or (perp_demo.get('previous_conviction') if isinstance(perp_demo, dict) else None)
-                
-                cursor.execute('''
-                    INSERT INTO perpetrator_demographics 
-                    (case_id, age_range, region, anonymized_id, previous_conviction)
-                    VALUES (%s, %s, %s, %s, %s)
-                    ON CONFLICT (case_id) DO UPDATE SET
-                        age_range = EXCLUDED.age_range,
-                        region = EXCLUDED.region,
-                        anonymized_id = EXCLUDED.anonymized_id,
-                        previous_conviction = EXCLUDED.previous_conviction
-                ''', (
-                    case.get('id'),
-                    age_range_str,
-                    None,
-                    None,
-                    json.dumps(prev_conviction) if prev_conviction else None,
-                ))
-            
-            prosecution = case.get('prosecution_outcome')
-            if prosecution and isinstance(prosecution, dict):
-                status = prosecution.get('booking_status') or prosecution.get('status')
-                charges = prosecution.get('charges', [])
-                charges_str = json.dumps(charges)
-                
-                sentences = prosecution.get('sentences', [])
-                if isinstance(sentences, str):
-                    sentences = [sentences] if sentences.strip() else []
-                cursor.execute('''
-                    INSERT INTO prosecution_outcomes 
-                    (case_id, status, charges, sentences)
-                    VALUES (%s, %s, %s, %s)
-                    ON CONFLICT (case_id) DO UPDATE SET
-                        status = EXCLUDED.status,
-                        charges = EXCLUDED.charges,
-                        sentences = EXCLUDED.sentences
-                ''', (
-                    case.get('id'),
-                    status,
-                    charges_str,
-                    json.dumps(sentences if isinstance(sentences, list) else []),
-                ))
-            
-            conn.commit()
-            cursor.close()
-            return_connection(conn)
-            return True
-            
+            ok = self._store_case_on_cursor(cursor, case)
+            if ok:
+                conn.commit()
+            return ok
         except Exception as e:
             print(f"Error storing case: {e}")
             import traceback
             traceback.print_exc()
-            if 'conn' in locals():
-                cursor.close()
-                return_connection(conn)
+            if conn is not None:
+                try:
+                    conn.rollback()
+                except Exception:
+                    pass
             return False
-    
+        finally:
+            if cursor is not None:
+                try:
+                    cursor.close()
+                except Exception:
+                    pass
+            if conn is not None:
+                return_connection(conn)
+
+    def _commit_case_batch(self, conn, cursor, batch: List[Dict[str, Any]]) -> int:
+        """Commit a batch of cases; on failure fall back to per-case commits."""
+        try:
+            stored = 0
+            for case in batch:
+                if self._store_case_on_cursor(cursor, case):
+                    stored += 1
+            conn.commit()
+            return stored
+        except Exception as e:
+            print(f"⚠️  Batch store failed ({e}); falling back to per-case commits")
+            try:
+                conn.rollback()
+            except Exception:
+                pass
+            stored = 0
+            for case in batch:
+                try:
+                    if self._store_case_on_cursor(cursor, case):
+                        conn.commit()
+                        stored += 1
+                except Exception as case_exc:
+                    print(f"Error storing case: {case_exc}")
+                    try:
+                        conn.rollback()
+                    except Exception:
+                        pass
+            return stored
+
     def store_cases(self, cases: List[Dict[str, Any]]) -> int:
-        """Store multiple cases in the database."""
+        """
+        Store multiple cases using one pooled connection and batched commits.
+
+        COMMIT batch size: STORE_COMMIT_BATCH env (default 100). Bigger
+        transactions cut Railway proxy RTT that dominated per-case commits.
+        """
+        if not cases:
+            return 0
+        try:
+            commit_every = int(os.environ.get("STORE_COMMIT_BATCH", "100"))
+        except ValueError:
+            commit_every = 100
+        commit_every = max(1, commit_every)
+
+        conn = None
+        cursor = None
         stored_count = 0
-        for case in cases:
-            if self.store_case(case):
-                stored_count += 1
-        return stored_count
+        try:
+            conn = get_connection()
+            cursor = conn.cursor()
+            batch: List[Dict[str, Any]] = []
+            for i, case in enumerate(cases):
+                batch.append(case)
+                if len(batch) >= commit_every:
+                    stored_count += self._commit_case_batch(conn, cursor, batch)
+                    batch = []
+                    if (i + 1) % (commit_every * 5) == 0 or (i + 1) == len(cases):
+                        print(f"  … stored {stored_count}/{len(cases)} cases")
+            if batch:
+                stored_count += self._commit_case_batch(conn, cursor, batch)
+                print(f"  … stored {stored_count}/{len(cases)} cases")
+            return stored_count
+        except Exception as e:
+            print(f"Error storing cases: {e}")
+            import traceback
+            traceback.print_exc()
+            if conn is not None:
+                try:
+                    conn.rollback()
+                except Exception:
+                    pass
+            return stored_count
+        finally:
+            if cursor is not None:
+                try:
+                    cursor.close()
+                except Exception:
+                    pass
+            if conn is not None:
+                return_connection(conn)
 
     def persist_provenance_models(self, document, version) -> Tuple[str, str]:
         """Insert one source document + version. Idempotent for identical rows."""

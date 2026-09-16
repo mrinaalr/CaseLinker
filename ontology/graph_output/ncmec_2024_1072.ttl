@@ -1,43 +1,99 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
-@prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
 @prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
-@prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-undercover: <https://cacontology.projectvic.org/undercover#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/admission/1/extraction-confidence> a cac-core:AssessmentResult ;
+    cac-core:assesses <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/admission/1> ;
+    cac-core:generatedBy <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072> ;
+    cac-core:hasConfidence 0.65 .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2024-08-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/event/hands-on>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/offense-event/charge-3> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/agency/ceos> a cacontology-multi:FederalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/district-attorney-generals-office> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:StateAgency ;
+    rdfs:label "District Attorney General's Office" .
+
+<https://caselinker.up.railway.app/resource/agency/fbi> a cacontology-multi:FederalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/hamilton-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Hamilton County Sheriff's Office" .
+
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:23:13.201634" ;
+    dcterms:created "2026-09-15T21:08:11.085762" ;
     dcterms:identifier "ncmec_2024_1072" ;
-    dcterms:modified "2026-09-10T19:23:13.201634" ;
-    dcterms:source <https://whnt.com/news/national/tennessee-man-accused-of-posting-videos-of-sex-with-teen-on-x/>,
+    dcterms:modified "2026-09-15T21:08:11.085762" ;
+    dcterms:source <https://www.justice.gov/usao-edtn/pr/ooltewah-man-sentenced-32-years-imprisonment-exploitation-minor-receipt-child#:~:text=Of%20Child%20Pornography-,Ooltewah%20Man%20Sentenced%20To%2032%20Years%20Imprisonment%20For%20Exploitation%20Of,And%20Possession%20Of%20Child%20Pornography&text=CHATTANOOGA%2C%20Tenn.,by%20the%20Honorable%20Travis%20R>,
         "NCMEC" ;
-    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/phase/charged> ;
-    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/phase/charged> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/event/hands-on>,
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/chattanooga>,
+        <https://caselinker.up.railway.app/resource/location/hamilton-county>,
+        <https://caselinker.up.railway.app/resource/location/ooltewah>,
+        <https://caselinker.up.railway.app/resource/location/tenn>,
+        <https://caselinker.up.railway.app/resource/location/tennessee>,
+        <https://caselinker.up.railway.app/resource/location/united-states> ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/phase/sentenced> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/phase/sentenced> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/admission/1>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/event/hands-on>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/event/possession>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/event/trust-violation>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/legal-proceeding> .
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/event/project-safe-childhood>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/legal-proceeding>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/legal-step/sentenced>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/offense-event/charge-3> ;
+    cacontology:investigationStatus "unknown" ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ceos>,
+        <https://caselinker.up.railway.app/resource/agency/district-attorney-generals-office>,
+        <https://caselinker.up.railway.app/resource/agency/fbi>,
+        <https://caselinker.up.railway.app/resource/agency/hamilton-county-sheriffs-office>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/chattanooga>,
+        <https://caselinker.up.railway.app/resource/location/hamilton-county>,
+        <https://caselinker.up.railway.app/resource/location/ooltewah>,
+        <https://caselinker.up.railway.app/resource/location/tenn>,
+        <https://caselinker.up.railway.app/resource/location/tennessee>,
+        <https://caselinker.up.railway.app/resource/location/united-states> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/charge/1> a cacontology-legal-outcomes:CriminalCharge,
-        cacontology-legal-outcomes:StateCharge ;
-    rdfs:label "sexual exploitation of a minor" .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
+        cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "possession of child pornography" ;
+    cacontology-legal-outcomes:indictmentCounts 2 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/charge/2> a cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "sexual exploitation" ;
     ns1:chargeCluster "sexual_exploitation_unspecified" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/event/trust-violation> a cacontology-custodial:CustodialAbuse,
-        cacontology-custodial:TrustViolation ;
-    cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/relationship/mother> .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/charge/3> a cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "child exploitation" ;
+    rdfs:seeAlso <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/offense-event/charge-3> ;
+    ns1:chargeCluster "child_exploitation" ;
+    ns1:chargeOffenseEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/offense-event/charge-3> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/event/project-safe-childhood> a cac-core:Event,
+        cacontology-multi:ProjectSafeChildhoodOperation ;
+    cacontology:severityLevel 3 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
@@ -45,60 +101,84 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/charge/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-06-01T00:00:00Z"^^xsd:dateTimeStamp ;
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/charge/2>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/charge/3> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-08-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/sentence/1> .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/legal-step/sentenced> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding,
+        cacontology-legal-outcomes:SentencingHearing ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-08-01T00:00:00Z"^^xsd:dateTimeStamp .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/person/offender/1> a uco-identity:Person ;
-    cacontology-detection:ageEstimate 22 .
+    cacontology-detection:ageEstimate 42 .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/person/victim/1> a uco-identity:Person ;
-    cacontology-production:victimAge 16 .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/relationship/mother> a cacontology-custodial:CustodialRelationship,
-        cacontology-custodial:FamilialRelationship ;
-    cacontology-custodial:involvesChild <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/role/victim/1> ;
-    cacontology-custodial:involvesCustodian <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/role/offender/1> ;
-    cacontology-custodial:relationshipType "mother" .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/person/victim/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2024-06-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:hasRoleBeginPoint "2024-08-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/event/hands-on>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/event/possession> ;
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/offense-event/charge-3> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/person/offender/1> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/role/victim/1> a cacontology:VictimRole,
-        uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2024-06-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/event/hands-on>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/event/possession> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/person/victim/1> .
-
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$100,000" .
+        cacontology-legal-outcomes:SupervisedRelease ;
+    rdfs:label "[\"384 months\", \"supervised release\"]" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/phase/charged> a cacontology:LegalProcessPhase,
-        cac-core:Phase ;
-    cacontology:hasPhaseBeginPoint "2024-06-01T00:00:00Z"^^xsd:dateTimeStamp .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/admission/1> a cacontology-undercover:IncriminatingStatement ;
+    rdfs:label "to law enforcement, and some of the women throughout the U" ;
+    dcterms:source <https://www.justice.gov/usao-edtn/pr/ooltewah-man-sentenced-32-years-imprisonment-exploitation-minor-receipt-child#:~:text=Of%20Child%20Pornography-,Ooltewah%20Man%20Sentenced%20To%2032%20Years%20Imprisonment%20For%20Exploitation%20Of,And%20Possession%20Of%20Child%20Pornography&text=CHATTANOOGA%2C%20Tenn.,by%20the%20Honorable%20Travis%20R> ;
+    ns1:admissionContext "oughout the United States to molest their children and then send him images of the abuse. Price confessed to law enforcement, and some of..." ;
+    ns1:admissionFrame "confessed_paraphrase" ;
+    ns1:admissionTheme "other" ;
+    ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/role/offender/1> ;
+    ns1:evidenceTier "press_release_stated" ;
+    ns1:quoteType "paraphrase" ;
+    uco-core:description "to law enforcement, and some of the women throughout the U" .
 
-<https://caselinker.up.railway.app/resource/platform/social-media> a cacontology-platforms:SocialMediaPlatform ;
-    rdfs:label "social media" .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/phase/sentenced> a cac-core:Phase,
+        cacontology-legal-outcomes:SentencingPhase ;
+    cacontology:hasPhaseBeginPoint "2024-08-01T00:00:00Z"^^xsd:dateTimeStamp .
 
-<https://caselinker.up.railway.app/resource/platform/twitter-x> a cacontology-platforms:SocialMediaPlatform ;
-    rdfs:label "Twitter / X" .
+<https://caselinker.up.railway.app/resource/location/chattanooga> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Chattanooga" ;
+    uco-core:name "Chattanooga" .
+
+<https://caselinker.up.railway.app/resource/location/hamilton-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Hamilton County" ;
+    uco-core:name "Hamilton County" .
+
+<https://caselinker.up.railway.app/resource/location/ooltewah> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Ooltewah" ;
+    uco-core:name "Ooltewah" .
+
+<https://caselinker.up.railway.app/resource/location/tenn> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/tennessee> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;
-    cacontology:severityLevel 3 ;
-    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/social-media>,
-        <https://caselinker.up.railway.app/resource/platform/twitter-x> .
+    cacontology:severityLevel 3 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
     cacontology:severityLevel 3 ;
-    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/social-media>,
-        <https://caselinker.up.railway.app/resource/platform/twitter-x> ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/facet/possession> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1072/offense-event/charge-3> a cacontology:ChildSexualAbuseEvent,
+        cac-core:Event,
+        uco-action:Crime ;
+    rdfs:label "Inferred offense from charge: child exploitation" .
 

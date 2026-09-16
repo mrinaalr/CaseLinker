@@ -5,19 +5,24 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_311> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:11:26.076521" ;
+    dcterms:created "2026-09-15T20:55:01.020448" ;
     dcterms:identifier "ncmec_2023_311" ;
-    dcterms:modified "2026-09-10T19:11:26.076521" ;
+    dcterms:modified "2026-09-15T20:55:01.020448" ;
     dcterms:source <https://www.wfla.com/news/pinellas-county/pinellas-county-man-charged-with-possessing-transmitting-child-pornography/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/fla>,
+        <https://caselinker.up.railway.app/resource/location/palm-harbor>,
+        <https://caselinker.up.railway.app/resource/location/pinellas-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_311/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_311/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_311/cybertip>,
@@ -25,7 +30,10 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_311/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/pinellas-county-sheriffs-office> .
+        <https://caselinker.up.railway.app/resource/agency/pinellas-county-sheriffs-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/fla>,
+        <https://caselinker.up.railway.app/resource/location/palm-harbor>,
+        <https://caselinker.up.railway.app/resource/location/pinellas-county> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_311/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -57,21 +65,36 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_311/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Pinellas County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_311/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_311/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_311/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_311/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 39 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_311/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_311/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_311/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/fla> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/palm-harbor> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Palm Harbor" ;
+    uco-core:name "Palm Harbor" .
+
+<https://caselinker.up.railway.app/resource/location/pinellas-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_311/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

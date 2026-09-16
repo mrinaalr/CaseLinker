@@ -9,6 +9,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -52,23 +53,30 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_355/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_355/charge/2>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_355/charge/3> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-05-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_355/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_355/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 43 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_355/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_355/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/platform/kik> a cacontology-platforms:MessagingService ;
     rdfs:label "Kik" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_355> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:28:25.294123" ;
+    dcterms:created "2026-09-15T21:27:13.492400" ;
     dcterms:identifier "ncmec_2025_355" ;
-    dcterms:modified "2026-09-10T19:28:25.294123" ;
+    dcterms:modified "2026-09-15T21:27:13.492400" ;
     dcterms:source <https://www.kcci.com/article/des-moines-man-gabriel-flores-charged-in-child-pornography-investigation-iowa-crime/64795324>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/des-moines>,
+        <https://caselinker.up.railway.app/resource/location/iowa> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_355/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_355/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_355/admission/1>,
@@ -76,12 +84,14 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_355/event/csam>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_355/event/distribution>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_355/legal-proceeding> ;
-    cacontology:investigationStatus "unknown" .
+    cacontology:investigationStatus "unknown" ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/des-moines>,
+        <https://caselinker.up.railway.app/resource/location/iowa> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_355/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "speaking with minors on different cellphone applications and exchanging explicit images with them" ;
     dcterms:source <https://www.kcci.com/article/des-moines-man-gabriel-flores-charged-in-child-pornography-investigation-iowa-crime/64795324> ;
-    ns1:admissionContext "so says he admitted to sharing the images with others over platforms like Signal and Kik. Court records show Flores also admitted to spea..." ;
+    ns1:admissionContext "o says he admitted to sharing the images with others over platforms like Signal and Kik. Court records show Flores also admitted to speak..." ;
     ns1:admissionFrame "admitted_to" ;
     ns1:admissionTheme "other" ;
     ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_355/role/offender/1> ;
@@ -98,6 +108,14 @@
     cacontology:hasRoleBeginPoint "2025-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2025_355/event/csam> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_355/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/location/des-moines> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Des Moines" ;
+    uco-core:name "Des Moines" .
+
+<https://caselinker.up.railway.app/resource/location/iowa> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_355/admission/2> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "to sharing the images with others over platforms like Signal and Kik" ;

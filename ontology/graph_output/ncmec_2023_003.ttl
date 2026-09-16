@@ -14,6 +14,7 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -22,15 +23,19 @@
     cac-core:generatedBy <https://caselinker.up.railway.app/resource/case/ncmec_2023_003> ;
     cac-core:hasConfidence 0.65 .
 
-<https://caselinker.up.railway.app/resource/agency/gainesville-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/gainesville-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Gainesville Police Department" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_003> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:09:06.175051" ;
+    dcterms:created "2026-09-15T20:55:00.737051" ;
     dcterms:identifier "ncmec_2023_003" ;
-    dcterms:modified "2026-09-10T19:09:06.175051" ;
+    dcterms:modified "2026-09-15T20:55:00.737051" ;
     dcterms:source <https://alachuachronicle.com/gainesville-man-arrested-on-10-counts-of-child-pornography/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/fla>,
+        <https://caselinker.up.railway.app/resource/location/gainesville> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_003/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_003/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_003/admission/1>,
@@ -43,7 +48,9 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_003/operation> ;
     cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/ncmec_2023_003/tech/cybertipline> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/gainesville-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/fla>,
+        <https://caselinker.up.railway.app/resource/location/gainesville> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_003/charge/1> a cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "child" ;
@@ -79,7 +86,8 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_003/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_003/charge/2>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_003/charge/3> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-02-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-02-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_003/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_003/operation> a cac-core:Event,
         cacontology-taskforce:ReactiveOperation .
@@ -102,6 +110,10 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_003/offense-event/charge-3> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_003/person/victim/1> .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_003/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_003/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
 
@@ -118,7 +130,16 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_003/offense-event/charge-3> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_003/person/offender/1> .
 
-<https://caselinker.up.railway.app/resource/platform/google-drive> a cacontology-platforms:FileHostingService ;
+<https://caselinker.up.railway.app/resource/location/fla> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/gainesville> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Gainesville" ;
+    uco-core:name "Gainesville" .
+
+<https://caselinker.up.railway.app/resource/platform/google-drive> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:FileHostingService ;
     rdfs:label "Google Drive" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_003/admission/1> a cacontology-undercover:IncriminatingStatement ;

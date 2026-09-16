@@ -6,25 +6,29 @@
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_068> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:09:34.708441" ;
+    dcterms:created "2026-09-15T20:55:00.796015" ;
     dcterms:identifier "ncmec_2023_068" ;
-    dcterms:modified "2026-09-10T19:09:34.708441" ;
+    dcterms:modified "2026-09-15T20:55:00.796015" ;
     dcterms:source <https://www.havasunews.com/news/new-information-released-in-child-porn-arrest/article_3b8389ac-a444-11ee-a7a8-675277c11fd2.html>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/lake-havasu-city> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_068/cybertip>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_068/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_068/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/azicac-task-force>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/lake-havasu-city> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_068/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -38,7 +42,9 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_068/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_068/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/azicac-task-force> a cacontology-taskforce:StateICACtaskForce .
+<https://caselinker.up.railway.app/resource/agency/azicac-task-force> a cac-core:OrganizationLikeEntity,
+        cacontology-taskforce:StateICACtaskForce ;
+    rdfs:label "AZICAC Task Force" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_068/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -54,14 +60,24 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_068/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_068/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_068/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 50 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_068/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_068/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
+
+<https://caselinker.up.railway.app/resource/location/lake-havasu-city> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Lake Havasu City" ;
+    uco-core:name "Lake Havasu City" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_068/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

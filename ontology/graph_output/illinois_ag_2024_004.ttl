@@ -10,16 +10,20 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2024_004> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:48:04.022231" ;
+    dcterms:created "2026-09-15T19:40:56.626017" ;
     dcterms:identifier "illinois_ag_2024_004" ;
-    dcterms:modified "2026-09-10T19:48:04.022231" ;
+    dcterms:modified "2026-09-15T19:49:36.872411" ;
     dcterms:source <https://illinoisattorneygeneral.gov/news/story/attorney-general-raoul-charges-bond-county-man-with-possession-of-child-sexual-abuse-material-weapon-by-a-felon111324>,
         "ILLINOIS AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/chicago>,
+        <https://caselinker.up.railway.app/resource/location/illinois>,
+        <https://caselinker.up.railway.app/resource/location/pocahontas> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/illinois_ag_2024_004/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/illinois_ag_2024_004/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/illinois_ag_2024_004/cybertip>,
@@ -32,7 +36,10 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/bond-county-sheriffs-office>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/illinois-high-tech-crimes-bureau>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/chicago>,
+        <https://caselinker.up.railway.app/resource/location/illinois>,
+        <https://caselinker.up.railway.app/resource/location/pocahontas> .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2024_004/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -83,13 +90,11 @@
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2024_004/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility: Bond County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/illinois_ag_2024_004/charge/1>,
         <https://caselinker.up.railway.app/resource/case/illinois_ag_2024_004/charge/2>,
         <https://caselinker.up.railway.app/resource/case/illinois_ag_2024_004/charge/3> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/illinois_ag_2024_004/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/illinois_ag_2024_004/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/illinois_ag_2024_004/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2024_004/operation> a cac-core:Event,
         cacontology-taskforce:ReactiveOperation .
@@ -100,11 +105,7 @@
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2024_004/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "15 years" .
-
-<https://caselinker.up.railway.app/resource/case/illinois_ag_2024_004/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "10 years" .
+    rdfs:label "[\"15 years\", \"10 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2024_004/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -114,6 +115,17 @@
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2024_004/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/chicago> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/illinois> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/pocahontas> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Pocahontas" ;
+    uco-core:name "Pocahontas" .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2024_004/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

@@ -13,6 +13,7 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -98,7 +99,7 @@
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_547/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "120 months" .
+    rdfs:label "[\"120 months\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_547/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -107,11 +108,14 @@
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_547> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T21:23:04.804816" ;
+    dcterms:created "2026-09-15T22:12:28.479930" ;
     dcterms:identifier "doj_safe_childhood_2023_547" ;
-    dcterms:modified "2026-09-14T21:23:04.804816" ;
+    dcterms:modified "2026-09-15T22:12:28.479930" ;
     dcterms:source <https://www.justice.gov/usao-ne/pr/omaha-man-sentenced-10-years-child-pornography-receipt-and-distribution>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/nebraska>,
+        <https://caselinker.up.railway.app/resource/location/omaha>,
+        <https://caselinker.up.railway.app/resource/location/united-states> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_547/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_547/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_547/admission/1>,
@@ -130,7 +134,10 @@
         <https://caselinker.up.railway.app/resource/agency/fbi>,
         <https://caselinker.up.railway.app/resource/agency/hsi>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/usao> .
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/nebraska>,
+        <https://caselinker.up.railway.app/resource/location/omaha>,
+        <https://caselinker.up.railway.app/resource/location/united-states> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_547/admission/2> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "viewing images and videos using Omegle on his cell phone" ;
@@ -154,14 +161,32 @@
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_547/offense-event/charge-4> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_547/person/offender/1> .
 
-<https://caselinker.up.railway.app/resource/platform/dropbox> a cacontology-platforms:FileHostingService ;
+<https://caselinker.up.railway.app/resource/location/nebraska> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Nebraska" ;
+    uco-core:name "Nebraska" .
+
+<https://caselinker.up.railway.app/resource/location/omaha> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Omaha" ;
+    uco-core:name "Omaha" .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/platform/dropbox> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:FileHostingService ;
     rdfs:label "Dropbox" .
 
-<https://caselinker.up.railway.app/resource/platform/instagram> a cacontology-platforms:SocialMediaPlatform ;
+<https://caselinker.up.railway.app/resource/platform/instagram> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:SocialMediaPlatform ;
     rdfs:label "Instagram" .
 
-<https://caselinker.up.railway.app/resource/platform/omegle> a cacontology-platforms:AnonymousChatPlatform ;
-    rdfs:label "Omegle" .
+<https://caselinker.up.railway.app/resource/platform/omegle> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:AnonymousChatPlatform ;
+    rdfs:label "Omegle" ;
+    cacontology-platforms:guestAccountsAllowed "true" ;
+    cacontology-platforms:identityVerificationRequired "false" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_547/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "viewing images and videos of child pornography on his cell phone and to using Omegle to obtain links to the child por..." ;

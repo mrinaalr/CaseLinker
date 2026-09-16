@@ -3,41 +3,51 @@
 @prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_507> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:18:34.828742" ;
+    dcterms:created "2026-09-15T21:08:10.620641" ;
     dcterms:identifier "ncmec_2024_507" ;
-    dcterms:modified "2026-09-10T19:18:34.828742" ;
-    dcterms:source <https://www.ktbs.com/news/cpso-cyber-crimes-arrests-man-for-child-pornography/article_401312e4-dcd4-11ee-aa1f-8b2e90a0f334.html>,
+    dcterms:modified "2026-09-15T21:08:10.620641" ;
+    dcterms:source <https://www.ksla.com/2024/05/07/shreveport-man-arrested-child-porn-investigation/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/la>,
+        <https://caselinker.up.railway.app/resource/location/shreveport> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_507/phase/booked> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_507/phase/booked> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_507/event/possession>,
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_507/event/distribution>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_507/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_507/legal-proceeding> ;
-    cacontology:investigationStatus "unknown" .
+    cacontology:investigationStatus "unknown" ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/la>,
+        <https://caselinker.up.railway.app/resource/location/shreveport> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_507/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2024-03-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:hasRoleBeginPoint "2024-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_507/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_507/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_507/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2024-03-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:hasRoleBeginPoint "2024-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_507/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_507/person/victim/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_507/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "pornography involving juveniles" ;
-    cacontology-legal-outcomes:indictmentCounts 61 .
+    rdfs:label "child porn" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_507/event/distribution> a cac-core:Event,
+        cacontology-legal-outcomes:CSAM_Distribution ;
+    cacontology:severityLevel 3 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_507/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
@@ -45,18 +55,30 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2024_507/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-03-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2024_507/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_507/person/offender/1> a uco-identity:Person ;
-    cacontology-detection:ageEstimate 48 .
+    cacontology-detection:ageEstimate 27 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_507/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_507/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_507/phase/booked> a cacontology:InitialPhase,
         cac-core:Phase ;
-    cacontology:hasPhaseBeginPoint "2024-03-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology:hasPhaseBeginPoint "2024-05-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/la> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/shreveport> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_507/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
+    cacontology:severityLevel 3 ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2024_507/facet/possession> .
 

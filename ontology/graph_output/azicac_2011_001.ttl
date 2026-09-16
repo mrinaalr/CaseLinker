@@ -9,6 +9,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -33,22 +34,33 @@
 
 <https://caselinker.up.railway.app/resource/case/azicac_2011_001> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:04:36.242052" ;
+    dcterms:created "2026-09-15T19:06:28.200802" ;
     dcterms:identifier "azicac_2011_001" ;
-    dcterms:modified "2026-09-10T19:04:36.242052" ;
+    dcterms:modified "2026-09-15T19:21:53.780829" ;
     dcterms:source <https://www.azicac.org/cases-and-arrests/>,
         "AZICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/arizona>,
+        <https://caselinker.up.railway.app/resource/location/scottsdale> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/azicac_2011_001/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/azicac_2011_001/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/azicac_2011_001/admission/1>,
         <https://caselinker.up.railway.app/resource/case/azicac_2011_001/event/distribution>,
-        <https://caselinker.up.railway.app/resource/case/azicac_2011_001/event/online-only> ;
+        <https://caselinker.up.railway.app/resource/case/azicac_2011_001/event/online-only>,
+        <https://caselinker.up.railway.app/resource/case/azicac_2011_001/legal-proceeding> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/maricopa-county-attorneys-office>,
-        <https://caselinker.up.railway.app/resource/agency/scottsdale-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/scottsdale-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/arizona>,
+        <https://caselinker.up.railway.app/resource/location/scottsdale> .
 
 <https://caselinker.up.railway.app/resource/case/azicac_2011_001/event/distribution> a cac-core:Event,
         cacontology-legal-outcomes:CSAM_Distribution ;
     cacontology:severityLevel 1 .
+
+<https://caselinker.up.railway.app/resource/case/azicac_2011_001/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2011-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/azicac_2011_001/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/azicac_2011_001/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 25 .
@@ -61,9 +73,23 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/azicac_2011_001/event/online-only> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/azicac_2011_001/person/offender/1> .
 
+<https://caselinker.up.railway.app/resource/case/azicac_2011_001/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/azicac_2011_001/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2011-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/arizona> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Arizona" ;
+    uco-core:name "Arizona" .
+
+<https://caselinker.up.railway.app/resource/location/scottsdale> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Scottsdale" ;
+    uco-core:name "Scottsdale" .
 
 <https://caselinker.up.railway.app/resource/case/azicac_2011_001/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "had met the girl online which led to him and the victim having an online and phone relationship" ;

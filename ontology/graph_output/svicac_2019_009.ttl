@@ -9,6 +9,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -37,7 +38,8 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/svicac_2019_009/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2019-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2019-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/svicac_2019_009/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2019_009/person/offender/1> a uco-identity:Person .
 
@@ -57,13 +59,21 @@
         <https://caselinker.up.railway.app/resource/case/svicac_2019_009/event/hands-on> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/svicac_2019_009/person/victim/1> .
 
+<https://caselinker.up.railway.app/resource/case/svicac_2019_009/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/svicac_2019_009> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:14:23.233405" ;
+    dcterms:created "2026-09-15T20:29:58.189672" ;
     dcterms:identifier "svicac_2019_009" ;
-    dcterms:modified "2026-09-10T20:14:23.233405" ;
+    dcterms:modified "2026-09-15T20:29:58.189672" ;
     dcterms:source <https://www.mercurynews.com/2019/05/23/feds-antioch-man-admitted-to-raping-toddler-documenting-it/>,
         "SVICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/antioch>,
+        <https://caselinker.up.railway.app/resource/location/cordons-antioch>,
+        <https://caselinker.up.railway.app/resource/location/florida>,
+        <https://caselinker.up.railway.app/resource/location/oakland> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/svicac_2019_009/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/svicac_2019_009/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/svicac_2019_009/admission/1>,
@@ -72,7 +82,11 @@
         <https://caselinker.up.railway.app/resource/case/svicac_2019_009/event/hands-on>,
         <https://caselinker.up.railway.app/resource/case/svicac_2019_009/event/trust-violation>,
         <https://caselinker.up.railway.app/resource/case/svicac_2019_009/legal-proceeding> ;
-    cacontology:investigationStatus "unknown" .
+    cacontology:investigationStatus "unknown" ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/antioch>,
+        <https://caselinker.up.railway.app/resource/location/cordons-antioch>,
+        <https://caselinker.up.railway.app/resource/location/florida>,
+        <https://caselinker.up.railway.app/resource/location/oakland> .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2019_009/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "raping toddler, documenting it By Nate Gartrell | ngartrell@bayareanewsgroup" ;
@@ -99,6 +113,20 @@
 <https://caselinker.up.railway.app/resource/case/svicac_2019_009/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2019-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/antioch> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/cordons-antioch> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Cordon’s Antioch" ;
+    uco-core:name "Cordon’s Antioch" .
+
+<https://caselinker.up.railway.app/resource/location/florida> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/oakland> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2019_009/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

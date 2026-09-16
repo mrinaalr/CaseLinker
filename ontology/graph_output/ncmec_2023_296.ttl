@@ -4,24 +4,30 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_296> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:11:19.643412" ;
+    dcterms:created "2026-09-15T20:55:01.005394" ;
     dcterms:identifier "ncmec_2023_296" ;
-    dcterms:modified "2026-09-10T19:11:19.643412" ;
+    dcterms:modified "2026-09-15T20:55:01.005394" ;
     dcterms:source <https://www.kplctv.com/2023/06/14/150-counts-child-porn-filed-against-hornbeck-man/#lnelyb0cjwn9mhndu7m>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/calcasieu-parish>,
+        <https://caselinker.up.railway.app/resource/location/lake-charles-louisiana> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_296/cybertip>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_296/event/csam>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_296/legal-proceeding> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/louisiana-attorney-generals-office>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/calcasieu-parish>,
+        <https://caselinker.up.railway.app/resource/location/lake-charles-louisiana> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_296/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -35,7 +41,9 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_296/event/csam> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_296/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/louisiana-attorney-generals-office> a cacontology-multi:StateAgency .
+<https://caselinker.up.railway.app/resource/agency/louisiana-attorney-generals-office> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:StateAgency ;
+    rdfs:label "Louisiana Attorney General's Office" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_296/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -60,9 +68,19 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_296/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$600,000" .
+    rdfs:label "[\"$600,000\"]" .
 
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
+
+<https://caselinker.up.railway.app/resource/location/calcasieu-parish> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Calcasieu Parish" ;
+    uco-core:name "Calcasieu Parish" .
+
+<https://caselinker.up.railway.app/resource/location/lake-charles-louisiana> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Lake Charles, Louisiana" ;
+    uco-core:name "Lake Charles, Louisiana" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_296/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

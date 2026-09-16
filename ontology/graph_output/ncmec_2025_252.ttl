@@ -4,24 +4,34 @@
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_252> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:27:26.621869" ;
+    dcterms:created "2026-09-15T21:27:13.384432" ;
     dcterms:identifier "ncmec_2025_252" ;
-    dcterms:modified "2026-09-10T19:27:26.621869" ;
+    dcterms:modified "2026-09-15T21:27:13.384432" ;
     dcterms:source <https://www.yahoo.com/news/sex-offender-sought-grovetown-suspected-155637726.html>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/evans>,
+        <https://caselinker.up.railway.app/resource/location/ga>,
+        <https://caselinker.up.railway.app/resource/location/grovetown>,
+        <https://caselinker.up.railway.app/resource/location/richmond-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_252/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_252/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_252/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_252/legal-proceeding> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/grovetown-police-department> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/grovetown-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/evans>,
+        <https://caselinker.up.railway.app/resource/location/ga>,
+        <https://caselinker.up.railway.app/resource/location/grovetown>,
+        <https://caselinker.up.railway.app/resource/location/richmond-county> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_252/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -54,16 +64,35 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_252/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_252/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-03-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-03-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_252/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_252/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 31 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_252/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_252/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_252/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-03-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/evans> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/ga> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/grovetown> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/richmond-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Richmond County" ;
+    uco-core:name "Richmond County" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_252/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

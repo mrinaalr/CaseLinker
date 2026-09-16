@@ -1,14 +1,15 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
-@prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-undercover: <https://cacontology.projectvic.org/undercover#> .
+@prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -19,39 +20,56 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_144/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2024-10-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:hasRoleBeginPoint "2024-09-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_144/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_144/person/victim/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_144> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:15:25.118358" ;
+    dcterms:created "2026-09-15T21:08:10.241716" ;
     dcterms:identifier "ncmec_2024_144" ;
-    dcterms:modified "2026-09-10T19:15:25.118358" ;
-    dcterms:source <https://www.hernandosheriff.org/Applications/PressReleases/PressReleases/20241017_Possession_of_Child_Pornography_Arrest_%E2%80%93_Andor_Storz_%E2%80%93_2024-00243929.pdf>,
+    dcterms:modified "2026-09-15T21:08:10.241716" ;
+    dcterms:source <https://weartv.com/news/local/pensacola-man-faces-50-counts-on-child-porn-animal-sexual-activity-charges>,
         "NCMEC" ;
-    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_144/phase/charged> ;
-    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_144/phase/charged> ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/escambia-county>,
+        <https://caselinker.up.railway.app/resource/location/fla>,
+        <https://caselinker.up.railway.app/resource/location/pensacola> ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_144/phase/arrested> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_144/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_144/admission/1>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_144/cybertip>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_144/event/distribution>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_144/event/possession>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_144/legal-proceeding>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_144/operation> .
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_144/legal-proceeding> ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/escambia-county>,
+        <https://caselinker.up.railway.app/resource/location/fla>,
+        <https://caselinker.up.railway.app/resource/location/pensacola> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_144/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "possession of child pornography" ;
-    cacontology-legal-outcomes:indictmentCounts 3 .
+    rdfs:label "child pornography" ;
+    cacontology-legal-outcomes:indictmentCounts 72 .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_144/charge/2> a cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "animal" ;
+    cacontology-legal-outcomes:indictmentCounts 20 .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_144/cybertip> a cacontology-us-ncmec:NCMECCybertipReport ;
+    cacontology-us-ncmec:supportedBy <https://caselinker.up.railway.app/resource/agency/ncmec> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_144/event/distribution> a cac-core:Event,
+        cacontology-legal-outcomes:CSAM_Distribution .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_144/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_144/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2024_144/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-10-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_144/operation> a cac-core:Event,
-        cacontology-taskforce:TaskForceOperation .
+    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2024_144/charge/1>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_144/charge/2> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-09-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2024_144/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_144/person/offender/1> a uco-identity:Person .
 
@@ -59,34 +77,41 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_144/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2024-10-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:hasRoleBeginPoint "2024-09-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_144/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_144/person/offender/1> .
 
-<https://caselinker.up.railway.app/resource/platform/social-media> a cacontology-platforms:SocialMediaPlatform ;
-    rdfs:label "social media" .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_144/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_144/phase/charged> a cacontology:LegalProcessPhase,
-        cac-core:Phase ;
-    cacontology:hasPhaseBeginPoint "2024-10-01T00:00:00Z"^^xsd:dateTimeStamp .
+<https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_144/admission/1> a cacontology-undercover:IncriminatingStatement ;
-    rdfs:label "owning the social media account in question, however, he denied viewing or possessing the files of CSAM" ;
-    dcterms:source <https://www.hernandosheriff.org/Applications/PressReleases/PressReleases/20241017_Possession_of_Child_Pornography_Arrest_%E2%80%93_Andor_Storz_%E2%80%93_2024-00243929.pdf> ;
-    ns1:admissionContext "esponded to Storz’s residence at 12543 Little Farms Drive in Spring Hill to speak to him. During the interview, Storz’s admitted to ownin..." ;
+    rdfs:label "the allegations when interviewed by deputies" ;
+    dcterms:source <https://weartv.com/news/local/pensacola-man-faces-50-counts-on-child-porn-animal-sexual-activity-charges> ;
+    ns1:admissionContext "he report states Black also uploaded a photo of a child family member to a message group. According to the report, Black admitted to the..." ;
     ns1:admissionFrame "admitted_to" ;
-    ns1:admissionTheme "harm_conduct",
-        "minimization",
-        "tech_use" ;
+    ns1:admissionTheme "other" ;
     ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_144/role/offender/1> ;
     ns1:evidenceTier "press_release_stated" ;
     ns1:quoteType "paraphrase" ;
-    uco-core:description "owning the social media account in question, however, he denied viewing or possessing the files of CSAM" .
+    uco-core:description "the allegations when interviewed by deputies" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_144/phase/arrested> a cacontology:InitialPhase,
+        cac-core:Phase ;
+    cacontology:hasPhaseBeginPoint "2024-09-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/escambia-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/fla> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/pensacola> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_144/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
-    cacontology:producesArtifact <https://caselinker.up.railway.app/resource/case/ncmec_2024_144/admission/1> ;
-    cacontology:severityLevel 3 ;
-    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/social-media> ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2024_144/facet/possession> .
 

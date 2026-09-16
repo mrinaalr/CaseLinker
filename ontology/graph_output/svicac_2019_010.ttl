@@ -6,19 +6,24 @@
 @prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2019_010> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:14:23.894742" ;
+    dcterms:created "2026-09-15T20:29:58.190558" ;
     dcterms:identifier "svicac_2019_010" ;
-    dcterms:modified "2026-09-10T20:14:23.894742" ;
+    dcterms:modified "2026-09-15T20:29:58.190558" ;
     dcterms:source <https://www.nbcbayarea.com/news/local/Man-Arrested-at-SFO-Charged-With-Child-Porn-Possession-509153121.html>,
         "SVICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/san-francisco>,
+        <https://caselinker.up.railway.app/resource/location/san-mateo-county>,
+        <https://caselinker.up.railway.app/resource/location/seattle> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/svicac_2019_010/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/svicac_2019_010/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/svicac_2019_010/event/distribution>,
@@ -26,7 +31,10 @@
         <https://caselinker.up.railway.app/resource/case/svicac_2019_010/event/possession>,
         <https://caselinker.up.railway.app/resource/case/svicac_2019_010/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/san-francisco>,
+        <https://caselinker.up.railway.app/resource/location/san-mateo-county>,
+        <https://caselinker.up.railway.app/resource/location/seattle> .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2019_010/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -73,11 +81,24 @@
 
 <https://caselinker.up.railway.app/resource/case/svicac_2019_010/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$100,000" .
+    rdfs:label "[\"$100,000\"]" .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2019_010/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2019-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/san-francisco> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "San Francisco" ;
+    uco-core:name "San Francisco" .
+
+<https://caselinker.up.railway.app/resource/location/san-mateo-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "San Mateo County" ;
+    uco-core:name "San Mateo County" .
+
+<https://caselinker.up.railway.app/resource/location/seattle> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2019_010/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

@@ -7,19 +7,25 @@
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2014_006> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:03:15.645923" ;
+    dcterms:created "2026-09-15T20:10:06.675729" ;
     dcterms:identifier "ohio_ag_2014_006" ;
-    dcterms:modified "2026-09-10T20:03:15.645923" ;
+    dcterms:modified "2026-09-15T20:10:06.675729" ;
     dcterms:source <https://www.ohioattorneygeneral.gov/Media/News-Releases/July-2014/Attorney-General-DeWine-and-Buckeye-State-Sheriffs>,
         "OHIO AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/columbus>,
+        <https://caselinker.up.railway.app/resource/location/knox-county>,
+        <https://caselinker.up.railway.app/resource/location/ohio>,
+        <https://caselinker.up.railway.app/resource/location/ohios> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ohio_ag_2014_006/event/csam>,
         <https://caselinker.up.railway.app/resource/case/ohio_ag_2014_006/event/trafficking>,
         <https://caselinker.up.railway.app/resource/case/ohio_ag_2014_006/legal-proceeding>,
@@ -27,7 +33,11 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/attorney-generals-bureau-of-criminal-investigation>,
         <https://caselinker.up.railway.app/resource/agency/attorney-generals-office>,
         <https://caselinker.up.railway.app/resource/agency/ohio-attorney-generals-bci>,
-        <https://caselinker.up.railway.app/resource/agency/ohio-attorney-generals-office> .
+        <https://caselinker.up.railway.app/resource/agency/ohio-attorney-generals-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/columbus>,
+        <https://caselinker.up.railway.app/resource/location/knox-county>,
+        <https://caselinker.up.railway.app/resource/location/ohio>,
+        <https://caselinker.up.railway.app/resource/location/ohios> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2014_006/relationship/stranger> a cacontology-custodial:CustodialRelationship,
         cacontology-grooming:OnlinePredator ;
@@ -62,10 +72,10 @@
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2014_006/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Chad Swain Gallia County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ohio_ag_2014_006/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ohio_ag_2014_006/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2014-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2014-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ohio_ag_2014_006/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2014_006/operation> a cac-core:Event,
         cacontology-taskforce:TaskForceOperation .
@@ -87,8 +97,28 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ohio_ag_2014_006/event/csam> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ohio_ag_2014_006/person/victim/1> .
 
+<https://caselinker.up.railway.app/resource/case/ohio_ag_2014_006/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/platform/social-media> a cacontology-platforms:SocialMediaPlatform ;
     rdfs:label "social media" .
+
+<https://caselinker.up.railway.app/resource/location/columbus> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/knox-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Knox County" ;
+    uco-core:name "Knox County" .
+
+<https://caselinker.up.railway.app/resource/location/ohio> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/ohios> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Ohio’s" ;
+    uco-core:name "Ohio’s" .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2014_006/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

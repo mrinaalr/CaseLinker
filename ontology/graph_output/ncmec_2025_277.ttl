@@ -10,16 +10,20 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_277> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:27:39.238147" ;
+    dcterms:created "2026-09-15T21:27:13.409882" ;
     dcterms:identifier "ncmec_2025_277" ;
-    dcterms:modified "2026-09-10T19:27:39.238147" ;
+    dcterms:modified "2026-09-15T21:27:13.409882" ;
     dcterms:source <https://www.postregister.com/news/crime_courts/idaho-falls-man-sentenced-to-16-years-for-child-porn/article_d7ebbf60-feae-11ef-85ed-1b662554840a.html>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/bonneville-county>,
+        <https://caselinker.up.railway.app/resource/location/idaho>,
+        <https://caselinker.up.railway.app/resource/location/idaho-falls> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_277/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_277/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_277/cybertip>,
@@ -32,7 +36,10 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/idaho-attorney-generals>,
         <https://caselinker.up.railway.app/resource/agency/idaho-falls-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/bonneville-county>,
+        <https://caselinker.up.railway.app/resource/location/idaho>,
+        <https://caselinker.up.railway.app/resource/location/idaho-falls> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_277/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -52,7 +59,9 @@
         cacontology-multi:StateAgency ;
     rdfs:label "Idaho Attorney General's" .
 
-<https://caselinker.up.railway.app/resource/agency/idaho-falls-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/idaho-falls-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Idaho Falls Police Department" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_277/charge/1> a cacontology-legal-outcomes:CriminalCharge,
         cacontology-legal-outcomes:StateCharge ;
@@ -83,9 +92,7 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_277/charge/2>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_277/charge/3> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2025-03-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_277/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2025_277/sentence/2>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2025_277/sentence/3> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_277/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_277/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -99,15 +106,7 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_277/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "16 YEARS" .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2025_277/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "30 years" .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2025_277/sentence/3> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "10 years" .
+    rdfs:label "[\"16 YEARS\", \"30 years\", \"10 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_277/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -120,6 +119,19 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_277/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2025-03-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/bonneville-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Bonneville County" ;
+    uco-core:name "Bonneville County" .
+
+<https://caselinker.up.railway.app/resource/location/idaho> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/idaho-falls> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Idaho Falls" ;
+    uco-core:name "Idaho Falls" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_277/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

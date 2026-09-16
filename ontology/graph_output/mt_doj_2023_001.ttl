@@ -9,6 +9,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -40,9 +41,7 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/mt_doj_2023_001/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/mt_doj_2023_001/sentence/2>,
-        <https://caselinker.up.railway.app/resource/case/mt_doj_2023_001/sentence/3> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/mt_doj_2023_001/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/mt_doj_2023_001/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -57,23 +56,16 @@
 
 <https://caselinker.up.railway.app/resource/case/mt_doj_2023_001/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "60 years" .
-
-<https://caselinker.up.railway.app/resource/case/mt_doj_2023_001/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "20 years" .
-
-<https://caselinker.up.railway.app/resource/case/mt_doj_2023_001/sentence/3> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "40 years" .
+    rdfs:label "[\"60 years\", \"20 years\", \"40 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/mt_doj_2023_001> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:55:03.455067" ;
+    dcterms:created "2026-09-15T19:59:52.350655" ;
     dcterms:identifier "mt_doj_2023_001" ;
-    dcterms:modified "2026-09-10T19:55:03.455067" ;
+    dcterms:modified "2026-09-15T19:59:52.350655" ;
     dcterms:source <https://dojmt.gov/forsyth-man-sentenced-in-rosebud-county-child-sexual-abuse-case/>,
         "MT DOJ" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/rosebud-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/mt_doj_2023_001/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/mt_doj_2023_001/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/mt_doj_2023_001/admission/1>,
@@ -82,7 +74,8 @@
         <https://caselinker.up.railway.app/resource/case/mt_doj_2023_001/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/mt_doj_2023_001/legal-step/sentenced> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/department-of-health-and-human-services>,
-        <https://caselinker.up.railway.app/resource/agency/rosebud-county-sheriffs-office> .
+        <https://caselinker.up.railway.app/resource/agency/rosebud-county-sheriffs-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/rosebud-county> .
 
 <https://caselinker.up.railway.app/resource/case/mt_doj_2023_001/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
@@ -93,6 +86,11 @@
     cacontology:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/mt_doj_2023_001/event/hands-on> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/mt_doj_2023_001/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/location/rosebud-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Rosebud County" ;
+    uco-core:name "Rosebud County" .
 
 <https://caselinker.up.railway.app/resource/case/mt_doj_2023_001/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "sexually assaulting a minor girl multiple times between 2015 and 2021, Attorney General Austin Knudsen announced today" ;

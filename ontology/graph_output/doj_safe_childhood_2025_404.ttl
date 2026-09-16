@@ -10,6 +10,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -28,8 +29,6 @@
 
 <https://caselinker.up.railway.app/resource/agency/doj> a cacontology-multi:FederalAgency .
 
-<https://caselinker.up.railway.app/resource/agency/fbi> a cacontology-multi:FederalAgency .
-
 <https://caselinker.up.railway.app/resource/agency/hsi> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
@@ -42,11 +41,14 @@
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_404> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T21:22:34.484724" ;
+    dcterms:created "2026-09-15T22:12:27.057939" ;
     dcterms:identifier "doj_safe_childhood_2025_404" ;
-    dcterms:modified "2026-09-14T21:22:34.484724" ;
+    dcterms:modified "2026-09-15T22:12:27.057939" ;
     dcterms:source <https://www.justice.gov/usao-ks/pr/wichita-man-pleads-guilty-child-pornography-distribution>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/kan>,
+        <https://caselinker.up.railway.app/resource/location/kansas>,
+        <https://caselinker.up.railway.app/resource/location/wichita> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_404/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_404/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_404/admission/1>,
@@ -58,12 +60,14 @@
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ceos>,
         <https://caselinker.up.railway.app/resource/agency/doj>,
-        <https://caselinker.up.railway.app/resource/agency/fbi>,
         <https://caselinker.up.railway.app/resource/agency/hsi>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/usao>,
         <https://caselinker.up.railway.app/resource/agency/usms>,
-        <https://caselinker.up.railway.app/resource/agency/wichita-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/wichita-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/kan>,
+        <https://caselinker.up.railway.app/resource/location/kansas>,
+        <https://caselinker.up.railway.app/resource/location/wichita> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_404/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -110,11 +114,20 @@
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_404/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "20 years" .
+    rdfs:label "[\"20 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_404/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/kan> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/kansas> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/wichita> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_404/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "creating an account on a messaging app and using it to distribute child sex abuse materials in November 2023" ;

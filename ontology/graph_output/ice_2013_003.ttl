@@ -9,29 +9,36 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ice_2013_003> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:45:32.971969" ;
+    dcterms:created "2026-09-15T19:35:19.124232" ;
     dcterms:identifier "ice_2013_003" ;
-    dcterms:modified "2026-09-10T19:45:32.971969" ;
+    dcterms:modified "2026-09-15T19:35:19.124232" ;
     dcterms:source <https://www.ice.gov/news/releases/las-vegas-man-sentenced-14-years-federal-child-pornography-charges>,
         "ICE" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/las-vegas>,
+        <https://caselinker.up.railway.app/resource/location/nevada> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ice_2013_003/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ice_2013_003/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ice_2013_003/event/distribution>,
         <https://caselinker.up.railway.app/resource/case/ice_2013_003/event/multi-jurisdiction>,
         <https://caselinker.up.railway.app/resource/case/ice_2013_003/event/online-only>,
         <https://caselinker.up.railway.app/resource/case/ice_2013_003/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/ice_2013_003/event/project-safe-childhood>,
         <https://caselinker.up.railway.app/resource/case/ice_2013_003/event/trafficking>,
         <https://caselinker.up.railway.app/resource/case/ice_2013_003/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/ice_2013_003/legal-step/sentenced>,
         <https://caselinker.up.railway.app/resource/case/ice_2013_003/offense-event/charge-4>,
         <https://caselinker.up.railway.app/resource/case/ice_2013_003/operation> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/hsi>,
-        <https://caselinker.up.railway.app/resource/agency/ice> .
+        <https://caselinker.up.railway.app/resource/agency/ice>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/las-vegas>,
+        <https://caselinker.up.railway.app/resource/location/nevada> .
 
 <https://caselinker.up.railway.app/resource/case/ice_2013_003/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -52,6 +59,8 @@
 <https://caselinker.up.railway.app/resource/agency/hsi> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/agency/ice> a cacontology-multi:FederalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/ice_2013_003/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -78,6 +87,9 @@
         cacontology-multi:MultiJurisdictionalInvestigation ;
     cacontology-multi:crossesBorders true .
 
+<https://caselinker.up.railway.app/resource/case/ice_2013_003/event/project-safe-childhood> a cac-core:Event,
+        cacontology-multi:ProjectSafeChildhoodOperation .
+
 <https://caselinker.up.railway.app/resource/case/ice_2013_003/event/trafficking> a cac-core:Event,
         cacontology-legal-outcomes:SexTrafficking .
 
@@ -91,8 +103,7 @@
         <https://caselinker.up.railway.app/resource/case/ice_2013_003/charge/3>,
         <https://caselinker.up.railway.app/resource/case/ice_2013_003/charge/4> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ice_2013_003/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/ice_2013_003/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ice_2013_003/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ice_2013_003/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -108,16 +119,22 @@
 <https://caselinker.up.railway.app/resource/case/ice_2013_003/person/victim/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ice_2013_003/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "14 years" .
-
-<https://caselinker.up.railway.app/resource/case/ice_2013_003/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "supervised release" .
+    rdfs:label "[\"14 years\", \"supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/case/ice_2013_003/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/las-vegas> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Las Vegas" ;
+    uco-core:name "Las Vegas" .
+
+<https://caselinker.up.railway.app/resource/location/nevada> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Nevada" ;
+    uco-core:name "Nevada" .
 
 <https://caselinker.up.railway.app/resource/case/ice_2013_003/event/online-only> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event .

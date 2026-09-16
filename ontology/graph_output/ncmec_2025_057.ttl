@@ -3,26 +3,32 @@
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_057> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:25:42.861945" ;
+    dcterms:created "2026-09-15T21:27:13.204232" ;
     dcterms:identifier "ncmec_2025_057" ;
-    dcterms:modified "2026-09-10T19:25:42.861945" ;
+    dcterms:modified "2026-09-15T21:27:13.204232" ;
     dcterms:source <https://arkansasradio.com/2025/04/arkansas-man-charged-with-13-counts-of-child-pornography-in-horrific-case-development/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/arkansas>,
+        <https://caselinker.up.railway.app/resource/location/pulaski-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_057/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_057/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_057/event/distribution>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_057/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_057/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/little-rock-police-department> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/little-rock-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/arkansas>,
+        <https://caselinker.up.railway.app/resource/location/pulaski-county> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_057/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -36,7 +42,9 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2025_057/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_057/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/little-rock-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/little-rock-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Little Rock Police Department" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_057/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -52,15 +60,26 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_057/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-04-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-04-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_057/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_057/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_057/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_057/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_057/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-04-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/arkansas> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/pulaski-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_057/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

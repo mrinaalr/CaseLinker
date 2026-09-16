@@ -13,6 +13,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -42,7 +43,9 @@
 
 <https://caselinker.up.railway.app/resource/agency/doj> a cacontology-multi:FederalAgency .
 
-<https://caselinker.up.railway.app/resource/agency/eagle-pass-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/eagle-pass-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Eagle Pass Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/hsi> a cacontology-multi:FederalAgency .
 
@@ -96,7 +99,7 @@
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_158/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "30 Years" .
+    rdfs:label "[\"30 Years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_158/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -118,16 +121,26 @@
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
+<https://caselinker.up.railway.app/resource/location/del-rio> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Del Rio" ;
+    uco-core:name "Del Rio" .
+
+<https://caselinker.up.railway.app/resource/location/texas> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
 <https://caselinker.up.railway.app/resource/platform/snapchat> a cacontology-platforms:MessagingService ;
     rdfs:label "Snapchat" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_158> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T21:22:16.231639" ;
+    dcterms:created "2026-09-15T22:12:25.952342" ;
     dcterms:identifier "doj_safe_childhood_2026_158" ;
-    dcterms:modified "2026-09-14T21:22:16.231639" ;
+    dcterms:modified "2026-09-15T22:12:25.952342" ;
     dcterms:source <https://www.justice.gov/usao-wdtx/pr/eagle-pass-man-sentenced-30-years-federal-prison-production-child-pornography>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/del-rio>,
+        <https://caselinker.up.railway.app/resource/location/texas> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_158/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_158/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_158/admission/1>,
@@ -147,7 +160,9 @@
         <https://caselinker.up.railway.app/resource/agency/hsi>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/usao> .
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/del-rio>,
+        <https://caselinker.up.railway.app/resource/location/texas> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_158/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

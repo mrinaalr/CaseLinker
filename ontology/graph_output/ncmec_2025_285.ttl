@@ -11,6 +11,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -27,15 +28,19 @@
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
-<https://caselinker.up.railway.app/resource/agency/rexburg-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/rexburg-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Rexburg Police Department" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_285> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:27:44.182273" ;
+    dcterms:created "2026-09-15T21:27:13.418107" ;
     dcterms:identifier "ncmec_2025_285" ;
-    dcterms:modified "2026-09-10T19:27:44.182273" ;
+    dcterms:modified "2026-09-15T21:27:13.418107" ;
     dcterms:source <https://www.eastidahonews.com/2025/06/local-man-charged-after-allegedly-downloading-and-sharing-pornographic-images-of-children/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/east-idaho>,
+        <https://caselinker.up.railway.app/resource/location/rexburg> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_285/phase/convicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_285/phase/convicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_285/admission/1>,
@@ -46,7 +51,9 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_285/operation> ;
     cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/ncmec_2025_285/tech/cybertipline> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/rexburg-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/rexburg-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/east-idaho>,
+        <https://caselinker.up.railway.app/resource/location/rexburg> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_285/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -86,7 +93,7 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_285/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "40 years" .
+    rdfs:label "[\"40 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_285/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -98,10 +105,18 @@
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2025-06-01T00:00:00Z"^^xsd:dateTimeStamp .
 
+<https://caselinker.up.railway.app/resource/location/east-idaho> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/rexburg> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Rexburg" ;
+    uco-core:name "Rexburg" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_285/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "downloading and sharing the explicit content with other users on Kik" ;
     dcterms:source <https://www.eastidahonews.com/2025/06/local-man-charged-after-allegedly-downloading-and-sharing-pornographic-images-of-children/> ;
-    ns1:admissionContext "various sexual acts. Johansson was taken in and interviewed at the police department. The document states that after reading the man’s Mi..." ;
+    ns1:admissionContext "arious sexual acts. Johansson was taken in and interviewed at the police department. The document states that after reading the man’s Mir..." ;
     ns1:admissionFrame "admitted_to" ;
     ns1:admissionTheme "tech_use" ;
     ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_285/role/offender/1> ;

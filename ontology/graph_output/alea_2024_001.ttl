@@ -5,18 +5,28 @@
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/alea_2024_001> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:26:11.632920" ;
+    dcterms:created "2026-09-15T19:23:52.947419" ;
     dcterms:identifier "alea_2024_001" ;
-    dcterms:modified "2026-09-10T20:26:11.632920" ;
+    dcterms:modified "2026-09-15T19:23:52.947419" ;
     dcterms:source <https://www.alea.gov/news/alea-three-missing-children-virginia-safely-located-alabama>,
         "ALEA" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/alabama>,
+        <https://caselinker.up.railway.app/resource/location/evergreen>,
+        <https://caselinker.up.railway.app/resource/location/fishersville>,
+        <https://caselinker.up.railway.app/resource/location/jefferson-county>,
+        <https://caselinker.up.railway.app/resource/location/tennessee>,
+        <https://caselinker.up.railway.app/resource/location/virgina>,
+        <https://caselinker.up.railway.app/resource/location/virginia-safely-located> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/alea_2024_001/phase/booked> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/alea_2024_001/phase/booked> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/alea_2024_001/event/multi-jurisdiction>,
@@ -24,14 +34,16 @@
         <https://caselinker.up.railway.app/resource/case/alea_2024_001/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/aleas-state-bureau-of-investigation>,
-        <https://caselinker.up.railway.app/resource/agency/pickens-county-district-attorneys-office>,
-        <https://caselinker.up.railway.app/resource/agency/virginia-state-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/virginia-state-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/alabama>,
+        <https://caselinker.up.railway.app/resource/location/evergreen>,
+        <https://caselinker.up.railway.app/resource/location/fishersville>,
+        <https://caselinker.up.railway.app/resource/location/jefferson-county>,
+        <https://caselinker.up.railway.app/resource/location/tennessee>,
+        <https://caselinker.up.railway.app/resource/location/virgina>,
+        <https://caselinker.up.railway.app/resource/location/virginia-safely-located> .
 
 <https://caselinker.up.railway.app/resource/agency/aleas-state-bureau-of-investigation> a cacontology-multi:StateAgency .
-
-<https://caselinker.up.railway.app/resource/agency/pickens-county-district-attorneys-office> a cac-core:OrganizationLikeEntity,
-        cacontology-multi:StateAgency ;
-    rdfs:label "Pickens County District Attorney's Office" .
 
 <https://caselinker.up.railway.app/resource/agency/virginia-state-police-department> a cac-core:OrganizationLikeEntity,
         cacontology-multi:StateAgency ;
@@ -47,8 +59,8 @@
 <https://caselinker.up.railway.app/resource/case/alea_2024_001/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Jefferson County Jail" ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/alea_2024_001/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/alea_2024_001/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 35 .
@@ -71,7 +83,42 @@
     cacontology:hasRoleBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/alea_2024_001/person/victim/1> .
 
+<https://caselinker.up.railway.app/resource/case/alea_2024_001/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/alea_2024_001/phase/booked> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/alabama> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/evergreen> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Evergreen" ;
+    uco-core:name "Evergreen" .
+
+<https://caselinker.up.railway.app/resource/location/fishersville> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Fishersville" ;
+    uco-core:name "Fishersville" .
+
+<https://caselinker.up.railway.app/resource/location/jefferson-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/tennessee> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Tennessee" ;
+    uco-core:name "Tennessee" .
+
+<https://caselinker.up.railway.app/resource/location/virgina> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Virgina" ;
+    uco-core:name "Virgina" .
+
+<https://caselinker.up.railway.app/resource/location/virginia-safely-located> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Virginia Safely Located" ;
+    uco-core:name "Virginia Safely Located" .
 

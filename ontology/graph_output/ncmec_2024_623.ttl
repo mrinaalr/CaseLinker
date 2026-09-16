@@ -1,93 +1,106 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
-@prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
+@prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
+@prefix cacontology-undercover: <https://cacontology.projectvic.org/undercover#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_623/admission/1/extraction-confidence> a cac-core:AssessmentResult ;
+    cac-core:assesses <https://caselinker.up.railway.app/resource/case/ncmec_2024_623/admission/1> ;
+    cac-core:generatedBy <https://caselinker.up.railway.app/resource/case/ncmec_2024_623> ;
+    cac-core:hasConfidence 0.65 .
+
+<https://caselinker.up.railway.app/resource/agency/department-of-family-services> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Department of Family Services" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_623> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:19:30.633465" ;
+    dcterms:created "2026-09-15T21:08:10.709708" ;
     dcterms:identifier "ncmec_2024_623" ;
-    dcterms:modified "2026-09-10T19:19:30.633465" ;
-    dcterms:source <https://stlouiscountypolice.com/department-news/press-releases/charges-issued-for-possession-of-child-pornography/>,
+    dcterms:modified "2026-09-15T21:08:10.709708" ;
+    dcterms:source <https://www.wcax.com/2024/12/23/dad-charged-after-2-month-old-brought-hospital-with-over-14-fractures-police-say/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/missouri>,
+        <https://caselinker.up.railway.app/resource/location/mo> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_623/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_623/phase/charged> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_623/cybertip>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_623/event/distribution>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_623/event/online-only>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_623/event/possession>,
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_623/admission/1>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_623/event/multi-jurisdiction>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_623/event/trust-violation>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_623/legal-proceeding> ;
-    cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/st-louis-county-police-department> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/department-of-family-services> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/missouri>,
+        <https://caselinker.up.railway.app/resource/location/mo> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_623/role/offender/1> a cacontology:OffenderRole,
-        uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2024-12-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_623/event/online-only>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_623/event/possession> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_623/person/offender/1> .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_623/event/multi-jurisdiction> a cac-core:Event,
+        cacontology-multi:MultiJurisdictionalInvestigation ;
+    cacontology:severityLevel 3 .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_623/role/victim/1> a cacontology:VictimRole,
-        uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2024-12-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_623/event/online-only>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_623/event/possession> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_623/person/victim/1> .
-
-<https://caselinker.up.railway.app/resource/agency/st-louis-county-police-department> a cacontology-multi:LocalAgency .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_623/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
-        cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "possession of child pornography" ;
-    cacontology-legal-outcomes:indictmentCounts 2 .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_623/cybertip> a cacontology-us-ncmec:NCMECCybertipReport ;
-    cacontology-us-ncmec:supportedBy <https://caselinker.up.railway.app/resource/agency/ncmec> .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_623/event/distribution> a cac-core:Event,
-        cacontology-legal-outcomes:CSAM_Distribution .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_623/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_623/event/trust-violation> a cacontology-custodial:CustodialAbuse,
+        cacontology-custodial:TrustViolation ;
+    cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/ncmec_2024_623/relationship/mother> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_623/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2024_623/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-12-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-12-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2024_623/sentence/1> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_623/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_623/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 20 .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_623/person/victim/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_623/person/victim/1> a uco-identity:Person ;
+    cacontology-production:victimAge 2 .
 
-<https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_623/relationship/mother> a cacontology-custodial:CustodialRelationship,
+        cacontology-custodial:FamilialRelationship ;
+    cacontology-custodial:involvesChild <https://caselinker.up.railway.app/resource/case/ncmec_2024_623/role/victim/1> ;
+    cacontology-custodial:involvesCustodian <https://caselinker.up.railway.app/resource/case/ncmec_2024_623/role/offender/1> ;
+    cacontology-custodial:relationshipType "mother" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_623/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2024-12-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_623/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_623/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:MonetaryPenalty ;
+    rdfs:label "[\"$50,000\"]" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_623/admission/1> a cacontology-undercover:IncriminatingStatement ;
+    rdfs:label "dropped the baby after tripping" ;
+    dcterms:source <https://www.wcax.com/2024/12/23/dad-charged-after-2-month-old-brought-hospital-with-over-14-fractures-police-say/> ;
+    ns1:admissionContext "res. Some of the fractures were at different stages of healing, “signs of classic abuse.” Leonard initially said he dropped the baby afte..." ;
+    ns1:admissionFrame "said_paraphrase" ;
+    ns1:admissionTheme "other" ;
+    ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_623/role/offender/1> ;
+    ns1:evidenceTier "press_release_stated" ;
+    ns1:quoteType "paraphrase" ;
+    uco-core:description "dropped the baby after tripping" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_623/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2024-12-01T00:00:00Z"^^xsd:dateTimeStamp .
 
-<https://caselinker.up.railway.app/resource/platform/chat> a cacontology-platforms:AnonymousChatPlatform ;
-    rdfs:label "chat" .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_623/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2024-12-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_623/person/offender/1> .
 
-<https://caselinker.up.railway.app/resource/platform/kik> a cacontology-platforms:MessagingService ;
-    rdfs:label "Kik" .
+<https://caselinker.up.railway.app/resource/location/missouri> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_623/event/online-only> a cacontology:ChildSexualAbuseEvent,
-        cac-core:Event ;
-    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/chat>,
-        <https://caselinker.up.railway.app/resource/platform/kik> .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_623/event/possession> a cacontology:CSAMIncident,
-        cac-core:Event ;
-    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/chat>,
-        <https://caselinker.up.railway.app/resource/platform/kik> ;
-    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2024_623/facet/possession> .
+<https://caselinker.up.railway.app/resource/location/mo> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 

@@ -9,16 +9,22 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2013_140> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T22:32:48.147460" ;
+    dcterms:created "2026-09-15T21:47:04.132481" ;
     dcterms:identifier "doj_ceos_2013_140" ;
-    dcterms:modified "2026-09-14T22:32:48.147460" ;
+    dcterms:modified "2026-09-15T21:47:04.132481" ;
     dcterms:source <https://www.justice.gov/usao-ma/pr/leicester-man-sentenced-24-years-producing-child-pornography>,
         "DOJ CEOS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/boston>,
+        <https://caselinker.up.railway.app/resource/location/florida>,
+        <https://caselinker.up.railway.app/resource/location/hampden-county>,
+        <https://caselinker.up.railway.app/resource/location/leicester>,
+        <https://caselinker.up.railway.app/resource/location/united-states> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_ceos_2013_140/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_ceos_2013_140/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_ceos_2013_140/event/distribution>,
@@ -27,7 +33,12 @@
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2013_140/event/trust-violation>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2013_140/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2013_140/legal-step/sentenced> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/massachusetts-state-police-department> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/massachusetts-state-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/boston>,
+        <https://caselinker.up.railway.app/resource/location/florida>,
+        <https://caselinker.up.railway.app/resource/location/hampden-county>,
+        <https://caselinker.up.railway.app/resource/location/leicester>,
+        <https://caselinker.up.railway.app/resource/location/united-states> .
 
 <https://caselinker.up.railway.app/resource/agency/massachusetts-state-police-department> a cacontology-multi:StateAgency .
 
@@ -70,10 +81,7 @@
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2013_140/charge/3>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2013_140/charge/4> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_ceos_2013_140/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_ceos_2013_140/sentence/2>,
-        <https://caselinker.up.railway.app/resource/case/doj_ceos_2013_140/sentence/3>,
-        <https://caselinker.up.railway.app/resource/case/doj_ceos_2013_140/sentence/4> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_ceos_2013_140/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2013_140/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -105,24 +113,31 @@
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_ceos_2013_140/person/victim/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2013_140/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "24 Years" .
-
-<https://caselinker.up.railway.app/resource/case/doj_ceos_2013_140/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "10 years of supervised release" .
-
-<https://caselinker.up.railway.app/resource/case/doj_ceos_2013_140/sentence/3> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MandatoryMinimumSentencing ;
-    rdfs:label "mandatory minimum sentence" .
-
-<https://caselinker.up.railway.app/resource/case/doj_ceos_2013_140/sentence/4> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:LifeImprisonmentSentence ;
-    rdfs:label "life in prison" .
+    rdfs:label "[\"24 Years\", \"10 years of supervised release\", \"mandatory minimum sentence\", \"life in prison\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2013_140/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/boston> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/florida> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/hampden-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Hampden County" ;
+    uco-core:name "Hampden County" .
+
+<https://caselinker.up.railway.app/resource/location/leicester> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Leicester" ;
+    uco-core:name "Leicester" .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2013_140/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

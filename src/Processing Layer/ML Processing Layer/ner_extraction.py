@@ -706,13 +706,23 @@ class NERExtractor:
         return "none"
 
 
+_primary_ner_extractor: Optional["NERExtractor"] = None
+_primary_ner_extractor_probed: bool = False
+
+
 def create_primary_ner_extractor() -> Optional["NERExtractor"]:
     """
     Ingest-time NER: Stanza first, Hugging Face transformers only if Stanza unavailable.
 
+    Cached for the process lifetime so multi-group ingest does not reload Stanza.
+
     Returns:
         Configured ``NERExtractor``, or ``None`` if no backend loads.
     """
+    global _primary_ner_extractor, _primary_ner_extractor_probed
+    if _primary_ner_extractor_probed:
+        return _primary_ner_extractor
+
     stanza_ext: Optional[NERExtractor] = None
     transformers_ext: Optional[NERExtractor] = None
 
@@ -752,7 +762,9 @@ def create_primary_ner_extractor() -> Optional["NERExtractor"]:
         stanza_ext = None
 
     if stanza_ext is not None and stanza_ext.is_available():
-        return stanza_ext
+        _primary_ner_extractor = stanza_ext
+        _primary_ner_extractor_probed = True
+        return _primary_ner_extractor
 
     # Fallback to transformers (only if stanza isn't available)
     try:
@@ -764,7 +776,11 @@ def create_primary_ner_extractor() -> Optional["NERExtractor"]:
                 "Location NER fragmentation may increase; please verify.",
                 file=_sys.stderr,
             )
-            return transformers_ext
+            _primary_ner_extractor = transformers_ext
+            _primary_ner_extractor_probed = True
+            return _primary_ner_extractor
     except Exception:
         pass
+    _primary_ner_extractor = None
+    _primary_ner_extractor_probed = True
     return None

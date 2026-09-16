@@ -7,17 +7,21 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2020_010> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:24:35.196921" ;
+    dcterms:created "2026-09-15T20:39:17.497174" ;
     dcterms:identifier "vt_ag_2020_010" ;
-    dcterms:modified "2026-09-10T20:24:35.196921" ;
+    dcterms:modified "2026-09-15T20:39:17.497174" ;
     dcterms:source <https://ago.vermont.gov/blog/2020/03/13/lowell-man-sentenced-luring-child>,
         "VT AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/lowell>,
+        <https://caselinker.up.railway.app/resource/location/vermont> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/vt_ag_2020_010/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/vt_ag_2020_010/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/vt_ag_2020_010/legal-proceeding>,
@@ -29,8 +33,11 @@
         <https://caselinker.up.railway.app/resource/agency/hsi>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/this-task-force>,
+        <https://caselinker.up.railway.app/resource/agency/usao>,
         <https://caselinker.up.railway.app/resource/agency/vermont-attorney-generals-office>,
-        <https://caselinker.up.railway.app/resource/agency/vermont-state-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/vermont-state-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/lowell>,
+        <https://caselinker.up.railway.app/resource/location/vermont> .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2020_010/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -46,13 +53,17 @@
 
 <https://caselinker.up.railway.app/resource/agency/burlington-police-department> a cacontology-multi:LocalAgency .
 
-<https://caselinker.up.railway.app/resource/agency/colchester-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/colchester-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Colchester Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/hsi> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
 <https://caselinker.up.railway.app/resource/agency/this-task-force> a cacontology-multi:LocalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/agency/vermont-attorney-generals-office> a cacontology-multi:StateAgency .
 
@@ -67,9 +78,7 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/vt_ag_2020_010/charge/1> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2020-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/vt_ag_2020_010/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/vt_ag_2020_010/sentence/2>,
-        <https://caselinker.up.railway.app/resource/case/vt_ag_2020_010/sentence/3> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/vt_ag_2020_010/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2020_010/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -86,18 +95,18 @@
     cacontology-production:victimAge 14 .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2020_010/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "5 years" .
-
-<https://caselinker.up.railway.app/resource/case/vt_ag_2020_010/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:ProbationSentence ;
-    rdfs:label "probation" .
-
-<https://caselinker.up.railway.app/resource/case/vt_ag_2020_010/sentence/3> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "10 years" .
+    rdfs:label "[\"5 years\", \"probation\", \"10 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2020_010/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2020-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/lowell> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Lowell" ;
+    uco-core:name "Lowell" .
+
+<https://caselinker.up.railway.app/resource/location/vermont> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 

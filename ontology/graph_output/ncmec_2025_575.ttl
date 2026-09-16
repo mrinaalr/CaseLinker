@@ -1,35 +1,76 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
-@prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
+@prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_575> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:30:18.075045" ;
+    dcterms:created "2026-09-15T21:27:13.671642" ;
     dcterms:identifier "ncmec_2025_575" ;
-    dcterms:modified "2026-09-10T19:30:18.075045" ;
-    dcterms:source <https://wgme.com/news/local/former-high-school-hockey-coach-arrested-on-child-porn-charges-in-new-hampshire>,
+    dcterms:modified "2026-09-15T21:27:13.671642" ;
+    dcterms:source <https://www.msn.com/en-us/news/crime/concord-teen-charged-with-sexual-abuse-images-was-investigated-in-2022/ar-AA1DDKOv?apiversion=v2&noservercache=1&domshim=1&renderwebcomponents=1&wcseo=1&batchservertelemetry=1&noservertelemetry=1>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/broadway>,
+        <https://caselinker.up.railway.app/resource/location/concord>,
+        <https://caselinker.up.railway.app/resource/location/concord-new-hampshire>,
+        <https://caselinker.up.railway.app/resource/location/henrietta>,
+        <https://caselinker.up.railway.app/resource/location/new-york>,
+        <https://caselinker.up.railway.app/resource/location/the-south-end> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_575/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_575/phase/charged> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_575/event/hands-on>,
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_575/cybertip>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2025_575/event/distribution>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2025_575/event/multi-jurisdiction>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_575/event/possession>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2025_575/event/trust-violation>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2025_575/legal-proceeding> .
+        <https://caselinker.up.railway.app/resource/case/ncmec_2025_575/legal-proceeding> ;
+    cacontology:investigationStatus "unknown" ;
+    cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/ncmec_2025_575/tech/cybertipline> ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/broadway>,
+        <https://caselinker.up.railway.app/resource/location/concord>,
+        <https://caselinker.up.railway.app/resource/location/concord-new-hampshire>,
+        <https://caselinker.up.railway.app/resource/location/henrietta>,
+        <https://caselinker.up.railway.app/resource/location/new-york>,
+        <https://caselinker.up.railway.app/resource/location/the-south-end> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_575/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2025_575/event/possession> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_575/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_575/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2025_575/event/possession> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_575/person/victim/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_575/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "child porn" .
+    rdfs:label "child pornography" ;
+    cacontology-legal-outcomes:indictmentCounts 2 .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2025_575/event/trust-violation> a cacontology-custodial:AuthorityAbuse,
-        cacontology-custodial:TrustViolation ;
-    cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/ncmec_2025_575/relationship/coach> .
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_575/cybertip> a cacontology-us-ncmec:NCMECCybertipReport ;
+    cacontology-us-ncmec:supportedBy <https://caselinker.up.railway.app/resource/agency/ncmec> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_575/event/distribution> a cac-core:Event,
+        cacontology-legal-outcomes:CSAM_Distribution ;
+    cacontology:severityLevel 3 .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_575/event/multi-jurisdiction> a cac-core:Event,
+        cacontology-multi:MultiJurisdictionalInvestigation ;
+    cacontology:severityLevel 3 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_575/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
@@ -37,42 +78,61 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_575/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-03-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_575/sentence/1> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2025_575/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_575/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 19 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_575/person/victim/1> a uco-identity:Person .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2025_575/relationship/coach> a cacontology-custodial:Coach,
-        cacontology-custodial:CustodialRelationship ;
-    cacontology-custodial:involvesChild <https://caselinker.up.railway.app/resource/case/ncmec_2025_575/role/victim/1> ;
-    cacontology-custodial:involvesCustodian <https://caselinker.up.railway.app/resource/case/ncmec_2025_575/role/offender/1> ;
-    cacontology-custodial:relationshipType "coach" .
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_575/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2025_575/role/offender/1> a cacontology:OffenderRole,
-        uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2025-03-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2025_575/event/hands-on>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2025_575/event/possession> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_575/person/offender/1> .
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_575/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
+    rdfs:label "CyberTipline" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2025_575/role/victim/1> a cacontology:VictimRole,
-        uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2025-03-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2025_575/event/hands-on>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2025_575/event/possession> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_575/person/victim/1> .
+<https://caselinker.up.railway.app/resource/platform/kik> a cacontology-platforms:MessagingService ;
+    rdfs:label "Kik" .
+
+<https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_575/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
-    cacontology:hasPhaseBeginPoint "2025-03-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2025_575/event/hands-on> a cacontology:ChildSexualAbuseEvent,
-        cac-core:Event ;
-    cacontology:severityLevel 3 .
+<https://caselinker.up.railway.app/resource/location/broadway> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Broadway" ;
+    uco-core:name "Broadway" .
+
+<https://caselinker.up.railway.app/resource/location/concord> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Concord" ;
+    uco-core:name "Concord" .
+
+<https://caselinker.up.railway.app/resource/location/concord-new-hampshire> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Concord, New Hampshire" ;
+    uco-core:name "Concord, New Hampshire" .
+
+<https://caselinker.up.railway.app/resource/location/henrietta> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Henrietta" ;
+    uco-core:name "Henrietta" .
+
+<https://caselinker.up.railway.app/resource/location/new-york> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/the-south-end> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "the South End" ;
+    uco-core:name "the South End" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_575/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
     cacontology:severityLevel 3 ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/kik> ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2025_575/facet/possession> .
 

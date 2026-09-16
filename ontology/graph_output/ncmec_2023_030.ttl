@@ -13,6 +13,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -28,7 +29,9 @@
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
-<https://caselinker.up.railway.app/resource/agency/pennsylvania-state-police-department> a cacontology-multi:StateAgency .
+<https://caselinker.up.railway.app/resource/agency/pennsylvania-state-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:StateAgency ;
+    rdfs:label "Pennsylvania State Police Department" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_030/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -56,7 +59,8 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_030/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-04-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-04-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_030/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_030/operation> a cac-core:Event,
         cacontology-taskforce:ReactiveOperation .
@@ -88,6 +92,10 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_030/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_030/person/victim/1> .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_030/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_030/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
 
@@ -95,11 +103,22 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_030> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:09:18.060737" ;
+    dcterms:created "2026-09-15T20:55:00.767417" ;
     dcterms:identifier "ncmec_2023_030" ;
-    dcterms:modified "2026-09-10T19:09:18.060737" ;
+    dcterms:modified "2026-09-15T20:55:00.767417" ;
     dcterms:source <https://www.timesleader.com/news/1606409/gymnastics-coach-charged-with-possessing-and-sharing-child-sexual-abuse-materials>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/annapolis>,
+        <https://caselinker.up.railway.app/resource/location/central-kentucky>,
+        <https://caselinker.up.railway.app/resource/location/fairmount-township>,
+        <https://caselinker.up.railway.app/resource/location/keller-road>,
+        <https://caselinker.up.railway.app/resource/location/lebanon-county>,
+        <https://caselinker.up.railway.app/resource/location/luzerne-county>,
+        <https://caselinker.up.railway.app/resource/location/maryland>,
+        <https://caselinker.up.railway.app/resource/location/neafie>,
+        <https://caselinker.up.railway.app/resource/location/palmyra>,
+        <https://caselinker.up.railway.app/resource/location/pennsylvania>,
+        <https://caselinker.up.railway.app/resource/location/west-hazleton> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_030/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_030/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_030/admission/1>,
@@ -115,7 +134,18 @@
     cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/ncmec_2023_030/tech/cybertipline> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/pennsylvania-state-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/pennsylvania-state-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/annapolis>,
+        <https://caselinker.up.railway.app/resource/location/central-kentucky>,
+        <https://caselinker.up.railway.app/resource/location/fairmount-township>,
+        <https://caselinker.up.railway.app/resource/location/keller-road>,
+        <https://caselinker.up.railway.app/resource/location/lebanon-county>,
+        <https://caselinker.up.railway.app/resource/location/luzerne-county>,
+        <https://caselinker.up.railway.app/resource/location/maryland>,
+        <https://caselinker.up.railway.app/resource/location/neafie>,
+        <https://caselinker.up.railway.app/resource/location/palmyra>,
+        <https://caselinker.up.railway.app/resource/location/pennsylvania>,
+        <https://caselinker.up.railway.app/resource/location/west-hazleton> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_030/admission/2> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "has been a gymnastics coach for 34, years focusing on children from 8 to 18-years old" ;
@@ -145,6 +175,53 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_030/event/conspiracy>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_030/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_030/person/offender/3> .
+
+<https://caselinker.up.railway.app/resource/location/annapolis> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Annapolis" ;
+    uco-core:name "Annapolis" .
+
+<https://caselinker.up.railway.app/resource/location/central-kentucky> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Central Kentucky" ;
+    uco-core:name "Central Kentucky" .
+
+<https://caselinker.up.railway.app/resource/location/fairmount-township> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Fairmount Township" ;
+    uco-core:name "Fairmount Township" .
+
+<https://caselinker.up.railway.app/resource/location/keller-road> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Keller Road" ;
+    uco-core:name "Keller Road" .
+
+<https://caselinker.up.railway.app/resource/location/lebanon-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Lebanon County" ;
+    uco-core:name "Lebanon County" .
+
+<https://caselinker.up.railway.app/resource/location/luzerne-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/maryland> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/neafie> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Neafie" ;
+    uco-core:name "Neafie" .
+
+<https://caselinker.up.railway.app/resource/location/palmyra> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Palmyra" ;
+    uco-core:name "Palmyra" .
+
+<https://caselinker.up.railway.app/resource/location/pennsylvania> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/west-hazleton> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_030/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "browses the internet for pornographic images, court records say" ;

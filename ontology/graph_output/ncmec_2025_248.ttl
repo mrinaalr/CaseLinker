@@ -10,6 +10,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -24,17 +25,21 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2025_248/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_248/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/glynn-county-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/glynn-county-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Glynn County Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_248> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:27:25.171438" ;
+    dcterms:created "2026-09-15T21:27:13.382205" ;
     dcterms:identifier "ncmec_2025_248" ;
-    dcterms:modified "2026-09-10T19:27:25.171438" ;
+    dcterms:modified "2026-09-15T21:27:13.382205" ;
     dcterms:source <https://www.wsav.com/crime-safety/saint-simons-island-man-arrested-for-10-counts-of-sexual-exploitation-of-children/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/ga>,
+        <https://caselinker.up.railway.app/resource/location/glynn-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_248/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_248/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_248/admission/1>,
@@ -43,7 +48,9 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_248/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/glynn-county-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/icac> .
+        <https://caselinker.up.railway.app/resource/agency/icac> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/ga>,
+        <https://caselinker.up.railway.app/resource/location/glynn-county> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_248/charge/1> a cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "SEXUAL EXPLOITATION OF" ;
@@ -64,7 +71,8 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_248/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_248/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-05-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_248/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_248/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 39 .
@@ -77,14 +85,26 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2025_248/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_248/person/offender/1> .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_248/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_248/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-05-01T00:00:00Z"^^xsd:dateTimeStamp .
 
+<https://caselinker.up.railway.app/resource/location/ga> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/glynn-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Glynn County" ;
+    uco-core:name "Glynn County" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_248/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "to possessing and distributing child pornography, a police spokesperson said" ;
     dcterms:source <https://www.wsav.com/crime-safety/saint-simons-island-man-arrested-for-10-counts-of-sexual-exploitation-of-children/> ;
-    ns1:admissionContext "re Drive Wednesday. James Waller, 39, was arrested and interviewed by detectives where he reportedly confessed to possessing and distribu..." ;
+    ns1:admissionContext "e Drive Wednesday. James Waller, 39, was arrested and interviewed by detectives where he reportedly confessed to possessing and distribut..." ;
     ns1:admissionFrame "confessed_paraphrase" ;
     ns1:admissionTheme "harm_conduct" ;
     ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_248/role/offender/1> ;

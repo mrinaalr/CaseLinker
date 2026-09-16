@@ -11,6 +11,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -48,8 +49,7 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_017/charge/1> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_017/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_017/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_017/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_017/person/offender/1> a uco-identity:Person .
 
@@ -58,11 +58,7 @@
 
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_017/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$100" .
-
-<https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_017/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$400,000" .
+    rdfs:label "[\"$100\", \"$400,000\"]" .
 
 <https://caselinker.up.railway.app/resource/platform/chat> a cacontology-platforms:AnonymousChatPlatform ;
     rdfs:label "chat" .
@@ -77,11 +73,14 @@
 
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_017> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:15:13.132122" ;
+    dcterms:created "2026-09-15T20:27:39.219624" ;
     dcterms:identifier "south_florida_icac_2025_017" ;
-    dcterms:modified "2026-09-10T20:15:13.132122" ;
+    dcterms:modified "2026-09-15T20:27:39.219624" ;
     dcterms:source <https://www.local10.com//news/local/2025/11/25/tamarac-man-posed-as-15-year-old-girl-to-solicit-lewd-videos-from-teen-boys-deputies-say/>,
         "SOUTH FLORIDA ICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/coral-springs>,
+        <https://caselinker.up.railway.app/resource/location/fla>,
+        <https://caselinker.up.railway.app/resource/location/tamarac> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_017/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_017/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_017/admission/1>,
@@ -91,7 +90,10 @@
         <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_017/event/possession>,
         <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_017/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ncmec> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/coral-springs>,
+        <https://caselinker.up.railway.app/resource/location/fla>,
+        <https://caselinker.up.railway.app/resource/location/tamarac> .
 
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_017/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "received deferred adjudication in the latter case because he was found incompetent to stand trial" ;
@@ -124,6 +126,15 @@
     cacontology:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_017/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_017/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/location/coral-springs> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/fla> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/tamarac> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_017/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

@@ -11,6 +11,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -23,11 +24,12 @@
 
 <https://caselinker.up.railway.app/resource/case/texas_ag_2018_004> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:26:25.726059" ;
+    dcterms:created "2026-09-15T20:33:54.811992" ;
     dcterms:identifier "texas_ag_2018_004" ;
-    dcterms:modified "2026-09-10T20:26:25.726059" ;
+    dcterms:modified "2026-09-15T20:33:54.811992" ;
     dcterms:source <https://www.texasattorneygeneral.gov/news/categories/cyber-crimes>,
         "Texas AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/kerrville> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/texas_ag_2018_004/phase/convicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/texas_ag_2018_004/phase/convicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/texas_ag_2018_004/admission/1>,
@@ -39,7 +41,8 @@
         <https://caselinker.up.railway.app/resource/case/texas_ag_2018_004/legal-step/convicted>,
         <https://caselinker.up.railway.app/resource/case/texas_ag_2018_004/operation> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/texas-attorney-generals-office> .
+        <https://caselinker.up.railway.app/resource/agency/texas-attorney-generals-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/kerrville> .
 
 <https://caselinker.up.railway.app/resource/case/texas_ag_2018_004/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -60,8 +63,7 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/texas_ag_2018_004/charge/1> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2018-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/texas_ag_2018_004/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/texas_ag_2018_004/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/texas_ag_2018_004/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/texas_ag_2018_004/legal-step/convicted> a cac-core:Event,
         cac-core:LegalEvent,
@@ -91,11 +93,7 @@
 
 <https://caselinker.up.railway.app/resource/case/texas_ag_2018_004/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "10 years" .
-
-<https://caselinker.up.railway.app/resource/case/texas_ag_2018_004/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "60 years" .
+    rdfs:label "[\"10 years\", \"60 years\"]" .
 
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
@@ -110,6 +108,11 @@
         <https://caselinker.up.railway.app/resource/case/texas_ag_2018_004/event/possession> ;
     cacontology:perpetratorRegisteredSexOffender true ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/texas_ag_2018_004/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/location/kerrville> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Kerrville" ;
+    uco-core:name "Kerrville" .
 
 <https://caselinker.up.railway.app/resource/case/texas_ag_2018_004/event/online-only> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

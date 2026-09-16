@@ -7,25 +7,34 @@
 @prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/fresno_so_2013_004> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:44:21.226943" ;
+    dcterms:created "2026-09-15T19:31:21.305541" ;
     dcterms:identifier "fresno_so_2013_004" ;
-    dcterms:modified "2026-09-10T19:44:21.226943" ;
+    dcterms:modified "2026-09-15T19:31:21.305541" ;
     dcterms:source <https://www.fresnosheriff.org/media-relations/firebaugh-boys-girls-club-director-arrested.html>,
         "FRESNO SO" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/firebaugh>,
+        <https://caselinker.up.railway.app/resource/location/the-city-of-firebaugh>,
+        <https://caselinker.up.railway.app/resource/location/torres> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/fresno_so_2013_004/phase/booked> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/fresno_so_2013_004/phase/booked> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/fresno_so_2013_004/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/firebaugh-police-department>,
         <https://caselinker.up.railway.app/resource/agency/hsi>,
-        <https://caselinker.up.railway.app/resource/agency/icac> .
+        <https://caselinker.up.railway.app/resource/agency/icac> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/firebaugh>,
+        <https://caselinker.up.railway.app/resource/location/the-city-of-firebaugh>,
+        <https://caselinker.up.railway.app/resource/location/torres> .
 
 <https://caselinker.up.railway.app/resource/case/fresno_so_2013_004/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -51,8 +60,8 @@
 <https://caselinker.up.railway.app/resource/case/fresno_so_2013_004/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Fresno County Jail" ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/fresno_so_2013_004/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/fresno_so_2013_004/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 25 .
@@ -60,7 +69,26 @@
 <https://caselinker.up.railway.app/resource/case/fresno_so_2013_004/person/victim/1> a uco-identity:Person ;
     cacontology-production:victimAge 13 .
 
+<https://caselinker.up.railway.app/resource/case/fresno_so_2013_004/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/fresno_so_2013_004/phase/booked> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/firebaugh> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Firebaugh" ;
+    uco-core:name "Firebaugh" .
+
+<https://caselinker.up.railway.app/resource/location/the-city-of-firebaugh> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "the City of Firebaugh" ;
+    uco-core:name "the City of Firebaugh" .
+
+<https://caselinker.up.railway.app/resource/location/torres> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Torres’" ;
+    uco-core:name "Torres’" .
 

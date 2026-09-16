@@ -210,16 +210,16 @@ def process_cases(df):
     if total_cases == 0:
         return processed_cases
     
-    # Use tqdm for progress bar if available
+    # Feature extract → batched semantic encode → NER merge.
     if HAS_TQDM:
-        case_iterator = tqdm(
+        extract_iterator = tqdm(
             all_case_batches,
-            desc="Processing cases",
+            desc="Extracting features",
             unit="case",
-            total=total_cases
+            total=total_cases,
         )
     else:
-        case_iterator = all_case_batches
+        extract_iterator = all_case_batches
 
     ner_by_case_id: Dict[str, Any] = {}
     if (
@@ -252,12 +252,13 @@ def process_cases(df):
                 prefetch_ids, ner_extractor.extract_entities_bulk(prefetch_texts)
             ):
                 ner_by_case_id[cid] = entities
-    
-    for batch_info in case_iterator:
+
+    work: List[tuple] = []
+    for batch_info in extract_iterator:
         case_batch = batch_info['case_batch']
         source = batch_info['source']
         source_file = batch_info['source_file']
-        
+
         raw_case = {
             'case_text': case_batch.get('case_text'),
             'month_year': case_batch.get('month_year'),
@@ -278,19 +279,29 @@ def process_cases(df):
             inferred_url = _extract_source_url(raw_case.get('case_text', ''))
             if inferred_url:
                 raw_case['source_url'] = inferred_url
-        
-        # Step 2: Extract pattern features (Pattern Processing Layer handles its own logic)
-        pattern_features = extract_features(raw_case)
 
-        # Step 2b: Enrich with semantic concepts (if available)
-        if semantic_detector and semantic_detector.is_available():
-            try:
-                semantic_detector.enhance_case_with_concepts(pattern_features)
-            except Exception:
-                # If semantic enrichment fails, continue with pattern-only features
-                pass
-        
-        # Step 3: Extract NER features (ML Processing Layer handles its own logic)
+        pattern_features = extract_features(raw_case)
+        work.append((batch_info, pattern_features, raw_case))
+
+    if semantic_detector and semantic_detector.is_available() and work:
+        try:
+            if HAS_TQDM:
+                tqdm.write(f"Semantic concepts: batch-encoding {len(work)} cases…")
+            else:
+                print(
+                    f"Semantic concepts: batch-encoding {len(work)} cases…",
+                    file=sys.stderr,
+                )
+            semantic_detector.enhance_cases_with_concepts([w[1] for w in work])
+        except Exception:
+            pass
+
+    if HAS_TQDM:
+        merge_iterator = tqdm(work, desc="Processing cases", unit="case", total=len(work))
+    else:
+        merge_iterator = work
+
+    for batch_info, pattern_features, raw_case in merge_iterator:
         ner_entities = None
         if ner_extractor and ner_extractor.is_available():
             case_text = raw_case.get('case_text', '')
@@ -302,22 +313,17 @@ def process_cases(df):
                     else:
                         ner_entities = ner_extractor.extract_entities(case_text)
                 except Exception:
-                    # NER extraction failed - continue without NER
                     ner_entities = None
-        
-        # Step 4: Merge pattern + NER features (MergeProcessing handles its own logic)
+
         merged_features = merger.merge_features(pattern_features, ner_entities)
-        
-        # Step 5: Assign comparison values (Pattern Processing Layer handles its own logic)
         case_with_values = assign_comparison_values(merged_features)
-        
-        # Step 6: Add timestamps
+
         timestamp = datetime.now().isoformat()
         case_with_values['created_at'] = timestamp
         case_with_values['updated_at'] = timestamp
-        
+
         processed_cases.append(case_with_values)
-    
+
     return processed_cases
 
 __all__ = [

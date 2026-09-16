@@ -9,16 +9,20 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2026_012> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:00:23.810536" ;
+    dcterms:created "2026-09-15T20:06:35.743384" ;
     dcterms:identifier "newyork_sp_2026_012" ;
-    dcterms:modified "2026-09-10T20:00:23.810536" ;
+    dcterms:modified "2026-09-15T20:06:35.743384" ;
     dcterms:source <https://troopers.ny.gov/news/clay-man-charged-promotion-sexual-performance-child>,
         "NEWYORK SP" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/albany>,
+        <https://caselinker.up.railway.app/resource/location/clay-new-york>,
+        <https://caselinker.up.railway.app/resource/location/north-syracuse> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/newyork_sp_2026_012/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/newyork_sp_2026_012/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/newyork_sp_2026_012/event/distribution>,
@@ -29,7 +33,10 @@
         <https://caselinker.up.railway.app/resource/agency/fbi>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/new-york-state-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/troop-d-bureau-of-criminal-investigation> .
+        <https://caselinker.up.railway.app/resource/agency/troop-d-bureau-of-criminal-investigation> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/albany>,
+        <https://caselinker.up.railway.app/resource/location/clay-new-york>,
+        <https://caselinker.up.railway.app/resource/location/north-syracuse> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2026_012/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -66,16 +73,32 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/newyork_sp_2026_012/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/newyork_sp_2026_012/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2026_012/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 21 .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2026_012/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/newyork_sp_2026_012/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2026_012/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/albany> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/clay-new-york> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Clay, New York" ;
+    uco-core:name "Clay, New York" .
+
+<https://caselinker.up.railway.app/resource/location/north-syracuse> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2026_012/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

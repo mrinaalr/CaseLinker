@@ -9,6 +9,7 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -38,11 +39,12 @@
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_098> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T22:24:27.261682" ;
+    dcterms:created "2026-09-15T22:12:29.363480" ;
     dcterms:identifier "doj_safe_childhood_2021_098" ;
-    dcterms:modified "2026-09-14T22:24:27.261682" ;
+    dcterms:modified "2026-09-15T22:12:29.363480" ;
     dcterms:source <https://www.justice.gov/usao-sdtx/pr/sex-offender-sentenced-involvement-child-pornography-featuring-young-children-bondage>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/houston> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_098/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_098/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_098/admission/1>,
@@ -57,7 +59,8 @@
         <https://caselinker.up.railway.app/resource/agency/doj>,
         <https://caselinker.up.railway.app/resource/agency/fbi>,
         <https://caselinker.up.railway.app/resource/agency/us-bureau-of-prisons>,
-        <https://caselinker.up.railway.app/resource/agency/usao> .
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/houston> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_098/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -75,10 +78,12 @@
     ns1:chargeOffenseEvent <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_098/offense-event/charge-3> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_098/event/distribution> a cac-core:Event,
-        cacontology-legal-outcomes:CSAM_Distribution .
+        cacontology-legal-outcomes:CSAM_Distribution ;
+    cacontology:severityLevel 1 .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_098/event/project-safe-childhood> a cac-core:Event,
-        cacontology-multi:ProjectSafeChildhoodOperation .
+        cacontology-multi:ProjectSafeChildhoodOperation ;
+    cacontology:severityLevel 1 .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_098/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
@@ -89,8 +94,7 @@
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_098/charge/2>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_098/charge/3> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_098/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_098/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_098/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_098/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -110,16 +114,15 @@
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_098/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_098/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "200 months" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_098/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "supervised release" .
+    rdfs:label "[\"200 months\", \"supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_098/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/houston> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_098/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "received and possessed child pornography, announced Acting U" ;
@@ -135,6 +138,7 @@
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_098/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
     cacontology:producesArtifact <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_098/admission/1> ;
+    cacontology:severityLevel 1 ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_098/facet/possession> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_098/offense-event/charge-3> a cacontology:ChildSexualAbuseEvent,

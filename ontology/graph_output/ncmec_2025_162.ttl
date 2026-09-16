@@ -11,6 +11,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -27,11 +28,14 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_162> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:26:40.368323" ;
+    dcterms:created "2026-09-15T21:27:13.304474" ;
     dcterms:identifier "ncmec_2025_162" ;
-    dcterms:modified "2026-09-10T19:26:40.368323" ;
+    dcterms:modified "2026-09-15T21:27:13.304474" ;
     dcterms:source <https://www.tapinto.net/towns/coconut-creek/articles/messaging-app-company-tip-leads-to-child-pornography-arrest-of-coconut-creek-man>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/coconut-creek>,
+        <https://caselinker.up.railway.app/resource/location/florida>,
+        <https://caselinker.up.railway.app/resource/location/tapinto-coconut-creek> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_162/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_162/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_162/admission/1>,
@@ -40,7 +44,10 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_162/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_162/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ncmec> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/coconut-creek>,
+        <https://caselinker.up.railway.app/resource/location/florida>,
+        <https://caselinker.up.railway.app/resource/location/tapinto-coconut-creek> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_162/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -59,7 +66,8 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_162/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-04-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-04-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_162/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_162/person/offender/1> a uco-identity:Person .
 
@@ -72,6 +80,10 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2025_162/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_162/person/offender/1> .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_162/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/platform/kik> a cacontology-platforms:MessagingService ;
     rdfs:label "Kik" .
 
@@ -81,10 +93,23 @@
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-04-01T00:00:00Z"^^xsd:dateTimeStamp .
 
+<https://caselinker.up.railway.app/resource/location/coconut-creek> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Coconut Creek" ;
+    uco-core:name "Coconut Creek" .
+
+<https://caselinker.up.railway.app/resource/location/florida> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/tapinto-coconut-creek> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Tapinto Coconut Creek" ;
+    uco-core:name "Tapinto Coconut Creek" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_162/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "had the account while he was in middle school and last used it in 2018 or 2019" ;
     dcterms:source <https://www.tapinto.net/towns/coconut-creek/articles/messaging-app-company-tip-leads-to-child-pornography-arrest-of-coconut-creek-man> ;
-    ns1:admissionContext "count reported by Kik were his. However, he denied that he had control of the account. He later said that he had the account while he was..." ;
+    ns1:admissionContext "ount reported by Kik were his. However, he denied that he had control of the account. He later said that he had the account while he was..." ;
     ns1:admissionFrame "said_paraphrase" ;
     ns1:admissionTheme "tech_use" ;
     ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_162/role/offender/1> ;

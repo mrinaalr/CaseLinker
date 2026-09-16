@@ -1,5 +1,6 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
@@ -8,16 +9,22 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2003_011> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:39:08.502441" ;
+    dcterms:created "2026-09-15T21:42:39.642445" ;
     dcterms:identifier "doj_archives_2003_011" ;
-    dcterms:modified "2026-09-10T19:39:08.502441" ;
+    dcterms:modified "2026-09-15T21:42:39.642445" ;
     dcterms:source <https://www.justice.gov/archive/criminal/ceos/pressreleases/downloads/SDIN%20Cauble%20sentence%20PR_042203.pdf>,
-        "DOJ ARCHIVES" ;
+        "DOJ CEOS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/indiana>,
+        <https://caselinker.up.railway.app/resource/location/indianapolis>,
+        <https://caselinker.up.railway.app/resource/location/kokomo>,
+        <https://caselinker.up.railway.app/resource/location/the-southern-district>,
+        <https://caselinker.up.railway.app/resource/location/united-states> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_archives_2003_011/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_archives_2003_011/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_archives_2003_011/event/csam>,
@@ -27,7 +34,13 @@
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/bureau-of-prisons>,
         <https://caselinker.up.railway.app/resource/agency/doj>,
-        <https://caselinker.up.railway.app/resource/agency/indiana-state-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/indiana-state-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/indiana>,
+        <https://caselinker.up.railway.app/resource/location/indianapolis>,
+        <https://caselinker.up.railway.app/resource/location/kokomo>,
+        <https://caselinker.up.railway.app/resource/location/the-southern-district>,
+        <https://caselinker.up.railway.app/resource/location/united-states> .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2003_011/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -43,13 +56,13 @@
         <https://caselinker.up.railway.app/resource/case/doj_archives_2003_011/offense-event/charge-2> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_archives_2003_011/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/bureau-of-prisons> a cac-core:OrganizationLikeEntity,
-        cacontology-multi:LocalAgency ;
-    rdfs:label "Bureau of Prisons" .
+<https://caselinker.up.railway.app/resource/agency/bureau-of-prisons> a cacontology-multi:LocalAgency .
 
 <https://caselinker.up.railway.app/resource/agency/doj> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/agency/indiana-state-police-department> a cacontology-multi:StateAgency .
+
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2003_011/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -70,9 +83,7 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/doj_archives_2003_011/charge/1>,
         <https://caselinker.up.railway.app/resource/case/doj_archives_2003_011/charge/2> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2003-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_archives_2003_011/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_archives_2003_011/sentence/2>,
-        <https://caselinker.up.railway.app/resource/case/doj_archives_2003_011/sentence/3> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_archives_2003_011/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2003_011/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -80,25 +91,35 @@
         cacontology-legal-outcomes:SentencingHearing ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2003-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
-<https://caselinker.up.railway.app/resource/case/doj_archives_2003_011/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/doj_archives_2003_011/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 30 .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2003_011/person/victim/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2003_011/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "41 MONTHS" .
-
-<https://caselinker.up.railway.app/resource/case/doj_archives_2003_011/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "3 years of supervised release" .
-
-<https://caselinker.up.railway.app/resource/case/doj_archives_2003_011/sentence/3> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:ProbationSentence ;
-    rdfs:label "Probation" .
+    rdfs:label "[\"41 MONTHS\", \"3 years of supervised release\", \"Probation\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2003_011/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2003-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/indiana> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/indianapolis> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/kokomo> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Kokomo" ;
+    uco-core:name "Kokomo" .
+
+<https://caselinker.up.railway.app/resource/location/the-southern-district> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2003_011/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

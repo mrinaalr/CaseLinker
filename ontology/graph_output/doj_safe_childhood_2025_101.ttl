@@ -9,20 +9,27 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_101> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T21:22:25.851826" ;
+    dcterms:created "2026-09-15T22:12:26.616737" ;
     dcterms:identifier "doj_safe_childhood_2025_101" ;
-    dcterms:modified "2026-09-14T21:22:25.851826" ;
+    dcterms:modified "2026-09-15T22:12:26.616737" ;
     dcterms:source <https://www.justice.gov/usao-ks/pr/judge-convicts-kansas-man-receiving-child-pornography>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/galicia>,
+        <https://caselinker.up.railway.app/resource/location/kan>,
+        <https://caselinker.up.railway.app/resource/location/kansas>,
+        <https://caselinker.up.railway.app/resource/location/kansas-city>,
+        <https://caselinker.up.railway.app/resource/location/milwaukee>,
+        <https://caselinker.up.railway.app/resource/location/wisconsin> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_101/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_101/phase/sentenced> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_101/event/distribution>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_101/event/possession>,
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_101/event/csam>,
+        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_101/event/distribution>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_101/event/project-safe-childhood>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_101/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_101/legal-step/sentenced> ;
@@ -30,20 +37,25 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ceos>,
         <https://caselinker.up.railway.app/resource/agency/doj>,
         <https://caselinker.up.railway.app/resource/agency/fbi>,
-        <https://caselinker.up.railway.app/resource/agency/lincoln-police-department>,
         <https://caselinker.up.railway.app/resource/agency/milwaukee-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/usao> .
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/galicia>,
+        <https://caselinker.up.railway.app/resource/location/kan>,
+        <https://caselinker.up.railway.app/resource/location/kansas>,
+        <https://caselinker.up.railway.app/resource/location/kansas-city>,
+        <https://caselinker.up.railway.app/resource/location/milwaukee>,
+        <https://caselinker.up.railway.app/resource/location/wisconsin> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_101/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
     cacontology:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_101/event/possession> ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_101/event/csam> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_101/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_101/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
     cacontology:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_101/event/possession> ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_101/event/csam> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_101/person/victim/1> .
 
 <https://caselinker.up.railway.app/resource/agency/ceos> a cacontology-multi:FederalAgency .
@@ -51,8 +63,6 @@
 <https://caselinker.up.railway.app/resource/agency/doj> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/agency/fbi> a cacontology-multi:FederalAgency .
-
-<https://caselinker.up.railway.app/resource/agency/lincoln-police-department> a cacontology-multi:LocalAgency .
 
 <https://caselinker.up.railway.app/resource/agency/milwaukee-police-department> a cac-core:OrganizationLikeEntity,
         cacontology-multi:LocalAgency ;
@@ -76,14 +86,15 @@
         cacontology-multi:ProjectSafeChildhoodOperation ;
     cacontology:severityLevel 3 .
 
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_101/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_101/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_101/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_101/charge/1>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_101/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_101/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_101/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -96,6 +107,10 @@
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_101/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_101/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/platform/social-media> a cacontology-platforms:SocialMediaPlatform ;
     rdfs:label "social media" .
 
@@ -103,9 +118,33 @@
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_101/event/possession> a cacontology:CSAMIncident,
+<https://caselinker.up.railway.app/resource/location/galicia> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Galicia" ;
+    uco-core:name "Galicia" .
+
+<https://caselinker.up.railway.app/resource/location/kan> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Kan." ;
+    uco-core:name "Kan." .
+
+<https://caselinker.up.railway.app/resource/location/kansas> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/kansas-city> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/milwaukee> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Milwaukee" ;
+    uco-core:name "Milwaukee" .
+
+<https://caselinker.up.railway.app/resource/location/wisconsin> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_101/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;
     cacontology:severityLevel 3 ;
     cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/social-media> ;
-    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_101/facet/possession> .
+    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_101/facet/csam> .
 

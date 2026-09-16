@@ -6,19 +6,24 @@
 @prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_105> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:26:10.161601" ;
+    dcterms:created "2026-09-15T21:27:13.255136" ;
     dcterms:identifier "ncmec_2025_105" ;
-    dcterms:modified "2026-09-10T19:26:10.161601" ;
+    dcterms:modified "2026-09-15T21:27:13.255136" ;
     dcterms:source <https://www.turnto23.com/news/in-your-neighborhood/bakersfield/bakersfield-police-department-detective-under-investigation-following-arrest>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/bakersfield>,
+        <https://caselinker.up.railway.app/resource/location/calif>,
+        <https://caselinker.up.railway.app/resource/location/south-carolina> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_105/phase/booked> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_105/phase/booked> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_105/cybertip>,
@@ -30,7 +35,10 @@
         <https://caselinker.up.railway.app/resource/agency/department-of-homeland-security>,
         <https://caselinker.up.railway.app/resource/agency/kern-county-sheriffs-office>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/us-secret-service> .
+        <https://caselinker.up.railway.app/resource/agency/us-secret-service> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/bakersfield>,
+        <https://caselinker.up.railway.app/resource/location/calif>,
+        <https://caselinker.up.railway.app/resource/location/south-carolina> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_105/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -46,7 +54,9 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_105/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_105/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/bakersfield-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/bakersfield-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Bakersfield Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/department-of-homeland-security> a cacontology-multi:LocalAgency .
 
@@ -69,18 +79,34 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_105/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-05-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_105/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_105/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_105/person/victim/1> a uco-identity:Person ;
     cacontology-production:victimAge 15 .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_105/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_105/phase/booked> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-05-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/bakersfield> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/calif> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/south-carolina> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "South Carolina" ;
+    uco-core:name "South Carolina" .
 
 <https://caselinker.up.railway.app/resource/platform/instagram> a cacontology-platforms:SocialMediaPlatform ;
     rdfs:label "Instagram" .

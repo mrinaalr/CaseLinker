@@ -11,16 +11,19 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2023_008> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:24:07.486683" ;
+    dcterms:created "2026-09-15T20:39:17.455310" ;
     dcterms:identifier "vt_ag_2023_008" ;
-    dcterms:modified "2026-09-10T20:24:07.486683" ;
+    dcterms:modified "2026-09-15T20:39:17.455310" ;
     dcterms:source <https://ago.vermont.gov/blog/2023/08/01/burlington-resident-arrested-possession-child-sexual-abuse-material>,
         "VT AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/burlington>,
+        <https://caselinker.up.railway.app/resource/location/vermont> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/vt_ag_2023_008/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/vt_ag_2023_008/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/vt_ag_2023_008/cybertip>,
@@ -36,7 +39,9 @@
         <https://caselinker.up.railway.app/resource/agency/hsi>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/vermont-state-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/vermont-state-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/burlington>,
+        <https://caselinker.up.railway.app/resource/location/vermont> .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2023_008/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -54,7 +59,9 @@
 
 <https://caselinker.up.railway.app/resource/agency/burlington-police-department> a cacontology-multi:LocalAgency .
 
-<https://caselinker.up.railway.app/resource/agency/department-of-corrections> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/department-of-corrections> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Department of Corrections" .
 
 <https://caselinker.up.railway.app/resource/agency/essex-police-department> a cacontology-multi:LocalAgency .
 
@@ -100,12 +107,13 @@
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2023_008/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:ProbationSentence ;
-    rdfs:label "probation" .
+    rdfs:label "[\"probation\"]" .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2023_008/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
 
-<https://caselinker.up.railway.app/resource/platform/google-drive> a cacontology-platforms:FileHostingService ;
+<https://caselinker.up.railway.app/resource/platform/google-drive> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:FileHostingService ;
     rdfs:label "Google Drive" .
 
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
@@ -113,6 +121,12 @@
 <https://caselinker.up.railway.app/resource/case/vt_ag_2023_008/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/burlington> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/vermont> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2023_008/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

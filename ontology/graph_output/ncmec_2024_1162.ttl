@@ -1,80 +1,110 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
-@prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
-@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-undercover: <https://cacontology.projectvic.org/undercover#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/admission/1/extraction-confidence> a cac-core:AssessmentResult ;
+    cac-core:assesses <https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/admission/1> ;
+    cac-core:generatedBy <https://caselinker.up.railway.app/resource/case/ncmec_2024_1162> ;
+    cac-core:hasConfidence 0.65 .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2024-03-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/event/possession> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/agency/shenandoah-county-sheriffs-office> a cacontology-multi:LocalAgency .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1162> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:24:16.674791" ;
+    dcterms:created "2026-09-15T21:08:11.209370" ;
     dcterms:identifier "ncmec_2024_1162" ;
-    dcterms:modified "2026-09-10T19:24:16.674791" ;
-    dcterms:source <https://showcasemagazine.com/2024/06/14/sex-offender-faces-charges-in-pitt-co/>,
+    dcterms:modified "2026-09-15T21:08:11.209370" ;
+    dcterms:source <https://www.nvdaily.com/nvdaily/authorities-arrest-mount-jackson-couple-on-child-porn-charges/article_1e64a15d-732b-536e-b237-5b73460d5251.html>,
         "NCMEC" ;
-    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/phase/convicted> ;
-    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/phase/convicted> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/cybertip>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/event/trust-violation>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/legal-proceeding>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/legal-step/convicted> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ncmec> .
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/mount-jackson>,
+        <https://caselinker.up.railway.app/resource/location/shenandoah-county> ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/phase/charged> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/phase/charged> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/admission/1>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/cybertip>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/legal-proceeding> ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ncmec>,
+        <https://caselinker.up.railway.app/resource/agency/shenandoah-county-sheriffs-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/mount-jackson>,
+        <https://caselinker.up.railway.app/resource/location/shenandoah-county> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
+        cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "child pornography" ;
+    cacontology-legal-outcomes:indictmentCounts 2 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/cybertip> a cacontology-us-ncmec:NCMECCybertipReport ;
     cacontology-us-ncmec:supportedBy <https://caselinker.up.railway.app/resource/agency/ncmec> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/event/trust-violation> a cacontology-custodial:CustodialAbuse,
-        cacontology-custodial:TrustViolation ;
-    cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/relationship/parent> .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility: Pittsylvania County Jail" ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-06-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/charge/1> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-03-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/sentence/1> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/legal-step/convicted> a cac-core:Event,
-        cac-core:LegalEvent,
-        cacontology-legal-outcomes:LegalProceeding,
-        cacontology-legal-outcomes:SentencingHearing ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-06-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/person/offender/1> a uco-identity:Person ;
-    cacontology-detection:ageEstimate 55 .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/person/victim/1> a uco-identity:Person .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/relationship/parent> a cacontology-custodial:CaregiverRelationship,
-        cacontology-custodial:CustodialRelationship ;
-    cacontology-custodial:involvesChild <https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/role/victim/1> ;
-    cacontology-custodial:involvesCustodian <https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/role/offender/1> ;
-    cacontology-custodial:relationshipType "parent" .
-
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2024-06-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:perpetratorRegisteredSexOffender true ;
+    cacontology:hasRoleBeginPoint "2024-03-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/person/offender/1> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/role/victim/1> a cacontology:VictimRole,
-        uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2024-06-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/person/victim/1> .
-
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:ProbationSentence ;
-    rdfs:label "probation" .
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/phase/convicted> a cac-core:Phase,
-        cacontology-legal-outcomes:SentencingPhase ;
-    cacontology:hasPhaseBeginPoint "2024-06-01T00:00:00Z"^^xsd:dateTimeStamp .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/phase/charged> a cacontology:LegalProcessPhase,
+        cac-core:Phase ;
+    cacontology:hasPhaseBeginPoint "2024-03-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/mount-jackson> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Mount Jackson" ;
+    uco-core:name "Mount Jackson" .
+
+<https://caselinker.up.railway.app/resource/location/shenandoah-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/admission/1> a cacontology-undercover:IncriminatingStatement ;
+    rdfs:label "making the Google email account, the complaint states" ;
+    dcterms:source <https://www.nvdaily.com/nvdaily/authorities-arrest-mount-jackson-couple-on-child-porn-charges/article_1e64a15d-732b-536e-b237-5b73460d5251.html> ;
+    ns1:admissionContext "a tablet computer. Law enforcement officers interviewed Smith and Zemany at the property. Zemany admitted to making the Google email acco..." ;
+    ns1:admissionFrame "admitted_to" ;
+    ns1:admissionTheme "tech_use" ;
+    ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/role/offender/1> ;
+    ns1:evidenceTier "press_release_stated" ;
+    ns1:quoteType "paraphrase" ;
+    uco-core:description "making the Google email account, the complaint states" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/event/possession> a cacontology:CSAMIncident,
+        cac-core:Event ;
+    cacontology:producesArtifact <https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/admission/1> ;
+    cacontology:severityLevel 3 ;
+    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2024_1162/facet/possession> .
 

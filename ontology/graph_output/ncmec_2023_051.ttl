@@ -6,19 +6,25 @@
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_051> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:09:26.405898" ;
+    dcterms:created "2026-09-15T20:55:00.781798" ;
     dcterms:identifier "ncmec_2023_051" ;
-    dcterms:modified "2026-09-10T19:09:26.405898" ;
+    dcterms:modified "2026-09-15T20:55:00.781798" ;
     dcterms:source <https://illinoisattorneygeneral.gov/news/story/attorney-general-raoul-charges-franklin-county-man-with-possession-of-child-pornography-11-1-23#:~:text=Austin%20W.%20Lee%2C%2029%2C,to%20three%20years%20in%20prison>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/benton>,
+        <https://caselinker.up.railway.app/resource/location/chicago>,
+        <https://caselinker.up.railway.app/resource/location/franklin-county>,
+        <https://caselinker.up.railway.app/resource/location/illinois> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_051/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_051/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_051/cybertip>,
@@ -30,7 +36,12 @@
     cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/ncmec_2023_051/tech/cybertipline> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/benton-police-department>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/benton>,
+        <https://caselinker.up.railway.app/resource/location/chicago>,
+        <https://caselinker.up.railway.app/resource/location/franklin-county>,
+        <https://caselinker.up.railway.app/resource/location/illinois> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_051/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -46,9 +57,13 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_051/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_051/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/benton-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/benton-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Benton Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
+
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_051/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -66,9 +81,9 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_051/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Franklin County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_051/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-11-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-11-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_051/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_051/operation> a cac-core:Event,
         cacontology-taskforce:ReactiveOperation .
@@ -78,6 +93,10 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_051/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_051/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_051/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
 
@@ -86,6 +105,24 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_051/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-11-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/benton> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Benton" ;
+    uco-core:name "Benton" .
+
+<https://caselinker.up.railway.app/resource/location/chicago> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Chicago" ;
+    uco-core:name "Chicago" .
+
+<https://caselinker.up.railway.app/resource/location/franklin-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Franklin County" ;
+    uco-core:name "Franklin County" .
+
+<https://caselinker.up.railway.app/resource/location/illinois> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_051/event/online-only> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event .

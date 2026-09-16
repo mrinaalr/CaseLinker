@@ -8,23 +8,30 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/scag_icac_2024_009> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:06:33.040024" ;
+    dcterms:created "2026-09-15T20:17:54.056233" ;
     dcterms:identifier "scag_icac_2024_009" ;
-    dcterms:modified "2026-09-10T20:06:33.040024" ;
+    dcterms:modified "2026-09-15T20:17:54.056233" ;
     dcterms:source <https://www.scag.gov/about-the-office/news/attorney-general-alan-wilson-announces-richland-county-man-sentenced-to-prison-for-having-child-sexual-abuse-material/>,
         "SCAG ICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/columbia>,
+        <https://caselinker.up.railway.app/resource/location/richland-county>,
+        <https://caselinker.up.railway.app/resource/location/sc> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/scag_icac_2024_009/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/scag_icac_2024_009/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/scag_icac_2024_009/event/csam>,
         <https://caselinker.up.railway.app/resource/case/scag_icac_2024_009/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/scag_icac_2024_009/legal-step/sentenced> ;
     cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/south-carolina-department-of-corrections> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/south-carolina-department-of-corrections> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/columbia>,
+        <https://caselinker.up.railway.app/resource/location/richland-county>,
+        <https://caselinker.up.railway.app/resource/location/sc> .
 
 <https://caselinker.up.railway.app/resource/case/scag_icac_2024_009/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -38,7 +45,9 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/scag_icac_2024_009/event/csam> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/scag_icac_2024_009/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/south-carolina-department-of-corrections> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/south-carolina-department-of-corrections> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "South Carolina Department of Corrections" .
 
 <https://caselinker.up.railway.app/resource/case/scag_icac_2024_009/charge/1> a cacontology-legal-outcomes:CriminalCharge,
         cacontology-legal-outcomes:StateCharge ;
@@ -76,11 +85,20 @@
 
 <https://caselinker.up.railway.app/resource/case/scag_icac_2024_009/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:ProbationSentence ;
-    rdfs:label "Probation" .
+    rdfs:label "[\"Probation\"]" .
 
 <https://caselinker.up.railway.app/resource/case/scag_icac_2024_009/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/columbia> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/richland-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/sc> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/scag_icac_2024_009/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

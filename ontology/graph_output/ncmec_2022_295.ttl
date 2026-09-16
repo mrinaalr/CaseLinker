@@ -1,34 +1,46 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_295> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:06:47.363392" ;
+    dcterms:created "2026-09-15T20:45:06.240388" ;
     dcterms:identifier "ncmec_2022_295" ;
-    dcterms:modified "2026-09-10T19:06:47.363392" ;
-    dcterms:source <https://www.fox4now.com/charlotte-county/man-arrested-after-storing-child-pornography-on-google-photos-account>,
+    dcterms:modified "2026-09-15T20:45:06.240388" ;
+    dcterms:source <https://www.ksl.com/article/50331137/former-utah-legislator-arrested-in-new-child-porn-investigation>,
         "NCMEC" ;
-    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_295/phase/charged> ;
-    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_295/phase/charged> ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/salt-lake-city>,
+        <https://caselinker.up.railway.app/resource/location/utah> ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_295/phase/convicted> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_295/phase/convicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2022_295/cybertip>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_295/event/distribution>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_295/event/possession>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_295/legal-proceeding> ;
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_295/legal-proceeding>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_295/legal-step/convicted> ;
     cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ncmec> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/salt-lake-city>,
+        <https://caselinker.up.railway.app/resource/location/utah> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_295/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
     cacontology:hasRoleBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_295/event/possession> ;
+    cacontology:perpetratorRegisteredSexOffender true ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_295/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_295/role/victim/1> a cacontology:VictimRole,
@@ -37,31 +49,66 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_295/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_295/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_295/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
+<https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_295/charge/1> a cacontology-legal-outcomes:CriminalCharge,
+        cacontology-legal-outcomes:StateCharge ;
+    rdfs:label "sexual exploitation of a minor" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_295/charge/2> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "possession of child pornography" ;
-    cacontology-legal-outcomes:indictmentCounts 2 .
+    cacontology-legal-outcomes:indictmentCounts 3 .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_295/charge/3> a cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "sexual exploitation" ;
+    ns1:chargeCluster "sexual_exploitation_unspecified" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_295/cybertip> a cacontology-us-ncmec:NCMECCybertipReport ;
     cacontology-us-ncmec:supportedBy <https://caselinker.up.railway.app/resource/agency/ncmec> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_295/event/distribution> a cac-core:Event,
+        cacontology-legal-outcomes:CSAM_Distribution .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_295/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_295/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2022_295/charge/1> ;
+    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2022_295/charge/1>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_295/charge/2>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_295/charge/3> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2022_295/sentence/1> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_295/legal-step/convicted> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding,
+        cacontology-legal-outcomes:SentencingHearing ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_295/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_295/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 74 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_295/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_295/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:ProbationSentence ;
+    rdfs:label "[\"probation\", \"15 years\"]" .
+
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_295/phase/charged> a cacontology:LegalProcessPhase,
-        cac-core:Phase ;
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_295/phase/convicted> a cac-core:Phase,
+        cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/salt-lake-city> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Salt Lake City" ;
+    uco-core:name "Salt Lake City" .
+
+<https://caselinker.up.railway.app/resource/location/utah> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_295/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

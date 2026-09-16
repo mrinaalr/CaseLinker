@@ -1,89 +1,91 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
-@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
-@prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_463> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:12:34.506587" ;
+    dcterms:created "2026-09-15T20:55:01.153041" ;
     dcterms:identifier "ncmec_2023_463" ;
-    dcterms:modified "2026-09-10T19:12:34.506587" ;
-    dcterms:source <https://nypost.com/2023/06/15/finance-exec-54-accused-of-drugging-and-raping-young-teen-at-hotels-across-nyc/>,
+    dcterms:modified "2026-09-15T20:55:01.153041" ;
+    dcterms:source <https://www.paulsvalleydailydemocrat.com/news/local_news/explicit-online-posts-lead-to-arrests/article_5cf12ebe-52de-5a58-b2bc-51fae1c73ba3.html>,
         "NCMEC" ;
-    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_463/phase/indicted> ;
-    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_463/phase/indicted> ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/garvin-county>,
+        <https://caselinker.up.railway.app/resource/location/pauls-valley>,
+        <https://caselinker.up.railway.app/resource/location/wynnewood> ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_463/phase/charged> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_463/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_463/event/distribution>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2023_463/event/hands-on>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2023_463/event/multi-jurisdiction>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2023_463/event/online-only>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_463/legal-proceeding> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/manhattan-district-attorneys-office> .
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/garvin-county>,
+        <https://caselinker.up.railway.app/resource/location/pauls-valley>,
+        <https://caselinker.up.railway.app/resource/location/wynnewood> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_463/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2023-06-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_463/event/hands-on> ;
+    cacontology:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_463/event/online-only> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_463/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_463/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2023-06-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_463/event/hands-on> ;
+    cacontology:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_463/event/online-only> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_463/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/manhattan-district-attorneys-office> a cac-core:OrganizationLikeEntity,
-        cacontology-multi:StateAgency ;
-    rdfs:label "Manhattan District Attorney's Office" .
-
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_463/event/distribution> a cac-core:Event,
-        cacontology-legal-outcomes:CSAM_Distribution ;
-    cacontology:severityLevel 3 .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_463/event/multi-jurisdiction> a cac-core:Event,
-        cacontology-multi:MultiJurisdictionalInvestigation ;
-    cacontology:severityLevel 3 .
+        cacontology-legal-outcomes:CSAM_Distribution .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_463/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-06-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_463/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2023_463/sentence/2> .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_463/sentence/1> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_463/person/offender/1> a uco-identity:Person ;
-    cacontology-detection:ageEstimate 54 .
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_463/person/offender/1> a uco-identity:Person .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_463/person/victim/1> a uco-identity:Person ;
-    cacontology-production:victimAge 14 .
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_463/person/victim/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_463/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$1" .
+    rdfs:label "[\"$80,000\"]" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_463/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$700" .
-
-<https://caselinker.up.railway.app/resource/platform/instagram> a cacontology-platforms:SocialMediaPlatform ;
-    rdfs:label "Instagram" .
+<https://caselinker.up.railway.app/resource/platform/facebook> a cacontology-platforms:SocialMediaPlatform ;
+    rdfs:label "Facebook" .
 
 <https://caselinker.up.railway.app/resource/platform/social-media> a cacontology-platforms:SocialMediaPlatform ;
     rdfs:label "social media" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_463/phase/indicted> a cacontology:LegalProcessPhase,
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_463/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
-    cacontology:hasPhaseBeginPoint "2023-06-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_463/event/hands-on> a cacontology:ChildSexualAbuseEvent,
+<https://caselinker.up.railway.app/resource/location/garvin-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Garvin County" ;
+    uco-core:name "Garvin County" .
+
+<https://caselinker.up.railway.app/resource/location/pauls-valley> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Pauls Valley" ;
+    uco-core:name "Pauls Valley" .
+
+<https://caselinker.up.railway.app/resource/location/wynnewood> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Wynnewood" ;
+    uco-core:name "Wynnewood" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_463/event/online-only> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;
-    cacontology:severityLevel 3 ;
-    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/instagram>,
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/facebook>,
         <https://caselinker.up.railway.app/resource/platform/social-media> .
 

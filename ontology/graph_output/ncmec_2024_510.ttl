@@ -3,71 +3,87 @@
 @prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
+@prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_510> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:18:36.213208" ;
+    dcterms:created "2026-09-15T21:08:10.623296" ;
     dcterms:identifier "ncmec_2024_510" ;
-    dcterms:modified "2026-09-10T19:18:36.213208" ;
-    dcterms:source <https://lsp.org/community-outreach/news/mamou-man-arrested-for-possession-of-child-sexual-abuse-material-and-narcotics/>,
+    dcterms:modified "2026-09-15T21:08:10.623296" ;
+    dcterms:source <https://www.wabi.tv/2024/03/08/convicted-sex-offender-arrested-again-facing-multiple-charges/>,
         "NCMEC" ;
-    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_510/phase/booked> ;
-    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_510/phase/booked> ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/maine> ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_510/phase/convicted> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_510/phase/convicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_510/event/possession>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_510/event/trafficking>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_510/legal-proceeding> ;
-    cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/louisiana-state-police-department> .
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_510/legal-proceeding>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_510/legal-step/convicted> ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/penobscot-county-sheriffs-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/maine> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_510/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2024-08-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:hasRoleBeginPoint "2024-03-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_510/event/possession> ;
+    cacontology:perpetratorRegisteredSexOffender true ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_510/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_510/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2024-08-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:hasRoleBeginPoint "2024-03-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_510/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_510/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/louisiana-state-police-department> a cacontology-multi:StateAgency .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_510/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
-        cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "child sexual abuse material" .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_510/event/trafficking> a cac-core:Event,
-        cacontology-legal-outcomes:SexTrafficking ;
-    cacontology:severityLevel 3 .
+<https://caselinker.up.railway.app/resource/agency/penobscot-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Penobscot County Sheriff's Office" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_510/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_510/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2024_510/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-08-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-03-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2024_510/sentence/1> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_510/legal-step/convicted> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding,
+        cacontology-legal-outcomes:SentencingHearing ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-03-01T00:00:00Z"^^xsd:dateTimeStamp .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_510/person/offender/1> a uco-identity:Person ;
-    cacontology-detection:ageEstimate 42 .
+    cacontology-detection:ageEstimate 31 .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_510/person/victim/1> a uco-identity:Person ;
-    cacontology-production:victimAge 12 .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_510/person/victim/1> a uco-identity:Person .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_510/phase/booked> a cacontology:InitialPhase,
-        cac-core:Phase ;
-    cacontology:hasPhaseBeginPoint "2024-08-01T00:00:00Z"^^xsd:dateTimeStamp .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_510/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
+<https://caselinker.up.railway.app/resource/platform/social-media> a cacontology-platforms:SocialMediaPlatform ;
+    rdfs:label "social media" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_510/phase/convicted> a cac-core:Phase,
+        cacontology-legal-outcomes:SentencingPhase ;
+    cacontology:hasPhaseBeginPoint "2024-03-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/maine> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Maine" ;
+    uco-core:name "Maine" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_510/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
-    cacontology:severityLevel 3 ;
+    cacontology:severityLevel 2 ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/social-media> ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2024_510/facet/possession> .
 

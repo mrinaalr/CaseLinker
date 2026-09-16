@@ -10,20 +10,26 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_443> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T21:23:02.013607" ;
+    dcterms:created "2026-09-15T22:12:28.353527" ;
     dcterms:identifier "doj_safe_childhood_2023_443" ;
-    dcterms:modified "2026-09-14T21:23:02.013607" ;
+    dcterms:modified "2026-09-15T22:12:28.353527" ;
     dcterms:source <https://www.justice.gov/usao-mdla/pr/texas-man-pleads-guilty-federal-court-production-and-attempted-production-child>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/lewisville>,
+        <https://caselinker.up.railway.app/resource/location/louisiana>,
+        <https://caselinker.up.railway.app/resource/location/texas>,
+        <https://caselinker.up.railway.app/resource/location/the-eastern-district>,
+        <https://caselinker.up.railway.app/resource/location/the-middle-district>,
+        <https://caselinker.up.railway.app/resource/location/united-states> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_443/phase/pleaded-guilty> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_443/phase/pleaded-guilty> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_443/event/csam>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_443/event/multi-jurisdiction>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_443/event/production>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_443/event/project-safe-childhood>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_443/legal-proceeding>,
@@ -32,7 +38,14 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ceos>,
         <https://caselinker.up.railway.app/resource/agency/doj>,
         <https://caselinker.up.railway.app/resource/agency/fbi>,
-        <https://caselinker.up.railway.app/resource/agency/usao> .
+        <https://caselinker.up.railway.app/resource/agency/federal-court>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/lewisville>,
+        <https://caselinker.up.railway.app/resource/location/louisiana>,
+        <https://caselinker.up.railway.app/resource/location/texas>,
+        <https://caselinker.up.railway.app/resource/location/the-eastern-district>,
+        <https://caselinker.up.railway.app/resource/location/the-middle-district>,
+        <https://caselinker.up.railway.app/resource/location/united-states> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_443/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -54,6 +67,10 @@
 
 <https://caselinker.up.railway.app/resource/agency/fbi> a cacontology-multi:FederalAgency .
 
+<https://caselinker.up.railway.app/resource/agency/federal-court> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Federal Court" .
+
 <https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_443/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
@@ -67,9 +84,6 @@
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_443/charge/3> a cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "sexual exploitation" ;
     ns1:chargeCluster "sexual_exploitation_unspecified" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_443/event/multi-jurisdiction> a cac-core:Event,
-        cacontology-multi:MultiJurisdictionalInvestigation .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_443/event/project-safe-childhood> a cac-core:Event,
         cacontology-multi:ProjectSafeChildhoodOperation .
@@ -100,11 +114,31 @@
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_443/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "supervised release" .
+    rdfs:label "[\"supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_443/phase/pleaded-guilty> a cac-core:Phase,
         cacontology-legal-outcomes:PreTrialPhase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/lewisville> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Lewisville" ;
+    uco-core:name "Lewisville" .
+
+<https://caselinker.up.railway.app/resource/location/louisiana> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/texas> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/the-eastern-district> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/the-middle-district> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/platform/google-drive> a cacontology-platforms:FileHostingService ;
     rdfs:label "Google Drive" .

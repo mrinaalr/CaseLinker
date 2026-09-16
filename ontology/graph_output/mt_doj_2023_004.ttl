@@ -9,6 +9,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -27,39 +28,35 @@
         cacontology-multi:LocalAgency ;
     rdfs:label "Billings Police Department" .
 
-<https://caselinker.up.railway.app/resource/agency/havre-police-department> a cacontology-multi:LocalAgency .
-
 <https://caselinker.up.railway.app/resource/agency/miles-city-police-department> a cac-core:OrganizationLikeEntity,
         cacontology-multi:LocalAgency ;
     rdfs:label "Miles City Police Department" .
 
-<https://caselinker.up.railway.app/resource/agency/montana-division-of-criminal-investigation> a cacontology-multi:LocalAgency .
-
 <https://caselinker.up.railway.app/resource/case/mt_doj_2023_004> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:55:07.373782" ;
+    dcterms:created "2026-09-15T19:59:52.363152" ;
     dcterms:identifier "mt_doj_2023_004" ;
-    dcterms:modified "2026-09-10T19:55:07.373782" ;
+    dcterms:modified "2026-09-15T19:59:52.363152" ;
     dcterms:source <https://dojmt.gov/miles-city-child-sexual-abuse-predator-sentenced-to-50-years/>,
         "MT DOJ" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/custer-county>,
+        <https://caselinker.up.railway.app/resource/location/miles-city> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/mt_doj_2023_004/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/mt_doj_2023_004/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/mt_doj_2023_004/admission/1>,
         <https://caselinker.up.railway.app/resource/case/mt_doj_2023_004/event/hands-on>,
         <https://caselinker.up.railway.app/resource/case/mt_doj_2023_004/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/mt_doj_2023_004/legal-step/sentenced> ;
-    cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/billings-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/havre-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/miles-city-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/montana-division-of-criminal-investigation> .
+        <https://caselinker.up.railway.app/resource/agency/miles-city-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/custer-county>,
+        <https://caselinker.up.railway.app/resource/location/miles-city> .
 
 <https://caselinker.up.railway.app/resource/case/mt_doj_2023_004/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/mt_doj_2023_004/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/mt_doj_2023_004/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/mt_doj_2023_004/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/mt_doj_2023_004/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -80,15 +77,21 @@
 
 <https://caselinker.up.railway.app/resource/case/mt_doj_2023_004/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "50 Years" .
-
-<https://caselinker.up.railway.app/resource/case/mt_doj_2023_004/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "15 year" .
+    rdfs:label "[\"50 Years\", \"15 year\"]" .
 
 <https://caselinker.up.railway.app/resource/case/mt_doj_2023_004/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/custer-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Custer County" ;
+    uco-core:name "Custer County" .
+
+<https://caselinker.up.railway.app/resource/location/miles-city> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Miles City" ;
+    uco-core:name "Miles City" .
 
 <https://caselinker.up.railway.app/resource/case/mt_doj_2023_004/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "sexually assaulting a young girl multiple times between 2017 and 2019" ;

@@ -9,9 +9,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -24,27 +24,24 @@
         uco-role:VictimRole ;
     cacontology:hasRoleBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/event/conspiracy>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/event/csam>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/offense-event/charge-3> ;
+        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/event/csam> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/person/victim/1> .
 
 <https://caselinker.up.railway.app/resource/agency/doj> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/agency/fbi> a cacontology-multi:FederalAgency .
 
-<https://caselinker.up.railway.app/resource/agency/human-trafficking-task-force-hamilton> a cac-core:OrganizationLikeEntity,
-        cacontology-multi:LocalAgency ;
-    rdfs:label "Human Trafficking Task Force Hamilton" .
-
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T22:24:26.720952" ;
+    dcterms:created "2026-09-15T22:12:29.334778" ;
     dcterms:identifier "doj_safe_childhood_2021_075" ;
-    dcterms:modified "2026-09-14T22:24:26.720952" ;
+    dcterms:modified "2026-09-15T22:12:29.334778" ;
     dcterms:source <https://www.justice.gov/usao-mt/pr/hamilton-man-sentenced-12-years-prison-distributing-meth-minor-and-receiving-child>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/missoula>,
+        <https://caselinker.up.railway.app/resource/location/montana> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/admission/1>,
@@ -53,12 +50,12 @@
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/event/distribution>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/event/project-safe-childhood>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/legal-proceeding>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/legal-step/sentenced>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/offense-event/charge-3> ;
+        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/legal-step/sentenced> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/doj>,
         <https://caselinker.up.railway.app/resource/agency/fbi>,
-        <https://caselinker.up.railway.app/resource/agency/human-trafficking-task-force-hamilton>,
-        <https://caselinker.up.railway.app/resource/agency/icac> .
+        <https://caselinker.up.railway.app/resource/agency/icac> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/missoula>,
+        <https://caselinker.up.railway.app/resource/location/montana> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -67,12 +64,6 @@
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/charge/2> a cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "sexual exploitation" ;
     ns1:chargeCluster "sexual_exploitation_unspecified" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/charge/3> a cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "child exploitation" ;
-    rdfs:seeAlso <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/offense-event/charge-3> ;
-    ns1:chargeCluster "child_exploitation" ;
-    ns1:chargeOffenseEvent <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/offense-event/charge-3> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/event/distribution> a cac-core:Event,
         cacontology-legal-outcomes:CSAM_Distribution ;
@@ -88,11 +79,9 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/charge/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/charge/2>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/charge/3> ;
+        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/charge/2> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -115,25 +104,19 @@
         uco-role:OffenderRole ;
     cacontology:hasRoleBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/event/conspiracy>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/event/csam>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/offense-event/charge-3> ;
+        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/event/csam> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/person/offender/2> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/role/offender/3> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
     cacontology:hasRoleBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/event/conspiracy>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/event/csam>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/offense-event/charge-3> ;
+        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/event/csam> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/person/offender/3> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "12 years" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "10 years of supervised release" .
+    rdfs:label "[\"12 years\", \"10 years of supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
@@ -143,9 +126,18 @@
         uco-role:OffenderRole ;
     cacontology:hasRoleBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/event/conspiracy>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/event/csam>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/offense-event/charge-3> ;
+        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/event/csam> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/location/missoula> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/montana> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/platform/playstation-network> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:GamePlatform ;
+    rdfs:label "PlayStation Network" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "supplying methamphetamine to a minor girl and to receiving sexually explicit images of her after making repeated requ..." ;
@@ -157,10 +149,6 @@
     ns1:evidenceTier "press_release_stated" ;
     ns1:quoteType "paraphrase" ;
     uco-core:description "supplying methamphetamine to a minor girl and to receiving sexually explicit images of her after making repeated requests for such photos or videos was sentenced today to 12 years in prison to be foll" .
-
-<https://caselinker.up.railway.app/resource/platform/playstation-network> a cac-core:DigitalSystemEntity,
-        cacontology-platforms:GamePlatform ;
-    rdfs:label "PlayStation Network" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/event/conspiracy> a cacontology:ConspiracyToCommitCSA,
         cac-core:Event ;
@@ -177,10 +165,4 @@
     cacontology:severityLevel 1 ;
     cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/playstation-network> ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/facet/csam> .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_075/offense-event/charge-3> a cacontology:ChildSexualAbuseEvent,
-        cac-core:Event,
-        uco-action:Crime ;
-    rdfs:label "Inferred offense from charge: child exploitation" ;
-    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/playstation-network> .
 

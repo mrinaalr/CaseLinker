@@ -11,6 +11,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -41,6 +42,8 @@
 
 <https://caselinker.up.railway.app/resource/agency/maryland-state-police-department> a cacontology-multi:StateAgency .
 
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_446/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "possession of child pornography" ;
@@ -52,13 +55,17 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_446/event/multi-jurisdiction> a cac-core:Event,
         cacontology-multi:MultiJurisdictionalInvestigation .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_446/event/project-safe-childhood> a cac-core:Event,
+        cacontology-multi:ProjectSafeChildhoodOperation .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_446/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_446/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_446/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-02-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-02-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_446/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_446/operation> a cac-core:Event,
         cacontology-taskforce:TaskForceOperation .
@@ -68,16 +75,27 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_446/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_446/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_446/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_446> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:29:10.677264" ;
+    dcterms:created "2026-09-15T21:27:13.566299" ;
     dcterms:identifier "ncmec_2025_446" ;
-    dcterms:modified "2026-09-10T19:29:10.677264" ;
+    dcterms:modified "2026-09-15T21:27:13.566299" ;
     dcterms:source <https://smnewsnet.com/archives/543439/callaway-man-charged-with-possession-of-child-pornography-and-firearms-violations-in-st-marys-county/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/callaway>,
+        <https://caselinker.up.railway.app/resource/location/jackson>,
+        <https://caselinker.up.railway.app/resource/location/memphis>,
+        <https://caselinker.up.railway.app/resource/location/mississippi>,
+        <https://caselinker.up.railway.app/resource/location/st-marys-county>,
+        <https://caselinker.up.railway.app/resource/location/tennessee>,
+        <https://caselinker.up.railway.app/resource/location/virginia> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_446/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_446/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_446/admission/1>,
@@ -86,6 +104,7 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_446/event/multi-jurisdiction>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_446/event/online-only>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_446/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2025_446/event/project-safe-childhood>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_446/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_446/operation> ;
     cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/ncmec_2025_446/tech/cybertipline> ;
@@ -93,7 +112,15 @@
         <https://caselinker.up.railway.app/resource/agency/howard-county-police-department>,
         <https://caselinker.up.railway.app/resource/agency/hsi>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/maryland-state-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/maryland-state-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/callaway>,
+        <https://caselinker.up.railway.app/resource/location/jackson>,
+        <https://caselinker.up.railway.app/resource/location/memphis>,
+        <https://caselinker.up.railway.app/resource/location/mississippi>,
+        <https://caselinker.up.railway.app/resource/location/st-marys-county>,
+        <https://caselinker.up.railway.app/resource/location/tennessee>,
+        <https://caselinker.up.railway.app/resource/location/virginia> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_446/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "accessing explicit content on previous devices, explaining that when he replaced his phone, the files transferred to ..." ;
@@ -116,6 +143,41 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2025_446/event/online-only>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_446/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_446/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/location/callaway> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Callaway" ;
+    uco-core:name "Callaway" .
+
+<https://caselinker.up.railway.app/resource/location/jackson> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Jackson" ;
+    uco-core:name "Jackson" .
+
+<https://caselinker.up.railway.app/resource/location/memphis> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Memphis" ;
+    uco-core:name "Memphis" .
+
+<https://caselinker.up.railway.app/resource/location/mississippi> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Mississippi" ;
+    uco-core:name "Mississippi" .
+
+<https://caselinker.up.railway.app/resource/location/st-marys-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "St. Mary’s County" ;
+    uco-core:name "St. Mary’s County" .
+
+<https://caselinker.up.railway.app/resource/location/tennessee> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Tennessee" ;
+    uco-core:name "Tennessee" .
+
+<https://caselinker.up.railway.app/resource/location/virginia> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Virginia" ;
+    uco-core:name "Virginia" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_446/event/online-only> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

@@ -2,24 +2,30 @@
 @prefix cacontology: <https://cacontology.projectvic.org#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_197> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:10:33.609381" ;
+    dcterms:created "2026-09-15T20:55:00.920761" ;
     dcterms:identifier "ncmec_2023_197" ;
-    dcterms:modified "2026-09-10T19:10:33.609381" ;
+    dcterms:modified "2026-09-15T20:55:00.920761" ;
     dcterms:source <https://news.yahoo.com/aurora-man-facing-21-child-165030233.html#:~:text=Erick%20Nunez%2C%2021%2C%20allegedly%20disseminated,pornography%2C%20a%20Class%202%20felony>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/aurora>,
+        <https://caselinker.up.railway.app/resource/location/ill> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_197/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_197/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_197/event/distribution>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_197/event/possession>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2023_197/legal-proceeding> .
+        <https://caselinker.up.railway.app/resource/case/ncmec_2023_197/legal-proceeding> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/aurora>,
+        <https://caselinker.up.railway.app/resource/location/ill> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_197/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -47,15 +53,28 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_197/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-11-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-11-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_197/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_197/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_197/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_197/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_197/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-11-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/aurora> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Aurora" ;
+    uco-core:name "Aurora" .
+
+<https://caselinker.up.railway.app/resource/location/ill> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_197/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

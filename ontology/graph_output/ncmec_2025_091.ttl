@@ -4,19 +4,23 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_091> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:26:02.038047" ;
+    dcterms:created "2026-09-15T21:27:13.238978" ;
     dcterms:identifier "ncmec_2025_091" ;
-    dcterms:modified "2026-09-10T19:26:02.038047" ;
+    dcterms:modified "2026-09-15T21:27:13.238978" ;
     dcterms:source <https://www.actionnewsnow.com/news/anderson-man-arrested-for-possession-of-child-sexual-abuse-materials/article_2d9bee6d-122b-4c39-a1af-3b5aeed6d3fc.html>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/anderson>,
+        <https://caselinker.up.railway.app/resource/location/calif> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_091/phase/booked> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_091/phase/booked> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_091/event/distribution>,
@@ -25,7 +29,9 @@
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/anderson-police-department>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/redding-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/redding-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/anderson>,
+        <https://caselinker.up.railway.app/resource/location/calif> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_091/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -43,7 +49,9 @@
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
-<https://caselinker.up.railway.app/resource/agency/redding-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/redding-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Redding Police Department" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_091/event/distribution> a cac-core:Event,
         cacontology-legal-outcomes:CSAM_Distribution ;
@@ -54,16 +62,28 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_091/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Shasta County Jail" ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-05-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_091/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_091/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_091/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_091/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_091/phase/booked> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-05-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/anderson> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Anderson" ;
+    uco-core:name "Anderson" .
+
+<https://caselinker.up.railway.app/resource/location/calif> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_091/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

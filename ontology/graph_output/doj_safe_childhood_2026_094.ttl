@@ -11,16 +11,19 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_094> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T21:22:14.352106" ;
+    dcterms:created "2026-09-15T22:12:25.769490" ;
     dcterms:identifier "doj_safe_childhood_2026_094" ;
-    dcterms:modified "2026-09-14T21:22:14.352106" ;
+    dcterms:modified "2026-09-15T22:12:25.769490" ;
     dcterms:source <https://www.justice.gov/usao-wdla/pr/eunice-man-pleads-guilty-receipt-child-pornography-investigation-linked-defendants>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/louisiana>,
+        <https://caselinker.up.railway.app/resource/location/united-states> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_094/phase/pleaded-guilty> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_094/phase/pleaded-guilty> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_094/event/csam>,
@@ -33,7 +36,9 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ceos>,
         <https://caselinker.up.railway.app/resource/agency/doj>,
         <https://caselinker.up.railway.app/resource/agency/fbi>,
-        <https://caselinker.up.railway.app/resource/agency/usao> .
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/louisiana>,
+        <https://caselinker.up.railway.app/resource/location/united-states> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_094/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -103,27 +108,40 @@
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_094/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "20 years" .
+    rdfs:label "[\"20 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_094/phase/pleaded-guilty> a cac-core:Phase,
         cacontology-legal-outcomes:PreTrialPhase ;
     cacontology:hasPhaseBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
+<https://caselinker.up.railway.app/resource/location/louisiana> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_094/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;
-    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/chat> ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/chat>,
+        <https://caselinker.up.railway.app/resource/platform/twitter-x> ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_094/facet/csam> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_094/event/online-only> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;
-    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/chat> .
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/chat>,
+        <https://caselinker.up.railway.app/resource/platform/twitter-x> .
 
 <https://caselinker.up.railway.app/resource/platform/chat> a cacontology-platforms:AnonymousChatPlatform ;
     rdfs:label "chat" .
+
+<https://caselinker.up.railway.app/resource/platform/twitter-x> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:SocialMediaPlatform ;
+    rdfs:label "Twitter / X" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_094/offense-event/charge-3> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event,
         uco-action:Crime ;
     rdfs:label "Inferred offense from charge: child exploitation" ;
-    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/chat> .
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/chat>,
+        <https://caselinker.up.railway.app/resource/platform/twitter-x> .
 

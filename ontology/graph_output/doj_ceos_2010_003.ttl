@@ -8,8 +8,10 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -22,12 +24,11 @@
         uco-role:VictimRole ;
     cacontology:hasRoleBeginPoint "2010-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/doj_ceos_2010_003/event/hands-on>,
-        <https://caselinker.up.railway.app/resource/case/doj_ceos_2010_003/event/possession> ;
+        <https://caselinker.up.railway.app/resource/case/doj_ceos_2010_003/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/doj_ceos_2010_003/offense-event/charge-3> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_ceos_2010_003/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/hsi> a cac-core:OrganizationLikeEntity,
-        cacontology-multi:FederalAgency ;
-    rdfs:label "Homeland Security Investigations" .
+<https://caselinker.up.railway.app/resource/agency/hsi> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/agency/ice> a cacontology-multi:FederalAgency .
 
@@ -35,11 +36,16 @@
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2010_003> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T22:32:44.006781" ;
+    dcterms:created "2026-09-15T21:47:03.877107" ;
     dcterms:identifier "doj_ceos_2010_003" ;
-    dcterms:modified "2026-09-14T22:32:44.006781" ;
+    dcterms:modified "2026-09-15T21:47:03.877107" ;
     dcterms:source <https://www.justice.gov/archives/opa/pr/mississippi-man-sentenced-35-years-prison-production-distribution-receipt-and-possession>,
         "DOJ CEOS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/crystal-springs>,
+        <https://caselinker.up.railway.app/resource/location/miss>,
+        <https://caselinker.up.railway.app/resource/location/mississippi>,
+        <https://caselinker.up.railway.app/resource/location/new-orleans>,
+        <https://caselinker.up.railway.app/resource/location/washington> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_ceos_2010_003/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_ceos_2010_003/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_ceos_2010_003/admission/1>,
@@ -49,10 +55,16 @@
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2010_003/event/trafficking>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2010_003/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2010_003/legal-step/sentenced>,
+        <https://caselinker.up.railway.app/resource/case/doj_ceos_2010_003/offense-event/charge-3>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2010_003/operation> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/hsi>,
         <https://caselinker.up.railway.app/resource/agency/ice>,
-        <https://caselinker.up.railway.app/resource/agency/usao> .
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/crystal-springs>,
+        <https://caselinker.up.railway.app/resource/location/miss>,
+        <https://caselinker.up.railway.app/resource/location/mississippi>,
+        <https://caselinker.up.railway.app/resource/location/new-orleans>,
+        <https://caselinker.up.railway.app/resource/location/washington> .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2010_003/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -62,6 +74,12 @@
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2010_003/charge/2> a cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "sexual exploitation" ;
     ns1:chargeCluster "sexual_exploitation_unspecified" .
+
+<https://caselinker.up.railway.app/resource/case/doj_ceos_2010_003/charge/3> a cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "child exploitation" ;
+    rdfs:seeAlso <https://caselinker.up.railway.app/resource/case/doj_ceos_2010_003/offense-event/charge-3> ;
+    ns1:chargeCluster "child_exploitation" ;
+    ns1:chargeOffenseEvent <https://caselinker.up.railway.app/resource/case/doj_ceos_2010_003/offense-event/charge-3> .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2010_003/event/distribution> a cac-core:Event,
         cacontology-legal-outcomes:CSAM_Distribution ;
@@ -77,11 +95,10 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/doj_ceos_2010_003/charge/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_ceos_2010_003/charge/2> ;
+        <https://caselinker.up.railway.app/resource/case/doj_ceos_2010_003/charge/2>,
+        <https://caselinker.up.railway.app/resource/case/doj_ceos_2010_003/charge/3> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2010-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_ceos_2010_003/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_ceos_2010_003/sentence/2>,
-        <https://caselinker.up.railway.app/resource/case/doj_ceos_2010_003/sentence/3> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_ceos_2010_003/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2010_003/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -100,27 +117,36 @@
         uco-role:OffenderRole ;
     cacontology:hasRoleBeginPoint "2010-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/doj_ceos_2010_003/event/hands-on>,
-        <https://caselinker.up.railway.app/resource/case/doj_ceos_2010_003/event/possession> ;
+        <https://caselinker.up.railway.app/resource/case/doj_ceos_2010_003/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/doj_ceos_2010_003/offense-event/charge-3> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_ceos_2010_003/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2010_003/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "35 Years" .
-
-<https://caselinker.up.railway.app/resource/case/doj_ceos_2010_003/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "supervised release" .
-
-<https://caselinker.up.railway.app/resource/case/doj_ceos_2010_003/sentence/3> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$1,500" .
+    rdfs:label "[\"35 Years\", \"supervised release\", \"$1,500\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2010_003/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2010-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
-<https://caselinker.up.railway.app/resource/platform/chat> a cacontology-platforms:AnonymousChatPlatform ;
-    rdfs:label "chat" .
+<https://caselinker.up.railway.app/resource/location/crystal-springs> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Crystal Springs" ;
+    uco-core:name "Crystal Springs" .
+
+<https://caselinker.up.railway.app/resource/location/miss> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/mississippi> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/new-orleans> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "New Orleans" ;
+    uco-core:name "New Orleans" .
+
+<https://caselinker.up.railway.app/resource/location/washington> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2010_003/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;
@@ -135,6 +161,9 @@
     cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/chat> ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/doj_ceos_2010_003/facet/possession> .
 
+<https://caselinker.up.railway.app/resource/platform/chat> a cacontology-platforms:AnonymousChatPlatform ;
+    rdfs:label "chat" .
+
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2010_003/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "ICE agents that he had child pornography on his computer, that he had chatted with others online about having sex wit..." ;
     dcterms:source <https://www.justice.gov/archives/opa/pr/mississippi-man-sentenced-35-years-prison-production-distribution-receipt-and-possession> ;
@@ -146,4 +175,10 @@
     ns1:evidenceTier "press_release_stated" ;
     ns1:quoteType "paraphrase" ;
     uco-core:description "ICE agents that he had child pornography on his computer, that he had chatted with others online about having sex with children, and that he had knowingly received and traded pornographic images of ch" .
+
+<https://caselinker.up.railway.app/resource/case/doj_ceos_2010_003/offense-event/charge-3> a cacontology:ChildSexualAbuseEvent,
+        cac-core:Event,
+        uco-action:Crime ;
+    rdfs:label "Inferred offense from charge: child exploitation" ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/chat> .
 

@@ -1,5 +1,6 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
@@ -9,28 +10,41 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_020> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:14:19.028633" ;
+    dcterms:created "2026-09-15T21:08:10.039485" ;
     dcterms:identifier "ncmec_2024_020" ;
-    dcterms:modified "2026-09-10T19:14:19.028633" ;
+    dcterms:modified "2026-09-15T21:08:10.039485" ;
     dcterms:source <https://www.justice.gov/usao-az/pr/graham-county-man-sentenced-over-8-years-prison-possession-child-sex-abuse-material#:~:text=Williams's%20wife%2C%20Cori%2C%20was%20also,sentenced%20on%20April%2017%2C%202024>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/ariz>,
+        <https://caselinker.up.railway.app/resource/location/arizona>,
+        <https://caselinker.up.railway.app/resource/location/graham-county>,
+        <https://caselinker.up.railway.app/resource/location/tucson>,
+        <https://caselinker.up.railway.app/resource/location/united-states> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_020/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_020/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_020/cybertip>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_020/event/distribution>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_020/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_020/event/project-safe-childhood>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_020/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_020/legal-step/sentenced>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_020/operation> ;
     cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/ncmec_2024_020/tech/cybertipline> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ceos>,
         <https://caselinker.up.railway.app/resource/agency/hsi>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/ariz>,
+        <https://caselinker.up.railway.app/resource/location/arizona>,
+        <https://caselinker.up.railway.app/resource/location/graham-county>,
+        <https://caselinker.up.railway.app/resource/location/tucson>,
+        <https://caselinker.up.railway.app/resource/location/united-states> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_020/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -48,6 +62,8 @@
 
 <https://caselinker.up.railway.app/resource/agency/hsi> a cacontology-multi:FederalAgency .
 
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_020/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "possession of child pornography" ;
@@ -64,6 +80,10 @@
         cacontology-legal-outcomes:CSAM_Distribution ;
     cacontology:severityLevel 3 .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_020/event/project-safe-childhood> a cac-core:Event,
+        cacontology-multi:ProjectSafeChildhoodOperation ;
+    cacontology:severityLevel 3 .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_020/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_020/legal-proceeding> a cac-core:Event,
@@ -72,8 +92,7 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2024_020/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_020/charge/2> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2024-03-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2024_020/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_020/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2024_020/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_020/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -84,17 +103,14 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_020/operation> a cac-core:Event,
         cacontology-taskforce:TaskForceOperation .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_020/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_020/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 36 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_020/person/victim/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_020/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "97 months" .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_020/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "supervised release" .
+    rdfs:label "[\"97 months\", \"supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_020/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -104,6 +120,21 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_020/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2024-03-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/ariz> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/arizona> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/graham-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/tucson> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_020/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

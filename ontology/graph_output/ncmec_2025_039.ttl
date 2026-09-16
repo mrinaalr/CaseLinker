@@ -13,6 +13,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -33,11 +34,15 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_039> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:25:33.493516" ;
+    dcterms:created "2026-09-15T21:27:13.189092" ;
     dcterms:identifier "ncmec_2025_039" ;
-    dcterms:modified "2026-09-10T19:25:33.493516" ;
+    dcterms:modified "2026-09-15T21:27:13.189092" ;
     dcterms:source <https://gilaherald.com/man-on-probation-for-sexual-exploitation-of-a-minor-jailed-on-new-sex-charges/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/arkansas>,
+        <https://caselinker.up.railway.app/resource/location/jasper>,
+        <https://caselinker.up.railway.app/resource/location/texas>,
+        <https://caselinker.up.railway.app/resource/location/tucson> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_039/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_039/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_039/admission/1>,
@@ -49,7 +54,11 @@
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/graham-county-sheriffs-office>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/thatcher-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/thatcher-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/arkansas>,
+        <https://caselinker.up.railway.app/resource/location/jasper>,
+        <https://caselinker.up.railway.app/resource/location/texas>,
+        <https://caselinker.up.railway.app/resource/location/tucson> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_039/charge/1> a cacontology-legal-outcomes:CriminalCharge,
         cacontology-legal-outcomes:StateCharge ;
@@ -71,8 +80,7 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_039/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_039/charge/2> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2025-04-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_039/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2025_039/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_039/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_039/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -101,11 +109,7 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_039/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:ProbationSentence ;
-    rdfs:label "PROBATION" .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2025_039/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "5 years" .
+    rdfs:label "[\"PROBATION\", \"5 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_039/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
@@ -118,8 +122,28 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_039/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_039/person/offender/1> .
 
-<https://caselinker.up.railway.app/resource/platform/snapchat> a cacontology-platforms:MessagingService ;
-    rdfs:label "Snapchat" .
+<https://caselinker.up.railway.app/resource/location/arkansas> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Arkansas" ;
+    uco-core:name "Arkansas" .
+
+<https://caselinker.up.railway.app/resource/location/jasper> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Jasper" ;
+    uco-core:name "Jasper" .
+
+<https://caselinker.up.railway.app/resource/location/texas> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Texas" ;
+    uco-core:name "Texas" .
+
+<https://caselinker.up.railway.app/resource/location/tucson> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/platform/snapchat> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:MessagingService ;
+    rdfs:label "Snapchat" ;
+    cacontology-platforms:encryptionLevel "end-to-end" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_039/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;
@@ -137,7 +161,7 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_039/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "using the material for sexual gratification purposes but denied remembering sending any of the material to anyone els..." ;
     dcterms:source <https://gilaherald.com/man-on-probation-for-sexual-exploitation-of-a-minor-jailed-on-new-sex-charges/> ;
-    ns1:admissionContext "nverbal communication and restricted and repetitive behavior patterns. When questioned by police regarding his latest possession of CSAM,..." ;
+    ns1:admissionContext "verbal communication and restricted and repetitive behavior patterns. When questioned by police regarding his latest possession of CSAM,..." ;
     ns1:admissionFrame "admitted_to" ;
     ns1:admissionTheme "harm_conduct",
         "minimization" ;

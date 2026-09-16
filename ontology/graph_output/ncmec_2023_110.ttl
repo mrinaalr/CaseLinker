@@ -9,16 +9,23 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_110> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:09:54.405445" ;
+    dcterms:created "2026-09-15T20:55:00.842032" ;
     dcterms:identifier "ncmec_2023_110" ;
-    dcterms:modified "2026-09-10T19:09:54.405445" ;
+    dcterms:modified "2026-09-15T20:55:00.842032" ;
     dcterms:source <https://www.cbs17.com/news/local-news/man-in-harnett-county-jail-charged-with-10-counts-of-child-sexual-exploitation-sheriffs-office-says/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/cameron>,
+        <https://caselinker.up.railway.app/resource/location/harnett-county>,
+        <https://caselinker.up.railway.app/resource/location/harnett-county-jail>,
+        <https://caselinker.up.railway.app/resource/location/lillington>,
+        <https://caselinker.up.railway.app/resource/location/nc>,
+        <https://caselinker.up.railway.app/resource/location/pine-oak> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_110/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_110/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_110/event/multi-jurisdiction>,
@@ -26,7 +33,13 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_110/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/state-bureau-of-investigation> .
+        <https://caselinker.up.railway.app/resource/agency/state-bureau-of-investigation> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/cameron>,
+        <https://caselinker.up.railway.app/resource/location/harnett-county>,
+        <https://caselinker.up.railway.app/resource/location/harnett-county-jail>,
+        <https://caselinker.up.railway.app/resource/location/lillington>,
+        <https://caselinker.up.railway.app/resource/location/nc>,
+        <https://caselinker.up.railway.app/resource/location/pine-oak> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_110/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -72,21 +85,53 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_110/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Harnett County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_110/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_110/charge/2>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_110/charge/3>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_110/charge/4> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_110/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_110/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 45 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_110/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_110/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_110/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/cameron> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Cameron" ;
+    uco-core:name "Cameron" .
+
+<https://caselinker.up.railway.app/resource/location/harnett-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Harnett County" ;
+    uco-core:name "Harnett County" .
+
+<https://caselinker.up.railway.app/resource/location/harnett-county-jail> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Harnett County Jail" ;
+    uco-core:name "Harnett County Jail" .
+
+<https://caselinker.up.railway.app/resource/location/lillington> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Lillington" ;
+    uco-core:name "Lillington" .
+
+<https://caselinker.up.railway.app/resource/location/nc> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/pine-oak> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Pine Oak" ;
+    uco-core:name "Pine Oak" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_110/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

@@ -9,6 +9,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -29,18 +30,20 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_100> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:09:50.477873" ;
+    dcterms:created "2026-09-15T20:55:00.836359" ;
     dcterms:identifier "ncmec_2023_100" ;
-    dcterms:modified "2026-09-10T19:09:50.477873" ;
+    dcterms:modified "2026-09-15T20:55:00.836359" ;
     dcterms:source <https://www.gazettextra.com/news/crime/janesville-man-charged-with-possessing-child-pornography/article_c6f373f0-fb32-11ed-b426-33a3de0458a3.html>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/janesville> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_100/phase/convicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_100/phase/convicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_100/admission/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_100/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_100/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_100/legal-step/convicted> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/janesville-police-department> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/janesville-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/janesville> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_100/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -52,7 +55,6 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_100/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility: Rock County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_100/charge/1> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2023-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_100/sentence/1> .
@@ -76,7 +78,7 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_100/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$500,000" .
+    rdfs:label "[\"$500,000\"]" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_100/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "has been doing this for a year" ;
@@ -92,6 +94,11 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_100/phase/convicted> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2023-05-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/janesville> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Janesville" ;
+    uco-core:name "Janesville" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_100/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

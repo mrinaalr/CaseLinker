@@ -10,20 +10,25 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_001> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:35:49.784528" ;
+    dcterms:created "2026-09-15T19:24:25.518765" ;
     dcterms:identifier "anchorage_pd_2022_001" ;
-    dcterms:modified "2026-09-10T19:35:49.784528" ;
+    dcterms:modified "2026-09-15T19:24:25.518765" ;
     dcterms:source <https://www.anchoragepolice.com/news/federal-jury-convicts-jayshon-moore-for-sex-trafficking-a-minor-and-child-pornography>,
         "ANCHORAGE PD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/anchorage>,
+        <https://caselinker.up.railway.app/resource/location/china>,
+        <https://caselinker.up.railway.app/resource/location/the-district-of-alaska> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_001/phase/convicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_001/phase/convicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_001/event/possession>,
         <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_001/event/production>,
+        <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_001/event/project-safe-childhood>,
         <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_001/event/trafficking>,
         <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_001/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_001/legal-step/convicted>,
@@ -32,7 +37,11 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/anchorage-police-department>,
         <https://caselinker.up.railway.app/resource/agency/child-exploitation-and-human-trafficking-task-force>,
         <https://caselinker.up.railway.app/resource/agency/district-attorneys-office>,
-        <https://caselinker.up.railway.app/resource/agency/fbi> .
+        <https://caselinker.up.railway.app/resource/agency/fbi>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/anchorage>,
+        <https://caselinker.up.railway.app/resource/location/china>,
+        <https://caselinker.up.railway.app/resource/location/the-district-of-alaska> .
 
 <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_001/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -58,6 +67,8 @@
 
 <https://caselinker.up.railway.app/resource/agency/fbi> a cacontology-multi:FederalAgency .
 
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
+
 <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_001/charge/1> a cacontology-legal-outcomes:CriminalCharge,
         cacontology-legal-outcomes:StateCharge ;
     rdfs:label "sexual exploitation of a child" .
@@ -81,6 +92,9 @@
     ns1:chargeCluster "child_exploitation" ;
     ns1:chargeOffenseEvent <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_001/offense-event/charge-5> .
 
+<https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_001/event/project-safe-childhood> a cac-core:Event,
+        cacontology-multi:ProjectSafeChildhoodOperation .
+
 <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_001/event/trafficking> a cac-core:Event,
         cacontology-legal-outcomes:SexTrafficking .
 
@@ -97,9 +111,7 @@
         <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_001/charge/4>,
         <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_001/charge/5> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_001/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_001/sentence/2>,
-        <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_001/sentence/3> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_001/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_001/legal-step/convicted> a cac-core:Event,
         cac-core:LegalEvent,
@@ -112,20 +124,23 @@
 <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_001/person/victim/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_001/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "supervised release" .
-
-<https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_001/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MandatoryMinimumSentencing ;
-    rdfs:label "mandatory minimum" .
-
-<https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_001/sentence/3> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "15 years" .
+    rdfs:label "[\"supervised release\", \"mandatory minimum\", \"15 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_001/phase/convicted> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/anchorage> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/china> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "China" ;
+    uco-core:name "China" .
+
+<https://caselinker.up.railway.app/resource/location/the-district-of-alaska> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/anchorage_pd_2022_001/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

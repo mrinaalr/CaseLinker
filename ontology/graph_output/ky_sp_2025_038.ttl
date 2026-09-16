@@ -10,22 +10,28 @@
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2025_038> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:52:59.993199" ;
+    dcterms:created "2026-09-15T19:52:04.427466" ;
     dcterms:identifier "ky_sp_2025_038" ;
-    dcterms:modified "2026-09-10T19:52:59.993199" ;
+    dcterms:modified "2026-09-15T19:52:04.427466" ;
     dcterms:source <https://www.kentuckystatepolice.ky.gov/news/ecb-4-1-2025/>,
         "KY SP" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/ky>,
+        <https://caselinker.up.railway.app/resource/location/versailles>,
+        <https://caselinker.up.railway.app/resource/location/woodford-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/cybertip>,
+        <https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/event/conspiracy>,
         <https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/event/csam>,
         <https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/event/distribution>,
         <https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/event/production>,
@@ -39,7 +45,11 @@
         <https://caselinker.up.railway.app/resource/agency/fbi>,
         <https://caselinker.up.railway.app/resource/agency/kentucky-state-police-department>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/versailles-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/usao>,
+        <https://caselinker.up.railway.app/resource/agency/versailles-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/ky>,
+        <https://caselinker.up.railway.app/resource/location/versailles>,
+        <https://caselinker.up.railway.app/resource/location/woodford-county> .
 
 <https://caselinker.up.railway.app/resource/agency/anderson-county-sheriffs-department> a cac-core:OrganizationLikeEntity,
         cacontology-multi:LocalAgency ;
@@ -48,6 +58,8 @@
 <https://caselinker.up.railway.app/resource/agency/fbi> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/agency/kentucky-state-police-department> a cacontology-multi:StateAgency .
+
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/agency/versailles-police-department> a cac-core:OrganizationLikeEntity,
         cacontology-multi:LocalAgency ;
@@ -97,33 +109,30 @@
 <https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 26 .
 
+<https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/person/offender/2> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 31 .
+
 <https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/person/victim/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/relationship/father> a cacontology-custodial:CustodialRelationship,
         cacontology-custodial:FamilialRelationship ;
     cacontology-custodial:involvesChild <https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/role/victim/1> ;
-    cacontology-custodial:involvesCustodian <https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/role/offender/1> ;
+    cacontology-custodial:involvesCustodian <https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/role/offender/1>,
+        <https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/role/offender/2> ;
     cacontology-custodial:relationshipType "father" .
-
-<https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/role/offender/1> a cacontology:OffenderRole,
-        uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/event/csam>,
-        <https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/event/production>,
-        <https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/event/sextortion> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
     cacontology:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/event/csam>,
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/event/conspiracy>,
+        <https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/event/csam>,
         <https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/event/production>,
         <https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/event/sextortion> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/person/victim/1> .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "540 months" .
+    rdfs:label "[\"540 months\"]" .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -133,6 +142,41 @@
 <https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/event/conspiracy>,
+        <https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/event/csam>,
+        <https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/event/production>,
+        <https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/event/sextortion> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/role/offender/2> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/event/conspiracy>,
+        <https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/event/csam>,
+        <https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/event/production>,
+        <https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/event/sextortion> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/person/offender/2> .
+
+<https://caselinker.up.railway.app/resource/location/ky> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/versailles> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/woodford-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/event/conspiracy> a cacontology:ConspiracyToCommitCSA,
+        cac-core:Event ;
+    cacontology:conspiracyMemberCount 2 ;
+    cacontology:participatesInConspiracy <https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/role/offender/1>,
+        <https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/role/offender/2> ;
+    cacontology:severityLevel 3 ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/social-media> .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2025_038/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

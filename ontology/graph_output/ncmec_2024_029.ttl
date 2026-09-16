@@ -1,5 +1,6 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
@@ -8,70 +9,131 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_029> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:14:23.354817" ;
+    dcterms:created "2026-09-15T21:08:10.045630" ;
     dcterms:identifier "ncmec_2024_029" ;
-    dcterms:modified "2026-09-10T19:14:23.354817" ;
-    dcterms:source <https://www.kark.com/crime/arkansas-man-facing-more-than-100-counts-of-child-pornography/>,
+    dcterms:modified "2026-09-15T21:08:10.045630" ;
+    dcterms:source <https://www.nwaonline.com/news/2024/oct/21/two-arkansas-men-facing-multiple-charges-in/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/arkansas>,
+        <https://caselinker.up.railway.app/resource/location/hot-spring-county>,
+        <https://caselinker.up.railway.app/resource/location/leachville>,
+        <https://caselinker.up.railway.app/resource/location/malvern>,
+        <https://caselinker.up.railway.app/resource/location/mississippi-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_029/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_029/phase/charged> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_029/event/csam>,
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_029/event/conspiracy>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_029/event/distribution>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_029/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_029/legal-proceeding> ;
-    cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/crittenden-county-sheriffs-department>,
-        <https://caselinker.up.railway.app/resource/agency/icac> .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_029/role/offender/1> a cacontology:OffenderRole,
-        uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2024-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_029/event/csam> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_029/person/offender/1> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/arkansas-state-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/icac> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/arkansas>,
+        <https://caselinker.up.railway.app/resource/location/hot-spring-county>,
+        <https://caselinker.up.railway.app/resource/location/leachville>,
+        <https://caselinker.up.railway.app/resource/location/malvern>,
+        <https://caselinker.up.railway.app/resource/location/mississippi-county> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_029/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2024-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_029/event/csam> ;
+    cacontology:hasRoleBeginPoint "2024-10-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_029/event/conspiracy>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_029/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_029/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/crittenden-county-sheriffs-department> a cac-core:OrganizationLikeEntity,
-        cacontology-multi:LocalAgency ;
-    rdfs:label "Crittenden County Sheriff's Department" .
+<https://caselinker.up.railway.app/resource/agency/arkansas-state-police-department> a cacontology-multi:StateAgency .
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_029/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_029/charge/1> a cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "distributing" ;
+    cacontology-legal-outcomes:indictmentCounts 11 .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_029/charge/2> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "CHILD PORNOGRAPHY" ;
-    cacontology-legal-outcomes:indictmentCounts 214 .
+    rdfs:label "child porn" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_029/charge/2> a cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "Producing/Directing Sexual Performance of a Child" ;
-    cacontology-legal-outcomes:indictmentCounts 14 ;
-    ns1:chargeCluster "sexual_performance_of_child" .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_029/event/distribution> a cac-core:Event,
+        cacontology-legal-outcomes:CSAM_Distribution ;
+    cacontology:severityLevel 3 .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_029/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_029/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_029/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2024_029/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_029/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-05-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-10-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2024_029/sentence/1> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_029/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_029/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 30 .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_029/person/offender/2> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 31 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_029/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_029/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2024-10-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_029/event/conspiracy>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_029/event/possession> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_029/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_029/role/offender/2> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2024-10-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_029/event/conspiracy>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_029/event/possession> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_029/person/offender/2> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_029/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:MonetaryPenalty ;
+    rdfs:label "[\"$100,000\"]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_029/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
-    cacontology:hasPhaseBeginPoint "2024-05-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology:hasPhaseBeginPoint "2024-10-01T00:00:00Z"^^xsd:dateTimeStamp .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_029/event/csam> a cacontology:CSAMIncident,
+<https://caselinker.up.railway.app/resource/location/arkansas> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/hot-spring-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Hot Spring County" ;
+    uco-core:name "Hot Spring County" .
+
+<https://caselinker.up.railway.app/resource/location/leachville> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Leachville" ;
+    uco-core:name "Leachville" .
+
+<https://caselinker.up.railway.app/resource/location/malvern> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Malvern" ;
+    uco-core:name "Malvern" .
+
+<https://caselinker.up.railway.app/resource/location/mississippi-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Mississippi County" ;
+    uco-core:name "Mississippi County" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_029/event/conspiracy> a cacontology:ConspiracyToCommitCSA,
         cac-core:Event ;
-    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2024_029/facet/csam> .
+    cacontology:conspiracyMemberCount 2 ;
+    cacontology:participatesInConspiracy <https://caselinker.up.railway.app/resource/case/ncmec_2024_029/role/offender/1>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_029/role/offender/2> ;
+    cacontology:severityLevel 3 .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_029/event/possession> a cacontology:CSAMIncident,
+        cac-core:Event ;
+    cacontology:severityLevel 3 ;
+    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2024_029/facet/possession> .
 

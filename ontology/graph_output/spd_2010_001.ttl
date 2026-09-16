@@ -6,24 +6,32 @@
 @prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/spd_2010_001> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:12:50.430173" ;
+    dcterms:created "2026-09-15T20:28:56.165145" ;
     dcterms:identifier "spd_2010_001" ;
-    dcterms:modified "2026-09-10T20:12:50.430173" ;
+    dcterms:modified "2026-09-15T20:28:56.165145" ;
     dcterms:source <https://spdblotter.seattle.gov/2010/12/13/would-be-child-predator-arrested/>,
         "SPD" ;
-    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/spd_2010_001/phase/arrested> ;
-    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/spd_2010_001/phase/arrested> ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/king-county> ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/spd_2010_001/phase/booked> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/spd_2010_001/phase/booked> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/spd_2010_001/event/distribution>,
-        <https://caselinker.up.railway.app/resource/case/spd_2010_001/event/hands-on> ;
+        <https://caselinker.up.railway.app/resource/case/spd_2010_001/event/hands-on>,
+        <https://caselinker.up.railway.app/resource/case/spd_2010_001/legal-proceeding>,
+        <https://caselinker.up.railway.app/resource/case/spd_2010_001/operation> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/seattle-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/taskforce> .
+        <https://caselinker.up.railway.app/resource/agency/taskforce> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/king-county> .
 
 <https://caselinker.up.railway.app/resource/case/spd_2010_001/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -39,13 +47,26 @@
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
-<https://caselinker.up.railway.app/resource/agency/seattle-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/seattle-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Seattle Police Department" .
 
-<https://caselinker.up.railway.app/resource/agency/taskforce> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/taskforce> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Taskforce" .
 
 <https://caselinker.up.railway.app/resource/case/spd_2010_001/event/distribution> a cac-core:Event,
         cacontology-legal-outcomes:CSAM_Distribution ;
     cacontology:severityLevel 3 .
+
+<https://caselinker.up.railway.app/resource/case/spd_2010_001/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2010-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/spd_2010_001/sentence/1> .
+
+<https://caselinker.up.railway.app/resource/case/spd_2010_001/operation> a cac-core:Event,
+        cacontology-taskforce:UndercoverUnit .
 
 <https://caselinker.up.railway.app/resource/case/spd_2010_001/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 47 .
@@ -53,9 +74,18 @@
 <https://caselinker.up.railway.app/resource/case/spd_2010_001/person/victim/1> a uco-identity:Person ;
     cacontology-production:victimAge 15 .
 
-<https://caselinker.up.railway.app/resource/case/spd_2010_001/phase/arrested> a cacontology:InitialPhase,
+<https://caselinker.up.railway.app/resource/case/spd_2010_001/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
+<https://caselinker.up.railway.app/resource/case/spd_2010_001/phase/booked> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2010-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/king-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "King County" ;
+    uco-core:name "King County" .
 
 <https://caselinker.up.railway.app/resource/case/spd_2010_001/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

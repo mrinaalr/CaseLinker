@@ -9,20 +9,22 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_549> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:18:56.798047" ;
+    dcterms:created "2026-09-15T21:08:10.658332" ;
     dcterms:identifier "ncmec_2024_549" ;
-    dcterms:modified "2026-09-10T19:18:56.798047" ;
-    dcterms:source <https://www.voicenews.com/2024/08/16/algonac-man-arrested-on-child-pornography-charges/>,
+    dcterms:modified "2026-09-15T21:08:10.658332" ;
+    dcterms:source <https://www.wnem.com/2024/04/03/sanford-man-charged-child-porn-computer-crime/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/mich>,
+        <https://caselinker.up.railway.app/resource/location/sanford> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_549/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_549/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_549/cybertip>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_549/event/distribution>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_549/event/online-only>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_549/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_549/legal-proceeding> ;
@@ -30,18 +32,20 @@
     cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/ncmec_2024_549/tech/cybertipline> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/michigan-state-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/mich>,
+        <https://caselinker.up.railway.app/resource/location/sanford> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_549/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2024-08-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:hasRoleBeginPoint "2024-04-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_549/event/online-only>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_549/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_549/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_549/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2024-08-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:hasRoleBeginPoint "2024-04-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_549/event/online-only>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_549/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_549/person/victim/1> .
@@ -52,7 +56,7 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_549/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "child pornography" .
+    rdfs:label "child porn" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_549/charge/2> a cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "sexual exploitation" ;
@@ -61,9 +65,6 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_549/cybertip> a cacontology-us-ncmec:NCMECCybertipReport ;
     cacontology-us-ncmec:supportedBy <https://caselinker.up.railway.app/resource/agency/ncmec> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_549/event/distribution> a cac-core:Event,
-        cacontology-legal-outcomes:CSAM_Distribution .
-
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_549/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_549/legal-proceeding> a cac-core:Event,
@@ -71,11 +72,16 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2024_549/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_549/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-08-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-04-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2024_549/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_549/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_549/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_549/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_549/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -84,7 +90,15 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_549/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
-    cacontology:hasPhaseBeginPoint "2024-08-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology:hasPhaseBeginPoint "2024-04-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/mich> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/sanford> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Sanford" ;
+    uco-core:name "Sanford" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_549/event/online-only> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event .

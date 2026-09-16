@@ -2,141 +2,152 @@
 @prefix cacontology: <https://cacontology.projectvic.org#> .
 @prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
+@prefix cacontology-undercover: <https://cacontology.projectvic.org/undercover#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_562> a cacontology:CACInvestigation,
-        cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:13:18.897866" ;
-    dcterms:identifier "ncmec_2023_562" ;
-    dcterms:modified "2026-09-10T19:13:18.897866" ;
-    dcterms:source <https://thecourier.com/news/455285/one-man-29-alleged-offenses-involving-a-minor/>,
-        "NCMEC" ;
-    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/phase/indicted> ;
-    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/phase/indicted> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/event/conspiracy>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/legal-proceeding> .
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_562/admission/1/extraction-confidence> a cac-core:AssessmentResult ;
+    cac-core:assesses <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/admission/1> ;
+    cac-core:generatedBy <https://caselinker.up.railway.app/resource/case/ncmec_2023_562> ;
+    cac-core:hasConfidence 0.65 .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_562/admission/2/extraction-confidence> a cac-core:AssessmentResult ;
+    cac-core:assesses <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/admission/2> ;
+    cac-core:generatedBy <https://caselinker.up.railway.app/resource/case/ncmec_2023_562> ;
+    cac-core:hasConfidence 0.65 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/event/conspiracy> ;
+    cacontology:hasRoleBeginPoint "2014-10-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/agency/maine-state-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:StateAgency ;
+    rdfs:label "Maine State Police Department" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "pandering sexually-oriented material involving a minor" ;
-    cacontology-legal-outcomes:indictmentCounts 30 .
+    rdfs:label "child pornography" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_562/event/distribution> a cac-core:Event,
+        cacontology-legal-outcomes:CSAM_Distribution .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_562/event/multi-jurisdiction> a cac-core:Event,
+        cacontology-multi:MultiJurisdictionalInvestigation .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_562/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2014-10-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/sentence/1> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_562/legal-step/sentenced> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding,
+        cacontology-legal-outcomes:SentencingHearing ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2014-10-01T00:00:00Z"^^xsd:dateTimeStamp .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/person/offender/1> a uco-identity:Person ;
-    cacontology-detection:ageEstimate 19 .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_562/person/offender/2> a uco-identity:Person ;
-    cacontology-detection:ageEstimate 20 .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_562/person/offender/3> a uco-identity:Person ;
-    cacontology-detection:ageEstimate 29 .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_562/person/offender/4> a uco-identity:Person ;
-    cacontology-detection:ageEstimate 32 .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_562/person/offender/5> a uco-identity:Person ;
-    cacontology-detection:ageEstimate 40 .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_562/person/offender/6> a uco-identity:Person ;
-    cacontology-detection:ageEstimate 42 .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_562/person/offender/7> a uco-identity:Person ;
-    cacontology-detection:ageEstimate 44 .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_562/person/offender/8> a uco-identity:Person ;
-    cacontology-detection:ageEstimate 57 .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_562/person/offender/9> a uco-identity:Person ;
-    cacontology-detection:ageEstimate 74 .
+    cacontology-detection:ageEstimate 25 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/person/victim/1> a uco-identity:Person ;
-    cacontology-production:victimAge 17 .
+    cacontology-production:victimAge 14 .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_562/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:ProbationSentence ;
+    rdfs:label "[\"7 months\", \"probation\"]" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_562> a cacontology:CACInvestigation,
+        cac-core:EnduringEntity ;
+    dcterms:created "2026-09-15T20:55:01.242366" ;
+    dcterms:identifier "ncmec_2023_562" ;
+    dcterms:modified "2026-09-15T20:55:01.242366" ;
+    dcterms:source <https://thecourier.com/news/455285/one-man-29-alleged-offenses-involving-a-minor/>,
+        "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/augusta>,
+        <https://caselinker.up.railway.app/resource/location/maine>,
+        <https://caselinker.up.railway.app/resource/location/maryland>,
+        <https://caselinker.up.railway.app/resource/location/sparks> ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/phase/sentenced> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/phase/sentenced> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/admission/1>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/admission/2>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/event/distribution>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/event/multi-jurisdiction>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/legal-proceeding>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/legal-step/sentenced> ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/maine-state-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/augusta>,
+        <https://caselinker.up.railway.app/resource/location/maine>,
+        <https://caselinker.up.railway.app/resource/location/maryland>,
+        <https://caselinker.up.railway.app/resource/location/sparks> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_562/admission/2> a cacontology-undercover:IncriminatingStatement ;
+    rdfs:label "‘had a problem with it since he was 14 years old" ;
+    dcterms:source <https://thecourier.com/news/455285/one-man-29-alleged-offenses-involving-a-minor/> ;
+    ns1:admissionContext "t filings by Assistant Attorney General Kate M. Lawrence, “Stagge admitted to downloading child pornography and said that he ‘had a probl..." ;
+    ns1:admissionFrame "said_paraphrase" ;
+    ns1:admissionTheme "other" ;
+    ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/role/offender/1> ;
+    ns1:evidenceTier "press_release_stated" ;
+    ns1:quoteType "paraphrase" ;
+    uco-core:description "‘had a problem with it since he was 14 years old" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_562/phase/sentenced> a cac-core:Phase,
+        cacontology-legal-outcomes:SentencingPhase ;
+    cacontology:hasPhaseBeginPoint "2014-10-01T00:00:00Z"^^xsd:dateTimeStamp .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/event/conspiracy> ;
+    cacontology:hasRoleBeginPoint "2014-10-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/person/offender/1> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_562/role/offender/2> a cacontology:OffenderRole,
-        uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/event/conspiracy> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/person/offender/2> .
+<https://caselinker.up.railway.app/resource/location/augusta> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Augusta" ;
+    uco-core:name "Augusta" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_562/role/offender/3> a cacontology:OffenderRole,
-        uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/event/conspiracy> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/person/offender/3> .
+<https://caselinker.up.railway.app/resource/location/maine> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Maine" ;
+    uco-core:name "Maine" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_562/role/offender/4> a cacontology:OffenderRole,
-        uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/event/conspiracy> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/person/offender/4> .
+<https://caselinker.up.railway.app/resource/location/maryland> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_562/role/offender/5> a cacontology:OffenderRole,
-        uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/event/conspiracy> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/person/offender/5> .
+<https://caselinker.up.railway.app/resource/location/sparks> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Sparks" ;
+    uco-core:name "Sparks" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_562/role/offender/6> a cacontology:OffenderRole,
-        uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/event/conspiracy> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/person/offender/6> .
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_562/admission/1> a cacontology-undercover:IncriminatingStatement ;
+    rdfs:label "downloading child pornography and said that he ‘had a problem with it since he was 14 years old" ;
+    dcterms:source <https://thecourier.com/news/455285/one-man-29-alleged-offenses-involving-a-minor/> ;
+    ns1:admissionContext "activity. At that time, according to court filings by Assistant Attorney General Kate M. Lawrence, “Stagge admitted to downloading child..." ;
+    ns1:admissionFrame "admitted_to" ;
+    ns1:admissionTheme "harm_conduct",
+        "tech_use" ;
+    ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/role/offender/1> ;
+    ns1:evidenceTier "press_release_stated" ;
+    ns1:quoteType "paraphrase" ;
+    uco-core:description "downloading child pornography and said that he ‘had a problem with it since he was 14 years old" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_562/role/offender/7> a cacontology:OffenderRole,
-        uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/event/conspiracy> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/person/offender/7> .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_562/role/offender/8> a cacontology:OffenderRole,
-        uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/event/conspiracy> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/person/offender/8> .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_562/role/offender/9> a cacontology:OffenderRole,
-        uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/event/conspiracy> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/person/offender/9> .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_562/phase/indicted> a cacontology:LegalProcessPhase,
-        cac-core:Phase ;
-    cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_562/event/conspiracy> a cacontology:ConspiracyToCommitCSA,
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_562/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
-    cacontology:conspiracyMemberCount 9 ;
-    cacontology:participatesInConspiracy <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/role/offender/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/role/offender/2>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/role/offender/3>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/role/offender/4>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/role/offender/5>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/role/offender/6>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/role/offender/7>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/role/offender/8>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/role/offender/9> ;
-    cacontology:severityLevel 1 .
+    cacontology:producesArtifact <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/admission/1> ;
+    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2023_562/facet/possession> .
 

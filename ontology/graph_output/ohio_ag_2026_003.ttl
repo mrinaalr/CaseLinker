@@ -4,25 +4,35 @@
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2026_003> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:03:29.945919" ;
+    dcterms:created "2026-09-15T20:10:06.709697" ;
     dcterms:identifier "ohio_ag_2026_003" ;
-    dcterms:modified "2026-09-10T20:03:29.945919" ;
+    dcterms:modified "2026-09-15T20:10:06.709697" ;
     dcterms:source <https://www.ohioattorneygeneral.gov/Media/News-Releases/November/State-Agents-Arrest-Man-on-Child-Rape-Allegation>,
         "OHIO AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/fairfield-county>,
+        <https://caselinker.up.railway.app/resource/location/gallia-county>,
+        <https://caselinker.up.railway.app/resource/location/gallipolis>,
+        <https://caselinker.up.railway.app/resource/location/ohio> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ohio_ag_2026_003/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ohio_ag_2026_003/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ohio_ag_2026_003/event/hands-on>,
         <https://caselinker.up.railway.app/resource/case/ohio_ag_2026_003/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/attorney-generals-office>,
-        <https://caselinker.up.railway.app/resource/agency/bureau-of-criminal-investigation> .
+        <https://caselinker.up.railway.app/resource/agency/bureau-of-criminal-investigation> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/fairfield-county>,
+        <https://caselinker.up.railway.app/resource/location/gallia-county>,
+        <https://caselinker.up.railway.app/resource/location/gallipolis>,
+        <https://caselinker.up.railway.app/resource/location/ohio> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2026_003/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -43,17 +53,33 @@
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2026_003/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Gallia County Jail" ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ohio_ag_2026_003/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2026_003/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 63 .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2026_003/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ohio_ag_2026_003/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2026_003/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/fairfield-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/gallia-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/gallipolis> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/ohio> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2026_003/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

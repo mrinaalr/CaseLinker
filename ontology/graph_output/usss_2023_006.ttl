@@ -10,19 +10,24 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/usss_2023_006> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:21:11.425516" ;
+    dcterms:created "2026-09-15T20:36:46.070204" ;
     dcterms:identifier "usss_2023_006" ;
-    dcterms:modified "2026-09-10T20:21:11.425516" ;
+    dcterms:modified "2026-09-15T20:36:46.070204" ;
     dcterms:source <https://www.secretservice.gov/newsroom/releases/2023/03/federal-jury-convicts-fort-mccoy-man-attempting-entice-12-year-old-child>,
         "USSS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/florida>,
+        <https://caselinker.up.railway.app/resource/location/ocala>,
+        <https://caselinker.up.railway.app/resource/location/united-states> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/usss_2023_006/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/usss_2023_006/phase/arrested> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/usss_2023_006/legal-proceeding>,
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/usss_2023_006/event/project-safe-childhood>,
+        <https://caselinker.up.railway.app/resource/case/usss_2023_006/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/usss_2023_006/offense-event/charge-2>,
         <https://caselinker.up.railway.app/resource/case/usss_2023_006/operation> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ceos>,
@@ -32,7 +37,11 @@
         <https://caselinker.up.railway.app/resource/agency/ice>,
         <https://caselinker.up.railway.app/resource/agency/marion-county-sheriffs-office>,
         <https://caselinker.up.railway.app/resource/agency/ocala-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/us-secret-service> .
+        <https://caselinker.up.railway.app/resource/agency/us-secret-service>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/florida>,
+        <https://caselinker.up.railway.app/resource/location/ocala>,
+        <https://caselinker.up.railway.app/resource/location/united-states> .
 
 <https://caselinker.up.railway.app/resource/case/usss_2023_006/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -48,7 +57,9 @@
 
 <https://caselinker.up.railway.app/resource/agency/ceos> a cacontology-multi:FederalAgency .
 
-<https://caselinker.up.railway.app/resource/agency/citrus-county-sheriffs-office> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/citrus-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Citrus County Sheriff's Office" .
 
 <https://caselinker.up.railway.app/resource/agency/florida-department-of-law-enforcement> a cacontology-multi:LocalAgency .
 
@@ -62,6 +73,8 @@
 
 <https://caselinker.up.railway.app/resource/agency/us-secret-service> a cacontology-multi:FederalAgency .
 
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
+
 <https://caselinker.up.railway.app/resource/case/usss_2023_006/charge/1> a cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "sexual exploitation" ;
     ns1:chargeCluster "sexual_exploitation_unspecified" .
@@ -71,6 +84,9 @@
     rdfs:seeAlso <https://caselinker.up.railway.app/resource/case/usss_2023_006/offense-event/charge-2> ;
     ns1:chargeCluster "child_exploitation" ;
     ns1:chargeOffenseEvent <https://caselinker.up.railway.app/resource/case/usss_2023_006/offense-event/charge-2> .
+
+<https://caselinker.up.railway.app/resource/case/usss_2023_006/event/project-safe-childhood> a cac-core:Event,
+        cacontology-multi:ProjectSafeChildhoodOperation .
 
 <https://caselinker.up.railway.app/resource/case/usss_2023_006/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
@@ -90,7 +106,7 @@
 
 <https://caselinker.up.railway.app/resource/case/usss_2023_006/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "10 years" .
+    rdfs:label "[\"10 years\"]" .
 
 <https://caselinker.up.railway.app/resource/platform/social-media> a cacontology-platforms:SocialMediaPlatform ;
     rdfs:label "social media" .
@@ -98,6 +114,15 @@
 <https://caselinker.up.railway.app/resource/case/usss_2023_006/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/florida> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/ocala> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/usss_2023_006/offense-event/charge-2> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event,

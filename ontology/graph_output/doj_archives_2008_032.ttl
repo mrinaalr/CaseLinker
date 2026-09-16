@@ -1,27 +1,43 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2008_032> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:42:01.141692" ;
+    dcterms:created "2026-09-15T21:42:39.946152" ;
     dcterms:identifier "doj_archives_2008_032" ;
-    dcterms:modified "2026-09-10T19:42:01.141692" ;
+    dcterms:modified "2026-09-15T21:42:39.946152" ;
     dcterms:source <https://www.justice.gov/archive/criminal/ceos/pressreleases/downloads/DAK_TRAFFICKER-SENTENCED_08-15-08.pdf>,
-        "DOJ ARCHIVES" ;
+        "DOJ CEOS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/alaska>,
+        <https://caselinker.up.railway.app/resource/location/anchorage>,
+        <https://caselinker.up.railway.app/resource/location/the-district-of-alaska>,
+        <https://caselinker.up.railway.app/resource/location/washington> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_archives_2008_032/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_archives_2008_032/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_archives_2008_032/event/distribution>,
         <https://caselinker.up.railway.app/resource/case/doj_archives_2008_032/event/hands-on>,
         <https://caselinker.up.railway.app/resource/case/doj_archives_2008_032/event/trafficking>,
         <https://caselinker.up.railway.app/resource/case/doj_archives_2008_032/legal-proceeding>,
-        <https://caselinker.up.railway.app/resource/case/doj_archives_2008_032/legal-step/sentenced> .
+        <https://caselinker.up.railway.app/resource/case/doj_archives_2008_032/legal-step/sentenced> ;
+    cacontology:investigationStatus "unknown" ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/alaska-human-trafficking-task-force>,
+        <https://caselinker.up.railway.app/resource/agency/anchorage-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/fbi>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/alaska>,
+        <https://caselinker.up.railway.app/resource/location/anchorage>,
+        <https://caselinker.up.railway.app/resource/location/the-district-of-alaska>,
+        <https://caselinker.up.railway.app/resource/location/washington> .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2008_032/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -34,6 +50,16 @@
     cacontology:hasRoleBeginPoint "2008-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/doj_archives_2008_032/event/hands-on> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_archives_2008_032/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/agency/alaska-human-trafficking-task-force> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Alaska Human Trafficking Task Force" .
+
+<https://caselinker.up.railway.app/resource/agency/anchorage-police-department> a cacontology-multi:LocalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/fbi> a cacontology-multi:FederalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2008_032/charge/1> a cacontology-legal-outcomes:CriminalCharge,
         cacontology-legal-outcomes:SexTrafficking ;
@@ -52,8 +78,7 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/doj_archives_2008_032/charge/1> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2008-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_archives_2008_032/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_archives_2008_032/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_archives_2008_032/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2008_032/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -67,16 +92,24 @@
     cacontology-production:victimAge 17 .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2008_032/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "30 YEARS" .
-
-<https://caselinker.up.railway.app/resource/case/doj_archives_2008_032/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "supervised release" .
+    rdfs:label "[\"30 YEARS\", \"supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2008_032/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2008-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/alaska> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/anchorage> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/the-district-of-alaska> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/washington> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2008_032/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

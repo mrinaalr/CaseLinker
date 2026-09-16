@@ -4,28 +4,33 @@
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2016_007> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:03:00.473530" ;
+    dcterms:created "2026-09-15T20:10:06.632150" ;
     dcterms:identifier "ohio_ag_2016_007" ;
-    dcterms:modified "2026-09-10T20:03:00.473530" ;
+    dcterms:modified "2026-09-15T20:10:06.632150" ;
     dcterms:source <https://www.ohioattorneygeneral.gov/Media/News-Releases/February-2016/Attorney-General-DeWine-Announces-Arrest-in-Child>,
         "OHIO AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/campbell>,
+        <https://caselinker.up.railway.app/resource/location/ohio> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ohio_ag_2016_007/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ohio_ag_2016_007/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ohio_ag_2016_007/event/csam>,
         <https://caselinker.up.railway.app/resource/case/ohio_ag_2016_007/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/attorney-generals-crimes-against-children-unit>,
-        <https://caselinker.up.railway.app/resource/agency/jackson-county-sheriffs-office>,
         <https://caselinker.up.railway.app/resource/agency/mahoning-county-sheriffs-office>,
-        <https://caselinker.up.railway.app/resource/agency/ohio-bureau-of-criminal-investigation> .
+        <https://caselinker.up.railway.app/resource/agency/ohio-bureau-of-criminal-investigation> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/campbell>,
+        <https://caselinker.up.railway.app/resource/location/ohio> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2016_007/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -40,8 +45,6 @@
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ohio_ag_2016_007/person/victim/1> .
 
 <https://caselinker.up.railway.app/resource/agency/attorney-generals-crimes-against-children-unit> a cacontology-multi:StateAgency .
-
-<https://caselinker.up.railway.app/resource/agency/jackson-county-sheriffs-office> a cacontology-multi:LocalAgency .
 
 <https://caselinker.up.railway.app/resource/agency/mahoning-county-sheriffs-office> a cacontology-multi:LocalAgency .
 
@@ -58,16 +61,29 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ohio_ag_2016_007/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2016-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2016-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ohio_ag_2016_007/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2016_007/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 36 .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2016_007/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ohio_ag_2016_007/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2016_007/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2016-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/campbell> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Campbell" ;
+    uco-core:name "Campbell" .
+
+<https://caselinker.up.railway.app/resource/location/ohio> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2016_007/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

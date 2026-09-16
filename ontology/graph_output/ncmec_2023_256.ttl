@@ -4,19 +4,23 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_256> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:11:01.493149" ;
+    dcterms:created "2026-09-15T20:55:00.975718" ;
     dcterms:identifier "ncmec_2023_256" ;
-    dcterms:modified "2026-09-10T19:11:01.493149" ;
+    dcterms:modified "2026-09-15T20:55:00.975718" ;
     dcterms:source <https://troopers.ny.gov/news/fulton-man-arrested-possessing-child-pornography#:~:text=On%20December%2021%2C%202023%2C%20State,on%20his%20personal%20cell%20phone>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/fulton-new-york>,
+        <https://caselinker.up.railway.app/resource/location/north-syracuse> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_256/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_256/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_256/cybertip>,
@@ -24,7 +28,10 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_256/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/sp-lysander-bureau-of-criminal-investigation> .
+        <https://caselinker.up.railway.app/resource/agency/sp-lysander-bureau-of-criminal-investigation>,
+        <https://caselinker.up.railway.app/resource/agency/state-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/fulton-new-york>,
+        <https://caselinker.up.railway.app/resource/location/north-syracuse> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_256/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -42,6 +49,8 @@
         cacontology-multi:LocalAgency ;
     rdfs:label "SP Lysander Bureau of Criminal Investigation" .
 
+<https://caselinker.up.railway.app/resource/agency/state-police-department> a cacontology-multi:StateAgency .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_256/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "child pornography" .
@@ -55,17 +64,32 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_256/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-12-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-12-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_256/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_256/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_256/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_256/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_256/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-12-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/fulton-new-york> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Fulton, New York" ;
+    uco-core:name "Fulton, New York" .
+
+<https://caselinker.up.railway.app/resource/location/north-syracuse> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "North Syracuse" ;
+    uco-core:name "North Syracuse" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_256/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

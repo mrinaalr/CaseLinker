@@ -9,6 +9,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -35,17 +36,21 @@
 
 <https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
-<https://caselinker.up.railway.app/resource/agency/west-virginia-state-police-department> a cac-core:OrganizationLikeEntity,
-        cacontology-multi:StateAgency ;
-    rdfs:label "West Virginia State Police Department" .
+<https://caselinker.up.railway.app/resource/agency/west-virginia-state-police-department> a cacontology-multi:StateAgency .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_055> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T21:23:06.497432" ;
+    dcterms:created "2026-09-15T22:12:28.564166" ;
     dcterms:identifier "doj_safe_childhood_2022_055" ;
-    dcterms:modified "2026-09-14T21:23:06.497432" ;
+    dcterms:modified "2026-09-15T22:12:28.564166" ;
     dcterms:source <https://www.justice.gov/usao-sdwv/pr/mason-county-man-sentenced-10-years-prison-child-pornography-crime>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/henderson>,
+        <https://caselinker.up.railway.app/resource/location/huntington>,
+        <https://caselinker.up.railway.app/resource/location/mason-county>,
+        <https://caselinker.up.railway.app/resource/location/united-states>,
+        <https://caselinker.up.railway.app/resource/location/west-virginia>,
+        <https://caselinker.up.railway.app/resource/location/wva> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_055/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_055/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_055/admission/1>,
@@ -59,7 +64,13 @@
         <https://caselinker.up.railway.app/resource/agency/fbi>,
         <https://caselinker.up.railway.app/resource/agency/mason-county-sheriffs-department>,
         <https://caselinker.up.railway.app/resource/agency/usao>,
-        <https://caselinker.up.railway.app/resource/agency/west-virginia-state-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/west-virginia-state-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/henderson>,
+        <https://caselinker.up.railway.app/resource/location/huntington>,
+        <https://caselinker.up.railway.app/resource/location/mason-county>,
+        <https://caselinker.up.railway.app/resource/location/united-states>,
+        <https://caselinker.up.railway.app/resource/location/west-virginia>,
+        <https://caselinker.up.railway.app/resource/location/wva> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_055/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -80,8 +91,7 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_055/charge/1>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_055/charge/2> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_055/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_055/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_055/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_055/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -101,16 +111,30 @@
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_055/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_055/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "10 Years" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_055/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "15 years of supervised release" .
+    rdfs:label "[\"10 Years\", \"15 years of supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_055/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/henderson> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/huntington> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/mason-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/west-virginia> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/wva> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2022_055/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "possessed the child pornography, and that it included videos of prepubescent minors engaged in sexually explicit conduct" ;

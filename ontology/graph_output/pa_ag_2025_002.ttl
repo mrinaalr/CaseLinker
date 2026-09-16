@@ -1,26 +1,44 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
 @prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/pa_ag_2025_002> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:03:57.243458" ;
+    dcterms:created "2026-09-15T20:12:06.736232" ;
     dcterms:identifier "pa_ag_2025_002" ;
-    dcterms:modified "2026-09-10T20:03:57.243458" ;
+    dcterms:modified "2026-09-15T20:12:06.736232" ;
     dcterms:source <https://www.attorneygeneral.gov/taking-action/ag-sundays-child-predator-section-nabs-allegheny-county-man-attempting-to-meet-child/>,
         "PA AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/allegheny-county>,
+        <https://caselinker.up.railway.app/resource/location/harrisburg>,
+        <https://caselinker.up.railway.app/resource/location/pitcairn> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/pa_ag_2025_002/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/pa_ag_2025_002/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/pa_ag_2025_002/event/hands-on>,
-        <https://caselinker.up.railway.app/resource/case/pa_ag_2025_002/event/trust-violation> .
+        <https://caselinker.up.railway.app/resource/case/pa_ag_2025_002/event/trust-violation>,
+        <https://caselinker.up.railway.app/resource/case/pa_ag_2025_002/legal-proceeding> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/allegheny-county>,
+        <https://caselinker.up.railway.app/resource/location/harrisburg>,
+        <https://caselinker.up.railway.app/resource/location/pitcairn> .
 
 <https://caselinker.up.railway.app/resource/case/pa_ag_2025_002/event/trust-violation> a cacontology-custodial:CustodialAbuse,
         cacontology-custodial:TrustViolation ;
     cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/pa_ag_2025_002/relationship/mother> .
+
+<https://caselinker.up.railway.app/resource/case/pa_ag_2025_002/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/pa_ag_2025_002/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/pa_ag_2025_002/person/offender/1> a uco-identity:Person .
 
@@ -44,9 +62,26 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/pa_ag_2025_002/event/hands-on> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/pa_ag_2025_002/person/victim/1> .
 
+<https://caselinker.up.railway.app/resource/case/pa_ag_2025_002/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/pa_ag_2025_002/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/allegheny-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Allegheny County" ;
+    uco-core:name "Allegheny County" .
+
+<https://caselinker.up.railway.app/resource/location/harrisburg> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/pitcairn> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Pitcairn" ;
+    uco-core:name "Pitcairn" .
 
 <https://caselinker.up.railway.app/resource/case/pa_ag_2025_002/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

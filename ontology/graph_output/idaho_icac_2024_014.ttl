@@ -9,16 +9,21 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2024_014> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:50:13.163638" ;
+    dcterms:created "2026-09-15T19:36:56.075185" ;
     dcterms:identifier "idaho_icac_2024_014" ;
-    dcterms:modified "2026-09-10T19:50:13.163638" ;
+    dcterms:modified "2026-09-15T19:36:56.075185" ;
     dcterms:source <https://www.ag.idaho.gov/newsroom/category/icac/?showall=true>,
         "Idaho ICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/idaho>,
+        <https://caselinker.up.railway.app/resource/location/idaho-falls>,
+        <https://caselinker.up.railway.app/resource/location/washington-county>,
+        <https://caselinker.up.railway.app/resource/location/weiser> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/idaho_icac_2024_014/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/idaho_icac_2024_014/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/idaho_icac_2024_014/cybertip>,
@@ -32,7 +37,11 @@
         <https://caselinker.up.railway.app/resource/agency/idaho-falls-police-department>,
         <https://caselinker.up.railway.app/resource/agency/madison-county-sheriffs-office>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/weiser-city-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/weiser-city-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/idaho>,
+        <https://caselinker.up.railway.app/resource/location/idaho-falls>,
+        <https://caselinker.up.railway.app/resource/location/washington-county>,
+        <https://caselinker.up.railway.app/resource/location/weiser> .
 
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2024_014/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -79,20 +88,40 @@
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2024_014/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Washington County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/idaho_icac_2024_014/charge/1>,
         <https://caselinker.up.railway.app/resource/case/idaho_icac_2024_014/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/idaho_icac_2024_014/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2024_014/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2024_014/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/idaho_icac_2024_014/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2024_014/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/idaho> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/idaho-falls> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/washington-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Washington County" ;
+    uco-core:name "Washington County" .
+
+<https://caselinker.up.railway.app/resource/location/weiser> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Weiser" ;
+    uco-core:name "Weiser" .
 
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2024_014/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

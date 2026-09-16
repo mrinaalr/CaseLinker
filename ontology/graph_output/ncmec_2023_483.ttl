@@ -1,60 +1,111 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
+@prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_483> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:12:43.099176" ;
+    dcterms:created "2026-09-15T20:55:01.166571" ;
     dcterms:identifier "ncmec_2023_483" ;
-    dcterms:modified "2026-09-10T19:12:43.099176" ;
-    dcterms:source <https://weartv.com/news/local/33-year-old-fort-walton-beach-arrested-on-child-porn-charges>,
+    dcterms:modified "2026-09-15T20:55:01.166571" ;
+    dcterms:source <https://www.mytwintiers.com/crime/elmira-man-accused-of-uploading-child-porn-online/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/elmira>,
+        <https://caselinker.up.railway.app/resource/location/ny> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_483/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_483/phase/charged> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_483/event/possession>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2023_483/legal-proceeding> .
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_483/cybertip>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2023_483/event/csam>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2023_483/event/distribution>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2023_483/event/online-only>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2023_483/legal-proceeding>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2023_483/operation> ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/elmira-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/icac>,
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/elmira>,
+        <https://caselinker.up.railway.app/resource/location/ny> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_483/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_483/event/possession> ;
+    cacontology:hasRoleBeginPoint "2023-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_483/event/csam>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2023_483/event/online-only> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_483/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_483/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_483/event/possession> ;
+    cacontology:hasRoleBeginPoint "2023-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_483/event/csam>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2023_483/event/online-only> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_483/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/agency/elmira-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Elmira Police Department" .
+
+<https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_483/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "child porn possession" ;
-    cacontology-legal-outcomes:indictmentCounts 4 .
+    rdfs:label "child porn" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_483/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_483/cybertip> a cacontology-us-ncmec:NCMECCybertipReport ;
+    cacontology-us-ncmec:supportedBy <https://caselinker.up.railway.app/resource/agency/ncmec> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_483/event/distribution> a cac-core:Event,
+        cacontology-legal-outcomes:CSAM_Distribution .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_483/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_483/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Escambia County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_483/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_483/sentence/1> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_483/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_483/operation> a cac-core:Event,
+        cacontology-taskforce:TaskForceOperation .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_483/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 31 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_483/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_483/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
+<https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_483/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
-    cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology:hasPhaseBeginPoint "2023-05-01T00:00:00Z"^^xsd:dateTimeStamp .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_483/event/possession> a cacontology:CSAMIncident,
+<https://caselinker.up.railway.app/resource/location/elmira> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Elmira" ;
+    uco-core:name "Elmira" .
+
+<https://caselinker.up.railway.app/resource/location/ny> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_483/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;
-    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2023_483/facet/possession> .
+    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2023_483/facet/csam> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_483/event/online-only> a cacontology:ChildSexualAbuseEvent,
+        cac-core:Event .
 

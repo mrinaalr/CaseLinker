@@ -9,23 +9,30 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_043> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:00:33.563227" ;
+    dcterms:created "2026-09-15T20:06:35.754781" ;
     dcterms:identifier "newyork_sp_2025_043" ;
-    dcterms:modified "2026-09-10T20:00:33.563227" ;
+    dcterms:modified "2026-09-15T20:06:35.754781" ;
     dcterms:source <https://troopers.ny.gov/news/pine-bush-man-arrested-possession-obscene-material-involving-children>,
         "NEWYORK SP" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/middletown>,
+        <https://caselinker.up.railway.app/resource/location/new-york>,
+        <https://caselinker.up.railway.app/resource/location/pine-bush> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_043/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_043/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_043/event/possession>,
         <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_043/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_043/operation> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/new-york-state-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/troop-f-bureau-of-criminal-investigation> .
+        <https://caselinker.up.railway.app/resource/agency/troop-f-bureau-of-criminal-investigation> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/middletown>,
+        <https://caselinker.up.railway.app/resource/location/new-york>,
+        <https://caselinker.up.railway.app/resource/location/pine-bush> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_043/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -58,7 +65,8 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_043/charge/1>,
         <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_043/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_043/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_043/operation> a cac-core:Event,
         cacontology-taskforce:ProactiveOperation .
@@ -68,9 +76,26 @@
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_043/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/newyork_sp_2025_043/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_043/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/middletown> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Middletown" ;
+    uco-core:name "Middletown" .
+
+<https://caselinker.up.railway.app/resource/location/new-york> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/pine-bush> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Pine Bush" ;
+    uco-core:name "Pine Bush" .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_043/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

@@ -11,6 +11,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -37,11 +38,17 @@
 
 <https://caselinker.up.railway.app/resource/case/de_ag_2011_003> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:38:10.065633" ;
+    dcterms:created "2026-09-15T19:29:01.660302" ;
     dcterms:identifier "de_ag_2011_003" ;
-    dcterms:modified "2026-09-10T19:38:10.065633" ;
+    dcterms:modified "2026-09-15T19:29:01.660302" ;
     dcterms:source <https://news.delaware.gov/2011/10/18/two-arrested-following-child-predator-task-force-investigations>,
         "DE AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/brandywood>,
+        <https://caselinker.up.railway.app/resource/location/delaware>,
+        <https://caselinker.up.railway.app/resource/location/new-castle-county>,
+        <https://caselinker.up.railway.app/resource/location/newark>,
+        <https://caselinker.up.railway.app/resource/location/salem-woods>,
+        <https://caselinker.up.railway.app/resource/location/wilmington> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/de_ag_2011_003/phase/convicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/de_ag_2011_003/phase/convicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/de_ag_2011_003/admission/1>,
@@ -55,7 +62,13 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/child-predator-task-force>,
         <https://caselinker.up.railway.app/resource/agency/delaware-child-predator-task-force>,
         <https://caselinker.up.railway.app/resource/agency/new-castle-county-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/us-department-of-justice> .
+        <https://caselinker.up.railway.app/resource/agency/us-department-of-justice> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/brandywood>,
+        <https://caselinker.up.railway.app/resource/location/delaware>,
+        <https://caselinker.up.railway.app/resource/location/new-castle-county>,
+        <https://caselinker.up.railway.app/resource/location/newark>,
+        <https://caselinker.up.railway.app/resource/location/salem-woods>,
+        <https://caselinker.up.railway.app/resource/location/wilmington> .
 
 <https://caselinker.up.railway.app/resource/case/de_ag_2011_003/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -73,8 +86,7 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/de_ag_2011_003/charge/1> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2011-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/de_ag_2011_003/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/de_ag_2011_003/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/de_ag_2011_003/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/de_ag_2011_003/legal-step/convicted> a cac-core:Event,
         cac-core:LegalEvent,
@@ -114,11 +126,7 @@
 
 <https://caselinker.up.railway.app/resource/case/de_ag_2011_003/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$180,000" .
-
-<https://caselinker.up.railway.app/resource/case/de_ag_2011_003/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$120,000" .
+    rdfs:label "[\"$180,000\", \"$120,000\"]" .
 
 <https://caselinker.up.railway.app/resource/case/de_ag_2011_003/phase/convicted> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
@@ -132,8 +140,34 @@
         <https://caselinker.up.railway.app/resource/case/de_ag_2011_003/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/de_ag_2011_003/person/offender/1> .
 
-<https://caselinker.up.railway.app/resource/platform/chat> a cacontology-platforms:AnonymousChatPlatform ;
-    rdfs:label "chat" .
+<https://caselinker.up.railway.app/resource/location/brandywood> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Brandywood" ;
+    uco-core:name "Brandywood" .
+
+<https://caselinker.up.railway.app/resource/location/delaware> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/new-castle-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "New Castle County" ;
+    uco-core:name "New Castle County" .
+
+<https://caselinker.up.railway.app/resource/location/newark> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/salem-woods> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Salem Woods" ;
+    uco-core:name "Salem Woods" .
+
+<https://caselinker.up.railway.app/resource/location/wilmington> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/platform/chat> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:AnonymousChatPlatform ;
+    rdfs:label "chat" ;
+    cacontology-platforms:platformSpecificity "generic" .
 
 <https://caselinker.up.railway.app/resource/platform/twitter-x> a cacontology-platforms:SocialMediaPlatform ;
     rdfs:label "Twitter / X" .

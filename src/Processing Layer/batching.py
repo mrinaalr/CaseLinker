@@ -425,13 +425,11 @@ def case_batching(text: str, org_name: str = "case", source: str = None, source_
         return _batch_merged_icac_news_cases(text, org_name, source_file, "ARKANSAS DPS")
     elif is_alea:
         return _batch_merged_icac_news_cases(text, org_name, source_file, "ALEA")
-    elif is_doj_ceos:
+    elif is_doj_ceos or is_doj_archives:
+        # Archives PDFs share the DOJ CEOS source label.
         return _batch_merged_icac_news_cases(text, org_name, source_file, "DOJ CEOS")
-    elif is_doj_ai_csam:
-        return _batch_merged_icac_news_cases(text, org_name, source_file, "DOJ AI CSAM")
-    elif is_doj_archives:
-        return _batch_merged_icac_news_cases(text, org_name, source_file, "DOJ ARCHIVES")
-    elif is_doj_safe_childhood:
+    elif is_doj_safe_childhood or is_doj_ai_csam:
+        # AI-CSAM USAO topic harvest shares Project Safe Childhood source label.
         return _batch_merged_icac_news_cases(text, org_name, source_file, "DOJ SAFE CHILDHOOD")
     elif is_other_external:
         return _batch_external_cases(text, org_name, source_file)
@@ -1591,12 +1589,20 @@ _MERGED_ICAC_NEWS_PDF_CANDIDATES: Dict[str, List[str]] = {
     ],
     "ARKANSAS DPS": ["ARKDPS_ICAC_All.pdf", "arkansas_dps_output/ARKDPS_ICAC_All.pdf"],
     "ALEA": ["alea_icac_news.pdf", "data/ingestion/alea/alea_icac_news.pdf"],
-    "DOJ CEOS": ["DOJ_CEOS_All.pdf", "DOJ_BULK.pdf", "doj_ceos_output/DOJ_CEOS_All.pdf"],
+    "DOJ CEOS": [
+        "DOJ_CEOS_All.pdf",
+        "DOJ_BULK.pdf",
+        "doj_ceos_output/DOJ_CEOS_All.pdf",
+        "DOJ_ARCHIVES_All.pdf",
+        "doj_archives_output/DOJ_ARCHIVES_All.pdf",
+    ],
     "DOJ AI CSAM": ["DOJ_AI_CSAM_All.pdf", "scripts/scraper/state/ai_csam_backfill/AI_CSAM_DOJ_batch.pdf"],
     "DOJ ARCHIVES": ["DOJ_ARCHIVES_All.pdf", "doj_archives_output/DOJ_ARCHIVES_All.pdf"],
     "DOJ SAFE CHILDHOOD": [
         "DOJ_SAFE_CHILDHOOD.pdf",
         "DOJ_SAFE_CHILDHOOD_All.pdf",
+        "DOJ_AI_CSAM_All.pdf",
+        "scripts/scraper/state/ai_csam_backfill/AI_CSAM_DOJ_batch.pdf",
     ],
 }
 

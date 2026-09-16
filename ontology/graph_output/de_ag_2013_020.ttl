@@ -9,16 +9,20 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/de_ag_2013_020> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:38:39.426218" ;
+    dcterms:created "2026-09-15T19:29:01.718624" ;
     dcterms:identifier "de_ag_2013_020" ;
-    dcterms:modified "2026-09-10T19:38:39.426218" ;
+    dcterms:modified "2026-09-15T19:29:01.718624" ;
     dcterms:source <https://news.delaware.gov/2013/06/13/claymont-man-charged-with-dealing-in-child-pornography>,
         "DE AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/claymont>,
+        <https://caselinker.up.railway.app/resource/location/delaware>,
+        <https://caselinker.up.railway.app/resource/location/wilmington> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/de_ag_2013_020/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/de_ag_2013_020/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/de_ag_2013_020/event/csam>,
@@ -29,7 +33,10 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/child-predator-task-force>,
         <https://caselinker.up.railway.app/resource/agency/delaware-child-predator-task-force>,
         <https://caselinker.up.railway.app/resource/agency/delaware-state-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/us-department-of-justice> .
+        <https://caselinker.up.railway.app/resource/agency/us-department-of-justice> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/claymont>,
+        <https://caselinker.up.railway.app/resource/location/delaware>,
+        <https://caselinker.up.railway.app/resource/location/wilmington> .
 
 <https://caselinker.up.railway.app/resource/case/de_ag_2013_020/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -86,7 +93,8 @@
         <https://caselinker.up.railway.app/resource/case/de_ag_2013_020/charge/3>,
         <https://caselinker.up.railway.app/resource/case/de_ag_2013_020/charge/4>,
         <https://caselinker.up.railway.app/resource/case/de_ag_2013_020/charge/5> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/de_ag_2013_020/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/de_ag_2013_020/operation> a cac-core:Event,
         cacontology-taskforce:TaskForceOperation .
@@ -96,9 +104,24 @@
 
 <https://caselinker.up.railway.app/resource/case/de_ag_2013_020/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/de_ag_2013_020/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/de_ag_2013_020/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/claymont> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Claymont" ;
+    uco-core:name "Claymont" .
+
+<https://caselinker.up.railway.app/resource/location/delaware> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/wilmington> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/de_ag_2013_020/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

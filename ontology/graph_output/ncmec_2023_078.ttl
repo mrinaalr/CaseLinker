@@ -5,19 +5,25 @@
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_078> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:09:39.445169" ;
+    dcterms:created "2026-09-15T20:55:00.806518" ;
     dcterms:identifier "ncmec_2023_078" ;
-    dcterms:modified "2026-09-10T19:09:39.445169" ;
+    dcterms:modified "2026-09-15T20:55:00.806518" ;
     dcterms:source <https://patch.com/virginia/fairfaxcity/child-porn-solicitation-charges-filed-against-dc-man-fairfax-case>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/fairfax>,
+        <https://caselinker.up.railway.app/resource/location/virginia>,
+        <https://caselinker.up.railway.app/resource/location/washington>,
+        <https://caselinker.up.railway.app/resource/location/washington-dc> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_078/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_078/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_078/event/csam>,
@@ -28,7 +34,11 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/fairfax-county-police-department>,
         <https://caselinker.up.railway.app/resource/agency/fairfax-police-department>,
         <https://caselinker.up.railway.app/resource/agency/fcpds-major-crimes-bureau>,
-        <https://caselinker.up.railway.app/resource/agency/metropolitan-washington-airport-authority-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/metropolitan-washington-airport-authority-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/fairfax>,
+        <https://caselinker.up.railway.app/resource/location/virginia>,
+        <https://caselinker.up.railway.app/resource/location/washington>,
+        <https://caselinker.up.railway.app/resource/location/washington-dc> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_078/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -44,7 +54,9 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_078/event/production> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_078/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/fairfax-county-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/fairfax-county-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Fairfax County Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/fairfax-police-department> a cac-core:OrganizationLikeEntity,
         cacontology-multi:LocalAgency ;
@@ -79,15 +91,36 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_078/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_078/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_078/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_078/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_078/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_078/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_078/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/fairfax> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Fairfax" ;
+    uco-core:name "Fairfax" .
+
+<https://caselinker.up.railway.app/resource/location/virginia> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/washington> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/washington-dc> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Washington, D.c." ;
+    uco-core:name "Washington, D.c." .
 
 <https://caselinker.up.railway.app/resource/platform/snapchat> a cacontology-platforms:MessagingService ;
     rdfs:label "Snapchat" .

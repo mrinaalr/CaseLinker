@@ -1,23 +1,29 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2026_008> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:15:31.245909" ;
+    dcterms:created "2026-09-15T20:27:39.254564" ;
     dcterms:identifier "south_florida_icac_2026_008" ;
-    dcterms:modified "2026-09-10T20:15:31.245909" ;
+    dcterms:modified "2026-09-15T20:27:39.254564" ;
     dcterms:source <https://www.fdle.state.fl.us/news/2026/february/fdle-arrests-okeechobee-man-for-possession-of-child-sexual-abuse-material>,
         "SOUTH FLORIDA ICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/fla>,
+        <https://caselinker.up.railway.app/resource/location/glades-county>,
+        <https://caselinker.up.railway.app/resource/location/okeechobee> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/south_florida_icac_2026_008/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/south_florida_icac_2026_008/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/south_florida_icac_2026_008/cybertip>,
@@ -32,7 +38,10 @@
         <https://caselinker.up.railway.app/resource/agency/glades-county-sheriffs-office>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/okeechobee-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/okeechobee-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/fla>,
+        <https://caselinker.up.railway.app/resource/location/glades-county>,
+        <https://caselinker.up.railway.app/resource/location/okeechobee> .
 
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2026_008/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -46,7 +55,9 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/south_florida_icac_2026_008/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/south_florida_icac_2026_008/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/attorney-generals-office-of-statewide-prosecution> a cacontology-multi:StateAgency .
+<https://caselinker.up.railway.app/resource/agency/attorney-generals-office-of-statewide-prosecution> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:StateAgency ;
+    rdfs:label "Attorney General's Office of Statewide Prosecution" .
 
 <https://caselinker.up.railway.app/resource/agency/florida-capitol-police-department> a cac-core:OrganizationLikeEntity,
         cacontology-multi:LocalAgency ;
@@ -81,13 +92,18 @@
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2026_008/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Glades County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/south_florida_icac_2026_008/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/south_florida_icac_2026_008/sentence/1> .
 
-<https://caselinker.up.railway.app/resource/case/south_florida_icac_2026_008/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/south_florida_icac_2026_008/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 56 .
 
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2026_008/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/south_florida_icac_2026_008/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2026_008/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -97,6 +113,19 @@
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2026_008/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/fla> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/glades-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Glades County" ;
+    uco-core:name "Glades County" .
+
+<https://caselinker.up.railway.app/resource/location/okeechobee> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Okeechobee" ;
+    uco-core:name "Okeechobee" .
 
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2026_008/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

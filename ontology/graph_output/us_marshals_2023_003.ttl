@@ -3,20 +3,31 @@
 @prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2023_003> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:18:41.233320" ;
+    dcterms:created "2026-09-15T20:35:06.229592" ;
     dcterms:identifier "us_marshals_2023_003" ;
-    dcterms:modified "2026-09-10T20:18:41.233320" ;
+    dcterms:modified "2026-09-15T20:35:06.229592" ;
     dcterms:source <https://www.usmarshals.gov/news/press-release/us-marshals-connecticut-capture-two-fugitive-sex-offenders>,
         "US MARSHALS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/bridgeport>,
+        <https://caselinker.up.railway.app/resource/location/connecticut>,
+        <https://caselinker.up.railway.app/resource/location/delaware>,
+        <https://caselinker.up.railway.app/resource/location/fairfield>,
+        <https://caselinker.up.railway.app/resource/location/hartford>,
+        <https://caselinker.up.railway.app/resource/location/new-haven>,
+        <https://caselinker.up.railway.app/resource/location/newark>,
+        <https://caselinker.up.railway.app/resource/location/newcastle>,
+        <https://caselinker.up.railway.app/resource/location/norwalk> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/us_marshals_2023_003/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/us_marshals_2023_003/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/us_marshals_2023_003/event/multi-jurisdiction>,
@@ -26,12 +37,20 @@
         <https://caselinker.up.railway.app/resource/agency/fairfield-police-department>,
         <https://caselinker.up.railway.app/resource/agency/ice>,
         <https://caselinker.up.railway.app/resource/agency/usms>,
-        <https://caselinker.up.railway.app/resource/agency/waterbury-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/waterbury-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/bridgeport>,
+        <https://caselinker.up.railway.app/resource/location/connecticut>,
+        <https://caselinker.up.railway.app/resource/location/delaware>,
+        <https://caselinker.up.railway.app/resource/location/fairfield>,
+        <https://caselinker.up.railway.app/resource/location/hartford>,
+        <https://caselinker.up.railway.app/resource/location/new-haven>,
+        <https://caselinker.up.railway.app/resource/location/newark>,
+        <https://caselinker.up.railway.app/resource/location/newcastle>,
+        <https://caselinker.up.railway.app/resource/location/norwalk> .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2023_003/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
     cacontology:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:perpetratorRegisteredSexOffender true ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/us_marshals_2023_003/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2023_003/role/victim/1> a cacontology:VictimRole,
@@ -39,14 +58,13 @@
     cacontology:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/us_marshals_2023_003/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/platform/twitter-x> a cacontology-platforms:SocialMediaPlatform ;
-    rdfs:label "Twitter / X" .
-
 <https://caselinker.up.railway.app/resource/agency/bridgeport-police-department> a cac-core:OrganizationLikeEntity,
         cacontology-multi:LocalAgency ;
     rdfs:label "Bridgeport Police Department" .
 
-<https://caselinker.up.railway.app/resource/agency/fairfield-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/fairfield-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Fairfield Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/ice> a cacontology-multi:FederalAgency .
 
@@ -73,9 +91,50 @@
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2023_003/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:ProbationSentence ;
-    rdfs:label "probation" .
+    rdfs:label "[\"probation\"]" .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2023_003/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/bridgeport> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Bridgeport" ;
+    uco-core:name "Bridgeport" .
+
+<https://caselinker.up.railway.app/resource/location/connecticut> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Connecticut" ;
+    uco-core:name "Connecticut" .
+
+<https://caselinker.up.railway.app/resource/location/delaware> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/fairfield> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/hartford> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Hartford" ;
+    uco-core:name "Hartford" .
+
+<https://caselinker.up.railway.app/resource/location/new-haven> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "New Haven" ;
+    uco-core:name "New Haven" .
+
+<https://caselinker.up.railway.app/resource/location/newark> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Newark" ;
+    uco-core:name "Newark" .
+
+<https://caselinker.up.railway.app/resource/location/newcastle> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Newcastle" ;
+    uco-core:name "Newcastle" .
+
+<https://caselinker.up.railway.app/resource/location/norwalk> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Norwalk" ;
+    uco-core:name "Norwalk" .
 

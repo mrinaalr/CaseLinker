@@ -806,7 +806,7 @@ These exist purely for ML similarity computation and represent no independent ca
 | `severity_phrases` | Sub-phrase list from `extract_severity_phrases()`; used as debug evidence for severity indicators, not a separate CAC node |
 | `date_range.start` / `.end` | Temporal coverage; use as `cac-core:hasPhaseBeginPoint` / `hasPhaseEndPoint` literals on `CACInvestigation` phase nodes |
 | `organizations` (raw NER) | Unresolved; used as input to `agencies_involved` after deduplication; may partially map to `cacontology-multi:LocalAgency` after resolution |
-| `locations` (raw NER) | Geographic strings; no CAC class for a location node in the current modules. Could use `uco-location:Location` if CASE SDK supports it. Flag as gap. |
+| `locations` (raw NER) | Geographic strings → shared `uco-location:Location` + `cac-core:PlaceLikeEntity` singletons (`resource/location/{slug}`); linked from `CACInvestigation` via `dcterms:spatial` and `caselinker:mentionsLocation`. Not `ProductionLocation` (production-site subclass only). |
 | `case_demographics.gender` | Victim gender; no CaseLinker→CAC mapping defined. Flag for Cory. |
 | `anonymized_id` (victim / perpetrator) | Internal anonymization handles; use as `dcterms:identifier` literals if Person nodes are created |
 | `era` (from `case_studies.json`) | CaseLinker editorial periodization (I, II, III); no CAC equivalent |
@@ -815,7 +815,7 @@ These exist purely for ML similarity computation and represent no independent ca
 
 | Gap | Description |
 |---|---|
-| No `Location` class in core modules | Geographic locations (`locations` NER field) have no target. CASE/UCO has `uco-location:Location` — confirm if importable. |
+| No dedicated CAC press-release geo class | Geographic locations (`locations` NER) map to UCO `uco-location:Location` + `cac-core:PlaceLikeEntity` (same pattern as PACER venues). A CAC subclass for narrative place mentions would still be useful. |
 | No `VictimGender` property on `VictimRole` | `case_demographics.gender` has no mapping target |
 | No `EvidenceVolume` class | `evidence_volume.images`, `.videos`, `.storage_size` could be properties on `ProductionOffense` or `ProducedContent` but no dedicated class exists |
 | No P2P-specific platform subclass | `FileHostingService` is the closest for P2P clients but is imprecise |

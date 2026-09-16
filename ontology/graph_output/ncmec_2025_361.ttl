@@ -12,6 +12,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -52,7 +53,6 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_361/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility: Scott County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_361/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_361/charge/2> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2025-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
@@ -65,7 +65,7 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_361/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$75,000" .
+    rdfs:label "[\"$75,000\"]" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_361/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -74,11 +74,13 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_361> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:28:28.910250" ;
+    dcterms:created "2026-09-15T21:27:13.500611" ;
     dcterms:identifier "ncmec_2025_361" ;
-    dcterms:modified "2026-09-10T19:28:28.910250" ;
+    dcterms:modified "2026-09-15T21:27:13.500611" ;
     dcterms:source <https://www.ourquadcities.com/news/local-news/davenport-man-faces-23-charges-of-child-pornography/#/questions/5662210>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/davenport>,
+        <https://caselinker.up.railway.app/resource/location/scott-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_361/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_361/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_361/admission/1>,
@@ -91,7 +93,9 @@
     cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/ncmec_2025_361/tech/cybertipline> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/davenport-police-department>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/davenport>,
+        <https://caselinker.up.railway.app/resource/location/scott-county> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_361/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;
@@ -103,6 +107,12 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2025_361/event/online-only>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_361/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_361/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/location/davenport> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/scott-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/platform/chat> a cacontology-platforms:AnonymousChatPlatform ;
     rdfs:label "chat" .
@@ -149,7 +159,7 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_361/admission/2> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "having previously viewed child pornography involving a child under the age of 5 years old" ;
     dcterms:source <https://www.ourquadcities.com/news/local-news/davenport-man-faces-23-charges-of-child-pornography/#/questions/5662210> ;
-    ns1:admissionContext "lity).” After he was read his Miranda Rights, Rupe admitted “to requesting, receiving and sending child pornography with other users onli..." ;
+    ns1:admissionContext "ity).” After he was read his Miranda Rights, Rupe admitted “to requesting, receiving and sending child pornography with other users onlin..." ;
     ns1:admissionFrame "admitted_to" ;
     ns1:admissionTheme "harm_conduct" ;
     ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_361/role/offender/1> ;

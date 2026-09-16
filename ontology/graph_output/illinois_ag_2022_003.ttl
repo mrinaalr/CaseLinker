@@ -12,16 +12,21 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2022_003> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:46:29.838969" ;
+    dcterms:created "2026-09-15T19:40:56.287765" ;
     dcterms:identifier "illinois_ag_2022_003" ;
-    dcterms:modified "2026-09-10T19:46:29.838969" ;
+    dcterms:modified "2026-09-15T19:48:49.789636" ;
     dcterms:source <https://illinoisattorneygeneral.gov/News-Room/2022-Press-Release-Archive/202204-11%20MCLEAN%20COUNTY%20MAN%20CHARGED%20WITH%20POSSESSING%20CHILD%20PORNOGRAPHY.pdf>,
         "ILLINOIS AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/chicago>,
+        <https://caselinker.up.railway.app/resource/location/hudson>,
+        <https://caselinker.up.railway.app/resource/location/illinois>,
+        <https://caselinker.up.railway.app/resource/location/mclean-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/illinois_ag_2022_003/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/illinois_ag_2022_003/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/illinois_ag_2022_003/cybertip>,
@@ -35,7 +40,11 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/hudson-police-department>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/mclean-county-sheriffs-office>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/chicago>,
+        <https://caselinker.up.railway.app/resource/location/hudson>,
+        <https://caselinker.up.railway.app/resource/location/illinois>,
+        <https://caselinker.up.railway.app/resource/location/mclean-county> .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2022_003/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -87,8 +96,7 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/illinois_ag_2022_003/charge/1>,
         <https://caselinker.up.railway.app/resource/case/illinois_ag_2022_003/charge/2> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/illinois_ag_2022_003/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/illinois_ag_2022_003/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/illinois_ag_2022_003/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2022_003/operation> a cac-core:Event,
         cacontology-taskforce:ReactiveOperation .
@@ -99,12 +107,8 @@
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2022_003/person/victim/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2022_003/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "30 years" .
-
-<https://caselinker.up.railway.app/resource/case/illinois_ag_2022_003/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$500,000," .
+    rdfs:label "[\"30 years\", \"$500,000,\"]" .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2022_003/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -114,6 +118,22 @@
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2022_003/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/chicago> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/hudson> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Hudson" ;
+    uco-core:name "Hudson" .
+
+<https://caselinker.up.railway.app/resource/location/illinois> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/mclean-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Mclean County" ;
+    uco-core:name "Mclean County" .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2022_003/event/online-only> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

@@ -11,6 +11,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -37,11 +38,15 @@
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_040> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T22:24:25.947200" ;
+    dcterms:created "2026-09-15T22:12:29.285261" ;
     dcterms:identifier "doj_safe_childhood_2021_040" ;
-    dcterms:modified "2026-09-14T22:24:25.947200" ;
+    dcterms:modified "2026-09-15T22:12:29.285261" ;
     dcterms:source <https://www.justice.gov/usao-co/pr/colorado-springs-man-sentenced-20-years-federal-prison-producing-child-pornography>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/colorado>,
+        <https://caselinker.up.railway.app/resource/location/colorado-springs>,
+        <https://caselinker.up.railway.app/resource/location/denver>,
+        <https://caselinker.up.railway.app/resource/location/united-states> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_040/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_040/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_040/admission/1>,
@@ -55,7 +60,11 @@
         <https://caselinker.up.railway.app/resource/agency/doj>,
         <https://caselinker.up.railway.app/resource/agency/hsi>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/usao> .
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/colorado>,
+        <https://caselinker.up.railway.app/resource/location/colorado-springs>,
+        <https://caselinker.up.railway.app/resource/location/denver>,
+        <https://caselinker.up.railway.app/resource/location/united-states> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_040/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -81,9 +90,7 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_040/charge/1>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_040/charge/2> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_040/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_040/sentence/2>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_040/sentence/3> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_040/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_040/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -103,23 +110,30 @@
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_040/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_040/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "240 months" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_040/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "supervised release" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_040/sentence/3> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$40," .
+    rdfs:label "[\"240 months\", \"supervised release\", \"$40,\"]" .
 
 <https://caselinker.up.railway.app/resource/platform/tor> a cacontology-platforms:DarkWebService ;
     rdfs:label "Tor" .
 
+<https://caselinker.up.railway.app/resource/platform/twitter-x> a cacontology-platforms:SocialMediaPlatform ;
+    rdfs:label "Twitter / X" .
+
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_040/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/colorado> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/colorado-springs> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/denver> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_040/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "creating the videos depicting his sexual abuse of the minor victim, and admitted to selling the videos on TOR" ;
@@ -136,6 +150,7 @@
         cac-core:Event ;
     cacontology:producesArtifact <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_040/admission/1> ;
     cacontology:severityLevel 3 ;
-    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/tor> ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/tor>,
+        <https://caselinker.up.railway.app/resource/platform/twitter-x> ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2021_040/facet/possession> .
 

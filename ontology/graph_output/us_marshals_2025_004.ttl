@@ -5,17 +5,23 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2025_004> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:18:01.275339" ;
+    dcterms:created "2026-09-15T20:35:06.166860" ;
     dcterms:identifier "us_marshals_2025_004" ;
-    dcterms:modified "2026-09-10T20:18:01.275339" ;
+    dcterms:modified "2026-09-15T20:35:06.166860" ;
     dcterms:source <https://www.usmarshals.gov/news/press-release/us-marshals-maine-arrest-man-wanted-sexual-exploitation-of-child-colorado>,
         "US MARSHALS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/colorado>,
+        <https://caselinker.up.railway.app/resource/location/livermore-falls>,
+        <https://caselinker.up.railway.app/resource/location/maine>,
+        <https://caselinker.up.railway.app/resource/location/portland> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/us_marshals_2025_004/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/us_marshals_2025_004/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/us_marshals_2025_004/event/multi-jurisdiction>,
@@ -27,7 +33,11 @@
         <https://caselinker.up.railway.app/resource/agency/maine-department-of-corrections>,
         <https://caselinker.up.railway.app/resource/agency/maine-violent-offender-task-force>,
         <https://caselinker.up.railway.app/resource/agency/usms>,
-        <https://caselinker.up.railway.app/resource/agency/violent-offender-task-force> .
+        <https://caselinker.up.railway.app/resource/agency/violent-offender-task-force> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/colorado>,
+        <https://caselinker.up.railway.app/resource/location/livermore-falls>,
+        <https://caselinker.up.railway.app/resource/location/maine>,
+        <https://caselinker.up.railway.app/resource/location/portland> .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2025_004/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -77,13 +87,32 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/us_marshals_2025_004/charge/1>,
         <https://caselinker.up.railway.app/resource/case/us_marshals_2025_004/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/us_marshals_2025_004/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2025_004/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2025_004/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/us_marshals_2025_004/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/us_marshals_2025_004/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/colorado> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/livermore-falls> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Livermore Falls" ;
+    uco-core:name "Livermore Falls" .
+
+<https://caselinker.up.railway.app/resource/location/maine> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/portland> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 

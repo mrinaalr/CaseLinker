@@ -12,16 +12,19 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_055> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T21:22:51.173528" ;
+    dcterms:created "2026-09-15T22:12:27.852071" ;
     dcterms:identifier "doj_safe_childhood_2023_055" ;
-    dcterms:modified "2026-09-14T21:22:51.173528" ;
+    dcterms:modified "2026-09-15T22:12:27.852071" ;
     dcterms:source <https://www.justice.gov/usao-edca/pr/fresno-sex-offender-sentenced-lengthy-prison-term-child-pornography-conviction>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/calif>,
+        <https://caselinker.up.railway.app/resource/location/fresno> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_055/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_055/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_055/cybertip>,
@@ -39,7 +42,9 @@
         <https://caselinker.up.railway.app/resource/agency/hsi>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/usao> .
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/calif>,
+        <https://caselinker.up.railway.app/resource/location/fresno> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_055/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -59,9 +64,13 @@
 
 <https://caselinker.up.railway.app/resource/agency/doj> a cacontology-multi:FederalAgency .
 
-<https://caselinker.up.railway.app/resource/agency/fresno-county-sheriffs-office> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/fresno-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Fresno County Sheriff's Office" .
 
-<https://caselinker.up.railway.app/resource/agency/fresno-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/fresno-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Fresno Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/hsi> a cacontology-multi:FederalAgency .
 
@@ -106,8 +115,7 @@
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_055/charge/3>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_055/charge/4> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_055/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_055/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_055/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_055/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -121,18 +129,24 @@
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_055/person/victim/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_055/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "30 years" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_055/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "supervised release" .
+    rdfs:label "[\"30 years\", \"supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_055/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/calif> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Calif." ;
+    uco-core:name "Calif." .
+
+<https://caselinker.up.railway.app/resource/location/fresno> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Fresno" ;
+    uco-core:name "Fresno" .
 
 <https://caselinker.up.railway.app/resource/platform/facebook> a cacontology-platforms:SocialMediaPlatform ;
     rdfs:label "Facebook" .

@@ -10,16 +10,19 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2024_039> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:24:42.820848" ;
+    dcterms:created "2026-09-15T20:39:17.507061" ;
     dcterms:identifier "vt_ag_2024_039" ;
-    dcterms:modified "2026-09-10T20:24:42.820848" ;
+    dcterms:modified "2026-09-15T20:39:17.507061" ;
     dcterms:source <https://ago.vermont.gov/blog/2024/05/21/milton-resident-arrested-voyeurism>,
         "VT AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/milton>,
+        <https://caselinker.up.railway.app/resource/location/vermont> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/vt_ag_2024_039/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/vt_ag_2024_039/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/vt_ag_2024_039/cybertip>,
@@ -33,7 +36,9 @@
         <https://caselinker.up.railway.app/resource/agency/hsi>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/milton-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/milton>,
+        <https://caselinker.up.railway.app/resource/location/vermont> .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2024_039/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -93,18 +98,31 @@
         <https://caselinker.up.railway.app/resource/case/vt_ag_2024_039/charge/2>,
         <https://caselinker.up.railway.app/resource/case/vt_ag_2024_039/charge/3>,
         <https://caselinker.up.railway.app/resource/case/vt_ag_2024_039/charge/4> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/vt_ag_2024_039/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2024_039/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 53 .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2024_039/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/vt_ag_2024_039/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2024_039/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/milton> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Milton" ;
+    uco-core:name "Milton" .
+
+<https://caselinker.up.railway.app/resource/location/vermont> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2024_039/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

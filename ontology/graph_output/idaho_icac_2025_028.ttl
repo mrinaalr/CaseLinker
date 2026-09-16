@@ -5,19 +5,24 @@
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2025_028> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:50:19.737713" ;
+    dcterms:created "2026-09-15T19:36:56.098146" ;
     dcterms:identifier "idaho_icac_2025_028" ;
-    dcterms:modified "2026-09-10T19:50:19.737713" ;
+    dcterms:modified "2026-09-15T19:36:56.098146" ;
     dcterms:source <https://www.ag.idaho.gov/newsroom/category/icac/?showall=true>,
         "Idaho ICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/boise>,
+        <https://caselinker.up.railway.app/resource/location/gem-county>,
+        <https://caselinker.up.railway.app/resource/location/idaho> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/idaho_icac_2025_028/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/idaho_icac_2025_028/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/idaho_icac_2025_028/event/distribution>,
@@ -26,7 +31,10 @@
         <https://caselinker.up.railway.app/resource/case/idaho_icac_2025_028/legal-step/sentenced> ;
     cacontology:investigationStatus "unknown" ;
     cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/idaho_icac_2025_028/tech/cybertipline> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/boise>,
+        <https://caselinker.up.railway.app/resource/location/gem-county>,
+        <https://caselinker.up.railway.app/resource/location/idaho> .
 
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2025_028/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -57,8 +65,7 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/idaho_icac_2025_028/charge/1> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2025-07-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/idaho_icac_2025_028/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/idaho_icac_2025_028/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/idaho_icac_2025_028/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2025_028/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -72,11 +79,7 @@
 
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2025_028/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "20 years" .
-
-<https://caselinker.up.railway.app/resource/case/idaho_icac_2025_028/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "10 years" .
+    rdfs:label "[\"20 years\", \"10 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2025_028/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -84,6 +87,17 @@
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2025_028/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2025-07-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/boise> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/gem-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Gem County" ;
+    uco-core:name "Gem County" .
+
+<https://caselinker.up.railway.app/resource/location/idaho> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2025_028/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

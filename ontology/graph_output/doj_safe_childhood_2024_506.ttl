@@ -11,6 +11,7 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -40,7 +41,9 @@
 
 <https://caselinker.up.railway.app/resource/agency/hsi> a cacontology-multi:FederalAgency .
 
-<https://caselinker.up.railway.app/resource/agency/louisiana-bureau-of-investigation> a cacontology-multi:StateAgency .
+<https://caselinker.up.railway.app/resource/agency/louisiana-bureau-of-investigation> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:StateAgency ;
+    rdfs:label "Louisiana Bureau of Investigation" .
 
 <https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
@@ -79,10 +82,7 @@
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_506/charge/2>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_506/charge/3> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_506/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_506/sentence/2>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_506/sentence/3>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_506/sentence/4> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_506/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_506/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -118,20 +118,8 @@
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_506/person/offender/3> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_506/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "204 months" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_506/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "10 years of supervised release" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_506/sentence/3> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "180 months" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_506/sentence/4> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "20 years of supervised release" .
+    rdfs:label "[\"204 months\", \"10 years of supervised release\", \"180 months\", \"20 years of supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_506/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -140,11 +128,18 @@
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_506> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T21:22:49.217628" ;
+    dcterms:created "2026-09-15T22:12:27.766886" ;
     dcterms:identifier "doj_safe_childhood_2024_506" ;
-    dcterms:modified "2026-09-14T21:22:49.217628" ;
+    dcterms:modified "2026-09-15T22:12:27.766886" ;
     dcterms:source <https://www.justice.gov/usao-wdla/pr/two-men-south-louisiana-sentenced-child-pornography-charges>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/church-point>,
+        <https://caselinker.up.railway.app/resource/location/la>,
+        <https://caselinker.up.railway.app/resource/location/lafayette>,
+        <https://caselinker.up.railway.app/resource/location/louisiana>,
+        <https://caselinker.up.railway.app/resource/location/south-louisiana>,
+        <https://caselinker.up.railway.app/resource/location/united-states>,
+        <https://caselinker.up.railway.app/resource/location/westlake> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_506/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_506/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_506/admission/1>,
@@ -165,11 +160,45 @@
         <https://caselinker.up.railway.app/resource/agency/hsi>,
         <https://caselinker.up.railway.app/resource/agency/louisiana-bureau-of-investigation>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/usao> .
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/church-point>,
+        <https://caselinker.up.railway.app/resource/location/la>,
+        <https://caselinker.up.railway.app/resource/location/lafayette>,
+        <https://caselinker.up.railway.app/resource/location/louisiana>,
+        <https://caselinker.up.railway.app/resource/location/south-louisiana>,
+        <https://caselinker.up.railway.app/resource/location/united-states>,
+        <https://caselinker.up.railway.app/resource/location/westlake> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_506/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/church-point> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Church Point" ;
+    uco-core:name "Church Point" .
+
+<https://caselinker.up.railway.app/resource/location/la> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/lafayette> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/louisiana> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/south-louisiana> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "South Louisiana" ;
+    uco-core:name "South Louisiana" .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/westlake> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Westlake" ;
+    uco-core:name "Westlake" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_506/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "receiving and possessing these images by using the internet" ;

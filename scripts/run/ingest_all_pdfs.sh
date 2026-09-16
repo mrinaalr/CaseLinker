@@ -47,6 +47,10 @@ if [ -d .venv ]; then
   . .venv/bin/activate
 fi
 
+# Cluster precompute is expensive over Railway; always skip during bulk ingest.
+# Recompute locally after ingest, then upload the slim cluster payload.
+export SKIP_PRECOMPUTE_CLUSTERS="${SKIP_PRECOMPUTE_CLUSTERS:-1}"
+
 # Pattern layer modules (ai_extraction_patterns, etc.) live beside processing.py
 PATTERN_LAYER="$REPO_ROOT/src/Processing Layer/Pattern Processing Layer"
 export PYTHONPATH="$PATTERN_LAYER:$REPO_ROOT/src/Processing Layer:$REPO_ROOT/src/Ingestion Layer:$REPO_ROOT/src/Storage Layer:$REPO_ROOT/src:$PYTHONPATH"
@@ -81,15 +85,9 @@ if [ "$COUNT" -eq 0 ]; then
   exit 1
 fi
 
-echo "Found $COUNT PDF(s); running pipeline..." >&2
-while IFS= read -r f; do
-  echo "  - $f" >&2
-done <"$LIST"
+# Default group-size 1 = one PDF at a time inside one long-lived process (models stay warm).
+GROUP_SIZE="${INGEST_GROUP_SIZE:-1}"
+echo "Found $COUNT PDF(s); SKIP_PRECOMPUTE_CLUSTERS=$SKIP_PRECOMPUTE_CLUSTERS group_size=$GROUP_SIZE" >&2
+echo "Ingesting via one long-lived process (models stay warm; store batches over Railway)..." >&2
 
-# Avoid xargs-only pipelines (ARG_MAX-safe for typical ingest sizes; POSIX sh).
-set --
-while IFS= read -r f; do
-  [ -n "$f" ] || continue
-  set -- "$@" "$f"
-done <"$LIST"
-python3 src/main.py "$@"
+python3 "$REPO_ROOT/scripts/run/ingest_grouped.py" --list "$LIST" --group-size "$GROUP_SIZE"

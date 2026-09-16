@@ -10,20 +10,29 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_324> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:11:31.571592" ;
+    dcterms:created "2026-09-15T20:55:01.029986" ;
     dcterms:identifier "ncmec_2023_324" ;
-    dcterms:modified "2026-09-10T19:11:31.571592" ;
+    dcterms:modified "2026-09-15T20:55:01.029986" ;
     dcterms:source <https://www.justice.gov/usao-sdil/pr/first-grade-teacher-charged-solicitation-child-sexual-abuse-material>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/east-st-louis>,
+        <https://caselinker.up.railway.app/resource/location/ill>,
+        <https://caselinker.up.railway.app/resource/location/illinois>,
+        <https://caselinker.up.railway.app/resource/location/jefferson-county>,
+        <https://caselinker.up.railway.app/resource/location/new-baden>,
+        <https://caselinker.up.railway.app/resource/location/southern-district>,
+        <https://caselinker.up.railway.app/resource/location/the-southern-district> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_324/phase/convicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_324/phase/convicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_324/event/csam>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_324/event/distribution>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2023_324/event/project-safe-childhood>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_324/event/trust-violation>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_324/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_324/legal-step/convicted> ;
@@ -32,9 +41,19 @@
         <https://caselinker.up.railway.app/resource/agency/ceos>,
         <https://caselinker.up.railway.app/resource/agency/clinton-county-sheriffs-department>,
         <https://caselinker.up.railway.app/resource/agency/hsi>,
-        <https://caselinker.up.railway.app/resource/agency/jefferson-county-sheriffs-office> .
+        <https://caselinker.up.railway.app/resource/agency/jefferson-county-sheriffs-office>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/east-st-louis>,
+        <https://caselinker.up.railway.app/resource/location/ill>,
+        <https://caselinker.up.railway.app/resource/location/illinois>,
+        <https://caselinker.up.railway.app/resource/location/jefferson-county>,
+        <https://caselinker.up.railway.app/resource/location/new-baden>,
+        <https://caselinker.up.railway.app/resource/location/southern-district>,
+        <https://caselinker.up.railway.app/resource/location/the-southern-district> .
 
-<https://caselinker.up.railway.app/resource/agency/carmi-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/carmi-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Carmi Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/ceos> a cacontology-multi:FederalAgency .
 
@@ -46,12 +65,18 @@
 
 <https://caselinker.up.railway.app/resource/agency/jefferson-county-sheriffs-office> a cacontology-multi:LocalAgency .
 
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_324/charge/1> a cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "sexual exploitation" ;
     ns1:chargeCluster "sexual_exploitation_unspecified" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_324/event/distribution> a cac-core:Event,
         cacontology-legal-outcomes:CSAM_Distribution ;
+    cacontology:severityLevel 3 .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_324/event/project-safe-childhood> a cac-core:Event,
+        cacontology-multi:ProjectSafeChildhoodOperation ;
     cacontology:severityLevel 3 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_324/event/trust-violation> a cacontology-custodial:AuthorityAbuse,
@@ -98,7 +123,7 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_324/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "20 years" .
+    rdfs:label "[\"20 years\"]" .
 
 <https://caselinker.up.railway.app/resource/platform/snapchat> a cacontology-platforms:MessagingService ;
     rdfs:label "Snapchat" .
@@ -106,6 +131,31 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_324/phase/convicted> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2023-08-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/east-st-louis> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "East St. Louis" ;
+    uco-core:name "East St. Louis" .
+
+<https://caselinker.up.railway.app/resource/location/ill> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/illinois> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/jefferson-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/new-baden> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "New Baden" ;
+    uco-core:name "New Baden" .
+
+<https://caselinker.up.railway.app/resource/location/southern-district> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/the-southern-district> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_324/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

@@ -11,16 +11,20 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2022_004> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:24:24.772381" ;
+    dcterms:created "2026-09-15T20:39:17.481241" ;
     dcterms:identifier "vt_ag_2022_004" ;
-    dcterms:modified "2026-09-10T20:24:24.772381" ;
+    dcterms:modified "2026-09-15T20:39:17.481241" ;
     dcterms:source <https://ago.vermont.gov/blog/2022/01/11/springfield-man-arrested-possession-child-sex-abuse-materials>,
         "VT AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/springfield>,
+        <https://caselinker.up.railway.app/resource/location/vermont>,
+        <https://caselinker.up.railway.app/resource/location/windsor-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/vt_ag_2022_004/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/vt_ag_2022_004/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/vt_ag_2022_004/cybertip>,
@@ -35,7 +39,11 @@
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
         <https://caselinker.up.railway.app/resource/agency/orange-county-sheriffs-department>,
         <https://caselinker.up.railway.app/resource/agency/springfield-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/vermont-state-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/usao>,
+        <https://caselinker.up.railway.app/resource/agency/vermont-state-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/springfield>,
+        <https://caselinker.up.railway.app/resource/location/vermont>,
+        <https://caselinker.up.railway.app/resource/location/windsor-county> .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2022_004/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -55,9 +63,13 @@
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
-<https://caselinker.up.railway.app/resource/agency/orange-county-sheriffs-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/orange-county-sheriffs-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Orange County Sheriff's Department" .
 
 <https://caselinker.up.railway.app/resource/agency/springfield-police-department> a cacontology-multi:LocalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/agency/vermont-state-police-department> a cacontology-multi:StateAgency .
 
@@ -84,7 +96,8 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/vt_ag_2022_004/charge/1>,
         <https://caselinker.up.railway.app/resource/case/vt_ag_2022_004/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/vt_ag_2022_004/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2022_004/operation> a cac-core:Event,
         cacontology-taskforce:TaskForceOperation .
@@ -93,6 +106,10 @@
     cacontology-detection:ageEstimate 37 .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2022_004/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/vt_ag_2022_004/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2022_004/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -105,6 +122,17 @@
 <https://caselinker.up.railway.app/resource/case/vt_ag_2022_004/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/springfield> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/vermont> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/windsor-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Windsor County" ;
+    uco-core:name "Windsor County" .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2022_004/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

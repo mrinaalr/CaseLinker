@@ -3,21 +3,25 @@
 @prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2026_024> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:14:20.906803" ;
+    dcterms:created "2026-09-15T20:29:58.183044" ;
     dcterms:identifier "svicac_2026_024" ;
-    dcterms:modified "2026-09-10T20:14:20.906803" ;
+    dcterms:modified "2026-09-15T20:29:58.183044" ;
     dcterms:source <https://www.ksbw.com/article/morgan-hill-men-at-heart-of-large-child-porn-ring/28175459>,
         "SVICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/san-martin> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/svicac_2026_024/event/csam>,
-        <https://caselinker.up.railway.app/resource/case/svicac_2026_024/legal-proceeding> .
+        <https://caselinker.up.railway.app/resource/case/svicac_2026_024/legal-proceeding> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/san-martin> .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2026_024/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -41,12 +45,22 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/svicac_2026_024/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/svicac_2026_024/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2026_024/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 19 .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2026_024/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/svicac_2026_024/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
+<https://caselinker.up.railway.app/resource/location/san-martin> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "San Martin" ;
+    uco-core:name "San Martin" .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2026_024/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

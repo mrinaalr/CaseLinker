@@ -1,22 +1,28 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_264> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:11:04.954750" ;
+    dcterms:created "2026-09-15T20:55:00.980914" ;
     dcterms:identifier "ncmec_2023_264" ;
-    dcterms:modified "2026-09-10T19:11:04.954750" ;
+    dcterms:modified "2026-09-15T20:55:00.980914" ;
     dcterms:source <https://breakingac.com/2023/06/lower-township-man-charged-with-child-pornography-drugs/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/cape-may-county>,
+        <https://caselinker.up.railway.app/resource/location/lower-township>,
+        <https://caselinker.up.railway.app/resource/location/townships-villas> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_264/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_264/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_264/cybertip>,
@@ -26,7 +32,10 @@
     cacontology:investigationStatus "unknown" ;
     cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/ncmec_2023_264/tech/cybertipline> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/lower-township-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/cape-may-county>,
+        <https://caselinker.up.railway.app/resource/location/lower-township>,
+        <https://caselinker.up.railway.app/resource/location/townships-villas> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_264/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -64,11 +73,17 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_264/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_264/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-06-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-06-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_264/sentence/1> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_264/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_264/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 42 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_264/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_264/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_264/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -78,6 +93,19 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_264/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-06-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/cape-may-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/lower-township> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Lower Township" ;
+    uco-core:name "Lower Township" .
+
+<https://caselinker.up.railway.app/resource/location/townships-villas> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Township’s Villas" ;
+    uco-core:name "Township’s Villas" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_264/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

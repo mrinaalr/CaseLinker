@@ -3,6 +3,7 @@
 @prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
@@ -10,16 +11,21 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_008> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:59:47.751286" ;
+    dcterms:created "2026-09-15T20:06:35.698520" ;
     dcterms:identifier "newyork_sp_2025_008" ;
-    dcterms:modified "2026-09-10T19:59:47.751286" ;
+    dcterms:modified "2026-09-15T20:06:35.698520" ;
     dcterms:source <https://troopers.ny.gov/news/state-police-arrest-newburgh-man-charges-child-sexual-exploitation>,
         "NEWYORK SP" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/montgomery>,
+        <https://caselinker.up.railway.app/resource/location/new-windsor>,
+        <https://caselinker.up.railway.app/resource/location/new-york>,
+        <https://caselinker.up.railway.app/resource/location/newburgh> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_008/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_008/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_008/cybertip>,
@@ -29,8 +35,12 @@
     cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_008/tech/cybertipline> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/state-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/troop-f-bureau-of-criminal-investigation> .
+        <https://caselinker.up.railway.app/resource/agency/new-york-state-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/troop-f-bureau-of-criminal-investigation> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/montgomery>,
+        <https://caselinker.up.railway.app/resource/location/new-windsor>,
+        <https://caselinker.up.railway.app/resource/location/new-york>,
+        <https://caselinker.up.railway.app/resource/location/newburgh> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_008/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -46,7 +56,7 @@
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
-<https://caselinker.up.railway.app/resource/agency/state-police-department> a cacontology-multi:StateAgency .
+<https://caselinker.up.railway.app/resource/agency/new-york-state-police-department> a cacontology-multi:StateAgency .
 
 <https://caselinker.up.railway.app/resource/agency/troop-f-bureau-of-criminal-investigation> a cac-core:OrganizationLikeEntity,
         cacontology-multi:LocalAgency ;
@@ -65,15 +75,31 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_008/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_008/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_008/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 70 .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_008/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/newyork_sp_2025_008/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_008/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
+
+<https://caselinker.up.railway.app/resource/platform/facebook> a cacontology-platforms:SocialMediaPlatform ;
+    rdfs:label "Facebook" .
+
+<https://caselinker.up.railway.app/resource/platform/twitter-x> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:SocialMediaPlatform ;
+    rdfs:label "Twitter / X" .
+
+<https://caselinker.up.railway.app/resource/platform/youtube> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:VideoStreamingPlatform ;
+    rdfs:label "YouTube" .
 
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
@@ -81,7 +107,28 @@
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
+<https://caselinker.up.railway.app/resource/location/montgomery> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Montgomery" ;
+    uco-core:name "Montgomery" .
+
+<https://caselinker.up.railway.app/resource/location/new-windsor> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "New Windsor" ;
+    uco-core:name "New Windsor" .
+
+<https://caselinker.up.railway.app/resource/location/new-york> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/newburgh> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Newburgh" ;
+    uco-core:name "Newburgh" .
+
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_008/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/facebook>,
+        <https://caselinker.up.railway.app/resource/platform/twitter-x>,
+        <https://caselinker.up.railway.app/resource/platform/youtube> ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_008/facet/possession> .
 

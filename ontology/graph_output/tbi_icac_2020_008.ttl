@@ -8,16 +8,19 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2020_008> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:17:18.573649" ;
+    dcterms:created "2026-09-15T20:31:48.104461" ;
     dcterms:identifier "tbi_icac_2020_008" ;
-    dcterms:modified "2026-09-10T20:17:18.573649" ;
+    dcterms:modified "2026-09-15T20:31:48.104461" ;
     dcterms:source <https://tbinewsroom.com/2020/08/25/washington-county-man-charged-with-sexual-exploitation-of-a-minor/>,
         "TBI ICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/johnson-city>,
+        <https://caselinker.up.railway.app/resource/location/washington-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/tbi_icac_2020_008/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/tbi_icac_2020_008/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/tbi_icac_2020_008/cybertip>,
@@ -29,7 +32,9 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/federal-probation-office>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
         <https://caselinker.up.railway.app/resource/agency/tennessee-bureau-of-investigation>,
-        <https://caselinker.up.railway.app/resource/agency/washington-county-sheriffs-office> .
+        <https://caselinker.up.railway.app/resource/agency/washington-county-sheriffs-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/johnson-city>,
+        <https://caselinker.up.railway.app/resource/location/washington-county> .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2020_008/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -77,13 +82,11 @@
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2020_008/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility: Washington County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/tbi_icac_2020_008/charge/1>,
         <https://caselinker.up.railway.app/resource/case/tbi_icac_2020_008/charge/2>,
         <https://caselinker.up.railway.app/resource/case/tbi_icac_2020_008/charge/3> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2020-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/tbi_icac_2020_008/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/tbi_icac_2020_008/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/tbi_icac_2020_008/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2020_008/person/offender/1> a uco-identity:Person .
 
@@ -91,17 +94,19 @@
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2020_008/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:ProbationSentence ;
-    rdfs:label "Probation" .
-
-<https://caselinker.up.railway.app/resource/case/tbi_icac_2020_008/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$20,000" .
+    rdfs:label "[\"Probation\", \"$20,000\"]" .
 
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2020_008/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2020-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/johnson-city> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/washington-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2020_008/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

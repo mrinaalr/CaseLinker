@@ -2,88 +2,106 @@
 @prefix cacontology: <https://cacontology.projectvic.org#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
-@prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_643> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:19:41.363502" ;
+    dcterms:created "2026-09-15T21:08:10.731662" ;
     dcterms:identifier "ncmec_2024_643" ;
-    dcterms:modified "2026-09-10T19:19:41.363502" ;
-    dcterms:source <https://www.kolotv.com/2024/04/26/man-arrested-charges-possession-distribution-child-pornography/>,
+    dcterms:modified "2026-09-15T21:08:10.731662" ;
+    dcterms:source <https://www.cbsnews.com/boston/news/author-brendan-dubois-new-hampshire-arrest/>,
         "NCMEC" ;
-    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_643/phase/arrested> ;
-    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_643/phase/arrested> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_643/cybertip>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_643/event/distribution>,
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/boston>,
+        <https://caselinker.up.railway.app/resource/location/exeter>,
+        <https://caselinker.up.railway.app/resource/location/new-hampshire>,
+        <https://caselinker.up.railway.app/resource/location/nh> ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_643/phase/charged> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_643/phase/charged> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_643/event/multi-jurisdiction>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_643/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_643/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/exeter-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/icac> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/boston>,
+        <https://caselinker.up.railway.app/resource/location/exeter>,
+        <https://caselinker.up.railway.app/resource/location/new-hampshire>,
+        <https://caselinker.up.railway.app/resource/location/nh> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_643/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2024-04-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:hasRoleBeginPoint "2024-07-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_643/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_643/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_643/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2024-04-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:hasRoleBeginPoint "2024-07-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_643/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_643/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/agency/exeter-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Exeter Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_643/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "child pornography" ;
+    rdfs:label "possession of child pornography" ;
     cacontology-legal-outcomes:indictmentCounts 2 .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_643/charge/2> a cacontology-legal-outcomes:CSAM_Distribution,
-        cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "distribution of child pornography" .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_643/cybertip> a cacontology-us-ncmec:NCMECCybertipReport ;
-    cacontology-us-ncmec:supportedBy <https://caselinker.up.railway.app/resource/agency/ncmec> .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_643/event/distribution> a cac-core:Event,
-        cacontology-legal-outcomes:CSAM_Distribution ;
-    cacontology:severityLevel 3 .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_643/event/multi-jurisdiction> a cac-core:Event,
+        cacontology-multi:MultiJurisdictionalInvestigation .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_643/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_643/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2024_643/charge/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_643/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-04-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2024_643/charge/1> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-07-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2024_643/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_643/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_643/person/victim/1> a uco-identity:Person .
 
-<https://caselinker.up.railway.app/resource/platform/chat> a cacontology-platforms:AnonymousChatPlatform ;
-    rdfs:label "chat" .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_643/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
-<https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_643/phase/arrested> a cacontology:InitialPhase,
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_643/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
-    cacontology:hasPhaseBeginPoint "2024-04-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology:hasPhaseBeginPoint "2024-07-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/boston> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/exeter> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Exeter" ;
+    uco-core:name "Exeter" .
+
+<https://caselinker.up.railway.app/resource/location/new-hampshire> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "New Hampshire" ;
+    uco-core:name "New Hampshire" .
+
+<https://caselinker.up.railway.app/resource/location/nh> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "N.h." ;
+    uco-core:name "N.h." .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_643/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
-    cacontology:severityLevel 3 ;
-    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/chat> ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2024_643/facet/possession> .
 

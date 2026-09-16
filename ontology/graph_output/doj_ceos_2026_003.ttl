@@ -1,6 +1,7 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
 @prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
@@ -8,21 +9,29 @@
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_003> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:42:56.329578" ;
+    dcterms:created "2026-09-15T21:50:56.918710" ;
     dcterms:identifier "doj_ceos_2026_003" ;
-    dcterms:modified "2026-09-10T19:42:56.329578" ;
+    dcterms:modified "2026-09-15T21:50:56.918710" ;
     dcterms:source <https://www.justice.gov/opa/pr/former-american-embassy-employee-sentenced-rape-minors-burkina-faso>,
         "DOJ CEOS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/burkina-faso>,
+        <https://caselinker.up.railway.app/resource/location/maryland>,
+        <https://caselinker.up.railway.app/resource/location/ouagadougou>,
+        <https://caselinker.up.railway.app/resource/location/the-district-of-maryland>,
+        <https://caselinker.up.railway.app/resource/location/united-states> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_003/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_003/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_003/event/hands-on>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_003/event/multi-jurisdiction>,
+        <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_003/event/project-safe-childhood>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_003/event/trust-violation>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_003/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_003/legal-step/sentenced>,
@@ -33,7 +42,13 @@
         <https://caselinker.up.railway.app/resource/agency/doj>,
         <https://caselinker.up.railway.app/resource/agency/hsi>,
         <https://caselinker.up.railway.app/resource/agency/justice-departments-criminal-division>,
-        <https://caselinker.up.railway.app/resource/agency/us-state-department> .
+        <https://caselinker.up.railway.app/resource/agency/us-state-department>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/burkina-faso>,
+        <https://caselinker.up.railway.app/resource/location/maryland>,
+        <https://caselinker.up.railway.app/resource/location/ouagadougou>,
+        <https://caselinker.up.railway.app/resource/location/the-district-of-maryland>,
+        <https://caselinker.up.railway.app/resource/location/united-states> .
 
 <https://caselinker.up.railway.app/resource/agency/agency-for-international-development-office-of-inspector-general> a cac-core:OrganizationLikeEntity,
         cacontology-multi:LocalAgency ;
@@ -51,6 +66,8 @@
         cacontology-multi:LocalAgency ;
     rdfs:label "U.S. State Department" .
 
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
+
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_003/charge/1> a cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "sexual exploitation" ;
     ns1:chargeCluster "sexual_exploitation_unspecified" .
@@ -65,6 +82,10 @@
         cacontology-multi:MultiJurisdictionalInvestigation ;
     cacontology:severityLevel 3 ;
     cacontology-multi:crossesBorders true .
+
+<https://caselinker.up.railway.app/resource/case/doj_ceos_2026_003/event/project-safe-childhood> a cac-core:Event,
+        cacontology-multi:ProjectSafeChildhoodOperation ;
+    cacontology:severityLevel 3 .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_003/event/trust-violation> a cacontology-custodial:CustodialAbuse,
         cacontology-custodial:TrustViolation ;
@@ -84,7 +105,8 @@
         cacontology-legal-outcomes:SentencingHearing ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
-<https://caselinker.up.railway.app/resource/case/doj_ceos_2026_003/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/doj_ceos_2026_003/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 41 .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_003/person/victim/1> a uco-identity:Person ;
     cacontology-production:victimAge 13 .
@@ -111,11 +133,30 @@
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_003/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:LifeImprisonmentSentence ;
-    rdfs:label "life in prison" .
+    rdfs:label "[\"life in prison\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_003/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/burkina-faso> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Burkina Faso" ;
+    uco-core:name "Burkina Faso" .
+
+<https://caselinker.up.railway.app/resource/location/maryland> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/ouagadougou> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Ouagadougou" ;
+    uco-core:name "Ouagadougou" .
+
+<https://caselinker.up.railway.app/resource/location/the-district-of-maryland> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_003/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

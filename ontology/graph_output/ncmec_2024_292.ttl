@@ -1,91 +1,86 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_292> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:16:43.226628" ;
+    dcterms:created "2026-09-15T21:08:10.419736" ;
     dcterms:identifier "ncmec_2024_292" ;
-    dcterms:modified "2026-09-10T19:16:43.226628" ;
-    dcterms:source <https://themonticellonews.com/men-arrested-for-child-sex-abuse-p19724-1.htm>,
+    dcterms:modified "2026-09-15T21:08:10.419736" ;
+    dcterms:source <https://www.wjbf.com/news/crime-news/burke-county-man-charged-with-sexual-exploitation-of-children/>,
         "NCMEC" ;
-    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_292/phase/booked> ;
-    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_292/phase/booked> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_292/event/csam>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_292/legal-proceeding> ;
-    cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/department-of-corrections>,
-        <https://caselinker.up.railway.app/resource/agency/georgia-bureau-of-investigation>,
-        <https://caselinker.up.railway.app/resource/agency/jasper-county-sheriffs-office>,
-        <https://caselinker.up.railway.app/resource/agency/secret-service> .
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/ga>,
+        <https://caselinker.up.railway.app/resource/location/waynesboro> ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_292/phase/charged> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_292/phase/charged> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_292/legal-proceeding> ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/burke-county-sheriffs-office>,
+        <https://caselinker.up.railway.app/resource/agency/icac> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/ga>,
+        <https://caselinker.up.railway.app/resource/location/waynesboro> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_292/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
     cacontology:hasRoleBeginPoint "2024-02-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_292/event/csam> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_292/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_292/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
     cacontology:hasRoleBeginPoint "2024-02-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_292/event/csam> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_292/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/department-of-corrections> a cacontology-multi:LocalAgency .
-
-<https://caselinker.up.railway.app/resource/agency/georgia-bureau-of-investigation> a cacontology-multi:StateAgency .
-
-<https://caselinker.up.railway.app/resource/agency/jasper-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
+<https://caselinker.up.railway.app/resource/agency/burke-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
         cacontology-multi:LocalAgency ;
-    rdfs:label "Jasper County Sheriff's Office" .
+    rdfs:label "Burke County Sheriff's Office" .
 
-<https://caselinker.up.railway.app/resource/agency/secret-service> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_292/charge/1> a cacontology-legal-outcomes:CriminalCharge,
         cacontology-legal-outcomes:StateCharge ;
-    rdfs:label "sexual exploitation of children" .
+    rdfs:label "sexual exploitation of children" ;
+    cacontology-legal-outcomes:indictmentCounts 2 .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_292/charge/2> a cacontology-legal-outcomes:CSAM_Possession,
-        cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "child sexual abuse material" .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_292/charge/3> a cacontology-legal-outcomes:CriminalCharge ;
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_292/charge/2> a cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "sexual exploitation" ;
     ns1:chargeCluster "sexual_exploitation_unspecified" .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_292/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_292/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2024_292/charge/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_292/charge/2>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_292/charge/3> ;
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_292/charge/2> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2024-02-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2024_292/sentence/1> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_292/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_292/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 22 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_292/person/victim/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_292/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:ProbationSentence ;
-    rdfs:label "probation" .
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_292/phase/booked> a cacontology:InitialPhase,
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_292/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2024-02-01T00:00:00Z"^^xsd:dateTimeStamp .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_292/event/csam> a cacontology:CSAMIncident,
-        cac-core:Event ;
-    cacontology:severityLevel 3 ;
-    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2024_292/facet/csam> .
+<https://caselinker.up.railway.app/resource/location/ga> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/waynesboro> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Waynesboro" ;
+    uco-core:name "Waynesboro" .
 

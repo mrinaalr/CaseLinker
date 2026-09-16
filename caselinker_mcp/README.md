@@ -2,7 +2,7 @@
 
 The CaseLinker MCP (Model Context Protocol) server exposes the corpus, knowledge graphs, triage scoring, and automated analysis as **37 structured tools** for agent and LLM workflows. Twenty-nine tools wrap the existing CaseLinker REST API over HTTP; eight are MCP-only (facet traversal, on-demand graphs, static source catalog). Read-only — no direct database mutation via MCP — so it works the same against local `run/main.py` and the Railway production deployment.
 
-The processed sqlite corpus is **10,000 case reports**, **120,272 extracted features**, and **4,000+ distinct law-enforcement agencies** (**56** sources, **10,000** per-case CAC graphs under `ontology/graph_output/`). Point `CASELINKER_API_URL` at localhost to query this set; Railway still serves the last deployed snapshot until that environment is updated.
+The processed sqlite corpus is **10,282 case reports**, **125,891 extracted features**, and **4,000+ distinct law-enforcement agencies** (**56** sources, **10,282** per-case CAC graphs under `ontology/graph_output/`). Point `CASELINKER_API_URL` at localhost to query this set; Railway still serves the last deployed snapshot until that environment is updated.
 
 See [`tool_registry.md`](tool_registry.md) for the full tool catalog and tier breakdown.
 

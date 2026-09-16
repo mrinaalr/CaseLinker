@@ -11,6 +11,7 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -47,6 +48,8 @@
         cacontology-multi:StateAgency ;
     rdfs:label "Philippine National Bureau of Investigation" .
 
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
+
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2025_023/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "child sexual abuse material" .
@@ -69,6 +72,10 @@
         cacontology-multi:MultiJurisdictionalInvestigation ;
     cacontology:severityLevel 3 ;
     cacontology-multi:crossesBorders true .
+
+<https://caselinker.up.railway.app/resource/case/doj_ceos_2025_023/event/project-safe-childhood> a cac-core:Event,
+        cacontology-multi:ProjectSafeChildhoodOperation ;
+    cacontology:severityLevel 3 .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2025_023/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
@@ -96,15 +103,19 @@
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2025_023/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "30 years" .
+    rdfs:label "[\"30 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2025_023> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:43:13.086735" ;
+    dcterms:created "2026-09-15T21:50:56.952369" ;
     dcterms:identifier "doj_ceos_2025_023" ;
-    dcterms:modified "2026-09-10T19:43:13.086735" ;
+    dcterms:modified "2026-09-15T21:50:56.952369" ;
     dcterms:source <https://www.justice.gov/opa/pr/kentucky-man-sentenced-sexually-exploiting-minors-philippines>,
         "DOJ CEOS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/kentucky>,
+        <https://caselinker.up.railway.app/resource/location/philippines>,
+        <https://caselinker.up.railway.app/resource/location/united-states>,
+        <https://caselinker.up.railway.app/resource/location/walton> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_ceos_2025_023/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_ceos_2025_023/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_ceos_2025_023/admission/1>,
@@ -114,6 +125,7 @@
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2025_023/event/hands-on>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2025_023/event/multi-jurisdiction>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2025_023/event/production>,
+        <https://caselinker.up.railway.app/resource/case/doj_ceos_2025_023/event/project-safe-childhood>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2025_023/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2025_023/legal-step/sentenced>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2025_023/offense-event/charge-3> ;
@@ -123,7 +135,12 @@
         <https://caselinker.up.railway.app/resource/agency/fbi>,
         <https://caselinker.up.railway.app/resource/agency/justice-departments-criminal-division>,
         <https://caselinker.up.railway.app/resource/agency/justice-departments-office-of-international-affairs>,
-        <https://caselinker.up.railway.app/resource/agency/philippine-national-bureau-of-investigation> .
+        <https://caselinker.up.railway.app/resource/agency/philippine-national-bureau-of-investigation>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/kentucky>,
+        <https://caselinker.up.railway.app/resource/location/philippines>,
+        <https://caselinker.up.railway.app/resource/location/united-states>,
+        <https://caselinker.up.railway.app/resource/location/walton> .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2025_023/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
@@ -137,6 +154,20 @@
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2025_023/event/production>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2025_023/offense-event/charge-3> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_ceos_2025_023/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/location/kentucky> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/philippines> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/walton> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Walton" ;
+    uco-core:name "Walton" .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2025_023/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

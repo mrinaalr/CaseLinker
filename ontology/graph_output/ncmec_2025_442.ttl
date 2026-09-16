@@ -5,19 +5,26 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_442> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:29:07.785753" ;
+    dcterms:created "2026-09-15T21:27:13.561604" ;
     dcterms:identifier "ncmec_2025_442" ;
-    dcterms:modified "2026-09-10T19:29:07.785753" ;
+    dcterms:modified "2026-09-15T21:27:13.561604" ;
     dcterms:source <https://news.maryland.gov/msp/2025/10/17/maryland-state-police-arrest-man-for-sexual-solicitation-of-a-minor-distribution-of-child-pornography-in-worcester-county/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/berlin>,
+        <https://caselinker.up.railway.app/resource/location/berlin-barrack>,
+        <https://caselinker.up.railway.app/resource/location/berlin-maryland>,
+        <https://caselinker.up.railway.app/resource/location/maryland>,
+        <https://caselinker.up.railway.app/resource/location/worcester-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_442/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_442/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_442/cybertip>,
@@ -29,7 +36,12 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/fbi>,
         <https://caselinker.up.railway.app/resource/agency/maryland-state-police-department>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/usms> .
+        <https://caselinker.up.railway.app/resource/agency/usms> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/berlin>,
+        <https://caselinker.up.railway.app/resource/location/berlin-barrack>,
+        <https://caselinker.up.railway.app/resource/location/berlin-maryland>,
+        <https://caselinker.up.railway.app/resource/location/maryland>,
+        <https://caselinker.up.railway.app/resource/location/worcester-county> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_442/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -45,9 +57,13 @@
 
 <https://caselinker.up.railway.app/resource/agency/fbi> a cacontology-multi:FederalAgency .
 
-<https://caselinker.up.railway.app/resource/agency/maryland-state-police-department> a cacontology-multi:StateAgency .
+<https://caselinker.up.railway.app/resource/agency/maryland-state-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:StateAgency ;
+    rdfs:label "Maryland State Police Department" .
 
-<https://caselinker.up.railway.app/resource/agency/usms> a cacontology-multi:FederalAgency .
+<https://caselinker.up.railway.app/resource/agency/usms> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:FederalAgency ;
+    rdfs:label "U.S. Marshals Service" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_442/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -70,12 +86,17 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_442/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_442/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-10-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-10-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_442/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_442/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 29 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_442/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_442/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_442/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -85,6 +106,31 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_442/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-10-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/berlin> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Berlin" ;
+    uco-core:name "Berlin" .
+
+<https://caselinker.up.railway.app/resource/location/berlin-barrack> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Berlin Barrack" ;
+    uco-core:name "Berlin Barrack" .
+
+<https://caselinker.up.railway.app/resource/location/berlin-maryland> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Berlin, Maryland" ;
+    uco-core:name "Berlin, Maryland" .
+
+<https://caselinker.up.railway.app/resource/location/maryland> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Maryland" ;
+    uco-core:name "Maryland" .
+
+<https://caselinker.up.railway.app/resource/location/worcester-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Worcester County" ;
+    uco-core:name "Worcester County" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_442/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

@@ -3,23 +3,33 @@
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_011> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:03:25.985955" ;
+    dcterms:created "2026-09-15T20:10:06.698825" ;
     dcterms:identifier "ohio_ag_2013_011" ;
-    dcterms:modified "2026-09-10T20:03:25.985955" ;
+    dcterms:modified "2026-09-15T20:10:06.698825" ;
     dcterms:source <https://www.ohioattorneygeneral.gov/Media/News-Releases/April-2013/Former-Mayor-of-Stockport-Convicted-on-21-Counts>,
         "OHIO AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/mcconnelsville>,
+        <https://caselinker.up.railway.app/resource/location/ohio>,
+        <https://caselinker.up.railway.app/resource/location/stockport> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_011/phase/convicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_011/phase/convicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_011/event/hands-on>,
+        <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_011/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_011/legal-step/convicted> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ohio-attorney-generals-crimes-against-children-unit> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ohio-attorney-generals-crimes-against-children-unit> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/mcconnelsville>,
+        <https://caselinker.up.railway.app/resource/location/ohio>,
+        <https://caselinker.up.railway.app/resource/location/stockport> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_011/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -37,6 +47,12 @@
         cacontology-multi:StateAgency ;
     rdfs:label "Ohio Attorney General's Crimes Against Children Unit" .
 
+<https://caselinker.up.railway.app/resource/case/ohio_ag_2013_011/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_011/sentence/1> .
+
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_011/legal-step/convicted> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding,
@@ -47,9 +63,26 @@
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_011/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ohio_ag_2013_011/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_011/phase/convicted> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/mcconnelsville> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Mcconnelsville" ;
+    uco-core:name "Mcconnelsville" .
+
+<https://caselinker.up.railway.app/resource/location/ohio> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/stockport> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Stockport" ;
+    uco-core:name "Stockport" .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_011/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

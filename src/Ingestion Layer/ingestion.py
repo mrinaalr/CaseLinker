@@ -27,7 +27,9 @@ consume_same_line_slug_after_url = _suc_mod.consume_same_line_slug_after_url
 from typing import Dict, List, Any, Optional
 import warnings
 import logging
+import os
 import re
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from functools import lru_cache
 
 try:
@@ -39,6 +41,20 @@ try:
     warnings.filterwarnings("ignore", category=UserWarning)
 except ImportError:
     PDFPLUMBER_AVAILABLE = False
+
+try:
+    # PyMuPDF 1.28+ prefers `import pymupdf`; older installs still expose `fitz`.
+    try:
+        import pymupdf as _pymupdf  # type: ignore
+    except ImportError:
+        import fitz as _pymupdf  # type: ignore
+    PYMUPDF_AVAILABLE = True
+except ImportError:
+    _pymupdf = None  # type: ignore
+    PYMUPDF_AVAILABLE = False
+
+# Below this many chars, treat PyMuPDF output as empty and fall back to pdfplumber.
+_PDF_TEXT_EMPTY_CHARS = 50
 
 
 def detect_source_from_content(text: str, filename: str) -> str:
@@ -227,7 +243,8 @@ def detect_source_from_content(text: str, filename: str) -> str:
         'doj_ai_csam' in filename_lower
         or ('doj' in filename_lower and 'ai' in filename_lower and 'csam' in filename_lower)
     ):
-        return 'DOJ AI CSAM'
+        # USAO AI-CSAM harvest — under Project Safe Childhood, not CEOS section news.
+        return 'DOJ SAFE CHILDHOOD'
     elif (
         'safe_childhood' in filename_lower
         or 'safe-childhood' in filename_lower
@@ -245,7 +262,8 @@ def detect_source_from_content(text: str, filename: str) -> str:
     ):
         return 'DOJ CEOS'
     elif 'doj_archives' in filename_lower or ('doj' in filename_lower and 'archive' in filename_lower):
-        return 'DOJ ARCHIVES'
+        # Folded into DOJ CEOS for the published 56-source taxonomy.
+        return 'DOJ CEOS'
     elif 'fbi' in filename_lower:
         return 'FBI'
 
@@ -599,7 +617,19 @@ def detect_source_from_content(text: str, filename: str) -> str:
     ):
         return 'ALEA'
 
-    # DOJ AI-CSAM supplemental bundle (justice.gov USAO/OPA AI-generated CSAM PRs)
+    # U.S. DOJ Project Safe Childhood USAO/OPA prosecutions (dedicated harvest; own source)
+    if re.search(r'justice\.gov', text_sample, re.I) and re.search(
+        r'Project\s+Safe\s+Childhood',
+        text_sample,
+        re.I,
+    ) and (
+        'safe_childhood' in filename_lower
+        or 'safe-childhood' in filename_lower
+        or ('safe' in filename_lower and 'childhood' in filename_lower)
+    ):
+        return 'DOJ SAFE CHILDHOOD'
+
+    # DOJ AI-CSAM supplemental bundle → Project Safe Childhood (USAO topic harvest)
     if re.search(r'justice\.gov', text_sample, re.I) and re.search(
         r'AI[- ]generated|artificial intelligence|deepfake|computer[- ]generated',
         text_sample,
@@ -612,21 +642,9 @@ def detect_source_from_content(text: str, filename: str) -> str:
         'doj_ai_csam' in filename_lower
         or ('ai' in filename_lower and 'csam' in filename_lower)
     ):
-        return 'DOJ AI CSAM'
-
-    # U.S. DOJ Project Safe Childhood USAO/OPA prosecutions (dedicated harvest)
-    if re.search(r'justice\.gov', text_sample, re.I) and re.search(
-        r'Project\s+Safe\s+Childhood',
-        text_sample,
-        re.I,
-    ) and (
-        'safe_childhood' in filename_lower
-        or 'safe-childhood' in filename_lower
-        or ('safe' in filename_lower and 'childhood' in filename_lower)
-    ):
         return 'DOJ SAFE CHILDHOOD'
 
-    # U.S. DOJ CEOS news (federal child exploitation press releases; supplemental source)
+    # U.S. DOJ CEOS news (federal child exploitation press releases)
     if re.search(r'justice\.gov', text_sample, re.I) and re.search(
         r'Child Exploitation\s*&\s*Obscenity Section|CEOS|Press Release',
         text_sample,
@@ -634,13 +652,13 @@ def detect_source_from_content(text: str, filename: str) -> str:
     ):
         return 'DOJ CEOS'
 
-    # U.S. DOJ archived CEOS pages (legacy archive domain path)
+    # U.S. DOJ archived CEOS pages → DOJ CEOS (same published source bucket)
     if re.search(r'justice\.gov/archives/criminal', text_sample, re.I) and re.search(
         r'Child Exploitation|Obscenity Section|Press Release|child pornography|sexual abuse material',
         text_sample,
         re.I,
     ):
-        return 'DOJ ARCHIVES'
+        return 'DOJ CEOS'
 
     # Pennsylvania Office of Attorney General (attorneygeneral.gov — exclude other state AG domains)
     if re.search(r'attorneygeneral\.gov', text_sample, re.I) and not re.search(
@@ -859,7 +877,8 @@ def _load_source_url_fallbacks_from_sources_html() -> Dict[str, str]:
         elif "u.s. doj archives" in n or (
             "doj archives" in n and "obscenity" in n
         ) or "child exploitation and obscenity section archive" in n:
-            mapping["DOJ ARCHIVES"] = url_clean
+            # Archives harvest folds into DOJ CEOS for source taxonomy.
+            mapping["DOJ CEOS"] = url_clean
     return mapping
 
 
@@ -871,33 +890,83 @@ def get_source_url_fallback(source: str) -> Optional[str]:
     return _load_source_url_fallbacks_from_sources_html().get(key)
 
 
+def _extract_pdf_text_pymupdf(pdf_path: str) -> str:
+    """Fast text extract via PyMuPDF. Returns '' on failure / empty layout."""
+    if not PYMUPDF_AVAILABLE or _pymupdf is None:
+        return ""
+    try:
+        doc = _pymupdf.open(pdf_path)
+        try:
+            parts: List[str] = []
+            for page in doc:
+                page_text = page.get_text("text") or ""
+                if page_text.strip():
+                    parts.append(page_text)
+            return "\n".join(parts)
+        finally:
+            doc.close()
+    except Exception as exc:
+        logging.getLogger(__name__).debug(
+            "PyMuPDF extract failed for %s: %s", pdf_path, exc
+        )
+        return ""
+
+
+def _extract_pdf_text_pdfplumber(pdf_path: str) -> str:
+    """Slower but layout-robust extract via pdfplumber."""
+    if not PDFPLUMBER_AVAILABLE:
+        raise ImportError(
+            "pdfplumber is required for PDF extraction. Install with: pip install pdfplumber"
+        )
+    text_content: List[str] = []
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        with pdfplumber.open(pdf_path) as pdf:
+            for page in pdf.pages:
+                page_text = page.extract_text()
+                if page_text:
+                    text_content.append(page_text)
+    return "\n".join(text_content)
+
+
 def extract_pdf_text(pdf_path: str) -> str:
     """
     Extract all text from a PDF file.
-    
+
+    Prefers PyMuPDF (pymupdf/fitz) for speed on text-heavy press-release PDFs.
+    Falls back to pdfplumber when PyMuPDF is missing, errors, or returns an
+    empty/near-empty layout (scanned or odd encodings).
+
     Args:
         pdf_path: Path to the PDF file
-        
+
     Returns:
         Extracted text as a string
     """
+    if not PYMUPDF_AVAILABLE and not PDFPLUMBER_AVAILABLE:
+        raise ImportError(
+            "PDF extraction requires pymupdf and/or pdfplumber. "
+            "Install with: pip install pymupdf pdfplumber"
+        )
+
+    fast = _extract_pdf_text_pymupdf(pdf_path)
+    if len(fast.strip()) >= _PDF_TEXT_EMPTY_CHARS:
+        return fast
+
     if not PDFPLUMBER_AVAILABLE:
-        raise ImportError("pdfplumber is required for PDF extraction. Install with: pip install pdfplumber")
-    
-    text_content = []
-    
+        if fast.strip():
+            return fast
+        raise Exception(
+            f"Error extracting text from PDF: PyMuPDF returned empty layout "
+            f"and pdfplumber is not installed ({pdf_path})"
+        )
+
     try:
-        with warnings.catch_warnings():
-            warnings.simplefilter("ignore")
-            with pdfplumber.open(pdf_path) as pdf:
-                for page in pdf.pages:
-                    page_text = page.extract_text()
-                    if page_text:
-                        text_content.append(page_text)
-        
-        return "\n".join(text_content)
+        return _extract_pdf_text_pdfplumber(pdf_path)
     except Exception as e:
-        raise Exception(f"Error extracting text from PDF: {str(e)}")
+        if fast.strip():
+            return fast
+        raise Exception(f"Error extracting text from PDF: {str(e)}") from e
 
 
 def ingest_file(file_path: str, file_type: Optional[str] = None, source_url: Optional[str] = None) -> pd.DataFrame:
@@ -953,70 +1022,107 @@ def ingest_file(file_path: str, file_type: Optional[str] = None, source_url: Opt
         raise ValueError(f"Unsupported file type: {file_type}")
 
 
+def _ingest_one_pdf_row(
+    pdf_path: str,
+    source_urls_by_file: Optional[Dict[str, str]] = None,
+    default_source_url: Optional[str] = None,
+) -> Optional[Dict[str, Any]]:
+    """Extract one PDF into a DataFrame row dict, or None if skipped/failed."""
+    path = Path(pdf_path)
+
+    if not path.exists():
+        print(f"⚠️  Warning: File not found, skipping: {pdf_path}")
+        return None
+
+    if path.suffix.lower() != ".pdf":
+        print(f"⚠️  Warning: Not a PDF file, skipping: {pdf_path}")
+        return None
+
+    try:
+        text = extract_pdf_text(str(path))
+
+        org_name = detect_source_from_content(text, path.name)
+        detected_source_url = extract_source_url_from_text(text)
+        resolved_source_url = (
+            (source_urls_by_file or {}).get(str(path))
+            or (source_urls_by_file or {}).get(path.name)
+            or default_source_url
+            or detected_source_url
+            or get_source_url_fallback(org_name)
+        )
+
+        print(
+            f"✓ Ingested: {path.name} ({len(text):,} characters) "
+            f"- Detected source: {org_name}"
+        )
+        return {
+            "source_file": path.name,
+            "extracted_text": text,
+            "source": org_name,
+            "source_url": resolved_source_url,
+        }
+    except Exception as e:
+        print(f"❌ Error processing {path.name}: {e}")
+        return None
+
+
 def ingest_multiple_pdfs(
     pdf_paths: List[str],
     source_urls_by_file: Optional[Dict[str, str]] = None,
     default_source_url: Optional[str] = None,
+    max_workers: Optional[int] = None,
 ) -> pd.DataFrame:
     """
     Ingest multiple PDF files and return a combined DataFrame.
-    Each PDF is processed separately and combined into a single DataFrame.
+
+    Step 1 extracts overlap across PDFs (default 4 workers). Set
+    INGEST_PDF_WORKERS=1 to force sequential extract.
     
     Args:
         pdf_paths: List of paths to PDF files
         source_urls_by_file: Optional mapping of filename or full path to source URL
         default_source_url: Optional fallback source URL for files not in mapping
+        max_workers: Parallel extract workers (default env INGEST_PDF_WORKERS or 4)
         
     Returns:
-        DataFrame with ingested data from all PDFs
+        DataFrame with ingested data from all PDFs (same order as pdf_paths)
     """
     if not pdf_paths:
         raise ValueError("No PDF paths provided")
-    
-    all_data = []
-    
-    for pdf_path in pdf_paths:
-        path = Path(pdf_path)
-        
-        if not path.exists():
-            print(f"⚠️  Warning: File not found, skipping: {pdf_path}")
-            continue
-        
-        if not path.suffix.lower() == '.pdf':
-            print(f"⚠️  Warning: Not a PDF file, skipping: {pdf_path}")
-            continue
-        
+
+    if max_workers is None:
         try:
-            text = extract_pdf_text(str(path))
-            
-            # Detect source from content and filename
-            org_name = detect_source_from_content(text, path.name)
-            detected_source_url = extract_source_url_from_text(text)
-            resolved_source_url = (
-                (source_urls_by_file or {}).get(str(path))
-                or (source_urls_by_file or {}).get(path.name)
-                or default_source_url
-                or detected_source_url
-                or get_source_url_fallback(org_name)
+            max_workers = int(os.environ.get("INGEST_PDF_WORKERS", "4"))
+        except ValueError:
+            max_workers = 4
+    max_workers = max(1, min(max_workers, len(pdf_paths)))
+
+    all_data: List[Optional[Dict[str, Any]]] = [None] * len(pdf_paths)
+
+    if max_workers == 1:
+        for i, pdf_path in enumerate(pdf_paths):
+            all_data[i] = _ingest_one_pdf_row(
+                pdf_path, source_urls_by_file, default_source_url
             )
-            
-            all_data.append({
-                'source_file': path.name,
-                'extracted_text': text,
-                'source': org_name,
-                'source_url': resolved_source_url,
-            })
-            print(f"✓ Ingested: {path.name} ({len(text):,} characters) - Detected source: {org_name}")
-            
-        except Exception as e:
-            print(f"❌ Error processing {path.name}: {e}")
-            continue
-    
-    if not all_data:
+    else:
+        with ThreadPoolExecutor(max_workers=max_workers) as pool:
+            futures = {
+                pool.submit(
+                    _ingest_one_pdf_row,
+                    pdf_path,
+                    source_urls_by_file,
+                    default_source_url,
+                ): i
+                for i, pdf_path in enumerate(pdf_paths)
+            }
+            for fut in as_completed(futures):
+                all_data[futures[fut]] = fut.result()
+
+    rows = [row for row in all_data if row is not None]
+    if not rows:
         raise ValueError("No PDFs were successfully ingested")
-    
-    df = pd.DataFrame(all_data)
-    return df
+
+    return pd.DataFrame(rows)
 
 
 

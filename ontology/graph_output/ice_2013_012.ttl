@@ -10,16 +10,19 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ice_2013_012> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:45:51.708659" ;
+    dcterms:created "2026-09-15T19:35:19.185604" ;
     dcterms:identifier "ice_2013_012" ;
-    dcterms:modified "2026-09-10T19:45:51.708659" ;
+    dcterms:modified "2026-09-15T19:35:19.185604" ;
     dcterms:source <https://www.ice.gov/news/releases/las-piedras-resident-sentenced-50-years-prison-production-child-pornography>,
         "ICE" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/las-piedras>,
+        <https://caselinker.up.railway.app/resource/location/puerto-rico> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ice_2013_012/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ice_2013_012/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ice_2013_012/cybertip>,
@@ -37,7 +40,9 @@
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
         <https://caselinker.up.railway.app/resource/agency/puerto-rico-crimes-against-children-task-force>,
         <https://caselinker.up.railway.app/resource/agency/puerto-rico-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/virtual-global-taskforce> .
+        <https://caselinker.up.railway.app/resource/agency/virtual-global-taskforce> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/las-piedras>,
+        <https://caselinker.up.railway.app/resource/location/puerto-rico> .
 
 <https://caselinker.up.railway.app/resource/case/ice_2013_012/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -59,7 +64,9 @@
 
 <https://caselinker.up.railway.app/resource/agency/ice> a cacontology-multi:FederalAgency .
 
-<https://caselinker.up.railway.app/resource/agency/puerto-rico-crimes-against-children-task-force> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/puerto-rico-crimes-against-children-task-force> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Puerto Rico Crimes Against Children Task Force" .
 
 <https://caselinker.up.railway.app/resource/agency/puerto-rico-police-department> a cac-core:OrganizationLikeEntity,
         cacontology-multi:LocalAgency ;
@@ -123,13 +130,23 @@
 
 <https://caselinker.up.railway.app/resource/case/ice_2013_012/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "50 years" .
+    rdfs:label "[\"50 years\"]" .
 
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/ice_2013_012/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/las-piedras> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Las Piedras" ;
+    uco-core:name "Las Piedras" .
+
+<https://caselinker.up.railway.app/resource/location/puerto-rico> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Puerto Rico" ;
+    uco-core:name "Puerto Rico" .
 
 <https://caselinker.up.railway.app/resource/case/ice_2013_012/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

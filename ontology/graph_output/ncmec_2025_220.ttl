@@ -3,26 +3,32 @@
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_220> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:27:10.959588" ;
+    dcterms:created "2026-09-15T21:27:13.358946" ;
     dcterms:identifier "ncmec_2025_220" ;
-    dcterms:modified "2026-09-10T19:27:10.959588" ;
+    dcterms:modified "2026-09-15T21:27:13.358946" ;
     dcterms:source <https://www.myfloridanews.com/news/centralwest/kenneth-city-man-charged-with-possession/article_8ea6392f-b7bb-581f-a067-241c6073bb9c.html>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/florida>,
+        <https://caselinker.up.railway.app/resource/location/kenneth-city> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_220/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_220/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_220/event/online-only>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_220/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_220/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/pinellas-county-sheriffs-office> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/pinellas-county-sheriffs-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/florida>,
+        <https://caselinker.up.railway.app/resource/location/kenneth-city> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_220/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -50,17 +56,29 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_220/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Pinellas County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_220/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_220/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_220/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_220/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_220/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_220/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/florida> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/kenneth-city> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Kenneth City" ;
+    uco-core:name "Kenneth City" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_220/event/online-only> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event .

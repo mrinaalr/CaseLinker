@@ -5,19 +5,25 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_450> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:29:13.122333" ;
+    dcterms:created "2026-09-15T21:27:13.571548" ;
     dcterms:identifier "ncmec_2025_450" ;
-    dcterms:modified "2026-09-10T19:29:13.122333" ;
+    dcterms:modified "2026-09-15T21:27:13.571548" ;
     dcterms:source <https://sheriff.carrollcountymd.gov/wp-content/uploads/2025/02/Sheriffs-Office-makes-arrest-for-child-sexual-abuse-material-charges-060425.pdf>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/carroll-county>,
+        <https://caselinker.up.railway.app/resource/location/maryland>,
+        <https://caselinker.up.railway.app/resource/location/taneytown>,
+        <https://caselinker.up.railway.app/resource/location/westminster> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_450/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_450/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_450/event/possession>,
@@ -26,7 +32,11 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/carroll-county-advocacy-and-investigation-center>,
         <https://caselinker.up.railway.app/resource/agency/carroll-county-advocacy-and-investigation-unit>,
         <https://caselinker.up.railway.app/resource/agency/carroll-county-sheriffs-office>,
-        <https://caselinker.up.railway.app/resource/agency/icac> .
+        <https://caselinker.up.railway.app/resource/agency/icac> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/carroll-county>,
+        <https://caselinker.up.railway.app/resource/location/maryland>,
+        <https://caselinker.up.railway.app/resource/location/taneytown>,
+        <https://caselinker.up.railway.app/resource/location/westminster> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_450/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -40,7 +50,9 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2025_450/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_450/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/carroll-county-advocacy-and-investigation-center> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/carroll-county-advocacy-and-investigation-center> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Carroll County Advocacy and Investigation Center" .
 
 <https://caselinker.up.railway.app/resource/agency/carroll-county-advocacy-and-investigation-unit> a cacontology-multi:LocalAgency .
 
@@ -59,16 +71,37 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_450/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-06-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-06-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_450/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_450/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 18 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_450/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_450/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_450/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-06-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/carroll-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Carroll County" ;
+    uco-core:name "Carroll County" .
+
+<https://caselinker.up.railway.app/resource/location/maryland> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/taneytown> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/westminster> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Westminster" ;
+    uco-core:name "Westminster" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_450/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

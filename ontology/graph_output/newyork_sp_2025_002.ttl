@@ -6,17 +6,25 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_002> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:59:44.542311" ;
+    dcterms:created "2026-09-15T20:06:35.693786" ;
     dcterms:identifier "newyork_sp_2025_002" ;
-    dcterms:modified "2026-09-10T19:59:44.542311" ;
+    dcterms:modified "2026-09-15T20:06:35.693786" ;
     dcterms:source <https://troopers.ny.gov/news/warren-man-arrested-sex-offense-charges>,
         "NEWYORK SP" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/albany>,
+        <https://caselinker.up.railway.app/resource/location/herkimer>,
+        <https://caselinker.up.railway.app/resource/location/herkimer-county>,
+        <https://caselinker.up.railway.app/resource/location/new-york>,
+        <https://caselinker.up.railway.app/resource/location/richfield-springs>,
+        <https://caselinker.up.railway.app/resource/location/warren> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_002/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_002/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_002/event/distribution>,
@@ -24,7 +32,13 @@
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/crimes-against-children-task-force>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/new-york-state-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/new-york-state-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/albany>,
+        <https://caselinker.up.railway.app/resource/location/herkimer>,
+        <https://caselinker.up.railway.app/resource/location/herkimer-county>,
+        <https://caselinker.up.railway.app/resource/location/new-york>,
+        <https://caselinker.up.railway.app/resource/location/richfield-springs>,
+        <https://caselinker.up.railway.app/resource/location/warren> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_002/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -54,9 +68,7 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_002/charge/1> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_002/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_002/sentence/2>,
-        <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_002/sentence/3> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_002/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_002/person/offender/1> a uco-identity:Person .
 
@@ -64,17 +76,35 @@
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_002/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$5,000" .
-
-<https://caselinker.up.railway.app/resource/case/newyork_sp_2025_002/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$15,000" .
-
-<https://caselinker.up.railway.app/resource/case/newyork_sp_2025_002/sentence/3> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$20,000" .
+    rdfs:label "[\"$5,000\", \"$15,000\", \"$20,000\"]" .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_002/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/albany> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/herkimer> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Herkimer" ;
+    uco-core:name "Herkimer" .
+
+<https://caselinker.up.railway.app/resource/location/herkimer-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Herkimer County" ;
+    uco-core:name "Herkimer County" .
+
+<https://caselinker.up.railway.app/resource/location/new-york> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/richfield-springs> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Richfield Springs" ;
+    uco-core:name "Richfield Springs" .
+
+<https://caselinker.up.railway.app/resource/location/warren> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Warren" ;
+    uco-core:name "Warren" .
 

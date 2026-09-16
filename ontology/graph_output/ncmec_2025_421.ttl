@@ -6,26 +6,36 @@
 @prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_421> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:28:57.408960" ;
+    dcterms:created "2026-09-15T21:27:13.545781" ;
     dcterms:identifier "ncmec_2025_421" ;
-    dcterms:modified "2026-09-10T19:28:57.408960" ;
+    dcterms:modified "2026-09-15T21:27:13.545781" ;
     dcterms:source <https://wgno.com/news/crime/hammond-man-arrested-in-georgia-on-child-sex-crimes-charges/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/ga>,
+        <https://caselinker.up.railway.app/resource/location/georgia>,
+        <https://caselinker.up.railway.app/resource/location/statesboro>,
+        <https://caselinker.up.railway.app/resource/location/tangipahoa-parish> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_421/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_421/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_421/event/csam>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_421/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/statesboro-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/statesboro-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/ga>,
+        <https://caselinker.up.railway.app/resource/location/georgia>,
+        <https://caselinker.up.railway.app/resource/location/statesboro>,
+        <https://caselinker.up.railway.app/resource/location/tangipahoa-parish> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_421/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -55,7 +65,8 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_421/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-02-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-02-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_421/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_421/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 45 .
@@ -63,9 +74,31 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_421/person/victim/1> a uco-identity:Person ;
     cacontology-production:victimAge 11 .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_421/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_421/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-02-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/ga> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Ga." ;
+    uco-core:name "Ga." .
+
+<https://caselinker.up.railway.app/resource/location/georgia> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Georgia" ;
+    uco-core:name "Georgia" .
+
+<https://caselinker.up.railway.app/resource/location/statesboro> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Statesboro" ;
+    uco-core:name "Statesboro" .
+
+<https://caselinker.up.railway.app/resource/location/tangipahoa-parish> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_421/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

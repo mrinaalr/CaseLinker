@@ -12,6 +12,7 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -43,7 +44,9 @@
 
 <https://caselinker.up.railway.app/resource/agency/hsi> a cacontology-multi:FederalAgency .
 
-<https://caselinker.up.railway.app/resource/agency/twin-falls-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/twin-falls-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Twin Falls Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
@@ -74,8 +77,7 @@
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_232/charge/2>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_232/charge/3> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_232/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_232/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_232/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_232/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -90,20 +92,24 @@
     cacontology-production:victimAge 11 .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_232/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "336 months" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_232/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "supervised release" .
+    rdfs:label "[\"336 months\", \"supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_232> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T21:22:56.100915" ;
+    dcterms:created "2026-09-15T22:12:28.086514" ;
     dcterms:identifier "doj_safe_childhood_2023_232" ;
-    dcterms:modified "2026-09-14T21:22:56.100915" ;
+    dcterms:modified "2026-09-15T22:12:28.086514" ;
     dcterms:source <https://www.justice.gov/usao-id/pr/oklahoma-man-sentenced-28-years-federal-prison-producing-child-pornography>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/boise>,
+        <https://caselinker.up.railway.app/resource/location/garvin-county>,
+        <https://caselinker.up.railway.app/resource/location/idaho>,
+        <https://caselinker.up.railway.app/resource/location/nevada>,
+        <https://caselinker.up.railway.app/resource/location/oklahoma>,
+        <https://caselinker.up.railway.app/resource/location/seminole>,
+        <https://caselinker.up.railway.app/resource/location/the-pacific-northwest>,
+        <https://caselinker.up.railway.app/resource/location/twin-falls> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_232/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_232/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_232/admission/1>,
@@ -120,7 +126,15 @@
         <https://caselinker.up.railway.app/resource/agency/elko-county-sheriffs-office>,
         <https://caselinker.up.railway.app/resource/agency/hsi>,
         <https://caselinker.up.railway.app/resource/agency/twin-falls-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/usao> .
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/boise>,
+        <https://caselinker.up.railway.app/resource/location/garvin-county>,
+        <https://caselinker.up.railway.app/resource/location/idaho>,
+        <https://caselinker.up.railway.app/resource/location/nevada>,
+        <https://caselinker.up.railway.app/resource/location/oklahoma>,
+        <https://caselinker.up.railway.app/resource/location/seminole>,
+        <https://caselinker.up.railway.app/resource/location/the-pacific-northwest>,
+        <https://caselinker.up.railway.app/resource/location/twin-falls> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_232/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
@@ -133,6 +147,38 @@
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_232/event/hands-on>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_232/offense-event/charge-3> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_232/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/location/boise> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/garvin-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Garvin County" ;
+    uco-core:name "Garvin County" .
+
+<https://caselinker.up.railway.app/resource/location/idaho> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/nevada> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Nevada" ;
+    uco-core:name "Nevada" .
+
+<https://caselinker.up.railway.app/resource/location/oklahoma> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/seminole> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Seminole" ;
+    uco-core:name "Seminole" .
+
+<https://caselinker.up.railway.app/resource/location/the-pacific-northwest> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/twin-falls> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Twin Falls" ;
+    uco-core:name "Twin Falls" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_232/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

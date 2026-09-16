@@ -5,19 +5,23 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_073> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:09:37.525245" ;
+    dcterms:created "2026-09-15T20:55:00.801448" ;
     dcterms:identifier "ncmec_2023_073" ;
-    dcterms:modified "2026-09-10T19:09:37.525245" ;
+    dcterms:modified "2026-09-15T20:55:00.801448" ;
     dcterms:source <https://southernillinoisnow.com/2023/05/09/centralia-police-make-another-child-pornography-arrest/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/centralia>,
+        <https://caselinker.up.railway.app/resource/location/east-calumet> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_073/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_073/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_073/event/conspiracy>,
@@ -27,7 +31,9 @@
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/centralia-police-department>,
         <https://caselinker.up.railway.app/resource/agency/illinois-attorney-general-task-force>,
-        <https://caselinker.up.railway.app/resource/agency/jefferson-county-sheriffs-department> .
+        <https://caselinker.up.railway.app/resource/agency/jefferson-county-sheriffs-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/centralia>,
+        <https://caselinker.up.railway.app/resource/location/east-calumet> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_073/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
@@ -37,13 +43,17 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_073/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_073/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/centralia-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/centralia-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Centralia Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/illinois-attorney-general-task-force> a cac-core:OrganizationLikeEntity,
         cacontology-multi:StateAgency ;
     rdfs:label "Illinois Attorney General Task Force" .
 
-<https://caselinker.up.railway.app/resource/agency/jefferson-county-sheriffs-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/jefferson-county-sheriffs-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Jefferson County Sheriff's Department" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_073/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -55,7 +65,8 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_073/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-05-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_073/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_073/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 18 .
@@ -81,9 +92,23 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_073/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_073/person/offender/2> .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_073/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_073/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-05-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/centralia> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Centralia" ;
+    uco-core:name "Centralia" .
+
+<https://caselinker.up.railway.app/resource/location/east-calumet> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "East Calumet" ;
+    uco-core:name "East Calumet" .
 
 <https://caselinker.up.railway.app/resource/platform/chat> a cacontology-platforms:AnonymousChatPlatform ;
     rdfs:label "chat" .

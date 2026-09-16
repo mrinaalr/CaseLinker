@@ -13,6 +13,7 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -31,7 +32,9 @@
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_264/offense-event/charge-4> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_264/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/army-criminal-investigation-division> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/army-criminal-investigation-division> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Army Criminal Investigation Division" .
 
 <https://caselinker.up.railway.app/resource/agency/ceos> a cacontology-multi:FederalAgency .
 
@@ -45,11 +48,15 @@
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_264> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T21:22:19.326278" ;
+    dcterms:created "2026-09-15T22:12:26.188141" ;
     dcterms:identifier "doj_safe_childhood_2026_264" ;
-    dcterms:modified "2026-09-14T21:22:19.326278" ;
+    dcterms:modified "2026-09-15T22:12:26.188141" ;
     dcterms:source <https://www.justice.gov/usao-ak/pr/fort-wainwright-soldier-sentenced-32-years-sadistic-child-pornography-case>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/alaska>,
+        <https://caselinker.up.railway.app/resource/location/fairbanks>,
+        <https://caselinker.up.railway.app/resource/location/fort-wainwright>,
+        <https://caselinker.up.railway.app/resource/location/the-district-of-alaska> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_264/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_264/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_264/admission/1>,
@@ -71,7 +78,11 @@
         <https://caselinker.up.railway.app/resource/agency/doj>,
         <https://caselinker.up.railway.app/resource/agency/fbi>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/usao> .
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/alaska>,
+        <https://caselinker.up.railway.app/resource/location/fairbanks>,
+        <https://caselinker.up.railway.app/resource/location/fort-wainwright>,
+        <https://caselinker.up.railway.app/resource/location/the-district-of-alaska> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_264/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -115,8 +126,7 @@
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_264/charge/3>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_264/charge/4> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_264/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_264/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_264/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_264/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -142,12 +152,8 @@
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_264/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_264/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "32 years" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_264/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "supervised release" .
+    rdfs:label "[\"32 years\", \"supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_264/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -157,6 +163,20 @@
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_264/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/alaska> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/fairbanks> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/fort-wainwright> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Fort Wainwright" ;
+    uco-core:name "Fort Wainwright" .
+
+<https://caselinker.up.railway.app/resource/location/the-district-of-alaska> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_264/event/ai-csam> a cacontology:DigitallyGeneratedCSAMIncident,
         <https://cacontology.projectvic.org/ai-csam#AIGeneratedCSAM>,

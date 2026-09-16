@@ -1,29 +1,42 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
 @prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/lapd_2025_001> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:54:31.161540" ;
+    dcterms:created "2026-09-15T19:58:40.475500" ;
     dcterms:identifier "lapd_2025_001" ;
-    dcterms:modified "2026-09-10T19:54:31.161540" ;
+    dcterms:modified "2026-09-15T19:58:40.475500" ;
     dcterms:source <https://www.lapdonline.org/newsroom/detectives-seek-additional-victims-of-arrested-childcare-worker-nr25221ma/>,
         "LAPD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/las-vegas>,
+        <https://caselinker.up.railway.app/resource/location/los-angeles>,
+        <https://caselinker.up.railway.app/resource/location/los-angeles-county>,
+        <https://caselinker.up.railway.app/resource/location/ventura> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/lapd_2025_001/phase/booked> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/lapd_2025_001/phase/booked> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/lapd_2025_001/event/online-only>,
-        <https://caselinker.up.railway.app/resource/case/lapd_2025_001/event/possession> ;
+        <https://caselinker.up.railway.app/resource/case/lapd_2025_001/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/lapd_2025_001/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/hsi>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/los-angeles-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/los-angeles-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/las-vegas>,
+        <https://caselinker.up.railway.app/resource/location/los-angeles>,
+        <https://caselinker.up.railway.app/resource/location/los-angeles-county>,
+        <https://caselinker.up.railway.app/resource/location/ventura> .
 
 <https://caselinker.up.railway.app/resource/case/lapd_2025_001/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -47,14 +60,38 @@
 
 <https://caselinker.up.railway.app/resource/case/lapd_2025_001/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
+<https://caselinker.up.railway.app/resource/case/lapd_2025_001/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/lapd_2025_001/sentence/1> .
+
 <https://caselinker.up.railway.app/resource/case/lapd_2025_001/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 28 .
 
 <https://caselinker.up.railway.app/resource/case/lapd_2025_001/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/lapd_2025_001/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/lapd_2025_001/phase/booked> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/las-vegas> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Las Vegas" ;
+    uco-core:name "Las Vegas" .
+
+<https://caselinker.up.railway.app/resource/location/los-angeles> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/los-angeles-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/ventura> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/lapd_2025_001/event/online-only> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event .

@@ -3,73 +3,110 @@
 @prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
+@prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
+@prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_617> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:13:45.621794" ;
+    dcterms:created "2026-09-15T20:55:01.295646" ;
     dcterms:identifier "ncmec_2023_617" ;
-    dcterms:modified "2026-09-10T19:13:45.621794" ;
-    dcterms:source <https://www.wbrc.com/2023/05/31/tuscaloosa-man-arrested-child-pornography-case/>,
+    dcterms:modified "2026-09-15T20:55:01.295646" ;
+    dcterms:source <https://www.live5news.com/2023/06/07/johns-island-man-charged-with-sexual-exploitation-minor/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/charleston>,
+        <https://caselinker.up.railway.app/resource/location/charleston-county>,
+        <https://caselinker.up.railway.app/resource/location/gotshall>,
+        <https://caselinker.up.railway.app/resource/location/johns-island>,
+        <https://caselinker.up.railway.app/resource/location/sc> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_617/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_617/phase/charged> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_617/event/csam>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2023_617/event/distribution>,
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_617/event/distribution>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2023_617/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_617/legal-proceeding> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/west-alabama-human-trafficking-task-force> .
+    cacontology:investigationStatus "unknown" ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/charleston>,
+        <https://caselinker.up.railway.app/resource/location/charleston-county>,
+        <https://caselinker.up.railway.app/resource/location/gotshall>,
+        <https://caselinker.up.railway.app/resource/location/johns-island>,
+        <https://caselinker.up.railway.app/resource/location/sc> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_617/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
     cacontology:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_617/event/csam> ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_617/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_617/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_617/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
     cacontology:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_617/event/csam> ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_617/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_617/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/west-alabama-human-trafficking-task-force> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_617/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
-        cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "child pornography" ;
-    cacontology-legal-outcomes:indictmentCounts 2 .
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_617/charge/1> a cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "sexual exploitation" ;
+    ns1:chargeCluster "sexual_exploitation_unspecified" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_617/event/distribution> a cac-core:Event,
         cacontology-legal-outcomes:CSAM_Distribution .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_617/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_617/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_617/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Tuscaloosa County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_617/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_617/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_617/person/offender/1> a uco-identity:Person ;
-    cacontology-detection:ageEstimate 23 .
+    cacontology-detection:ageEstimate 68 .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_617/person/victim/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_617/person/victim/1> a uco-identity:Person ;
+    cacontology-production:victimAge 6 .
 
-<https://caselinker.up.railway.app/resource/platform/social-media> a cacontology-platforms:SocialMediaPlatform ;
-    rdfs:label "social media" .
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_617/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:MonetaryPenalty ;
+    rdfs:label "[\"$40,000\"]" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_617/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_617/event/csam> a cacontology:CSAMIncident,
+<https://caselinker.up.railway.app/resource/location/charleston> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Charleston" ;
+    uco-core:name "Charleston" .
+
+<https://caselinker.up.railway.app/resource/location/charleston-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Charleston County" ;
+    uco-core:name "Charleston County" .
+
+<https://caselinker.up.railway.app/resource/location/gotshall> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Gotshall" ;
+    uco-core:name "Gotshall" .
+
+<https://caselinker.up.railway.app/resource/location/johns-island> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Johns Island" ;
+    uco-core:name "Johns Island" .
+
+<https://caselinker.up.railway.app/resource/location/sc> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_617/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
-    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/social-media> ;
-    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2023_617/facet/csam> .
+    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2023_617/facet/possession> .
 

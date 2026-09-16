@@ -9,17 +9,22 @@
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2019_003> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:14:16.825424" ;
+    dcterms:created "2026-09-15T20:29:58.177496" ;
     dcterms:identifier "svicac_2019_003" ;
-    dcterms:modified "2026-09-10T20:14:16.825424" ;
+    dcterms:modified "2026-09-15T20:29:58.177496" ;
     dcterms:source <https://sanfrancisco.cbslocal.com/2019/12/10/san-jose-soccer-coach-arrested-suspicion-of-molesting-multiple-girls/>,
         "SVICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/san-jose>,
+        <https://caselinker.up.railway.app/resource/location/santa-clara-county>,
+        <https://caselinker.up.railway.app/resource/location/south-bay> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/svicac_2019_003/phase/booked> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/svicac_2019_003/phase/booked> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/svicac_2019_003/event/hands-on>,
@@ -29,13 +34,18 @@
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/san-jose-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/task-forcechild-exploitation-detail> .
+        <https://caselinker.up.railway.app/resource/agency/task-forcechild-exploitation-detail> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/san-jose>,
+        <https://caselinker.up.railway.app/resource/location/santa-clara-county>,
+        <https://caselinker.up.railway.app/resource/location/south-bay> .
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
 <https://caselinker.up.railway.app/resource/agency/san-jose-police-department> a cacontology-multi:LocalAgency .
 
-<https://caselinker.up.railway.app/resource/agency/task-forcechild-exploitation-detail> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/task-forcechild-exploitation-detail> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Task Force/Child Exploitation Detail" .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2019_003/charge/1> a cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "child exploitation" ;
@@ -51,7 +61,8 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/svicac_2019_003/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2019-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2019-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/svicac_2019_003/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2019_003/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 34 .
@@ -78,9 +89,24 @@
         <https://caselinker.up.railway.app/resource/case/svicac_2019_003/offense-event/charge-1> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/svicac_2019_003/person/victim/1> .
 
+<https://caselinker.up.railway.app/resource/case/svicac_2019_003/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/svicac_2019_003/phase/booked> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2019-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/san-jose> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/santa-clara-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/south-bay> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "South Bay" ;
+    uco-core:name "South Bay" .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2019_003/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

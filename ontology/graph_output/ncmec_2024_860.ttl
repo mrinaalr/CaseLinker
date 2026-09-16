@@ -1,68 +1,99 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_860> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:21:25.597998" ;
+    dcterms:created "2026-09-15T21:08:10.894074" ;
     dcterms:identifier "ncmec_2024_860" ;
-    dcterms:modified "2026-09-10T19:21:25.597998" ;
-    dcterms:source <https://www.gowatertown.net/former-school-principal-facing-federal-charges-for-trying-to-bring-children-to-south-dakota-for-sex/>,
+    dcterms:modified "2026-09-15T21:08:10.894074" ;
+    dcterms:source <https://kfgo.com/2024/03/12/fargo-man-facing-40-years-for-child-porn/>,
         "NCMEC" ;
-    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_860/phase/charged> ;
-    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_860/phase/charged> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_860/event/distribution>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_860/event/multi-jurisdiction>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_860/event/possession>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_860/legal-proceeding> .
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/cass-county>,
+        <https://caselinker.up.railway.app/resource/location/north-dakota>,
+        <https://caselinker.up.railway.app/resource/location/united-states> ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_860/phase/convicted> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_860/phase/convicted> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_860/cybertip>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_860/event/csam>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_860/legal-proceeding>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_860/legal-step/convicted> ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/cass-county>,
+        <https://caselinker.up.railway.app/resource/location/north-dakota>,
+        <https://caselinker.up.railway.app/resource/location/united-states> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_860/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
     cacontology:hasRoleBeginPoint "2024-03-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_860/event/possession> ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_860/event/csam> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_860/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_860/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
     cacontology:hasRoleBeginPoint "2024-03-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_860/event/possession> ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_860/event/csam> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_860/person/victim/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_860/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "child pornography" .
+    rdfs:label "child pornography" ;
+    cacontology-legal-outcomes:indictmentCounts 2 .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_860/event/distribution> a cac-core:Event,
-        cacontology-legal-outcomes:CSAM_Distribution .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_860/cybertip> a cacontology-us-ncmec:NCMECCybertipReport ;
+    cacontology-us-ncmec:supportedBy <https://caselinker.up.railway.app/resource/agency/ncmec> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_860/event/multi-jurisdiction> a cac-core:Event,
-        cacontology-multi:MultiJurisdictionalInvestigation .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_860/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_860/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_860/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Cass County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2024_860/charge/1> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-03-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2024_860/sentence/1> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_860/legal-step/convicted> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding,
+        cacontology-legal-outcomes:SentencingHearing ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2024-03-01T00:00:00Z"^^xsd:dateTimeStamp .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_860/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_860/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 27 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_860/person/victim/1> a uco-identity:Person .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_860/phase/charged> a cacontology:LegalProcessPhase,
-        cac-core:Phase ;
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_860/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[\"10 years\", \"40 years\"]" .
+
+<https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_860/phase/convicted> a cac-core:Phase,
+        cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2024-03-01T00:00:00Z"^^xsd:dateTimeStamp .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_860/event/possession> a cacontology:CSAMIncident,
+<https://caselinker.up.railway.app/resource/location/cass-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/north-dakota> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_860/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;
-    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2024_860/facet/possession> .
+    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2024_860/facet/csam> .
 

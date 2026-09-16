@@ -6,19 +6,24 @@
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2025_042> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:50:47.675221" ;
+    dcterms:created "2026-09-15T19:36:56.200828" ;
     dcterms:identifier "idaho_icac_2025_042" ;
-    dcterms:modified "2026-09-10T19:50:47.675221" ;
+    dcterms:modified "2026-09-15T19:36:56.200828" ;
     dcterms:source <https://www.ag.idaho.gov/newsroom/category/icac/?showall=true>,
         "Idaho ICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/boise>,
+        <https://caselinker.up.railway.app/resource/location/canyon-county>,
+        <https://caselinker.up.railway.app/resource/location/idaho> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/idaho_icac_2025_042/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/idaho_icac_2025_042/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/idaho_icac_2025_042/cybertip>,
@@ -39,7 +44,11 @@
         <https://caselinker.up.railway.app/resource/agency/nampa-police-department>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
         <https://caselinker.up.railway.app/resource/agency/pocatello-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/rupert-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/rupert-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/boise>,
+        <https://caselinker.up.railway.app/resource/location/canyon-county>,
+        <https://caselinker.up.railway.app/resource/location/idaho> .
 
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2025_042/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -79,6 +88,8 @@
 
 <https://caselinker.up.railway.app/resource/agency/rupert-police-department> a cacontology-multi:LocalAgency .
 
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
+
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2025_042/cybertip> a cacontology-us-ncmec:NCMECCybertipReport ;
     cacontology-us-ncmec:supportedBy <https://caselinker.up.railway.app/resource/agency/ncmec> .
 
@@ -91,8 +102,8 @@
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2025_042/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Canyon County Jail" ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-02-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-02-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/idaho_icac_2025_042/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2025_042/operation> a cac-core:Event,
         cacontology-taskforce:UndercoverUnit .
@@ -100,6 +111,10 @@
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2025_042/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2025_042/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/idaho_icac_2025_042/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/platform/chat> a cacontology-platforms:AnonymousChatPlatform ;
     rdfs:label "chat" .
@@ -112,6 +127,15 @@
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2025_042/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-02-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/boise> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/canyon-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/idaho> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2025_042/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

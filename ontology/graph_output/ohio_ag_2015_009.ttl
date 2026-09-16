@@ -6,18 +6,23 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2015_009> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:03:07.986442" ;
+    dcterms:created "2026-09-15T20:10:06.648929" ;
     dcterms:identifier "ohio_ag_2015_009" ;
-    dcterms:modified "2026-09-10T20:03:07.986442" ;
+    dcterms:modified "2026-09-15T20:10:06.648929" ;
     dcterms:source <https://www.ohioattorneygeneral.gov/Media/News-Releases/April-2015/Columbus-Man-Sentenced-to-32-Years-in-Prison-for-R>,
         "OHIO AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/columbus>,
+        <https://caselinker.up.railway.app/resource/location/franklin-county>,
+        <https://caselinker.up.railway.app/resource/location/ohio> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ohio_ag_2015_009/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ohio_ag_2015_009/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ohio_ag_2015_009/event/hands-on>,
@@ -25,7 +30,10 @@
         <https://caselinker.up.railway.app/resource/case/ohio_ag_2015_009/legal-step/sentenced> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/columbus-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/ohio-bureau-of-criminal-investigation> .
+        <https://caselinker.up.railway.app/resource/agency/ohio-bureau-of-criminal-investigation> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/columbus>,
+        <https://caselinker.up.railway.app/resource/location/franklin-county>,
+        <https://caselinker.up.railway.app/resource/location/ohio> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2015_009/relationship/stranger> a cacontology-custodial:CustodialRelationship,
         cacontology-grooming:OnlinePredator ;
@@ -33,7 +41,9 @@
     cacontology-custodial:involvesCustodian <https://caselinker.up.railway.app/resource/case/ohio_ag_2015_009/role/offender/1> ;
     cacontology-custodial:relationshipType "stranger" .
 
-<https://caselinker.up.railway.app/resource/agency/columbus-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/columbus-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Columbus Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/ohio-bureau-of-criminal-investigation> a cacontology-multi:LocalAgency .
 
@@ -68,11 +78,20 @@
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2015_009/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "32 years" .
+    rdfs:label "[\"32 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2015_009/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2015-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/columbus> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/franklin-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/ohio> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2015_009/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

@@ -4,26 +4,38 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_375> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:28:35.401904" ;
+    dcterms:created "2026-09-15T21:27:13.509744" ;
     dcterms:identifier "ncmec_2025_375" ;
-    dcterms:modified "2026-09-10T19:28:35.401904" ;
+    dcterms:modified "2026-09-15T21:27:13.509744" ;
     dcterms:source <https://www.wsaz.com/2025/04/10/man-arrested-connection-with-child-pornography-case/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/elliott-county>,
+        <https://caselinker.up.railway.app/resource/location/kentucky>,
+        <https://caselinker.up.railway.app/resource/location/ky>,
+        <https://caselinker.up.railway.app/resource/location/morehead>,
+        <https://caselinker.up.railway.app/resource/location/rowan-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_375/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_375/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_375/event/distribution>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_375/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_375/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/kentucky-state-police-department> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/kentucky-state-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/elliott-county>,
+        <https://caselinker.up.railway.app/resource/location/kentucky>,
+        <https://caselinker.up.railway.app/resource/location/ky>,
+        <https://caselinker.up.railway.app/resource/location/morehead>,
+        <https://caselinker.up.railway.app/resource/location/rowan-county> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_375/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -37,7 +49,9 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2025_375/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_375/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/kentucky-state-police-department> a cacontology-multi:StateAgency .
+<https://caselinker.up.railway.app/resource/agency/kentucky-state-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:StateAgency ;
+    rdfs:label "Kentucky State Police Department" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_375/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -62,14 +76,41 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_375/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$250,000" .
+    rdfs:label "[\"$250,000\"]" .
 
-<https://caselinker.up.railway.app/resource/platform/social-media> a cacontology-platforms:SocialMediaPlatform ;
-    rdfs:label "social media" .
+<https://caselinker.up.railway.app/resource/platform/social-media> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:SocialMediaPlatform ;
+    rdfs:label "social media" ;
+    cacontology-platforms:platformSpecificity "generic" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_375/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-04-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/elliott-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Elliott County" ;
+    uco-core:name "Elliott County" .
+
+<https://caselinker.up.railway.app/resource/location/kentucky> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Kentucky" ;
+    uco-core:name "Kentucky" .
+
+<https://caselinker.up.railway.app/resource/location/ky> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Ky." ;
+    uco-core:name "Ky." .
+
+<https://caselinker.up.railway.app/resource/location/morehead> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Morehead" ;
+    uco-core:name "Morehead" .
+
+<https://caselinker.up.railway.app/resource/location/rowan-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Rowan County" ;
+    uco-core:name "Rowan County" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_375/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

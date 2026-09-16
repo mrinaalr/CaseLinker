@@ -12,16 +12,21 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2021_005> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:46:21.677315" ;
+    dcterms:created "2026-09-15T19:40:56.263143" ;
     dcterms:identifier "illinois_ag_2021_005" ;
-    dcterms:modified "2026-09-10T19:46:21.677315" ;
+    dcterms:modified "2026-09-15T19:48:44.769872" ;
     dcterms:source <https://illinoisattorneygeneral.gov/News-Room/2021-Press-Release-Archive/202112-16%20vermilion%20county%20man%20sentenced%20for%20possession%20of%20child%20pornography.pdf>,
         "ILLINOIS AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/chicago>,
+        <https://caselinker.up.railway.app/resource/location/georgetown>,
+        <https://caselinker.up.railway.app/resource/location/illinois>,
+        <https://caselinker.up.railway.app/resource/location/vermilion-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/illinois_ag_2021_005/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/illinois_ag_2021_005/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/illinois_ag_2021_005/cybertip>,
@@ -36,7 +41,11 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/georgetown-police-department>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/illinois-high-tech-crimes-bureau>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/chicago>,
+        <https://caselinker.up.railway.app/resource/location/georgetown>,
+        <https://caselinker.up.railway.app/resource/location/illinois>,
+        <https://caselinker.up.railway.app/resource/location/vermilion-county> .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2021_005/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -54,7 +63,9 @@
         <https://caselinker.up.railway.app/resource/case/illinois_ag_2021_005/offense-event/charge-2> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/illinois_ag_2021_005/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/georgetown-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/georgetown-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Georgetown Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
@@ -84,7 +95,8 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/illinois_ag_2021_005/charge/1>,
         <https://caselinker.up.railway.app/resource/case/illinois_ag_2021_005/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/illinois_ag_2021_005/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2021_005/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -100,6 +112,10 @@
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2021_005/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/illinois_ag_2021_005/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2021_005/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
 
@@ -108,6 +124,20 @@
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2021_005/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/chicago> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/georgetown> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Georgetown" ;
+    uco-core:name "Georgetown" .
+
+<https://caselinker.up.railway.app/resource/location/illinois> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/vermilion-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2021_005/event/online-only> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

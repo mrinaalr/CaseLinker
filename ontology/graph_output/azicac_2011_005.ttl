@@ -12,6 +12,7 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -55,11 +56,9 @@
 <https://caselinker.up.railway.app/resource/case/azicac_2011_005/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility: Maricopa County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/azicac_2011_005/charge/1> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2011-06-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/azicac_2011_005/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/azicac_2011_005/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/azicac_2011_005/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/azicac_2011_005/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 43 .
@@ -68,23 +67,29 @@
 
 <https://caselinker.up.railway.app/resource/case/azicac_2011_005/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:ProbationSentence ;
-    rdfs:label "probation" .
-
-<https://caselinker.up.railway.app/resource/case/azicac_2011_005/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "8 years" .
+    rdfs:label "[\"probation\", \"8 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/azicac_2011_005/phase/booked> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2011-06-01T00:00:00Z"^^xsd:dateTimeStamp .
 
+<https://caselinker.up.railway.app/resource/location/maricopa-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Maricopa County" ;
+    uco-core:name "Maricopa County" .
+
+<https://caselinker.up.railway.app/resource/location/phoenix> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
 <https://caselinker.up.railway.app/resource/case/azicac_2011_005> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:04:37.681696" ;
+    dcterms:created "2026-09-15T19:06:28.209241" ;
     dcterms:identifier "azicac_2011_005" ;
-    dcterms:modified "2026-09-10T19:04:37.681696" ;
+    dcterms:modified "2026-09-15T19:21:55.597229" ;
     dcterms:source <https://www.azicac.org/cases-and-arrests/>,
         "AZICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/maricopa-county>,
+        <https://caselinker.up.railway.app/resource/location/phoenix> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/azicac_2011_005/phase/booked> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/azicac_2011_005/phase/booked> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/azicac_2011_005/admission/1>,
@@ -95,21 +100,21 @@
         <https://caselinker.up.railway.app/resource/case/azicac_2011_005/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/azicac_2011_005/offense-event/charge-1> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/azicac-task-force>,
-        <https://caselinker.up.railway.app/resource/agency/phoenix-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/phoenix-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/maricopa-county>,
+        <https://caselinker.up.railway.app/resource/location/phoenix> .
 
 <https://caselinker.up.railway.app/resource/case/azicac_2011_005/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;
     cacontology:producesArtifact <https://caselinker.up.railway.app/resource/case/azicac_2011_005/admission/1>,
         <https://caselinker.up.railway.app/resource/case/azicac_2011_005/admission/2>,
-        <https://caselinker.up.railway.app/resource/case/azicac_2011_005/admission/3> ;
-    cacontology:severityLevel 1 .
+        <https://caselinker.up.railway.app/resource/case/azicac_2011_005/admission/3> .
 
 <https://caselinker.up.railway.app/resource/case/azicac_2011_005/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
     cacontology:producesArtifact <https://caselinker.up.railway.app/resource/case/azicac_2011_005/admission/1>,
         <https://caselinker.up.railway.app/resource/case/azicac_2011_005/admission/2>,
         <https://caselinker.up.railway.app/resource/case/azicac_2011_005/admission/3> ;
-    cacontology:severityLevel 1 ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/azicac_2011_005/facet/possession> .
 
 <https://caselinker.up.railway.app/resource/case/azicac_2011_005/role/offender/1> a cacontology:OffenderRole,
@@ -124,7 +129,7 @@
 <https://caselinker.up.railway.app/resource/case/azicac_2011_005/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "out of control" ;
     dcterms:source <https://www.azicac.org/cases-and-arrests/> ;
-    ns1:admissionContext "artment was called to the central Phoenix business location and interviewed the suspect. The suspect was found to be possessing hundreds..." ;
+    ns1:admissionContext "ases and Arrests – to the central Phoenix business location and interviewed the suspect. The suspect was found to be possessing hundreds..." ;
     ns1:admissionFrame "perp_proximate_admitted_quote" ;
     ns1:admissionTheme "recidivism_escalation" ;
     ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/azicac_2011_005/role/offender/1> ;

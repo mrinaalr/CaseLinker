@@ -7,18 +7,23 @@
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ut_ag_2022_001> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:21:58.183770" ;
+    dcterms:created "2026-09-15T20:38:01.179234" ;
     dcterms:identifier "ut_ag_2022_001" ;
-    dcterms:modified "2026-09-10T20:21:58.183770" ;
+    dcterms:modified "2026-09-15T20:38:01.179234" ;
     dcterms:source <https://attorneygeneral.utah.gov/roosevelt-13-year-old-returned-home-after-icac-investigation/>,
         "UT AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/cheyenne>,
+        <https://caselinker.up.railway.app/resource/location/florida>,
+        <https://caselinker.up.railway.app/resource/location/wyoming> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ut_ag_2022_001/cybertip>,
         <https://caselinker.up.railway.app/resource/case/ut_ag_2022_001/event/distribution>,
         <https://caselinker.up.railway.app/resource/case/ut_ag_2022_001/event/multi-jurisdiction>,
@@ -33,7 +38,10 @@
         <https://caselinker.up.railway.app/resource/agency/uintah-county-sheriffs-department>,
         <https://caselinker.up.railway.app/resource/agency/unita-county-sheriffs-office>,
         <https://caselinker.up.railway.app/resource/agency/utah-attorney-generals-office>,
-        <https://caselinker.up.railway.app/resource/agency/utah-state-bureau-of-investigations> .
+        <https://caselinker.up.railway.app/resource/agency/utah-state-bureau-of-investigations> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/cheyenne>,
+        <https://caselinker.up.railway.app/resource/location/florida>,
+        <https://caselinker.up.railway.app/resource/location/wyoming> .
 
 <https://caselinker.up.railway.app/resource/case/ut_ag_2022_001/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -105,7 +113,8 @@
     rdfs:label "Oculus" ;
     cacontology-platforms:platformType "vr" .
 
-<https://caselinker.up.railway.app/resource/platform/skout> a cacontology-platforms:OnlineDatingPlatform ;
+<https://caselinker.up.railway.app/resource/platform/skout> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:OnlineDatingPlatform ;
     rdfs:label "Skout" .
 
 <https://caselinker.up.railway.app/resource/platform/snapchat> a cacontology-platforms:MessagingService ;
@@ -117,13 +126,24 @@
 <https://caselinker.up.railway.app/resource/platform/tiktok> a cacontology-platforms:SocialMediaPlatform ;
     rdfs:label "TikTok" .
 
-<https://caselinker.up.railway.app/resource/platform/whatsapp> a cacontology-platforms:MessagingService ;
-    rdfs:label "WhatsApp" .
+<https://caselinker.up.railway.app/resource/platform/whatsapp> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:MessagingService ;
+    rdfs:label "WhatsApp" ;
+    cacontology-platforms:encryptionLevel "end-to-end" .
 
 <https://caselinker.up.railway.app/resource/platform/whisper> a cacontology-platforms:AnonymousChatPlatform ;
     rdfs:label "Whisper" .
 
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
+
+<https://caselinker.up.railway.app/resource/location/cheyenne> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/florida> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/wyoming> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ut_ag_2022_001/event/online-only> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

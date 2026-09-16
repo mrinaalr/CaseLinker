@@ -11,16 +11,21 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_089> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:09:45.410494" ;
+    dcterms:created "2026-09-15T20:55:00.825198" ;
     dcterms:identifier "ncmec_2023_089" ;
-    dcterms:modified "2026-09-10T19:09:45.410494" ;
+    dcterms:modified "2026-09-15T20:55:00.825198" ;
     dcterms:source <https://www.al.com/news/2023/10/baldwin-county-band-instructor-arrested-on-child-pornography-charges.html>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/baldwin-county>,
+        <https://caselinker.up.railway.app/resource/location/heyburn>,
+        <https://caselinker.up.railway.app/resource/location/idaho>,
+        <https://caselinker.up.railway.app/resource/location/minidoka-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_089/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_089/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_089/cybertip>,
@@ -35,9 +40,15 @@
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/idaho-attorney-generals-office>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/rupert-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/rupert-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/baldwin-county>,
+        <https://caselinker.up.railway.app/resource/location/heyburn>,
+        <https://caselinker.up.railway.app/resource/location/idaho>,
+        <https://caselinker.up.railway.app/resource/location/minidoka-county> .
 
-<https://caselinker.up.railway.app/resource/agency/alabama-law-enforcement-agency> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/alabama-law-enforcement-agency> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Alabama Law Enforcement Agency" .
 
 <https://caselinker.up.railway.app/resource/agency/baldwin-county-sheriffs-office> a cacontology-multi:LocalAgency .
 
@@ -45,9 +56,13 @@
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
-<https://caselinker.up.railway.app/resource/agency/idaho-attorney-generals-office> a cacontology-multi:StateAgency .
+<https://caselinker.up.railway.app/resource/agency/idaho-attorney-generals-office> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:StateAgency ;
+    rdfs:label "Idaho Attorney General's Office" .
 
-<https://caselinker.up.railway.app/resource/agency/rupert-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/rupert-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Rupert Police Department" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_089/charge/1> a cacontology-legal-outcomes:CriminalCharge,
         cacontology-legal-outcomes:StateCharge ;
@@ -77,11 +92,11 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_089/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Baldwin County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_089/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_089/charge/2>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_089/charge/3> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_089/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_089/person/offender/1> a uco-identity:Person .
 
@@ -105,6 +120,10 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_089/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_089/person/victim/1> .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_089/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/platform/social-media> a cacontology-platforms:SocialMediaPlatform ;
     rdfs:label "social media" .
 
@@ -113,6 +132,22 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_089/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/baldwin-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/heyburn> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Heyburn" ;
+    uco-core:name "Heyburn" .
+
+<https://caselinker.up.railway.app/resource/location/idaho> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/minidoka-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Minidoka County" ;
+    uco-core:name "Minidoka County" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_089/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

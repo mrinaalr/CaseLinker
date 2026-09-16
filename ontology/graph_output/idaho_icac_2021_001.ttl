@@ -9,16 +9,21 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2021_001> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:49:46.629650" ;
+    dcterms:created "2026-09-15T19:36:56.027911" ;
     dcterms:identifier "idaho_icac_2021_001" ;
-    dcterms:modified "2026-09-10T19:49:46.629650" ;
+    dcterms:modified "2026-09-15T19:36:56.027911" ;
     dcterms:source <https://www.ag.idaho.gov/newsroom/category/icac/?showall=true>,
         "Idaho ICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/ada-county>,
+        <https://caselinker.up.railway.app/resource/location/clearwater-county>,
+        <https://caselinker.up.railway.app/resource/location/idaho>,
+        <https://caselinker.up.railway.app/resource/location/orofino> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/idaho_icac_2021_001/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/idaho_icac_2021_001/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/idaho_icac_2021_001/cybertip>,
@@ -31,7 +36,11 @@
         <https://caselinker.up.railway.app/resource/agency/moscow-police-department>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
         <https://caselinker.up.railway.app/resource/agency/orofino-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/usms> .
+        <https://caselinker.up.railway.app/resource/agency/usms> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/ada-county>,
+        <https://caselinker.up.railway.app/resource/location/clearwater-county>,
+        <https://caselinker.up.railway.app/resource/location/idaho>,
+        <https://caselinker.up.railway.app/resource/location/orofino> .
 
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2021_001/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -81,20 +90,44 @@
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2021_001/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Ada County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/idaho_icac_2021_001/charge/1>,
         <https://caselinker.up.railway.app/resource/case/idaho_icac_2021_001/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/idaho_icac_2021_001/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2021_001/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2021_001/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/idaho_icac_2021_001/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2021_001/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/ada-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Ada County" ;
+    uco-core:name "Ada County" .
+
+<https://caselinker.up.railway.app/resource/location/clearwater-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Clearwater County" ;
+    uco-core:name "Clearwater County" .
+
+<https://caselinker.up.railway.app/resource/location/idaho> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Idaho" ;
+    uco-core:name "Idaho" .
+
+<https://caselinker.up.railway.app/resource/location/orofino> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Orofino" ;
+    uco-core:name "Orofino" .
 
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2021_001/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

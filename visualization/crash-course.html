@@ -449,8 +449,8 @@
           <h1>Crash course into CaseLinker and its tools.</h1>
           <p>CaseLinker is a project designed to group and visualize statistical and contextual information from ICAC cases.</p>
           <div class="stats">
-            <div class="stat"><b>10,000</b><span>case reports</span></div>
-            <div class="stat"><b>120,272+</b><span>extracted features</span></div>
+            <div class="stat"><b>10,282</b><span>case reports</span></div>
+            <div class="stat"><b>125,891+</b><span>extracted features</span></div>
             <div class="stat"><b>4,000+</b><span>agencies</span></div>
             <div class="stat"><b>56</b><span>sources</span></div>
           </div>
@@ -459,11 +459,11 @@
           <div class="col">
             <h2>Collect</h2>
             <button class="node" data-go="collect"><strong>Press-release suite</strong><span>Listing, URL list, or DOJ API → merged PDF</span></button>
-            <button class="node" data-go="pacer"><strong>PACER / RECAP</strong><span>CourtListener free archive; court docs collected at $3–5 each (41 records, $154)</span></button>
+            <button class="node" data-go="pacer"><strong>PACER / RECAP</strong><span>CourtListener free archive; court docs collected at $3–5 each (41 records, 128 documents, 297 graphs)</span></button>
           </div>
           <div class="arrow" aria-hidden="true">→</div>
           <div class="col">
-            <h2>Ingest</h2>
+            <h2>Extract</h2>
             <button class="node" data-go="ingest"><strong>PDF → case store</strong><span>src/main.py · SQLite / PostgreSQL</span></button>
             <button class="node" data-go="schema"><strong>Case schema</strong><span>Regex, patterns, optional ML</span></button>
             <button class="node" data-go="gates"><strong>Gates</strong><span>Novelty, verify_cac, age, agency, noise</span></button>
@@ -515,7 +515,13 @@
 
   <script>
     const GH = "https://github.com/mrinaalr/CaseLinker/blob/main/";
-    const repo = (path, label) => ({ href: GH + path, label: label || path, kind: "repo" });
+    // path may include a GitHub heading hash, e.g. "README.md#motivation"
+    const repo = (path, label) => {
+      const hashIdx = path.indexOf("#");
+      const file = hashIdx >= 0 ? path.slice(0, hashIdx) : path;
+      const hash = hashIdx >= 0 ? path.slice(hashIdx) : "";
+      return { href: GH + file + hash, label: label || file, kind: "repo" };
+    };
     const app = (href, label) => ({ href, label, kind: "app" });
     const ext = (href, label) => ({ href, label, kind: "ext" });
 
@@ -526,9 +532,9 @@
         station: "what",
         kicker: "The crash · 01",
         title: "What CaseLinker is",
-        lede: "CaseLinker is a project designed to group and visualize statistical and contextual information from ICAC cases.",
+        lede: "CaseLinker is a project designed to aggregate, structure, and visualize statistical and contextual information from ICAC cases.",
         points: [
-          ["Corpus (documentation)", "10,000 case reports, 120,272+ extracted features, 4,000+ distinct law-enforcement agencies, 56 sources. Per-source coverage is on Sources."],
+          ["Corpus (documentation)", "10,282 case narratives, 125,891+ extracted features, 4,000+ distinct law-enforcement agencies, 56 sources. Per-source coverage is on Sources."],
           ["Emphasis", "Feature extraction; clustering and linking; visualization — with particular attention to tasteful presentation of case content."],
           ["Architecture", "Five layers: Ingestion, Processing, Storage, Clustering & Analysis, Visualization."]
         ],
@@ -548,7 +554,7 @@
           ["Limitations in trend analysis", "Analyzing the evolution of child exploitation, the mediums in which it occurs, and recurring case topics."]
         ],
         callout: ["Radioactive material", "Public reports still contain highly disturbing case material. Cross-case work concentrates that load. The pipeline exists so analysis can run on extracted features, graphs, and cohorts instead of rereading the source text."],
-        links: [repo("README.md", "README.md · Motivation")]
+        links: [repo("README.md#motivation", "README.md · Motivation")]
       },
       {
         id: "runtimes",
@@ -563,7 +569,7 @@
           ["caselinker_mcp/server.py", "MCP server. 37 tools. Read-only. Wraps the existing REST API; no database mutation."]
         ],
         figure: "PDFs  →  src/main.py  →  SQLite or PostgreSQL  →  run/main.py  +  MCP",
-        links: [repo("README.md", "README.md · Entry Points"), repo("caselinker_mcp/README.md")]
+        links: [repo("README.md#entry-points", "README.md · Entry Points"), repo("caselinker_mcp/README.md")]
       },
       {
         id: "collect",
@@ -577,7 +583,7 @@
           ["Two things to notice", "Discovery and PDF conversion are separate. Empty or wrong inputs produce empty or wrong PDFs."]
         ],
         figure: "Agency listing  →  fetch_source_urls.py  →  urls.txt  →  scrape_pdf.py  →  merged PDF  →  ingest",
-        links: [repo("scripts/scraper/README.md"), repo("scripts/scraper/PRESS_RELEASE_SCRAPING.md"), repo("README.md", "README.md · Agency → PDF")]
+        links: [repo("scripts/scraper/README.md"), repo("scripts/scraper/PRESS_RELEASE_SCRAPING.md"), repo("README.md#agency--pdf-in-house-scraper", "README.md · Agency → PDF")]
       },
       {
         id: "ingest",
@@ -591,7 +597,7 @@
           ["Then", "Batch cases, extract features, assign case IDs, store in SQLite (local) or PostgreSQL (production), pre-compute clusters."],
           ["Storage", "Database-agnostic. Cases in rawish form: original structure plus normalized fields. Tables include cases, victim_demographics, perpetrator_demographics, prosecution_outcomes, precomputed_clusters."]
         ],
-        links: [repo("README.md", "README.md · Process Your Own PDF Files"), repo("Architecture design.md"), repo("src/Ingestion Layer/ingestion.py", "ingestion.py")]
+        links: [repo("README.md#process-your-own-pdf-files", "README.md · Process Your Own PDF Files"), repo("Architecture design.md"), repo("src/Ingestion Layer/ingestion.py", "ingestion.py")]
       },
       {
         id: "schema",
@@ -606,7 +612,7 @@
           ["ML enrichment", "When enabled, Stanza NER is primary. A victim-age gate drops decoy and headline ages. Semantic sentence scoring stores concept scores; only selected ones merge into main fields."],
           ["Comparison values", "Normalized vectors for similarity and pre-computed clusters. Raw narrative, source organization, source URL, and publication date are preserved."]
         ],
-        links: [repo("README.md", "README.md · Case Schema"), repo("Architecture design.md", "Architecture design.md · Case Entity Schema")]
+        links: [repo("README.md#case-schema--feature-extraction", "README.md · Case Schema"), repo("Architecture design.md#2-data-processing-layer", "Architecture design.md · Case Entity Schema")]
       },
       {
         id: "gates",
@@ -621,7 +627,7 @@
           ["At mapping", "noise_filter.py — platform mention signal vs noise. Used at corpus selection time."]
         ],
         links: [
-          repo("scripts/scraper/README.md", "scripts/scraper/README.md · After the merge"),
+          repo("scripts/scraper/README.md#after-the-merge-quality-gates", "scripts/scraper/README.md · After the merge"),
           repo("scripts/scraper/EXPAND_SOURCES.md"),
           repo("scripts/verify/verify_cac.py", "verify_cac.py"),
           repo("ontology/noise_filter.py", "noise_filter.py"),
@@ -638,9 +644,9 @@
         points: [
           ["Vocabulary", "CAC Ontology (Project VIC) on the Linux Foundation Cyber Domain Ontology stack: CASE and UCO."],
           ["Pipeline", "Case features → deterministic mapping (features_to_cac.py) → per-case Turtle and JSON-LD → SHACL → Oxigraph. Only conformant graphs enter the merged corpus."],
-          ["Why graphs", "Relational and analytical questions at corpus scale need typed entities and edges — beyond relational tables and regex-derived tags."]
+          ["Why graphs", "Relational and analytical questions at corpus scale need typed entities and edges — beyond PostgreSQL tables and regex-derived tags."]
         ],
-        links: [repo("README.md", "README.md · Ontology & Graphs"), repo("ontology/README.md"), repo("ontology/MAPPING_PLAN.md"), repo("ontology/features_to_cac.py", "features_to_cac.py")]
+        links: [repo("README.md#ontology--graphs-local--live", "README.md · Ontology & Graphs"), repo("ontology/README.md"), repo("ontology/MAPPING_PLAN.md"), repo("ontology/features_to_cac.py", "features_to_cac.py")]
       },
       {
         id: "sparql",
@@ -663,11 +669,11 @@
         chapter: "crash",
         station: "tools",
         kicker: "The crash · 10",
-        title: "Tools you will actually use",
+        title: "Tools available",
         lede: "Same data, three entry points.",
         points: [
-          ["Web — pick by job", "Cohorts: Search. Tag intersection and grouping: Analysis. Rank a narrative: Triage. Extraction QA: Audit. Platform affordances: Visualization. Court-record phases: Lifecycle. Typed relations: Ontology & Graphs. Era narratives: Case Studies. Tech-by-era: Tech Landscape. NL over stats: LLM. Browser API lab: Query."],
-          ["REST", "Interactive docs at /docs. The UI and MCP wrap the same routes. Public is rate limited. CaseLinker-Key unlocks bulk export, full narratives, lifecycle JSON, and L*."],
+          ["Web — pick by job", "Filtering and Look-ups: Search. Tag intersection and grouping: Analysis. Rank a narrative: Triage. Extraction QA: Audit. Platform affordances: Visualization. Court-record phases: Lifecycle. Typed relations: Ontology & Graphs. Era narratives: Case Studies. Tech-by-era: Tech Landscape. NL over stats: LLM. Browser API lab: Query."],
+          ["REST API", "Interactive docs at /docs. The UI and MCP wrap the same routes. Public is rate limited. CaseLinker-Key unlocks bulk export, full narratives, lifecycle JSON, and L*."],
           ["MCP", "37 tools, read-only, no database mutation. 29 REST wrappers, 8 MCP-only. 32 public, 5 trusted-key sensitive. SPARQL stays on curl, /docs, or the CASE/UCO SDK."]
         ],
         figure: "Job  →  Web page  ·  same job  →  /api/*  ·  agent  →  MCP tool",
@@ -703,7 +709,7 @@
           ["fetch_source_urls.py", "HTML listing harvester. Paginated newsrooms, Squarespace, Google CSE, search.usa.gov."],
           ["After merge", "filter_merged_pdf.py, remove_pdf_pages_by_text.py, check_expand_novelty.py."]
         ],
-        links: [repo("scripts/scraper/README.md", "scripts/scraper/README.md · Suite map")]
+        links: [repo("scripts/scraper/README.md#suite-map", "scripts/scraper/README.md · Suite map")]
       },
       {
         id: "entry",
@@ -718,7 +724,7 @@
           ["You only have a listing page", "fetch_source_urls.py, then either quickstart above."],
           ["DOJ by topic, no URL list", "Do not crawl justice.gov/psc/press-room (page>0 is HTTP 403). Do not call scrape_doj.py with an empty url-file. harvest_doj_psc.py, then --doj-file."]
         ],
-        links: [repo("scripts/scraper/README.md", "scripts/scraper/README.md · Quickstart"), repo("scripts/scraper/PRESS_RELEASE_SCRAPING.md", "Canonical workflow")]
+        links: [repo("scripts/scraper/README.md#quickstart", "scripts/scraper/README.md · Quickstart"), repo("scripts/scraper/PRESS_RELEASE_SCRAPING.md#canonical-workflow-new-source", "Canonical workflow")]
       },
       {
         id: "doj",
@@ -733,7 +739,7 @@
           ["Two jobs", "Discover records by topic: harvest_doj_psc.py. Resolve URLs you already have: scrape_doj.py."],
           ["Novelty", "URL vs existing DOJ PDFs. Dedup inside the harvest is by API uuid."]
         ],
-        links: [repo("scripts/scraper/README.md", "Why DOJ is different"), repo("scripts/scraper/PRESS_RELEASE_SCRAPING.md"), repo("scripts/scraper/harvest_doj_psc.py", "harvest_doj_psc.py"), repo("scripts/scraper/scrape_doj.py", "scrape_doj.py")]
+        links: [repo("scripts/scraper/README.md#why-doj-justicegov-is-different", "Why DOJ is different"), repo("scripts/scraper/PRESS_RELEASE_SCRAPING.md"), repo("scripts/scraper/harvest_doj_psc.py", "harvest_doj_psc.py"), repo("scripts/scraper/scrape_doj.py", "scrape_doj.py")]
       },
       {
         id: "canon",
@@ -748,7 +754,7 @@
           ["4–6", "One-URL extract() probe. Build the merged PDF. QA: one article per section, each with Source: https://. Succeeded: N | Failed: M. Investigate every failed URL."],
           ["When to ask a human", "Login, CAPTCHA, or paid API. Releases only on Facebook or PDF email blasts with no stable URL list. robots.txt or legal terms block automated access. A bot-wall that would require solving a JS challenge — the same call already made for justice.gov."]
         ],
-        links: [repo("scripts/scraper/PRESS_RELEASE_SCRAPING.md", "Canonical workflow"), repo("scripts/scraper/README.md", "When to ask a human")]
+        links: [repo("scripts/scraper/PRESS_RELEASE_SCRAPING.md#canonical-workflow-new-source", "Canonical workflow"), repo("scripts/scraper/README.md#when-to-stop-and-ask-a-human", "When to ask a human")]
       },
       {
         id: "cache",
@@ -763,7 +769,7 @@
           ["ICAC / CAC corpus", "check_expand_novelty.py then verify_cac.py --all-failures --default-fail-csv. Remove failures before ingest."],
           ["Any other topic", "Skip verify_cac.py (harvest_doj_psc.py --skip-cac). Still drop grants, rollups, speeches; collapse arrest vs sentencing; novelty-check against existing merged PDFs. scrape_pdf.py is topic-agnostic."]
         ],
-        links: [repo("scripts/scraper/README.md", "Output & caching"), repo("scripts/scraper/EXPAND_SOURCES.md"), repo("scripts/scraper/check_expand_novelty.py", "check_expand_novelty.py"), repo("scripts/verify/verify_cac.py", "verify_cac.py")]
+        links: [repo("scripts/scraper/README.md#output--caching", "Output & caching"), repo("scripts/scraper/EXPAND_SOURCES.md"), repo("scripts/scraper/check_expand_novelty.py", "check_expand_novelty.py"), repo("scripts/verify/verify_cac.py", "verify_cac.py")]
       },
       {
         id: "pacer",
@@ -772,10 +778,10 @@
         kicker: "Deeper · court records",
         nav: "PACER / RECAP",
         title: "PACER / RECAP collection",
-        lede: "Federal dockets are a court-record overlay beside the 10,000 press-release case graphs. Collection goes through CourtListener’s RECAP archive.",
+        lede: "Federal dockets are a court-record overlay beside the 10,282 press-release case graphs. Collection goes through CourtListener’s RECAP archive.",
         points: [
           ["Who might have a docket", "corpus2pacer.py. Tier A: federal ingestion source. B: federal prosecuting or investigating agency. C: narrative signals (U.S. District Court, federal indictment language, criminal docket pattern). Any tier includes the case; confidence is high / medium / low."],
-          ["Fetch", "cases2records.py. By default downloads only free docs already in RECAP (is_available=True). PACER purchases are off unless you pass --charge-pacer. Court records run $3–5 each; this collection is 41 records for $154. --key-docs pulls indictment / plea / sentencing, max 4 per case. --dry-run audits free vs needs PACER with no downloads and no charges."],
+          ["Fetch", "cases2records.py. By default downloads only free docs already in RECAP (is_available=True). PACER purchases are off unless you pass --charge-pacer. Court records run $3–5 each; current collection is 41 records, 128 documents, 297 graphs. --key-docs pulls indictment / plea / sentencing, max 4 per case. --dry-run audits free vs needs PACER with no downloads and no charges."],
           ["What lands in the repo", "ontology/PACER/ family folders: BULK_FOLDER, ENTICEMENT, ENTERPRISE, PRODUCTION, SEXTORTION, TRAFFICKING. 41 investigations, 128 documents, modeled by the CASE-UCO SDK. Loaded as 297 named graphs urn:pacer:kg:… via scripts/load_pacer_jsonld.py --post."],
           ["Lifecycle", "Those graphs feed CAC state machines under state_machines/ (30 cases) and the /lifecycle UI. Five canonical PACER federal cases as offense-type state machines, plus expansion cases from full federal dockets."]
         ],
@@ -785,8 +791,8 @@
           repo("ontology/PACER/cases2records.py", "cases2records.py"),
           repo("ontology/PACER/BULK_FOLDER/pacer_cost.csv", "pacer_cost.csv"),
           repo("scripts/load_pacer_jsonld.py", "load_pacer_jsonld.py"),
-          repo("ontology/README.md", "ontology/README.md · PACER"),
-          repo("ontology/docs/SPARQL.md", "SPARQL.md · two PACER families"),
+          repo("ontology/README.md#pacer-and-lifecycle", "ontology/README.md · PACER"),
+          repo("ontology/docs/SPARQL.md#two-pacer-named-graph-families", "SPARQL.md · two PACER families"),
           app("/lifecycle", "/lifecycle"),
           app("/patterns", "/patterns")
         ]
@@ -805,7 +811,7 @@
           ["IDs", "Assigned after the split. Form: org_name_year_month_number."]
         ],
         figure: "Source: https://  →  cases  →  org_name_year_month_number",
-        links: [repo("Architecture design.md", "Case Batching"), repo("src/Processing Layer/batching.py", "batching.py"), repo("scripts/scraper/PRESS_RELEASE_SCRAPING.md", "Source line")]
+        links: [repo("Architecture design.md#2-data-processing-layer", "Case Batching"), repo("src/Processing Layer/batching.py", "batching.py"), repo("scripts/scraper/PRESS_RELEASE_SCRAPING.md#scrape_pdfpy-internals-what-agents-may-extend", "Source line")]
       },
       {
         id: "extract",
@@ -820,7 +826,7 @@
           ["NER", "Stanza is primary; transformers is true fallback only if Stanza is unavailable. Perp/victim ages are routed by extraction pattern context."],
           ["Semantic scores", "Most concept scores are kept for analysis. Merge-layer examples: possession_csam ≥ 0.5 appends possession; grooming ≥ 0.35 appends grooming to severity_indicators."]
         ],
-        links: [repo("README.md", "Case Schema & Feature Extraction"), repo("Architecture design.md"), repo("ontology/MAPPING_PLAN.md", "MAPPING_PLAN.md · NLP / semantic")]
+        links: [repo("README.md#case-schema--feature-extraction", "Case Schema & Feature Extraction"), repo("Architecture design.md"), repo("ontology/MAPPING_PLAN.md#4-nlp--semantic-features", "MAPPING_PLAN.md · NLP / semantic")]
       },
       {
         id: "merge",
@@ -901,7 +907,7 @@
           ["What a clone already has", "Ontology graphs, PACER KGs, lifecycle machines, L* JSON, case studies, triage bundle — even with an empty SQLite file."]
         ],
         figure: "PDFs → src/main.py    or    CASELINKER_KEY → import_corpus_from_api.py",
-        links: [repo("README.md", "README.md · Reproduce the local corpus"), repo("scripts/run/import_corpus_from_api.py", "import_corpus_from_api.py"), repo("scripts/run/ingest_all_pdfs.sh", "ingest_all_pdfs.sh")]
+        links: [repo("README.md#option-2-local-setup-works-out-of-the-box", "README.md · Reproduce the local corpus"), repo("scripts/run/import_corpus_from_api.py", "import_corpus_from_api.py"), repo("scripts/run/ingest_all_pdfs.sh", "ingest_all_pdfs.sh")]
       },
       {
         id: "graph",
@@ -917,7 +923,7 @@
           ["IRIs", "https://caselinker.up.railway.app/resource/{case|platform|agency}/…. dcterms:identifier on cac:CACInvestigation is the CaseLinker case id."]
         ],
         figure: "CACInvestigation ─hasStep→ Event ─usesChannel→ Platform\n                ─involvesAgency→ Agency\n                ─hasStep→ LegalProceeding ─hasCharge→ CriminalCharge",
-        links: [repo("ontology/README.md", "What a case graph contains"), repo("ontology/MAPPING_PLAN.md", "Five Spine Branches"), repo("ontology/docs/SPARQL.md", "Namespaces")]
+        links: [repo("ontology/README.md#what-a-case-graph-contains", "What a case graph contains"), repo("ontology/MAPPING_PLAN.md#five-spine-branches", "Five Spine Branches"), repo("ontology/docs/SPARQL.md#namespaces", "Namespaces")]
       },
       {
         id: "pools",
@@ -928,11 +934,11 @@
         title: "Pools, PACER overlay, rebuild",
         lede: "Two PACER named-graph families. Do not treat them as one store.",
         points: [
-          ["Press-release graphs", "10,000 CACInvestigation graphs, one named graph per case, from ontology/graph_output/. Wholesale reload: python3 scripts/rebuild_oxigraph.py (PUT /store). Remap-and-overwrite, not incremental."],
+          ["Press-release graphs", "10,282 CACInvestigation graphs, one named graph per case, from ontology/graph_output/. Wholesale reload: python3 scripts/rebuild_oxigraph.py (PUT /store). Remap-and-overwrite, not incremental."],
           ["CASE-UCO PACER KGs", "urn:pacer:kg:… from ontology/PACER/ JSON-LD. Incremental POST via load_pacer_jsonld.py. rebuild_oxigraph.py does not read those JSON-LD files. A full PUT does not restore them — re-run load_pacer_jsonld.py --post."],
           ["Viz pools", "Viz pools and Big Bang are accessible on Ontology & Graphs."],
         ],
-        links: [repo("ontology/README.md", "Graph pools"), repo("ontology/docs/SPARQL.md", "Two PACER named-graph families"), repo("scripts/rebuild_oxigraph.py", "rebuild_oxigraph.py"), app("/patterns", "Ontology & Graphs")]
+        links: [repo("ontology/README.md#graph-pools", "Graph pools"), repo("ontology/docs/SPARQL.md#two-pacer-named-graph-families", "Two PACER named-graph families"), repo("scripts/rebuild_oxigraph.py", "rebuild_oxigraph.py"), app("/patterns", "Ontology & Graphs")]
       },
       {
         id: "questions",
@@ -949,7 +955,7 @@
         ],
         figure: "Q1 platform harm   ·   Q2 offense subsets   ·   Q3 Affordances for Harm (AfH)",
         links: [
-          repo("ontology/README.md", "ontology/README.md · Q1–Q3"),
+          repo("ontology/README.md#research-questions-q1q3", "ontology/README.md · Q1–Q3"),
           app("/patterns/questions/q01", "Q01"),
           app("/patterns/questions/q02", "Q02"),
           app("/patterns/questions/q03", "Q03"),
@@ -1002,7 +1008,7 @@
           ["Counts", "Any-tag semantics: a node counts every case that has that value anywhere in the field, not only the primary bucket. Prune filters restrict allowed values."],
           ["IDs", "Click a node for cohort case IDs. Cohorts smaller than three are gated behind a demo access key."]
         ],
-        links: [repo("src/Storage Layer/facet_tree.py", "facet_tree.py"), app("/search", "/search"), repo("README.md", "README.md · Using Search")]
+        links: [repo("src/Storage Layer/facet_tree.py", "facet_tree.py"), app("/search", "/search"), repo("README.md#using-search", "README.md · Using Search")]
       },
       {
         id: "clusters",
@@ -1067,7 +1073,7 @@
           ["Eras", "Same four buckets as Search and Case Studies: 2010–2014, 2015–2018, 2019–2022, 2023–2026."],
           ["API", "GET /api/technology-revolver. Precomputed slim table technology_revolver_slim for the page."]
         ],
-        links: [app("/tech-landscape", "/tech-landscape"), repo("README.md", "README.md · Tech Landscape")]
+        links: [app("/tech-landscape", "/tech-landscape"), repo("README.md#other-features", "README.md · Tech Landscape")]
       },
       {
         id: "lstar",
@@ -1103,7 +1109,7 @@
           ["Five dimensions", "Platform context, perpetrator methodology, investigative approach, prosecutorial outcome, relationship to the era. Optional takeaway; optional linked_case_id into the corpus."],
           ["Notes", "GET/POST /api/case-studies/notes/{id} — community notes, rate limited. POST is not an MCP tool."]
         ],
-        links: [app("/case-studies", "/case-studies"), repo("data/case_studies.json", "case_studies.json"), repo("README.md", "README.md · Report #4")]
+        links: [app("/case-studies", "/case-studies"), repo("data/case_studies.json", "case_studies.json"), repo("README.md#technical-reports", "README.md · Report #4")]
       },
       {
         id: "querylab",
@@ -1133,7 +1139,7 @@
           ["Caps", "Public: 50 requests / IP / day plus slowapi 15/min. Trusted CaseLinker-Key: daily cap exempt; 15/min still applies. Localhost exempt."],
           ["Scope", "Statistics and structured fields. Not a substitute for SPARQL over CAC graphs."]
         ],
-        links: [app("/llm", "/llm"), repo("caselinker_mcp/tool_registry.md", "tool_registry.md · llm_chat")]
+        links: [app("/llm", "/llm"), repo("caselinker_mcp/tool_registry.md#trusted-key-sensitive-5-tools", "tool_registry.md · llm_chat")]
       },
       {
         id: "audit",
@@ -1180,9 +1186,9 @@
         points: [
           ["Reports", "#1 prototype (arXiv 2603.18020). #2 NER + 207 cases. #3 five sources / facet tree. #4 four-era case-study framework. #5 visual briefing on the scaled corpus."],
           ["Ethics", "No PII processed. Sources already public and redacted. UMass Amherst HRPO: this research does not contain private or identifiable information under 45 CFR 46.102(f)(1), (2)."],
-          ["Disclaimer", "Full usage disclaimer lives on /sources. The crash-course callout on radioactive material is the operational version of the same fact."]
+          ["Disclaimer", "Full usage disclaimer: /sources. Same point as the early Radioactive material callout—public reports are still sensitive; work from extracted features, not by re-reading the source text."]
         ],
-        links: [repo("README.md", "README.md · Technical Reports"), app("/sources", "/sources")]
+        links: [repo("README.md#technical-reports", "README.md · Technical Reports"), app("/sources", "/sources")]
       },
       {
         id: "stop",
@@ -1197,7 +1203,7 @@
           ["Already decided", "justice.gov sits behind Akamai Bot Manager. Use the public News API. Do not attempt to solve the challenge."],
           ["PACER money", "Court records run $3–5 each (41 records collected for $154). cases2records.py will not purchase PACER documents unless you pass --charge-pacer. Default is free RECAP only."]
         ],
-        links: [repo("scripts/scraper/README.md", "When to ask a human"), repo("scripts/scraper/PRESS_RELEASE_SCRAPING.md"), repo("ontology/PACER/cases2records.py", "cases2records.py")]
+        links: [repo("scripts/scraper/README.md#when-to-stop-and-ask-a-human", "When to ask a human"), repo("scripts/scraper/PRESS_RELEASE_SCRAPING.md"), repo("ontology/PACER/cases2records.py", "cases2records.py")]
       }
     ];
 

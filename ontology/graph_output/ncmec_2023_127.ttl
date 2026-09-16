@@ -11,16 +11,19 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_127> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:10:01.266030" ;
+    dcterms:created "2026-09-15T20:55:00.854426" ;
     dcterms:identifier "ncmec_2023_127" ;
-    dcterms:modified "2026-09-10T19:10:01.266030" ;
+    dcterms:modified "2026-09-15T20:55:00.854426" ;
     dcterms:source <https://www.whio.com/news/local/local-attorney-arrested-facing-over-70-charges-alleged-sex-offenses-with-underage-girl/WU4H255IRZGY5G4XXOO66CLXCQ/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/dayton>,
+        <https://caselinker.up.railway.app/resource/location/nevada> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_127/phase/indicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_127/phase/indicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_127/event/csam>,
@@ -28,7 +31,9 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_127/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_127/offense-event/charge-2> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/dayton-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/icac> .
+        <https://caselinker.up.railway.app/resource/agency/icac> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/dayton>,
+        <https://caselinker.up.railway.app/resource/location/nevada> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_127/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -71,19 +76,33 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_127/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Montgomery County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_127/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_127/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-10-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-10-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_127/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_127/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 34 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_127/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_127/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_127/phase/indicted> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-10-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/dayton> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Dayton" ;
+    uco-core:name "Dayton" .
+
+<https://caselinker.up.railway.app/resource/location/nevada> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Nevada" ;
+    uco-core:name "Nevada" .
 
 <https://caselinker.up.railway.app/resource/platform/chat> a cacontology-platforms:AnonymousChatPlatform ;
     rdfs:label "chat" .

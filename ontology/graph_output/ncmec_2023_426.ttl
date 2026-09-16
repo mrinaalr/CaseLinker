@@ -1,70 +1,91 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
+@prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_426> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:12:17.594365" ;
+    dcterms:created "2026-09-15T20:55:01.115555" ;
     dcterms:identifier "ncmec_2023_426" ;
-    dcterms:modified "2026-09-10T19:12:17.594365" ;
-    dcterms:source <https://fox59.com/news/indycrime/docs-bloomington-man-arrested-after-downloading-child-pornography/#:~:text=%E2%80%94%20A%20Bloomington%20man%20has%20been,pornography%2C%20a%20Level%205%20felony>,
+    dcterms:modified "2026-09-15T20:55:01.115555" ;
+    dcterms:source <https://davie-so-nc.zuercherportal/#.submit_tip.https://www.ourdavie.com/2023/01/12/cybertip-leads-to-arrest-for-child-sexual-exploitation/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/mocksville> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_426/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_426/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_426/event/distribution>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2023_426/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_426/legal-proceeding> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/indianapolis-metropolitan-police-department> .
+    cacontology:investigationStatus "unknown" ;
+    cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/ncmec_2023_426/tech/cybertipline> ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/davie-county-sheriffs-office>,
+        <https://caselinker.up.railway.app/resource/agency/icac> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/mocksville> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_426/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
     cacontology:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_426/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_426/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_426/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
     cacontology:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_426/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_426/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/agency/davie-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Davie County Sheriff's Office" .
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
-<https://caselinker.up.railway.app/resource/agency/indianapolis-metropolitan-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_426/charge/1> a cacontology-legal-outcomes:CriminalCharge,
+        cacontology-legal-outcomes:StateCharge ;
+    rdfs:label "sexual exploitation of a minor" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_426/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
-        cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "child pornography" .
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_426/charge/2> a cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "sexual exploitation" ;
+    ns1:chargeCluster "sexual_exploitation_unspecified" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_426/event/distribution> a cac-core:Event,
-        cacontology-legal-outcomes:CSAM_Distribution .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_426/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+        cacontology-legal-outcomes:CSAM_Distribution ;
+    cacontology:severityLevel 3 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_426/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_426/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_426/charge/1>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2023_426/charge/2> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_426/sentence/1> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_426/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_426/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 62 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_426/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_426/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:MonetaryPenalty ;
+    rdfs:label "[\"$50,000\"]" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_426/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
+    rdfs:label "CyberTipline" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_426/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_426/event/possession> a cacontology:CSAMIncident,
-        cac-core:Event ;
-    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2023_426/facet/possession> .
+<https://caselinker.up.railway.app/resource/location/mocksville> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Mocksville" ;
+    uco-core:name "Mocksville" .
 

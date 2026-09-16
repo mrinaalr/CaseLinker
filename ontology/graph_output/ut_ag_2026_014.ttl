@@ -11,6 +11,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -30,11 +31,14 @@
 
 <https://caselinker.up.railway.app/resource/case/ut_ag_2026_014> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:22:04.115527" ;
+    dcterms:created "2026-09-15T20:38:01.190010" ;
     dcterms:identifier "ut_ag_2026_014" ;
-    dcterms:modified "2026-09-10T20:22:04.115527" ;
+    dcterms:modified "2026-09-15T20:38:01.190010" ;
     dcterms:source <https://attorneygeneral.utah.gov/beaver-utah-man-sentenced-to-jail-in-child-pornography-case/>,
         "UT AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/beaver>,
+        <https://caselinker.up.railway.app/resource/location/beaver-county>,
+        <https://caselinker.up.railway.app/resource/location/utah> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ut_ag_2026_014/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ut_ag_2026_014/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ut_ag_2026_014/admission/1>,
@@ -45,7 +49,10 @@
         <https://caselinker.up.railway.app/resource/case/ut_ag_2026_014/legal-step/sentenced> ;
     cacontology:investigationStatus "unknown" ;
     cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/ut_ag_2026_014/tech/cybertipline> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/beaver>,
+        <https://caselinker.up.railway.app/resource/location/beaver-county>,
+        <https://caselinker.up.railway.app/resource/location/utah> .
 
 <https://caselinker.up.railway.app/resource/case/ut_ag_2026_014/charge/1> a cacontology-legal-outcomes:CriminalCharge,
         cacontology-legal-outcomes:StateCharge ;
@@ -68,13 +75,11 @@
 <https://caselinker.up.railway.app/resource/case/ut_ag_2026_014/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility: Beaver County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ut_ag_2026_014/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ut_ag_2026_014/charge/2>,
         <https://caselinker.up.railway.app/resource/case/ut_ag_2026_014/charge/3> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ut_ag_2026_014/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/ut_ag_2026_014/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ut_ag_2026_014/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ut_ag_2026_014/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -95,11 +100,7 @@
 
 <https://caselinker.up.railway.app/resource/case/ut_ag_2026_014/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:ProbationSentence ;
-    rdfs:label "probation" .
-
-<https://caselinker.up.railway.app/resource/case/ut_ag_2026_014/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "48 months" .
+    rdfs:label "[\"probation\", \"48 months\"]" .
 
 <https://caselinker.up.railway.app/resource/case/ut_ag_2026_014/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -107,6 +108,19 @@
 <https://caselinker.up.railway.app/resource/case/ut_ag_2026_014/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/beaver> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Beaver" ;
+    uco-core:name "Beaver" .
+
+<https://caselinker.up.railway.app/resource/location/beaver-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Beaver County" ;
+    uco-core:name "Beaver County" .
+
+<https://caselinker.up.railway.app/resource/location/utah> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/platform/chat> a cacontology-platforms:AnonymousChatPlatform ;
     rdfs:label "chat" .

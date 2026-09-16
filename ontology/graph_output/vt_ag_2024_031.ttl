@@ -12,16 +12,20 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2024_031> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:23:47.547104" ;
+    dcterms:created "2026-09-15T20:39:17.426453" ;
     dcterms:identifier "vt_ag_2024_031" ;
-    dcterms:modified "2026-09-10T20:23:47.547104" ;
+    dcterms:modified "2026-09-15T20:39:17.426453" ;
     dcterms:source <https://ago.vermont.gov/blog/2024/08/01/springfield-resident-arrested-attempted-luring-child>,
         "VT AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/hartford>,
+        <https://caselinker.up.railway.app/resource/location/springfield>,
+        <https://caselinker.up.railway.app/resource/location/vermont> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/vt_ag_2024_031/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/vt_ag_2024_031/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/vt_ag_2024_031/cybertip>,
@@ -34,7 +38,10 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/attorney-generals-office>,
         <https://caselinker.up.railway.app/resource/agency/hartford-police-department>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/hartford>,
+        <https://caselinker.up.railway.app/resource/location/springfield>,
+        <https://caselinker.up.railway.app/resource/location/vermont> .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2024_031/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -92,7 +99,8 @@
         <https://caselinker.up.railway.app/resource/case/vt_ag_2024_031/charge/2>,
         <https://caselinker.up.railway.app/resource/case/vt_ag_2024_031/charge/3>,
         <https://caselinker.up.railway.app/resource/case/vt_ag_2024_031/charge/4> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/vt_ag_2024_031/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2024_031/operation> a cac-core:Event,
         cacontology-taskforce:UndercoverUnit .
@@ -103,13 +111,29 @@
 <https://caselinker.up.railway.app/resource/case/vt_ag_2024_031/person/victim/1> a uco-identity:Person ;
     cacontology-production:victimAge 14 .
 
+<https://caselinker.up.railway.app/resource/case/vt_ag_2024_031/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2024_031/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
-<https://caselinker.up.railway.app/resource/platform/grindr> a cacontology-platforms:OnlineDatingPlatform ;
+<https://caselinker.up.railway.app/resource/location/hartford> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Hartford" ;
+    uco-core:name "Hartford" .
+
+<https://caselinker.up.railway.app/resource/location/springfield> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/vermont> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/platform/grindr> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:OnlineDatingPlatform ;
     rdfs:label "Grindr" .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2024_031/event/csam> a cacontology:CSAMIncident,

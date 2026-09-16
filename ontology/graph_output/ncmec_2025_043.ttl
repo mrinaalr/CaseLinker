@@ -12,6 +12,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -32,17 +33,24 @@
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
-<https://caselinker.up.railway.app/resource/agency/jacksonville-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/jacksonville-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Jacksonville Police Department" .
 
-<https://caselinker.up.railway.app/resource/agency/pulaski-county-sheriffs-office> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/pulaski-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Pulaski County Sheriff's Office" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_043> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:25:35.791875" ;
+    dcterms:created "2026-09-15T21:27:13.193364" ;
     dcterms:identifier "ncmec_2025_043" ;
-    dcterms:modified "2026-09-10T19:25:35.791875" ;
+    dcterms:modified "2026-09-15T21:27:13.193364" ;
     dcterms:source <https://katv.com/news/local/jacksonville-man-arrested-for-uploading-and-downloading-child-sexual-abuse-material-search-warrant-csam-kik-dropbox-discord-registry-sheriffs-office-forensic-examinations-investigation>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/ark>,
+        <https://caselinker.up.railway.app/resource/location/arkansas>,
+        <https://caselinker.up.railway.app/resource/location/jacksonville> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_043/phase/booked> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_043/phase/booked> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_043/admission/1>,
@@ -54,7 +62,10 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/garland-county-sheriffs-office>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/jacksonville-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/pulaski-county-sheriffs-office> .
+        <https://caselinker.up.railway.app/resource/agency/pulaski-county-sheriffs-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/ark>,
+        <https://caselinker.up.railway.app/resource/location/arkansas>,
+        <https://caselinker.up.railway.app/resource/location/jacksonville> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_043/charge/1> a cacontology-legal-outcomes:CSAM_Distribution,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -76,7 +87,8 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_043/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_043/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-08-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-08-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_043/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_043/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 37 .
@@ -89,13 +101,18 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2025_043/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_043/person/offender/1> .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_043/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_043/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
 
 <https://caselinker.up.railway.app/resource/platform/discord> a cacontology-platforms:MessagingService ;
     rdfs:label "Discord" .
 
-<https://caselinker.up.railway.app/resource/platform/dropbox> a cacontology-platforms:FileHostingService ;
+<https://caselinker.up.railway.app/resource/platform/dropbox> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:FileHostingService ;
     rdfs:label "Dropbox" .
 
 <https://caselinker.up.railway.app/resource/platform/kik> a cacontology-platforms:MessagingService ;
@@ -105,10 +122,23 @@
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-08-01T00:00:00Z"^^xsd:dateTimeStamp .
 
+<https://caselinker.up.railway.app/resource/location/ark> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Ark." ;
+    uco-core:name "Ark." .
+
+<https://caselinker.up.railway.app/resource/location/arkansas> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/jacksonville> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Jacksonville" ;
+    uco-core:name "Jacksonville" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_043/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "uploading and downloading Child Sexual Abuse Material (CSAM) for the past almost year while at the residing location" ;
     dcterms:source <https://katv.com/news/local/jacksonville-man-arrested-for-uploading-and-downloading-child-sexual-abuse-material-search-warrant-csam-kik-dropbox-discord-registry-sheriffs-office-forensic-examinations-investigation> ;
-    ns1:admissionContext "rges of Failure to Comply with Sex Offender Registry Reporting Requirements warrant. When interviewed, Walker admitted to uploading and d..." ;
+    ns1:admissionContext "ges of Failure to Comply with Sex Offender Registry Reporting Requirements warrant. When interviewed, Walker admitted to uploading and do..." ;
     ns1:admissionFrame "admitted_to" ;
     ns1:admissionTheme "harm_conduct",
         "tech_use" ;

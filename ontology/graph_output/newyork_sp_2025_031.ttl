@@ -5,23 +5,32 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_031> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:00:19.365521" ;
+    dcterms:created "2026-09-15T20:06:35.738829" ;
     dcterms:identifier "newyork_sp_2025_031" ;
-    dcterms:modified "2026-09-10T20:00:19.365521" ;
+    dcterms:modified "2026-09-15T20:06:35.738829" ;
     dcterms:source <https://troopers.ny.gov/news/arrest-made-following-child-sexual-abuse-investigation-coxsackie>,
         "NEWYORK SP" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/catskill>,
+        <https://caselinker.up.railway.app/resource/location/coxsackie>,
+        <https://caselinker.up.railway.app/resource/location/new-york> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_031/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_031/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_031/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/new-york-state-police-department> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/new-york-state-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/catskill>,
+        <https://caselinker.up.railway.app/resource/location/coxsackie>,
+        <https://caselinker.up.railway.app/resource/location/new-york> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_031/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -38,8 +47,8 @@
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_031/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Greene County Jail" ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_031/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_031/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 85 .
@@ -47,7 +56,22 @@
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_031/person/victim/1> a uco-identity:Person ;
     cacontology-production:victimAge 11 .
 
+<https://caselinker.up.railway.app/resource/case/newyork_sp_2025_031/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_031/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/catskill> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/coxsackie> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Coxsackie" ;
+    uco-core:name "Coxsackie" .
+
+<https://caselinker.up.railway.app/resource/location/new-york> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 

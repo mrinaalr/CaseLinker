@@ -1,30 +1,38 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
-@prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
-@prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
+@prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_576> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:08:48.426184" ;
+    dcterms:created "2026-09-15T20:45:06.493200" ;
     dcterms:identifier "ncmec_2022_576" ;
-    dcterms:modified "2026-09-10T19:08:48.426184" ;
-    dcterms:source <https://www.kfyrtv.com/2022/01/22/cybertip-child-pornography-leads-williston-mans-arrest/>,
+    dcterms:modified "2026-09-15T20:45:06.493200" ;
+    dcterms:source <https://www.kltv.com/2022/02/25/trinity-county-deputies-arrest-man-after-search-turns-up-child-porn-images/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/port-adventure>,
+        <https://caselinker.up.railway.app/resource/location/texas>,
+        <https://caselinker.up.railway.app/resource/location/trinity-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_576/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_576/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2022_576/event/distribution>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_576/event/possession>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_576/legal-proceeding>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_576/operation> ;
-    cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/ncmec_2022_576/tech/cybertipline> .
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_576/legal-proceeding> ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/texas-attorney-generals-office>,
+        <https://caselinker.up.railway.app/resource/agency/trinity-county-sheriffs-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/port-adventure>,
+        <https://caselinker.up.railway.app/resource/location/texas>,
+        <https://caselinker.up.railway.app/resource/location/trinity-county> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_576/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -38,13 +46,21 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_576/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_576/person/victim/1> .
 
+<https://caselinker.up.railway.app/resource/agency/texas-attorney-generals-office> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:StateAgency ;
+    rdfs:label "Texas Attorney General's Office" .
+
+<https://caselinker.up.railway.app/resource/agency/trinity-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Trinity County Sheriff's Office" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_576/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "child pornography" .
+    rdfs:label "possession of child pornography" ;
+    cacontology-legal-outcomes:indictmentCounts 2 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_576/event/distribution> a cac-core:Event,
-        cacontology-legal-outcomes:CSAM_Distribution ;
-    cacontology:severityLevel 3 .
+        cacontology-legal-outcomes:CSAM_Distribution .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_576/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
@@ -52,28 +68,42 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2022_576/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_576/operation> a cac-core:Event,
-        cacontology-taskforce:ReactiveOperation .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2022_576/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_576/person/offender/1> a uco-identity:Person .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_576/person/victim/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_576/person/victim/1> a uco-identity:Person ;
+    cacontology-production:victimAge 2 .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_576/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
-    rdfs:label "CyberTipline" .
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_576/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:MonetaryPenalty ;
+    rdfs:label "[\"$205,000\"]" .
 
-<https://caselinker.up.railway.app/resource/platform/dropbox> a cacontology-platforms:FileHostingService ;
-    rdfs:label "Dropbox" .
+<https://caselinker.up.railway.app/resource/platform/facebook> a cacontology-platforms:SocialMediaPlatform ;
+    rdfs:label "Facebook" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_576/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
+<https://caselinker.up.railway.app/resource/location/port-adventure> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Port Adventure" ;
+    uco-core:name "Port Adventure" .
+
+<https://caselinker.up.railway.app/resource/location/texas> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Texas" ;
+    uco-core:name "Texas" .
+
+<https://caselinker.up.railway.app/resource/location/trinity-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Trinity County" ;
+    uco-core:name "Trinity County" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_576/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
-    cacontology:severityLevel 3 ;
-    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/dropbox> ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/facebook> ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2022_576/facet/possession> .
 

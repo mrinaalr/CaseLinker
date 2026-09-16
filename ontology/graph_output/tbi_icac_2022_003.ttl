@@ -8,17 +8,22 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2022_003> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:16:15.765430" ;
+    dcterms:created "2026-09-15T20:31:48.034737" ;
     dcterms:identifier "tbi_icac_2022_003" ;
-    dcterms:modified "2026-09-10T20:16:15.765430" ;
+    dcterms:modified "2026-09-15T20:31:48.034737" ;
     dcterms:source <https://tbinewsroom.com/2022/09/28/south-carolina-man-arrested-13-year-old-girl-rescued-in-collaborative-dark-web-investigation/>,
         "TBI ICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/anderson-south-carolina>,
+        <https://caselinker.up.railway.app/resource/location/cookeville>,
+        <https://caselinker.up.railway.app/resource/location/south-carolina> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/tbi_icac_2022_003/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/tbi_icac_2022_003/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/tbi_icac_2022_003/event/hands-on>,
@@ -28,7 +33,10 @@
         <https://caselinker.up.railway.app/resource/agency/fbi>,
         <https://caselinker.up.railway.app/resource/agency/hsi>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/putnam-county-sheriffs-office> .
+        <https://caselinker.up.railway.app/resource/agency/putnam-county-sheriffs-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/anderson-south-carolina>,
+        <https://caselinker.up.railway.app/resource/location/cookeville>,
+        <https://caselinker.up.railway.app/resource/location/south-carolina> .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2022_003/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -63,12 +71,10 @@
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2022_003/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility: Sumner County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/tbi_icac_2022_003/charge/1>,
         <https://caselinker.up.railway.app/resource/case/tbi_icac_2022_003/charge/2> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/tbi_icac_2022_003/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/tbi_icac_2022_003/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/tbi_icac_2022_003/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2022_003/person/offender/1> a uco-identity:Person .
 
@@ -77,21 +83,29 @@
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2022_003/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$25,000" .
-
-<https://caselinker.up.railway.app/resource/case/tbi_icac_2022_003/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$53,000" .
+    rdfs:label "[\"$25,000\", \"$53,000\"]" .
 
 <https://caselinker.up.railway.app/resource/platform/chat> a cacontology-platforms:AnonymousChatPlatform ;
     rdfs:label "chat" .
 
-<https://caselinker.up.railway.app/resource/platform/dark-web> a cacontology-platforms:DarkWebService ;
+<https://caselinker.up.railway.app/resource/platform/dark-web> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:DarkWebService ;
     rdfs:label "dark web" .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2022_003/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/anderson-south-carolina> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Anderson, South Carolina" ;
+    uco-core:name "Anderson, South Carolina" .
+
+<https://caselinker.up.railway.app/resource/location/cookeville> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/south-carolina> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2022_003/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

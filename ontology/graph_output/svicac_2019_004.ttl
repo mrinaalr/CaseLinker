@@ -7,19 +7,26 @@
 @prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2019_004> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:14:17.684019" ;
+    dcterms:created "2026-09-15T20:29:58.178951" ;
     dcterms:identifier "svicac_2019_004" ;
-    dcterms:modified "2026-09-10T20:14:17.684019" ;
+    dcterms:modified "2026-09-15T20:29:58.178951" ;
     dcterms:source <https://www.eastbaytimes.com/2019/11/14/bay-area-man-charged-with-attempted-coercion-child-porn-distribution/>,
         "SVICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/bay-area>,
+        <https://caselinker.up.railway.app/resource/location/fairfield>,
+        <https://caselinker.up.railway.app/resource/location/north-bay>,
+        <https://caselinker.up.railway.app/resource/location/pleasant-hill>,
+        <https://caselinker.up.railway.app/resource/location/sacramento> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/svicac_2019_004/phase/convicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/svicac_2019_004/phase/convicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/svicac_2019_004/event/distribution>,
@@ -32,7 +39,13 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/contra-costa-county-district-attorneys-office>,
         <https://caselinker.up.railway.app/resource/agency/hsi>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/us-justice-department> .
+        <https://caselinker.up.railway.app/resource/agency/us-justice-department>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/bay-area>,
+        <https://caselinker.up.railway.app/resource/location/fairfield>,
+        <https://caselinker.up.railway.app/resource/location/north-bay>,
+        <https://caselinker.up.railway.app/resource/location/pleasant-hill>,
+        <https://caselinker.up.railway.app/resource/location/sacramento> .
 
 <https://caselinker.up.railway.app/resource/agency/contra-costa-county-district-attorneys-office> a cacontology-multi:StateAgency .
 
@@ -40,7 +53,13 @@
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
-<https://caselinker.up.railway.app/resource/agency/us-justice-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/us-justice-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "U.S. Justice Department" .
+
+<https://caselinker.up.railway.app/resource/agency/usao> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:FederalAgency ;
+    rdfs:label "U.S. Attorney's Office" .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2019_004/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -61,9 +80,7 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/svicac_2019_004/charge/1> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2019-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/svicac_2019_004/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/svicac_2019_004/sentence/2>,
-        <https://caselinker.up.railway.app/resource/case/svicac_2019_004/sentence/3> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/svicac_2019_004/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2019_004/legal-step/convicted> a cac-core:Event,
         cac-core:LegalEvent,
@@ -101,20 +118,35 @@
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/svicac_2019_004/person/victim/1> .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2019_004/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "10 years" .
-
-<https://caselinker.up.railway.app/resource/case/svicac_2019_004/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:LifeImprisonmentSentence ;
-    rdfs:label "life in prison" .
-
-<https://caselinker.up.railway.app/resource/case/svicac_2019_004/sentence/3> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$250,000" .
+    rdfs:label "[\"10 years\", \"life in prison\", \"$250,000\"]" .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2019_004/phase/convicted> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2019-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/bay-area> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Bay Area" ;
+    uco-core:name "Bay Area" .
+
+<https://caselinker.up.railway.app/resource/location/fairfield> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Fairfield" ;
+    uco-core:name "Fairfield" .
+
+<https://caselinker.up.railway.app/resource/location/north-bay> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "North Bay" ;
+    uco-core:name "North Bay" .
+
+<https://caselinker.up.railway.app/resource/location/pleasant-hill> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/sacramento> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Sacramento" ;
+    uco-core:name "Sacramento" .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2019_004/event/online-only> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event .

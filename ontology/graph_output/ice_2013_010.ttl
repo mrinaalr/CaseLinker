@@ -9,16 +9,18 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ice_2013_010> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:45:48.335135" ;
+    dcterms:created "2026-09-15T19:35:19.172272" ;
     dcterms:identifier "ice_2013_010" ;
-    dcterms:modified "2026-09-10T19:45:48.335135" ;
+    dcterms:modified "2026-09-15T19:35:19.172272" ;
     dcterms:source <https://www.ice.gov/news/releases/orlando-man-sentenced-more-6-years-child-pornography-charges>,
         "ICE" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/orlando> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ice_2013_010/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ice_2013_010/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ice_2013_010/cybertip>,
@@ -33,7 +35,8 @@
         <https://caselinker.up.railway.app/resource/agency/hsi>,
         <https://caselinker.up.railway.app/resource/agency/ice>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/virtual-global-taskforce> .
+        <https://caselinker.up.railway.app/resource/agency/virtual-global-taskforce> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/orlando> .
 
 <https://caselinker.up.railway.app/resource/case/ice_2013_010/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -47,7 +50,9 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ice_2013_010/event/csam> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ice_2013_010/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/florida-department-of-law-enforcement> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/florida-department-of-law-enforcement> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Florida Department of Law Enforcement" .
 
 <https://caselinker.up.railway.app/resource/agency/hsi> a cacontology-multi:FederalAgency .
 
@@ -109,13 +114,18 @@
 
 <https://caselinker.up.railway.app/resource/case/ice_2013_010/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "6 years" .
+    rdfs:label "[\"6 years\"]" .
 
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/ice_2013_010/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/orlando> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Orlando" ;
+    uco-core:name "Orlando" .
 
 <https://caselinker.up.railway.app/resource/case/ice_2013_010/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

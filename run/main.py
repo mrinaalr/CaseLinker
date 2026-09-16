@@ -188,10 +188,12 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-# Project Safe Childhood is a separate /sources card but the same U.S. DOJ family as
-# DOJ CEOS, so it does not increment the published source_count (56 agencies).
+# Published taxonomy: 54 non-DOJ + DOJ CEOS + DOJ SAFE CHILDHOOD = 56.
+# CEOS Archives fold into DOJ CEOS. AI-CSAM USAO harvest folds into Safe Childhood
+# (PSC umbrella; not a separate agency — splitting AI/Archives would hit 57–58).
 _SOURCE_COUNT_FAMILY = {
-    "DOJ SAFE CHILDHOOD": "DOJ CEOS",
+    "DOJ AI CSAM": "DOJ SAFE CHILDHOOD",
+    "DOJ ARCHIVES": "DOJ CEOS",
 }
 
 
@@ -1281,12 +1283,30 @@ def _hydrate_keyword_sample_texts(cases: List[Dict[str, Any]], sample_n: int = 1
             c["case_text"] = t
 
 
+def _runtime_cluster_compute_allowed() -> bool:
+    """
+    Heavy automated-analysis / cluster / technology-revolver compute OOMs Railway.
+
+    Always off unless ALLOW_RUNTIME_CLUSTER_COMPUTE=1. Serve Redis → Postgres slim
+    only; refresh offline via scripts/run/precompute_clusters.py.
+    """
+    allow = os.environ.get("ALLOW_RUNTIME_CLUSTER_COMPUTE", "").strip().lower()
+    return allow in ("1", "true", "yes", "on")
+
+
 def _schedule_automated_analysis_warmup(case_count: int, reason: str = "request") -> bool:
     """
     Single-flight: start at most one background compute. Returns True if this call started it.
-    Compute NEVER runs on the request thread.
+    Compute NEVER runs on the request thread. No-op on Railway unless explicitly allowed.
     """
     global _automated_analysis_computing, _automated_analysis_compute_count
+
+    if not _runtime_cluster_compute_allowed():
+        print(
+            f"⏭️  Skipping runtime cluster/AA compute (reason={reason}, "
+            f"case_count={case_count}) — serve precomputed slim/Redis only"
+        )
+        return False
 
     with _automated_analysis_lock:
         if _automated_analysis_computing:
@@ -1477,6 +1497,12 @@ try:
                     need_compute = True
 
                 if need_compute:
+                    if not _runtime_cluster_compute_allowed():
+                        print(
+                            f"⏭️  Startup: no slim/Redis cluster cache for {case_count} cases; "
+                            "runtime compute disabled — run scripts/run/precompute_clusters.py"
+                        )
+                        return
                     # Single compute path also refreshes cluster + AA caches; skip dual case loads
                     _schedule_automated_analysis_warmup(case_count, reason="startup")
                     return
@@ -3119,6 +3145,20 @@ def get_technology_revolver(request: Request):
             _technology_revolver_cache_snippet_ver = _TECHNOLOGY_REVOLVER_SNIPPET_VER
             return payload
 
+        # Cold miss: never compute on Railway (OOM). Precompute via script.
+        if not _runtime_cluster_compute_allowed():
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "error": "Technology-revolver cache not precomputed for this corpus. "
+                    "Run scripts/run/precompute_clusters.py (runtime compute disabled).",
+                    "total_cases": current_case_count,
+                    "chambers": [],
+                    "cached": False,
+                    "status": "cache_miss",
+                },
+            )
+
         payload = _compute_technology_revolver_payload()
         payload["cached"] = False
         storage.store_technology_revolver_slim(payload, current_case_count)
@@ -3149,8 +3189,8 @@ async def cluster_groups_endpoint(request: Request):
     """
     Lightweight endpoint for cluster / case-group visualizations.
     Returns slimmed case_groups (IDs only) - full case data fetched on click.
-    Load order: memory → Redis → DB slim. Cold miss schedules background compute
-    and returns 202 — never computes inline.
+    Load order: memory → Redis → DB slim. Cold miss: 202 if runtime compute
+    allowed, else 503 (Railway never spawns AA — avoids OOM).
     """
     global _cluster_groups_cache, _cluster_groups_cache_case_count
     try:
@@ -3186,11 +3226,22 @@ async def cluster_groups_endpoint(request: Request):
             _cluster_groups_cache_case_count = current_case_count
             return result
 
-        # 4. Cold: schedule single-flight background compute; never block the request
-        _schedule_automated_analysis_warmup(current_case_count, reason="cluster-groups")
+        # 4. Cold: never compute inline. On Railway (default) refuse to spawn
+        # background AA — that OOMs the dyno. Local may schedule warmup.
+        if _schedule_automated_analysis_warmup(current_case_count, reason="cluster-groups"):
+            return JSONResponse(
+                status_code=202,
+                content={"status": "warming", "success": False, "case_groups": []},
+            )
         return JSONResponse(
-            status_code=202,
-            content={"status": "warming", "success": False, "case_groups": []},
+            status_code=503,
+            content={
+                "success": False,
+                "status": "cache_miss",
+                "case_groups": [],
+                "error": "Cluster cache not precomputed for this corpus. "
+                "Run scripts/run/precompute_clusters.py (runtime compute disabled).",
+            },
         )
     except Exception as e:
         import traceback
@@ -3202,8 +3253,8 @@ async def cluster_groups_endpoint(request: Request):
 async def automated_analysis_endpoint(request: Request):
     """
     Full automated analysis (case groups, triaged cases, insights).
-    Load order: memory → Redis → Postgres slim. Cold miss returns 202 and
-    schedules a single background compute (never on the request path).
+    Load order: memory → Redis → Postgres slim. Cold miss returns 202 only when
+    runtime compute is allowed; otherwise 503 (never OOMs Railway).
     """
     global _automated_analysis_mem_cache, _automated_analysis_mem_case_count
     try:
@@ -3252,11 +3303,20 @@ async def automated_analysis_endpoint(request: Request):
             _automated_analysis_mem_case_count = current_case_count
             return _build_automated_analysis_response(aa_from_db, source="database", cached=True)
 
-        # Cold: schedule single-flight background compute; never compute inline
-        _schedule_automated_analysis_warmup(current_case_count, reason="automated-analysis")
+        # Cold: never compute inline. Refuse spawn on Railway.
+        if _schedule_automated_analysis_warmup(current_case_count, reason="automated-analysis"):
+            return JSONResponse(
+                status_code=202,
+                content={"status": "warming", "success": False},
+            )
         return JSONResponse(
-            status_code=202,
-            content={"status": "warming", "success": False},
+            status_code=503,
+            content={
+                "success": False,
+                "status": "cache_miss",
+                "error": "Automated-analysis cache not precomputed for this corpus. "
+                "Run scripts/run/precompute_clusters.py (runtime compute disabled).",
+            },
         )
     except Exception as e:
         import traceback

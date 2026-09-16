@@ -6,19 +6,24 @@
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_042> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:05:06.277965" ;
+    dcterms:created "2026-09-15T20:45:06.024010" ;
     dcterms:identifier "ncmec_2022_042" ;
-    dcterms:modified "2026-09-10T19:05:06.277965" ;
+    dcterms:modified "2026-09-15T20:45:06.024010" ;
     dcterms:source <https://www.phillymag.com/news/2022/01/13/andrew-wolf-springside-chestnut-hill-2/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/alexandria>,
+        <https://caselinker.up.railway.app/resource/location/new-york>,
+        <https://caselinker.up.railway.app/resource/location/philadelphia> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_042/phase/convicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_042/phase/convicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2022_042/event/csam>,
@@ -28,9 +33,14 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_042/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_042/legal-step/convicted>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_042/operation> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/fbi> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/fbi> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/alexandria>,
+        <https://caselinker.up.railway.app/resource/location/new-york>,
+        <https://caselinker.up.railway.app/resource/location/philadelphia> .
 
-<https://caselinker.up.railway.app/resource/agency/fbi> a cacontology-multi:FederalAgency .
+<https://caselinker.up.railway.app/resource/agency/fbi> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:FederalAgency ;
+    rdfs:label "FBI" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_042/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -54,7 +64,8 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2022_042/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_042/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2022_042/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_042/legal-step/convicted> a cac-core:Event,
         cac-core:LegalEvent,
@@ -89,15 +100,36 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_042/event/online-only> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_042/person/victim/1> .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_042/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_042/phase/convicted> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
+<https://caselinker.up.railway.app/resource/location/alexandria> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Alexandria" ;
+    uco-core:name "Alexandria" .
+
+<https://caselinker.up.railway.app/resource/location/new-york> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "New York" ;
+    uco-core:name "New York" .
+
+<https://caselinker.up.railway.app/resource/location/philadelphia> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Philadelphia" ;
+    uco-core:name "Philadelphia" .
+
 <https://caselinker.up.railway.app/resource/platform/facebook> a cacontology-platforms:SocialMediaPlatform ;
     rdfs:label "Facebook" .
 
-<https://caselinker.up.railway.app/resource/platform/social-media> a cacontology-platforms:SocialMediaPlatform ;
-    rdfs:label "social media" .
+<https://caselinker.up.railway.app/resource/platform/social-media> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:SocialMediaPlatform ;
+    rdfs:label "social media" ;
+    cacontology-platforms:platformSpecificity "generic" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_042/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

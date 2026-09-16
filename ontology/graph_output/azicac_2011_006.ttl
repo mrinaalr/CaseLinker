@@ -10,17 +10,22 @@
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/azicac_2011_006> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:04:38.098740" ;
+    dcterms:created "2026-09-15T19:06:28.210726" ;
     dcterms:identifier "azicac_2011_006" ;
-    dcterms:modified "2026-09-10T19:04:38.098740" ;
+    dcterms:modified "2026-09-15T19:21:56.024827" ;
     dcterms:source <https://www.azicac.org/cases-and-arrests/>,
         "AZICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/arizona>,
+        <https://caselinker.up.railway.app/resource/location/maricopa-county-jail>,
+        <https://caselinker.up.railway.app/resource/location/phoenix> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/azicac_2011_006/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/azicac_2011_006/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/azicac_2011_006/event/conspiracy>,
@@ -33,7 +38,10 @@
         <https://caselinker.up.railway.app/resource/agency/fbi>,
         <https://caselinker.up.railway.app/resource/agency/maricopa-county-attorneys-office>,
         <https://caselinker.up.railway.app/resource/agency/mesa-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/phoenix-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/phoenix-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/arizona>,
+        <https://caselinker.up.railway.app/resource/location/maricopa-county-jail>,
+        <https://caselinker.up.railway.app/resource/location/phoenix> .
 
 <https://caselinker.up.railway.app/resource/agency/azicac> a cacontology-taskforce:StateICACtaskForce .
 
@@ -64,7 +72,6 @@
 <https://caselinker.up.railway.app/resource/case/azicac_2011_006/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility: Maricopa County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/azicac_2011_006/charge/1>,
         <https://caselinker.up.railway.app/resource/case/azicac_2011_006/charge/2> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2011-07-01T00:00:00Z"^^xsd:dateTimeStamp ;
@@ -98,7 +105,7 @@
 
 <https://caselinker.up.railway.app/resource/case/azicac_2011_006/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "25 years" .
+    rdfs:label "[\"25 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/azicac_2011_006/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;
@@ -119,6 +126,17 @@
         <https://caselinker.up.railway.app/resource/case/azicac_2011_006/event/hands-on>,
         <https://caselinker.up.railway.app/resource/case/azicac_2011_006/offense-event/charge-2> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/azicac_2011_006/person/offender/2> .
+
+<https://caselinker.up.railway.app/resource/location/arizona> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/maricopa-county-jail> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Maricopa County Jail" ;
+    uco-core:name "Maricopa County Jail" .
+
+<https://caselinker.up.railway.app/resource/location/phoenix> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/azicac_2011_006/event/conspiracy> a cacontology:ConspiracyToCommitCSA,
         cac-core:Event ;

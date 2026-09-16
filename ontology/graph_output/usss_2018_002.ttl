@@ -10,6 +10,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -33,13 +34,20 @@
         cacontology-multi:LocalAgency ;
     rdfs:label "St. Joseph County Sheriff's Department" .
 
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
+
 <https://caselinker.up.railway.app/resource/case/usss_2018_002> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:20:40.569929" ;
+    dcterms:created "2026-09-15T20:36:46.019677" ;
     dcterms:identifier "usss_2018_002" ;
-    dcterms:modified "2026-09-10T20:20:40.569929" ;
+    dcterms:modified "2026-09-15T20:36:46.019677" ;
     dcterms:source <https://www.secretservice.gov/press/releases/2018/12/elkhart-man-indicted-possession-and-transportation-child-pornography>,
         "USSS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/elkhart>,
+        <https://caselinker.up.railway.app/resource/location/indiana>,
+        <https://caselinker.up.railway.app/resource/location/northern-district>,
+        <https://caselinker.up.railway.app/resource/location/south-bend>,
+        <https://caselinker.up.railway.app/resource/location/united-states> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/usss_2018_002/phase/convicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/usss_2018_002/phase/convicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/usss_2018_002/admission/1>,
@@ -54,7 +62,13 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/fbi>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
         <https://caselinker.up.railway.app/resource/agency/secret-service>,
-        <https://caselinker.up.railway.app/resource/agency/st-joseph-county-sheriffs-department> .
+        <https://caselinker.up.railway.app/resource/agency/st-joseph-county-sheriffs-department>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/elkhart>,
+        <https://caselinker.up.railway.app/resource/location/indiana>,
+        <https://caselinker.up.railway.app/resource/location/northern-district>,
+        <https://caselinker.up.railway.app/resource/location/south-bend>,
+        <https://caselinker.up.railway.app/resource/location/united-states> .
 
 <https://caselinker.up.railway.app/resource/case/usss_2018_002/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -73,7 +87,8 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/usss_2018_002/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2018-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2018-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/usss_2018_002/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/usss_2018_002/legal-step/convicted> a cac-core:Event,
         cac-core:LegalEvent,
@@ -95,6 +110,10 @@
         <https://caselinker.up.railway.app/resource/case/usss_2018_002/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/usss_2018_002/person/offender/1> .
 
+<https://caselinker.up.railway.app/resource/case/usss_2018_002/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/usss_2018_002/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
 
@@ -103,6 +122,25 @@
 <https://caselinker.up.railway.app/resource/case/usss_2018_002/phase/convicted> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2018-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/elkhart> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Elkhart" ;
+    uco-core:name "Elkhart" .
+
+<https://caselinker.up.railway.app/resource/location/indiana> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/northern-district> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/south-bend> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "South Bend" ;
+    uco-core:name "South Bend" .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/usss_2018_002/event/online-only> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

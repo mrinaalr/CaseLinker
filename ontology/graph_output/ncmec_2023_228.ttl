@@ -7,26 +7,36 @@
 @prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_228> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:10:48.863429" ;
+    dcterms:created "2026-09-15T20:55:00.950310" ;
     dcterms:identifier "ncmec_2023_228" ;
-    dcterms:modified "2026-09-10T19:10:48.863429" ;
+    dcterms:modified "2026-09-15T20:55:00.950310" ;
     dcterms:source <https://lacrossetribune.com/news/local/crime-courts/child-porn-suspect-arrested-at-same-la-crosse-residence-where-child-was-found-dead-days/article_04457760-19c1-11ee-aec2-4ffa33d7ac1d.html>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/farmington>,
+        <https://caselinker.up.railway.app/resource/location/la-crosse>,
+        <https://caselinker.up.railway.app/resource/location/missouri>,
+        <https://caselinker.up.railway.app/resource/location/southeast-missouri> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_228/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_228/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_228/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_228/event/trust-violation>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_228/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/farmington>,
+        <https://caselinker.up.railway.app/resource/location/la-crosse>,
+        <https://caselinker.up.railway.app/resource/location/missouri>,
+        <https://caselinker.up.railway.app/resource/location/southeast-missouri> .
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
@@ -44,11 +54,9 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_228/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility: La Crosse County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_228/charge/1> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_228/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2023_228/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_228/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_228/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 20 .
@@ -76,15 +84,25 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_228/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$5,000" .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_228/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$50,000" .
+    rdfs:label "[\"$5,000\", \"$50,000\"]" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_228/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/farmington> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/la-crosse> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/missouri> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/southeast-missouri> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Southeast Missouri" ;
+    uco-core:name "Southeast Missouri" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_228/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

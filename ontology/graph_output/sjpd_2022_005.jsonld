@@ -2,22 +2,29 @@
   {
     "@graph": [
       {
-        "@id": "https://caselinker.up.railway.app/resource/case/sjpd_2022_005/person/victim/1",
+        "@id": "https://caselinker.up.railway.app/resource/case/sjpd_2022_005/legal-proceeding",
         "@type": [
-          "https://ontology.unifiedcyberontology.org/uco/identity/Person"
-        ]
-      },
-      {
-        "@id": "https://caselinker.up.railway.app/resource/case/sjpd_2022_005/phase/booked",
-        "@type": [
-          "https://cacontology.projectvic.org#InitialPhase",
-          "https://cacontology.projectvic.org/core#Phase"
+          "https://cacontology.projectvic.org/legal-outcomes#LegalProceeding",
+          "https://cacontology.projectvic.org/core#LegalEvent",
+          "https://cacontology.projectvic.org/core#Event"
         ],
-        "https://cacontology.projectvic.org#hasPhaseBeginPoint": [
+        "https://cacontology.projectvic.org/legal-outcomes#hasProceedingBeginPoint": [
           {
             "@type": "http://www.w3.org/2001/XMLSchema#dateTimeStamp",
             "@value": "2022-01-01T00:00:00Z"
           }
+        ],
+        "https://cacontology.projectvic.org/legal-outcomes#resultsSentence": [
+          {
+            "@id": "https://caselinker.up.railway.app/resource/case/sjpd_2022_005/sentence/1"
+          }
+        ]
+      },
+      {
+        "@id": "https://caselinker.up.railway.app/resource/location/santa-clara-county",
+        "@type": [
+          "https://ontology.unifiedcyberontology.org/uco/location/Location",
+          "https://cacontology.projectvic.org/core#PlaceLikeEntity"
         ]
       },
       {
@@ -34,18 +41,35 @@
         ]
       },
       {
-        "@id": "https://caselinker.up.railway.app/resource/case/sjpd_2022_005/legal-proceeding",
+        "@id": "https://caselinker.up.railway.app/resource/case/sjpd_2022_005/role/offender/1",
         "@type": [
-          "https://cacontology.projectvic.org/legal-outcomes#LegalProceeding",
-          "https://cacontology.projectvic.org/core#LegalEvent",
-          "https://cacontology.projectvic.org/core#Event"
+          "https://cacontology.projectvic.org#OffenderRole",
+          "https://ontology.unifiedcyberontology.org/uco/role/OffenderRole"
         ],
-        "http://www.w3.org/2000/01/rdf-schema#comment": [
+        "https://cacontology.projectvic.org#hasRoleBeginPoint": [
           {
-            "@value": "Pretrial detention facility (not a sentence): Santa Clara County Jail"
+            "@type": "http://www.w3.org/2001/XMLSchema#dateTimeStamp",
+            "@value": "2022-01-01T00:00:00Z"
           }
         ],
-        "https://cacontology.projectvic.org/legal-outcomes#hasProceedingBeginPoint": [
+        "https://cacontology.projectvic.org#participatesInEvent": [
+          {
+            "@id": "https://caselinker.up.railway.app/resource/case/sjpd_2022_005/event/hands-on"
+          }
+        ],
+        "https://cacontology.projectvic.org/core#hasRole": [
+          {
+            "@id": "https://caselinker.up.railway.app/resource/case/sjpd_2022_005/person/offender/1"
+          }
+        ]
+      },
+      {
+        "@id": "https://caselinker.up.railway.app/resource/case/sjpd_2022_005/phase/booked",
+        "@type": [
+          "https://cacontology.projectvic.org#InitialPhase",
+          "https://cacontology.projectvic.org/core#Phase"
+        ],
+        "https://cacontology.projectvic.org#hasPhaseBeginPoint": [
           {
             "@type": "http://www.w3.org/2001/XMLSchema#dateTimeStamp",
             "@value": "2022-01-01T00:00:00Z"
@@ -53,7 +77,26 @@
         ]
       },
       {
-        "@id": "https://caselinker.up.railway.app/resource/case/sjpd_2022_005/person/offender/1",
+        "@id": "https://caselinker.up.railway.app/resource/location/san-josé",
+        "@type": [
+          "https://ontology.unifiedcyberontology.org/uco/location/Location",
+          "https://cacontology.projectvic.org/core#PlaceLikeEntity"
+        ]
+      },
+      {
+        "@id": "https://caselinker.up.railway.app/resource/case/sjpd_2022_005/sentence/1",
+        "@type": [
+          "https://cacontology.projectvic.org/legal-outcomes#PrisonSentence",
+          "https://cacontology.projectvic.org/legal-outcomes#CriminalSentence"
+        ],
+        "http://www.w3.org/2000/01/rdf-schema#label": [
+          {
+            "@value": "[]"
+          }
+        ]
+      },
+      {
+        "@id": "https://caselinker.up.railway.app/resource/case/sjpd_2022_005/person/victim/1",
         "@type": [
           "https://ontology.unifiedcyberontology.org/uco/identity/Person"
         ]
@@ -65,62 +108,9 @@
         ]
       },
       {
-        "@id": "https://caselinker.up.railway.app/resource/case/sjpd_2022_005",
+        "@id": "https://caselinker.up.railway.app/resource/agency/icac",
         "@type": [
-          "https://cacontology.projectvic.org#CACInvestigation",
-          "https://cacontology.projectvic.org/core#EnduringEntity"
-        ],
-        "http://purl.org/dc/terms/created": [
-          {
-            "@value": "2026-09-10T20:12:30.351121"
-          }
-        ],
-        "http://purl.org/dc/terms/identifier": [
-          {
-            "@value": "sjpd_2022_005"
-          }
-        ],
-        "http://purl.org/dc/terms/modified": [
-          {
-            "@value": "2026-09-10T20:12:30.351121"
-          }
-        ],
-        "http://purl.org/dc/terms/source": [
-          {
-            "@value": "SJPD"
-          },
-          {
-            "@id": "https://www.sjpd.org/Home/Components/News/News/805/"
-          }
-        ],
-        "https://cacontology.projectvic.org#currentPhase": [
-          {
-            "@id": "https://caselinker.up.railway.app/resource/case/sjpd_2022_005/phase/booked"
-          }
-        ],
-        "https://cacontology.projectvic.org#hasPhase": [
-          {
-            "@id": "https://caselinker.up.railway.app/resource/case/sjpd_2022_005/phase/booked"
-          }
-        ],
-        "https://cacontology.projectvic.org#hasStep": [
-          {
-            "@id": "https://caselinker.up.railway.app/resource/case/sjpd_2022_005/event/hands-on"
-          },
-          {
-            "@id": "https://caselinker.up.railway.app/resource/case/sjpd_2022_005/legal-proceeding"
-          }
-        ],
-        "https://cacontology.projectvic.org/multi-jurisdiction#involvesAgency": [
-          {
-            "@id": "https://caselinker.up.railway.app/resource/agency/icac"
-          },
-          {
-            "@id": "https://caselinker.up.railway.app/resource/agency/san-josé-police-department"
-          },
-          {
-            "@id": "https://caselinker.up.railway.app/resource/agency/task-forcechild-exploitation-detail"
-          }
+          "https://cacontology.projectvic.org/taskforce#StateICACtaskForce"
         ]
       },
       {
@@ -159,32 +149,107 @@
         ]
       },
       {
-        "@id": "https://caselinker.up.railway.app/resource/case/sjpd_2022_005/role/offender/1",
+        "@id": "https://caselinker.up.railway.app/resource/location/the-city-of-san-josé",
         "@type": [
-          "https://cacontology.projectvic.org#OffenderRole",
-          "https://ontology.unifiedcyberontology.org/uco/role/OffenderRole"
+          "https://ontology.unifiedcyberontology.org/uco/location/Location",
+          "https://cacontology.projectvic.org/core#PlaceLikeEntity"
         ],
-        "https://cacontology.projectvic.org#hasRoleBeginPoint": [
+        "http://www.w3.org/2000/01/rdf-schema#label": [
           {
-            "@type": "http://www.w3.org/2001/XMLSchema#dateTimeStamp",
-            "@value": "2022-01-01T00:00:00Z"
+            "@value": "the City of San José"
           }
         ],
-        "https://cacontology.projectvic.org#participatesInEvent": [
+        "https://ontology.unifiedcyberontology.org/uco/core/name": [
           {
-            "@id": "https://caselinker.up.railway.app/resource/case/sjpd_2022_005/event/hands-on"
-          }
-        ],
-        "https://cacontology.projectvic.org/core#hasRole": [
-          {
-            "@id": "https://caselinker.up.railway.app/resource/case/sjpd_2022_005/person/offender/1"
+            "@value": "the City of San José"
           }
         ]
       },
       {
-        "@id": "https://caselinker.up.railway.app/resource/agency/icac",
+        "@id": "https://caselinker.up.railway.app/resource/case/sjpd_2022_005",
         "@type": [
-          "https://cacontology.projectvic.org/taskforce#StateICACtaskForce"
+          "https://cacontology.projectvic.org#CACInvestigation",
+          "https://cacontology.projectvic.org/core#EnduringEntity"
+        ],
+        "http://purl.org/dc/terms/created": [
+          {
+            "@value": "2026-09-15T20:26:31.783186"
+          }
+        ],
+        "http://purl.org/dc/terms/identifier": [
+          {
+            "@value": "sjpd_2022_005"
+          }
+        ],
+        "http://purl.org/dc/terms/modified": [
+          {
+            "@value": "2026-09-15T20:26:31.783186"
+          }
+        ],
+        "http://purl.org/dc/terms/source": [
+          {
+            "@value": "SJPD"
+          },
+          {
+            "@id": "https://www.sjpd.org/Home/Components/News/News/805/"
+          }
+        ],
+        "http://purl.org/dc/terms/spatial": [
+          {
+            "@id": "https://caselinker.up.railway.app/resource/location/san-josé"
+          },
+          {
+            "@id": "https://caselinker.up.railway.app/resource/location/santa-clara-county"
+          },
+          {
+            "@id": "https://caselinker.up.railway.app/resource/location/the-city-of-san-josé"
+          }
+        ],
+        "https://cacontology.projectvic.org#currentPhase": [
+          {
+            "@id": "https://caselinker.up.railway.app/resource/case/sjpd_2022_005/phase/booked"
+          }
+        ],
+        "https://cacontology.projectvic.org#hasPhase": [
+          {
+            "@id": "https://caselinker.up.railway.app/resource/case/sjpd_2022_005/phase/booked"
+          }
+        ],
+        "https://cacontology.projectvic.org#hasStep": [
+          {
+            "@id": "https://caselinker.up.railway.app/resource/case/sjpd_2022_005/event/hands-on"
+          },
+          {
+            "@id": "https://caselinker.up.railway.app/resource/case/sjpd_2022_005/legal-proceeding"
+          }
+        ],
+        "https://cacontology.projectvic.org/multi-jurisdiction#involvesAgency": [
+          {
+            "@id": "https://caselinker.up.railway.app/resource/agency/icac"
+          },
+          {
+            "@id": "https://caselinker.up.railway.app/resource/agency/san-josé-police-department"
+          },
+          {
+            "@id": "https://caselinker.up.railway.app/resource/agency/task-forcechild-exploitation-detail"
+          }
+        ],
+        "https://caselinker.up.railway.app/resource/vocab/mentionsLocation": [
+          {
+            "@id": "https://caselinker.up.railway.app/resource/location/san-josé"
+          },
+          {
+            "@id": "https://caselinker.up.railway.app/resource/location/santa-clara-county"
+          },
+          {
+            "@id": "https://caselinker.up.railway.app/resource/location/the-city-of-san-josé"
+          }
+        ]
+      },
+      {
+        "@id": "https://caselinker.up.railway.app/resource/case/sjpd_2022_005/person/offender/1",
+        "@type": [
+          "https://ontology.unifiedcyberontology.org/uco/identity/Person"
         ]
       }
     ],

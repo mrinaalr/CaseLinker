@@ -4,25 +4,35 @@
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_140> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:10:07.579247" ;
+    dcterms:created "2026-09-15T20:55:00.868936" ;
     dcterms:identifier "ncmec_2023_140" ;
-    dcterms:modified "2026-09-10T19:10:07.579247" ;
+    dcterms:modified "2026-09-15T20:55:00.868936" ;
     dcterms:source <https://www.wivb.com/news/local-news/erie-county/grand-island/grand-island-man-arrested-for-child-sex-crimes-weapons-charges/#:~:text=An%20internet%20crimes%20against%20children,with%20New%20York%20State%20law>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/buffalo>,
+        <https://caselinker.up.railway.app/resource/location/grand-island>,
+        <https://caselinker.up.railway.app/resource/location/new-york-state>,
+        <https://caselinker.up.railway.app/resource/location/ny> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_140/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_140/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_140/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_140/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/new-york-state-police-department> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/new-york-state-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/buffalo>,
+        <https://caselinker.up.railway.app/resource/location/grand-island>,
+        <https://caselinker.up.railway.app/resource/location/new-york-state>,
+        <https://caselinker.up.railway.app/resource/location/ny> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_140/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -36,7 +46,9 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_140/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_140/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/new-york-state-police-department> a cacontology-multi:StateAgency .
+<https://caselinker.up.railway.app/resource/agency/new-york-state-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:StateAgency ;
+    rdfs:label "New York State Police Department" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_140/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -48,16 +60,39 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_140/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_140/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_140/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 63 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_140/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_140/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_140/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/buffalo> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Buffalo" ;
+    uco-core:name "Buffalo" .
+
+<https://caselinker.up.railway.app/resource/location/grand-island> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Grand Island" ;
+    uco-core:name "Grand Island" .
+
+<https://caselinker.up.railway.app/resource/location/new-york-state> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "New York State" ;
+    uco-core:name "New York State" .
+
+<https://caselinker.up.railway.app/resource/location/ny> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_140/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

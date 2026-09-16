@@ -5,19 +5,26 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/nm_ag_2026_007> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:59:35.068947" ;
+    dcterms:created "2026-09-15T20:05:42.236182" ;
     dcterms:identifier "nm_ag_2026_007" ;
-    dcterms:modified "2026-09-10T19:59:35.068947" ;
+    dcterms:modified "2026-09-15T20:05:42.236182" ;
     dcterms:source <https://nmdoj.gov/press-release/media-alert-registered-sex-offender-arrested-in-new-mexico-for-possession-and-distribution-child-sexual-abuse-material/>,
         "NM AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/albuquerque>,
+        <https://caselinker.up.railway.app/resource/location/dc>,
+        <https://caselinker.up.railway.app/resource/location/new-mexico>,
+        <https://caselinker.up.railway.app/resource/location/washington>,
+        <https://caselinker.up.railway.app/resource/location/west-virginia> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/nm_ag_2026_007/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/nm_ag_2026_007/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/nm_ag_2026_007/event/distribution>,
@@ -28,7 +35,12 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/new-mexico-department-of-justice>,
         <https://caselinker.up.railway.app/resource/agency/task-forces>,
-        <https://caselinker.up.railway.app/resource/agency/us-department-of-justice> .
+        <https://caselinker.up.railway.app/resource/agency/us-department-of-justice> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/albuquerque>,
+        <https://caselinker.up.railway.app/resource/location/dc>,
+        <https://caselinker.up.railway.app/resource/location/new-mexico>,
+        <https://caselinker.up.railway.app/resource/location/washington>,
+        <https://caselinker.up.railway.app/resource/location/west-virginia> .
 
 <https://caselinker.up.railway.app/resource/case/nm_ag_2026_007/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -47,7 +59,9 @@
 
 <https://caselinker.up.railway.app/resource/agency/new-mexico-department-of-justice> a cacontology-multi:StateAgency .
 
-<https://caselinker.up.railway.app/resource/agency/task-forces> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/task-forces> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Task Force's" .
 
 <https://caselinker.up.railway.app/resource/agency/us-department-of-justice> a cacontology-multi:LocalAgency .
 
@@ -69,16 +83,38 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/nm_ag_2026_007/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/nm_ag_2026_007/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/nm_ag_2026_007/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 53 .
 
 <https://caselinker.up.railway.app/resource/case/nm_ag_2026_007/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/nm_ag_2026_007/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/nm_ag_2026_007/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/albuquerque> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/dc> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/new-mexico> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/washington> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/west-virginia> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "West Virginia" ;
+    uco-core:name "West Virginia" .
 
 <https://caselinker.up.railway.app/resource/case/nm_ag_2026_007/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

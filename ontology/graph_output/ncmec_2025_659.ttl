@@ -1,45 +1,71 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
+@prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_659> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:31:05.480436" ;
+    dcterms:created "2026-09-15T21:27:13.742987" ;
     dcterms:identifier "ncmec_2025_659" ;
-    dcterms:modified "2026-09-10T19:31:05.480436" ;
-    dcterms:source <https://www.yahoo.com/news/holly-springs-man-deemed-danger-174412583.html>,
+    dcterms:modified "2026-09-15T21:27:13.742987" ;
+    dcterms:source <https://www.wcnc.com/article/news/crime/cornelius-child-sex-exploitation-suspect-release-1-10-2025/275-b8d83e5c-40eb-4531-9024-717083e8ef99>,
         "NCMEC" ;
-    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_659/phase/arrested> ;
-    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_659/phase/arrested> ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/mecklenburg-county>,
+        <https://caselinker.up.railway.app/resource/location/nc> ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_659/phase/charged> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_659/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_659/event/possession>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2025_659/legal-proceeding> .
+        <https://caselinker.up.railway.app/resource/case/ncmec_2025_659/legal-proceeding> ;
+    cacontology:investigationStatus "unknown" ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/cornelius-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/icac>,
+        <https://caselinker.up.railway.app/resource/agency/north-carolina-state-bureau-of-investigation-computer-crimes-unit> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/mecklenburg-county>,
+        <https://caselinker.up.railway.app/resource/location/nc> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_659/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2025-02-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2025_659/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_659/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_659/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2025-02-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2025_659/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_659/person/victim/1> .
 
+<https://caselinker.up.railway.app/resource/agency/cornelius-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Cornelius Police Department" .
+
+<https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
+
+<https://caselinker.up.railway.app/resource/agency/north-carolina-state-bureau-of-investigation-computer-crimes-unit> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:StateAgency ;
+    rdfs:label "North Carolina State Bureau of Investigation Computer Crimes Unit" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_659/charge/1> a cacontology-legal-outcomes:CriminalCharge,
         cacontology-legal-outcomes:StateCharge ;
-    rdfs:label "first-degree sexual exploitation of a minor" ;
-    cacontology-legal-outcomes:indictmentCounts 30 .
+    rdfs:label "felony second-degree sexual exploitation of" ;
+    cacontology-legal-outcomes:indictmentCounts 10 .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2025_659/charge/2> a cacontology-legal-outcomes:CriminalCharge ;
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_659/charge/2> a cacontology-legal-outcomes:CSAM_Possession,
+        cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "child pornography" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_659/charge/3> a cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "sexual exploitation" ;
     ns1:chargeCluster "sexual_exploitation_unspecified" .
 
@@ -49,25 +75,38 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_659/charge/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2025_659/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-02-01T00:00:00Z"^^xsd:dateTimeStamp ;
+        <https://caselinker.up.railway.app/resource/case/ncmec_2025_659/charge/2>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2025_659/charge/3> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_659/sentence/1> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2025_659/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_659/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 18 .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2025_659/person/victim/1> a uco-identity:Person ;
-    cacontology-production:victimAge 14 .
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_659/person/victim/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_659/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$2" .
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2025_659/phase/arrested> a cacontology:InitialPhase,
+<https://caselinker.up.railway.app/resource/platform/facebook> a cacontology-platforms:SocialMediaPlatform ;
+    rdfs:label "Facebook" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_659/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
-    cacontology:hasPhaseBeginPoint "2025-02-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/mecklenburg-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Mecklenburg County" ;
+    uco-core:name "Mecklenburg County" .
+
+<https://caselinker.up.railway.app/resource/location/nc> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_659/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
-    cacontology:severityLevel 3 ;
+    cacontology:severityLevel 1 ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/facebook> ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2025_659/facet/possession> .
 

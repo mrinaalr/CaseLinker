@@ -7,16 +7,22 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_182> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:10:25.573042" ;
+    dcterms:created "2026-09-15T20:55:00.904360" ;
     dcterms:identifier "ncmec_2023_182" ;
-    dcterms:modified "2026-09-10T19:10:25.573042" ;
+    dcterms:modified "2026-09-15T20:55:00.904360" ;
     dcterms:source <https://www.westernslopenow.com/news/5-mesa-county-men-arrested-for-having-child-pornography/#:~:text=44%2Dyear%2Dold%20Dustin%20McClain,under%20the%20age%20of%2012>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/clifton>,
+        <https://caselinker.up.railway.app/resource/location/colo>,
+        <https://caselinker.up.railway.app/resource/location/fruita>,
+        <https://caselinker.up.railway.app/resource/location/grand-valley>,
+        <https://caselinker.up.railway.app/resource/location/mesa-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_182/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_182/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_182/event/possession>,
@@ -24,7 +30,12 @@
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/colorado-bureau-of-investigations>,
         <https://caselinker.up.railway.app/resource/agency/hsi>,
-        <https://caselinker.up.railway.app/resource/agency/mesa-county-sheriffs-office> .
+        <https://caselinker.up.railway.app/resource/agency/mesa-county-sheriffs-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/clifton>,
+        <https://caselinker.up.railway.app/resource/location/colo>,
+        <https://caselinker.up.railway.app/resource/location/fruita>,
+        <https://caselinker.up.railway.app/resource/location/grand-valley>,
+        <https://caselinker.up.railway.app/resource/location/mesa-county> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_182/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -44,7 +55,9 @@
 
 <https://caselinker.up.railway.app/resource/agency/hsi> a cacontology-multi:FederalAgency .
 
-<https://caselinker.up.railway.app/resource/agency/mesa-county-sheriffs-office> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/mesa-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Mesa County Sheriff's Office" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_182/charge/1> a cacontology-legal-outcomes:CriminalCharge,
         cacontology-legal-outcomes:StateCharge ;
@@ -68,15 +81,41 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_182/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_182/charge/2>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_182/charge/3> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_182/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_182/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_182/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_182/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_182/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/clifton> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Clifton" ;
+    uco-core:name "Clifton" .
+
+<https://caselinker.up.railway.app/resource/location/colo> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/fruita> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Fruita" ;
+    uco-core:name "Fruita" .
+
+<https://caselinker.up.railway.app/resource/location/grand-valley> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Grand Valley" ;
+    uco-core:name "Grand Valley" .
+
+<https://caselinker.up.railway.app/resource/location/mesa-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_182/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

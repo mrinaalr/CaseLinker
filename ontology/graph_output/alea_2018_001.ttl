@@ -1,5 +1,6 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
@@ -11,16 +12,24 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/alea_2018_001> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:26:14.039714" ;
+    dcterms:created "2026-09-15T19:23:52.952962" ;
     dcterms:identifier "alea_2018_001" ;
-    dcterms:modified "2026-09-10T20:26:14.039714" ;
+    dcterms:modified "2026-09-15T19:23:52.952962" ;
     dcterms:source <https://www.alea.gov/news/us-attorneys-office-charges-millbrook-man-11-counts-production-child-porn>,
         "ALEA" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/alabama>,
+        <https://caselinker.up.railway.app/resource/location/elmore-county>,
+        <https://caselinker.up.railway.app/resource/location/mich>,
+        <https://caselinker.up.railway.app/resource/location/michigan>,
+        <https://caselinker.up.railway.app/resource/location/millbrook>,
+        <https://caselinker.up.railway.app/resource/location/montgomery>,
+        <https://caselinker.up.railway.app/resource/location/wayne-county> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/alea_2018_001/cybertip>,
         <https://caselinker.up.railway.app/resource/case/alea_2018_001/event/csam>,
         <https://caselinker.up.railway.app/resource/case/alea_2018_001/event/distribution>,
@@ -36,7 +45,15 @@
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/millbrook-police-department>,
         <https://caselinker.up.railway.app/resource/agency/montgomery-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/alabama>,
+        <https://caselinker.up.railway.app/resource/location/elmore-county>,
+        <https://caselinker.up.railway.app/resource/location/mich>,
+        <https://caselinker.up.railway.app/resource/location/michigan>,
+        <https://caselinker.up.railway.app/resource/location/millbrook>,
+        <https://caselinker.up.railway.app/resource/location/montgomery>,
+        <https://caselinker.up.railway.app/resource/location/wayne-county> .
 
 <https://caselinker.up.railway.app/resource/case/alea_2018_001/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -60,7 +77,9 @@
         cacontology-multi:StateAgency ;
     rdfs:label "ALEA's State Bureau of Investigation" .
 
-<https://caselinker.up.railway.app/resource/agency/alexander-city-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/alexander-city-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Alexander City Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/detroit-police-department> a cac-core:OrganizationLikeEntity,
         cacontology-multi:LocalAgency ;
@@ -72,7 +91,11 @@
 
 <https://caselinker.up.railway.app/resource/agency/millbrook-police-department> a cacontology-multi:LocalAgency .
 
-<https://caselinker.up.railway.app/resource/agency/montgomery-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/montgomery-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Montgomery Police Department" .
+
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/alea_2018_001/charge/1> a cacontology-legal-outcomes:CSAM_Production,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -104,13 +127,52 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/alea_2018_001/charge/1>,
         <https://caselinker.up.railway.app/resource/case/alea_2018_001/charge/2>,
         <https://caselinker.up.railway.app/resource/case/alea_2018_001/charge/3> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2018-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2018-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/alea_2018_001/sentence/1> .
 
-<https://caselinker.up.railway.app/resource/case/alea_2018_001/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/alea_2018_001/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 44 .
 
 <https://caselinker.up.railway.app/resource/case/alea_2018_001/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/alea_2018_001/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
+
+<https://caselinker.up.railway.app/resource/location/alabama> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/elmore-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Elmore County" ;
+    uco-core:name "Elmore County" .
+
+<https://caselinker.up.railway.app/resource/location/mich> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Mich." ;
+    uco-core:name "Mich." .
+
+<https://caselinker.up.railway.app/resource/location/michigan> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Michigan" ;
+    uco-core:name "Michigan" .
+
+<https://caselinker.up.railway.app/resource/location/millbrook> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Millbrook" ;
+    uco-core:name "Millbrook" .
+
+<https://caselinker.up.railway.app/resource/location/montgomery> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Montgomery" ;
+    uco-core:name "Montgomery" .
+
+<https://caselinker.up.railway.app/resource/location/wayne-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Wayne County" ;
+    uco-core:name "Wayne County" .
 
 <https://caselinker.up.railway.app/resource/case/alea_2018_001/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

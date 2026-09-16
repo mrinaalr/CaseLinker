@@ -4,19 +4,29 @@
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2005_005> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:39:35.515029" ;
+    dcterms:created "2026-09-15T21:42:39.698864" ;
     dcterms:identifier "doj_archives_2005_005" ;
-    dcterms:modified "2026-09-10T19:39:35.515029" ;
+    dcterms:modified "2026-09-15T21:42:39.698864" ;
     dcterms:source <https://www.justice.gov/archive/criminal/ceos/pressreleases/downloads/SDOH%20Halter%20conviction%20PR_111805.pdf>,
-        "DOJ ARCHIVES" ;
+        "DOJ CEOS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/berlin-township>,
+        <https://caselinker.up.railway.app/resource/location/columbus>,
+        <https://caselinker.up.railway.app/resource/location/galena>,
+        <https://caselinker.up.railway.app/resource/location/ohio>,
+        <https://caselinker.up.railway.app/resource/location/sherman-road>,
+        <https://caselinker.up.railway.app/resource/location/the-southern-district>,
+        <https://caselinker.up.railway.app/resource/location/united>,
+        <https://caselinker.up.railway.app/resource/location/united-states> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_archives_2005_005/phase/convicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_archives_2005_005/phase/convicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_archives_2005_005/event/multi-jurisdiction>,
@@ -25,7 +35,16 @@
         <https://caselinker.up.railway.app/resource/case/doj_archives_2005_005/legal-step/convicted> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/fbi>,
-        <https://caselinker.up.railway.app/resource/agency/genoa-township-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/genoa-township-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/berlin-township>,
+        <https://caselinker.up.railway.app/resource/location/columbus>,
+        <https://caselinker.up.railway.app/resource/location/galena>,
+        <https://caselinker.up.railway.app/resource/location/ohio>,
+        <https://caselinker.up.railway.app/resource/location/sherman-road>,
+        <https://caselinker.up.railway.app/resource/location/the-southern-district>,
+        <https://caselinker.up.railway.app/resource/location/united>,
+        <https://caselinker.up.railway.app/resource/location/united-states> .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2005_005/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -45,6 +64,8 @@
         cacontology-multi:LocalAgency ;
     rdfs:label "Genoa Township Police Department" .
 
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
+
 <https://caselinker.up.railway.app/resource/case/doj_archives_2005_005/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "child pornography" .
@@ -59,8 +80,7 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/doj_archives_2005_005/charge/1> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2005-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_archives_2005_005/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_archives_2005_005/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_archives_2005_005/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2005_005/legal-step/convicted> a cac-core:Event,
         cac-core:LegalEvent,
@@ -75,15 +95,41 @@
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2005_005/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "supervised release" .
-
-<https://caselinker.up.railway.app/resource/case/doj_archives_2005_005/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$250,000" .
+    rdfs:label "[\"supervised release\", \"$250,000\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2005_005/phase/convicted> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2005-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/berlin-township> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Berlin Township" ;
+    uco-core:name "Berlin Township" .
+
+<https://caselinker.up.railway.app/resource/location/columbus> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/galena> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Galena" ;
+    uco-core:name "Galena" .
+
+<https://caselinker.up.railway.app/resource/location/ohio> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/sherman-road> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Sherman Road" ;
+    uco-core:name "Sherman Road" .
+
+<https://caselinker.up.railway.app/resource/location/the-southern-district> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/united> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2005_005/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

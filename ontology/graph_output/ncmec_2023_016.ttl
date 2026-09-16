@@ -11,6 +11,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -75,11 +76,11 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_016/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Whiteside County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_016/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_016/charge/2>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_016/charge/3> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-07-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-07-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_016/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_016/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 28 .
@@ -96,6 +97,10 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_016/event/hands-on>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_016/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_016/person/offender/2> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_016/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_016/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -114,6 +119,24 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_016/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-07-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/ill> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/ogden> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Ogden" ;
+    uco-core:name "Ogden" .
+
+<https://caselinker.up.railway.app/resource/location/sterling> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Sterling" ;
+    uco-core:name "Sterling" .
+
+<https://caselinker.up.railway.app/resource/location/utah> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Utah" ;
+    uco-core:name "Utah" .
 
 <https://caselinker.up.railway.app/resource/platform/chat> a cacontology-platforms:AnonymousChatPlatform ;
     rdfs:label "chat" .
@@ -149,7 +172,7 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_016/admission/3> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "possessed and disseminated child pornography" ;
     dcterms:source <https://gephardtdaily.com/local/ogden-man-arrested-for-11-felonies-related-to-child-exploitation/> ;
-    ns1:admissionContext "22, 2023 STERLING, Ill. (KWQC) - A Sterling man was arrested Tuesday after Illinois State Police said he possessed and disseminated child..." ;
+    ns1:admissionContext "2, 2023 STERLING, Ill. (KWQC) - A Sterling man was arrested Tuesday after Illinois State Police said he possessed and disseminated child..." ;
     ns1:admissionFrame "said_paraphrase" ;
     ns1:admissionTheme "harm_conduct" ;
     ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_016/role/offender/1> ;
@@ -204,11 +227,15 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_016> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:09:12.261086" ;
+    dcterms:created "2026-09-15T20:55:00.753754" ;
     dcterms:identifier "ncmec_2023_016" ;
-    dcterms:modified "2026-09-10T19:09:12.261086" ;
+    dcterms:modified "2026-09-15T20:55:00.753754" ;
     dcterms:source <https://gephardtdaily.com/local/ogden-man-arrested-for-11-felonies-related-to-child-exploitation/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/ill>,
+        <https://caselinker.up.railway.app/resource/location/ogden>,
+        <https://caselinker.up.railway.app/resource/location/sterling>,
+        <https://caselinker.up.railway.app/resource/location/utah> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_016/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_016/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_016/admission/1>,
@@ -224,7 +251,11 @@
     cacontology:investigationStatus "unknown" ;
     cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/ncmec_2023_016/tech/cybertipline> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/illinois-state-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/ogden-city-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/ogden-city-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/ill>,
+        <https://caselinker.up.railway.app/resource/location/ogden>,
+        <https://caselinker.up.railway.app/resource/location/sterling>,
+        <https://caselinker.up.railway.app/resource/location/utah> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_016/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;

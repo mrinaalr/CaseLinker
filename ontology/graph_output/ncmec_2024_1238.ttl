@@ -1,38 +1,62 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
-@prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
+@prefix cacontology-undercover: <https://cacontology.projectvic.org/undercover#> .
+@prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/admission/1/extraction-confidence> a cac-core:AssessmentResult ;
+    cac-core:assesses <https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/admission/1> ;
+    cac-core:generatedBy <https://caselinker.up.railway.app/resource/case/ncmec_2024_1238> ;
+    cac-core:hasConfidence 0.65 .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2024-09-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/event/possession> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1238> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:25:04.446035" ;
+    dcterms:created "2026-09-15T21:08:11.283573" ;
     dcterms:identifier "ncmec_2024_1238" ;
-    dcterms:modified "2026-09-10T19:25:04.446035" ;
-    dcterms:source <https://wsau.com/2024/07/16/aschbrenner-child-porn-trial-rescheduled-for-october/>,
+    dcterms:modified "2026-09-15T21:08:11.283573" ;
+    dcterms:source <https://www.channel3000.com/news/reedsburg-man-charged-following-tip-from-internet-crimes-against-children-task-force/article_34b2264a-6c82-11ef-9684-a77cb5c1696a.html>,
         "NCMEC" ;
-    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/phase/arrested> ;
-    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/phase/arrested> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/event/online-only>,
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/reedsburg>,
+        <https://caselinker.up.railway.app/resource/location/sauk-county>,
+        <https://caselinker.up.railway.app/resource/location/wis> ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/phase/charged> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/phase/charged> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/admission/1>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/cybertip>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/event/possession>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/event/trust-violation>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/legal-proceeding>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/operation> .
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/legal-proceeding> ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/reedsburg>,
+        <https://caselinker.up.railway.app/resource/location/sauk-county>,
+        <https://caselinker.up.railway.app/resource/location/wis> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "possession of child pornography" ;
-    cacontology-legal-outcomes:indictmentCounts 3 .
+    cacontology-legal-outcomes:indictmentCounts 2 .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/event/trust-violation> a cacontology-custodial:AuthorityAbuse,
-        cacontology-custodial:TrustViolation ;
-    cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/relationship/teacher> .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/cybertip> a cacontology-us-ncmec:NCMECCybertipReport ;
+    cacontology-us-ncmec:supportedBy <https://caselinker.up.railway.app/resource/agency/ncmec> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
@@ -40,53 +64,57 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-07-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/sentence/2> .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-09-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/sentence/1> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/operation> a cac-core:Event,
-        cacontology-taskforce:TaskForceOperation .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 29 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/person/victim/1> a uco-identity:Person .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/relationship/teacher> a cacontology-custodial:CustodialRelationship,
-        cacontology-custodial:Teacher ;
-    cacontology-custodial:involvesChild <https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/role/victim/1> ;
-    cacontology-custodial:involvesCustodian <https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/role/offender/1> ;
-    cacontology-custodial:relationshipType "teacher" .
-
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2024-07-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/event/online-only>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/event/possession> ;
+    cacontology:hasRoleBeginPoint "2024-09-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/person/offender/1> .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/role/victim/1> a cacontology:VictimRole,
-        uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2024-07-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/event/online-only>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/event/possession> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/person/victim/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "50 years" .
+    rdfs:label "[]" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$25,000" .
+<https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/phase/arrested> a cacontology:InitialPhase,
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
-    cacontology:hasPhaseBeginPoint "2024-07-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology:hasPhaseBeginPoint "2024-09-01T00:00:00Z"^^xsd:dateTimeStamp .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/event/online-only> a cacontology:ChildSexualAbuseEvent,
-        cac-core:Event .
+<https://caselinker.up.railway.app/resource/location/reedsburg> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Reedsburg" ;
+    uco-core:name "Reedsburg" .
+
+<https://caselinker.up.railway.app/resource/location/sauk-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Sauk County" ;
+    uco-core:name "Sauk County" .
+
+<https://caselinker.up.railway.app/resource/location/wis> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/admission/1> a cacontology-undercover:IncriminatingStatement ;
+    rdfs:label "was found with child sexual abuse materials" ;
+    dcterms:source <https://www.channel3000.com/news/reedsburg-man-charged-following-tip-from-internet-crimes-against-children-task-force/article_34b2264a-6c82-11ef-9684-a77cb5c1696a.html> ;
+    ns1:admissionContext "0072403, 169897525 REEDSBURG, Wis. -- A Reedsburg man was arrested and charged this week after police said he was found with child sexual..." ;
+    ns1:admissionFrame "said_paraphrase" ;
+    ns1:admissionTheme "harm_conduct" ;
+    ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/role/offender/1> ;
+    ns1:evidenceTier "press_release_stated" ;
+    ns1:quoteType "paraphrase" ;
+    uco-core:description "was found with child sexual abuse materials" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
+    cacontology:producesArtifact <https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/admission/1> ;
+    cacontology:severityLevel 3 ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2024_1238/facet/possession> .
 

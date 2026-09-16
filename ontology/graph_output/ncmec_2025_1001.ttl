@@ -1,9 +1,9 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
-@prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix cacontology-undercover: <https://cacontology.projectvic.org/undercover#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
@@ -11,6 +11,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -24,25 +25,21 @@
     cac-core:generatedBy <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001> ;
     cac-core:hasConfidence 0.65 .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/admission/3/extraction-confidence> a cac-core:AssessmentResult ;
-    cac-core:assesses <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/admission/3> ;
-    cac-core:generatedBy <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001> ;
-    cac-core:hasConfidence 0.65 .
-
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2025-08-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/event/possession> ;
+    cacontology:hasRoleBeginPoint "2025-07-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/event/hands-on>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
-
-<https://caselinker.up.railway.app/resource/agency/utah-attorney-generals-office> a cacontology-multi:StateAgency .
+<https://caselinker.up.railway.app/resource/agency/orem-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Orem Police Department" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/charge/1> a cacontology-legal-outcomes:CriminalCharge,
         cacontology-legal-outcomes:StateCharge ;
-    rdfs:label "sexual exploitation of a minor and obstruction of justice" ;
-    cacontology-legal-outcomes:indictmentCounts 11 .
+    rdfs:label "aggravated sexual exploitation of a minor" ;
+    cacontology-legal-outcomes:indictmentCounts 119 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/charge/2> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -64,95 +61,129 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Salt Lake County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/charge/2>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/charge/3> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-08-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-07-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/sentence/1> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 44 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/person/victim/1> a uco-identity:Person .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
-    rdfs:label "CyberTipline" .
-
-<https://caselinker.up.railway.app/resource/platform/social-media> a cacontology-platforms:SocialMediaPlatform ;
-    rdfs:label "social media" .
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/phase/booked> a cacontology:InitialPhase,
-        cac-core:Phase ;
-    cacontology:hasPhaseBeginPoint "2025-08-01T00:00:00Z"^^xsd:dateTimeStamp .
-
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:34:33.919573" ;
+    dcterms:created "2026-09-15T21:27:14.224058" ;
     dcterms:identifier "ncmec_2025_1001" ;
-    dcterms:modified "2026-09-10T19:34:33.919573" ;
-    dcterms:source <https://www.ksl.com/article/51363210/pediatric-nurse-arrested-in-child-sex-abuse-material-investigation>,
+    dcterms:modified "2026-09-15T21:27:14.224058" ;
+    dcterms:source <https://www.abc4.com/news/crimes-against-children/orem-man-felonies-csam/>,
         "NCMEC" ;
-    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/phase/booked> ;
-    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/phase/booked> ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/logan>,
+        <https://caselinker.up.railway.app/resource/location/south-ogden>,
+        <https://caselinker.up.railway.app/resource/location/tremonton>,
+        <https://caselinker.up.railway.app/resource/location/tremonton-city>,
+        <https://caselinker.up.railway.app/resource/location/utah> ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/phase/charged> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/admission/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/admission/2>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/admission/3>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/cybertip>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/event/distribution>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/event/hands-on>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
-    cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/tech/cybertipline> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/utah-attorney-generals-office> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ncmec>,
+        <https://caselinker.up.railway.app/resource/agency/orem-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/logan>,
+        <https://caselinker.up.railway.app/resource/location/south-ogden>,
+        <https://caselinker.up.railway.app/resource/location/tremonton>,
+        <https://caselinker.up.railway.app/resource/location/tremonton-city>,
+        <https://caselinker.up.railway.app/resource/location/utah> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/admission/1> a cacontology-undercover:IncriminatingStatement ;
-    rdfs:label "sending and receiving child sex abuse material using several social media platforms, the affidavit alleges" ;
-    dcterms:source <https://www.ksl.com/article/51363210/pediatric-nurse-arrested-in-child-sex-abuse-material-investigation> ;
-    ns1:admissionContext "the Salt Lake County area,\" according to a police booking affidavit. On Tuesday, a search warrant was served at Putnam's residence, where..." ;
-    ns1:admissionFrame "admitted_to" ;
-    ns1:admissionTheme "harm_conduct" ;
-    ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/role/offender/1> ;
-    ns1:evidenceTier "press_release_stated" ;
-    ns1:quoteType "paraphrase" ;
-    uco-core:description "sending and receiving child sex abuse material using several social media platforms, the affidavit alleges" .
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/phase/charged> a cacontology:LegalProcessPhase,
+        cac-core:Phase ;
+    cacontology:hasPhaseBeginPoint "2025-07-01T00:00:00Z"^^xsd:dateTimeStamp .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/admission/2> a cacontology-undercover:IncriminatingStatement ;
-    rdfs:label "distributing child sex abuse material thousands of times" ;
-    dcterms:source <https://www.ksl.com/article/51363210/pediatric-nurse-arrested-in-child-sex-abuse-material-investigation> ;
-    ns1:admissionContext "Lance destroyed his phone and hid it in an attempt to hide any evidence.\" Putnam has been viewing such items for a couple of years, accor..." ;
-    ns1:admissionFrame "admitted_to" ;
-    ns1:admissionTheme "harm_conduct" ;
-    ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/role/offender/1> ;
-    ns1:evidenceTier "press_release_stated" ;
-    ns1:quoteType "paraphrase" ;
-    uco-core:description "distributing child sex abuse material thousands of times" .
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2025-07-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/event/hands-on>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/event/possession> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/person/offender/1> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/admission/3> a cacontology-undercover:IncriminatingStatement ;
-    rdfs:label "to sending and receiving child sex abuse material using several social media platforms, the affidavit alleges" ;
-    dcterms:source <https://www.ksl.com/article/51363210/pediatric-nurse-arrested-in-child-sex-abuse-material-investigation> ;
-    ns1:admissionContext "Tuesday, a search warrant was served at Putnam's residence, where, after being detained, he admitted to sending and receiving child sex a..." ;
-    ns1:admissionFrame "he_admitted_paraphrase" ;
-    ns1:admissionTheme "harm_conduct" ;
-    ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/role/offender/1> ;
-    ns1:evidenceTier "press_release_stated" ;
-    ns1:quoteType "paraphrase" ;
-    uco-core:description "to sending and receiving child sex abuse material using several social media platforms, the affidavit alleges" .
+<https://caselinker.up.railway.app/resource/location/logan> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Logan" ;
+    uco-core:name "Logan" .
+
+<https://caselinker.up.railway.app/resource/location/south-ogden> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "South Ogden" ;
+    uco-core:name "South Ogden" .
+
+<https://caselinker.up.railway.app/resource/location/tremonton> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Tremonton" ;
+    uco-core:name "Tremonton" .
+
+<https://caselinker.up.railway.app/resource/location/tremonton-city> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Tremonton City" ;
+    uco-core:name "Tremonton City" .
+
+<https://caselinker.up.railway.app/resource/location/utah> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/platform/chat> a cacontology-platforms:AnonymousChatPlatform ;
+    rdfs:label "chat" .
+
+<https://caselinker.up.railway.app/resource/platform/kik> a cacontology-platforms:MessagingService ;
+    rdfs:label "Kik" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/event/hands-on> a cacontology:ChildSexualAbuseEvent,
+        cac-core:Event ;
+    cacontology:producesArtifact <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/admission/1>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/admission/2> ;
+    cacontology:severityLevel 3 ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/chat>,
+        <https://caselinker.up.railway.app/resource/platform/kik> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
     cacontology:producesArtifact <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/admission/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/admission/2>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/admission/3> ;
+        <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/admission/2> ;
     cacontology:severityLevel 3 ;
-    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/social-media> ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/chat>,
+        <https://caselinker.up.railway.app/resource/platform/kik> ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/facet/possession> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/role/offender/1> a cacontology:OffenderRole,
-        uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2025-08-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/event/possession> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/person/offender/1> .
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/admission/1> a cacontology-undercover:IncriminatingStatement ;
+    rdfs:label "having possessed the videos identified" ;
+    dcterms:source <https://www.abc4.com/news/crimes-against-children/orem-man-felonies-csam/> ;
+    ns1:admissionContext "aw enforcement was then able to connect the account to Hansen, charging documents state. After detectives discovered explicit videos of a..." ;
+    ns1:admissionFrame "admitted_to" ;
+    ns1:admissionTheme "harm_conduct" ;
+    ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/role/offender/1> ;
+    ns1:evidenceTier "press_release_stated" ;
+    ns1:quoteType "paraphrase" ;
+    uco-core:description "having possessed the videos identified" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/admission/2> a cacontology-undercover:IncriminatingStatement ;
+    rdfs:label "enjoys child sexual abuse material but tries \"to stay out of trouble,\" charging documents state" ;
+    dcterms:source <https://www.abc4.com/news/crimes-against-children/orem-man-felonies-csam/> ;
+    ns1:admissionContext "Hansen also discussed sexual abuse of children in several internet chats they discovered. Hansen said he enjoys child sexual abuse materi..." ;
+    ns1:admissionFrame "said_paraphrase" ;
+    ns1:admissionTheme "harm_conduct" ;
+    ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_1001/role/offender/1> ;
+    ns1:evidenceTier "press_release_stated" ;
+    ns1:quoteType "paraphrase" ;
+    uco-core:description "enjoys child sexual abuse material but tries \"to stay out of trouble,\" charging documents state" .
 

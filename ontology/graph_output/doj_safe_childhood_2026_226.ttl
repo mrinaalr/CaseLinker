@@ -9,6 +9,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -26,7 +27,9 @@
 
 <https://caselinker.up.railway.app/resource/agency/fbi> a cacontology-multi:FederalAgency .
 
-<https://caselinker.up.railway.app/resource/agency/sun-prairie-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/sun-prairie-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Sun Prairie Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/university-of-wisconsin-police-department> a cac-core:OrganizationLikeEntity,
         cacontology-multi:LocalAgency ;
@@ -38,11 +41,14 @@
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_226> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T21:22:18.226244" ;
+    dcterms:created "2026-09-15T22:12:26.108535" ;
     dcterms:identifier "doj_safe_childhood_2026_226" ;
-    dcterms:modified "2026-09-14T21:22:18.226244" ;
+    dcterms:modified "2026-09-15T22:12:26.108535" ;
     dcterms:source <https://www.justice.gov/usao-wdwi/pr/former-sun-prairie-high-school-dean-students-sentenced-18-years-producing-child>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/sun-prairie>,
+        <https://caselinker.up.railway.app/resource/location/united-states>,
+        <https://caselinker.up.railway.app/resource/location/wisconsin> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_226/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_226/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_226/admission/1>,
@@ -56,7 +62,10 @@
         <https://caselinker.up.railway.app/resource/agency/sun-prairie-police-department>,
         <https://caselinker.up.railway.app/resource/agency/university-of-wisconsin-police-department>,
         <https://caselinker.up.railway.app/resource/agency/usao>,
-        <https://caselinker.up.railway.app/resource/agency/wisconsin-department-of-justice-division-of-criminal-investigation> .
+        <https://caselinker.up.railway.app/resource/agency/wisconsin-department-of-justice-division-of-criminal-investigation> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/sun-prairie>,
+        <https://caselinker.up.railway.app/resource/location/united-states>,
+        <https://caselinker.up.railway.app/resource/location/wisconsin> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_226/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -74,9 +83,7 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_226/charge/1> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_226/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_226/sentence/2>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_226/sentence/3> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_226/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_226/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -97,16 +104,8 @@
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_226/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_226/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "18 Years" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_226/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "25 years of supervised release" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_226/sentence/3> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$10,000" .
+    rdfs:label "[\"18 Years\", \"25 years of supervised release\", \"$10,000\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_226/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "wanted to “ruin their life" ;
@@ -122,6 +121,17 @@
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_226/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/sun-prairie> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Sun Prairie" ;
+    uco-core:name "Sun Prairie" .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/wisconsin> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_226/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

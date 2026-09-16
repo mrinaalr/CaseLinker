@@ -5,19 +5,23 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_026> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:15:19.841036" ;
+    dcterms:created "2026-09-15T20:27:39.236180" ;
     dcterms:identifier "south_florida_icac_2025_026" ;
-    dcterms:modified "2026-09-10T20:15:19.841036" ;
+    dcterms:modified "2026-09-15T20:27:39.236180" ;
     dcterms:source <https://www.nbcmiami.com/news/local/ex-tsa-explosive-specialist-arrested-on-child-porn-charges-again-miami-police/3664622/>,
         "SOUTH FLORIDA ICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/homestead>,
+        <https://caselinker.up.railway.app/resource/location/south-florida> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_026/phase/booked> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_026/phase/booked> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_026/event/possession>,
@@ -26,7 +30,9 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/department-of-homeland-security>,
         <https://caselinker.up.railway.app/resource/agency/hsi>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/miami-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/miami-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/homestead>,
+        <https://caselinker.up.railway.app/resource/location/south-florida> .
 
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_026/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -59,16 +65,29 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_026/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_026/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_026/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 58 .
 
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_026/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_026/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_026/phase/booked> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/homestead> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Homestead" ;
+    uco-core:name "Homestead" .
+
+<https://caselinker.up.railway.app/resource/location/south-florida> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_026/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

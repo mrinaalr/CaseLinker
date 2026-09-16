@@ -9,16 +9,21 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/scag_icac_2022_043> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:09:36.908721" ;
+    dcterms:created "2026-09-15T20:17:54.679009" ;
     dcterms:identifier "scag_icac_2022_043" ;
-    dcterms:modified "2026-09-10T20:09:36.908721" ;
+    dcterms:modified "2026-09-15T20:17:54.679009" ;
     dcterms:source <https://www.scag.gov/about-the-office/news/clarks-hill-man-arrested-on-child-sexual-abuse-material-and-related-charges/>,
         "SCAG ICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/clarks-hill>,
+        <https://caselinker.up.railway.app/resource/location/columbia>,
+        <https://caselinker.up.railway.app/resource/location/sc>,
+        <https://caselinker.up.railway.app/resource/location/south-carolina> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/scag_icac_2022_043/phase/convicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/scag_icac_2022_043/phase/convicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/scag_icac_2022_043/event/csam>,
@@ -29,7 +34,11 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/attorney-generals-office>,
         <https://caselinker.up.railway.app/resource/agency/edgefield-county-sheriffs-office>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/us-secret-service> .
+        <https://caselinker.up.railway.app/resource/agency/us-secret-service> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/clarks-hill>,
+        <https://caselinker.up.railway.app/resource/location/columbia>,
+        <https://caselinker.up.railway.app/resource/location/sc>,
+        <https://caselinker.up.railway.app/resource/location/south-carolina> .
 
 <https://caselinker.up.railway.app/resource/case/scag_icac_2022_043/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -72,8 +81,7 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/scag_icac_2022_043/charge/1>,
         <https://caselinker.up.railway.app/resource/case/scag_icac_2022_043/charge/2> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/scag_icac_2022_043/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/scag_icac_2022_043/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/scag_icac_2022_043/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/scag_icac_2022_043/legal-step/convicted> a cac-core:Event,
         cac-core:LegalEvent,
@@ -88,15 +96,25 @@
 
 <https://caselinker.up.railway.app/resource/case/scag_icac_2022_043/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "10 years" .
-
-<https://caselinker.up.railway.app/resource/case/scag_icac_2022_043/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "20 years" .
+    rdfs:label "[\"10 years\", \"20 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/scag_icac_2022_043/phase/convicted> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/clarks-hill> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Clarks Hill" ;
+    uco-core:name "Clarks Hill" .
+
+<https://caselinker.up.railway.app/resource/location/columbia> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/sc> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/south-carolina> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/scag_icac_2022_043/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

@@ -9,16 +9,20 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2025_021> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:23:13.253463" ;
+    dcterms:created "2026-09-15T20:39:17.390842" ;
     dcterms:identifier "vt_ag_2025_021" ;
-    dcterms:modified "2026-09-10T20:23:13.253463" ;
+    dcterms:modified "2026-09-15T20:39:17.390842" ;
     dcterms:source <https://ago.vermont.gov/blog/2025/11/05/white-river-junction-resident-sentenced-luring-child>,
         "VT AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/bethel>,
+        <https://caselinker.up.railway.app/resource/location/vermont>,
+        <https://caselinker.up.railway.app/resource/location/white-river-junction> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/vt_ag_2025_021/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/vt_ag_2025_021/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/vt_ag_2025_021/cybertip>,
@@ -32,7 +36,10 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/attorney-generals-office>,
         <https://caselinker.up.railway.app/resource/agency/hartford-police-department>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/bethel>,
+        <https://caselinker.up.railway.app/resource/location/vermont>,
+        <https://caselinker.up.railway.app/resource/location/white-river-junction> .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2025_021/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -91,9 +98,7 @@
         <https://caselinker.up.railway.app/resource/case/vt_ag_2025_021/charge/3>,
         <https://caselinker.up.railway.app/resource/case/vt_ag_2025_021/charge/4> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/vt_ag_2025_021/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/vt_ag_2025_021/sentence/2>,
-        <https://caselinker.up.railway.app/resource/case/vt_ag_2025_021/sentence/3> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/vt_ag_2025_021/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2025_021/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -109,22 +114,25 @@
 <https://caselinker.up.railway.app/resource/case/vt_ag_2025_021/person/victim/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2025_021/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "18 months" .
-
-<https://caselinker.up.railway.app/resource/case/vt_ag_2025_021/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:ProbationSentence ;
-    rdfs:label "probation" .
-
-<https://caselinker.up.railway.app/resource/case/vt_ag_2025_021/sentence/3> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "10 years" .
+    rdfs:label "[\"18 months\", \"probation\", \"10 years\"]" .
 
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2025_021/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/bethel> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/vermont> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/white-river-junction> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "White River Junction" ;
+    uco-core:name "White River Junction" .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2025_021/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

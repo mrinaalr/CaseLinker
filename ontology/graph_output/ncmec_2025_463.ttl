@@ -5,19 +5,24 @@
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_463> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:29:20.850130" ;
+    dcterms:created "2026-09-15T21:27:13.582441" ;
     dcterms:identifier "ncmec_2025_463" ;
-    dcterms:modified "2026-09-10T19:29:20.850130" ;
+    dcterms:modified "2026-09-15T21:27:13.582441" ;
     dcterms:source <https://www.capecod.com/cape-wide-news/39-year-old-marstons-mills-man-arrested-on-child-pornography-charges/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/marstons-mills>,
+        <https://caselinker.up.railway.app/resource/location/massachusetts>,
+        <https://caselinker.up.railway.app/resource/location/united-states> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_463/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_463/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_463/event/distribution>,
@@ -29,7 +34,10 @@
         <https://caselinker.up.railway.app/resource/agency/cape-islands-district-attorneys-office>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/secret-service-cyber-fraud-task-force>,
-        <https://caselinker.up.railway.app/resource/agency/us-secret-service> .
+        <https://caselinker.up.railway.app/resource/agency/us-secret-service> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/marstons-mills>,
+        <https://caselinker.up.railway.app/resource/location/massachusetts>,
+        <https://caselinker.up.railway.app/resource/location/united-states> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_463/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -43,7 +51,9 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2025_463/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_463/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/barnstable-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/barnstable-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Barnstable Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/cape-islands-district-attorneys-office> a cac-core:OrganizationLikeEntity,
         cacontology-multi:StateAgency ;
@@ -72,7 +82,8 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_463/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-09-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-09-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_463/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_463/operation> a cac-core:Event,
         cacontology-taskforce:TaskForceOperation .
@@ -81,12 +92,27 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_463/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_463/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_463/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_463/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-09-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/marstons-mills> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Marstons Mills" ;
+    uco-core:name "Marstons Mills" .
+
+<https://caselinker.up.railway.app/resource/location/massachusetts> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_463/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

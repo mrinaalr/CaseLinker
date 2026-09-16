@@ -5,19 +5,24 @@
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/la_ag_2026_036> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:54:25.011213" ;
+    dcterms:created "2026-09-15T19:57:48.569988" ;
     dcterms:identifier "la_ag_2026_036" ;
-    dcterms:modified "2026-09-10T19:54:25.011213" ;
+    dcterms:modified "2026-09-15T19:57:48.569988" ;
     dcterms:source <https://www.ag.state.la.us/Article/398>,
         "LA AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/louisiana>,
+        <https://caselinker.up.railway.app/resource/location/north-louisiana>,
+        <https://caselinker.up.railway.app/resource/location/red-river> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/la_ag_2026_036/phase/convicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/la_ag_2026_036/phase/convicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/la_ag_2026_036/event/hands-on>,
@@ -32,14 +37,16 @@
         <https://caselinker.up.railway.app/resource/agency/louisiana-department-of-public-safety-corrections>,
         <https://caselinker.up.railway.app/resource/agency/oak-grove-police-department>,
         <https://caselinker.up.railway.app/resource/agency/ruston-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/west-monroe-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/west-monroe-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/louisiana>,
+        <https://caselinker.up.railway.app/resource/location/north-louisiana>,
+        <https://caselinker.up.railway.app/resource/location/red-river> .
 
 <https://caselinker.up.railway.app/resource/case/la_ag_2026_036/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
     cacontology:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/la_ag_2026_036/event/hands-on>,
         <https://caselinker.up.railway.app/resource/case/la_ag_2026_036/event/possession> ;
-    cacontology:perpetratorRegisteredSexOffender true ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/la_ag_2026_036/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/la_ag_2026_036/role/victim/1> a cacontology:VictimRole,
@@ -522,7 +529,8 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/la_ag_2026_036/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/la_ag_2026_036/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/la_ag_2026_036/legal-step/convicted> a cac-core:Event,
         cac-core:LegalEvent,
@@ -663,12 +671,29 @@
 
 <https://caselinker.up.railway.app/resource/case/la_ag_2026_036/person/victim/9> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/la_ag_2026_036/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/la_ag_2026_036/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
 
 <https://caselinker.up.railway.app/resource/case/la_ag_2026_036/phase/convicted> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/louisiana> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/north-louisiana> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "North Louisiana" ;
+    uco-core:name "North Louisiana" .
+
+<https://caselinker.up.railway.app/resource/location/red-river> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Red River" ;
+    uco-core:name "Red River" .
 
 <https://caselinker.up.railway.app/resource/case/la_ag_2026_036/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

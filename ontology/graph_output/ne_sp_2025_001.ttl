@@ -6,43 +6,44 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ne_sp_2025_001> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:55:34.055744" ;
+    dcterms:created "2026-09-15T20:00:46.177215" ;
     dcterms:identifier "ne_sp_2025_001" ;
-    dcterms:modified "2026-09-10T19:55:34.055744" ;
+    dcterms:modified "2026-09-15T20:00:46.177215" ;
     dcterms:source <https://statepatrol.nebraska.gov/former-bellevue-officer-arrested-child-sexual-abuse-material-investigation>,
         "NE SP" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/bellevue> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ne_sp_2025_001/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ne_sp_2025_001/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ne_sp_2025_001/event/possession>,
-        <https://caselinker.up.railway.app/resource/case/ne_sp_2025_001/legal-proceeding>,
-        <https://caselinker.up.railway.app/resource/case/ne_sp_2025_001/offense-event/charge-2> ;
+        <https://caselinker.up.railway.app/resource/case/ne_sp_2025_001/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/bellevue-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/nebraska-attorney-generals-office> .
+        <https://caselinker.up.railway.app/resource/agency/nebraska-attorney-generals-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/bellevue> .
 
 <https://caselinker.up.railway.app/resource/case/ne_sp_2025_001/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
     cacontology:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ne_sp_2025_001/event/possession>,
-        <https://caselinker.up.railway.app/resource/case/ne_sp_2025_001/offense-event/charge-2> ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ne_sp_2025_001/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ne_sp_2025_001/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/ne_sp_2025_001/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
     cacontology:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ne_sp_2025_001/event/possession>,
-        <https://caselinker.up.railway.app/resource/case/ne_sp_2025_001/offense-event/charge-2> ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ne_sp_2025_001/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ne_sp_2025_001/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/bellevue-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/bellevue-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Bellevue Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/nebraska-attorney-generals-office> a cac-core:OrganizationLikeEntity,
         cacontology-multi:StateAgency ;
@@ -52,38 +53,35 @@
         cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "child sexual abuse material" .
 
-<https://caselinker.up.railway.app/resource/case/ne_sp_2025_001/charge/2> a cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "child exploitation" ;
-    rdfs:seeAlso <https://caselinker.up.railway.app/resource/case/ne_sp_2025_001/offense-event/charge-2> ;
-    ns1:chargeCluster "child_exploitation" ;
-    ns1:chargeOffenseEvent <https://caselinker.up.railway.app/resource/case/ne_sp_2025_001/offense-event/charge-2> .
-
 <https://caselinker.up.railway.app/resource/case/ne_sp_2025_001/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
 <https://caselinker.up.railway.app/resource/case/ne_sp_2025_001/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Sarpy County Jail" ;
-    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ne_sp_2025_001/charge/1>,
-        <https://caselinker.up.railway.app/resource/case/ne_sp_2025_001/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ne_sp_2025_001/charge/1> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ne_sp_2025_001/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ne_sp_2025_001/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 38 .
 
 <https://caselinker.up.railway.app/resource/case/ne_sp_2025_001/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ne_sp_2025_001/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ne_sp_2025_001/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/bellevue> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Bellevue" ;
+    uco-core:name "Bellevue" .
 
 <https://caselinker.up.railway.app/resource/case/ne_sp_2025_001/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
     cacontology:severityLevel 3 ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ne_sp_2025_001/facet/possession> .
-
-<https://caselinker.up.railway.app/resource/case/ne_sp_2025_001/offense-event/charge-2> a cacontology:ChildSexualAbuseEvent,
-        cac-core:Event,
-        uco-action:Crime ;
-    rdfs:label "Inferred offense from charge: child exploitation" .
 

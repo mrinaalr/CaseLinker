@@ -2,12 +2,14 @@
 @prefix cacontology: <https://cacontology.projectvic.org#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix cacontology-undercover: <https://cacontology.projectvic.org/undercover#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -22,15 +24,33 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_126/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_126/person/victim/1> .
 
+<https://caselinker.up.railway.app/resource/agency/ceos> a cacontology-multi:FederalAgency .
+
 <https://caselinker.up.railway.app/resource/agency/doj> a cacontology-multi:FederalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
+
+<https://caselinker.up.railway.app/resource/agency/iowa-division-of-criminal-investigation-cyber-crime-bureau> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Iowa Division of Criminal Investigation Cyber Crime Bureau" .
+
+<https://caselinker.up.railway.app/resource/agency/osage-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Osage Police Department" .
+
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_126> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T21:22:15.261065" ;
+    dcterms:created "2026-09-15T22:12:25.860451" ;
     dcterms:identifier "doj_safe_childhood_2026_126" ;
-    dcterms:modified "2026-09-14T21:22:15.261065" ;
+    dcterms:modified "2026-09-15T22:12:25.860451" ;
     dcterms:source <https://www.justice.gov/usao-ndia/pr/osage-man-pleads-guilty-receiving-child-pornography>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/cedar-rapids>,
+        <https://caselinker.up.railway.app/resource/location/iowa>,
+        <https://caselinker.up.railway.app/resource/location/osage>,
+        <https://caselinker.up.railway.app/resource/location/united-states> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_126/phase/convicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_126/phase/convicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_126/admission/1>,
@@ -38,7 +58,17 @@
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_126/event/project-safe-childhood>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_126/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_126/legal-step/convicted> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/doj> .
+    cacontology:investigationStatus "unknown" ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ceos>,
+        <https://caselinker.up.railway.app/resource/agency/doj>,
+        <https://caselinker.up.railway.app/resource/agency/icac>,
+        <https://caselinker.up.railway.app/resource/agency/iowa-division-of-criminal-investigation-cyber-crime-bureau>,
+        <https://caselinker.up.railway.app/resource/agency/osage-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/cedar-rapids>,
+        <https://caselinker.up.railway.app/resource/location/iowa>,
+        <https://caselinker.up.railway.app/resource/location/osage>,
+        <https://caselinker.up.railway.app/resource/location/united-states> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_126/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -60,11 +90,7 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_126/charge/1>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_126/charge/2> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_126/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_126/sentence/2>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_126/sentence/3>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_126/sentence/4>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_126/sentence/5> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_126/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_126/legal-step/convicted> a cac-core:Event,
         cac-core:LegalEvent,
@@ -84,32 +110,32 @@
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_126/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MandatoryMinimumSentencing ;
-    rdfs:label "mandatory minimum sentence" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_126/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "5 years" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_126/sentence/3> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "20 years" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_126/sentence/4> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$250,000" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_126/sentence/5> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "supervised release" .
+    rdfs:label "[\"mandatory minimum sentence\", \"5 years\", \"20 years\", \"$250,000\", \"supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_126/phase/convicted> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
+<https://caselinker.up.railway.app/resource/location/cedar-rapids> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Cedar Rapids" ;
+    uco-core:name "Cedar Rapids" .
+
+<https://caselinker.up.railway.app/resource/location/iowa> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/osage> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Osage" ;
+    uco-core:name "Osage" .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_126/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "had sent and received child pornography" ;
     dcterms:source <https://www.justice.gov/usao-ndia/pr/osage-man-pleads-guilty-receiving-child-pornography> ;
-    ns1:admissionContext "hild pornography in a cloudnbased account. In an interview with law enforcement officers, Powers admitted that he had sent and received c..." ;
+    ns1:admissionContext "hild pornography in a cloudIbased account. In an interview with law enforcement officers, Powers admitted that he had sent and received c..." ;
     ns1:admissionFrame "admitted_paraphrase" ;
     ns1:admissionTheme "harm_conduct" ;
     ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_126/role/offender/1> ;

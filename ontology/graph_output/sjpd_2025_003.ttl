@@ -10,16 +10,21 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/sjpd_2025_003> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:12:05.657806" ;
+    dcterms:created "2026-09-15T20:26:31.743998" ;
     dcterms:identifier "sjpd_2025_003" ;
-    dcterms:modified "2026-09-10T20:12:05.657806" ;
+    dcterms:modified "2026-09-15T20:26:31.743998" ;
     dcterms:source <https://www.sjpd.org/Home/Components/News/News/2113/>,
         "SJPD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/california>,
+        <https://caselinker.up.railway.app/resource/location/cupertino>,
+        <https://caselinker.up.railway.app/resource/location/san-josé>,
+        <https://caselinker.up.railway.app/resource/location/santa-clara-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/sjpd_2025_003/phase/booked> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/sjpd_2025_003/phase/booked> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/sjpd_2025_003/event/distribution>,
@@ -27,7 +32,11 @@
         <https://caselinker.up.railway.app/resource/case/sjpd_2025_003/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/sjpd_2025_003/offense-event/charge-2> ;
     cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/california>,
+        <https://caselinker.up.railway.app/resource/location/cupertino>,
+        <https://caselinker.up.railway.app/resource/location/san-josé>,
+        <https://caselinker.up.railway.app/resource/location/santa-clara-county> .
 
 <https://caselinker.up.railway.app/resource/case/sjpd_2025_003/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -66,16 +75,35 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/sjpd_2025_003/charge/1>,
         <https://caselinker.up.railway.app/resource/case/sjpd_2025_003/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/sjpd_2025_003/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/sjpd_2025_003/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 38 .
 
 <https://caselinker.up.railway.app/resource/case/sjpd_2025_003/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/sjpd_2025_003/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/sjpd_2025_003/phase/booked> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/california> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/cupertino> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Cupertino" ;
+    uco-core:name "Cupertino" .
+
+<https://caselinker.up.railway.app/resource/location/san-josé> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/santa-clara-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/sjpd_2025_003/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

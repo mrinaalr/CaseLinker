@@ -4,23 +4,32 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2018_004> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:53:47.210533" ;
+    dcterms:created "2026-09-15T19:52:04.521271" ;
     dcterms:identifier "ky_sp_2018_004" ;
-    dcterms:modified "2026-09-10T19:53:47.210533" ;
+    dcterms:modified "2026-09-15T19:52:04.521271" ;
     dcterms:source <https://www.kentuckystatepolice.ky.gov/news/hq-12-6-18-2/>,
         "KY SP" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/jackson>,
+        <https://caselinker.up.railway.app/resource/location/ky> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ky_sp_2018_004/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ky_sp_2018_004/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ky_sp_2018_004/event/distribution>,
         <https://caselinker.up.railway.app/resource/case/ky_sp_2018_004/event/online-only>,
+        <https://caselinker.up.railway.app/resource/case/ky_sp_2018_004/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/ky_sp_2018_004/operation> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/kentucky-state-police-department> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/kentucky-state-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/jackson>,
+        <https://caselinker.up.railway.app/resource/location/ky> .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2018_004/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -39,6 +48,12 @@
 <https://caselinker.up.railway.app/resource/case/ky_sp_2018_004/event/distribution> a cac-core:Event,
         cacontology-legal-outcomes:CSAM_Distribution .
 
+<https://caselinker.up.railway.app/resource/case/ky_sp_2018_004/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2018-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ky_sp_2018_004/sentence/1> .
+
 <https://caselinker.up.railway.app/resource/case/ky_sp_2018_004/operation> a cac-core:Event,
         cacontology-taskforce:UndercoverUnit .
 
@@ -46,9 +61,21 @@
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2018_004/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ky_sp_2018_004/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ky_sp_2018_004/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2018-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/jackson> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Jackson" ;
+    uco-core:name "Jackson" .
+
+<https://caselinker.up.railway.app/resource/location/ky> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2018_004/event/online-only> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event .

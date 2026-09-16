@@ -9,27 +9,38 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/usss_2021_018> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:21:38.743907" ;
+    dcterms:created "2026-09-15T20:36:46.108741" ;
     dcterms:identifier "usss_2021_018" ;
-    dcterms:modified "2026-09-10T20:21:38.743907" ;
+    dcterms:modified "2026-09-15T20:36:46.108741" ;
     dcterms:source <https://www.secretservice.gov/newsroom/releases/2021/03/west-springfield-man-sentenced-child-pornography-charges>,
         "USSS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/boston>,
+        <https://caselinker.up.railway.app/resource/location/springfield>,
+        <https://caselinker.up.railway.app/resource/location/united-states>,
+        <https://caselinker.up.railway.app/resource/location/west-springfield> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/usss_2021_018/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/usss_2021_018/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/usss_2021_018/event/distribution>,
         <https://caselinker.up.railway.app/resource/case/usss_2021_018/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/usss_2021_018/event/project-safe-childhood>,
         <https://caselinker.up.railway.app/resource/case/usss_2021_018/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/usss_2021_018/legal-step/sentenced>,
         <https://caselinker.up.railway.app/resource/case/usss_2021_018/offense-event/charge-2> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ceos>,
         <https://caselinker.up.railway.app/resource/agency/south-hadley-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/us-secret-service> .
+        <https://caselinker.up.railway.app/resource/agency/us-secret-service>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/boston>,
+        <https://caselinker.up.railway.app/resource/location/springfield>,
+        <https://caselinker.up.railway.app/resource/location/united-states>,
+        <https://caselinker.up.railway.app/resource/location/west-springfield> .
 
 <https://caselinker.up.railway.app/resource/case/usss_2021_018/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -53,6 +64,8 @@
 
 <https://caselinker.up.railway.app/resource/agency/us-secret-service> a cacontology-multi:FederalAgency .
 
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
+
 <https://caselinker.up.railway.app/resource/case/usss_2021_018/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "possession of child pornography" ;
@@ -66,6 +79,9 @@
 
 <https://caselinker.up.railway.app/resource/case/usss_2021_018/event/distribution> a cac-core:Event,
         cacontology-legal-outcomes:CSAM_Distribution .
+
+<https://caselinker.up.railway.app/resource/case/usss_2021_018/event/project-safe-childhood> a cac-core:Event,
+        cacontology-multi:ProjectSafeChildhoodOperation .
 
 <https://caselinker.up.railway.app/resource/case/usss_2021_018/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
@@ -90,11 +106,25 @@
 
 <https://caselinker.up.railway.app/resource/case/usss_2021_018/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "10 years of supervised release" .
+    rdfs:label "[\"10 years of supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/case/usss_2021_018/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/boston> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/springfield> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/west-springfield> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "West Springfield" ;
+    uco-core:name "West Springfield" .
 
 <https://caselinker.up.railway.app/resource/case/usss_2021_018/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

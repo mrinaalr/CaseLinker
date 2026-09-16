@@ -11,6 +11,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -46,11 +47,16 @@
 
 <https://caselinker.up.railway.app/resource/case/nj_ag_2016_009> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:56:29.913306" ;
+    dcterms:created "2026-09-15T20:03:12.154987" ;
     dcterms:identifier "nj_ag_2016_009" ;
-    dcterms:modified "2026-09-10T19:56:29.913306" ;
+    dcterms:modified "2026-09-15T20:03:12.154987" ;
     dcterms:source <https://www.njoag.gov/egg-harbor-man-sentenced-to-seven-years-in-prison-for-distributing-thousands-of-images-and-videos-of-child-pornography-via-email-arrested-in-investigation-by-ice-homeland-security-investigations>,
         "NJ AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/atlantic-county>,
+        <https://caselinker.up.railway.app/resource/location/egg-harbor-township>,
+        <https://caselinker.up.railway.app/resource/location/new-jerseys>,
+        <https://caselinker.up.railway.app/resource/location/newark>,
+        <https://caselinker.up.railway.app/resource/location/nj> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/nj_ag_2016_009/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/nj_ag_2016_009/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/nj_ag_2016_009/admission/1>,
@@ -67,7 +73,12 @@
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/ice>,
         <https://caselinker.up.railway.app/resource/agency/new-jersey-division-of-criminal-justice-financial-computer-crimes-bureau>,
-        <https://caselinker.up.railway.app/resource/agency/new-jersey-state-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/new-jersey-state-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/atlantic-county>,
+        <https://caselinker.up.railway.app/resource/location/egg-harbor-township>,
+        <https://caselinker.up.railway.app/resource/location/new-jerseys>,
+        <https://caselinker.up.railway.app/resource/location/newark>,
+        <https://caselinker.up.railway.app/resource/location/nj> .
 
 <https://caselinker.up.railway.app/resource/case/nj_ag_2016_009/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -89,8 +100,7 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/nj_ag_2016_009/charge/1>,
         <https://caselinker.up.railway.app/resource/case/nj_ag_2016_009/charge/2> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2016-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/nj_ag_2016_009/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/nj_ag_2016_009/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/nj_ag_2016_009/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/nj_ag_2016_009/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -115,16 +125,29 @@
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/nj_ag_2016_009/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/nj_ag_2016_009/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "10 years" .
-
-<https://caselinker.up.railway.app/resource/case/nj_ag_2016_009/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MandatoryMinimumSentencing ;
-    rdfs:label "mandatory minimum" .
+    rdfs:label "[\"10 years\", \"mandatory minimum\"]" .
 
 <https://caselinker.up.railway.app/resource/case/nj_ag_2016_009/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2016-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/atlantic-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/egg-harbor-township> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/new-jerseys> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "New Jersey’s" ;
+    uco-core:name "New Jersey’s" .
+
+<https://caselinker.up.railway.app/resource/location/newark> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/nj> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/nj_ag_2016_009/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

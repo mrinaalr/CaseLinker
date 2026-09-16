@@ -5,19 +5,24 @@
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_249> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:10:57.810958" ;
+    dcterms:created "2026-09-15T20:55:00.968472" ;
     dcterms:identifier "ncmec_2023_249" ;
-    dcterms:modified "2026-09-10T19:10:57.810958" ;
+    dcterms:modified "2026-09-15T20:55:00.968472" ;
     dcterms:source <https://krcrtv.com/news/local/massive-multi-agency-sting-nets-23-arrests-including-two-anderson-locals-in-child-predator-crackdown>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/anderson>,
+        <https://caselinker.up.railway.app/resource/location/northern-california>,
+        <https://caselinker.up.railway.app/resource/location/northstate> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_249/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_249/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_249/event/distribution>,
@@ -27,7 +32,10 @@
     cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/ncmec_2023_249/tech/cybertipline> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/anderson-police-department>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/shasta-county-sheriffs-office> .
+        <https://caselinker.up.railway.app/resource/agency/shasta-county-sheriffs-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/anderson>,
+        <https://caselinker.up.railway.app/resource/location/northern-california>,
+        <https://caselinker.up.railway.app/resource/location/northstate> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_249/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -41,7 +49,9 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_249/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_249/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/anderson-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/anderson-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Anderson Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
@@ -62,11 +72,16 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_249/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_249/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_249/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_249/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_249/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_249/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -74,6 +89,21 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_249/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/anderson> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Anderson" ;
+    uco-core:name "Anderson" .
+
+<https://caselinker.up.railway.app/resource/location/northern-california> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Northern California" ;
+    uco-core:name "Northern California" .
+
+<https://caselinker.up.railway.app/resource/location/northstate> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Northstate" ;
+    uco-core:name "Northstate" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_249/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

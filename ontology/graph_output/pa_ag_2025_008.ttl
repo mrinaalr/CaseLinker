@@ -1,28 +1,37 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/pa_ag_2025_008> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:04:04.808441" ;
+    dcterms:created "2026-09-15T20:12:06.752222" ;
     dcterms:identifier "pa_ag_2025_008" ;
-    dcterms:modified "2026-09-10T20:04:04.808441" ;
+    dcterms:modified "2026-09-15T20:12:06.752222" ;
     dcterms:source <https://www.attorneygeneral.gov/taking-action/york-county-sex-offender-on-probation-caught-possessing-hundreds-of-child-sexual-abuse-material-files/>,
         "PA AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/dover>,
+        <https://caselinker.up.railway.app/resource/location/harrisburg>,
+        <https://caselinker.up.railway.app/resource/location/york-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/pa_ag_2025_008/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/pa_ag_2025_008/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/pa_ag_2025_008/event/possession>,
         <https://caselinker.up.railway.app/resource/case/pa_ag_2025_008/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/office-of-the-attorney-general> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/office-of-the-attorney-general> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/dover>,
+        <https://caselinker.up.railway.app/resource/location/harrisburg>,
+        <https://caselinker.up.railway.app/resource/location/york-county> .
 
 <https://caselinker.up.railway.app/resource/case/pa_ag_2025_008/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -51,16 +60,19 @@
     cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/pa_ag_2025_008/sentence/1> .
 
-<https://caselinker.up.railway.app/resource/case/pa_ag_2025_008/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/pa_ag_2025_008/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 27 .
 
 <https://caselinker.up.railway.app/resource/case/pa_ag_2025_008/person/victim/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/pa_ag_2025_008/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:ProbationSentence ;
-    rdfs:label "Probation" .
+    rdfs:label "[\"Probation\"]" .
 
-<https://caselinker.up.railway.app/resource/platform/bittorrent> a cacontology-platforms:FileHostingService ;
-    rdfs:label "BitTorrent" .
+<https://caselinker.up.railway.app/resource/platform/bittorrent> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:FileHostingService ;
+    rdfs:label "BitTorrent" ;
+    cacontology-platforms:platformType "p2p" .
 
 <https://caselinker.up.railway.app/resource/platform/steam> a cac-core:DigitalSystemEntity,
         cacontology-platforms:GamePlatform ;
@@ -69,6 +81,19 @@
 <https://caselinker.up.railway.app/resource/case/pa_ag_2025_008/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/dover> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Dover" ;
+    uco-core:name "Dover" .
+
+<https://caselinker.up.railway.app/resource/location/harrisburg> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/york-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "York County" ;
+    uco-core:name "York County" .
 
 <https://caselinker.up.railway.app/resource/case/pa_ag_2025_008/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

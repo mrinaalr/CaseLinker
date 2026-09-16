@@ -5,18 +5,23 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_012> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:03:27.034987" ;
+    dcterms:created "2026-09-15T20:10:06.704402" ;
     dcterms:identifier "ohio_ag_2013_012" ;
-    dcterms:modified "2026-09-10T20:03:27.034987" ;
+    dcterms:modified "2026-09-15T20:10:06.704402" ;
     dcterms:source <https://www.ohioattorneygeneral.gov/Media/News-Releases/March-2013/Attorney-General-DeWine-s-Crimes-Against-Children>,
         "OHIO AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/mount-healthy>,
+        <https://caselinker.up.railway.app/resource/location/ohio> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_012/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_012/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_012/event/trust-violation>,
@@ -24,7 +29,9 @@
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/attorney-generals-bureau-of-criminal-investigation>,
         <https://caselinker.up.railway.app/resource/agency/attorney-generals-office>,
-        <https://caselinker.up.railway.app/resource/agency/mount-healthy-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/mount-healthy-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/mount-healthy>,
+        <https://caselinker.up.railway.app/resource/location/ohio> .
 
 <https://caselinker.up.railway.app/resource/agency/attorney-generals-bureau-of-criminal-investigation> a cacontology-multi:StateAgency .
 
@@ -41,8 +48,8 @@
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_012/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Hamilton County Jail" ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_012/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_012/person/offender/1> a uco-identity:Person .
 
@@ -65,7 +72,19 @@
     cacontology:hasRoleBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_012/person/victim/1> .
 
+<https://caselinker.up.railway.app/resource/case/ohio_ag_2013_012/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_012/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/mount-healthy> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Mount Healthy" ;
+    uco-core:name "Mount Healthy" .
+
+<https://caselinker.up.railway.app/resource/location/ohio> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 

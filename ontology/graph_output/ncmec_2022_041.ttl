@@ -5,19 +5,27 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_041> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:05:05.642097" ;
+    dcterms:created "2026-09-15T20:45:06.022605" ;
     dcterms:identifier "ncmec_2022_041" ;
-    dcterms:modified "2026-09-10T19:05:05.642097" ;
+    dcterms:modified "2026-09-15T20:45:06.022605" ;
     dcterms:source <https://www.sgvcitywatch.com/west-covina/local-church-employee-arrested-accused-of-possessing-child-porn>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/la-mirada>,
+        <https://caselinker.up.railway.app/resource/location/los-angeles-county>,
+        <https://caselinker.up.railway.app/resource/location/san-dimas>,
+        <https://caselinker.up.railway.app/resource/location/the-city-of-costa-mesa>,
+        <https://caselinker.up.railway.app/resource/location/united-states>,
+        <https://caselinker.up.railway.app/resource/location/west-covina> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_041/phase/booked> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_041/phase/booked> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2022_041/event/possession>,
@@ -26,8 +34,13 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/district-attorneys-office>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/marshal-service-pacific-southwest-regiona-fugitive-task-force>,
-        <https://caselinker.up.railway.app/resource/agency/west-covina---west-covina-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/west-covina-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/west-covina-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/la-mirada>,
+        <https://caselinker.up.railway.app/resource/location/los-angeles-county>,
+        <https://caselinker.up.railway.app/resource/location/san-dimas>,
+        <https://caselinker.up.railway.app/resource/location/the-city-of-costa-mesa>,
+        <https://caselinker.up.railway.app/resource/location/united-states>,
+        <https://caselinker.up.railway.app/resource/location/west-covina> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_041/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -49,10 +62,6 @@
         cacontology-multi:LocalAgency ;
     rdfs:label "Marshal Service Pacific Southwest Regiona Fugitive Task Force" .
 
-<https://caselinker.up.railway.app/resource/agency/west-covina---west-covina-police-department> a cac-core:OrganizationLikeEntity,
-        cacontology-multi:LocalAgency ;
-    rdfs:label "WEST COVINA - West Covina Police Department" .
-
 <https://caselinker.up.railway.app/resource/agency/west-covina-police-department> a cac-core:OrganizationLikeEntity,
         cacontology-multi:LocalAgency ;
     rdfs:label "West Covina Police Department" .
@@ -67,16 +76,51 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2022_041/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2022_041/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_041/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 33 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_041/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_041/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_041/phase/booked> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/la-mirada> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "la Mirada" ;
+    uco-core:name "la Mirada" .
+
+<https://caselinker.up.railway.app/resource/location/los-angeles-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Los Angeles County" ;
+    uco-core:name "Los Angeles County" .
+
+<https://caselinker.up.railway.app/resource/location/san-dimas> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "San Dimas" ;
+    uco-core:name "San Dimas" .
+
+<https://caselinker.up.railway.app/resource/location/the-city-of-costa-mesa> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "the City of Costa Mesa" ;
+    uco-core:name "the City of Costa Mesa" .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "United States" ;
+    uco-core:name "United States" .
+
+<https://caselinker.up.railway.app/resource/location/west-covina> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "West Covina" ;
+    uco-core:name "West Covina" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_041/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

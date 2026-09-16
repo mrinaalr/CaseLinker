@@ -1,5 +1,6 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
@@ -8,16 +9,21 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2014_010> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:16:35.862308" ;
+    dcterms:created "2026-09-15T20:31:48.056142" ;
     dcterms:identifier "tbi_icac_2014_010" ;
-    dcterms:modified "2026-09-10T20:16:35.862308" ;
+    dcterms:modified "2026-09-15T20:31:48.056142" ;
     dcterms:source <https://tbinewsroom.com/2014/09/25/williamson-county-man-arrested-on-child-porn-charges/>,
         "TBI ICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/franklin>,
+        <https://caselinker.up.railway.app/resource/location/nashville>,
+        <https://caselinker.up.railway.app/resource/location/tennessee>,
+        <https://caselinker.up.railway.app/resource/location/williamson-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/tbi_icac_2014_010/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/tbi_icac_2014_010/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/tbi_icac_2014_010/cybertip>,
@@ -25,7 +31,11 @@
         <https://caselinker.up.railway.app/resource/case/tbi_icac_2014_010/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/tennessee-bureau-of-investigation> .
+        <https://caselinker.up.railway.app/resource/agency/tennessee-bureau-of-investigation> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/franklin>,
+        <https://caselinker.up.railway.app/resource/location/nashville>,
+        <https://caselinker.up.railway.app/resource/location/tennessee>,
+        <https://caselinker.up.railway.app/resource/location/williamson-county> .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2014_010/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -65,17 +75,37 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/tbi_icac_2014_010/charge/1>,
         <https://caselinker.up.railway.app/resource/case/tbi_icac_2014_010/charge/2>,
         <https://caselinker.up.railway.app/resource/case/tbi_icac_2014_010/charge/3> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2014-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2014-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/tbi_icac_2014_010/sentence/1> .
 
-<https://caselinker.up.railway.app/resource/case/tbi_icac_2014_010/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/tbi_icac_2014_010/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 37 .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2014_010/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/tbi_icac_2014_010/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:MonetaryPenalty ;
+    rdfs:label "[\"$250,000\"]" .
 
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2014_010/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2014-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/franklin> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Franklin" ;
+    uco-core:name "Franklin" .
+
+<https://caselinker.up.railway.app/resource/location/nashville> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/tennessee> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/williamson-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2014_010/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

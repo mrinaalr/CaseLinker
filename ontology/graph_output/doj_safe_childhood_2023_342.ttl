@@ -12,16 +12,22 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_342> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T21:22:59.053335" ;
+    dcterms:created "2026-09-15T22:12:28.221093" ;
     dcterms:identifier "doj_safe_childhood_2023_342" ;
-    dcterms:modified "2026-09-14T21:22:59.053335" ;
+    dcterms:modified "2026-09-15T22:12:28.221093" ;
     dcterms:source <https://www.justice.gov/archives/opa/pr/man-sentenced-production-child-pornography-and-extortion>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/canada>,
+        <https://caselinker.up.railway.app/resource/location/ontario>,
+        <https://caselinker.up.railway.app/resource/location/the-district-of-maryland>,
+        <https://caselinker.up.railway.app/resource/location/united-states>,
+        <https://caselinker.up.railway.app/resource/location/vaughan> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_342/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_342/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_342/event/csam>,
@@ -36,7 +42,12 @@
         <https://caselinker.up.railway.app/resource/agency/fbi>,
         <https://caselinker.up.railway.app/resource/agency/justice-departments-criminal-division>,
         <https://caselinker.up.railway.app/resource/agency/justice-departments-office-of-international-affairs>,
-        <https://caselinker.up.railway.app/resource/agency/toronto-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/toronto-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/canada>,
+        <https://caselinker.up.railway.app/resource/location/ontario>,
+        <https://caselinker.up.railway.app/resource/location/the-district-of-maryland>,
+        <https://caselinker.up.railway.app/resource/location/united-states>,
+        <https://caselinker.up.railway.app/resource/location/vaughan> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_342/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -127,11 +138,32 @@
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_342/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "32 years" .
+    rdfs:label "[\"32 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_342/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/canada> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/ontario> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Ontario" ;
+    uco-core:name "Ontario" .
+
+<https://caselinker.up.railway.app/resource/location/the-district-of-maryland> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "the District of Maryland" ;
+    uco-core:name "the District of Maryland" .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/vaughan> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Vaughan" ;
+    uco-core:name "Vaughan" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_342/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;
@@ -159,8 +191,11 @@
 <https://caselinker.up.railway.app/resource/platform/chat> a cacontology-platforms:AnonymousChatPlatform ;
     rdfs:label "chat" .
 
-<https://caselinker.up.railway.app/resource/platform/omegle> a cacontology-platforms:AnonymousChatPlatform ;
-    rdfs:label "Omegle" .
+<https://caselinker.up.railway.app/resource/platform/omegle> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:AnonymousChatPlatform ;
+    rdfs:label "Omegle" ;
+    cacontology-platforms:guestAccountsAllowed "true" ;
+    cacontology-platforms:identityVerificationRequired "false" .
 
 <https://caselinker.up.railway.app/resource/platform/webcam-platform> a cacontology-platforms:VideoStreamingPlatform ;
     rdfs:label "Webcam platform" .

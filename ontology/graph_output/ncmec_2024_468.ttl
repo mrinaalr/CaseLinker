@@ -3,45 +3,108 @@
 @prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
+@prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
+@prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_468> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:18:15.389086" ;
+    dcterms:created "2026-09-15T21:08:10.596159" ;
     dcterms:identifier "ncmec_2024_468" ;
-    dcterms:modified "2026-09-10T19:18:15.389086" ;
-    dcterms:source <https://www.wlwt.com/article/kentucky-man-arrested-distribution-child-sex-abuse-material/60731629#:~:text=OWEN%20COUNTY%2C%20Ky.%20%E2%80%94&text=over%20the%20Internet.-,Alex%20Nathan%20Dietz%2C%2026%2C%20is%20charged%20with%20ten%20counts%20of,in%20prison%20for%20each%20count>,
+    dcterms:modified "2026-09-15T21:08:10.596159" ;
+    dcterms:source <https://fox56news.com/news/kentucky/24-year-old-owensboro-man-accused-of-distributing-child-porn-over-kik-app/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/ky>,
+        <https://caselinker.up.railway.app/resource/location/owensboro> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_468/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_468/phase/charged> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_468/event/distribution> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/kentucky-state-police-department> .
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_468/cybertip>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_468/event/distribution>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_468/event/online-only>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_468/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_468/legal-proceeding>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_468/operation> ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ncmec>,
+        <https://caselinker.up.railway.app/resource/agency/owensboro-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/ky>,
+        <https://caselinker.up.railway.app/resource/location/owensboro> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_468/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2024-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:hasRoleBeginPoint "2024-12-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_468/event/online-only>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_468/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_468/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_468/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2024-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:hasRoleBeginPoint "2024-12-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_468/event/online-only>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_468/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_468/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/kentucky-state-police-department> a cacontology-multi:StateAgency .
+<https://caselinker.up.railway.app/resource/agency/owensboro-police-department> a cacontology-multi:LocalAgency .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_468/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
+        cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "child porn" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_468/cybertip> a cacontology-us-ncmec:NCMECCybertipReport ;
+    cacontology-us-ncmec:supportedBy <https://caselinker.up.railway.app/resource/agency/ncmec> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_468/event/distribution> a cac-core:Event,
-        cacontology-legal-outcomes:CSAM_Distribution ;
-    cacontology:severityLevel 2 .
+        cacontology-legal-outcomes:CSAM_Distribution .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_468/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_468/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2024_468/charge/1> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-12-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2024_468/sentence/1> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_468/operation> a cac-core:Event,
+        cacontology-taskforce:TaskForceOperation .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_468/person/offender/1> a uco-identity:Person ;
-    cacontology-detection:ageEstimate 26 .
+    cacontology-detection:ageEstimate 24 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_468/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_468/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
+<https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_468/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
-    cacontology:hasPhaseBeginPoint "2024-05-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology:hasPhaseBeginPoint "2024-12-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/ky> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/owensboro> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/platform/kik> a cacontology-platforms:MessagingService ;
+    rdfs:label "Kik" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_468/event/online-only> a cacontology:ChildSexualAbuseEvent,
+        cac-core:Event ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/kik> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_468/event/possession> a cacontology:CSAMIncident,
+        cac-core:Event ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/kik> ;
+    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2024_468/facet/possession> .
 

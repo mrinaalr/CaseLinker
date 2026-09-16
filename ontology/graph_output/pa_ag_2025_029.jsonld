@@ -2,10 +2,16 @@
   {
     "@graph": [
       {
-        "@id": "https://caselinker.up.railway.app/resource/case/pa_ag_2025_029/role/victim/1",
+        "@id": "https://caselinker.up.railway.app/resource/agency/office-of-the-attorney-general",
         "@type": [
-          "https://cacontology.projectvic.org#VictimRole",
-          "https://ontology.unifiedcyberontology.org/uco/role/VictimRole"
+          "https://cacontology.projectvic.org/multi-jurisdiction#StateAgency"
+        ]
+      },
+      {
+        "@id": "https://caselinker.up.railway.app/resource/case/pa_ag_2025_029/role/offender/1",
+        "@type": [
+          "https://cacontology.projectvic.org#OffenderRole",
+          "https://ontology.unifiedcyberontology.org/uco/role/OffenderRole"
         ],
         "https://cacontology.projectvic.org#hasRoleBeginPoint": [
           {
@@ -15,19 +21,82 @@
         ],
         "https://cacontology.projectvic.org/core#hasRole": [
           {
-            "@id": "https://caselinker.up.railway.app/resource/case/pa_ag_2025_029/person/victim/1"
+            "@id": "https://caselinker.up.railway.app/resource/case/pa_ag_2025_029/person/offender/1"
           }
         ]
       },
       {
-        "@id": "https://caselinker.up.railway.app/resource/case/pa_ag_2025_029/person/offender/1",
+        "@id": "https://caselinker.up.railway.app/resource/location/pennsylvania",
         "@type": [
-          "https://ontology.unifiedcyberontology.org/uco/identity/Person"
+          "https://ontology.unifiedcyberontology.org/uco/location/Location",
+          "https://cacontology.projectvic.org/core#PlaceLikeEntity"
+        ]
+      },
+      {
+        "@id": "https://caselinker.up.railway.app/resource/case/pa_ag_2025_029/relationship/coach",
+        "@type": [
+          "https://cacontology.projectvic.org/custodial#Coach",
+          "https://cacontology.projectvic.org/custodial#CustodialRelationship"
         ],
-        "https://cacontology.projectvic.org/detection#ageEstimate": [
+        "https://cacontology.projectvic.org/custodial#involvesChild": [
           {
-            "@type": "http://www.w3.org/2001/XMLSchema#integer",
-            "@value": 59
+            "@id": "https://caselinker.up.railway.app/resource/case/pa_ag_2025_029/role/victim/1"
+          }
+        ],
+        "https://cacontology.projectvic.org/custodial#involvesCustodian": [
+          {
+            "@id": "https://caselinker.up.railway.app/resource/case/pa_ag_2025_029/role/offender/1"
+          }
+        ],
+        "https://cacontology.projectvic.org/custodial#relationshipType": [
+          {
+            "@value": "coach"
+          }
+        ]
+      },
+      {
+        "@id": "https://caselinker.up.railway.app/resource/case/pa_ag_2025_029/event/trust-violation",
+        "@type": [
+          "https://cacontology.projectvic.org/custodial#TrustViolation",
+          "https://cacontology.projectvic.org/custodial#AuthorityAbuse"
+        ],
+        "https://cacontology.projectvic.org/custodial#violatesRelationship": [
+          {
+            "@id": "https://caselinker.up.railway.app/resource/case/pa_ag_2025_029/relationship/coach"
+          }
+        ]
+      },
+      {
+        "@id": "https://caselinker.up.railway.app/resource/location/strawberry-square",
+        "@type": [
+          "https://ontology.unifiedcyberontology.org/uco/location/Location",
+          "https://cacontology.projectvic.org/core#PlaceLikeEntity"
+        ]
+      },
+      {
+        "@id": "https://caselinker.up.railway.app/resource/case/pa_ag_2025_029/legal-step/sentenced",
+        "@type": [
+          "https://cacontology.projectvic.org/legal-outcomes#SentencingHearing",
+          "https://cacontology.projectvic.org/legal-outcomes#LegalProceeding",
+          "https://cacontology.projectvic.org/core#LegalEvent",
+          "https://cacontology.projectvic.org/core#Event"
+        ],
+        "https://cacontology.projectvic.org/legal-outcomes#hasProceedingBeginPoint": [
+          {
+            "@type": "http://www.w3.org/2001/XMLSchema#dateTimeStamp",
+            "@value": "2025-01-01T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "@id": "https://caselinker.up.railway.app/resource/case/pa_ag_2025_029/sentence/1",
+        "@type": [
+          "https://cacontology.projectvic.org/legal-outcomes#PrisonSentence",
+          "https://cacontology.projectvic.org/legal-outcomes#CriminalSentence"
+        ],
+        "http://www.w3.org/2000/01/rdf-schema#label": [
+          {
+            "@value": "[\"23 months\"]"
           }
         ]
       },
@@ -39,7 +108,7 @@
         ],
         "http://purl.org/dc/terms/created": [
           {
-            "@value": "2026-09-10T20:04:25.276659"
+            "@value": "2026-09-15T20:12:06.795855"
           }
         ],
         "http://purl.org/dc/terms/identifier": [
@@ -49,7 +118,7 @@
         ],
         "http://purl.org/dc/terms/modified": [
           {
-            "@value": "2026-09-10T20:04:25.276659"
+            "@value": "2026-09-15T20:12:06.795855"
           }
         ],
         "http://purl.org/dc/terms/source": [
@@ -58,6 +127,17 @@
           },
           {
             "@id": "https://www.attorneygeneral.gov/taking-action/bellwood-antis-school-district-head-wrestling-coach-jailed-for-his-role-in-sexual-abuse-investigation/"
+          }
+        ],
+        "http://purl.org/dc/terms/spatial": [
+          {
+            "@id": "https://caselinker.up.railway.app/resource/location/harrisburg"
+          },
+          {
+            "@id": "https://caselinker.up.railway.app/resource/location/pennsylvania"
+          },
+          {
+            "@id": "https://caselinker.up.railway.app/resource/location/strawberry-square"
           }
         ],
         "https://cacontology.projectvic.org#currentPhase": [
@@ -90,46 +170,17 @@
           {
             "@id": "https://caselinker.up.railway.app/resource/agency/office-of-the-attorney-general"
           }
-        ]
-      },
-      {
-        "@id": "https://caselinker.up.railway.app/resource/case/pa_ag_2025_029/event/trust-violation",
-        "@type": [
-          "https://cacontology.projectvic.org/custodial#TrustViolation",
-          "https://cacontology.projectvic.org/custodial#AuthorityAbuse"
         ],
-        "https://cacontology.projectvic.org/custodial#violatesRelationship": [
+        "https://caselinker.up.railway.app/resource/vocab/mentionsLocation": [
           {
-            "@id": "https://caselinker.up.railway.app/resource/case/pa_ag_2025_029/relationship/coach"
-          }
-        ]
-      },
-      {
-        "@id": "https://caselinker.up.railway.app/resource/case/pa_ag_2025_029/relationship/coach",
-        "@type": [
-          "https://cacontology.projectvic.org/custodial#Coach",
-          "https://cacontology.projectvic.org/custodial#CustodialRelationship"
-        ],
-        "https://cacontology.projectvic.org/custodial#involvesChild": [
+            "@id": "https://caselinker.up.railway.app/resource/location/harrisburg"
+          },
           {
-            "@id": "https://caselinker.up.railway.app/resource/case/pa_ag_2025_029/role/victim/1"
-          }
-        ],
-        "https://cacontology.projectvic.org/custodial#involvesCustodian": [
+            "@id": "https://caselinker.up.railway.app/resource/location/pennsylvania"
+          },
           {
-            "@id": "https://caselinker.up.railway.app/resource/case/pa_ag_2025_029/role/offender/1"
+            "@id": "https://caselinker.up.railway.app/resource/location/strawberry-square"
           }
-        ],
-        "https://cacontology.projectvic.org/custodial#relationshipType": [
-          {
-            "@value": "coach"
-          }
-        ]
-      },
-      {
-        "@id": "https://caselinker.up.railway.app/resource/agency/office-of-the-attorney-general",
-        "@type": [
-          "https://cacontology.projectvic.org/multi-jurisdiction#StateAgency"
         ]
       },
       {
@@ -146,21 +197,10 @@
         ]
       },
       {
-        "@id": "https://caselinker.up.railway.app/resource/case/pa_ag_2025_029/role/offender/1",
+        "@id": "https://caselinker.up.railway.app/resource/location/harrisburg",
         "@type": [
-          "https://cacontology.projectvic.org#OffenderRole",
-          "https://ontology.unifiedcyberontology.org/uco/role/OffenderRole"
-        ],
-        "https://cacontology.projectvic.org#hasRoleBeginPoint": [
-          {
-            "@type": "http://www.w3.org/2001/XMLSchema#dateTimeStamp",
-            "@value": "2025-01-01T00:00:00Z"
-          }
-        ],
-        "https://cacontology.projectvic.org/core#hasRole": [
-          {
-            "@id": "https://caselinker.up.railway.app/resource/case/pa_ag_2025_029/person/offender/1"
-          }
+          "https://ontology.unifiedcyberontology.org/uco/location/Location",
+          "https://cacontology.projectvic.org/core#PlaceLikeEntity"
         ]
       },
       {
@@ -189,29 +229,32 @@
         ]
       },
       {
-        "@id": "https://caselinker.up.railway.app/resource/case/pa_ag_2025_029/sentence/1",
+        "@id": "https://caselinker.up.railway.app/resource/case/pa_ag_2025_029/role/victim/1",
         "@type": [
-          "https://cacontology.projectvic.org/legal-outcomes#PrisonSentence",
-          "https://cacontology.projectvic.org/legal-outcomes#CriminalSentence"
+          "https://cacontology.projectvic.org#VictimRole",
+          "https://ontology.unifiedcyberontology.org/uco/role/VictimRole"
         ],
-        "http://www.w3.org/2000/01/rdf-schema#label": [
+        "https://cacontology.projectvic.org#hasRoleBeginPoint": [
           {
-            "@value": "23 months"
+            "@type": "http://www.w3.org/2001/XMLSchema#dateTimeStamp",
+            "@value": "2025-01-01T00:00:00Z"
+          }
+        ],
+        "https://cacontology.projectvic.org/core#hasRole": [
+          {
+            "@id": "https://caselinker.up.railway.app/resource/case/pa_ag_2025_029/person/victim/1"
           }
         ]
       },
       {
-        "@id": "https://caselinker.up.railway.app/resource/case/pa_ag_2025_029/legal-step/sentenced",
+        "@id": "https://caselinker.up.railway.app/resource/case/pa_ag_2025_029/person/offender/1",
         "@type": [
-          "https://cacontology.projectvic.org/legal-outcomes#SentencingHearing",
-          "https://cacontology.projectvic.org/legal-outcomes#LegalProceeding",
-          "https://cacontology.projectvic.org/core#LegalEvent",
-          "https://cacontology.projectvic.org/core#Event"
+          "https://ontology.unifiedcyberontology.org/uco/identity/Person"
         ],
-        "https://cacontology.projectvic.org/legal-outcomes#hasProceedingBeginPoint": [
+        "https://cacontology.projectvic.org/detection#ageEstimate": [
           {
-            "@type": "http://www.w3.org/2001/XMLSchema#dateTimeStamp",
-            "@value": "2025-01-01T00:00:00Z"
+            "@type": "http://www.w3.org/2001/XMLSchema#integer",
+            "@value": 59
           }
         ]
       }

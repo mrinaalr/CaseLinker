@@ -5,22 +5,31 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_258> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:27:29.340401" ;
+    dcterms:created "2026-09-15T21:27:13.388769" ;
     dcterms:identifier "ncmec_2025_258" ;
-    dcterms:modified "2026-09-10T19:27:29.340401" ;
+    dcterms:modified "2026-09-15T21:27:13.388769" ;
     dcterms:source <https://www.wtvm.com/2025/04/17/columbus-photographer-among-two-arrested-sexual-exploitation-children/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/columbus>,
+        <https://caselinker.up.railway.app/resource/location/ga>,
+        <https://caselinker.up.railway.app/resource/location/midland> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_258/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_258/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_258/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/georgia-bureau-of-investigation> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/georgia-bureau-of-investigation>,
+        <https://caselinker.up.railway.app/resource/agency/muscogee-county-sheriffs-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/columbus>,
+        <https://caselinker.up.railway.app/resource/location/ga>,
+        <https://caselinker.up.railway.app/resource/location/midland> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_258/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -34,6 +43,8 @@
 
 <https://caselinker.up.railway.app/resource/agency/georgia-bureau-of-investigation> a cacontology-multi:StateAgency .
 
+<https://caselinker.up.railway.app/resource/agency/muscogee-county-sheriffs-office> a cacontology-multi:LocalAgency .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_258/charge/1> a cacontology-legal-outcomes:CriminalCharge,
         cacontology-legal-outcomes:StateCharge ;
     rdfs:label "each of sexual exploitation of children" ;
@@ -46,16 +57,31 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_258/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Muscogee County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_258/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_258/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-04-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-04-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_258/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_258/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_258/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_258/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_258/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-04-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/columbus> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/ga> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/midland> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Midland" ;
+    uco-core:name "Midland" .
 

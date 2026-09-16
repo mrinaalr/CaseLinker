@@ -5,26 +5,34 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_148> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:10:11.750964" ;
+    dcterms:created "2026-09-15T20:55:00.877241" ;
     dcterms:identifier "ncmec_2023_148" ;
-    dcterms:modified "2026-09-10T19:10:11.750964" ;
+    dcterms:modified "2026-09-15T20:55:00.877241" ;
     dcterms:source <https://www.wmdt.com/2023/05/crisfield-man-charged-with-possession-distribution-of-child-pornography/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/crisfield>,
+        <https://caselinker.up.railway.app/resource/location/md>,
+        <https://caselinker.up.railway.app/resource/location/somerset-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_148/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_148/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_148/event/distribution>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_148/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_148/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/maryland-state-police-department> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/maryland-state-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/crisfield>,
+        <https://caselinker.up.railway.app/resource/location/md>,
+        <https://caselinker.up.railway.app/resource/location/somerset-county> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_148/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -60,12 +68,17 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_148/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_148/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-05-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_148/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_148/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 25 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_148/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_148/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/platform/social-media> a cacontology-platforms:SocialMediaPlatform ;
     rdfs:label "social media" .
@@ -73,6 +86,19 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_148/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-05-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/crisfield> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Crisfield" ;
+    uco-core:name "Crisfield" .
+
+<https://caselinker.up.railway.app/resource/location/md> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/somerset-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Somerset County" ;
+    uco-core:name "Somerset County" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_148/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

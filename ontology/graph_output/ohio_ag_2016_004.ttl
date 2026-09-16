@@ -6,17 +6,25 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2016_004> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:02:58.478444" ;
+    dcterms:created "2026-09-15T20:10:06.623365" ;
     dcterms:identifier "ohio_ag_2016_004" ;
-    dcterms:modified "2026-09-10T20:02:58.478444" ;
+    dcterms:modified "2026-09-15T20:10:06.623365" ;
     dcterms:source <https://www.ohioattorneygeneral.gov/Media/News-Releases/June-2016/Ohio-Mother-Pleads-Guilty-to-Human-Trafficking-Cha>,
         "OHIO AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/cincinnati>,
+        <https://caselinker.up.railway.app/resource/location/hamilton-county>,
+        <https://caselinker.up.railway.app/resource/location/indiana>,
+        <https://caselinker.up.railway.app/resource/location/ohio>,
+        <https://caselinker.up.railway.app/resource/location/pleasant-plain> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ohio_ag_2016_004/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ohio_ag_2016_004/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ohio_ag_2016_004/event/conspiracy>,
@@ -24,10 +32,16 @@
         <https://caselinker.up.railway.app/resource/case/ohio_ag_2016_004/event/hands-on>,
         <https://caselinker.up.railway.app/resource/case/ohio_ag_2016_004/event/trafficking>,
         <https://caselinker.up.railway.app/resource/case/ohio_ag_2016_004/event/trust-violation>,
+        <https://caselinker.up.railway.app/resource/case/ohio_ag_2016_004/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/ohio_ag_2016_004/legal-step/sentenced> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/cincinnati-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/ohio-attorney-generals-office> .
+        <https://caselinker.up.railway.app/resource/agency/ohio-attorney-generals-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/cincinnati>,
+        <https://caselinker.up.railway.app/resource/location/hamilton-county>,
+        <https://caselinker.up.railway.app/resource/location/indiana>,
+        <https://caselinker.up.railway.app/resource/location/ohio>,
+        <https://caselinker.up.railway.app/resource/location/pleasant-plain> .
 
 <https://caselinker.up.railway.app/resource/agency/cincinnati-police-department> a cacontology-multi:LocalAgency .
 
@@ -44,6 +58,12 @@
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2016_004/event/trust-violation> a cacontology-custodial:CustodialAbuse,
         cacontology-custodial:TrustViolation ;
     cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/ohio_ag_2016_004/relationship/mother> .
+
+<https://caselinker.up.railway.app/resource/case/ohio_ag_2016_004/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2016-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ohio_ag_2016_004/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2016_004/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -74,6 +94,10 @@
         <https://caselinker.up.railway.app/resource/case/ohio_ag_2016_004/event/hands-on> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ohio_ag_2016_004/person/victim/1> .
 
+<https://caselinker.up.railway.app/resource/case/ohio_ag_2016_004/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2016_004/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2016-01-01T00:00:00Z"^^xsd:dateTimeStamp .
@@ -91,6 +115,21 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ohio_ag_2016_004/event/conspiracy>,
         <https://caselinker.up.railway.app/resource/case/ohio_ag_2016_004/event/hands-on> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ohio_ag_2016_004/person/offender/2> .
+
+<https://caselinker.up.railway.app/resource/location/cincinnati> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/hamilton-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/indiana> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/ohio> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/pleasant-plain> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2016_004/event/conspiracy> a cacontology:ConspiracyToCommitCSA,
         cac-core:Event ;

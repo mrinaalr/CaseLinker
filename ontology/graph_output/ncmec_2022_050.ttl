@@ -3,19 +3,24 @@
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_050> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:05:09.002022" ;
+    dcterms:created "2026-09-15T20:45:06.029737" ;
     dcterms:identifier "ncmec_2022_050" ;
-    dcterms:modified "2026-09-10T19:05:09.002022" ;
+    dcterms:modified "2026-09-15T20:45:06.029737" ;
     dcterms:source <https://www.wric.com/news/crime/fluvanna-man-to-serve-31-years-for-child-pornography/#:~:text=The%20court%20sentenced%20him%20to,his%20home%20in%20May%202020>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/fluvanna>,
+        <https://caselinker.up.railway.app/resource/location/fluvanna-county>,
+        <https://caselinker.up.railway.app/resource/location/va> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_050/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_050/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2022_050/event/distribution>,
@@ -24,7 +29,10 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_050/legal-step/sentenced> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/fluvanna-county-sheriffs-office>,
-        <https://caselinker.up.railway.app/resource/agency/virginia-department-of-corrections> .
+        <https://caselinker.up.railway.app/resource/agency/virginia-department-of-corrections> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/fluvanna>,
+        <https://caselinker.up.railway.app/resource/location/fluvanna-county>,
+        <https://caselinker.up.railway.app/resource/location/va> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_050/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -60,8 +68,7 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2022_050/charge/1> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2022_050/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_050/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2022_050/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_050/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -75,15 +82,26 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_050/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "31 years" .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_050/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "190 years" .
+    rdfs:label "[\"31 years\", \"190 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_050/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/fluvanna> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Fluvanna" ;
+    uco-core:name "Fluvanna" .
+
+<https://caselinker.up.railway.app/resource/location/fluvanna-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Fluvanna County" ;
+    uco-core:name "Fluvanna County" .
+
+<https://caselinker.up.railway.app/resource/location/va> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Va." ;
+    uco-core:name "Va." .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_050/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

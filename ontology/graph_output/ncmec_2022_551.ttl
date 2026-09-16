@@ -1,12 +1,18 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix cacontology-undercover: <https://cacontology.projectvic.org/undercover#> .
+@prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -15,22 +21,71 @@
     cac-core:generatedBy <https://caselinker.up.railway.app/resource/case/ncmec_2022_551> ;
     cac-core:hasConfidence 0.65 .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_551/admission/2/extraction-confidence> a cac-core:AssessmentResult ;
-    cac-core:assesses <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/admission/2> ;
-    cac-core:generatedBy <https://caselinker.up.railway.app/resource/case/ncmec_2022_551> ;
-    cac-core:hasConfidence 0.65 .
-
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
     cacontology:hasRoleBeginPoint "2022-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/event/online-only>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/event/possession> ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/offense-event/charge-2> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/agency/angola-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Angola Police Department" .
+
+<https://caselinker.up.railway.app/resource/agency/hsi> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:FederalAgency ;
+    rdfs:label "Homeland Security Investigations" .
+
+<https://caselinker.up.railway.app/resource/agency/pinellas-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Pinellas County Sheriff's Office" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_551> a cacontology:CACInvestigation,
+        cac-core:EnduringEntity ;
+    dcterms:created "2026-09-15T20:45:06.471593" ;
+    dcterms:identifier "ncmec_2022_551" ;
+    dcterms:modified "2026-09-15T20:45:06.471593" ;
+    dcterms:source <https://www.abcactionnews.com/news/region-pinellas/saint-leo-university-employee-arrested-charged-for-intentional-viewing-of-child-pornography>,
+        "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/angola>,
+        <https://caselinker.up.railway.app/resource/location/arizona>,
+        <https://caselinker.up.railway.app/resource/location/fla>,
+        <https://caselinker.up.railway.app/resource/location/pinellas-county>,
+        <https://caselinker.up.railway.app/resource/location/tempe>,
+        <https://caselinker.up.railway.app/resource/location/trine> ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/phase/charged> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/phase/charged> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/admission/1>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/cybertip>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/event/distribution>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/legal-proceeding>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/offense-event/charge-2> ;
+    cacontology:investigationStatus "unknown" ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/angola-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/hsi>,
+        <https://caselinker.up.railway.app/resource/agency/ncmec>,
+        <https://caselinker.up.railway.app/resource/agency/pinellas-county-sheriffs-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/angola>,
+        <https://caselinker.up.railway.app/resource/location/arizona>,
+        <https://caselinker.up.railway.app/resource/location/fla>,
+        <https://caselinker.up.railway.app/resource/location/pinellas-county>,
+        <https://caselinker.up.railway.app/resource/location/tempe>,
+        <https://caselinker.up.railway.app/resource/location/trine> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "child pornography" ;
-    cacontology-legal-outcomes:indictmentCounts 2 .
+    cacontology-legal-outcomes:indictmentCounts 12 .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_551/charge/2> a cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "child exploitation" ;
+    rdfs:seeAlso <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/offense-event/charge-2> ;
+    ns1:chargeCluster "child_exploitation" ;
+    ns1:chargeOffenseEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/offense-event/charge-2> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_551/cybertip> a cacontology-us-ncmec:NCMECCybertipReport ;
+    cacontology-us-ncmec:supportedBy <https://caselinker.up.railway.app/resource/agency/ncmec> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/event/distribution> a cac-core:Event,
         cacontology-legal-outcomes:CSAM_Distribution .
@@ -40,73 +95,90 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility: Clark County Jail" ;
-    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/charge/1> ;
+    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/charge/1>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/charge/2> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2022-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/sentence/1> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_551/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_551/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 55 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/person/victim/1> a uco-identity:Person .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_551/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$40,000" .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_551> a cacontology:CACInvestigation,
-        cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:08:37.499609" ;
-    dcterms:identifier "ncmec_2022_551" ;
-    dcterms:modified "2026-09-10T19:08:37.499609" ;
-    dcterms:source <https://lawandcrime.com/crime/arbys-manager-who-is-defendant-in-child-porn-case-peed-in-milkshake-mix-cops/>,
-        "NCMEC" ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/admission/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/admission/2>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/event/distribution>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/event/online-only>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/event/possession>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/legal-proceeding> ;
-    cacontology:investigationStatus "unknown" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
     cacontology:hasRoleBeginPoint "2022-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/event/online-only>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/event/possession> ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/offense-event/charge-2> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/person/offender/1> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_551/event/online-only> a cacontology:ChildSexualAbuseEvent,
-        cac-core:Event ;
-    cacontology:producesArtifact <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/admission/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/admission/2> .
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_551/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_551/event/possession> a cacontology:CSAMIncident,
-        cac-core:Event ;
-    cacontology:producesArtifact <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/admission/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/admission/2> ;
-    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/facet/possession> .
+<https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_551/phase/charged> a cacontology:LegalProcessPhase,
+        cac-core:Phase ;
+    cacontology:hasPhaseBeginPoint "2022-05-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/angola> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Angola" ;
+    uco-core:name "Angola" .
+
+<https://caselinker.up.railway.app/resource/location/arizona> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Arizona" ;
+    uco-core:name "Arizona" .
+
+<https://caselinker.up.railway.app/resource/location/fla> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/pinellas-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Pinellas County" ;
+    uco-core:name "Pinellas County" .
+
+<https://caselinker.up.railway.app/resource/location/tempe> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Tempe" ;
+    uco-core:name "Tempe" .
+
+<https://caselinker.up.railway.app/resource/location/trine> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Trine" ;
+    uco-core:name "Trine" .
+
+<https://caselinker.up.railway.app/resource/platform/kik> a cacontology-platforms:MessagingService ;
+    rdfs:label "Kik" .
+
+<https://caselinker.up.railway.app/resource/platform/social-media> a cacontology-platforms:SocialMediaPlatform ;
+    rdfs:label "social media" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/admission/1> a cacontology-undercover:IncriminatingStatement ;
-    rdfs:label "in an interview to downloading and distributing child pornography and having a sexual interest in children,” officers..." ;
-    dcterms:source <https://lawandcrime.com/crime/arbys-manager-who-is-defendant-in-child-porn-case-peed-in-milkshake-mix-cops/> ;
-    ns1:admissionContext "investigation into Sharp, 29, cops said. “On May 10, 2022, Stephen Sharp was contacted by detectives and confessed in an interview to dow..." ;
+    rdfs:label "during an interview that he owned a Kik account and did in fact receive and send child pornography files" ;
+    dcterms:source <https://www.abcactionnews.com/news/region-pinellas/saint-leo-university-employee-arrested-charged-for-intentional-viewing-of-child-pornography> ;
+    ns1:admissionContext "owing a forensic analysis, PCSO said 10 images of child pornography were found. PCSO said Kistulentz confessed during an interview that h..." ;
     ns1:admissionFrame "confessed_paraphrase" ;
     ns1:admissionTheme "harm_conduct",
-        "sexual_interest",
         "tech_use" ;
     ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/role/offender/1> ;
     ns1:evidenceTier "press_release_stated" ;
     ns1:quoteType "paraphrase" ;
-    uco-core:description "in an interview to downloading and distributing child pornography and having a sexual interest in children,” officers wrote" .
+    uco-core:description "during an interview that he owned a Kik account and did in fact receive and send child pornography files" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_551/admission/2> a cacontology-undercover:IncriminatingStatement ;
-    rdfs:label "to detectives he urinated on at least two occasions into the milkshake mixture for sexual gratification" ;
-    dcterms:source <https://lawandcrime.com/crime/arbys-manager-who-is-defendant-in-child-porn-case-peed-in-milkshake-mix-cops/> ;
-    ns1:admissionContext "Sharp urinating in a container confirmed to be milkshake mix from Arby’s,” police said. “Stephen Sharp confessed to detectives he urinate..." ;
-    ns1:admissionFrame "confessed_paraphrase" ;
-    ns1:admissionTheme "harm_conduct" ;
-    ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/role/offender/1> ;
-    ns1:evidenceTier "press_release_stated" ;
-    ns1:quoteType "paraphrase" ;
-    uco-core:description "to detectives he urinated on at least two occasions into the milkshake mixture for sexual gratification" .
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_551/event/possession> a cacontology:CSAMIncident,
+        cac-core:Event ;
+    cacontology:producesArtifact <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/admission/1> ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/kik>,
+        <https://caselinker.up.railway.app/resource/platform/social-media> ;
+    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2022_551/facet/possession> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_551/offense-event/charge-2> a cacontology:ChildSexualAbuseEvent,
+        cac-core:Event,
+        uco-action:Crime ;
+    rdfs:label "Inferred offense from charge: child exploitation" ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/kik>,
+        <https://caselinker.up.railway.app/resource/platform/social-media> .
 

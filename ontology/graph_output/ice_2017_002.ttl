@@ -4,7 +4,6 @@
 @prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
@@ -12,22 +11,25 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ice_2017_002> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:45:38.408762" ;
+    dcterms:created "2026-09-15T19:35:19.134960" ;
     dcterms:identifier "ice_2017_002" ;
-    dcterms:modified "2026-09-10T19:45:38.408762" ;
+    dcterms:modified "2026-09-15T19:35:19.134960" ;
     dcterms:source <https://www.ice.gov/news/releases/seattle-childcare-worker-receives-over-6-years-possessing-child-pornography>,
         "ICE" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/seattle> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ice_2017_002/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ice_2017_002/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ice_2017_002/event/distribution>,
         <https://caselinker.up.railway.app/resource/case/ice_2017_002/event/hands-on>,
         <https://caselinker.up.railway.app/resource/case/ice_2017_002/event/multi-jurisdiction>,
         <https://caselinker.up.railway.app/resource/case/ice_2017_002/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/ice_2017_002/event/project-safe-childhood>,
         <https://caselinker.up.railway.app/resource/case/ice_2017_002/event/trafficking>,
         <https://caselinker.up.railway.app/resource/case/ice_2017_002/event/trust-violation>,
         <https://caselinker.up.railway.app/resource/case/ice_2017_002/legal-proceeding>,
@@ -37,15 +39,21 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ceos>,
         <https://caselinker.up.railway.app/resource/agency/hsi>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/ice> .
+        <https://caselinker.up.railway.app/resource/agency/ice>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/seattle> .
 
-<https://caselinker.up.railway.app/resource/agency/ceos> a cacontology-multi:FederalAgency .
+<https://caselinker.up.railway.app/resource/agency/ceos> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:FederalAgency ;
+    rdfs:label "CEOS" .
 
 <https://caselinker.up.railway.app/resource/agency/hsi> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
 <https://caselinker.up.railway.app/resource/agency/ice> a cacontology-multi:FederalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/ice_2017_002/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -75,6 +83,10 @@
     cacontology:severityLevel 3 ;
     cacontology-multi:crossesBorders true .
 
+<https://caselinker.up.railway.app/resource/case/ice_2017_002/event/project-safe-childhood> a cac-core:Event,
+        cacontology-multi:ProjectSafeChildhoodOperation ;
+    cacontology:severityLevel 3 .
+
 <https://caselinker.up.railway.app/resource/case/ice_2017_002/event/trafficking> a cac-core:Event,
         cacontology-legal-outcomes:SexTrafficking ;
     cacontology:severityLevel 3 .
@@ -93,9 +105,7 @@
         <https://caselinker.up.railway.app/resource/case/ice_2017_002/charge/3>,
         <https://caselinker.up.railway.app/resource/case/ice_2017_002/charge/4> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2017-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ice_2017_002/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/ice_2017_002/sentence/2>,
-        <https://caselinker.up.railway.app/resource/case/ice_2017_002/sentence/3> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ice_2017_002/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ice_2017_002/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -134,44 +144,29 @@
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ice_2017_002/person/victim/1> .
 
 <https://caselinker.up.railway.app/resource/case/ice_2017_002/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "78 months" .
-
-<https://caselinker.up.railway.app/resource/case/ice_2017_002/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "15 years" .
-
-<https://caselinker.up.railway.app/resource/case/ice_2017_002/sentence/3> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "supervised release" .
+    rdfs:label "[\"78 months\", \"15 years\", \"supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/case/ice_2017_002/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2017-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
+<https://caselinker.up.railway.app/resource/location/seattle> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Seattle" ;
+    uco-core:name "Seattle" .
+
 <https://caselinker.up.railway.app/resource/case/ice_2017_002/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;
-    cacontology:severityLevel 3 ;
-    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/facebook>,
-        <https://caselinker.up.railway.app/resource/platform/instagram> .
+    cacontology:severityLevel 3 .
 
 <https://caselinker.up.railway.app/resource/case/ice_2017_002/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
     cacontology:severityLevel 3 ;
-    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/facebook>,
-        <https://caselinker.up.railway.app/resource/platform/instagram> ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ice_2017_002/facet/possession> .
-
-<https://caselinker.up.railway.app/resource/platform/facebook> a cacontology-platforms:SocialMediaPlatform ;
-    rdfs:label "Facebook" .
-
-<https://caselinker.up.railway.app/resource/platform/instagram> a cacontology-platforms:SocialMediaPlatform ;
-    rdfs:label "Instagram" .
 
 <https://caselinker.up.railway.app/resource/case/ice_2017_002/offense-event/charge-4> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event,
         uco-action:Crime ;
-    rdfs:label "Inferred offense from charge: child exploitation" ;
-    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/facebook>,
-        <https://caselinker.up.railway.app/resource/platform/instagram> .
+    rdfs:label "Inferred offense from charge: child exploitation" .
 

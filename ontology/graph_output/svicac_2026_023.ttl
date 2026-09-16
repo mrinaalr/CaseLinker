@@ -7,19 +7,23 @@
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2026_023> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:14:19.609344" ;
+    dcterms:created "2026-09-15T20:29:58.181623" ;
     dcterms:identifier "svicac_2026_023" ;
-    dcterms:modified "2026-09-10T20:14:19.609344" ;
+    dcterms:modified "2026-09-15T20:29:58.181623" ;
     dcterms:source <https://www.ksbw.com/article/watsonville-police-arrest-man-accused-of-filming-himself-having-sex-with-children/28429153>,
         "SVICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/santa-clara-county>,
+        <https://caselinker.up.railway.app/resource/location/watsonville> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/svicac_2026_023/phase/booked> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/svicac_2026_023/phase/booked> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/svicac_2026_023/cybertip>,
@@ -29,7 +33,9 @@
         <https://caselinker.up.railway.app/resource/case/svicac_2026_023/legal-proceeding> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/watsonville-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/watsonville-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/santa-clara-county>,
+        <https://caselinker.up.railway.app/resource/location/watsonville> .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2026_023/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -65,20 +71,30 @@
 <https://caselinker.up.railway.app/resource/case/svicac_2026_023/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Santa Cruz County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/svicac_2026_023/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/svicac_2026_023/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2026_023/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 24 .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2026_023/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/svicac_2026_023/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2026_023/phase/booked> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/santa-clara-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/watsonville> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2026_023/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

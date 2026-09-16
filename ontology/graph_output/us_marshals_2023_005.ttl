@@ -1,28 +1,45 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2023_005> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:19:06.909485" ;
+    dcterms:created "2026-09-15T20:35:06.267964" ;
     dcterms:identifier "us_marshals_2023_005" ;
-    dcterms:modified "2026-09-10T20:19:06.909485" ;
+    dcterms:modified "2026-09-15T20:35:06.267964" ;
     dcterms:source <https://www.usmarshals.gov/news/press-release/us-marshals-arrest-most-wanted-sex-offender-absconder>,
         "US MARSHALS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/eau-claire-county>,
+        <https://caselinker.up.railway.app/resource/location/minneapolis>,
+        <https://caselinker.up.railway.app/resource/location/minnesota>,
+        <https://caselinker.up.railway.app/resource/location/the-district-of-minnesota>,
+        <https://caselinker.up.railway.app/resource/location/u-haul>,
+        <https://caselinker.up.railway.app/resource/location/wisconsin> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/us_marshals_2023_005/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/us_marshals_2023_005/phase/arrested> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/us_marshals_2023_005/event/multi-jurisdiction> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/us_marshals_2023_005/event/multi-jurisdiction>,
+        <https://caselinker.up.railway.app/resource/case/us_marshals_2023_005/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/great-lakes-regional-fugitive-task-force>,
         <https://caselinker.up.railway.app/resource/agency/north-star-fugitive-task-force>,
         <https://caselinker.up.railway.app/resource/agency/task-force-officers>,
         <https://caselinker.up.railway.app/resource/agency/usms>,
-        <https://caselinker.up.railway.app/resource/agency/wisconsin-department-of-corrections> .
+        <https://caselinker.up.railway.app/resource/agency/wisconsin-department-of-corrections> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/eau-claire-county>,
+        <https://caselinker.up.railway.app/resource/location/minneapolis>,
+        <https://caselinker.up.railway.app/resource/location/minnesota>,
+        <https://caselinker.up.railway.app/resource/location/the-district-of-minnesota>,
+        <https://caselinker.up.railway.app/resource/location/u-haul>,
+        <https://caselinker.up.railway.app/resource/location/wisconsin> .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2023_005/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -50,11 +67,47 @@
         cacontology-multi:MultiJurisdictionalInvestigation ;
     cacontology:severityLevel 3 .
 
+<https://caselinker.up.railway.app/resource/case/us_marshals_2023_005/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/us_marshals_2023_005/sentence/1> .
+
 <https://caselinker.up.railway.app/resource/case/us_marshals_2023_005/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2023_005/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/us_marshals_2023_005/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/us_marshals_2023_005/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/eau-claire-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Eau Claire County" ;
+    uco-core:name "Eau Claire County" .
+
+<https://caselinker.up.railway.app/resource/location/minneapolis> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Minneapolis" ;
+    uco-core:name "Minneapolis" .
+
+<https://caselinker.up.railway.app/resource/location/minnesota> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/the-district-of-minnesota> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "the District of Minnesota" ;
+    uco-core:name "the District of Minnesota" .
+
+<https://caselinker.up.railway.app/resource/location/u-haul> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "U-haul" ;
+    uco-core:name "U-haul" .
+
+<https://caselinker.up.railway.app/resource/location/wisconsin> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 

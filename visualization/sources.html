@@ -859,6 +859,20 @@
                         }
                     ]
                 },
+
+                {
+                    name: "Alabama Law Enforcement Agency – News releases (ICAC / SBI)",
+                    url: "https://www.alea.gov/news?combine=child",
+                    description: "ALEA (child-related) news results, including State Bureau of Investigation (SBI) and Internet Crimes Against Children (ICAC) task force reports.",
+                    type: "Official website",
+                    yearLinks: [
+                        {
+                            year: "News search (child)",
+                            url: "https://www.alea.gov/news?combine=child",
+                            casesUsed: 0
+                        }
+                    ]
+                },
                 {
                     name: "South Dakota Office of the Attorney General – Press releases (ICAC)",
                     url: "https://atg.sd.gov/OurOffice/Media/pressreleases.aspx",
@@ -1043,21 +1057,8 @@
                             casesUsed: 0
                         }
                     ]
-                },
-               
-                {
-                    name: "Alabama Law Enforcement Agency – News releases (ICAC / SBI)",
-                    url: "https://www.alea.gov/news?combine=child",
-                    description: "ALEA (child-related) news results, including State Bureau of Investigation (SBI) and Internet Crimes Against Children (ICAC) task force reports.",
-                    type: "Official website",
-                    yearLinks: [
-                        {
-                            year: "News search (child)",
-                            url: "https://www.alea.gov/news?combine=child",
-                            casesUsed: 0
-                        }
-                    ]
                 }
+               
             ];
             
             const CASELINKER_COUNT_KEY = 'caselinker_total_case_count_v1';
@@ -1917,7 +1918,7 @@
                                 .toUpperCase()
                                 .replace(/_/g, ' ')
                                 .trim();
-                            return s === 'DOJ SAFE CHILDHOOD';
+                            return s === 'DOJ SAFE CHILDHOOD' || s === 'DOJ AI CSAM';
                         });
                         staticSource.cases = pscCases;
                         const pscRange = getDateRange(pscCases);
@@ -1936,7 +1937,7 @@
                                 .toUpperCase()
                                 .replace(/_/g, ' ')
                                 .trim();
-                            return s === 'DOJ CEOS';
+                            return s === 'DOJ CEOS' || s === 'DOJ ARCHIVES';
                         });
                         staticSource.cases = ceosCases;
                         const ceosRange = getDateRange(ceosCases);
@@ -1948,25 +1949,6 @@
                         }
                         if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
                             staticSource.yearLinks[0].casesUsed = ceosCases.length;
-                        }
-                    } else if (staticSource.name.includes('U.S. DOJ Archives')) {
-                        const archiveCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'DOJ ARCHIVES';
-                        });
-                        staticSource.cases = archiveCases;
-                        const archiveRange = getDateRange(archiveCases);
-                        if (archiveRange) {
-                            staticSource.dateRangeDisplay = archiveRange;
-                            if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                                staticSource.yearLinks[0].year = archiveRange;
-                            }
-                        }
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = archiveCases.length;
                         }
                     } else if (staticSource.name.includes('U.S. Secret Service')) {
                         const usssCases = cases.filter(c => {

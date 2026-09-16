@@ -9,17 +9,25 @@
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2006_022> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:40:38.795309" ;
+    dcterms:created "2026-09-15T21:42:39.811440" ;
     dcterms:identifier "doj_archives_2006_022" ;
-    dcterms:modified "2026-09-10T19:40:38.795309" ;
+    dcterms:modified "2026-09-15T21:42:39.811440" ;
     dcterms:source <https://www.justice.gov/archive/criminal/ceos/pressreleases/downloads/DMA%20Van%20Vliet%20convict%20PR_020606.pdf>,
-        "DOJ ARCHIVES" ;
+        "DOJ CEOS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/boston>,
+        <https://caselinker.up.railway.app/resource/location/hillsdale-new-jersey>,
+        <https://caselinker.up.railway.app/resource/location/massachusetts>,
+        <https://caselinker.up.railway.app/resource/location/new-jersey>,
+        <https://caselinker.up.railway.app/resource/location/united-states>,
+        <https://caselinker.up.railway.app/resource/location/waltham> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_archives_2006_022/phase/convicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_archives_2006_022/phase/convicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_archives_2006_022/event/multi-jurisdiction>,
@@ -30,7 +38,13 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/doj>,
         <https://caselinker.up.railway.app/resource/agency/medford-police-department>,
         <https://caselinker.up.railway.app/resource/agency/us-secret-service>,
-        <https://caselinker.up.railway.app/resource/agency/waltham-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/waltham-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/boston>,
+        <https://caselinker.up.railway.app/resource/location/hillsdale-new-jersey>,
+        <https://caselinker.up.railway.app/resource/location/massachusetts>,
+        <https://caselinker.up.railway.app/resource/location/new-jersey>,
+        <https://caselinker.up.railway.app/resource/location/united-states>,
+        <https://caselinker.up.railway.app/resource/location/waltham> .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2006_022/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -72,9 +86,7 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/doj_archives_2006_022/charge/1> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2006-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_archives_2006_022/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_archives_2006_022/sentence/2>,
-        <https://caselinker.up.railway.app/resource/case/doj_archives_2006_022/sentence/3> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_archives_2006_022/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2006_022/legal-step/convicted> a cac-core:Event,
         cac-core:LegalEvent,
@@ -89,20 +101,34 @@
     cacontology-production:victimAge 15 .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2006_022/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "30 years" .
-
-<https://caselinker.up.railway.app/resource/case/doj_archives_2006_022/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "5 years of supervised release" .
-
-<https://caselinker.up.railway.app/resource/case/doj_archives_2006_022/sentence/3> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$ 250,000" .
+    rdfs:label "[\"30 years\", \"5 years of supervised release\", \"$ 250,000\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_archives_2006_022/phase/convicted> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2006-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/boston> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/hillsdale-new-jersey> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Hillsdale, New Jersey" ;
+    uco-core:name "Hillsdale, New Jersey" .
+
+<https://caselinker.up.railway.app/resource/location/massachusetts> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/new-jersey> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/waltham> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Waltham" ;
+    uco-core:name "Waltham" .
 
 <https://caselinker.up.railway.app/resource/platform/chat> a cacontology-platforms:AnonymousChatPlatform ;
     rdfs:label "chat" .

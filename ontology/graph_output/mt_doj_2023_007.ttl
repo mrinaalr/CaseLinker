@@ -9,6 +9,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -29,18 +30,27 @@
 
 <https://caselinker.up.railway.app/resource/case/mt_doj_2023_007> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:55:09.283687" ;
+    dcterms:created "2026-09-15T19:59:52.366911" ;
     dcterms:identifier "mt_doj_2023_007" ;
-    dcterms:modified "2026-09-10T19:55:09.283687" ;
+    dcterms:modified "2026-09-15T19:59:52.366911" ;
     dcterms:source <https://dojmt.gov/attorney-generals-office-secures-guilty-plea-in-rosebud-county-child-sexual-abuse-case/>,
         "MT DOJ" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/rosebud-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/mt_doj_2023_007/phase/pleaded-guilty> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/mt_doj_2023_007/phase/pleaded-guilty> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/mt_doj_2023_007/admission/1>,
         <https://caselinker.up.railway.app/resource/case/mt_doj_2023_007/event/hands-on>,
+        <https://caselinker.up.railway.app/resource/case/mt_doj_2023_007/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/mt_doj_2023_007/legal-step/pleaded-guilty> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/department-of-health-and-human-services>,
-        <https://caselinker.up.railway.app/resource/agency/rosebud-county-sheriffs-office> .
+        <https://caselinker.up.railway.app/resource/agency/rosebud-county-sheriffs-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/rosebud-county> .
+
+<https://caselinker.up.railway.app/resource/case/mt_doj_2023_007/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/mt_doj_2023_007/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/mt_doj_2023_007/legal-step/pleaded-guilty> a cac-core:Event,
         cac-core:LegalEvent,
@@ -59,9 +69,16 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/mt_doj_2023_007/event/hands-on> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/mt_doj_2023_007/person/offender/1> .
 
+<https://caselinker.up.railway.app/resource/case/mt_doj_2023_007/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/mt_doj_2023_007/phase/pleaded-guilty> a cac-core:Phase,
         cacontology-legal-outcomes:PreTrialPhase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/rosebud-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/mt_doj_2023_007/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "sexually abusing the girl" ;

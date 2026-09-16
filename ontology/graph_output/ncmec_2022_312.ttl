@@ -1,61 +1,96 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
+@prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
+@prefix cacontology-undercover: <https://cacontology.projectvic.org/undercover#> .
+@prefix cacontology-usa-federal: <https://cacontology.projectvic.org/usa-federal-law#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_312> a cacontology:CACInvestigation,
-        cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:06:54.785122" ;
-    dcterms:identifier "ncmec_2022_312" ;
-    dcterms:modified "2026-09-10T19:06:54.785122" ;
-    dcterms:source <https://www.wrex.com/news/crime/rockford-man-arrested-on-several-child-pornography-charges-after-months-long-investigation/article_af04d150-0879-11ed-8567-db9fd926d42c.html>,
-        "NCMEC" ;
-    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/phase/charged> ;
-    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/phase/charged> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/event/distribution>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/event/possession>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/legal-proceeding> ;
-    cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/illinois-state-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/winnebago-county-sheriffs-office> .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_312/role/offender/1> a cacontology:OffenderRole,
-        uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/event/possession> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/person/offender/1> .
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_312/admission/1/extraction-confidence> a cac-core:AssessmentResult ;
+    cac-core:assesses <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/admission/1> ;
+    cac-core:generatedBy <https://caselinker.up.railway.app/resource/case/ncmec_2022_312> ;
+    cac-core:hasConfidence 0.65 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/event/possession> ;
+    cacontology:hasRoleBeginPoint "2021-04-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/event/hands-on>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/offense-event/charge-2>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/offense-event/charge-3> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
+<https://caselinker.up.railway.app/resource/agency/indiana-department-of-correction> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Indiana Department of Correction" .
 
-<https://caselinker.up.railway.app/resource/agency/illinois-state-police-department> a cacontology-multi:StateAgency .
+<https://caselinker.up.railway.app/resource/agency/indiana-department-of-corrections> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Indiana Department of Corrections" .
 
-<https://caselinker.up.railway.app/resource/agency/winnebago-county-sheriffs-office> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/indiana-state-police-department> a cacontology-multi:StateAgency .
+
+<https://caselinker.up.railway.app/resource/agency/kendallville-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Kendallville Police Department" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_312> a cacontology:CACInvestigation,
+        cac-core:EnduringEntity ;
+    dcterms:created "2026-09-15T20:45:06.256784" ;
+    dcterms:identifier "ncmec_2022_312" ;
+    dcterms:modified "2026-09-15T20:45:06.256784" ;
+    dcterms:source <https://www.kpcnews.com/newssun/article_71ed3e5f-e040-56ec-8412-51897f21b3ec.html>,
+        "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/fort-wayne>,
+        <https://caselinker.up.railway.app/resource/location/kendallville> ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/phase/sentenced> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/phase/sentenced> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/admission/1>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/event/distribution>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/event/hands-on>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/legal-proceeding>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/legal-step/sentenced>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/offense-event/charge-2>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/offense-event/charge-3> ;
+    cacontology:investigationStatus "unknown" ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/indiana-department-of-correction>,
+        <https://caselinker.up.railway.app/resource/agency/indiana-department-of-corrections>,
+        <https://caselinker.up.railway.app/resource/agency/indiana-state-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/kendallville-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/fort-wayne>,
+        <https://caselinker.up.railway.app/resource/location/kendallville> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "possession of child pornography" ;
     cacontology-legal-outcomes:indictmentCounts 2 .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_312/charge/2> a cacontology-legal-outcomes:CSAM_Distribution,
-        cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "distribution of child pornography" .
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_312/charge/2> a cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "child molestation" ;
+    rdfs:seeAlso <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/offense-event/charge-2> ;
+    ns1:chargeCluster "child_molestation" ;
+    ns1:chargeOffenseEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/offense-event/charge-2> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_312/charge/3> a cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "child exploitation" ;
+    rdfs:seeAlso <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/offense-event/charge-3> ;
+    ns1:chargeCluster "child_exploitation" ;
+    ns1:chargeOffenseEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/offense-event/charge-3> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/event/distribution> a cac-core:Event,
-        cacontology-legal-outcomes:CSAM_Distribution .
+        cacontology-legal-outcomes:CSAM_Distribution ;
+    cacontology:severityLevel 3 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
@@ -63,18 +98,84 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/charge/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/charge/2>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/charge/3> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2021-04-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/sentence/1> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_312/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_312/legal-step/sentenced> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding,
+        cacontology-legal-outcomes:SentencingHearing ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2021-04-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_312/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 70 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/person/victim/1> a uco-identity:Person .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_312/phase/charged> a cacontology:LegalProcessPhase,
-        cac-core:Phase ;
-    cacontology:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_312/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2021-04-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/event/hands-on>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/offense-event/charge-2>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/offense-event/charge-3> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_312/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:ProbationSentence ;
+    rdfs:label "[\"probation\", \"$10,000\"]" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_312/admission/1> a cacontology-undercover:IncriminatingStatement ;
+    rdfs:label "Kendallville Police Department Detective Sgt" ;
+    dcterms:source <https://www.kpcnews.com/newssun/article_71ed3e5f-e040-56ec-8412-51897f21b3ec.html> ;
+    ns1:admissionContext "y. The child told a friend about the incident, and the friend notified the social worker According to court documents filed in the case,..." ;
+    ns1:admissionFrame "admitted_to" ;
+    ns1:admissionTheme "other" ;
+    ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/role/offender/1> ;
+    ns1:evidenceTier "press_release_stated" ;
+    ns1:quoteType "paraphrase" ;
+    uco-core:description "Kendallville Police Department Detective Sgt" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_312/phase/sentenced> a cac-core:Phase,
+        cacontology-legal-outcomes:SentencingPhase ;
+    cacontology:hasPhaseBeginPoint "2021-04-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/fort-wayne> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Fort Wayne" ;
+    uco-core:name "Fort Wayne" .
+
+<https://caselinker.up.railway.app/resource/location/kendallville> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Kendallville" ;
+    uco-core:name "Kendallville" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_312/event/hands-on> a cacontology:ChildSexualAbuseEvent,
+        cac-core:Event ;
+    cacontology:severityLevel 3 ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/facebook> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
+    cacontology:severityLevel 3 ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/facebook> ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2022_312/facet/possession> .
+
+<https://caselinker.up.railway.app/resource/platform/facebook> a cacontology-platforms:SocialMediaPlatform ;
+    rdfs:label "Facebook" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_312/offense-event/charge-2> a cacontology:ChildSexualAbuseEvent,
+        cac-core:Event,
+        cacontology-usa-federal:SexualAbuseOfMinor,
+        uco-action:Crime ;
+    rdfs:label "Inferred offense from charge: child molestation" ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/facebook> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_312/offense-event/charge-3> a cacontology:ChildSexualAbuseEvent,
+        cac-core:Event,
+        uco-action:Crime ;
+    rdfs:label "Inferred offense from charge: child exploitation" ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/facebook> .
 

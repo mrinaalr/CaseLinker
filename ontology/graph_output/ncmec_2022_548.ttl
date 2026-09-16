@@ -1,15 +1,13 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix cacontology-undercover: <https://cacontology.projectvic.org/undercover#> .
-@prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -18,43 +16,22 @@
     cac-core:generatedBy <https://caselinker.up.railway.app/resource/case/ncmec_2022_548> ;
     cac-core:hasConfidence 0.65 .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_548/admission/2/extraction-confidence> a cac-core:AssessmentResult ;
+    cac-core:assesses <https://caselinker.up.railway.app/resource/case/ncmec_2022_548/admission/2> ;
+    cac-core:generatedBy <https://caselinker.up.railway.app/resource/case/ncmec_2022_548> ;
+    cac-core:hasConfidence 0.65 .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_548/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2022-06-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_548/event/possession> ;
+    cacontology:hasRoleBeginPoint "2022-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_548/event/online-only>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_548/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_548/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/logan-city-police-department> a cacontology-multi:LocalAgency .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_548> a cacontology:CACInvestigation,
-        cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:08:35.556360" ;
-    dcterms:identifier "ncmec_2022_548" ;
-    dcterms:modified "2026-09-10T19:08:35.556360" ;
-    dcterms:source <https://cachevalleydaily.com/news/archive/2022/06/17/alleged-fugitive-arrested-in-lewiston-on-possible-drug-and-child-porn-charges/#.YrXLuHbMKUk>,
-        "NCMEC" ;
-    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_548/phase/charged> ;
-    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_548/phase/charged> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2022_548/admission/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_548/event/distribution>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_548/event/possession>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_548/legal-proceeding>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_548/operation> ;
-    cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/ncmec_2022_548/tech/cybertipline> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/logan-city-police-department> .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_548/charge/1> a cacontology-legal-outcomes:CriminalCharge,
-        cacontology-legal-outcomes:StateCharge ;
-    rdfs:label "sexual exploitation of a minor" .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_548/charge/2> a cacontology-legal-outcomes:CSAM_Possession,
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_548/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "child pornography" ;
     cacontology-legal-outcomes:indictmentCounts 2 .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_548/charge/3> a cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "sexual exploitation" ;
-    ns1:chargeCluster "sexual_exploitation_unspecified" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_548/event/distribution> a cac-core:Event,
         cacontology-legal-outcomes:CSAM_Distribution .
@@ -64,49 +41,84 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_548/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility: Cache County Jail" ;
-    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2022_548/charge/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_548/charge/2>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_548/charge/3> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-06-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2022_548/charge/1> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2022_548/sentence/1> .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_548/operation> a cac-core:Event,
-        cacontology-taskforce:ReactiveOperation .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_548/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_548/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_548/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:MonetaryPenalty ;
+    rdfs:label "[\"$40,000\"]" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_548> a cacontology:CACInvestigation,
+        cac-core:EnduringEntity ;
+    dcterms:created "2026-09-15T20:45:06.467631" ;
+    dcterms:identifier "ncmec_2022_548" ;
+    dcterms:modified "2026-09-15T20:45:06.467631" ;
+    dcterms:source <https://lawandcrime.com/crime/arbys-manager-who-is-defendant-in-child-porn-case-peed-in-milkshake-mix-cops/>,
+        "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/vancouver>,
+        <https://caselinker.up.railway.app/resource/location/washington> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2022_548/admission/1>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_548/admission/2>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_548/event/distribution>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_548/event/online-only>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_548/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_548/legal-proceeding> ;
+    cacontology:investigationStatus "unknown" ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/vancouver>,
+        <https://caselinker.up.railway.app/resource/location/washington> .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_548/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2022-06-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_548/event/possession> ;
+    cacontology:hasRoleBeginPoint "2022-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_548/event/online-only>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_548/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_548/person/offender/1> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_548/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:ProbationSentence ;
-    rdfs:label "probation" .
+<https://caselinker.up.railway.app/resource/location/vancouver> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Vancouver" ;
+    uco-core:name "Vancouver" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_548/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
-    rdfs:label "CyberTipline" .
+<https://caselinker.up.railway.app/resource/location/washington> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_548/admission/1> a cacontology-undercover:IncriminatingStatement ;
-    rdfs:label "smoking it the day before" ;
-    dcterms:source <https://cachevalleydaily.com/news/archive/2022/06/17/alleged-fugitive-arrested-in-lewiston-on-possible-drug-and-child-porn-charges/#.YrXLuHbMKUk> ;
-    ns1:admissionContext "hs stated it was his marijuana, even though he doesn’t have a valid medical card. He also allegedly admitted to smoking it the day before" ;
-    ns1:admissionFrame "admitted_to" ;
-    ns1:admissionTheme "other" ;
-    ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_548/role/offender/1> ;
-    ns1:evidenceTier "press_release_stated" ;
-    ns1:quoteType "paraphrase" ;
-    uco-core:description "smoking it the day before" .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_548/phase/charged> a cacontology:LegalProcessPhase,
-        cac-core:Phase ;
-    cacontology:hasPhaseBeginPoint "2022-06-01T00:00:00Z"^^xsd:dateTimeStamp .
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_548/event/online-only> a cacontology:ChildSexualAbuseEvent,
+        cac-core:Event ;
+    cacontology:producesArtifact <https://caselinker.up.railway.app/resource/case/ncmec_2022_548/admission/1>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_548/admission/2> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_548/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
+    cacontology:producesArtifact <https://caselinker.up.railway.app/resource/case/ncmec_2022_548/admission/1>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_548/admission/2> ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2022_548/facet/possession> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_548/admission/1> a cacontology-undercover:IncriminatingStatement ;
+    rdfs:label "in an interview to downloading and distributing child pornography and having a sexual interest in children,” officers..." ;
+    dcterms:source <https://lawandcrime.com/crime/arbys-manager-who-is-defendant-in-child-porn-case-peed-in-milkshake-mix-cops/> ;
+    ns1:admissionContext "investigation into Sharp, 29, cops said. “On May 10, 2022, Stephen Sharp was contacted by detectives and confessed in an interview to dow..." ;
+    ns1:admissionFrame "confessed_paraphrase" ;
+    ns1:admissionTheme "harm_conduct",
+        "sexual_interest",
+        "tech_use" ;
+    ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_548/role/offender/1> ;
+    ns1:evidenceTier "press_release_stated" ;
+    ns1:quoteType "paraphrase" ;
+    uco-core:description "in an interview to downloading and distributing child pornography and having a sexual interest in children,” officers wrote" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_548/admission/2> a cacontology-undercover:IncriminatingStatement ;
+    rdfs:label "to detectives he urinated on at least two occasions into the milkshake mixture for sexual gratification" ;
+    dcterms:source <https://lawandcrime.com/crime/arbys-manager-who-is-defendant-in-child-porn-case-peed-in-milkshake-mix-cops/> ;
+    ns1:admissionContext "Sharp urinating in a container confirmed to be milkshake mix from Arby’s,” police said. “Stephen Sharp confessed to detectives he urinate..." ;
+    ns1:admissionFrame "confessed_paraphrase" ;
+    ns1:admissionTheme "harm_conduct" ;
+    ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_548/role/offender/1> ;
+    ns1:evidenceTier "press_release_stated" ;
+    ns1:quoteType "paraphrase" ;
+    uco-core:description "to detectives he urinated on at least two occasions into the milkshake mixture for sexual gratification" .
 

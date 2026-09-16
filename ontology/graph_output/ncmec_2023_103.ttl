@@ -11,16 +11,18 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_103> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:09:51.751177" ;
+    dcterms:created "2026-09-15T20:55:00.838815" ;
     dcterms:identifier "ncmec_2023_103" ;
-    dcterms:modified "2026-09-10T19:09:51.751177" ;
+    dcterms:modified "2026-09-15T20:55:00.838815" ;
     dcterms:source <https://www.cities929.com/2023/06/23/npd-arrest-made-in-child-pornography-investigation/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/united-states> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_103/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_103/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_103/cybertip>,
@@ -30,7 +32,8 @@
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/normal-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/normal-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/united-states> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_103/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -48,7 +51,9 @@
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
-<https://caselinker.up.railway.app/resource/agency/normal-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/normal-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Normal Police Department" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_103/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -76,18 +81,26 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_103/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_103/charge/2>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_103/charge/3> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_103/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_103/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 45 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_103/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_103/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_103/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_103/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

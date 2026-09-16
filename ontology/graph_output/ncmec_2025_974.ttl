@@ -2,26 +2,34 @@
 @prefix cacontology: <https://cacontology.projectvic.org#> .
 @prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_974> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:34:14.543331" ;
+    dcterms:created "2026-09-15T21:27:14.196431" ;
     dcterms:identifier "ncmec_2025_974" ;
-    dcterms:modified "2026-09-10T19:34:14.543331" ;
-    dcterms:source <https://www.dailysentinel.com/news/local/child-porn-charge-added-in-sex-assault-case/article_d09707e9-a060-52a9-83b3-9de23a5584bd.html>,
+    dcterms:modified "2026-09-15T21:27:14.196431" ;
+    dcterms:source <https://abc13.com/post/former-oak-ridge-north-police-officer-patrick-hosford-arrested-child-pornography-charges/15782763/>,
         "NCMEC" ;
-    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_974/phase/convicted> ;
-    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_974/phase/convicted> ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/oak-ridge-north>,
+        <https://caselinker.up.railway.app/resource/location/texas> ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_974/phase/arrested> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_974/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_974/event/possession>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2025_974/legal-proceeding>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2025_974/legal-step/convicted> .
+        <https://caselinker.up.railway.app/resource/case/ncmec_2025_974/legal-proceeding> ;
+    cacontology:investigationStatus "unknown" ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/conroe-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/oak-ridge-north-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/oak-ridge-north>,
+        <https://caselinker.up.railway.app/resource/location/texas> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_974/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -35,10 +43,17 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2025_974/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_974/person/victim/1> .
 
+<https://caselinker.up.railway.app/resource/agency/conroe-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Conroe Police Department" .
+
+<https://caselinker.up.railway.app/resource/agency/oak-ridge-north-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Oak Ridge North Police Department" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_974/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "possession of child pornography" ;
-    cacontology-legal-outcomes:indictmentCounts 3 .
+    rdfs:label "child pornography" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_974/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
@@ -47,37 +62,28 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_974/charge/1> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_974/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2025_974/sentence/2>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2025_974/sentence/3> .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2025_974/legal-step/convicted> a cac-core:Event,
-        cac-core:LegalEvent,
-        cacontology-legal-outcomes:LegalProceeding,
-        cacontology-legal-outcomes:SentencingHearing ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_974/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_974/person/offender/1> a uco-identity:Person ;
-    cacontology-detection:ageEstimate 21 .
+    cacontology-detection:ageEstimate 25 .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2025_974/person/victim/1> a uco-identity:Person ;
-    cacontology-production:victimAge 15 .
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_974/person/victim/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_974/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "30 years" .
+    rdfs:label "[]" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2025_974/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$20,000" .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2025_974/sentence/3> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$100,000" .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2025_974/phase/convicted> a cac-core:Phase,
-        cacontology-legal-outcomes:SentencingPhase ;
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_974/phase/arrested> a cacontology:InitialPhase,
+        cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/oak-ridge-north> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Oak Ridge North" ;
+    uco-core:name "Oak Ridge North" .
+
+<https://caselinker.up.railway.app/resource/location/texas> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_974/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

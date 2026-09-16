@@ -5,19 +5,24 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_358> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:28:26.914526" ;
+    dcterms:created "2026-09-15T21:27:13.495347" ;
     dcterms:identifier "ncmec_2025_358" ;
-    dcterms:modified "2026-09-10T19:28:26.914526" ;
+    dcterms:modified "2026-09-15T21:27:13.495347" ;
     dcterms:source <https://siouxcountysheriff.com/2025/07/03/investigation-leads-to-arrest-17-counts-of-possessing-child-pornography-for-rock-valley-man-july-3/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/iowa>,
+        <https://caselinker.up.railway.app/resource/location/rock-valley>,
+        <https://caselinker.up.railway.app/resource/location/sioux-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_358/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_358/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_358/event/possession>,
@@ -25,7 +30,10 @@
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/rock-valley-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/sioux-county-sheriffs-office> .
+        <https://caselinker.up.railway.app/resource/agency/sioux-county-sheriffs-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/iowa>,
+        <https://caselinker.up.railway.app/resource/location/rock-valley>,
+        <https://caselinker.up.railway.app/resource/location/sioux-county> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_358/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -59,18 +67,35 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_358/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Sioux County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_358/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-07-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-07-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_358/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_358/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 24 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_358/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_358/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_358/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-07-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/iowa> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/rock-valley> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Rock Valley" ;
+    uco-core:name "Rock Valley" .
+
+<https://caselinker.up.railway.app/resource/location/sioux-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Sioux County" ;
+    uco-core:name "Sioux County" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_358/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

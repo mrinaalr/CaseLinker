@@ -9,16 +9,19 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/wy_dci_2023_003> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:25:45.176410" ;
+    dcterms:created "2026-09-15T20:42:27.150133" ;
     dcterms:identifier "wy_dci_2023_003" ;
-    dcterms:modified "2026-09-10T20:25:45.176410" ;
+    dcterms:modified "2026-09-15T20:42:27.150133" ;
     dcterms:source <https://kgab.com/cheyenne-man-sentenced-to-3-8-years-in-prison-for-child-porn/>,
         "WY DCI" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/cheyenne>,
+        <https://caselinker.up.railway.app/resource/location/laramie-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/wy_dci_2023_003/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/wy_dci_2023_003/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/wy_dci_2023_003/event/distribution>,
@@ -27,7 +30,9 @@
         <https://caselinker.up.railway.app/resource/case/wy_dci_2023_003/legal-step/sentenced> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/wyoming-division-of-criminal-investigation> .
+        <https://caselinker.up.railway.app/resource/agency/wyoming-division-of-criminal-investigation> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/cheyenne>,
+        <https://caselinker.up.railway.app/resource/location/laramie-county> .
 
 <https://caselinker.up.railway.app/resource/case/wy_dci_2023_003/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -71,8 +76,7 @@
         <https://caselinker.up.railway.app/resource/case/wy_dci_2023_003/charge/2>,
         <https://caselinker.up.railway.app/resource/case/wy_dci_2023_003/charge/3> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/wy_dci_2023_003/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/wy_dci_2023_003/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/wy_dci_2023_003/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/wy_dci_2023_003/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -86,11 +90,7 @@
 
 <https://caselinker.up.railway.app/resource/case/wy_dci_2023_003/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "8 Years" .
-
-<https://caselinker.up.railway.app/resource/case/wy_dci_2023_003/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "122 years" .
+    rdfs:label "[\"8 Years\", \"122 years\"]" .
 
 <https://caselinker.up.railway.app/resource/platform/snapchat> a cacontology-platforms:MessagingService ;
     rdfs:label "Snapchat" .
@@ -98,6 +98,16 @@
 <https://caselinker.up.railway.app/resource/case/wy_dci_2023_003/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/cheyenne> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Cheyenne" ;
+    uco-core:name "Cheyenne" .
+
+<https://caselinker.up.railway.app/resource/location/laramie-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Laramie County" ;
+    uco-core:name "Laramie County" .
 
 <https://caselinker.up.railway.app/resource/case/wy_dci_2023_003/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

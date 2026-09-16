@@ -1,26 +1,34 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2020_037> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:53:19.433687" ;
+    dcterms:created "2026-09-15T19:52:04.486502" ;
     dcterms:identifier "ky_sp_2020_037" ;
-    dcterms:modified "2026-09-10T19:53:19.433687" ;
+    dcterms:modified "2026-09-15T19:52:04.486502" ;
     dcterms:source <https://www.kentuckystatepolice.ky.gov/news/p15-2-4-2020-3/>,
         "KY SP" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/kentucky>,
+        <https://caselinker.up.railway.app/resource/location/liberty> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ky_sp_2020_037/phase/indicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ky_sp_2020_037/phase/indicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ky_sp_2020_037/event/hands-on>,
         <https://caselinker.up.railway.app/resource/case/ky_sp_2020_037/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/kentucky-state-police-department> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/kentucky-state-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/kentucky>,
+        <https://caselinker.up.railway.app/resource/location/liberty> .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2020_037/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -39,16 +47,29 @@
 <https://caselinker.up.railway.app/resource/case/ky_sp_2020_037/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Calloway County Jail" ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2020-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2020-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ky_sp_2020_037/sentence/1> .
 
-<https://caselinker.up.railway.app/resource/case/ky_sp_2020_037/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/ky_sp_2020_037/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 34 .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2020_037/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/ky_sp_2020_037/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2020_037/phase/indicted> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2020-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/kentucky> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/liberty> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Liberty" ;
+    uco-core:name "Liberty" .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2020_037/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

@@ -9,24 +9,31 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_010> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:00:09.452981" ;
+    dcterms:created "2026-09-15T20:06:35.726073" ;
     dcterms:identifier "newyork_sp_2024_010" ;
-    dcterms:modified "2026-09-10T20:00:09.452981" ;
+    dcterms:modified "2026-09-15T20:06:35.726073" ;
     dcterms:source <https://troopers.ny.gov/news/tonawanda-man-arrested-child-sex-crimes-and-illegal-firearms>,
         "NEWYORK SP" ;
-    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_010/phase/charged> ;
-    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_010/phase/charged> ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/new-york>,
+        <https://caselinker.up.railway.app/resource/location/new-york-state>,
+        <https://caselinker.up.railway.app/resource/location/tonawanda> ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_010/phase/arrested> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_010/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_010/event/distribution>,
         <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_010/event/possession>,
         <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_010/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/bureau-of-criminal-investigation>,
-        <https://caselinker.up.railway.app/resource/agency/icac> .
+        <https://caselinker.up.railway.app/resource/agency/icac> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/new-york>,
+        <https://caselinker.up.railway.app/resource/location/new-york-state>,
+        <https://caselinker.up.railway.app/resource/location/tonawanda> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_010/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -65,8 +72,7 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_010/charge/1>,
         <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_010/charge/2> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_010/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_010/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_010/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_010/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 37 .
@@ -75,15 +81,24 @@
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_010/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$25" .
+    rdfs:label "[\"$25\", \"$50\"]" .
 
-<https://caselinker.up.railway.app/resource/case/newyork_sp_2024_010/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$50" .
-
-<https://caselinker.up.railway.app/resource/case/newyork_sp_2024_010/phase/charged> a cacontology:LegalProcessPhase,
+<https://caselinker.up.railway.app/resource/case/newyork_sp_2024_010/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/new-york> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/new-york-state> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "New York State" ;
+    uco-core:name "New York State" .
+
+<https://caselinker.up.railway.app/resource/location/tonawanda> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Tonawanda" ;
+    uco-core:name "Tonawanda" .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2024_010/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

@@ -12,6 +12,7 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -39,7 +40,11 @@
 
 <https://caselinker.up.railway.app/resource/agency/ice> a cacontology-multi:FederalAgency .
 
-<https://caselinker.up.railway.app/resource/agency/queensland-australia-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/queensland-australia-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Queensland (Australia) Police Department" .
+
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/ice_2017_003/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -85,8 +90,7 @@
         <https://caselinker.up.railway.app/resource/case/ice_2017_003/charge/3>,
         <https://caselinker.up.railway.app/resource/case/ice_2017_003/charge/4> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2017-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ice_2017_003/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/ice_2017_003/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ice_2017_003/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ice_2017_003/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -103,22 +107,22 @@
 <https://caselinker.up.railway.app/resource/case/ice_2017_003/person/victim/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ice_2017_003/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "15 years" .
-
-<https://caselinker.up.railway.app/resource/case/ice_2017_003/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "supervised release" .
+    rdfs:label "[\"15 years\", \"supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/ice_2017_003> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:45:42.840521" ;
+    dcterms:created "2026-09-15T19:35:19.146867" ;
     dcterms:identifier "ice_2017_003" ;
-    dcterms:modified "2026-09-10T19:45:42.840521" ;
+    dcterms:modified "2026-09-15T19:35:19.146867" ;
     dcterms:source <https://www.ice.gov/news/releases/utah-man-sentenced-15-years-federal-prison-after-pleading-guilty-receiving-child>,
         "ICE" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/canada>,
+        <https://caselinker.up.railway.app/resource/location/ogden>,
+        <https://caselinker.up.railway.app/resource/location/salt-lake-city>,
+        <https://caselinker.up.railway.app/resource/location/utah> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ice_2017_003/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ice_2017_003/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ice_2017_003/admission/1>,
@@ -137,7 +141,12 @@
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/ice>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/queensland-australia-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/queensland-australia-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/canada>,
+        <https://caselinker.up.railway.app/resource/location/ogden>,
+        <https://caselinker.up.railway.app/resource/location/salt-lake-city>,
+        <https://caselinker.up.railway.app/resource/location/utah> .
 
 <https://caselinker.up.railway.app/resource/case/ice_2017_003/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "beginning about Aug" ;
@@ -161,6 +170,20 @@
         <https://caselinker.up.railway.app/resource/case/ice_2017_003/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ice_2017_003/offense-event/charge-4> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ice_2017_003/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/location/canada> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/ogden> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Ogden" ;
+    uco-core:name "Ogden" .
+
+<https://caselinker.up.railway.app/resource/location/salt-lake-city> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/utah> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ice_2017_003/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

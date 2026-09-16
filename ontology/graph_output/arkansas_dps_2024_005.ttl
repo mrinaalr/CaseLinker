@@ -4,26 +4,29 @@
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
+@prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_005> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:36:15.025391" ;
+    dcterms:created "2026-09-15T19:25:07.416405" ;
     dcterms:identifier "arkansas_dps_2024_005" ;
-    dcterms:modified "2026-09-10T19:36:15.025391" ;
+    dcterms:modified "2026-09-15T19:25:07.416405" ;
     dcterms:source <https://dps.arkansas.gov/news/icac-task-force-investigation-leads-to-arrest-of-harrison-man-for-csam-possession/>,
         "ARKANSAS DPS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/ark> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_005/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_005/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_005/cybertip>,
-        <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_005/event/conspiracy>,
         <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_005/event/distribution>,
         <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_005/event/possession>,
         <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_005/legal-proceeding> ;
@@ -31,13 +34,19 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/arkansas-state-police-department>,
         <https://caselinker.up.railway.app/resource/agency/harrison-police-department>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/ark> .
+
+<https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_005/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_005/event/possession> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_005/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_005/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
     cacontology:hasRoleBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_005/event/conspiracy>,
-        <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_005/event/possession> ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_005/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_005/person/victim/1> .
 
 <https://caselinker.up.railway.app/resource/agency/arkansas-state-police-department> a cacontology-multi:StateAgency .
@@ -48,11 +57,7 @@
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
-<https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_005/charge/1> a cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "Distributing" ;
-    cacontology-legal-outcomes:indictmentCounts 11 .
-
-<https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_005/charge/2> a cacontology-legal-outcomes:CSAM_Possession,
+<https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_005/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "Possession of Child Sexual Abuse" ;
     cacontology-legal-outcomes:indictmentCounts 100 .
@@ -69,31 +74,22 @@
 <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_005/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_005/charge/1>,
-        <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_005/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_005/charge/1> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_005/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_005/person/offender/1> a uco-identity:Person ;
-    cacontology-detection:ageEstimate 31 .
-
-<https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_005/person/offender/2> a uco-identity:Person ;
     cacontology-detection:ageEstimate 38 .
 
-<https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_005/person/victim/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_005/person/victim/1> a uco-identity:Person ;
+    cacontology-production:victimAge 17 .
 
-<https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_005/role/offender/1> a cacontology:OffenderRole,
-        uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_005/event/conspiracy>,
-        <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_005/event/possession> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_005/person/offender/1> .
+<https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_005/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:MonetaryPenalty ;
+    rdfs:label "[\"$750,000\"]" .
 
-<https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_005/role/offender/2> a cacontology:OffenderRole,
-        uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_005/event/conspiracy>,
-        <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_005/event/possession> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_005/person/offender/2> .
+<https://caselinker.up.railway.app/resource/platform/chat> a cacontology-platforms:AnonymousChatPlatform ;
+    rdfs:label "chat" .
 
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
@@ -101,16 +97,8 @@
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
-<https://caselinker.up.railway.app/resource/platform/chat> a cacontology-platforms:AnonymousChatPlatform ;
-    rdfs:label "chat" .
-
-<https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_005/event/conspiracy> a cacontology:ConspiracyToCommitCSA,
-        cac-core:Event ;
-    cacontology:conspiracyMemberCount 2 ;
-    cacontology:participatesInConspiracy <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_005/role/offender/1>,
-        <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_005/role/offender/2> ;
-    cacontology:severityLevel 3 ;
-    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/chat> .
+<https://caselinker.up.railway.app/resource/location/ark> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/arkansas_dps_2024_005/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

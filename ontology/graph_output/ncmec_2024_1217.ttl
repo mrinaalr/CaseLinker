@@ -2,130 +2,98 @@
 @prefix cacontology: <https://cacontology.projectvic.org#> .
 @prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1217> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:24:52.667366" ;
+    dcterms:created "2026-09-15T21:08:11.266078" ;
     dcterms:identifier "ncmec_2024_1217" ;
-    dcterms:modified "2026-09-10T19:24:52.667366" ;
-    dcterms:source <https://www.gmtoday.com/the_freeman/news/oconomowoc-man-charged-with-23-felonies-including-10-counts-of-possessing-child-pornography/article_fadb4a80-6552-5372-8033-831ffabb2444.html>,
+    dcterms:modified "2026-09-15T21:08:11.266078" ;
+    dcterms:source <https://wtmj.com/news/2024/03/23/racine-county-man-arrested-on-15-counts-of-possession-of-child-pornography/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/burlington>,
+        <https://caselinker.up.railway.app/resource/location/racine-county>,
+        <https://caselinker.up.railway.app/resource/location/wis>,
+        <https://caselinker.up.railway.app/resource/location/wisconsin> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/phase/charged> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/event/conspiracy>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/event/hands-on>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/event/possession>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/legal-proceeding> .
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/legal-proceeding> ;
+    cacontology:investigationStatus "unknown" ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
+        <https://caselinker.up.railway.app/resource/agency/racine-county-criminal-investigations-bureau> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/burlington>,
+        <https://caselinker.up.railway.app/resource/location/racine-county>,
+        <https://caselinker.up.railway.app/resource/location/wis>,
+        <https://caselinker.up.railway.app/resource/location/wisconsin> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2024-03-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/event/possession> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2024-08-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/event/conspiracy>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/event/hands-on>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/event/possession> ;
+    cacontology:hasRoleBeginPoint "2024-03-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/charge/1> a cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "POSSESSING CHILD" ;
-    cacontology-legal-outcomes:indictmentCounts 10 .
+<https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/charge/2> a cacontology-legal-outcomes:CSAM_Possession,
+<https://caselinker.up.railway.app/resource/agency/racine-county-criminal-investigations-bureau> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Racine County Criminal Investigations Bureau" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "possession of child pornography" ;
-    cacontology-legal-outcomes:indictmentCounts 12 .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/charge/3> a cacontology-legal-outcomes:CriminalCharge,
-        cacontology-legal-outcomes:StateCharge ;
-    rdfs:label "sexual exploitation of a child" ;
-    cacontology-legal-outcomes:indictmentCounts 12 .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/charge/4> a cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "sexual exploitation" ;
-    ns1:chargeCluster "sexual_exploitation_unspecified" .
+    rdfs:label "Possession of Child Pornography and 3 counts of Failure to Update" ;
+    cacontology-legal-outcomes:indictmentCounts 32 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/charge/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/charge/2>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/charge/3>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/charge/4> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-08-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/sentence/2>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/sentence/3>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/sentence/4>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/sentence/5> .
+    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/charge/1> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-03-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 18 .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/person/offender/2> a uco-identity:Person ;
-    cacontology-detection:ageEstimate 63 .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/person/victim/1> a uco-identity:Person ;
-    cacontology-production:victimAge 9 .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/role/offender/1> a cacontology:OffenderRole,
-        uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2024-08-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/event/conspiracy>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/event/hands-on>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/event/possession> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/person/offender/1> .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/role/offender/2> a cacontology:OffenderRole,
-        uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2024-08-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/event/conspiracy>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/event/hands-on>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/event/possession> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/person/offender/2> .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/person/victim/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$250,000" .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$100,000" .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/sentence/3> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "40 years" .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/sentence/4> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$10,000" .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/sentence/5> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "5 years" .
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
-    cacontology:hasPhaseBeginPoint "2024-08-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology:hasPhaseBeginPoint "2024-03-01T00:00:00Z"^^xsd:dateTimeStamp .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/event/conspiracy> a cacontology:ConspiracyToCommitCSA,
-        cac-core:Event ;
-    cacontology:conspiracyMemberCount 2 ;
-    cacontology:participatesInConspiracy <https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/role/offender/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/role/offender/2> ;
-    cacontology:severityLevel 3 .
+<https://caselinker.up.railway.app/resource/location/burlington> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Burlington" ;
+    uco-core:name "Burlington" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/event/hands-on> a cacontology:ChildSexualAbuseEvent,
-        cac-core:Event ;
-    cacontology:severityLevel 3 .
+<https://caselinker.up.railway.app/resource/location/racine-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/wis> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/wisconsin> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1217/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

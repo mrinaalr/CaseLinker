@@ -10,6 +10,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -27,17 +28,26 @@
 
 <https://caselinker.up.railway.app/resource/agency/attorney-generals-office> a cacontology-multi:StateAgency .
 
-<https://caselinker.up.railway.app/resource/agency/effingham-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/effingham-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Effingham Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/monmouth-police-department> a cacontology-multi:LocalAgency .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_141> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:10:08.264116" ;
+    dcterms:created "2026-09-15T20:55:00.870820" ;
     dcterms:identifier "ncmec_2023_141" ;
-    dcterms:modified "2026-09-10T19:10:08.264116" ;
+    dcterms:modified "2026-09-15T20:55:00.870820" ;
     dcterms:source <https://www.wandtv.com/news/effingham-man-charged-with-possessing-disseminating-child-pornography/article_a7964e12-72a9-11ee-8fb0-c3c0e663f3bf.html#:~:text=Raoul's%20office%20charged%20Dallas%20R,to%20seven%20years%20in%20prison>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/augusta>,
+        <https://caselinker.up.railway.app/resource/location/effingham>,
+        <https://caselinker.up.railway.app/resource/location/ill>,
+        <https://caselinker.up.railway.app/resource/location/illinois>,
+        <https://caselinker.up.railway.app/resource/location/kennebec-county>,
+        <https://caselinker.up.railway.app/resource/location/maine>,
+        <https://caselinker.up.railway.app/resource/location/monmouth> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_141/phase/indicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_141/phase/indicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_141/admission/1>,
@@ -49,7 +59,14 @@
     cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/ncmec_2023_141/tech/cybertipline> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/attorney-generals-office>,
         <https://caselinker.up.railway.app/resource/agency/effingham-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/monmouth-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/monmouth-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/augusta>,
+        <https://caselinker.up.railway.app/resource/location/effingham>,
+        <https://caselinker.up.railway.app/resource/location/ill>,
+        <https://caselinker.up.railway.app/resource/location/illinois>,
+        <https://caselinker.up.railway.app/resource/location/kennebec-county>,
+        <https://caselinker.up.railway.app/resource/location/maine>,
+        <https://caselinker.up.railway.app/resource/location/monmouth> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_141/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -69,7 +86,6 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_141/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility: Effingham County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_141/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_141/charge/2> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2023-03-01T00:00:00Z"^^xsd:dateTimeStamp ;
@@ -90,7 +106,7 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_141/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "30 years" .
+    rdfs:label "[\"30 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_141/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -109,6 +125,33 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_141/phase/indicted> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-03-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/augusta> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Augusta" ;
+    uco-core:name "Augusta" .
+
+<https://caselinker.up.railway.app/resource/location/effingham> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Effingham" ;
+    uco-core:name "Effingham" .
+
+<https://caselinker.up.railway.app/resource/location/ill> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/illinois> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/kennebec-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Kennebec County" ;
+    uco-core:name "Kennebec County" .
+
+<https://caselinker.up.railway.app/resource/location/maine> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/monmouth> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_141/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

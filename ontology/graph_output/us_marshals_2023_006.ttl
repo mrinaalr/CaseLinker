@@ -1,26 +1,53 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
 @prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2023_006> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:19:09.530793" ;
+    dcterms:created "2026-09-15T20:35:06.274558" ;
     dcterms:identifier "us_marshals_2023_006" ;
-    dcterms:modified "2026-09-10T20:19:09.530793" ;
+    dcterms:modified "2026-09-15T20:35:06.274558" ;
     dcterms:source <https://www.usmarshals.gov/news/press-release/us-marshals-galveston-arrest-california-fugitive-run-35-years-multiple-sex>,
         "US MARSHALS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/california>,
+        <https://caselinker.up.railway.app/resource/location/central-district>,
+        <https://caselinker.up.railway.app/resource/location/galveston>,
+        <https://caselinker.up.railway.app/resource/location/galveston-county>,
+        <https://caselinker.up.railway.app/resource/location/houston>,
+        <https://caselinker.up.railway.app/resource/location/huntington-park>,
+        <https://caselinker.up.railway.app/resource/location/kemah>,
+        <https://caselinker.up.railway.app/resource/location/los-angeles-county>,
+        <https://caselinker.up.railway.app/resource/location/southern-district>,
+        <https://caselinker.up.railway.app/resource/location/texas>,
+        <https://caselinker.up.railway.app/resource/location/the-southern-district> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/us_marshals_2023_006/phase/booked> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/us_marshals_2023_006/phase/booked> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/us_marshals_2023_006/event/hands-on>,
-        <https://caselinker.up.railway.app/resource/case/us_marshals_2023_006/event/multi-jurisdiction> ;
+        <https://caselinker.up.railway.app/resource/case/us_marshals_2023_006/event/multi-jurisdiction>,
+        <https://caselinker.up.railway.app/resource/case/us_marshals_2023_006/legal-proceeding> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/huntington-park-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/usms> .
+        <https://caselinker.up.railway.app/resource/agency/usms> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/california>,
+        <https://caselinker.up.railway.app/resource/location/central-district>,
+        <https://caselinker.up.railway.app/resource/location/galveston>,
+        <https://caselinker.up.railway.app/resource/location/galveston-county>,
+        <https://caselinker.up.railway.app/resource/location/houston>,
+        <https://caselinker.up.railway.app/resource/location/huntington-park>,
+        <https://caselinker.up.railway.app/resource/location/kemah>,
+        <https://caselinker.up.railway.app/resource/location/los-angeles-county>,
+        <https://caselinker.up.railway.app/resource/location/southern-district>,
+        <https://caselinker.up.railway.app/resource/location/texas>,
+        <https://caselinker.up.railway.app/resource/location/the-southern-district> .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2023_006/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -44,14 +71,69 @@
         cacontology-multi:MultiJurisdictionalInvestigation ;
     cacontology:severityLevel 3 .
 
+<https://caselinker.up.railway.app/resource/case/us_marshals_2023_006/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/us_marshals_2023_006/sentence/1> .
+
 <https://caselinker.up.railway.app/resource/case/us_marshals_2023_006/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 62 .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2023_006/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/us_marshals_2023_006/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/us_marshals_2023_006/phase/booked> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/california> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/central-district> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Central District" ;
+    uco-core:name "Central District" .
+
+<https://caselinker.up.railway.app/resource/location/galveston> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Galveston" ;
+    uco-core:name "Galveston" .
+
+<https://caselinker.up.railway.app/resource/location/galveston-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Galveston County" ;
+    uco-core:name "Galveston County" .
+
+<https://caselinker.up.railway.app/resource/location/houston> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/huntington-park> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Huntington Park" ;
+    uco-core:name "Huntington Park" .
+
+<https://caselinker.up.railway.app/resource/location/kemah> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Kemah" ;
+    uco-core:name "Kemah" .
+
+<https://caselinker.up.railway.app/resource/location/los-angeles-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/southern-district> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Southern District" ;
+    uco-core:name "Southern District" .
+
+<https://caselinker.up.railway.app/resource/location/texas> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/the-southern-district> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2023_006/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

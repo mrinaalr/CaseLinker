@@ -1,77 +1,99 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_250> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:16:22.703411" ;
+    dcterms:created "2026-09-15T21:08:10.386955" ;
     dcterms:identifier "ncmec_2024_250" ;
-    dcterms:modified "2026-09-10T19:16:22.703411" ;
-    dcterms:source <https://www.wymt.com/2024/02/20/married-couple-accused-sexually-assaulting-family-dog/>,
+    dcterms:modified "2026-09-15T21:08:10.386955" ;
+    dcterms:source <https://www.local10.com/news/local/2024/06/20/bay-harbor-islands-man-had-at-least-141-files-of-child-sex-abuse-material-police-say/>,
         "NCMEC" ;
-    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_250/phase/charged> ;
-    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_250/phase/charged> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_250/event/possession>,
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/bay-harbor-islands>,
+        <https://caselinker.up.railway.app/resource/location/fla>,
+        <https://caselinker.up.railway.app/resource/location/miami-dade> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_250/event/csam>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_250/event/distribution>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_250/event/hands-on>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_250/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/secret-service>,
+        <https://caselinker.up.railway.app/resource/agency/us-secret-service> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/bay-harbor-islands>,
+        <https://caselinker.up.railway.app/resource/location/fla>,
+        <https://caselinker.up.railway.app/resource/location/miami-dade> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_250/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2024-02-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_250/event/possession> ;
+    cacontology:hasRoleBeginPoint "2024-06-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_250/event/csam>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_250/event/hands-on> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_250/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_250/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2024-02-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_250/event/possession> ;
+    cacontology:hasRoleBeginPoint "2024-06-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_250/event/csam>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_250/event/hands-on> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_250/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
+<https://caselinker.up.railway.app/resource/agency/secret-service> a cacontology-multi:LocalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/us-secret-service> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_250/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "possession of child pornography" ;
-    cacontology-legal-outcomes:indictmentCounts 2 .
+    rdfs:label "child sexual abuse material" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_250/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_250/event/distribution> a cac-core:Event,
+        cacontology-legal-outcomes:CSAM_Distribution ;
+    cacontology:severityLevel 3 .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_250/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_250/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility: Lee County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2024_250/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-02-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2024_250/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_250/sentence/2> .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-06-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2024_250/sentence/1> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_250/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_250/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 26 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_250/person/victim/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_250/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$2,500" .
+    rdfs:label "[\"$15,000\"]" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_250/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$20,000," .
+<https://caselinker.up.railway.app/resource/location/bay-harbor-islands> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Bay Harbor Islands" ;
+    uco-core:name "Bay Harbor Islands" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_250/phase/charged> a cacontology:LegalProcessPhase,
-        cac-core:Phase ;
-    cacontology:hasPhaseBeginPoint "2024-02-01T00:00:00Z"^^xsd:dateTimeStamp .
+<https://caselinker.up.railway.app/resource/location/fla> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_250/event/possession> a cacontology:CSAMIncident,
+<https://caselinker.up.railway.app/resource/location/miami-dade> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_250/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;
     cacontology:severityLevel 3 ;
-    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2024_250/facet/possession> .
+    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2024_250/facet/csam> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_250/event/hands-on> a cacontology:ChildSexualAbuseEvent,
+        cac-core:Event ;
+    cacontology:severityLevel 3 .
 

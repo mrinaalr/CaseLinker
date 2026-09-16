@@ -8,16 +8,21 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_428> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T21:22:47.043085" ;
+    dcterms:created "2026-09-15T22:12:27.671285" ;
     dcterms:identifier "doj_safe_childhood_2024_428" ;
-    dcterms:modified "2026-09-14T21:22:47.043085" ;
+    dcterms:modified "2026-09-15T22:12:27.671285" ;
     dcterms:source <https://www.justice.gov/usao-wdtx/pr/former-youth-softball-coach-sentenced-federal-prison-possessing-and-transporting-child>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/marfa>,
+        <https://caselinker.up.railway.app/resource/location/pecos>,
+        <https://caselinker.up.railway.app/resource/location/texas>,
+        <https://caselinker.up.railway.app/resource/location/the-western-district-of-texas> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_428/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_428/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_428/event/distribution>,
@@ -35,7 +40,11 @@
         <https://caselinker.up.railway.app/resource/agency/hsi>,
         <https://caselinker.up.railway.app/resource/agency/marfa-police-department>,
         <https://caselinker.up.railway.app/resource/agency/texas-department-of-public-safety>,
-        <https://caselinker.up.railway.app/resource/agency/usao> .
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/marfa>,
+        <https://caselinker.up.railway.app/resource/location/pecos>,
+        <https://caselinker.up.railway.app/resource/location/texas>,
+        <https://caselinker.up.railway.app/resource/location/the-western-district-of-texas> .
 
 <https://caselinker.up.railway.app/resource/agency/alpine-resident-agency> a cac-core:OrganizationLikeEntity,
         cacontology-multi:LocalAgency ;
@@ -51,7 +60,9 @@
 
 <https://caselinker.up.railway.app/resource/agency/hsi> a cacontology-multi:FederalAgency .
 
-<https://caselinker.up.railway.app/resource/agency/marfa-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/marfa-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Marfa Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/texas-department-of-public-safety> a cacontology-multi:StateAgency .
 
@@ -86,9 +97,7 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_428/charge/1>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_428/charge/2> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_428/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_428/sentence/2>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_428/sentence/3> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_428/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_428/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -120,19 +129,27 @@
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_428/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "97 months" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_428/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "37 months" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_428/sentence/3> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "60 months" .
+    rdfs:label "[\"97 months\", \"37 months\", \"60 months\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_428/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/marfa> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Marfa" ;
+    uco-core:name "Marfa" .
+
+<https://caselinker.up.railway.app/resource/location/pecos> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Pecos" ;
+    uco-core:name "Pecos" .
+
+<https://caselinker.up.railway.app/resource/location/texas> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/the-western-district-of-texas> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_428/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

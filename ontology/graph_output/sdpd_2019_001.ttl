@@ -5,25 +5,34 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/sdpd_2019_001> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:11:57.356248" ;
+    dcterms:created "2026-09-15T20:25:56.572534" ;
     dcterms:identifier "sdpd_2019_001" ;
-    dcterms:modified "2026-09-10T20:11:57.356248" ;
+    dcterms:modified "2026-09-15T20:25:56.572534" ;
     dcterms:source <https://www.sandiego.gov/sites/default/files/pr_07-27-19_sdpd_arrest.pdf>,
         "SDPD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/carmel-valley>,
+        <https://caselinker.up.railway.app/resource/location/san-diego>,
+        <https://caselinker.up.railway.app/resource/location/san-diego-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/sdpd_2019_001/phase/booked> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/sdpd_2019_001/phase/booked> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/sdpd_2019_001/event/conspiracy>,
         <https://caselinker.up.railway.app/resource/case/sdpd_2019_001/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/san-diego-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/san-diego-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/carmel-valley>,
+        <https://caselinker.up.railway.app/resource/location/san-diego>,
+        <https://caselinker.up.railway.app/resource/location/san-diego-county> .
 
 <https://caselinker.up.railway.app/resource/case/sdpd_2019_001/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
@@ -38,8 +47,8 @@
 <https://caselinker.up.railway.app/resource/case/sdpd_2019_001/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): San Diego County Jail" ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2019-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2019-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/sdpd_2019_001/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/sdpd_2019_001/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 21 .
@@ -61,9 +70,24 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/sdpd_2019_001/event/conspiracy> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/sdpd_2019_001/person/offender/2> .
 
+<https://caselinker.up.railway.app/resource/case/sdpd_2019_001/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/sdpd_2019_001/phase/booked> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2019-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/carmel-valley> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Carmel Valley" ;
+    uco-core:name "Carmel Valley" .
+
+<https://caselinker.up.railway.app/resource/location/san-diego> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/san-diego-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/sdpd_2019_001/event/conspiracy> a cacontology:ConspiracyToCommitCSA,
         cac-core:Event ;

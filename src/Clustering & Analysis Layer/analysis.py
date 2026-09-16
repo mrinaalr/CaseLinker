@@ -418,168 +418,273 @@ def tag_threader(all_cases: List[Dict[str, Any]], selected_tags: List[Dict[str, 
     }
 
 
+# Cap pairwise comparisons for metrics / candidate edges so 10k+ corpora finish in seconds.
+_METRIC_PAIR_CAP = 4000
+_CANDIDATE_CAP_PER_CASE = 96
+# Skip ultra-generic tokens that would explode inverted-index blocks.
+_BLOCK_STOP = frozenset({
+    "online", "internet", "unknown", "other", "n/a", "na", "none", "unspecified",
+})
+
+
+def _as_str_set(value: Any) -> frozenset:
+    if not value:
+        return frozenset()
+    if isinstance(value, (set, frozenset)):
+        return frozenset(str(x).strip().lower() for x in value if x is not None and str(x).strip())
+    if isinstance(value, (list, tuple)):
+        return frozenset(str(x).strip().lower() for x in value if x is not None and str(x).strip())
+    if isinstance(value, str) and value.strip():
+        return frozenset([value.strip().lower()])
+    return frozenset()
+
+
+def _ensure_comparison_values(case: Dict[str, Any]) -> Dict[str, Any]:
+    """Parse/normalize comparison_values in-place; synthesize from columns if missing."""
+    comp = case.get("comparison_values")
+    if isinstance(comp, str):
+        try:
+            comp = json.loads(comp)
+        except Exception:
+            comp = {}
+    if not isinstance(comp, dict) or not comp:
+        # Fall back to top-level columns so slim loads still cluster.
+        inv_types = case.get("investigation_types")
+        if isinstance(inv_types, list) and inv_types:
+            inv_type = str(inv_types[0]).strip().lower()
+        else:
+            inv_type = (case.get("investigation_type") or "unknown")
+            inv_type = str(inv_type).strip().lower() if inv_type else "unknown"
+        agencies = case.get("agencies_involved") or []
+        if isinstance(agencies, str):
+            try:
+                agencies = json.loads(agencies)
+            except Exception:
+                agencies = []
+        rel = case.get("relationship_to_victim")
+        pa = case.get("perpetrator_age")
+        if isinstance(pa, int):
+            pa_list = [pa]
+        elif isinstance(pa, list):
+            pa_list = pa
+        else:
+            pa_list = []
+        comp = {
+            "platform_vector": case.get("platforms_used") or [],
+            "topic_vector": case.get("case_topics") or [],
+            "severity_vector": case.get("severity_indicators") or [],
+            "relationship_vector": [rel] if rel else [],
+            "investigation_vector": {
+                "type": inv_type,
+                "agencies": agencies if isinstance(agencies, list) else [],
+            },
+            "demographic_vector": {
+                "victim_count": case.get("victim_count"),
+                "perpetrator_age": pa_list,
+                "multiple_perpetrators": bool(case.get("perpetrator_count") and case.get("perpetrator_count", 0) > 1),
+                "perpetrator_registered": bool(case.get("perpetrator_registered_sex_offender")),
+                "case_age_range": None,
+            },
+        }
+    case["comparison_values"] = comp
+    return comp
+
+
+def _feat_from_case(case: Dict[str, Any]) -> Dict[str, Any]:
+    """Precompute frozensets / scalars used by similarity (one-time per case)."""
+    comp = _ensure_comparison_values(case)
+    demo = comp.get("demographic_vector") or {}
+    if not isinstance(demo, dict):
+        demo = {}
+    inv = comp.get("investigation_vector") or {}
+    if not isinstance(inv, dict):
+        inv = {}
+    pa = demo.get("perpetrator_age")
+    if isinstance(pa, int):
+        pa_list = [pa]
+    elif isinstance(pa, list):
+        pa_list = [x for x in pa if isinstance(x, (int, float))]
+    else:
+        pa_list = []
+    age_range = demo.get("case_age_range")
+    if not isinstance(age_range, dict):
+        age_range = None
+    platforms = _as_str_set(comp.get("platform_vector"))
+    topics = _as_str_set(comp.get("topic_vector"))
+    severity = _as_str_set(comp.get("severity_vector"))
+    rel = _as_str_set(comp.get("relationship_vector"))
+    agencies = _as_str_set(inv.get("agencies"))
+    # Blocking tokens: prefer informative tags; drop stopwords that join everyone.
+    block = frozenset(
+        t for t in (platforms | topics | severity)
+        if t and t not in _BLOCK_STOP and len(t) > 1
+    )
+    return {
+        "id": case.get("id"),
+        "case": case,
+        "platforms": platforms,
+        "topics": topics,
+        "severity": severity,
+        "rel": rel,
+        "agencies": agencies,
+        "inv_type": (str(inv.get("type")).strip().lower() if inv.get("type") else None),
+        "age_range": age_range,
+        "victim_count": demo.get("victim_count"),
+        "pa_set": frozenset(pa_list),
+        "pa_avg": (sum(pa_list) / len(pa_list)) if pa_list else None,
+        "multi_perp": bool(demo.get("multiple_perpetrators")),
+        "rso": bool(demo.get("perpetrator_registered")),
+        "block": block,
+    }
+
+
+def _jaccard(a: frozenset, b: frozenset) -> float:
+    if not a and not b:
+        return 0.0
+    return len(a & b) / max(len(a | b), 1)
+
+
+def _feat_similarity(f1: Dict[str, Any], f2: Dict[str, Any]) -> float:
+    """Same weighted formula as legacy calculate_case_similarity, on precomputed feats."""
+    score = 0.0
+    weight_sum = 0.0
+
+    if f1["platforms"] or f2["platforms"]:
+        score += _jaccard(f1["platforms"], f2["platforms"]) * 0.15
+        weight_sum += 0.15
+
+    demo_sim = 0.0
+    demo_count = 0
+    ar1, ar2 = f1["age_range"], f2["age_range"]
+    if ar1 and ar2:
+        overlap = min(ar1.get("max", 0), ar2.get("max", 0)) - max(ar1.get("min", 0), ar2.get("min", 0))
+        r1 = ar1.get("max", 0) - ar1.get("min", 0)
+        r2 = ar2.get("max", 0) - ar2.get("min", 0)
+        if overlap > 0 and (r1 + r2) > 0:
+            demo_sim += overlap / max(r1, r2)
+            demo_count += 1
+    vc1, vc2 = f1["victim_count"], f2["victim_count"]
+    if vc1 is not None and vc2 is not None:
+        try:
+            vc1f, vc2f = float(vc1), float(vc2)
+            if vc1f == vc2f:
+                demo_sim += 1.0
+            elif max(vc1f, vc2f) > 0:
+                demo_sim += min(vc1f, vc2f) / max(vc1f, vc2f)
+            demo_count += 1
+        except (TypeError, ValueError):
+            pass
+    if f1["pa_set"] and f2["pa_set"]:
+        if f1["pa_set"] == f2["pa_set"]:
+            demo_sim += 1.0
+        elif f1["pa_set"] & f2["pa_set"]:
+            demo_sim += len(f1["pa_set"] & f2["pa_set"]) / len(f1["pa_set"] | f2["pa_set"])
+        elif f1["pa_avg"] is not None and f2["pa_avg"] is not None:
+            demo_sim += max(0.0, 1.0 - abs(f1["pa_avg"] - f2["pa_avg"]) / 20.0)
+        if f1["multi_perp"] and f2["multi_perp"]:
+            demo_sim += 0.2
+            demo_count += 1
+        demo_count += 1
+    # Always count RSO agreement when both feats exist
+    demo_sim += 1.0 if f1["rso"] == f2["rso"] else 0.0
+    demo_count += 1
+    if demo_count > 0:
+        score += (demo_sim / demo_count) * 0.20
+        weight_sum += 0.20
+
+    if f1["rel"] or f2["rel"]:
+        rel_sim = 1.0 if f1["rel"] == f2["rel"] else (0.5 if f1["rel"] & f2["rel"] else 0.0)
+        score += rel_sim * 0.10
+        weight_sum += 0.10
+
+    inv_sim = 0.0
+    inv_count = 0
+    if f1["inv_type"] and f2["inv_type"]:
+        inv_sim += 1.0 if f1["inv_type"] == f2["inv_type"] else 0.0
+        inv_count += 1
+    if f1["agencies"] or f2["agencies"]:
+        inv_sim += _jaccard(f1["agencies"], f2["agencies"])
+        inv_count += 1
+    if inv_count > 0:
+        score += (inv_sim / inv_count) * 0.15
+        weight_sum += 0.15
+
+    if f1["topics"] or f2["topics"]:
+        score += _jaccard(f1["topics"], f2["topics"]) * 0.25
+        weight_sum += 0.25
+    if f1["severity"] or f2["severity"]:
+        score += _jaccard(f1["severity"], f2["severity"]) * 0.15
+        weight_sum += 0.15
+
+    if weight_sum > 0:
+        return score / weight_sum
+    return 0.0
+
+
 def calculate_case_similarity(case1: Dict[str, Any], case2: Dict[str, Any]) -> float:
     """
     Calculate similarity score between two cases using comparison values.
     Returns a score between 0.0 and 1.0.
     """
-    comp1 = case1.get('comparison_values', {})
-    comp2 = case2.get('comparison_values', {})
-    
-    if not comp1 or not comp2:
-        return 0.0
-    
-    similarity_score = 0.0
-    weight_sum = 0.0
-    
-    # Platform similarity (weight: 0.15)
-    platforms1 = comp1.get('platform_vector') or []
-    platforms2 = comp2.get('platform_vector') or []
-    platforms1 = set(platforms1) if isinstance(platforms1, (list, tuple, set)) else set()
-    platforms2 = set(platforms2) if isinstance(platforms2, (list, tuple, set)) else set()
-    if platforms1 or platforms2:
-        platform_sim = len(platforms1 & platforms2) / max(len(platforms1 | platforms2), 1)
-        similarity_score += platform_sim * 0.15
-        weight_sum += 0.15
-    
-    # Demographic similarity (weight: 0.20)
-    demo1 = comp1.get('demographic_vector', {})
-    demo2 = comp2.get('demographic_vector', {})
-    demo_sim = 0.0
-    demo_count = 0
-    
-    # Victim age range similarity
-    age_range1 = demo1.get('case_age_range')
-    age_range2 = demo2.get('case_age_range')
-    if age_range1 and age_range2:
-        overlap = min(age_range1.get('max', 0), age_range2.get('max', 0)) - max(age_range1.get('min', 0), age_range2.get('min', 0))
-        range1_size = age_range1.get('max', 0) - age_range1.get('min', 0)
-        range2_size = age_range2.get('max', 0) - age_range2.get('min', 0)
-        if overlap > 0 and (range1_size + range2_size) > 0:
-            demo_sim += overlap / max(range1_size, range2_size)
-            demo_count += 1
-    
-    # Victim count similarity
-    vc1 = demo1.get('victim_count')
-    vc2 = demo2.get('victim_count')
-    if vc1 is not None and vc2 is not None:
-        if vc1 == vc2:
-            demo_sim += 1.0
-        elif max(vc1, vc2) > 0:
-            demo_sim += min(vc1, vc2) / max(vc1, vc2)
-        demo_count += 1
-    
-    # Perpetrator age similarity (handles both single and multiple perpetrators)
-    pa1 = demo1.get('perpetrator_age')
-    pa2 = demo2.get('perpetrator_age')
-    
-    # Normalize to lists
-    if isinstance(pa1, int):
-        pa1 = [pa1]
-    elif not isinstance(pa1, list):
-        pa1 = []
-    
-    if isinstance(pa2, int):
-        pa2 = [pa2]
-    elif not isinstance(pa2, list):
-        pa2 = []
-    
-    if pa1 and pa2:
-        # Calculate similarity between perpetrator age lists
-        # Method 1: Exact matches (same ages)
-        set1 = set(pa1)
-        set2 = set(pa2)
-        if set1 == set2:
-            demo_sim += 1.0  # Perfect match
-        elif set1 & set2:
-            # Some ages match - calculate overlap
-            overlap = len(set1 & set2)
-            total_unique = len(set1 | set2)
-            demo_sim += overlap / total_unique
+    return _feat_similarity(_feat_from_case(case1), _feat_from_case(case2))
+
+
+class _UnionFind:
+    __slots__ = ("parent", "rank")
+
+    def __init__(self, n: int):
+        self.parent = list(range(n))
+        self.rank = [0] * n
+
+    def find(self, x: int) -> int:
+        p = self.parent
+        while p[x] != x:
+            p[x] = p[p[x]]
+            x = p[x]
+        return x
+
+    def union(self, a: int, b: int) -> None:
+        ra, rb = self.find(a), self.find(b)
+        if ra == rb:
+            return
+        if self.rank[ra] < self.rank[rb]:
+            self.parent[ra] = rb
+        elif self.rank[ra] > self.rank[rb]:
+            self.parent[rb] = ra
         else:
-            # No exact matches - calculate average age difference
-            avg_age1 = sum(pa1) / len(pa1)
-            avg_age2 = sum(pa2) / len(pa2)
-            age_diff = abs(avg_age1 - avg_age2)
-            demo_sim += max(0, 1.0 - age_diff / 20.0)  # Normalize by 20 year difference
-        
-        # Bonus: Both have multiple perpetrators (gives more weight)
-        mp1 = demo1.get('multiple_perpetrators', False)
-        mp2 = demo2.get('multiple_perpetrators', False)
-        if mp1 and mp2:
-            demo_sim += 0.2  # Bonus for both having multiple perpetrators
-            demo_count += 1  # Count this as an additional factor
-        
-        demo_count += 1
-    
-    # Registered sex offender match
-    rso1 = demo1.get('perpetrator_registered', False)
-    rso2 = demo2.get('perpetrator_registered', False)
-    if rso1 == rso2:
-        demo_sim += 1.0
-        demo_count += 1
-    
-    if demo_count > 0:
-        similarity_score += (demo_sim / demo_count) * 0.20
-        weight_sum += 0.20
-    
-    # Relationship similarity (weight: 0.10)
-    rel1 = comp1.get('relationship_vector') or []
-    rel2 = comp2.get('relationship_vector') or []
-    rel1 = set(rel1) if isinstance(rel1, (list, tuple, set)) else set()
-    rel2 = set(rel2) if isinstance(rel2, (list, tuple, set)) else set()
-    if rel1 or rel2:
-        rel_sim = 1.0 if rel1 == rel2 else (0.5 if rel1 & rel2 else 0.0)
-        similarity_score += rel_sim * 0.10
-        weight_sum += 0.10
-    
-    # Investigation similarity (weight: 0.15)
-    inv1 = comp1.get('investigation_vector', {})
-    inv2 = comp2.get('investigation_vector', {})
-    inv_sim = 0.0
-    inv_count = 0
-    
-    if inv1.get('type') and inv2.get('type'):
-        inv_sim += 1.0 if inv1['type'] == inv2['type'] else 0.0
-        inv_count += 1
-    
-    agencies1 = inv1.get('agencies') or []
-    agencies2 = inv2.get('agencies') or []
-    agencies1 = set(agencies1) if isinstance(agencies1, (list, tuple, set)) else set()
-    agencies2 = set(agencies2) if isinstance(agencies2, (list, tuple, set)) else set()
-    if agencies1 or agencies2:
-        agency_sim = len(agencies1 & agencies2) / max(len(agencies1 | agencies2), 1)
-        inv_sim += agency_sim
-        inv_count += 1
-    
-    if inv_count > 0:
-        similarity_score += (inv_sim / inv_count) * 0.15
-        weight_sum += 0.15
-    
-    # Topic similarity (weight: 0.25)
-    topics1 = comp1.get('topic_vector') or []
-    topics2 = comp2.get('topic_vector') or []
-    topics1 = set(topics1) if isinstance(topics1, (list, tuple, set)) else set()
-    topics2 = set(topics2) if isinstance(topics2, (list, tuple, set)) else set()
-    if topics1 or topics2:
-        topic_sim = len(topics1 & topics2) / max(len(topics1 | topics2), 1)
-        similarity_score += topic_sim * 0.25
-        weight_sum += 0.25
-    
-    # Severity similarity (weight: 0.15)
-    severity1 = comp1.get('severity_vector') or []
-    severity2 = comp2.get('severity_vector') or []
-    severity1 = set(severity1) if isinstance(severity1, (list, tuple, set)) else set()
-    severity2 = set(severity2) if isinstance(severity2, (list, tuple, set)) else set()
-    if severity1 or severity2:
-        severity_sim = len(severity1 & severity2) / max(len(severity1 | severity2), 1)
-        similarity_score += severity_sim * 0.15
-        weight_sum += 0.15
-    
-    # Normalize by weight sum
-    if weight_sum > 0:
-        return similarity_score / weight_sum
-    return 0.0
+            self.parent[rb] = ra
+            self.rank[ra] += 1
+
+
+def _sample_pair_indices(n: int, cap: int = _METRIC_PAIR_CAP) -> List[Tuple[int, int]]:
+    """Deterministic pair sample: diagonal stripes, then stride fill. O(cap)."""
+    if n < 2:
+        return []
+    total = n * (n - 1) // 2
+    if total <= cap:
+        return [(i, j) for i in range(n) for j in range(i + 1, n)]
+    pairs: List[Tuple[int, int]] = []
+    # Near-diagonal (local structure)
+    for dist in range(1, n):
+        for i in range(0, n - dist):
+            pairs.append((i, i + dist))
+            if len(pairs) >= cap:
+                return pairs
+    return pairs
+
+
+def _metrics_from_feats(feats: List[Dict[str, Any]]) -> Dict[str, float]:
+    n = len(feats)
+    if n < 2:
+        return {"average_similarity": 0.0, "min_similarity": 0.0, "max_similarity": 0.0}
+    sims = [_feat_similarity(feats[i], feats[j]) for i, j in _sample_pair_indices(n)]
+    if not sims:
+        return {"average_similarity": 0.0, "min_similarity": 0.0, "max_similarity": 0.0}
+    return {
+        "average_similarity": round(sum(sims) / len(sims), 3),
+        "min_similarity": round(min(sims), 3),
+        "max_similarity": round(max(sims), 3),
+    }
 
 
 def extract_keywords_semantic(case_text: str, top_n: int = 10) -> List[str]:
@@ -888,57 +993,18 @@ def find_investigation_cases(all_cases: List[Dict[str, Any]]) -> List[Dict[str, 
 def calculate_group_similarity_metrics(group_cases: List[Dict[str, Any]]) -> Dict[str, float]:
     """
     Calculate similarity metrics for a group of cases.
-    
-    Computes average, minimum, and maximum pairwise similarities within the group.
-    
-    Args:
-        group_cases: List of case dictionaries in the group
-        
-    Returns:
-        Dictionary with 'average_similarity', 'min_similarity', 'max_similarity'
+
+    Uses a deterministic capped pair sample (not full O(n²)) so large clusters
+    stay interactive at corpus scale.
     """
     if len(group_cases) < 2:
         return {
-            'average_similarity': 0.0,
-            'min_similarity': 0.0,
-            'max_similarity': 0.0
+            "average_similarity": 0.0,
+            "min_similarity": 0.0,
+            "max_similarity": 0.0,
         }
-    
-    # Parse comparison_values if needed
-    for case in group_cases:
-        if isinstance(case.get('comparison_values'), str):
-            try:
-                case['comparison_values'] = json.loads(case['comparison_values'])
-            except:
-                case['comparison_values'] = {}
-        elif not case.get('comparison_values'):
-            extracted = case.get('extracted_features', {})
-            if isinstance(extracted, str):
-                try:
-                    extracted = json.loads(extracted)
-                except:
-                    extracted = {}
-            case['comparison_values'] = {}
-    
-    # Calculate all pairwise similarities
-    similarities = []
-    for i in range(len(group_cases)):
-        for j in range(i+1, len(group_cases)):
-            sim = calculate_case_similarity(group_cases[i], group_cases[j])
-            similarities.append(sim)
-    
-    if not similarities:
-        return {
-            'average_similarity': 0.0,
-            'min_similarity': 0.0,
-            'max_similarity': 0.0
-        }
-    
-    return {
-        'average_similarity': round(sum(similarities) / len(similarities), 3),
-        'min_similarity': round(min(similarities), 3),
-        'max_similarity': round(max(similarities), 3)
-    }
+    feats = [_feat_from_case(c) for c in group_cases]
+    return _metrics_from_feats(feats)
 
 
 def find_severe_cases(all_cases: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
@@ -981,141 +1047,90 @@ def find_severe_cases(all_cases: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
 
 def find_similar_cases_general(all_cases: List[Dict[str, Any]], similarity_threshold: float = 0.45) -> List[Dict[str, Any]]:
     """
-    Find cases for general Case Cluster using similarity-based clustering.
-    This is used for cases that don't fit into the predefined cluster types.
-    
-    Uses similarity-based clustering to group remaining cases.
-    
-    Args:
-        all_cases: List of case dictionaries (should be cases not in other clusters)
-        similarity_threshold: Minimum similarity (0.0-1.0) for grouping. Default 0.45.
-    
-    Returns:
-        List of case groups with similar cases
+    Similarity clustering via blocked candidate edges + Union-Find components.
+
+    Replaces the legacy O(n²) full matrix + O(n³) clique-growth loop:
+      1. Precompute feature frozensets once
+      2. Inverted-index blocking on topics/platforms/severity (stopwords dropped)
+      3. Cap candidates per case; keep edges with sim >= threshold
+      4. Connected components (single-linkage at threshold) as internal groups
+
+    Deterministic: cases sorted by id; candidate caps take lowest ids first.
     """
     if not all_cases:
         return []
-    
-    # Ensure deterministic ordering by sorting cases by ID first
-    # This ensures clusters are identical across different environments
-    all_cases = sorted(all_cases, key=lambda c: c.get('id', ''))
-    
-    # Parse comparison_values if stored as JSON strings
-    for case in all_cases:
-        if isinstance(case.get('comparison_values'), str):
-            try:
-                case['comparison_values'] = json.loads(case['comparison_values'])
-            except:
-                case['comparison_values'] = {}
-        elif not case.get('comparison_values'):
-            extracted = case.get('extracted_features', {})
-            if isinstance(extracted, str):
-                try:
-                    extracted = json.loads(extracted)
-                except:
-                    extracted = {}
-            case['comparison_values'] = {}
-    
-    # Build similarity matrix
-    similarity_matrix = {}
-    case_ids = [c.get('id') for c in all_cases if c.get('id')]
-    
-    for i, case1 in enumerate(all_cases):
-        case1_id = case1.get('id')
-        if not case1_id:
-            continue
-        for j, case2 in enumerate(all_cases[i+1:], start=i+1):
-            case2_id = case2.get('id')
-            if not case2_id:
+
+    all_cases = sorted(all_cases, key=lambda c: c.get("id") or "")
+    feats = [_feat_from_case(c) for c in all_cases if c.get("id")]
+    n = len(feats)
+    if n < 2:
+        return []
+
+    # Inverted index: token -> sorted indices
+    index: Dict[str, List[int]] = defaultdict(list)
+    for i, f in enumerate(feats):
+        for tok in f["block"]:
+            index[tok].append(i)
+
+    uf = _UnionFind(n)
+    # Candidate pairs (i < j) via shared block tokens; cap per case for O(n·C)
+    seen_pairs: set = set()
+    for i, f in enumerate(feats):
+        cand: set = set()
+        for tok in f["block"]:
+            bucket = index.get(tok)
+            if not bucket:
                 continue
-            sim = calculate_case_similarity(case1, case2)
-            similarity_matrix[(case1_id, case2_id)] = sim
-            similarity_matrix[(case2_id, case1_id)] = sim
-    
-    groups = []
-    used_cases = set()
-    
-    # Sort by connectivity, then by case ID for deterministic ordering
-    # This ensures clusters are identical across different environments
-    case_connectivity = {}
-    for case in all_cases:
-        case_id = case.get('id')
-        if not case_id:
+            # Huge generic buckets already filtered; still skip enormous leftovers
+            if len(bucket) > 2500:
+                continue
+            for j in bucket:
+                if j > i:
+                    cand.add(j)
+                if len(cand) >= _CANDIDATE_CAP_PER_CASE:
+                    break
+            if len(cand) >= _CANDIDATE_CAP_PER_CASE:
+                break
+        if not cand and not f["block"]:
+            # No block tokens: light fallback — compare to next K by id order
+            for j in range(i + 1, min(n, i + 1 + _CANDIDATE_CAP_PER_CASE)):
+                cand.add(j)
+        for j in sorted(cand)[:_CANDIDATE_CAP_PER_CASE]:
+            key = (i, j)
+            if key in seen_pairs:
+                continue
+            seen_pairs.add(key)
+            if _feat_similarity(feats[i], feats[j]) >= similarity_threshold:
+                uf.union(i, j)
+
+    components: Dict[int, List[int]] = defaultdict(list)
+    for i in range(n):
+        components[uf.find(i)].append(i)
+
+    groups: List[Dict[str, Any]] = []
+    for idxs in components.values():
+        if len(idxs) < 2:
             continue
-        similar_count = sum(1 for other_id in case_ids 
-                          if other_id != case_id and 
-                          similarity_matrix.get((case_id, other_id), 0) >= similarity_threshold)
-        case_connectivity[case_id] = similar_count
-    
-    # Sort by connectivity (descending), then by case ID (ascending) for deterministic ordering
-    sorted_cases = sorted(all_cases, key=lambda c: (
-        -case_connectivity.get(c.get('id'), 0),  # Negative for descending order
-        c.get('id', '')  # Then by ID for deterministic tie-breaking
-    ))
-    
-    for case1 in sorted_cases:
-        case1_id = case1.get('id')
-        if not case1_id or case1_id in used_cases:
-            continue
-        
-        group = [case1]
-        used_cases.add(case1_id)
-        
-        # Find cases similar to ALL cases in group
-        # Sort all_cases by ID for deterministic ordering
-        sorted_all_cases = sorted(all_cases, key=lambda c: c.get('id', ''))
-        changed = True
-        while changed:
-            changed = False
-            for case2 in sorted_all_cases:
-                case2_id = case2.get('id')
-                if not case2_id or case2_id in used_cases:
-                    continue
-                
-                similar_to_all = True
-                for group_case in group:
-                    group_case_id = group_case.get('id')
-                    sim = similarity_matrix.get((case2_id, group_case_id), 0)
-                    if sim < similarity_threshold:
-                        similar_to_all = False
-                        break
-                
-                if similar_to_all:
-                    group.append(case2)
-                    used_cases.add(case2_id)
-                    changed = True
-        
-        if len(group) > 1:
-            # Calculate similarities
-            similarities = []
-            for k in range(len(group)):
-                for l in range(k+1, len(group)):
-                    case_k_id = group[k].get('id')
-                    case_l_id = group[l].get('id')
-                    sim = similarity_matrix.get((case_k_id, case_l_id), 0)
-                    similarities.append(sim)
-            
-            avg_similarity = sum(similarities) / len(similarities) if similarities else 0.0
-            min_similarity = min(similarities) if similarities else 0.0
-            max_similarity = max(similarities) if similarities else 0.0
-            
-            characteristics = analyze_group_characteristics(group)
-            
-            groups.append({
-                'group_id': f"case_cluster_{len(groups) + 1}",
-                'cases': group,
-                'size': len(group),
-                'average_similarity': round(avg_similarity, 3),
-                'min_similarity': round(min_similarity, 3),
-                'max_similarity': round(max_similarity, 3),
-                'group_name': 'Case Cluster',
-                'description': characteristics.get('description', f"Cluster of {len(group)} similar cases"),
-                'statistics': characteristics.get('statistics', {})
-            })
-    
-    # Free O(n²) matrix before returning (peak allocation site)
-    del similarity_matrix, case_connectivity
-    return sorted(groups, key=lambda g: g['size'], reverse=True)
+        idxs = sorted(idxs)  # stable by original id order (feats already id-sorted)
+        group_cases = [feats[k]["case"] for k in idxs]
+        group_feats = [feats[k] for k in idxs]
+        metrics = _metrics_from_feats(group_feats)
+        characteristics = analyze_group_characteristics(group_cases)
+        groups.append({
+            "group_id": f"case_cluster_{len(groups) + 1}",
+            "cases": group_cases,
+            "size": len(group_cases),
+            "average_similarity": metrics["average_similarity"],
+            "min_similarity": metrics["min_similarity"],
+            "max_similarity": metrics["max_similarity"],
+            "group_name": "Case Cluster",
+            "description": characteristics.get(
+                "description", f"Cluster of {len(group_cases)} similar cases"
+            ),
+            "statistics": characteristics.get("statistics", {}),
+        })
+
+    return sorted(groups, key=lambda g: (-g["size"], g["group_id"]))
 
 
 def group_similar_cases(all_cases: List[Dict[str, Any]], similarity_threshold: float = 0.45) -> List[Dict[str, Any]]:

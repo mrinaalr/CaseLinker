@@ -9,6 +9,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -27,11 +28,14 @@
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2014_006> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:16:33.718635" ;
+    dcterms:created "2026-09-15T20:31:48.053806" ;
     dcterms:identifier "tbi_icac_2014_006" ;
-    dcterms:modified "2026-09-10T20:16:33.718635" ;
+    dcterms:modified "2026-09-15T20:31:48.053806" ;
     dcterms:source <https://tbinewsroom.com/2014/06/17/wilson-county-man-nabbed-in-tbi-child-pornography-case/>,
         "TBI ICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/lebanon>,
+        <https://caselinker.up.railway.app/resource/location/nashville>,
+        <https://caselinker.up.railway.app/resource/location/wilson-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/tbi_icac_2014_006/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/tbi_icac_2014_006/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/tbi_icac_2014_006/admission/1>,
@@ -39,7 +43,10 @@
         <https://caselinker.up.railway.app/resource/case/tbi_icac_2014_006/event/possession>,
         <https://caselinker.up.railway.app/resource/case/tbi_icac_2014_006/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/tennessee-bureau-of-investigation> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/tennessee-bureau-of-investigation> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/lebanon>,
+        <https://caselinker.up.railway.app/resource/location/nashville>,
+        <https://caselinker.up.railway.app/resource/location/wilson-county> .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2014_006/charge/1> a cacontology-legal-outcomes:CriminalCharge,
         cacontology-legal-outcomes:StateCharge ;
@@ -61,7 +68,6 @@
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2014_006/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility: Wilson County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/tbi_icac_2014_006/charge/1>,
         <https://caselinker.up.railway.app/resource/case/tbi_icac_2014_006/charge/2>,
         <https://caselinker.up.railway.app/resource/case/tbi_icac_2014_006/charge/3> ;
@@ -81,7 +87,7 @@
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2014_006/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$550,000" .
+    rdfs:label "[\"$550,000\"]" .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2014_006/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "collecting and distributing the images and videos beginning in the year 2000 and continuing through 2013" ;
@@ -97,6 +103,19 @@
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2014_006/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2014-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/lebanon> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Lebanon" ;
+    uco-core:name "Lebanon" .
+
+<https://caselinker.up.railway.app/resource/location/nashville> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/wilson-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Wilson County" ;
+    uco-core:name "Wilson County" .
 
 <https://caselinker.up.railway.app/resource/case/tbi_icac_2014_006/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

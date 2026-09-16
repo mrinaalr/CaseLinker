@@ -3,28 +3,41 @@
 @prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
+@prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
+@prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_395> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:12:03.792936" ;
+    dcterms:created "2026-09-15T20:55:01.090940" ;
     dcterms:identifier "ncmec_2023_395" ;
-    dcterms:modified "2026-09-10T19:12:03.792936" ;
-    dcterms:source <https://www.thesunchronicle.com/news/local_news/attleboro-man-pleads-innocent-to-possessing-child-pornography/article_9c7d1900-deb8-51f2-9560-56acad8bab36.html>,
+    dcterms:modified "2026-09-15T20:55:01.090940" ;
+    dcterms:source <https://www.nj.com/essex/2023/08/grand-jury-indicts-college-student-on-charges-he-induced-teens-to-send-nude-videos.html#:~:text=Keyon%20Luff%2C%2021%2C%20of%20Edgewater,the%20New%20Jersey%20Attorney%20General's>,
         "NCMEC" ;
-    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_395/phase/booked> ;
-    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_395/phase/booked> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_395/event/possession>,
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/edgewater-park>,
+        <https://caselinker.up.railway.app/resource/location/essex-county>,
+        <https://caselinker.up.railway.app/resource/location/montclair>,
+        <https://caselinker.up.railway.app/resource/location/new-jersey> ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_395/phase/charged> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_395/phase/charged> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_395/cybertip>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2023_395/event/distribution>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2023_395/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_395/legal-proceeding> ;
-    cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/massachusetts-state-police-department> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ncmec>,
+        <https://caselinker.up.railway.app/resource/agency/new-jersey-attorney-generals-office>,
+        <https://caselinker.up.railway.app/resource/agency/us-secret-service> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/edgewater-park>,
+        <https://caselinker.up.railway.app/resource/location/essex-county>,
+        <https://caselinker.up.railway.app/resource/location/montclair>,
+        <https://caselinker.up.railway.app/resource/location/new-jersey> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_395/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -38,13 +51,22 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_395/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_395/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
+<https://caselinker.up.railway.app/resource/agency/new-jersey-attorney-generals-office> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:StateAgency ;
+    rdfs:label "New Jersey Attorney General's Office" .
 
-<https://caselinker.up.railway.app/resource/agency/massachusetts-state-police-department> a cacontology-multi:StateAgency .
+<https://caselinker.up.railway.app/resource/agency/us-secret-service> a cacontology-multi:FederalAgency .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_395/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
-        cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "child pornography" .
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_395/charge/1> a cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "sexual exploitation" ;
+    ns1:chargeCluster "sexual_exploitation_unspecified" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_395/cybertip> a cacontology-us-ncmec:NCMECCybertipReport ;
+    cacontology-us-ncmec:supportedBy <https://caselinker.up.railway.app/resource/agency/ncmec> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_395/event/distribution> a cac-core:Event,
+        cacontology-legal-outcomes:CSAM_Distribution ;
+    cacontology:severityLevel 3 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_395/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
@@ -56,19 +78,42 @@
     cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_395/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_395/person/offender/1> a uco-identity:Person ;
-    cacontology-detection:ageEstimate 32 .
+    cacontology-detection:ageEstimate 21 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_395/person/victim/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_395/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$1,000" .
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_395/phase/booked> a cacontology:InitialPhase,
+<https://caselinker.up.railway.app/resource/platform/social-media> a cacontology-platforms:SocialMediaPlatform ;
+    rdfs:label "social media" .
+
+<https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_395/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
+<https://caselinker.up.railway.app/resource/location/edgewater-park> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Edgewater Park" ;
+    uco-core:name "Edgewater Park" .
+
+<https://caselinker.up.railway.app/resource/location/essex-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/montclair> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Montclair" ;
+    uco-core:name "Montclair" .
+
+<https://caselinker.up.railway.app/resource/location/new-jersey> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_395/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
+    cacontology:severityLevel 3 ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/social-media> ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2023_395/facet/possession> .
 

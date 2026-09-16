@@ -9,6 +9,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -29,17 +30,21 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_075> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:05:19.006695" ;
+    dcterms:created "2026-09-15T20:45:06.048529" ;
     dcterms:identifier "ncmec_2022_075" ;
-    dcterms:modified "2026-09-10T19:05:19.006695" ;
+    dcterms:modified "2026-09-15T20:45:06.048529" ;
     dcterms:source <https://www.fox19.com/2022/08/08/butler-county-man-indicted-19-child-porn-related-charges/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/butler-county>,
+        <https://caselinker.up.railway.app/resource/location/ohio> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_075/phase/indicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_075/phase/indicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2022_075/admission/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_075/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_075/legal-proceeding> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/butler-county-sheriffs-office> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/butler-county-sheriffs-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/butler-county>,
+        <https://caselinker.up.railway.app/resource/location/ohio> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_075/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -51,9 +56,9 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_075/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Butler County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2022_075/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2022_075/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_075/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 36 .
@@ -66,14 +71,26 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_075/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_075/person/offender/1> .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_075/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_075/phase/indicted> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
+<https://caselinker.up.railway.app/resource/location/butler-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Butler County" ;
+    uco-core:name "Butler County" .
+
+<https://caselinker.up.railway.app/resource/location/ohio> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_075/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "has struggled with addiction issues related to methamphetamines and pornography" ;
     dcterms:source <https://www.fox19.com/2022/08/08/butler-county-man-indicted-19-child-porn-related-charges/> ;
-    ns1:admissionContext "charge for possessing drug abuse instruments, the sheriff’s office said. Some of Marlow’s family members said he has struggled with addic..." ;
+    ns1:admissionContext "harge for possessing drug abuse instruments, the sheriff’s office said. Some of Marlow’s family members said he has struggled with addict..." ;
     ns1:admissionFrame "said_paraphrase" ;
     ns1:admissionTheme "harm_conduct",
         "recidivism_escalation" ;

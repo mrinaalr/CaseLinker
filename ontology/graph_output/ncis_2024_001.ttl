@@ -9,26 +9,40 @@
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncis_2024_001> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:55:18.804337" ;
+    dcterms:created "2026-09-15T20:00:11.620013" ;
     dcterms:identifier "ncis_2024_001" ;
-    dcterms:modified "2026-09-10T19:55:18.804337" ;
+    dcterms:modified "2026-09-15T20:00:11.620013" ;
     dcterms:source <https://www.ncis.navy.mil/Media/Press-Releases/Press-Release-View/Article/3985525/st-cloud-man-sentenced-to-ten-years-in-prison-for-attempting-to-entice-a-child>,
         "NCIS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/florida>,
+        <https://caselinker.up.railway.app/resource/location/jacksonville>,
+        <https://caselinker.up.railway.app/resource/location/nassau-county>,
+        <https://caselinker.up.railway.app/resource/location/st-cloud>,
+        <https://caselinker.up.railway.app/resource/location/united-states> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncis_2024_001/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncis_2024_001/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncis_2024_001/event/online-only>,
+        <https://caselinker.up.railway.app/resource/case/ncis_2024_001/event/project-safe-childhood>,
         <https://caselinker.up.railway.app/resource/case/ncis_2024_001/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/ncis_2024_001/legal-step/sentenced>,
         <https://caselinker.up.railway.app/resource/case/ncis_2024_001/offense-event/charge-3>,
         <https://caselinker.up.railway.app/resource/case/ncis_2024_001/operation> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ceos>,
-        <https://caselinker.up.railway.app/resource/agency/fbi> .
+        <https://caselinker.up.railway.app/resource/agency/fbi>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/florida>,
+        <https://caselinker.up.railway.app/resource/location/jacksonville>,
+        <https://caselinker.up.railway.app/resource/location/nassau-county>,
+        <https://caselinker.up.railway.app/resource/location/st-cloud>,
+        <https://caselinker.up.railway.app/resource/location/united-states> .
 
 <https://caselinker.up.railway.app/resource/case/ncis_2024_001/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -48,6 +62,8 @@
 
 <https://caselinker.up.railway.app/resource/agency/fbi> a cacontology-multi:FederalAgency .
 
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
+
 <https://caselinker.up.railway.app/resource/case/ncis_2024_001/charge/1> a cacontology-legal-outcomes:CriminalCharge,
         cacontology-legal-outcomes:OnlineEnticement ;
     rdfs:label "online enticement" .
@@ -61,6 +77,9 @@
     rdfs:seeAlso <https://caselinker.up.railway.app/resource/case/ncis_2024_001/offense-event/charge-3> ;
     ns1:chargeCluster "child_exploitation" ;
     ns1:chargeOffenseEvent <https://caselinker.up.railway.app/resource/case/ncis_2024_001/offense-event/charge-3> .
+
+<https://caselinker.up.railway.app/resource/case/ncis_2024_001/event/project-safe-childhood> a cac-core:Event,
+        cacontology-multi:ProjectSafeChildhoodOperation .
 
 <https://caselinker.up.railway.app/resource/case/ncis_2024_001/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
@@ -87,11 +106,30 @@
 
 <https://caselinker.up.railway.app/resource/case/ncis_2024_001/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "10 years" .
+    rdfs:label "[\"10 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/ncis_2024_001/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/florida> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/jacksonville> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/nassau-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Nassau County" ;
+    uco-core:name "Nassau County" .
+
+<https://caselinker.up.railway.app/resource/location/st-cloud> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "St. Cloud" ;
+    uco-core:name "St. Cloud" .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/platform/social-media> a cacontology-platforms:SocialMediaPlatform ;
     rdfs:label "social media" .

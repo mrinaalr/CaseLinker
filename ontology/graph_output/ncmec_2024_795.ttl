@@ -1,35 +1,110 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_795> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:20:55.003531" ;
+    dcterms:created "2026-09-15T21:08:10.839602" ;
     dcterms:identifier "ncmec_2024_795" ;
-    dcterms:modified "2026-09-10T19:20:55.003531" ;
-    dcterms:source <https://www.mydailyrecord.com/news/harnett-man-arrested-for-sex-exploitation/article_46bbaca2-e795-11ee-9276-c7f9b0902093.html>,
+    dcterms:modified "2026-09-15T21:08:10.839602" ;
+    dcterms:source <https://www.wlos.com/news/local/marshall-man-charged-third-degree-sexual-exploitation-minor-madison-county-sheriffs-office-arrest-bond-north-carolina-law>,
         "NCMEC" ;
-    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_795/phase/arrested> ;
-    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_795/phase/arrested> .
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/madison-county>,
+        <https://caselinker.up.railway.app/resource/location/nc>,
+        <https://caselinker.up.railway.app/resource/location/north-carolina> ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_795/phase/charged> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_795/phase/charged> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_795/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_795/legal-proceeding>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_795/offense-event/charge-3> ;
+    cacontology:investigationStatus "unknown" ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/madison-county-sheriffs-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/madison-county>,
+        <https://caselinker.up.railway.app/resource/location/nc>,
+        <https://caselinker.up.railway.app/resource/location/north-carolina> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_795/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2024-03-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:hasRoleBeginPoint "2024-06-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_795/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_795/offense-event/charge-3> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_795/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_795/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2024-03-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:hasRoleBeginPoint "2024-06-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_795/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_795/offense-event/charge-3> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_795/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_795/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/agency/madison-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Madison County Sheriff's Office" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_795/charge/1> a cacontology-legal-outcomes:CriminalCharge,
+        cacontology-legal-outcomes:StateCharge ;
+    rdfs:label "sexual exploitation of a minor" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_795/charge/2> a cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "sexual exploitation" ;
+    ns1:chargeCluster "sexual_exploitation_unspecified" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_795/charge/3> a cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "child exploitation" ;
+    rdfs:seeAlso <https://caselinker.up.railway.app/resource/case/ncmec_2024_795/offense-event/charge-3> ;
+    ns1:chargeCluster "child_exploitation" ;
+    ns1:chargeOffenseEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_795/offense-event/charge-3> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_795/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_795/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2024_795/charge/1>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_795/charge/2>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_795/charge/3> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-06-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2024_795/sentence/1> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_795/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 35 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_795/person/victim/1> a uco-identity:Person .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_795/phase/arrested> a cacontology:InitialPhase,
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_795/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:MonetaryPenalty ;
+    rdfs:label "[\"$75,000\"]" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_795/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
-    cacontology:hasPhaseBeginPoint "2024-03-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology:hasPhaseBeginPoint "2024-06-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/madison-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/nc> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/north-carolina> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_795/event/possession> a cacontology:CSAMIncident,
+        cac-core:Event ;
+    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2024_795/facet/possession> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_795/offense-event/charge-3> a cacontology:ChildSexualAbuseEvent,
+        cac-core:Event,
+        uco-action:Crime ;
+    rdfs:label "Inferred offense from charge: child exploitation" .
 

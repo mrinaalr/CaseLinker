@@ -4,24 +4,33 @@
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2017_001> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:54:00.355672" ;
+    dcterms:created "2026-09-15T19:52:04.539884" ;
     dcterms:identifier "ky_sp_2017_001" ;
-    dcterms:modified "2026-09-10T19:54:00.355672" ;
+    dcterms:modified "2026-09-15T19:52:04.539884" ;
     dcterms:source <https://www.kentuckystatepolice.ky.gov/news/kentucky-state-police-arrest-murray-man-sex-offenses-p1-5-14-17-1/>,
         "KY SP" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/kentucky>,
+        <https://caselinker.up.railway.app/resource/location/ky>,
+        <https://caselinker.up.railway.app/resource/location/murray> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ky_sp_2017_001/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ky_sp_2017_001/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ky_sp_2017_001/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/calloway-county-sheriffs-department>,
-        <https://caselinker.up.railway.app/resource/agency/kentucky-state-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/kentucky-state-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/kentucky>,
+        <https://caselinker.up.railway.app/resource/location/ky>,
+        <https://caselinker.up.railway.app/resource/location/murray> .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2017_001/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -37,20 +46,41 @@
         cacontology-multi:LocalAgency ;
     rdfs:label "Calloway County Sheriff's Department" .
 
-<https://caselinker.up.railway.app/resource/agency/kentucky-state-police-department> a cacontology-multi:StateAgency .
+<https://caselinker.up.railway.app/resource/agency/kentucky-state-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:StateAgency ;
+    rdfs:label "Kentucky State Police Department" .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2017_001/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Calloway County Jail" ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2017-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2017-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ky_sp_2017_001/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2017_001/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 55 .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2017_001/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ky_sp_2017_001/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ky_sp_2017_001/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2017-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/kentucky> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Kentucky" ;
+    uco-core:name "Kentucky" .
+
+<https://caselinker.up.railway.app/resource/location/ky> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Ky." ;
+    uco-core:name "Ky." .
+
+<https://caselinker.up.railway.app/resource/location/murray> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Murray" ;
+    uco-core:name "Murray" .
 

@@ -8,23 +8,28 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_354> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:28:25.017728" ;
+    dcterms:created "2026-09-15T21:27:13.492111" ;
     dcterms:identifier "ncmec_2025_354" ;
-    dcterms:modified "2026-09-10T19:28:25.017728" ;
+    dcterms:modified "2026-09-15T21:27:13.492111" ;
     dcterms:source <https://www.kwwl.com/news/dubuque/dubuque-man-facing-child-pornography-charges/article_bb2ddc26-9ad9-4299-a4e3-7ae45ab2b033.html>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/dubuque>,
+        <https://caselinker.up.railway.app/resource/location/iowa> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_354/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_354/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_354/cybertip>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_354/event/distribution>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_354/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_354/legal-proceeding> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ncmec> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/dubuque>,
+        <https://caselinker.up.railway.app/resource/location/iowa> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_354/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -61,17 +66,28 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_354/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_354/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-06-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-06-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_354/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_354/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_354/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_354/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_354/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-06-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/dubuque> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/iowa> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_354/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

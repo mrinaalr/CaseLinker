@@ -5,19 +5,23 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_038> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:00:27.674193" ;
+    dcterms:created "2026-09-15T20:06:35.746938" ;
     dcterms:identifier "newyork_sp_2025_038" ;
-    dcterms:modified "2026-09-10T20:00:27.674193" ;
+    dcterms:modified "2026-09-15T20:06:35.746938" ;
     dcterms:source <https://troopers.ny.gov/news/jefferson-county-man-arrested-possession-and-promotion-child-sexual-abuse-material>,
         "NEWYORK SP" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/brownville>,
+        <https://caselinker.up.railway.app/resource/location/jefferson-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_038/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_038/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_038/cybertip>,
@@ -26,7 +30,9 @@
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/bureau-of-criminal-investigation>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/new-york-state-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/new-york-state-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/brownville>,
+        <https://caselinker.up.railway.app/resource/location/jefferson-county> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_038/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -57,18 +63,31 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_038/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_038/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_038/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 19 .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_038/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/newyork_sp_2025_038/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_038/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/brownville> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Brownville" ;
+    uco-core:name "Brownville" .
+
+<https://caselinker.up.railway.app/resource/location/jefferson-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/newyork_sp_2025_038/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

@@ -1,6 +1,7 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
 @prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
@@ -12,16 +13,23 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2021_011> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:46:25.601691" ;
+    dcterms:created "2026-09-15T19:40:56.276440" ;
     dcterms:identifier "illinois_ag_2021_011" ;
-    dcterms:modified "2026-09-10T19:46:25.601691" ;
+    dcterms:modified "2026-09-15T19:48:47.243638" ;
     dcterms:source <https://illinoisattorneygeneral.gov/News-Room/2021-Press-Release-Archive/202110-13%20announces%20mchenry%20county%20man%20sentenced%20for%20child%20pornography.pdf>,
         "ILLINOIS AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/chicago>,
+        <https://caselinker.up.railway.app/resource/location/hills>,
+        <https://caselinker.up.railway.app/resource/location/illinois>,
+        <https://caselinker.up.railway.app/resource/location/mchenry-county>,
+        <https://caselinker.up.railway.app/resource/location/pollacks-lake>,
+        <https://caselinker.up.railway.app/resource/location/wheeling> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/illinois_ag_2021_011/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/illinois_ag_2021_011/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/illinois_ag_2021_011/cybertip>,
@@ -39,7 +47,13 @@
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/illinois-high-tech-crimes-bureau>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/wheeling-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/wheeling-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/chicago>,
+        <https://caselinker.up.railway.app/resource/location/hills>,
+        <https://caselinker.up.railway.app/resource/location/illinois>,
+        <https://caselinker.up.railway.app/resource/location/mchenry-county>,
+        <https://caselinker.up.railway.app/resource/location/pollacks-lake>,
+        <https://caselinker.up.railway.app/resource/location/wheeling> .
 
 <https://caselinker.up.railway.app/resource/agency/hills-police-department> a cacontology-multi:LocalAgency .
 
@@ -91,7 +105,8 @@
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2021_011/operation> a cac-core:Event,
         cacontology-taskforce:ReactiveOperation .
 
-<https://caselinker.up.railway.app/resource/case/illinois_ag_2021_011/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/illinois_ag_2021_011/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 47 .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2021_011/person/victim/1> a uco-identity:Person .
 
@@ -119,7 +134,7 @@
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2021_011/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "10 years" .
+    rdfs:label "[\"10 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2021_011/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -129,6 +144,26 @@
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2021_011/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/chicago> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/hills> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/illinois> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/mchenry-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/pollacks-lake> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Pollack’s Lake" ;
+    uco-core:name "Pollack’s Lake" .
+
+<https://caselinker.up.railway.app/resource/location/wheeling> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2021_011/event/online-only> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

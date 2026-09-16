@@ -11,6 +11,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -147,18 +148,29 @@
         cacontology-multi:LocalAgency ;
     rdfs:label "Prince George's County Police Department" .
 
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
+
 <https://caselinker.up.railway.app/resource/case/ice_2026_007> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:46:07.761138" ;
+    dcterms:created "2026-09-15T19:35:19.263712" ;
     dcterms:identifier "ice_2026_007" ;
-    dcterms:modified "2026-09-10T19:46:07.761138" ;
+    dcterms:modified "2026-09-15T19:35:19.263712" ;
     dcterms:source <https://www.ice.gov/news/releases/michigan-orthodontist-sentenced-60-years-exploiting-children-following-ice>,
         "ICE" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/detroit>,
+        <https://caselinker.up.railway.app/resource/location/grand-rapids>,
+        <https://caselinker.up.railway.app/resource/location/grandville>,
+        <https://caselinker.up.railway.app/resource/location/kent-county>,
+        <https://caselinker.up.railway.app/resource/location/mich>,
+        <https://caselinker.up.railway.app/resource/location/michigan>,
+        <https://caselinker.up.railway.app/resource/location/north-carolina>,
+        <https://caselinker.up.railway.app/resource/location/ottawa-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ice_2026_007/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ice_2026_007/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ice_2026_007/admission/1>,
         <https://caselinker.up.railway.app/resource/case/ice_2026_007/event/csam>,
         <https://caselinker.up.railway.app/resource/case/ice_2026_007/event/multi-jurisdiction>,
+        <https://caselinker.up.railway.app/resource/case/ice_2026_007/event/project-safe-childhood>,
         <https://caselinker.up.railway.app/resource/case/ice_2026_007/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/ice_2026_007/legal-step/sentenced>,
         <https://caselinker.up.railway.app/resource/case/ice_2026_007/operation> ;
@@ -167,7 +179,16 @@
         <https://caselinker.up.railway.app/resource/agency/ice>,
         <https://caselinker.up.railway.app/resource/agency/kent-county-sheriffs-office>,
         <https://caselinker.up.railway.app/resource/agency/our-human-trafficking-task-force>,
-        <https://caselinker.up.railway.app/resource/agency/prince-georges-county-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/prince-georges-county-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/detroit>,
+        <https://caselinker.up.railway.app/resource/location/grand-rapids>,
+        <https://caselinker.up.railway.app/resource/location/grandville>,
+        <https://caselinker.up.railway.app/resource/location/kent-county>,
+        <https://caselinker.up.railway.app/resource/location/mich>,
+        <https://caselinker.up.railway.app/resource/location/michigan>,
+        <https://caselinker.up.railway.app/resource/location/north-carolina>,
+        <https://caselinker.up.railway.app/resource/location/ottawa-county> .
 
 <https://caselinker.up.railway.app/resource/case/ice_2026_007/charge/1> a cacontology-legal-outcomes:CriminalCharge,
         cacontology-legal-outcomes:StateCharge ;
@@ -183,6 +204,10 @@
 
 <https://caselinker.up.railway.app/resource/case/ice_2026_007/event/multi-jurisdiction> a cac-core:Event,
         cacontology-multi:MultiJurisdictionalInvestigation ;
+    cacontology:severityLevel 3 .
+
+<https://caselinker.up.railway.app/resource/case/ice_2026_007/event/project-safe-childhood> a cac-core:Event,
+        cacontology-multi:ProjectSafeChildhoodOperation ;
     cacontology:severityLevel 3 .
 
 <https://caselinker.up.railway.app/resource/case/ice_2026_007/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
@@ -269,10 +294,12 @@
 
 <https://caselinker.up.railway.app/resource/case/ice_2026_007/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "60 years" .
+    rdfs:label "[\"60 years\"]" .
 
-<https://caselinker.up.railway.app/resource/platform/snapchat> a cacontology-platforms:MessagingService ;
-    rdfs:label "Snapchat" .
+<https://caselinker.up.railway.app/resource/platform/snapchat> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:MessagingService ;
+    rdfs:label "Snapchat" ;
+    cacontology-platforms:encryptionLevel "end-to-end" .
 
 <https://caselinker.up.railway.app/resource/case/ice_2026_007/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "was not surprised at the sentence imposed" ;
@@ -288,6 +315,42 @@
 <https://caselinker.up.railway.app/resource/case/ice_2026_007/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/detroit> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/grand-rapids> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Grand Rapids" ;
+    uco-core:name "Grand Rapids" .
+
+<https://caselinker.up.railway.app/resource/location/grandville> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Grandville" ;
+    uco-core:name "Grandville" .
+
+<https://caselinker.up.railway.app/resource/location/kent-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Kent County" ;
+    uco-core:name "Kent County" .
+
+<https://caselinker.up.railway.app/resource/location/mich> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Mich." ;
+    uco-core:name "Mich." .
+
+<https://caselinker.up.railway.app/resource/location/michigan> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Michigan" ;
+    uco-core:name "Michigan" .
+
+<https://caselinker.up.railway.app/resource/location/north-carolina> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/ottawa-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Ottawa County" ;
+    uco-core:name "Ottawa County" .
 
 <https://caselinker.up.railway.app/resource/case/ice_2026_007/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

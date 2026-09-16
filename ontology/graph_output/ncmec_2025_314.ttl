@@ -8,17 +8,23 @@
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_314> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:28:02.632770" ;
+    dcterms:created "2026-09-15T21:27:13.459553" ;
     dcterms:identifier "ncmec_2025_314" ;
-    dcterms:modified "2026-09-10T19:28:02.632770" ;
+    dcterms:modified "2026-09-15T21:27:13.459553" ;
     dcterms:source <https://fox59.com/news/indynews/frankfort-man-arrested-in-child-exploitation-investigation/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/clinton-county>,
+        <https://caselinker.up.railway.app/resource/location/frankfort>,
+        <https://caselinker.up.railway.app/resource/location/ind>,
+        <https://caselinker.up.railway.app/resource/location/indiana> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_314/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_314/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_314/legal-proceeding>,
@@ -27,7 +33,11 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/clinton-county-prosecutor>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/indiana-crimes-against-children-task-force>,
-        <https://caselinker.up.railway.app/resource/agency/indiana-state-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/indiana-state-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/clinton-county>,
+        <https://caselinker.up.railway.app/resource/location/frankfort>,
+        <https://caselinker.up.railway.app/resource/location/ind>,
+        <https://caselinker.up.railway.app/resource/location/indiana> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_314/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -47,9 +57,13 @@
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
-<https://caselinker.up.railway.app/resource/agency/indiana-crimes-against-children-task-force> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/indiana-crimes-against-children-task-force> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Indiana Crimes Against Children Task Force" .
 
-<https://caselinker.up.railway.app/resource/agency/indiana-state-police-department> a cacontology-multi:StateAgency .
+<https://caselinker.up.railway.app/resource/agency/indiana-state-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:StateAgency ;
+    rdfs:label "Indiana State Police Department" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_314/charge/1> a cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "child exploitation" ;
@@ -60,18 +74,40 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_314/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Clinton County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_314/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-09-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-09-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_314/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_314/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 23 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_314/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_314/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_314/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-09-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/clinton-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Clinton County" ;
+    uco-core:name "Clinton County" .
+
+<https://caselinker.up.railway.app/resource/location/frankfort> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Frankfort" ;
+    uco-core:name "Frankfort" .
+
+<https://caselinker.up.railway.app/resource/location/ind> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Ind." ;
+    uco-core:name "Ind." .
+
+<https://caselinker.up.railway.app/resource/location/indiana> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_314/offense-event/charge-1> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event,

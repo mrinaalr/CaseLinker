@@ -18,6 +18,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Optional
 
+import os
 import warnings
 
 try:
@@ -423,6 +424,114 @@ class SemanticConcepts:
         }
 
         return case
+
+    def enhance_cases_with_concepts(
+        self,
+        cases: List[Dict[str, Any]],
+        min_score: float = 0.35,
+        top_k: Optional[int] = None,
+        encode_batch_size: int = 64,
+    ) -> List[Dict[str, Any]]:
+        """
+        Enrich many cases with semantic concepts via one batched MiniLM encode.
+
+        Same fields as enhance_case_with_concepts; encode_batch_size controls
+        SentenceTransformer.encode batching (default 64).
+        """
+        if not cases:
+            return cases
+
+        def _empty_semantic(case: Dict[str, Any]) -> None:
+            if "ml_features" not in case:
+                case["ml_features"] = {}
+            case["ml_features"].setdefault(
+                "semantic_severity",
+                {"phrases": [], "scores": {}, "concept_metadata": {}},
+            )
+
+        def _case_text(case: Dict[str, Any]) -> str:
+            text = (
+                case.get("case_text")
+                or (case.get("raw_data") or {}).get("case_text")  # type: ignore[union-attr]
+                or (case.get("extracted_features") or {}).get("case_text")  # type: ignore[union-attr]
+                or ""
+            )
+            return text if isinstance(text, str) else ""
+
+        if not self.is_available():
+            for case in cases:
+                if case:
+                    _empty_semantic(case)
+            return cases
+
+        texts: List[str] = []
+        indices: List[int] = []
+        for i, case in enumerate(cases):
+            if not case:
+                continue
+            text = _case_text(case)
+            if not text.strip():
+                _empty_semantic(case)
+                continue
+            texts.append(text)
+            indices.append(i)
+
+        if not texts:
+            return cases
+
+        try:
+            try:
+                batch_size = int(os.environ.get("SEMANTIC_ENCODE_BATCH", str(encode_batch_size)))
+            except ValueError:
+                batch_size = encode_batch_size
+            batch_size = max(1, batch_size)
+
+            case_embs = self.model.encode(  # type: ignore[attr-defined]
+                texts,
+                batch_size=batch_size,
+                normalize_embeddings=True,
+                show_progress_bar=False,
+            )
+            concept_mat = np.asarray(self._concept_embeddings)
+            case_mat = np.asarray(case_embs)
+            sims_mat = case_mat @ concept_mat.T  # type: ignore[operator]
+
+            for row_i, case_i in enumerate(indices):
+                case = cases[case_i]
+                sims = sims_mat[row_i]
+                all_scores = [
+                    ConceptScore(key=key, score=float(sim))
+                    for key, sim in zip(self._concept_keys, sims)
+                ]
+                all_scores.sort(key=lambda s: s.score, reverse=True)
+                scores = [s for s in all_scores if s.score >= min_score]
+                if top_k is not None and top_k > 0:
+                    scores = scores[:top_k]
+                phrases = [s.key for s in scores]
+                score_map = {s.key: s.score for s in scores}
+                concept_metadata: Dict[str, Dict[str, bool]] = {}
+                for key in phrases:
+                    if key in self._CONCEPT_IS_PRODUCTION:
+                        concept_metadata[key] = {
+                            "is_production": self._CONCEPT_IS_PRODUCTION[key]
+                        }
+                if "ml_features" not in case:
+                    case["ml_features"] = {}
+                case["ml_features"]["semantic_severity"] = {
+                    "phrases": phrases,
+                    "scores": score_map,
+                    "concept_metadata": concept_metadata,
+                }
+        except Exception as exc:  # pragma: no cover - defensive
+            warnings.warn(f"SemanticConcepts: bulk encode failed: {exc}")
+            for case in cases:
+                if case:
+                    try:
+                        self.enhance_case_with_concepts(case, min_score=min_score, top_k=top_k)
+                    except Exception:
+                        _empty_semantic(case)
+
+        return cases
 
     def _precompute_concept_embeddings(self) -> None:
         """Precompute normalized embeddings for concepts."""

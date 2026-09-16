@@ -1,49 +1,54 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
+@prefix cacontology-undercover: <https://cacontology.projectvic.org/undercover#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_267> a cacontology:CACInvestigation,
-        cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:16:30.828080" ;
-    dcterms:identifier "ncmec_2024_267" ;
-    dcterms:modified "2026-09-10T19:16:30.828080" ;
-    dcterms:source <https://www.naplesnews.com/story/news/crime/2024/01/29/naples-man-enters-not-guilty-plea-in-child-pornography-case/72399906007/>,
-        "NCMEC" ;
-    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_267/phase/charged> ;
-    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_267/phase/charged> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_267/event/distribution>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_267/event/possession>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_267/event/trafficking>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2024_267/legal-proceeding> .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_267/role/offender/1> a cacontology:OffenderRole,
-        uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_267/event/possession> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_267/person/offender/1> .
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_267/admission/1/extraction-confidence> a cac-core:AssessmentResult ;
+    cac-core:assesses <https://caselinker.up.railway.app/resource/case/ncmec_2024_267/admission/1> ;
+    cac-core:generatedBy <https://caselinker.up.railway.app/resource/case/ncmec_2024_267> ;
+    cac-core:hasConfidence 0.65 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_267/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:hasRoleBeginPoint "2024-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_267/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_267/person/victim/1> .
 
+<https://caselinker.up.railway.app/resource/agency/florida-department-of-law-enforcement> a cacontology-multi:LocalAgency .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_267> a cacontology:CACInvestigation,
+        cac-core:EnduringEntity ;
+    dcterms:created "2026-09-15T21:08:10.401076" ;
+    dcterms:identifier "ncmec_2024_267" ;
+    dcterms:modified "2026-09-15T21:08:10.401076" ;
+    dcterms:source <https://insidelake.com/2024/05/09/fdle-arrests-mount-dora-man-on-child-pornography-charges/>,
+        "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/fla>,
+        <https://caselinker.up.railway.app/resource/location/mount-dora> ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_267/phase/arrested> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_267/phase/arrested> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_267/admission/1>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_267/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_267/legal-proceeding> ;
+    cacontology:investigationStatus "unknown" ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/florida-department-of-law-enforcement> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/fla>,
+        <https://caselinker.up.railway.app/resource/location/mount-dora> .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_267/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "possession of child pornography" ;
-    cacontology-legal-outcomes:indictmentCounts 20 .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_267/event/distribution> a cac-core:Event,
-        cacontology-legal-outcomes:CSAM_Distribution .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_267/event/trafficking> a cac-core:Event,
-        cacontology-legal-outcomes:SexTrafficking .
+    rdfs:label "possession of child pornography following a" ;
+    cacontology-legal-outcomes:indictmentCounts 12 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_267/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
@@ -51,22 +56,53 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2024_267/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2024_267/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_267/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_267/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_267/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2024-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_267/event/possession> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_267/person/offender/1> .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_267/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$120,000" .
+    rdfs:label "[\"$25,000\"]" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_267/phase/charged> a cacontology:LegalProcessPhase,
+<https://caselinker.up.railway.app/resource/platform/kik> a cacontology-platforms:MessagingService ;
+    rdfs:label "Kik" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_267/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;
-    cacontology:hasPhaseBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology:hasPhaseBeginPoint "2024-05-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/fla> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/mount-dora> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Mount Dora" ;
+    uco-core:name "Mount Dora" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_267/admission/1> a cacontology-undercover:IncriminatingStatement ;
+    rdfs:label "had seen child pornography files using Kik, a messaging application, on his phone that was located in his bedroom" ;
+    dcterms:source <https://insidelake.com/2024/05/09/fdle-arrests-mount-dora-man-on-child-pornography-charges/> ;
+    ns1:admissionContext "home being used to download child pornography, the affidavit states. During an interview, Hammond reportedly admitted he had seen child p..." ;
+    ns1:admissionFrame "admitted_he_she" ;
+    ns1:admissionTheme "harm_conduct",
+        "tech_use" ;
+    ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_267/role/offender/1> ;
+    ns1:evidenceTier "press_release_stated" ;
+    ns1:quoteType "paraphrase" ;
+    uco-core:description "had seen child pornography files using Kik, a messaging application, on his phone that was located in his bedroom" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_267/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
+    cacontology:producesArtifact <https://caselinker.up.railway.app/resource/case/ncmec_2024_267/admission/1> ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/kik> ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2024_267/facet/possession> .
 

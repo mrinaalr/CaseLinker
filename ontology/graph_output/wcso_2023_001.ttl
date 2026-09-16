@@ -11,16 +11,19 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/wcso_2023_001> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:26:01.381703" ;
+    dcterms:created "2026-09-15T20:41:58.852643" ;
     dcterms:identifier "wcso_2023_001" ;
-    dcterms:modified "2026-09-10T20:26:01.381703" ;
+    dcterms:modified "2026-09-15T20:41:58.852643" ;
     dcterms:source <https://washoelife.washoecounty.gov/sheriff/internet-crimes-against-children-task-force-make-child-pornography-arrest/>,
         "WCSO" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/nevada>,
+        <https://caselinker.up.railway.app/resource/location/sparks> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/wcso_2023_001/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/wcso_2023_001/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/wcso_2023_001/cybertip>,
@@ -36,7 +39,9 @@
         <https://caselinker.up.railway.app/resource/agency/sparks-police-department>,
         <https://caselinker.up.railway.app/resource/agency/united-states-marshals>,
         <https://caselinker.up.railway.app/resource/agency/usms>,
-        <https://caselinker.up.railway.app/resource/agency/washoe-county-sheriffs-office> .
+        <https://caselinker.up.railway.app/resource/agency/washoe-county-sheriffs-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/nevada>,
+        <https://caselinker.up.railway.app/resource/location/sparks> .
 
 <https://caselinker.up.railway.app/resource/case/wcso_2023_001/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -52,7 +57,9 @@
         <https://caselinker.up.railway.app/resource/case/wcso_2023_001/offense-event/charge-2> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/wcso_2023_001/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/child-exploitation-task-force> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/child-exploitation-task-force> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Child Exploitation Task Force" .
 
 <https://caselinker.up.railway.app/resource/agency/fbi> a cacontology-multi:FederalAgency .
 
@@ -62,9 +69,13 @@
 
 <https://caselinker.up.railway.app/resource/agency/sparks-police-department> a cacontology-multi:LocalAgency .
 
-<https://caselinker.up.railway.app/resource/agency/united-states-marshals> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/united-states-marshals> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "United States Marshals" .
 
-<https://caselinker.up.railway.app/resource/agency/usms> a cacontology-multi:FederalAgency .
+<https://caselinker.up.railway.app/resource/agency/usms> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:FederalAgency ;
+    rdfs:label "U.S. Marshals Service" .
 
 <https://caselinker.up.railway.app/resource/agency/washoe-county-sheriffs-office> a cacontology-multi:LocalAgency .
 
@@ -89,18 +100,29 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/wcso_2023_001/charge/1>,
         <https://caselinker.up.railway.app/resource/case/wcso_2023_001/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/wcso_2023_001/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/wcso_2023_001/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 24 .
 
 <https://caselinker.up.railway.app/resource/case/wcso_2023_001/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/wcso_2023_001/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/wcso_2023_001/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/nevada> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/sparks> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/wcso_2023_001/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

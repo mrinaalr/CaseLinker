@@ -13,6 +13,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -58,7 +59,8 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_269/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-06-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-06-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_269/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_269/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 41 .
@@ -66,15 +68,22 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_269/person/victim/1> a uco-identity:Person ;
     cacontology-production:victimAge 12 .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_269/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_269> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:11:06.965302" ;
+    dcterms:created "2026-09-15T20:55:00.984704" ;
     dcterms:identifier "ncmec_2023_269" ;
-    dcterms:modified "2026-09-10T19:11:06.965302" ;
+    dcterms:modified "2026-09-15T20:55:00.984704" ;
     dcterms:source <https://margatetalk.com/facebook-tip-man-arrested-child-pornography-43964>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/margate>,
+        <https://caselinker.up.railway.app/resource/location/palermo>,
+        <https://caselinker.up.railway.app/resource/location/south-florida> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_269/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_269/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_269/admission/1>,
@@ -87,7 +96,10 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_269/legal-proceeding> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/margate-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/margate>,
+        <https://caselinker.up.railway.app/resource/location/palermo>,
+        <https://caselinker.up.railway.app/resource/location/south-florida> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_269/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "officers that he had sent the files" ;
@@ -110,6 +122,19 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_269/event/online-only>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_269/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_269/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/location/margate> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Margate" ;
+    uco-core:name "Margate" .
+
+<https://caselinker.up.railway.app/resource/location/palermo> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Palermo" ;
+    uco-core:name "Palermo" .
+
+<https://caselinker.up.railway.app/resource/location/south-florida> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/platform/chat> a cacontology-platforms:AnonymousChatPlatform ;
     rdfs:label "chat" .

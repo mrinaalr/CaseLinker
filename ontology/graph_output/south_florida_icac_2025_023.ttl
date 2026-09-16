@@ -12,6 +12,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -50,6 +51,12 @@
 
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_023/facet/production> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
+<https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_023/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_023/sentence/1> .
+
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_023/operation> a cac-core:Event,
         cacontology-taskforce:TaskForceOperation .
 
@@ -58,13 +65,23 @@
 
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_023/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_023/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_023> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:15:17.478105" ;
+    dcterms:created "2026-09-15T20:27:39.231722" ;
     dcterms:identifier "south_florida_icac_2025_023" ;
-    dcterms:modified "2026-09-10T20:15:17.478105" ;
+    dcterms:modified "2026-09-15T20:27:39.231722" ;
     dcterms:source <https://www.local10.com/news/local/2025/08/27/feds-accuse-dania-beach-man-of-sexually-victimizing-10-year-old-girl-online/>,
         "SOUTH FLORIDA ICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/adams>,
+        <https://caselinker.up.railway.app/resource/location/broward-county>,
+        <https://caselinker.up.railway.app/resource/location/dania-beach>,
+        <https://caselinker.up.railway.app/resource/location/fla>,
+        <https://caselinker.up.railway.app/resource/location/fort-lauderdale>,
+        <https://caselinker.up.railway.app/resource/location/north-carolina> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_023/phase/booked> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_023/phase/booked> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_023/admission/1>,
@@ -73,10 +90,17 @@
         <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_023/event/multi-jurisdiction>,
         <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_023/event/possession>,
         <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_023/event/production>,
+        <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_023/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_023/operation> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/fbi>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/usms> .
+        <https://caselinker.up.railway.app/resource/agency/usms> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/adams>,
+        <https://caselinker.up.railway.app/resource/location/broward-county>,
+        <https://caselinker.up.railway.app/resource/location/dania-beach>,
+        <https://caselinker.up.railway.app/resource/location/fla>,
+        <https://caselinker.up.railway.app/resource/location/fort-lauderdale>,
+        <https://caselinker.up.railway.app/resource/location/north-carolina> .
 
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_023/admission/2> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "told them that “he had asked for her other social media accounts in order to further contact her” but they only commu..." ;
@@ -99,6 +123,28 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_023/event/possession>,
         <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_023/event/production> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_023/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/location/adams> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Adams’" ;
+    uco-core:name "Adams’" .
+
+<https://caselinker.up.railway.app/resource/location/broward-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/dania-beach> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Dania Beach" ;
+    uco-core:name "Dania Beach" .
+
+<https://caselinker.up.railway.app/resource/location/fla> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/fort-lauderdale> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/north-carolina> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/platform/chat> a cacontology-platforms:AnonymousChatPlatform ;
     rdfs:label "chat" .
@@ -136,7 +182,7 @@
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_023/facet/production> .
 
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_023/admission/1> a cacontology-undercover:IncriminatingStatement ;
-    rdfs:label "was sharing child sexual abuse videos n and even victimized a young girl online" ;
+    rdfs:label "was sharing child sexual abuse videos I and even victimized a young girl online" ;
     dcterms:source <https://www.local10.com/news/local/2025/08/27/feds-accuse-dania-beach-man-of-sexually-victimizing-10-year-old-girl-online/> ;
     ns1:admissionContext "nia Beach man was booked into the Broward County jail on Tuesday, facing multiple federal charges after authorities said he was sharing c..." ;
     ns1:admissionFrame "said_paraphrase" ;
@@ -144,5 +190,5 @@
     ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/south_florida_icac_2025_023/role/offender/1> ;
     ns1:evidenceTier "press_release_stated" ;
     ns1:quoteType "paraphrase" ;
-    uco-core:description "was sharing child sexual abuse videos n and even victimized a young girl online" .
+    uco-core:description "was sharing child sexual abuse videos I and even victimized a young girl online" .
 

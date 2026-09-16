@@ -287,5 +287,52 @@ class TestEndToEndSamplePress(unittest.TestCase):
         self.assertIn("U.S. Attorney's Office", feats.get("agencies_involved") or [])
 
 
+class TestLocationNerMapping(unittest.TestCase):
+    def test_fixture_emits_uco_location(self):
+        mapper = cac.CaseToCAC()
+        graph, warnings = mapper.map_case(cac.AZICAC_2011_006_FIXTURE)
+        loc = cac.BASE["location/mesa-arizona"]
+        types = set()
+        for ctx in graph.graphs():
+            for o in ctx.objects(loc, cac.RDF.type):
+                types.add(o)
+        self.assertIn(cac.UCO_LOCATION.Location, types)
+        self.assertIn(cac.CAC_CORE.PlaceLikeEntity, types)
+
+        inv = None
+        for ctx in graph.graphs():
+            for s in ctx.subjects(cac.RDF.type, cac.CAC.CACInvestigation):
+                inv = s
+                break
+            if inv:
+                break
+        self.assertIsNotNone(inv)
+        spatial = set()
+        mentions = set()
+        for ctx in graph.graphs():
+            spatial.update(ctx.objects(inv, cac.DCTERMS.spatial))
+            mentions.update(ctx.objects(inv, cac.CASELINKER_MENTIONS_LOCATION))
+        self.assertIn(loc, spatial)
+        self.assertIn(loc, mentions)
+
+    def test_shared_singleton_across_cases(self):
+        mapper = cac.CaseToCAC()
+        g1, _ = mapper.map_case(
+            {**cac.AZICAC_2011_006_FIXTURE, "id": "case_a", "locations": ["Phoenix, Arizona"]}
+        )
+        g2, _ = mapper.map_case(
+            {**cac.AZICAC_2011_006_FIXTURE, "id": "case_b", "locations": ["Phoenix, Arizona"]}
+        )
+        uri_a = cac.BASE["location/phoenix-arizona"]
+        # same registry URI; both graphs carry the type triple
+        self.assertEqual(mapper._location_registry["phoenix-arizona"], uri_a)
+        for g in (g1, g2):
+            found = False
+            for ctx in g.graphs():
+                if (uri_a, cac.RDF.type, cac.UCO_LOCATION.Location) in ctx:
+                    found = True
+            self.assertTrue(found)
+
+
 if __name__ == "__main__":
     unittest.main()

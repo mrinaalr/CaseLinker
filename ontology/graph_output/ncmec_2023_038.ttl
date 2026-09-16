@@ -9,16 +9,20 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_038> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:09:21.220427" ;
+    dcterms:created "2026-09-15T20:55:00.773465" ;
     dcterms:identifier "ncmec_2023_038" ;
-    dcterms:modified "2026-09-10T19:09:21.220427" ;
+    dcterms:modified "2026-09-15T20:55:00.773465" ;
     dcterms:source <https://www.nyspnews.com/cheektowaga-man-arrested-for-sex-crimes-against-children-1-2-3.htm>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/cheektowaga>,
+        <https://caselinker.up.railway.app/resource/location/new-york>,
+        <https://caselinker.up.railway.app/resource/location/the-town-of-cheektowaga> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_038/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_038/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_038/event/distribution>,
@@ -26,7 +30,10 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_038/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/bureau-of-criminal-investigation>,
-        <https://caselinker.up.railway.app/resource/agency/icac> .
+        <https://caselinker.up.railway.app/resource/agency/icac> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/cheektowaga>,
+        <https://caselinker.up.railway.app/resource/location/new-york>,
+        <https://caselinker.up.railway.app/resource/location/the-town-of-cheektowaga> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_038/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -68,16 +75,34 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_038/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_038/charge/2>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_038/charge/3> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-04-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-04-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_038/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_038/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 50 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_038/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_038/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_038/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-04-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/cheektowaga> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Cheektowaga" ;
+    uco-core:name "Cheektowaga" .
+
+<https://caselinker.up.railway.app/resource/location/new-york> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/the-town-of-cheektowaga> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "the Town of Cheektowaga" ;
+    uco-core:name "the Town of Cheektowaga" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_038/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

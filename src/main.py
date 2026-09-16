@@ -60,89 +60,107 @@ def main():
                 # Split by spaces to handle multiple files
                 file_paths = user_input.split()
                 print(f"\nProcessing {len(file_paths)} file(s)...")
-        
-        print("\n" + "="*60)
-        print("Step 1: Ingesting PDF(s)...")
-        print("="*60)
-        from ingestion import ingest_multiple_pdfs
-        
-        if len(file_paths) == 1:
-            # Single file - route through ingestion helper so source_url fallback is applied.
-            from ingestion import ingest_file
-            df = ingest_file(file_paths[0], file_type='pdf')
-            text = str(df.iloc[0].get('extracted_text', '') or '')
-            source = str(df.iloc[0].get('source', 'unknown') or 'unknown')
-            source_url = df.iloc[0].get('source_url')
-            print(f"✓ Extracted {len(text):,} characters from {file_paths[0]}")
-            print(f"✓ Detected source: {source}")
-            if source_url:
-                print(f"✓ Source URL: {source_url}")
-        else:
-            # Multiple files
-            df = ingest_multiple_pdfs(file_paths)
-            print(f"\n✓ Successfully ingested {len(df)} PDF file(s)")
-        
-        print("\n" + "="*60)
-        print("Step 2: Processing cases (batch, extract features, merge ml and pattern approaches)...")
-        print("="*60)
-        cases = process_cases(df)
-        print(f"✓ Found {len(cases)} cases across all PDFs")
-        
-        print("\n" + "="*60)
-        print("Step 3: Storing cases in database...")
-        print("="*60)
-        db_path = get_database_path()
-        stored_count = store_cases(cases, db_path, ingest_paths=file_paths)
-        print(f"✓ Stored {stored_count}/{len(cases)} cases in database")
-        
-        print("\n" + "="*60)
-        print("Step 4: Summary")
-        print("="*60)
-        all_stored_cases = get_all_stored_cases(db_path)
-        print(f"✓ Total cases in database: {len(all_stored_cases)}")
-        
-        # Show breakdown by source
-        sources = {}
-        for case in all_stored_cases:
-            source = case.get('source', 'Unknown')
-            sources[source] = sources.get(source, 0) + 1
-        
-        print("\nCases by source:")
-        for source, count in sorted(sources.items()):
-            print(f"  - {source}: {count} cases")
-        
-        # Pre-compute clusters after storing cases
-        print("\n" + "="*60)
-        print("Step 5: Pre-computing clusters...")
-        print("="*60)
-        skip_clusters = os.environ.get("SKIP_PRECOMPUTE_CLUSTERS", "").strip().lower() in (
-            "1", "true", "yes", "on",
-        )
-        if skip_clusters:
-            print("Skipping cluster pre-compute (SKIP_PRECOMPUTE_CLUSTERS is set).")
-        else:
-            try:
-                from analysis import run_automated_analysis
-                cluster_data = run_automated_analysis(all_stored_cases)
-                if db_path:
-                    storage = CaseStorage(db_path)  # SQLite
-                else:
-                    storage = CaseStorage()  # PostgreSQL
-                stored = storage.store_precomputed_clusters(cluster_data, len(all_stored_cases))
-                if stored:
-                    print(f"✓ Pre-computed clusters stored ({len(all_stored_cases)} cases)")
-                else:
-                    print(f"❌ Failed to store pre-computed clusters ({len(all_stored_cases)} cases)")
-            except Exception as e:
-                print(f"⚠️  Warning: Could not pre-compute clusters: {e}")
-                import traceback
-                traceback.print_exc()
+
+        run_pipeline(file_paths)
         
     except Exception as e:
         print(f"\n❌ Error: {e}")
         import traceback
-        traceback.print_exc()    
+        traceback.print_exc()
 
+
+def run_pipeline(file_paths: List[str]) -> None:
+    """
+    Run ingest → process → store → optional clusters for the given PDF paths.
+
+    Safe to call repeatedly in one process (models stay warm after first group).
+    """
+    print("\n" + "="*60)
+    print("Step 1: Ingesting PDF(s)...")
+    print("="*60)
+    from ingestion import ingest_multiple_pdfs
+
+    if len(file_paths) == 1:
+        from ingestion import ingest_file
+        df = ingest_file(file_paths[0], file_type='pdf')
+        text = str(df.iloc[0].get('extracted_text', '') or '')
+        source = str(df.iloc[0].get('source', 'unknown') or 'unknown')
+        source_url = df.iloc[0].get('source_url')
+        print(f"✓ Extracted {len(text):,} characters from {file_paths[0]}")
+        print(f"✓ Detected source: {source}")
+        if source_url:
+            print(f"✓ Source URL: {source_url}")
+    else:
+        df = ingest_multiple_pdfs(file_paths)
+        print(f"\n✓ Successfully ingested {len(df)} PDF file(s)")
+
+    print("\n" + "="*60)
+    print("Step 2: Processing cases (batch, extract features, merge ml and pattern approaches)...")
+    print("="*60)
+    cases = process_cases(df)
+    print(f"✓ Found {len(cases)} cases across all PDFs")
+
+    print("\n" + "="*60)
+    print("Step 3: Storing cases in database...")
+    print("="*60)
+    db_path = get_database_path()
+    stored_count = store_cases(cases, db_path, ingest_paths=file_paths)
+    print(f"✓ Stored {stored_count}/{len(cases)} cases in database")
+
+    print("\n" + "="*60)
+    print("Step 4: Summary")
+    print("="*60)
+    # Bulk ingest: skip full-corpus reload after every PDF (slow over Railway and
+    # re-runs schema DDL). This-batch counts are enough when clusters are skipped.
+    skip_clusters = os.environ.get("SKIP_PRECOMPUTE_CLUSTERS", "").strip().lower() in (
+        "1", "true", "yes", "on",
+    )
+    all_stored_cases = []
+    if skip_clusters:
+        print(f"✓ This batch stored {stored_count}/{len(cases)} cases (skipping full DB recount)")
+        sources = {}
+        for case in cases:
+            source = case.get("source", "Unknown")
+            sources[source] = sources.get(source, 0) + 1
+        print("\nThis batch by source:")
+        for source, count in sorted(sources.items()):
+            print(f"  - {source}: {count} cases")
+    else:
+        try:
+            all_stored_cases = get_all_stored_cases(db_path)
+            print(f"✓ Total cases in database: {len(all_stored_cases)}")
+            sources = {}
+            for case in all_stored_cases:
+                source = case.get("source", "Unknown")
+                sources[source] = sources.get(source, 0) + 1
+            print("\nCases by source:")
+            for source, count in sorted(sources.items()):
+                print(f"  - {source}: {count} cases")
+        except Exception as e:
+            print(f"⚠️  Summary skipped ({e})")
+
+    print("\n" + "="*60)
+    print("Step 5: Pre-computing clusters...")
+    print("="*60)
+    if skip_clusters:
+        print("Skipping cluster pre-compute (SKIP_PRECOMPUTE_CLUSTERS is set).")
+    else:
+        try:
+            from analysis import run_automated_analysis
+            cluster_data = run_automated_analysis(all_stored_cases)
+            if db_path:
+                storage = CaseStorage(db_path)  # SQLite
+            else:
+                storage = CaseStorage()  # PostgreSQL
+            stored = storage.store_precomputed_clusters(cluster_data, len(all_stored_cases))
+            if stored:
+                print(f"✓ Pre-computed clusters stored ({len(all_stored_cases)} cases)")
+            else:
+                print(f"❌ Failed to store pre-computed clusters ({len(all_stored_cases)} cases)")
+        except Exception as e:
+            print(f"⚠️  Warning: Could not pre-compute clusters: {e}")
+            import traceback
+            traceback.print_exc()
 
 
 def get_database_path() -> Optional[str]:
@@ -204,10 +222,7 @@ def store_cases(
     except Exception as exc:
         print(f"⚠️  Provenance attach skipped (ingest continues): {exc}")
 
-    stored_count = 0
-    for case in cases_to_store:
-        if storage.store_case(case):
-            stored_count += 1
+    stored_count = storage.store_cases(cases_to_store)
     return stored_count
 
 

@@ -11,6 +11,7 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -35,13 +36,17 @@
 
 <https://caselinker.up.railway.app/resource/agency/ceos> a cacontology-multi:FederalAgency .
 
-<https://caselinker.up.railway.app/resource/agency/department-of-the-army-criminal-investigation-division> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/department-of-the-army-criminal-investigation-division> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Department of the Army Criminal Investigation Division" .
 
 <https://caselinker.up.railway.app/resource/agency/doj> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/agency/fbi> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/agency/justice-departments-criminal-division> a cacontology-multi:LocalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_004/charge/1> a cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "sexual exploitation" ;
@@ -58,14 +63,17 @@
     cacontology:severityLevel 3 ;
     cacontology-multi:crossesBorders true .
 
+<https://caselinker.up.railway.app/resource/case/doj_ceos_2026_004/event/project-safe-childhood> a cac-core:Event,
+        cacontology-multi:ProjectSafeChildhoodOperation ;
+    cacontology:severityLevel 3 .
+
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_004/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_004/charge/1>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_004/charge/2> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_004/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_004/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_004/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_004/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -80,26 +88,28 @@
     cacontology-production:victimAge 11 .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_004/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "15 Years" .
-
-<https://caselinker.up.railway.app/resource/case/doj_ceos_2026_004/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "10 years of supervised release" .
+    rdfs:label "[\"15 Years\", \"10 years of supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_004> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:42:57.934014" ;
+    dcterms:created "2026-09-15T21:50:56.922463" ;
     dcterms:identifier "doj_ceos_2026_004" ;
-    dcterms:modified "2026-09-10T19:42:57.934014" ;
+    dcterms:modified "2026-09-15T21:50:56.922463" ;
     dcterms:source <https://www.justice.gov/opa/pr/former-army-civilian-employee-sentenced-15-years-prison-sexually-abusing-children>,
         "DOJ CEOS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/california>,
+        <https://caselinker.up.railway.app/resource/location/hawaii>,
+        <https://caselinker.up.railway.app/resource/location/japan>,
+        <https://caselinker.up.railway.app/resource/location/merced>,
+        <https://caselinker.up.railway.app/resource/location/united-states> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_004/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_004/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_004/admission/1>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_004/admission/2>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_004/event/hands-on>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_004/event/multi-jurisdiction>,
+        <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_004/event/project-safe-childhood>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_004/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_004/legal-step/sentenced>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_004/offense-event/charge-2> ;
@@ -109,7 +119,13 @@
         <https://caselinker.up.railway.app/resource/agency/department-of-the-army-criminal-investigation-division>,
         <https://caselinker.up.railway.app/resource/agency/doj>,
         <https://caselinker.up.railway.app/resource/agency/fbi>,
-        <https://caselinker.up.railway.app/resource/agency/justice-departments-criminal-division> .
+        <https://caselinker.up.railway.app/resource/agency/justice-departments-criminal-division>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/california>,
+        <https://caselinker.up.railway.app/resource/location/hawaii>,
+        <https://caselinker.up.railway.app/resource/location/japan>,
+        <https://caselinker.up.railway.app/resource/location/merced>,
+        <https://caselinker.up.railway.app/resource/location/united-states> .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_004/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
@@ -121,6 +137,21 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_004/event/hands-on>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_004/offense-event/charge-2> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_004/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/location/california> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/hawaii> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/japan> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/merced> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_004/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "engaging in sexual acts with both minor children" ;

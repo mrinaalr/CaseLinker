@@ -11,6 +11,7 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -35,7 +36,9 @@
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
-<https://caselinker.up.railway.app/resource/agency/pearland-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/pearland-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Pearland Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/us-bureau-of-prisons> a cacontology-multi:LocalAgency .
 
@@ -43,11 +46,14 @@
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_448> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T21:22:47.581493" ;
+    dcterms:created "2026-09-15T22:12:27.697987" ;
     dcterms:identifier "doj_safe_childhood_2024_448" ;
-    dcterms:modified "2026-09-14T21:22:47.581493" ;
+    dcterms:modified "2026-09-15T22:12:27.697987" ;
     dcterms:source <https://www.justice.gov/usao-sdtx/pr/convicted-sex-offender-imprisoned-additional-child-pornography-offenses>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/galveston>,
+        <https://caselinker.up.railway.app/resource/location/san-leon>,
+        <https://caselinker.up.railway.app/resource/location/texas> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_448/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_448/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_448/admission/1>,
@@ -65,7 +71,10 @@
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/pearland-police-department>,
         <https://caselinker.up.railway.app/resource/agency/us-bureau-of-prisons>,
-        <https://caselinker.up.railway.app/resource/agency/usao> .
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/galveston>,
+        <https://caselinker.up.railway.app/resource/location/san-leon>,
+        <https://caselinker.up.railway.app/resource/location/texas> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_448/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -101,10 +110,7 @@
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_448/charge/3>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_448/charge/4> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_448/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_448/sentence/2>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_448/sentence/3>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_448/sentence/4> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_448/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_448/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -130,20 +136,8 @@
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_448/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_448/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "240 months" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_448/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$22,000" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_448/sentence/3> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "10 years" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_448/sentence/4> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "supervised release" .
+    rdfs:label "[\"240 months\", \"$22,000\", \"10 years\", \"supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_448/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "communicating with whom he believed to be a 13-year-old female" ;
@@ -159,6 +153,17 @@
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_448/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/galveston> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/san-leon> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "San Leon" ;
+    uco-core:name "San Leon" .
+
+<https://caselinker.up.railway.app/resource/location/texas> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2024_448/event/online-only> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event .

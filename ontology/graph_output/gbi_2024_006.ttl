@@ -11,16 +11,19 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/gbi_2024_006> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:45:04.946764" ;
+    dcterms:created "2026-09-15T19:33:11.411959" ;
     dcterms:identifier "gbi_2024_006" ;
-    dcterms:modified "2026-09-10T19:45:04.946764" ;
+    dcterms:modified "2026-09-15T19:33:11.411959" ;
     dcterms:source <https://gbi.georgia.gov/search/results?query=CEACC>,
         "GBI" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/charlton-county>,
+        <https://caselinker.up.railway.app/resource/location/georgia> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/gbi_2024_006/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/gbi_2024_006/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/gbi_2024_006/cybertip>,
@@ -34,7 +37,9 @@
         <https://caselinker.up.railway.app/resource/agency/georgia-bureau-of-investigation-child-exploitation-and-computer-crimes>,
         <https://caselinker.up.railway.app/resource/agency/georgia-bureau-of-investigation-child-exploitation-unit>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/charlton-county>,
+        <https://caselinker.up.railway.app/resource/location/georgia> .
 
 <https://caselinker.up.railway.app/resource/case/gbi_2024_006/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -50,7 +55,9 @@
         <https://caselinker.up.railway.app/resource/case/gbi_2024_006/offense-event/charge-3> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/gbi_2024_006/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/charlton-county-sheriffs-office> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/charlton-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Charlton County Sheriff's Office" .
 
 <https://caselinker.up.railway.app/resource/agency/georgia-bureau-of-investigation-child-exploitation-and-computer-crimes> a cacontology-multi:StateAgency .
 
@@ -84,11 +91,11 @@
 <https://caselinker.up.railway.app/resource/case/gbi_2024_006/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Charlton County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/gbi_2024_006/charge/1>,
         <https://caselinker.up.railway.app/resource/case/gbi_2024_006/charge/2>,
         <https://caselinker.up.railway.app/resource/case/gbi_2024_006/charge/3> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-06-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-06-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/gbi_2024_006/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/gbi_2024_006/operation> a cac-core:Event,
         cacontology-taskforce:TaskForceOperation .
@@ -98,6 +105,10 @@
 
 <https://caselinker.up.railway.app/resource/case/gbi_2024_006/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/gbi_2024_006/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/gbi_2024_006/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
 
@@ -106,6 +117,14 @@
 <https://caselinker.up.railway.app/resource/case/gbi_2024_006/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2024-06-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/charlton-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Charlton County" ;
+    uco-core:name "Charlton County" .
+
+<https://caselinker.up.railway.app/resource/location/georgia> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/gbi_2024_006/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

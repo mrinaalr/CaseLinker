@@ -8,16 +8,21 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_027> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:09:16.760567" ;
+    dcterms:created "2026-09-15T20:55:00.763876" ;
     dcterms:identifier "ncmec_2023_027" ;
-    dcterms:modified "2026-09-10T19:09:16.760567" ;
+    dcterms:modified "2026-09-15T20:55:00.763876" ;
     dcterms:source <https://www.cnyhomepage.com/news/local-news/mohawk-man-charged-with-sexual-exploitation/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/albany>,
+        <https://caselinker.up.railway.app/resource/location/mohawk>,
+        <https://caselinker.up.railway.app/resource/location/new-york>,
+        <https://caselinker.up.railway.app/resource/location/united-states> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_027/phase/convicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_027/phase/convicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_027/event/csam>,
@@ -26,7 +31,12 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_027/legal-step/convicted> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/hsi>,
-        <https://caselinker.up.railway.app/resource/agency/us-department-of-justice> .
+        <https://caselinker.up.railway.app/resource/agency/us-department-of-justice>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/albany>,
+        <https://caselinker.up.railway.app/resource/location/mohawk>,
+        <https://caselinker.up.railway.app/resource/location/new-york>,
+        <https://caselinker.up.railway.app/resource/location/united-states> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_027/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -44,6 +54,8 @@
 <https://caselinker.up.railway.app/resource/agency/hsi> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/agency/us-department-of-justice> a cacontology-multi:LocalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_027/charge/1> a cacontology-legal-outcomes:CriminalCharge,
         cacontology-legal-outcomes:StateCharge ;
@@ -70,8 +82,7 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_027/charge/2>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_027/charge/3> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2023-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_027/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2023_027/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_027/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_027/legal-step/convicted> a cac-core:Event,
         cac-core:LegalEvent,
@@ -86,15 +97,27 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_027/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "15 years" .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_027/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "30 years" .
+    rdfs:label "[\"15 years\", \"30 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_027/phase/convicted> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2023-05-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/albany> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Albany" ;
+    uco-core:name "Albany" .
+
+<https://caselinker.up.railway.app/resource/location/mohawk> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Mohawk" ;
+    uco-core:name "Mohawk" .
+
+<https://caselinker.up.railway.app/resource/location/new-york> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_027/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

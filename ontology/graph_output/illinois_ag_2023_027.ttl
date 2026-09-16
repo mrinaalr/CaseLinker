@@ -11,16 +11,21 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_027> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:48:49.072924" ;
+    dcterms:created "2026-09-15T19:40:56.818766" ;
     dcterms:identifier "illinois_ag_2023_027" ;
-    dcterms:modified "2026-09-10T19:48:49.072924" ;
+    dcterms:modified "2026-09-15T19:49:59.848366" ;
     dcterms:source <https://illinoisattorneygeneral.gov/news/story/attorney-general-raoul-obtains-guilty-plea-prison-sentence-in-fayette-county-child-pornography-ring>,
         "ILLINOIS AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/chicago>,
+        <https://caselinker.up.railway.app/resource/location/fayette-county>,
+        <https://caselinker.up.railway.app/resource/location/illinois>,
+        <https://caselinker.up.railway.app/resource/location/vandalia> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_027/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_027/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_027/cybertip>,
@@ -38,7 +43,11 @@
         <https://caselinker.up.railway.app/resource/agency/illinois-high-tech-crimes-bureau>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
         <https://caselinker.up.railway.app/resource/agency/office-of-the-attorney-general>,
-        <https://caselinker.up.railway.app/resource/agency/vandalia-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/vandalia-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/chicago>,
+        <https://caselinker.up.railway.app/resource/location/fayette-county>,
+        <https://caselinker.up.railway.app/resource/location/illinois>,
+        <https://caselinker.up.railway.app/resource/location/vandalia> .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_027/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
@@ -98,9 +107,12 @@
     cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_027/person/offender/1> a uco-identity:Person ;
-    cacontology-detection:ageEstimate 39 .
+    cacontology-detection:ageEstimate 38 .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_027/person/offender/2> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 39 .
+
+<https://caselinker.up.railway.app/resource/case/illinois_ag_2023_027/person/offender/3> a uco-identity:Person ;
     cacontology-detection:ageEstimate 47 .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_027/person/victim/1> a uco-identity:Person .
@@ -123,9 +135,18 @@
         <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_027/offense-event/charge-3> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_027/person/offender/2> .
 
+<https://caselinker.up.railway.app/resource/case/illinois_ag_2023_027/role/offender/3> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_027/event/conspiracy>,
+        <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_027/event/online-only>,
+        <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_027/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_027/offense-event/charge-3> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_027/person/offender/3> .
+
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_027/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "30 years" .
+    rdfs:label "[\"30 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_027/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -136,11 +157,24 @@
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
+<https://caselinker.up.railway.app/resource/location/chicago> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/fayette-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/illinois> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/vandalia> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_027/event/conspiracy> a cacontology:ConspiracyToCommitCSA,
         cac-core:Event ;
-    cacontology:conspiracyMemberCount 2 ;
+    cacontology:conspiracyMemberCount 3 ;
     cacontology:participatesInConspiracy <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_027/role/offender/1>,
-        <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_027/role/offender/2> ;
+        <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_027/role/offender/2>,
+        <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_027/role/offender/3> ;
     cacontology:severityLevel 1 .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2023_027/event/online-only> a cacontology:ChildSexualAbuseEvent,

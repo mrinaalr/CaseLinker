@@ -11,16 +11,23 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2011_006> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:46:47.154001" ;
+    dcterms:created "2026-09-15T19:40:56.345536" ;
     dcterms:identifier "illinois_ag_2011_006" ;
-    dcterms:modified "2026-09-10T19:46:47.154001" ;
+    dcterms:modified "2026-09-15T19:48:59.028121" ;
     dcterms:source <https://illinoisattorneygeneral.gov/News-Room/2006-2018-Press-Archive/201111-02%20ATTORNEY%20GENERAL%20MADIGAN%20LA%20SALLE%20COUNTY%20MAN%20ARRESTED%20ON%20CHILD%20PORNOGRAPHY%20CHARGES.pdf>,
         "ILLINOIS AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/chicago>,
+        <https://caselinker.up.railway.app/resource/location/genoa>,
+        <https://caselinker.up.railway.app/resource/location/illinois>,
+        <https://caselinker.up.railway.app/resource/location/la-salle>,
+        <https://caselinker.up.railway.app/resource/location/la-salle-county>,
+        <https://caselinker.up.railway.app/resource/location/leland> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/illinois_ag_2011_006/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/illinois_ag_2011_006/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/illinois_ag_2011_006/event/distribution>,
@@ -33,7 +40,13 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/genoa-police-department>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/illinois-department-of-corrections>,
-        <https://caselinker.up.railway.app/resource/agency/la-salle-county-states-attorney> .
+        <https://caselinker.up.railway.app/resource/agency/la-salle-county-states-attorney> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/chicago>,
+        <https://caselinker.up.railway.app/resource/location/genoa>,
+        <https://caselinker.up.railway.app/resource/location/illinois>,
+        <https://caselinker.up.railway.app/resource/location/la-salle>,
+        <https://caselinker.up.railway.app/resource/location/la-salle-county>,
+        <https://caselinker.up.railway.app/resource/location/leland> .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2011_006/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -84,10 +97,10 @@
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2011_006/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): La Salle County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/illinois_ag_2011_006/charge/1>,
         <https://caselinker.up.railway.app/resource/case/illinois_ag_2011_006/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2011-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2011-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/illinois_ag_2011_006/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2011_006/operation> a cac-core:Event,
         cacontology-taskforce:TaskForceOperation .
@@ -98,9 +111,39 @@
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2011_006/person/victim/1> a uco-identity:Person ;
     cacontology-production:victimAge 5 .
 
+<https://caselinker.up.railway.app/resource/case/illinois_ag_2011_006/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2011_006/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2011-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/chicago> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/genoa> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Genoa" ;
+    uco-core:name "Genoa" .
+
+<https://caselinker.up.railway.app/resource/location/illinois> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/la-salle> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "la Salle" ;
+    uco-core:name "la Salle" .
+
+<https://caselinker.up.railway.app/resource/location/la-salle-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "la Salle County" ;
+    uco-core:name "la Salle County" .
+
+<https://caselinker.up.railway.app/resource/location/leland> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Leland" ;
+    uco-core:name "Leland" .
 
 <https://caselinker.up.railway.app/resource/case/illinois_ag_2011_006/event/online-only> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event .

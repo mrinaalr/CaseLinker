@@ -1,30 +1,49 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
 @prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2022_012> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:20:00.784963" ;
+    dcterms:created "2026-09-15T20:35:06.368471" ;
     dcterms:identifier "us_marshals_2022_012" ;
-    dcterms:modified "2026-09-10T20:20:00.784963" ;
+    dcterms:modified "2026-09-15T20:35:06.368471" ;
     dcterms:source <https://www.usmarshals.gov/news/press-release/us-marshals-locate-missing-missouri-children-near-tucson>,
         "US MARSHALS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/arizona>,
+        <https://caselinker.up.railway.app/resource/location/greene-county>,
+        <https://caselinker.up.railway.app/resource/location/missouri>,
+        <https://caselinker.up.railway.app/resource/location/springfield>,
+        <https://caselinker.up.railway.app/resource/location/the-state-of-missouri>,
+        <https://caselinker.up.railway.app/resource/location/tucson>,
+        <https://caselinker.up.railway.app/resource/location/united-states> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/us_marshals_2022_012/phase/booked> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/us_marshals_2022_012/phase/booked> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/us_marshals_2022_012/event/multi-jurisdiction>,
-        <https://caselinker.up.railway.app/resource/case/us_marshals_2022_012/event/trust-violation> ;
+        <https://caselinker.up.railway.app/resource/case/us_marshals_2022_012/event/trust-violation>,
+        <https://caselinker.up.railway.app/resource/case/us_marshals_2022_012/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/arizona-department-of-child-safety>,
         <https://caselinker.up.railway.app/resource/agency/arizona-wanted-violent-offender-task-force>,
         <https://caselinker.up.railway.app/resource/agency/midwest-violent-fugitive-task-force>,
         <https://caselinker.up.railway.app/resource/agency/pascua-yaqui-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/usms> .
+        <https://caselinker.up.railway.app/resource/agency/usms> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/arizona>,
+        <https://caselinker.up.railway.app/resource/location/greene-county>,
+        <https://caselinker.up.railway.app/resource/location/missouri>,
+        <https://caselinker.up.railway.app/resource/location/springfield>,
+        <https://caselinker.up.railway.app/resource/location/the-state-of-missouri>,
+        <https://caselinker.up.railway.app/resource/location/tucson>,
+        <https://caselinker.up.railway.app/resource/location/united-states> .
 
 <https://caselinker.up.railway.app/resource/agency/arizona-department-of-child-safety> a cac-core:OrganizationLikeEntity,
         cacontology-multi:LocalAgency ;
@@ -50,6 +69,12 @@
         cacontology-custodial:TrustViolation ;
     cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/us_marshals_2022_012/relationship/mother> .
 
+<https://caselinker.up.railway.app/resource/case/us_marshals_2022_012/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/us_marshals_2022_012/sentence/1> .
+
 <https://caselinker.up.railway.app/resource/case/us_marshals_2022_012/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/us_marshals_2022_012/person/victim/1> a uco-identity:Person .
@@ -70,7 +95,38 @@
     cacontology:hasRoleBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/us_marshals_2022_012/person/victim/1> .
 
+<https://caselinker.up.railway.app/resource/case/us_marshals_2022_012/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/us_marshals_2022_012/phase/booked> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/arizona> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/greene-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/missouri> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/springfield> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Springfield" ;
+    uco-core:name "Springfield" .
+
+<https://caselinker.up.railway.app/resource/location/the-state-of-missouri> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "the State of Missouri" ;
+    uco-core:name "the State of Missouri" .
+
+<https://caselinker.up.railway.app/resource/location/tucson> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Tucson" ;
+    uco-core:name "Tucson" .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 

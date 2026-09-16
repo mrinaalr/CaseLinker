@@ -9,16 +9,22 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_094> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:26:03.292956" ;
+    dcterms:created "2026-09-15T21:27:13.240624" ;
     dcterms:identifier "ncmec_2025_094" ;
-    dcterms:modified "2026-09-10T19:26:03.292956" ;
+    dcterms:modified "2026-09-15T21:27:13.240624" ;
     dcterms:source <https://www.fresnosheriff.org/media-relations/detectives-arrest-fresno-man-for-sexually-abusing-children.html>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/california>,
+        <https://caselinker.up.railway.app/resource/location/fresno>,
+        <https://caselinker.up.railway.app/resource/location/fresno-county>,
+        <https://caselinker.up.railway.app/resource/location/san-francisco>,
+        <https://caselinker.up.railway.app/resource/location/the-central-valley> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_094/phase/booked> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_094/phase/booked> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_094/event/hands-on>,
@@ -27,7 +33,12 @@
     cacontology:investigationStatus "unknown" ;
     cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/ncmec_2025_094/tech/cybertipline> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/hsi>,
-        <https://caselinker.up.railway.app/resource/agency/icac> .
+        <https://caselinker.up.railway.app/resource/agency/icac> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/california>,
+        <https://caselinker.up.railway.app/resource/location/fresno>,
+        <https://caselinker.up.railway.app/resource/location/fresno-county>,
+        <https://caselinker.up.railway.app/resource/location/san-francisco>,
+        <https://caselinker.up.railway.app/resource/location/the-central-valley> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_094/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -60,14 +71,18 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_094/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Fresno County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_094/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_094/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-05-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_094/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_094/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_094/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_094/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_094/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -75,6 +90,25 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_094/phase/booked> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-05-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/california> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/fresno> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/fresno-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/san-francisco> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "San Francisco" ;
+    uco-core:name "San Francisco" .
+
+<https://caselinker.up.railway.app/resource/location/the-central-valley> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "the Central Valley" ;
+    uco-core:name "the Central Valley" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_094/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

@@ -11,16 +11,20 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_007> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:04:51.973416" ;
+    dcterms:created "2026-09-15T20:45:05.990538" ;
     dcterms:identifier "ncmec_2022_007" ;
-    dcterms:modified "2026-09-10T19:04:51.973416" ;
+    dcterms:modified "2026-09-15T20:45:05.990538" ;
     dcterms:source <https://www.nashuatelegraph.com/news/local-news/2022/09/30/nashua-police-arrest-two-child-pornography-suspects-in-two-days/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/blanchard-st>,
+        <https://caselinker.up.railway.app/resource/location/nashua>,
+        <https://caselinker.up.railway.app/resource/location/new-hampshire> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_007/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_007/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2022_007/cybertip>,
@@ -31,7 +35,10 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_007/operation> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/nashua-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/blanchard-st>,
+        <https://caselinker.up.railway.app/resource/location/nashua>,
+        <https://caselinker.up.railway.app/resource/location/new-hampshire> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_007/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
@@ -67,7 +74,8 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2022_007/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_007/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2022_007/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_007/operation> a cac-core:Event,
         cacontology-taskforce:TaskForceOperation .
@@ -96,11 +104,30 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_007/offense-event/charge-2> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_007/person/offender/2> .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_007/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_007/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/blanchard-st> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Blanchard St." ;
+    uco-core:name "Blanchard St." .
+
+<https://caselinker.up.railway.app/resource/location/nashua> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Nashua" ;
+    uco-core:name "Nashua" .
+
+<https://caselinker.up.railway.app/resource/location/new-hampshire> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "New Hampshire" ;
+    uco-core:name "New Hampshire" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_007/event/conspiracy> a cacontology:ConspiracyToCommitCSA,
         cac-core:Event ;

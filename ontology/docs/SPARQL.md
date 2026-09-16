@@ -71,6 +71,7 @@ Instance IRIs use the same host:
 | Case / named graph | `https://caselinker.up.railway.app/resource/case/{case_id}` |
 | Platform | `https://caselinker.up.railway.app/resource/platform/{slug}` |
 | Agency | `https://caselinker.up.railway.app/resource/agency/{slug}` |
+| Location (NER) | `https://caselinker.up.railway.app/resource/location/{slug}` |
 
 `dcterms:identifier` on a `cac:CACInvestigation` is the CaseLinker `case_id` (e.g. `nj_ag_2017_001`).
 
@@ -102,6 +103,7 @@ PREFIX cac-tf:       <https://cacontology.projectvic.org/taskforce#>
 PREFIX uco-core:     <https://ontology.unifiedcyberontology.org/uco/core/>
 PREFIX uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/>
 PREFIX uco-role:     <https://ontology.unifiedcyberontology.org/uco/role/>
+PREFIX uco-location: <https://ontology.unifiedcyberontology.org/uco/location/>
 PREFIX dcterms:      <http://purl.org/dc/terms/>
 PREFIX rdfs:         <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX xsd:          <http://www.w3.org/2001/XMLSchema#>
@@ -109,15 +111,28 @@ PREFIX xsd:          <http://www.w3.org/2001/XMLSchema#>
 
 Other CAC modules appear when the mapped features need them (`grooming#`, `custodial#`, `sextortion#`, `production#`, `ai-csam#`, `us/ncmec#`, `usa-federal-law#`, `undercover#`). Bindings: [CASE/UCO SDK](https://github.com/vulnmaster/CASE-UCO-SDK) (`CASE_UCO_EXTENSIONS=cac`).
 
+NER place strings land on shared `uco-location:Location` nodes (`resource/location/{slug}`), typed also as `cac-core:PlaceLikeEntity`, linked from the investigation via `dcterms:spatial` (and `caselinker:mentionsLocation`):
+
+```sparql
+SELECT ?caseId ?place WHERE {
+  ?inv a cac:CACInvestigation ;
+       dcterms:identifier ?caseId ;
+       dcterms:spatial ?loc .
+  ?loc a uco-location:Location ;
+       rdfs:label ?place .
+}
+LIMIT 50
+```
+
 ## Corpus metadata
 
 | Fact | How to read it |
 |---|---|
-| Relational case count | `GET https://caselinker.up.railway.app/api/case-count` (local sqlite **10,000**) |
-| Extracted features / agencies | `GET /api/stats` → `unique_features` **120,272**, `unique_organizations` **4,000+** distinct LE agencies after ingest normalize plus LE-only filter (`source_count` **56**, Project Safe Childhood counted in the DOJ family) |
-| Graph case count | `SELECT (COUNT(DISTINCT ?s) AS ?n) WHERE { GRAPH ?g { ?s a cac:CACInvestigation } FILTER(STRSTARTS(STR(?g), "https://caselinker.up.railway.app/resource/case/")) }` (local set **10,000**; hosted SPARQL matches after Oxigraph load) |
+| Relational case count | `GET https://caselinker.up.railway.app/api/case-count` (local sqlite **10,282**) |
+| Extracted features / agencies | `GET /api/stats` → `unique_features` **125,891**, `unique_organizations` **4,000+** distinct LE agencies after ingest normalize plus LE-only filter (`source_count` **56** = 54 non-DOJ + `DOJ CEOS` + `DOJ SAFE CHILDHOOD`; CEOS Archives → CEOS; AI-CSAM USAO harvest → Safe Childhood) |
+| Graph case count | `SELECT (COUNT(DISTINCT ?s) AS ?n) WHERE { GRAPH ?g { ?s a cac:CACInvestigation } FILTER(STRSTARTS(STR(?g), "https://caselinker.up.railway.app/resource/case/")) }` (local set **10,282**; hosted SPARQL matches after Oxigraph load) |
 | PACER KG graphs | `SELECT (COUNT(DISTINCT ?g) AS ?n) WHERE { GRAPH ?g { ?s ?p ?o } FILTER(STRSTARTS(STR(?g), "urn:pacer:kg:")) }` (expect **297**) |
-| Named graphs (press release) | one per case; **10,000** locally |
+| Named graphs (press release) | one per case; **10,282** locally |
 | Graph generation time | `dcterms:created` / `dcterms:modified` on the investigation (remap time, not offense date) |
 | Public source | `dcterms:source` (press-release URL and/or source label) |
 | Reload | wholesale `python3 scripts/rebuild_oxigraph.py` (not incremental) |

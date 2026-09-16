@@ -6,11 +6,14 @@
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix cacontology-undercover: <https://cacontology.projectvic.org/undercover#> .
+@prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -22,10 +25,13 @@
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
     cacontology:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/event/possession> ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/offense-event/charge-3> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/canton-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/canton-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Canton Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/fbi> a cacontology-multi:FederalAgency .
 
@@ -35,13 +41,21 @@
         cacontology-multi:LocalAgency ;
     rdfs:label "Jackson Township Police Department" .
 
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
+
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T21:22:15.033115" ;
+    dcterms:created "2026-09-15T22:12:25.836297" ;
     dcterms:identifier "doj_safe_childhood_2026_119" ;
-    dcterms:modified "2026-09-14T21:22:15.033115" ;
+    dcterms:modified "2026-09-15T22:12:25.836297" ;
     dcterms:source <https://www.justice.gov/usao-ndoh/pr/canton-man-sentenced-13-years-prison-child-pornography-offenses>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/akron>,
+        <https://caselinker.up.railway.app/resource/location/canton>,
+        <https://caselinker.up.railway.app/resource/location/ohio>,
+        <https://caselinker.up.railway.app/resource/location/stark-county>,
+        <https://caselinker.up.railway.app/resource/location/the-northern-district>,
+        <https://caselinker.up.railway.app/resource/location/united-states> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/admission/1>,
@@ -49,11 +63,21 @@
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/event/possession>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/event/project-safe-childhood>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/legal-proceeding>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/legal-step/sentenced> ;
+        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/legal-step/sentenced>,
+        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/offense-event/charge-3>,
+        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/operation> ;
+    cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/tech/cybertipline> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/canton-police-department>,
         <https://caselinker.up.railway.app/resource/agency/fbi>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/jackson-township-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/jackson-township-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/akron>,
+        <https://caselinker.up.railway.app/resource/location/canton>,
+        <https://caselinker.up.railway.app/resource/location/ohio>,
+        <https://caselinker.up.railway.app/resource/location/stark-county>,
+        <https://caselinker.up.railway.app/resource/location/the-northern-district>,
+        <https://caselinker.up.railway.app/resource/location/united-states> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -63,6 +87,12 @@
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/charge/2> a cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "sexual exploitation" ;
     ns1:chargeCluster "sexual_exploitation_unspecified" .
+
+<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/charge/3> a cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "child exploitation" ;
+    rdfs:seeAlso <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/offense-event/charge-3> ;
+    ns1:chargeCluster "child_exploitation" ;
+    ns1:chargeOffenseEvent <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/offense-event/charge-3> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/event/distribution> a cac-core:Event,
         cacontology-legal-outcomes:CSAM_Distribution ;
@@ -78,17 +108,19 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/charge/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/charge/2> ;
+        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/charge/2>,
+        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/charge/3> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/sentence/2>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/sentence/3> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding,
         cacontology-legal-outcomes:SentencingHearing ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/operation> a cac-core:Event,
+        cacontology-taskforce:ReactiveOperation .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 38 .
@@ -98,27 +130,45 @@
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
     cacontology:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/event/possession> ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/event/possession>,
+        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/offense-event/charge-3> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "160 months" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "3 years" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/sentence/3> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "10 years of supervised release" .
+    rdfs:label "[\"160 months\", \"3 years\", \"10 years of supervised release\"]" .
 
-<https://caselinker.up.railway.app/resource/platform/social-media> a cacontology-platforms:SocialMediaPlatform ;
-    rdfs:label "social media" .
+<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
+    rdfs:label "CyberTipline" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/akron> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/canton> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Canton" ;
+    uco-core:name "Canton" .
+
+<https://caselinker.up.railway.app/resource/location/ohio> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/stark-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Stark County" ;
+    uco-core:name "Stark County" .
+
+<https://caselinker.up.railway.app/resource/location/the-northern-district> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/platform/social-media> a cacontology-platforms:SocialMediaPlatform ;
+    rdfs:label "social media" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "downloading, viewing, and trading child pornography on several social media platforms" ;
@@ -138,4 +188,10 @@
     cacontology:severityLevel 3 ;
     cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/social-media> ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/facet/possession> .
+
+<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_119/offense-event/charge-3> a cacontology:ChildSexualAbuseEvent,
+        cac-core:Event,
+        uco-action:Crime ;
+    rdfs:label "Inferred offense from charge: child exploitation" ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/social-media> .
 

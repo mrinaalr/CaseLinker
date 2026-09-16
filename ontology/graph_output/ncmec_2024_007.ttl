@@ -9,6 +9,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -27,11 +28,15 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_007> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:14:12.673555" ;
+    dcterms:created "2026-09-15T21:08:10.028996" ;
     dcterms:identifier "ncmec_2024_007" ;
-    dcterms:modified "2026-09-10T19:14:12.673555" ;
+    dcterms:modified "2026-09-15T21:08:10.028996" ;
     dcterms:source <https://www.cullmantribune.com/2024/01/30/holly-pond-man-charged-with-possession-dissemination-of-child-pornography/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/ala>,
+        <https://caselinker.up.railway.app/resource/location/cullman>,
+        <https://caselinker.up.railway.app/resource/location/cullman-county>,
+        <https://caselinker.up.railway.app/resource/location/holly-pond> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_007/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_007/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_007/admission/1>,
@@ -39,7 +44,11 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_007/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_007/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/alabama-state-bureau-of-investigation> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/alabama-state-bureau-of-investigation> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/ala>,
+        <https://caselinker.up.railway.app/resource/location/cullman>,
+        <https://caselinker.up.railway.app/resource/location/cullman-county>,
+        <https://caselinker.up.railway.app/resource/location/holly-pond> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_007/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -55,7 +64,8 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2024_007/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2024_007/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_007/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 24 .
@@ -67,6 +77,10 @@
     cacontology:hasRoleBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_007/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_007/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_007/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_007/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "couldn’t provide many details, but said, “Because of the Rules of Professional Conduct, I am limited in what I can sa..." ;
@@ -82,6 +96,24 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_007/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/ala> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/cullman> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Cullman" ;
+    uco-core:name "Cullman" .
+
+<https://caselinker.up.railway.app/resource/location/cullman-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Cullman County" ;
+    uco-core:name "Cullman County" .
+
+<https://caselinker.up.railway.app/resource/location/holly-pond> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Holly Pond" ;
+    uco-core:name "Holly Pond" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_007/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

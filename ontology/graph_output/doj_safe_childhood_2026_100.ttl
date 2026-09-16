@@ -5,6 +5,7 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
+@prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix cacontology-undercover: <https://cacontology.projectvic.org/undercover#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
@@ -12,6 +13,7 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -30,15 +32,24 @@
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_100/offense-event/charge-5> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_100/person/victim/1> .
 
+<https://caselinker.up.railway.app/resource/agency/ceos> a cacontology-multi:FederalAgency .
+
 <https://caselinker.up.railway.app/resource/agency/doj> a cacontology-multi:FederalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/hsi> a cacontology-multi:FederalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_100> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T21:22:14.496597" ;
+    dcterms:created "2026-09-15T22:12:25.785158" ;
     dcterms:identifier "doj_safe_childhood_2026_100" ;
-    dcterms:modified "2026-09-14T21:22:14.496597" ;
+    dcterms:modified "2026-09-15T22:12:25.785158" ;
     dcterms:source <https://www.justice.gov/usao-ne/pr/omaha-man-sentenced-30-years-production-and-distribution-child-pornography>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/nebraska>,
+        <https://caselinker.up.railway.app/resource/location/omaha>,
+        <https://caselinker.up.railway.app/resource/location/united-states> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_100/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_100/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_100/admission/1>,
@@ -50,8 +61,15 @@
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_100/event/project-safe-childhood>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_100/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_100/legal-step/sentenced>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_100/offense-event/charge-5> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/doj> .
+        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_100/offense-event/charge-5>,
+        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_100/operation> ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ceos>,
+        <https://caselinker.up.railway.app/resource/agency/doj>,
+        <https://caselinker.up.railway.app/resource/agency/hsi>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/nebraska>,
+        <https://caselinker.up.railway.app/resource/location/omaha>,
+        <https://caselinker.up.railway.app/resource/location/united-states> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_100/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -96,15 +114,16 @@
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_100/charge/4>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_100/charge/5> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_100/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_100/sentence/2>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_100/sentence/3> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_100/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_100/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding,
         cacontology-legal-outcomes:SentencingHearing ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_100/operation> a cac-core:Event,
+        cacontology-taskforce:TaskForceOperation .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_100/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 18 .
@@ -125,16 +144,8 @@
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_100/person/offender/2> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_100/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "360 months" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_100/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "240 months" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_100/sentence/3> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "supervised release" .
+    rdfs:label "[\"360 months\", \"240 months\", \"supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_100/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
@@ -149,6 +160,15 @@
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_100/event/production>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_100/offense-event/charge-5> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_100/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/location/nebraska> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/omaha> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2026_100/event/conspiracy> a cacontology:ConspiracyToCommitCSA,
         cac-core:Event ;

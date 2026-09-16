@@ -10,6 +10,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -40,7 +41,11 @@
         cacontology-multi:LocalAgency ;
     rdfs:label "St. Albans Police Department" .
 
-<https://caselinker.up.railway.app/resource/agency/west-virginia-state-police-department> a cacontology-multi:StateAgency .
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/west-virginia-state-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:StateAgency ;
+    rdfs:label "West Virginia State Police Department" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_060/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -54,6 +59,9 @@
     rdfs:label "sexual exploitation" ;
     ns1:chargeCluster "sexual_exploitation_unspecified" .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_060/event/project-safe-childhood> a cac-core:Event,
+        cacontology-multi:ProjectSafeChildhoodOperation .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_060/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_060/facet/production> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
@@ -65,11 +73,7 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_060/charge/2>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_060/charge/3> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2023-03-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_060/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2023_060/sentence/2>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2023_060/sentence/3>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2023_060/sentence/4>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2023_060/sentence/5> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_060/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_060/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -84,37 +88,29 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_060/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MandatoryMinimumSentencing ;
-    rdfs:label "mandatory minimum" .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_060/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "15 years" .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_060/sentence/3> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "30 years" .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_060/sentence/4> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "supervised release" .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_060/sentence/5> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$250,000" .
+    rdfs:label "[\"mandatory minimum\", \"15 years\", \"30 years\", \"supervised release\", \"$250,000\"]" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_060> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:09:31.550435" ;
+    dcterms:created "2026-09-15T20:55:00.791222" ;
     dcterms:identifier "ncmec_2023_060" ;
-    dcterms:modified "2026-09-10T19:09:31.550435" ;
+    dcterms:modified "2026-09-15T20:55:00.791222" ;
     dcterms:source <https://www.justice.gov/usao-sdwv/pr/kanawha-county-man-pleads-guilty-child-pornography-crime-1>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/charleston>,
+        <https://caselinker.up.railway.app/resource/location/kanawha-county>,
+        <https://caselinker.up.railway.app/resource/location/southern-district>,
+        <https://caselinker.up.railway.app/resource/location/st-albans>,
+        <https://caselinker.up.railway.app/resource/location/united-states>,
+        <https://caselinker.up.railway.app/resource/location/west-virginia>,
+        <https://caselinker.up.railway.app/resource/location/wva> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_060/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_060/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_060/admission/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_060/admission/2>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_060/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_060/event/production>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2023_060/event/project-safe-childhood>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_060/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_060/legal-step/sentenced> ;
     cacontology:investigationStatus "unknown" ;
@@ -122,7 +118,15 @@
         <https://caselinker.up.railway.app/resource/agency/department-of-homeland-security>,
         <https://caselinker.up.railway.app/resource/agency/hsi>,
         <https://caselinker.up.railway.app/resource/agency/st-albans-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/west-virginia-state-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/usao>,
+        <https://caselinker.up.railway.app/resource/agency/west-virginia-state-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/charleston>,
+        <https://caselinker.up.railway.app/resource/location/kanawha-county>,
+        <https://caselinker.up.railway.app/resource/location/southern-district>,
+        <https://caselinker.up.railway.app/resource/location/st-albans>,
+        <https://caselinker.up.railway.app/resource/location/united-states>,
+        <https://caselinker.up.railway.app/resource/location/west-virginia>,
+        <https://caselinker.up.railway.app/resource/location/wva> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_060/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
@@ -134,6 +138,35 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_060/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_060/event/production> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_060/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/location/charleston> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/kanawha-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Kanawha County" ;
+    uco-core:name "Kanawha County" .
+
+<https://caselinker.up.railway.app/resource/location/southern-district> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Southern District" ;
+    uco-core:name "Southern District" .
+
+<https://caselinker.up.railway.app/resource/location/st-albans> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "St. Albans" ;
+    uco-core:name "St. Albans" .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/west-virginia> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "West Virginia" ;
+    uco-core:name "West Virginia" .
+
+<https://caselinker.up.railway.app/resource/location/wva> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_060/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

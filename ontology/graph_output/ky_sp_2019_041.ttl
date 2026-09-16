@@ -4,18 +4,28 @@
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2019_041> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:53:38.415477" ;
+    dcterms:created "2026-09-15T19:52:04.510373" ;
     dcterms:identifier "ky_sp_2019_041" ;
-    dcterms:modified "2026-09-10T19:53:38.415477" ;
+    dcterms:modified "2026-09-15T19:52:04.510373" ;
     dcterms:source <https://www.kentuckystatepolice.ky.gov/news/ksp-extradites-former-trigg-county-resident-from-philippines/>,
         "KY SP" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/georgia>,
+        <https://caselinker.up.railway.app/resource/location/hickory>,
+        <https://caselinker.up.railway.app/resource/location/kentucky>,
+        <https://caselinker.up.railway.app/resource/location/marikina-manila>,
+        <https://caselinker.up.railway.app/resource/location/philippines>,
+        <https://caselinker.up.railway.app/resource/location/trigg-county>,
+        <https://caselinker.up.railway.app/resource/location/united-states> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ky_sp_2019_041/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ky_sp_2019_041/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ky_sp_2019_041/event/hands-on>,
@@ -23,7 +33,14 @@
         <https://caselinker.up.railway.app/resource/case/ky_sp_2019_041/legal-proceeding> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/georgia-department-of-corrections>,
-        <https://caselinker.up.railway.app/resource/agency/kentucky-state-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/kentucky-state-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/georgia>,
+        <https://caselinker.up.railway.app/resource/location/hickory>,
+        <https://caselinker.up.railway.app/resource/location/kentucky>,
+        <https://caselinker.up.railway.app/resource/location/marikina-manila>,
+        <https://caselinker.up.railway.app/resource/location/philippines>,
+        <https://caselinker.up.railway.app/resource/location/trigg-county>,
+        <https://caselinker.up.railway.app/resource/location/united-states> .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2019_041/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -37,7 +54,9 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ky_sp_2019_041/event/hands-on> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ky_sp_2019_041/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/georgia-department-of-corrections> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/georgia-department-of-corrections> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Georgia Department of Corrections" .
 
 <https://caselinker.up.railway.app/resource/agency/kentucky-state-police-department> a cacontology-multi:StateAgency .
 
@@ -49,17 +68,52 @@
 <https://caselinker.up.railway.app/resource/case/ky_sp_2019_041/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Christian County Jail" ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2019-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2019-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ky_sp_2019_041/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2019_041/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 39 .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2019_041/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ky_sp_2019_041/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ky_sp_2019_041/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2019-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/georgia> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Georgia" ;
+    uco-core:name "Georgia" .
+
+<https://caselinker.up.railway.app/resource/location/hickory> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Hickory" ;
+    uco-core:name "Hickory" .
+
+<https://caselinker.up.railway.app/resource/location/kentucky> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/marikina-manila> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Marikina Manila" ;
+    uco-core:name "Marikina Manila" .
+
+<https://caselinker.up.railway.app/resource/location/philippines> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Philippines" ;
+    uco-core:name "Philippines" .
+
+<https://caselinker.up.railway.app/resource/location/trigg-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Trigg County" ;
+    uco-core:name "Trigg County" .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2019_041/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

@@ -6,23 +6,32 @@
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2022_005> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:02:28.331032" ;
+    dcterms:created "2026-09-15T20:10:06.529564" ;
     dcterms:identifier "ohio_ag_2022_005" ;
-    dcterms:modified "2026-09-10T20:02:28.331032" ;
+    dcterms:modified "2026-09-15T20:10:06.529564" ;
     dcterms:source <https://www.ohioattorneygeneral.gov/Media/News-Releases/February-2022/Attorney-General-Dave-Yost-Announces-Success-of-An>,
         "OHIO AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/broadview-heights>,
+        <https://caselinker.up.railway.app/resource/location/cleveland>,
+        <https://caselinker.up.railway.app/resource/location/cuyahoga-county>,
+        <https://caselinker.up.railway.app/resource/location/northeast>,
+        <https://caselinker.up.railway.app/resource/location/ohio> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ohio_ag_2022_005/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ohio_ag_2022_005/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ohio_ag_2022_005/event/conspiracy>,
         <https://caselinker.up.railway.app/resource/case/ohio_ag_2022_005/event/hands-on>,
         <https://caselinker.up.railway.app/resource/case/ohio_ag_2022_005/event/trafficking>,
+        <https://caselinker.up.railway.app/resource/case/ohio_ag_2022_005/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/ohio_ag_2022_005/operation> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/bureau-of-criminal-investigation>,
         <https://caselinker.up.railway.app/resource/agency/cleveland-division-of-police-department>,
@@ -34,7 +43,12 @@
         <https://caselinker.up.railway.app/resource/agency/metrohealth-police-department>,
         <https://caselinker.up.railway.app/resource/agency/middleburg-heights-police-department>,
         <https://caselinker.up.railway.app/resource/agency/sheriffs-department>,
-        <https://caselinker.up.railway.app/resource/agency/warrensville-heights-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/warrensville-heights-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/broadview-heights>,
+        <https://caselinker.up.railway.app/resource/location/cleveland>,
+        <https://caselinker.up.railway.app/resource/location/cuyahoga-county>,
+        <https://caselinker.up.railway.app/resource/location/northeast>,
+        <https://caselinker.up.railway.app/resource/location/ohio> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2022_005/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
@@ -47,7 +61,9 @@
 
 <https://caselinker.up.railway.app/resource/agency/cleveland-division-of-police-department> a cacontology-multi:LocalAgency .
 
-<https://caselinker.up.railway.app/resource/agency/cuyahoga-county-sheriffs-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/cuyahoga-county-sheriffs-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Cuyahoga County Sheriff's Department" .
 
 <https://caselinker.up.railway.app/resource/agency/cuyahoga-regional-human-trafficking-task-force> a cacontology-multi:LocalAgency .
 
@@ -70,6 +86,12 @@
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2022_005/event/trafficking> a cac-core:Event,
         cacontology-legal-outcomes:SexTrafficking ;
     cacontology:severityLevel 3 .
+
+<https://caselinker.up.railway.app/resource/case/ohio_ag_2022_005/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ohio_ag_2022_005/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2022_005/operation> a cac-core:Event,
         cacontology-taskforce:ProactiveOperation .
@@ -106,9 +128,32 @@
         <https://caselinker.up.railway.app/resource/case/ohio_ag_2022_005/event/hands-on> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ohio_ag_2022_005/person/offender/3> .
 
+<https://caselinker.up.railway.app/resource/case/ohio_ag_2022_005/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2022_005/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/broadview-heights> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Broadview Heights" ;
+    uco-core:name "Broadview Heights" .
+
+<https://caselinker.up.railway.app/resource/location/cleveland> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/cuyahoga-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/northeast> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Northeast" ;
+    uco-core:name "Northeast" .
+
+<https://caselinker.up.railway.app/resource/location/ohio> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/platform/twitter-x> a cacontology-platforms:SocialMediaPlatform ;
     rdfs:label "Twitter / X" .

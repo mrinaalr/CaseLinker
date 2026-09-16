@@ -8,19 +8,24 @@
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_348> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:28:21.878085" ;
+    dcterms:created "2026-09-15T21:27:13.486530" ;
     dcterms:identifier "ncmec_2025_348" ;
-    dcterms:modified "2026-09-10T19:28:21.878085" ;
+    dcterms:modified "2026-09-15T21:27:13.486530" ;
     dcterms:source <https://www.kwwl.com/news/former-dubuque-corrections-officer-arrested-on-charges-related-to-child-pornography/article_d7918e1d-b387-41b4-82b8-3c22f14f72b7.html>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/dubuque>,
+        <https://caselinker.up.railway.app/resource/location/dubuque-county>,
+        <https://caselinker.up.railway.app/resource/location/iowa> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_348/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_348/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_348/cybertip>,
@@ -30,9 +35,14 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_348/operation> ;
     cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/ncmec_2025_348/tech/cybertipline> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/dubuque-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/dubuque>,
+        <https://caselinker.up.railway.app/resource/location/dubuque-county>,
+        <https://caselinker.up.railway.app/resource/location/iowa> .
 
-<https://caselinker.up.railway.app/resource/agency/dubuque-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/dubuque-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Dubuque Police Department" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_348/charge/1> a cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "purchase/possess a depiction of minor in a sex act and one count of sexual" ;
@@ -82,7 +92,7 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_348/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$50,000" .
+    rdfs:label "[\"$50,000\"]" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_348/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -95,6 +105,19 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_348/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-05-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/dubuque> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Dubuque" ;
+    uco-core:name "Dubuque" .
+
+<https://caselinker.up.railway.app/resource/location/dubuque-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Dubuque County" ;
+    uco-core:name "Dubuque County" .
+
+<https://caselinker.up.railway.app/resource/location/iowa> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_348/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

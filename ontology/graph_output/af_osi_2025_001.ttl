@@ -9,21 +9,26 @@
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/af_osi_2025_001> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:35:48.946686" ;
+    dcterms:created "2026-09-15T19:23:30.642684" ;
     dcterms:identifier "af_osi_2025_001" ;
-    dcterms:modified "2026-09-10T19:35:48.946686" ;
+    dcterms:modified "2026-09-15T19:23:30.642684" ;
     dcterms:source <https://www.osi.af.mil/News/Article-Display/Article/4421065/afosi-investigation-leads-to-life-sentence-in-child-abuse-case/>,
         "AF OSI" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/colorado>,
+        <https://caselinker.up.railway.app/resource/location/texas> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/af_osi_2025_001/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/af_osi_2025_001/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/af_osi_2025_001/cybertip>,
         <https://caselinker.up.railway.app/resource/case/af_osi_2025_001/event/multi-jurisdiction>,
+        <https://caselinker.up.railway.app/resource/case/af_osi_2025_001/event/project-safe-childhood>,
         <https://caselinker.up.railway.app/resource/case/af_osi_2025_001/event/trust-violation>,
         <https://caselinker.up.railway.app/resource/case/af_osi_2025_001/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/af_osi_2025_001/legal-step/sentenced>,
@@ -32,7 +37,10 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/colorado-springs-police-department>,
         <https://caselinker.up.railway.app/resource/agency/fbi>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/texas-department-of-public-safety> .
+        <https://caselinker.up.railway.app/resource/agency/texas-department-of-public-safety>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/colorado>,
+        <https://caselinker.up.railway.app/resource/location/texas> .
 
 <https://caselinker.up.railway.app/resource/agency/colorado-springs-police-department> a cac-core:OrganizationLikeEntity,
         cacontology-multi:LocalAgency ;
@@ -43,6 +51,8 @@
 <https://caselinker.up.railway.app/resource/agency/texas-department-of-public-safety> a cac-core:OrganizationLikeEntity,
         cacontology-multi:StateAgency ;
     rdfs:label "Texas Department of Public Safety" .
+
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/af_osi_2025_001/charge/1> a cacontology-legal-outcomes:CriminalCharge,
         cacontology-legal-outcomes:OnlineEnticement ;
@@ -59,6 +69,10 @@
 
 <https://caselinker.up.railway.app/resource/case/af_osi_2025_001/event/multi-jurisdiction> a cac-core:Event,
         cacontology-multi:MultiJurisdictionalInvestigation ;
+    cacontology:severityLevel 3 .
+
+<https://caselinker.up.railway.app/resource/case/af_osi_2025_001/event/project-safe-childhood> a cac-core:Event,
+        cacontology-multi:ProjectSafeChildhoodOperation ;
     cacontology:severityLevel 3 .
 
 <https://caselinker.up.railway.app/resource/case/af_osi_2025_001/event/trust-violation> a cacontology-custodial:CustodialAbuse,
@@ -106,7 +120,7 @@
 
 <https://caselinker.up.railway.app/resource/case/af_osi_2025_001/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:LifeImprisonmentSentence ;
-    rdfs:label "sentenced to life" .
+    rdfs:label "[\"sentenced to life\"]" .
 
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cac-core:OrganizationLikeEntity,
         cacontology-multi:FederalAgency ;
@@ -115,6 +129,16 @@
 <https://caselinker.up.railway.app/resource/case/af_osi_2025_001/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/colorado> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Colorado" ;
+    uco-core:name "Colorado" .
+
+<https://caselinker.up.railway.app/resource/location/texas> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Texas" ;
+    uco-core:name "Texas" .
 
 <https://caselinker.up.railway.app/resource/case/af_osi_2025_001/offense-event/charge-2> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event,

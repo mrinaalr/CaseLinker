@@ -5,37 +5,65 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1001> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:22:38.500097" ;
+    dcterms:created "2026-09-15T21:08:11.019835" ;
     dcterms:identifier "ncmec_2024_1001" ;
-    dcterms:modified "2026-09-10T19:22:38.500097" ;
-    dcterms:source <https://www.yahoo.com/news/archbald-man-accused-downloading-child-035900051.html>,
+    dcterms:modified "2026-09-15T21:08:11.019835" ;
+    dcterms:source <https://www.riverreporter.com/stories/pike-man-charged-with-possession-of-child-sexual-abuse-material,169396>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/milford>,
+        <https://caselinker.up.railway.app/resource/location/pa--pike-county>,
+        <https://caselinker.up.railway.app/resource/location/pike-county>,
+        <https://caselinker.up.railway.app/resource/location/wayne-county>,
+        <https://caselinker.up.railway.app/resource/location/westfall-township> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_1001/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_1001/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_1001/cybertip>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_1001/event/distribution>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_1001/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_1001/legal-proceeding> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ncmec> .
+    cacontology:investigationStatus "unknown" ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/district-attorneys>,
+        <https://caselinker.up.railway.app/resource/agency/district-attorneys-office>,
+        <https://caselinker.up.railway.app/resource/agency/ncmec>,
+        <https://caselinker.up.railway.app/resource/agency/pennsylvania-state-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/pike-county-sheriffs-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/milford>,
+        <https://caselinker.up.railway.app/resource/location/pa--pike-county>,
+        <https://caselinker.up.railway.app/resource/location/pike-county>,
+        <https://caselinker.up.railway.app/resource/location/wayne-county>,
+        <https://caselinker.up.railway.app/resource/location/westfall-township> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1001/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2024-07-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:hasRoleBeginPoint "2024-10-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_1001/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_1001/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1001/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2024-07-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:hasRoleBeginPoint "2024-10-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_1001/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_1001/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/agency/district-attorneys> a cacontology-multi:StateAgency .
+
+<https://caselinker.up.railway.app/resource/agency/district-attorneys-office> a cacontology-multi:StateAgency .
+
+<https://caselinker.up.railway.app/resource/agency/pennsylvania-state-police-department> a cacontology-multi:StateAgency .
+
+<https://caselinker.up.railway.app/resource/agency/pike-county-sheriffs-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Pike County Sheriff's Department" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1001/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -44,29 +72,54 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1001/cybertip> a cacontology-us-ncmec:NCMECCybertipReport ;
     cacontology-us-ncmec:supportedBy <https://caselinker.up.railway.app/resource/agency/ncmec> .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_1001/event/distribution> a cac-core:Event,
+        cacontology-legal-outcomes:CSAM_Distribution ;
+    cacontology:severityLevel 3 .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1001/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1001/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2024_1001/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-07-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-10-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2024_1001/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1001/person/offender/1> a uco-identity:Person ;
-    cacontology-detection:ageEstimate 34 .
+    cacontology-detection:ageEstimate 46 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1001/person/victim/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1001/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$50,000" .
+    rdfs:label "[\"$200,000.00\"]" .
 
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1001/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
-    cacontology:hasPhaseBeginPoint "2024-07-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology:hasPhaseBeginPoint "2024-10-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/milford> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Milford" ;
+    uco-core:name "Milford" .
+
+<https://caselinker.up.railway.app/resource/location/pa--pike-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Pa- Pike County" ;
+    uco-core:name "Pa- Pike County" .
+
+<https://caselinker.up.railway.app/resource/location/pike-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/wayne-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/westfall-township> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Westfall Township" ;
+    uco-core:name "Westfall Township" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_1001/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

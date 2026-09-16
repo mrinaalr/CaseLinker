@@ -10,6 +10,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -38,11 +39,14 @@
 
 <https://caselinker.up.railway.app/resource/case/usss_2025_002> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:21:04.512227" ;
+    dcterms:created "2026-09-15T20:36:46.059592" ;
     dcterms:identifier "usss_2025_002" ;
-    dcterms:modified "2026-09-10T20:21:04.512227" ;
+    dcterms:modified "2026-09-15T20:36:46.059592" ;
     dcterms:source <https://www.secretservice.gov/newsroom/releases/2025/07/lake-county-indiana-man-charged-possessing-child-sexual-abuse-material>,
         "USSS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/griffith>,
+        <https://caselinker.up.railway.app/resource/location/indiana>,
+        <https://caselinker.up.railway.app/resource/location/lake-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/usss_2025_002/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/usss_2025_002/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/usss_2025_002/admission/1>,
@@ -54,7 +58,10 @@
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/indiana-state-police-department>,
         <https://caselinker.up.railway.app/resource/agency/sheriffs-department>,
-        <https://caselinker.up.railway.app/resource/agency/us-secret-service> .
+        <https://caselinker.up.railway.app/resource/agency/us-secret-service> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/griffith>,
+        <https://caselinker.up.railway.app/resource/location/indiana>,
+        <https://caselinker.up.railway.app/resource/location/lake-county> .
 
 <https://caselinker.up.railway.app/resource/case/usss_2025_002/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -71,7 +78,8 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/usss_2025_002/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/usss_2025_002/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/usss_2025_002/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 56 .
@@ -84,9 +92,24 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/usss_2025_002/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/usss_2025_002/person/offender/1> .
 
+<https://caselinker.up.railway.app/resource/case/usss_2025_002/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/usss_2025_002/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/griffith> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Griffith" ;
+    uco-core:name "Griffith" .
+
+<https://caselinker.up.railway.app/resource/location/indiana> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/lake-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/usss_2025_002/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "viewed and downloaded the material for his personal use and said, “I know I made a mistake,” and “I know I looked at ..." ;

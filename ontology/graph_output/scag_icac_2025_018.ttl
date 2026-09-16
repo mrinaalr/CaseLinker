@@ -10,16 +10,23 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/scag_icac_2025_018> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:05:13.182974" ;
+    dcterms:created "2026-09-15T20:17:53.740525" ;
     dcterms:identifier "scag_icac_2025_018" ;
-    dcterms:modified "2026-09-10T20:05:13.182974" ;
+    dcterms:modified "2026-09-15T20:17:53.740525" ;
     dcterms:source <https://www.scag.gov/about-the-office/news/florence-man-arrested-on-three-child-sexual-abuse-material-charges-2/>,
         "SCAG ICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/columbia>,
+        <https://caselinker.up.railway.app/resource/location/connecticut>,
+        <https://caselinker.up.railway.app/resource/location/florence>,
+        <https://caselinker.up.railway.app/resource/location/lexington>,
+        <https://caselinker.up.railway.app/resource/location/sc>,
+        <https://caselinker.up.railway.app/resource/location/south-carolina> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/scag_icac_2025_018/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/scag_icac_2025_018/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/scag_icac_2025_018/event/ai-csam>,
@@ -31,7 +38,13 @@
         <https://caselinker.up.railway.app/resource/agency/florence-police-department>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/naugatuck-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/south-carolina-attorney-generals-office> .
+        <https://caselinker.up.railway.app/resource/agency/south-carolina-attorney-generals-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/columbia>,
+        <https://caselinker.up.railway.app/resource/location/connecticut>,
+        <https://caselinker.up.railway.app/resource/location/florence>,
+        <https://caselinker.up.railway.app/resource/location/lexington>,
+        <https://caselinker.up.railway.app/resource/location/sc>,
+        <https://caselinker.up.railway.app/resource/location/south-carolina> .
 
 <https://caselinker.up.railway.app/resource/case/scag_icac_2025_018/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -49,7 +62,9 @@
 
 <https://caselinker.up.railway.app/resource/agency/attorney-generals-office> a cacontology-multi:StateAgency .
 
-<https://caselinker.up.railway.app/resource/agency/florence-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/florence-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Florence Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
@@ -93,14 +108,36 @@
 
 <https://caselinker.up.railway.app/resource/case/scag_icac_2025_018/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "10 years" .
+    rdfs:label "[\"10 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/scag_icac_2025_018/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
-<https://caselinker.up.railway.app/resource/platform/gen-ai> a cacontology-platforms:FileHostingService ;
-    rdfs:label "Gen AI" .
+<https://caselinker.up.railway.app/resource/location/columbia> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/connecticut> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Connecticut" ;
+    uco-core:name "Connecticut" .
+
+<https://caselinker.up.railway.app/resource/location/florence> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/lexington> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/sc> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/south-carolina> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/platform/gen-ai> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:FileHostingService ;
+    rdfs:label "Gen AI" ;
+    cacontology-platforms:platformType "generative-ai" .
 
 <https://caselinker.up.railway.app/resource/case/scag_icac_2025_018/event/ai-csam> a cacontology:DigitallyGeneratedCSAMIncident,
         <https://cacontology.projectvic.org/ai-csam#AIGeneratedCSAM>,

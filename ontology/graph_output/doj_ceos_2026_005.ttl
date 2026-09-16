@@ -7,26 +7,37 @@
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_005> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:43:00.617836" ;
+    dcterms:created "2026-09-15T21:50:56.928719" ;
     dcterms:identifier "doj_ceos_2026_005" ;
-    dcterms:modified "2026-09-10T19:43:00.617836" ;
+    dcterms:modified "2026-09-15T21:50:56.928719" ;
     dcterms:source <https://www.justice.gov/opa/pr/former-us-army-member-convicted-physically-and-sexually-assaulting-two-minors-while-serving>,
         "DOJ CEOS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/atlanta>,
+        <https://caselinker.up.railway.app/resource/location/georgia>,
+        <https://caselinker.up.railway.app/resource/location/grafenwöhr-germany>,
+        <https://caselinker.up.railway.app/resource/location/the-northern-district> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_005/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_005/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_005/event/hands-on>,
+        <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_005/event/project-safe-childhood>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_005/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_005/legal-step/sentenced>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_005/offense-event/charge-2> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/doj>,
         <https://caselinker.up.railway.app/resource/agency/fbi>,
-        <https://caselinker.up.railway.app/resource/agency/justice-departments-criminal-division> .
+        <https://caselinker.up.railway.app/resource/agency/justice-departments-criminal-division> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/atlanta>,
+        <https://caselinker.up.railway.app/resource/location/georgia>,
+        <https://caselinker.up.railway.app/resource/location/grafenwöhr-germany>,
+        <https://caselinker.up.railway.app/resource/location/the-northern-district> .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_005/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -58,15 +69,17 @@
     ns1:chargeCluster "child_exploitation" ;
     ns1:chargeOffenseEvent <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_005/offense-event/charge-2> .
 
+<https://caselinker.up.railway.app/resource/case/doj_ceos_2026_005/event/project-safe-childhood> a cac-core:Event,
+        cacontology-multi:ProjectSafeChildhoodOperation ;
+    cacontology:severityLevel 3 .
+
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_005/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_005/charge/1>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_005/charge/2> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_005/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_005/sentence/2>,
-        <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_005/sentence/3> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_005/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_005/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -80,20 +93,26 @@
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_005/person/victim/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_005/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MandatoryMinimumSentencing ;
-    rdfs:label "mandatory minimum" .
-
-<https://caselinker.up.railway.app/resource/case/doj_ceos_2026_005/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "30 years" .
-
-<https://caselinker.up.railway.app/resource/case/doj_ceos_2026_005/sentence/3> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:LifeImprisonmentSentence ;
-    rdfs:label "life in prison" .
+    rdfs:label "[\"mandatory minimum\", \"30 years\", \"life in prison\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_005/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/atlanta> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/georgia> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/grafenwöhr-germany> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Grafenwöhr, Germany" ;
+    uco-core:name "Grafenwöhr, Germany" .
+
+<https://caselinker.up.railway.app/resource/location/the-northern-district> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2026_005/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

@@ -5,19 +5,25 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/usss_2017_002> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:20:49.410808" ;
+    dcterms:created "2026-09-15T20:36:46.037339" ;
     dcterms:identifier "usss_2017_002" ;
-    dcterms:modified "2026-09-10T20:20:49.410808" ;
+    dcterms:modified "2026-09-15T20:36:46.037339" ;
     dcterms:source <https://www.secretservice.gov/press/releases/2017/07/jonesboro-man-sentenced-more-21-years-multiple-child-pornography-charges>,
         "USSS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/arkansas>,
+        <https://caselinker.up.railway.app/resource/location/craighead-county>,
+        <https://caselinker.up.railway.app/resource/location/jonesboro>,
+        <https://caselinker.up.railway.app/resource/location/united-states> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/usss_2017_002/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/usss_2017_002/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/usss_2017_002/event/conspiracy>,
@@ -27,7 +33,12 @@
         <https://caselinker.up.railway.app/resource/case/usss_2017_002/legal-step/sentenced> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/jonesboro-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/us-secret-service> .
+        <https://caselinker.up.railway.app/resource/agency/us-secret-service>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/arkansas>,
+        <https://caselinker.up.railway.app/resource/location/craighead-county>,
+        <https://caselinker.up.railway.app/resource/location/jonesboro>,
+        <https://caselinker.up.railway.app/resource/location/united-states> .
 
 <https://caselinker.up.railway.app/resource/case/usss_2017_002/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
@@ -37,9 +48,13 @@
         <https://caselinker.up.railway.app/resource/case/usss_2017_002/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/usss_2017_002/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/jonesboro-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/jonesboro-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Jonesboro Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/us-secret-service> a cacontology-multi:FederalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/usss_2017_002/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -53,8 +68,7 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/usss_2017_002/charge/1> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2017-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/usss_2017_002/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/usss_2017_002/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/usss_2017_002/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/usss_2017_002/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -87,16 +101,28 @@
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/usss_2017_002/person/offender/2> .
 
 <https://caselinker.up.railway.app/resource/case/usss_2017_002/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "21 Years" .
-
-<https://caselinker.up.railway.app/resource/case/usss_2017_002/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "supervised release" .
+    rdfs:label "[\"21 Years\", \"supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/case/usss_2017_002/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2017-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/arkansas> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/craighead-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Craighead County" ;
+    uco-core:name "Craighead County" .
+
+<https://caselinker.up.railway.app/resource/location/jonesboro> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Jonesboro" ;
+    uco-core:name "Jonesboro" .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/platform/chat> a cacontology-platforms:AnonymousChatPlatform ;
     rdfs:label "chat" .

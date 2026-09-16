@@ -5,19 +5,26 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2023_002> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:13:15.776952" ;
+    dcterms:created "2026-09-15T20:29:57.803042" ;
     dcterms:identifier "svicac_2023_002" ;
-    dcterms:modified "2026-09-10T20:13:15.776952" ;
+    dcterms:modified "2026-09-15T20:29:57.803042" ;
     dcterms:source <https://hoodline.com/2023/11/youth-hockey-coach-arrested-alleged-lewd-acts-with-minor-in-san-jose-and-child-porn-charges-in-denver/>,
         "SVICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/california>,
+        <https://caselinker.up.railway.app/resource/location/colorado>,
+        <https://caselinker.up.railway.app/resource/location/denver>,
+        <https://caselinker.up.railway.app/resource/location/fresno-county>,
+        <https://caselinker.up.railway.app/resource/location/san-jose> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/svicac_2023_002/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/svicac_2023_002/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/svicac_2023_002/event/multi-jurisdiction>,
@@ -27,7 +34,12 @@
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/hsi>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/san-jose-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/san-jose-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/california>,
+        <https://caselinker.up.railway.app/resource/location/colorado>,
+        <https://caselinker.up.railway.app/resource/location/denver>,
+        <https://caselinker.up.railway.app/resource/location/fresno-county>,
+        <https://caselinker.up.railway.app/resource/location/san-jose> .
 
 <https://caselinker.up.railway.app/resource/agency/hsi> a cacontology-multi:FederalAgency .
 
@@ -53,7 +65,8 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/svicac_2023_002/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/svicac_2023_002/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2023_002/person/offender/1> a uco-identity:Person .
 
@@ -77,9 +90,30 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/svicac_2023_002/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/svicac_2023_002/person/victim/1> .
 
+<https://caselinker.up.railway.app/resource/case/svicac_2023_002/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/svicac_2023_002/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/california> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/colorado> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/denver> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Denver" ;
+    uco-core:name "Denver" .
+
+<https://caselinker.up.railway.app/resource/location/fresno-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/san-jose> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2023_002/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

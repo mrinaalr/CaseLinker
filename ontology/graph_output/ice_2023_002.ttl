@@ -12,21 +12,28 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ice_2023_002> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:45:59.974910" ;
+    dcterms:created "2026-09-15T19:35:19.235827" ;
     dcterms:identifier "ice_2023_002" ;
-    dcterms:modified "2026-09-10T19:45:59.974910" ;
+    dcterms:modified "2026-09-15T19:35:19.235827" ;
     dcterms:source <https://www.ice.gov/news/releases/new-mexico-man-sentenced-25-years-producing-child-sexual-abuse-material-following-hsi>,
         "ICE" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/albuquerque>,
+        <https://caselinker.up.railway.app/resource/location/el-paso>,
+        <https://caselinker.up.railway.app/resource/location/new-mexico>,
+        <https://caselinker.up.railway.app/resource/location/nm>,
+        <https://caselinker.up.railway.app/resource/location/united-states> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ice_2023_002/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ice_2023_002/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ice_2023_002/event/csam>,
         <https://caselinker.up.railway.app/resource/case/ice_2023_002/event/multi-jurisdiction>,
         <https://caselinker.up.railway.app/resource/case/ice_2023_002/event/production>,
+        <https://caselinker.up.railway.app/resource/case/ice_2023_002/event/project-safe-childhood>,
         <https://caselinker.up.railway.app/resource/case/ice_2023_002/event/trust-violation>,
         <https://caselinker.up.railway.app/resource/case/ice_2023_002/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/ice_2023_002/legal-step/sentenced>,
@@ -38,7 +45,13 @@
         <https://caselinker.up.railway.app/resource/agency/doj>,
         <https://caselinker.up.railway.app/resource/agency/hsi>,
         <https://caselinker.up.railway.app/resource/agency/new-mexico-state-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/truth-or-consequences-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/truth-or-consequences-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/albuquerque>,
+        <https://caselinker.up.railway.app/resource/location/el-paso>,
+        <https://caselinker.up.railway.app/resource/location/new-mexico>,
+        <https://caselinker.up.railway.app/resource/location/nm>,
+        <https://caselinker.up.railway.app/resource/location/united-states> .
 
 <https://caselinker.up.railway.app/resource/agency/ceos> a cacontology-multi:FederalAgency .
 
@@ -48,7 +61,9 @@
         cacontology-multi:LocalAgency ;
     rdfs:label "DHS" .
 
-<https://caselinker.up.railway.app/resource/agency/doj> a cacontology-multi:FederalAgency .
+<https://caselinker.up.railway.app/resource/agency/doj> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:FederalAgency ;
+    rdfs:label "U.S. Department of Justice" .
 
 <https://caselinker.up.railway.app/resource/agency/hsi> a cacontology-multi:FederalAgency .
 
@@ -59,6 +74,8 @@
 <https://caselinker.up.railway.app/resource/agency/truth-or-consequences-police-department> a cac-core:OrganizationLikeEntity,
         cacontology-multi:LocalAgency ;
     rdfs:label "Truth or Consequences Police Department" .
+
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/ice_2023_002/charge/1> a cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "sexual exploitation" ;
@@ -75,6 +92,10 @@
     cacontology:severityLevel 3 ;
     cacontology-multi:crossesBorders true .
 
+<https://caselinker.up.railway.app/resource/case/ice_2023_002/event/project-safe-childhood> a cac-core:Event,
+        cacontology-multi:ProjectSafeChildhoodOperation ;
+    cacontology:severityLevel 3 .
+
 <https://caselinker.up.railway.app/resource/case/ice_2023_002/event/trust-violation> a cacontology-custodial:CustodialAbuse,
         cacontology-custodial:TrustViolation ;
     cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/ice_2023_002/relationship/father> .
@@ -89,8 +110,7 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ice_2023_002/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ice_2023_002/charge/2> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ice_2023_002/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/ice_2023_002/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ice_2023_002/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ice_2023_002/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -127,16 +147,33 @@
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ice_2023_002/person/victim/1> .
 
 <https://caselinker.up.railway.app/resource/case/ice_2023_002/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "25 years" .
-
-<https://caselinker.up.railway.app/resource/case/ice_2023_002/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "10 years of supervised release" .
+    rdfs:label "[\"25 years\", \"10 years of supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/case/ice_2023_002/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/albuquerque> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Albuquerque" ;
+    uco-core:name "Albuquerque" .
+
+<https://caselinker.up.railway.app/resource/location/el-paso> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/new-mexico> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "New Mexico" ;
+    uco-core:name "New Mexico" .
+
+<https://caselinker.up.railway.app/resource/location/nm> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "N.m." ;
+    uco-core:name "N.m." .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ice_2023_002/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;
@@ -157,11 +194,14 @@
 <https://caselinker.up.railway.app/resource/platform/chat> a cacontology-platforms:AnonymousChatPlatform ;
     rdfs:label "chat" .
 
-<https://caselinker.up.railway.app/resource/platform/twitter-x> a cacontology-platforms:SocialMediaPlatform ;
+<https://caselinker.up.railway.app/resource/platform/twitter-x> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:SocialMediaPlatform ;
     rdfs:label "Twitter / X" .
 
-<https://caselinker.up.railway.app/resource/platform/whatsapp> a cacontology-platforms:MessagingService ;
-    rdfs:label "WhatsApp" .
+<https://caselinker.up.railway.app/resource/platform/whatsapp> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:MessagingService ;
+    rdfs:label "WhatsApp" ;
+    cacontology-platforms:encryptionLevel "end-to-end" .
 
 <https://caselinker.up.railway.app/resource/case/ice_2023_002/offense-event/charge-2> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event,

@@ -5,24 +5,31 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_527> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:08:26.252008" ;
+    dcterms:created "2026-09-15T20:45:06.451142" ;
     dcterms:identifier "ncmec_2022_527" ;
-    dcterms:modified "2026-09-10T19:08:26.252008" ;
-    dcterms:source <https://www.kenoshanews.com/news/local/crime-and-courts/kenosha-man-charged-with-10-counts-of-possession-of-child-pornography/article_a1cde850-f26c-11ec-bad3-cb40afb690be.html>,
+    dcterms:modified "2026-09-15T20:45:06.451142" ;
+    dcterms:source <https://patch.com/illinois/crystallake/man-accused-distributing-child-pornography>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/crystal-lake>,
+        <https://caselinker.up.railway.app/resource/location/mchenry-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_527/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_527/phase/charged> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2022_527/event/possession>,
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2022_527/event/distribution>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_527/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_527/legal-proceeding> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/kenosha-police-department> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/mchenry-county-sheriffs-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/crystal-lake>,
+        <https://caselinker.up.railway.app/resource/location/mchenry-county> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_527/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -36,12 +43,16 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_527/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_527/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/kenosha-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/mchenry-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "McHenry County Sheriff's Office" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_527/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "possession of child pornography" ;
-    cacontology-legal-outcomes:indictmentCounts 22 .
+    rdfs:label "child pornography" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_527/event/distribution> a cac-core:Event,
+        cacontology-legal-outcomes:CSAM_Distribution .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_527/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
@@ -53,23 +64,34 @@
     cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2022_527/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_527/person/offender/1> a uco-identity:Person ;
-    cacontology-detection:ageEstimate 36 .
+    cacontology-detection:ageEstimate 22 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_527/person/victim/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_527/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$15,000" .
+    rdfs:label "[\"$60,000\", \"$6,000\"]" .
 
-<https://caselinker.up.railway.app/resource/platform/kik> a cacontology-platforms:MessagingService ;
-    rdfs:label "Kik" .
+<https://caselinker.up.railway.app/resource/platform/discord> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:MessagingService ;
+    rdfs:label "Discord" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_527/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
+<https://caselinker.up.railway.app/resource/location/crystal-lake> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Crystal Lake" ;
+    uco-core:name "Crystal Lake" .
+
+<https://caselinker.up.railway.app/resource/location/mchenry-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Mchenry County" ;
+    uco-core:name "Mchenry County" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_527/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
-    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/kik> ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/discord> ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2022_527/facet/possession> .
 

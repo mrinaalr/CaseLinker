@@ -3,19 +3,24 @@
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_008> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:03:23.291459" ;
+    dcterms:created "2026-09-15T20:10:06.693661" ;
     dcterms:identifier "ohio_ag_2013_008" ;
-    dcterms:modified "2026-09-10T20:03:23.291459" ;
+    dcterms:modified "2026-09-15T20:10:06.693661" ;
     dcterms:source <https://www.ohioattorneygeneral.gov/Media/News-Releases/July-2013/Attorney-General-DeWine-Announces-Sex-Offender-Con>,
         "OHIO AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/new-lexington>,
+        <https://caselinker.up.railway.app/resource/location/ohio>,
+        <https://caselinker.up.railway.app/resource/location/perry-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_008/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_008/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_008/event/possession>,
@@ -23,12 +28,16 @@
         <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_008/legal-step/sentenced> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/attorney-generals-special-prosecutions-section>,
-        <https://caselinker.up.railway.app/resource/agency/new-lexington-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/new-lexington-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/new-lexington>,
+        <https://caselinker.up.railway.app/resource/location/ohio>,
+        <https://caselinker.up.railway.app/resource/location/perry-county> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_008/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
     cacontology:hasRoleBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_008/event/possession> ;
+    cacontology:perpetratorRegisteredSexOffender true ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_008/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_008/role/victim/1> a cacontology:VictimRole,
@@ -54,7 +63,8 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_008/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_008/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_008/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -66,9 +76,26 @@
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_008/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ohio_ag_2013_008/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_008/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2013-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/new-lexington> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "New Lexington" ;
+    uco-core:name "New Lexington" .
+
+<https://caselinker.up.railway.app/resource/location/ohio> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/perry-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Perry County" ;
+    uco-core:name "Perry County" .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2013_008/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

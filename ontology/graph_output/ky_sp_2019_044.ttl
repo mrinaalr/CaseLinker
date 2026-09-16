@@ -4,19 +4,28 @@
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2019_044> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:53:39.585060" ;
+    dcterms:created "2026-09-15T19:52:04.511824" ;
     dcterms:identifier "ky_sp_2019_044" ;
-    dcterms:modified "2026-09-10T19:53:39.585060" ;
+    dcterms:modified "2026-09-15T19:52:04.511824" ;
     dcterms:source <https://www.kentuckystatepolice.ky.gov/news/p16-4-17-19/>,
         "KY SP" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/bay-county>,
+        <https://caselinker.up.railway.app/resource/location/florida>,
+        <https://caselinker.up.railway.app/resource/location/hartford>,
+        <https://caselinker.up.railway.app/resource/location/ky>,
+        <https://caselinker.up.railway.app/resource/location/rosine>,
+        <https://caselinker.up.railway.app/resource/location/rosine-rosine>,
+        <https://caselinker.up.railway.app/resource/location/united-states> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ky_sp_2019_044/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ky_sp_2019_044/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ky_sp_2019_044/event/hands-on>,
@@ -24,7 +33,14 @@
         <https://caselinker.up.railway.app/resource/case/ky_sp_2019_044/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ky_sp_2019_044/legal-proceeding> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/kentucky-state-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/usms> .
+        <https://caselinker.up.railway.app/resource/agency/usms> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/bay-county>,
+        <https://caselinker.up.railway.app/resource/location/florida>,
+        <https://caselinker.up.railway.app/resource/location/hartford>,
+        <https://caselinker.up.railway.app/resource/location/ky>,
+        <https://caselinker.up.railway.app/resource/location/rosine>,
+        <https://caselinker.up.railway.app/resource/location/rosine-rosine>,
+        <https://caselinker.up.railway.app/resource/location/united-states> .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2019_044/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -42,7 +58,9 @@
 
 <https://caselinker.up.railway.app/resource/agency/kentucky-state-police-department> a cacontology-multi:StateAgency .
 
-<https://caselinker.up.railway.app/resource/agency/usms> a cacontology-multi:FederalAgency .
+<https://caselinker.up.railway.app/resource/agency/usms> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:FederalAgency ;
+    rdfs:label "US Marshals Located Lacy" .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2019_044/event/multi-jurisdiction> a cac-core:Event,
         cacontology-multi:MultiJurisdictionalInvestigation .
@@ -52,17 +70,52 @@
 <https://caselinker.up.railway.app/resource/case/ky_sp_2019_044/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Taylor County Jail" ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2019-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2019-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ky_sp_2019_044/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2019_044/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 29 .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2019_044/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ky_sp_2019_044/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ky_sp_2019_044/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2019-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/bay-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Bay County" ;
+    uco-core:name "Bay County" .
+
+<https://caselinker.up.railway.app/resource/location/florida> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Florida" ;
+    uco-core:name "Florida" .
+
+<https://caselinker.up.railway.app/resource/location/hartford> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Hartford" ;
+    uco-core:name "Hartford" .
+
+<https://caselinker.up.railway.app/resource/location/ky> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/rosine> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Rosine" ;
+    uco-core:name "Rosine" .
+
+<https://caselinker.up.railway.app/resource/location/rosine-rosine> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Rosine Rosine" ;
+    uco-core:name "Rosine Rosine" .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ky_sp_2019_044/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event .

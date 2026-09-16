@@ -11,16 +11,21 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_237> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:27:19.288452" ;
+    dcterms:created "2026-09-15T21:27:13.372773" ;
     dcterms:identifier "ncmec_2025_237" ;
-    dcterms:modified "2026-09-10T19:27:19.288452" ;
+    dcterms:modified "2026-09-15T21:27:13.372773" ;
     dcterms:source <https://www.wrdw.com/2025/06/28/columbia-county-man-arrested-charges-violating-child-exploitation-prevention-act/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/evans>,
+        <https://caselinker.up.railway.app/resource/location/ga>,
+        <https://caselinker.up.railway.app/resource/location/georgia>,
+        <https://caselinker.up.railway.app/resource/location/grovetown> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_237/phase/indicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_237/phase/indicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_237/event/csam>,
@@ -30,7 +35,11 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_237/operation> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/georgia-bureau-of-investigation>,
         <https://caselinker.up.railway.app/resource/agency/grovetown-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/icac> .
+        <https://caselinker.up.railway.app/resource/agency/icac> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/evans>,
+        <https://caselinker.up.railway.app/resource/location/ga>,
+        <https://caselinker.up.railway.app/resource/location/georgia>,
+        <https://caselinker.up.railway.app/resource/location/grovetown> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_237/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -48,9 +57,13 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_237/offense-event/charge-2> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_237/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/georgia-bureau-of-investigation> a cacontology-multi:StateAgency .
+<https://caselinker.up.railway.app/resource/agency/georgia-bureau-of-investigation> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:StateAgency ;
+    rdfs:label "Georgia Bureau of Investigation" .
 
-<https://caselinker.up.railway.app/resource/agency/grovetown-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/grovetown-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Grovetown Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
@@ -73,7 +86,8 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_237/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_237/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-06-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-06-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_237/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_237/operation> a cac-core:Event,
         cacontology-taskforce:TaskForceOperation .
@@ -82,9 +96,29 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_237/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_237/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_237/phase/indicted> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-06-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/evans> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Evans" ;
+    uco-core:name "Evans" .
+
+<https://caselinker.up.railway.app/resource/location/ga> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/georgia> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/grovetown> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Grovetown" ;
+    uco-core:name "Grovetown" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_237/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

@@ -6,24 +6,30 @@
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_272> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:11:09.325358" ;
+    dcterms:created "2026-09-15T20:55:00.989114" ;
     dcterms:identifier "ncmec_2023_272" ;
-    dcterms:modified "2026-09-10T19:11:09.325358" ;
+    dcterms:modified "2026-09-15T20:55:00.989114" ;
     dcterms:source <https://www.northcentralpa.com/news/269-pieces-of-child-pornography-found-on-phone/article_d665af52-71ce-11ee-bbe6-dbed2356c177.html>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/lock-haven>,
+        <https://caselinker.up.railway.app/resource/location/pa> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_272/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_272/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_272/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_272/legal-proceeding> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/lock-haven>,
+        <https://caselinker.up.railway.app/resource/location/pa> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_272/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -49,12 +55,17 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_272/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_272/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_272/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 48 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_272/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_272/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/platform/xbox-live> a cac-core:DigitalSystemEntity,
         cacontology-platforms:GamePlatform ;
@@ -63,6 +74,14 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_272/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/lock-haven> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Lock Haven" ;
+    uco-core:name "Lock Haven" .
+
+<https://caselinker.up.railway.app/resource/location/pa> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_272/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

@@ -5,19 +5,24 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/usss_2021_017> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:21:37.833080" ;
+    dcterms:created "2026-09-15T20:36:46.107683" ;
     dcterms:identifier "usss_2021_017" ;
-    dcterms:modified "2026-09-10T20:21:37.833080" ;
+    dcterms:modified "2026-09-15T20:36:46.107683" ;
     dcterms:source <https://www.secretservice.gov/newsroom/releases/2021/04/johnson-county-man-sentenced-10-years-federal-prison-child-pornography>,
         "USSS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/alvarado>,
+        <https://caselinker.up.railway.app/resource/location/johnson-county>,
+        <https://caselinker.up.railway.app/resource/location/texas> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/usss_2021_017/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/usss_2021_017/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/usss_2021_017/event/possession>,
@@ -26,7 +31,11 @@
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/hsi>,
         <https://caselinker.up.railway.app/resource/agency/johnson-county-sheriffs-office>,
-        <https://caselinker.up.railway.app/resource/agency/us-secret-service> .
+        <https://caselinker.up.railway.app/resource/agency/us-secret-service>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/alvarado>,
+        <https://caselinker.up.railway.app/resource/location/johnson-county>,
+        <https://caselinker.up.railway.app/resource/location/texas> .
 
 <https://caselinker.up.railway.app/resource/case/usss_2021_017/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -45,6 +54,8 @@
 <https://caselinker.up.railway.app/resource/agency/johnson-county-sheriffs-office> a cacontology-multi:LocalAgency .
 
 <https://caselinker.up.railway.app/resource/agency/us-secret-service> a cacontology-multi:FederalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/usss_2021_017/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -73,11 +84,22 @@
 
 <https://caselinker.up.railway.app/resource/case/usss_2021_017/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "10 Years" .
+    rdfs:label "[\"10 Years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/usss_2021_017/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/alvarado> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Alvarado" ;
+    uco-core:name "Alvarado" .
+
+<https://caselinker.up.railway.app/resource/location/johnson-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/texas> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/usss_2021_017/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

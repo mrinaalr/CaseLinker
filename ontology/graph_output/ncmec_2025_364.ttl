@@ -9,16 +9,18 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_364> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:28:30.341398" ;
+    dcterms:created "2026-09-15T21:27:13.502827" ;
     dcterms:identifier "ncmec_2025_364" ;
-    dcterms:modified "2026-09-10T19:28:30.341398" ;
+    dcterms:modified "2026-09-15T21:27:13.502827" ;
     dcterms:source <https://www.mcphersonsentinel.com/man-arrested-on-multiple-counts-of-child-exploitation/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/mcpherson-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_364/phase/convicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_364/phase/convicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_364/event/conspiracy>,
@@ -28,7 +30,8 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_364/legal-step/convicted>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_364/offense-event/charge-1> ;
     cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/mcpherson-county-district-attorneys-office> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/mcpherson-county-district-attorneys-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/mcpherson-county> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_364/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
@@ -57,12 +60,9 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_364/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility: Pherson County Jail" ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_364/charge/1> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2025-04-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_364/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2025_364/sentence/2>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2025_364/sentence/3> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_364/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_364/legal-step/convicted> a cac-core:Event,
         cac-core:LegalEvent,
@@ -96,19 +96,16 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_364/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MandatoryMinimumSentencing ;
-    rdfs:label "mandatory minimum" .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2025_364/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "25 years" .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2025_364/sentence/3> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$500,000" .
+    rdfs:label "[\"mandatory minimum\", \"25 years\", \"$500,000\"]" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_364/phase/convicted> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2025-04-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/mcpherson-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Mcpherson County" ;
+    uco-core:name "Mcpherson County" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_364/event/conspiracy> a cacontology:ConspiracyToCommitCSA,
         cac-core:Event ;

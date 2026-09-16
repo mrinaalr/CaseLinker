@@ -9,16 +9,19 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_374> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:28:35.020205" ;
+    dcterms:created "2026-09-15T21:27:13.509350" ;
     dcterms:identifier "ncmec_2025_374" ;
-    dcterms:modified "2026-09-10T19:28:35.020205" ;
+    dcterms:modified "2026-09-15T21:27:13.509350" ;
     dcterms:source <https://thisistopeka.com/2025/06/topeka-man-arrested-on-multiple-felony-charges-including-sexual-exploitation-of-a-child/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/kan>,
+        <https://caselinker.up.railway.app/resource/location/topeka> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_374/phase/booked> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_374/phase/booked> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_374/event/online-only>,
@@ -27,7 +30,9 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_374/offense-event/charge-3> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/kansas-bureau-of-investigation>,
-        <https://caselinker.up.railway.app/resource/agency/shawnee-county-department-of-corrections> .
+        <https://caselinker.up.railway.app/resource/agency/shawnee-county-department-of-corrections> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/kan>,
+        <https://caselinker.up.railway.app/resource/location/topeka> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_374/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -45,9 +50,13 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_374/offense-event/charge-3> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_374/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/kansas-bureau-of-investigation> a cacontology-multi:StateAgency .
+<https://caselinker.up.railway.app/resource/agency/kansas-bureau-of-investigation> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:StateAgency ;
+    rdfs:label "Kansas Bureau of Investigation" .
 
-<https://caselinker.up.railway.app/resource/agency/shawnee-county-department-of-corrections> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/shawnee-county-department-of-corrections> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Shawnee County Department of Corrections" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_374/charge/1> a cacontology-legal-outcomes:CriminalCharge,
         cacontology-legal-outcomes:StateCharge ;
@@ -71,16 +80,29 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_374/charge/1>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_374/charge/2>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_374/charge/3> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-06-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-06-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_374/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_374/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 18 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_374/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_374/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_374/phase/booked> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-06-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/kan> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/topeka> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Topeka" ;
+    uco-core:name "Topeka" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_374/event/online-only> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event .

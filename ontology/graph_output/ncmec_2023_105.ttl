@@ -11,6 +11,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -28,11 +29,12 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_105> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:09:52.572544" ;
+    dcterms:created "2026-09-15T20:55:00.839603" ;
     dcterms:identifier "ncmec_2023_105" ;
-    dcterms:modified "2026-09-10T19:09:52.572544" ;
+    dcterms:modified "2026-09-15T20:55:00.839603" ;
     dcterms:source <https://dailydodge.com/mayville-man-facing-first-degree-child-sexual-assault-charges/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/mayville> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_105/phase/convicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_105/phase/convicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_105/admission/1>,
@@ -41,7 +43,8 @@
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_105/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_105/legal-step/convicted>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2023_105/operation> ;
-    cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/ncmec_2023_105/tech/cybertipline> .
+    cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/ncmec_2023_105/tech/cybertipline> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/mayville> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_105/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -55,8 +58,7 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_105/charge/1> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2023-09-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_105/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2023_105/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_105/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_105/legal-step/convicted> a cac-core:Event,
         cac-core:LegalEvent,
@@ -81,11 +83,7 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_105/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$250" .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_105/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "125 years" .
+    rdfs:label "[\"$250\", \"125 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_105/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -93,6 +91,11 @@
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_105/phase/convicted> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2023-09-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/mayville> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Mayville" ;
+    uco-core:name "Mayville" .
 
 <https://caselinker.up.railway.app/resource/platform/kik> a cacontology-platforms:MessagingService ;
     rdfs:label "Kik" .

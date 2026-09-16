@@ -9,16 +9,21 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_533> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T21:23:04.444497" ;
+    dcterms:created "2026-09-15T22:12:28.460019" ;
     dcterms:identifier "doj_safe_childhood_2023_533" ;
-    dcterms:modified "2026-09-14T21:23:04.444497" ;
+    dcterms:modified "2026-09-15T22:12:28.460019" ;
     dcterms:source <https://www.justice.gov/usao-dc/pr/former-district-resident-sentenced-seven-years-prison-conspiracy-distribute-and-receive>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/arizona>,
+        <https://caselinker.up.railway.app/resource/location/dc>,
+        <https://caselinker.up.railway.app/resource/location/the-district-of-columbia>,
+        <https://caselinker.up.railway.app/resource/location/washington> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_533/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_533/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_533/event/distribution>,
@@ -32,7 +37,11 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/department-of-homeland-security>,
         <https://caselinker.up.railway.app/resource/agency/doj>,
         <https://caselinker.up.railway.app/resource/agency/hsi>,
-        <https://caselinker.up.railway.app/resource/agency/usao> .
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/arizona>,
+        <https://caselinker.up.railway.app/resource/location/dc>,
+        <https://caselinker.up.railway.app/resource/location/the-district-of-columbia>,
+        <https://caselinker.up.railway.app/resource/location/washington> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_533/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -48,7 +57,9 @@
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_533/offense-event/charge-2> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_533/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/department-of-homeland-security> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/department-of-homeland-security> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Department of Homeland Security" .
 
 <https://caselinker.up.railway.app/resource/agency/doj> a cacontology-multi:FederalAgency .
 
@@ -86,8 +97,7 @@
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_533/charge/1>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_533/charge/2> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_533/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_533/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_533/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_533/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -101,18 +111,36 @@
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_533/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "10 years of supervised release" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_533/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "15 years" .
+    rdfs:label "[\"10 years of supervised release\", \"15 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_533/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
-<https://caselinker.up.railway.app/resource/platform/chat> a cacontology-platforms:AnonymousChatPlatform ;
-    rdfs:label "chat" .
+<https://caselinker.up.railway.app/resource/location/arizona> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Arizona" ;
+    uco-core:name "Arizona" .
+
+<https://caselinker.up.railway.app/resource/location/dc> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "D.c." ;
+    uco-core:name "D.c." .
+
+<https://caselinker.up.railway.app/resource/location/the-district-of-columbia> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "the District of Columbia" ;
+    uco-core:name "the District of Columbia" .
+
+<https://caselinker.up.railway.app/resource/location/washington> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Washington" ;
+    uco-core:name "Washington" .
+
+<https://caselinker.up.railway.app/resource/platform/chat> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:AnonymousChatPlatform ;
+    rdfs:label "chat" ;
+    cacontology-platforms:platformSpecificity "generic" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_533/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

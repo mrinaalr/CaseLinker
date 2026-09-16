@@ -1,51 +1,62 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
+@prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_337> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:07:06.658290" ;
+    dcterms:created "2026-09-15T20:45:06.297641" ;
     dcterms:identifier "ncmec_2022_337" ;
-    dcterms:modified "2026-09-10T19:07:06.658290" ;
-    dcterms:source <https://www.wbrc.com/2022/03/28/tuscalososa-co-man-arrested-possession-child-pornography/>,
+    dcterms:modified "2026-09-15T20:45:06.297641" ;
+    dcterms:source <https://money.yahoo.com/marlborough-man-charged-possessing-child-190009719.html>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/east-main-st>,
+        <https://caselinker.up.railway.app/resource/location/marlborough> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_337/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_337/phase/charged> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2022_337/event/distribution>,
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2022_337/cybertip>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_337/event/distribution>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_337/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_337/legal-proceeding> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/tuscaloosa-county-sheriffs-office> .
+    cacontology:investigationStatus "unknown" ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/massachusetts-state-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/east-main-st>,
+        <https://caselinker.up.railway.app/resource/location/marlborough> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_337/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:hasRoleBeginPoint "2022-11-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_337/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_337/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_337/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:hasRoleBeginPoint "2022-11-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_337/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_337/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
-
-<https://caselinker.up.railway.app/resource/agency/tuscaloosa-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
-        cacontology-multi:LocalAgency ;
-    rdfs:label "Tuscaloosa County Sheriff's Office" .
+<https://caselinker.up.railway.app/resource/agency/massachusetts-state-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:StateAgency ;
+    rdfs:label "Massachusetts State Police Department" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_337/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "child pornography" .
+    rdfs:label "possession of child pornography" ;
+    cacontology-legal-outcomes:indictmentCounts 2 .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_337/cybertip> a cacontology-us-ncmec:NCMECCybertipReport ;
+    cacontology-us-ncmec:supportedBy <https://caselinker.up.railway.app/resource/agency/ncmec> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_337/event/distribution> a cac-core:Event,
         cacontology-legal-outcomes:CSAM_Distribution .
@@ -56,15 +67,33 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2022_337/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-11-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2022_337/sentence/1> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_337/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_337/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 34 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_337/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_337/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:MonetaryPenalty ;
+    rdfs:label "[\"$2,000\"]" .
+
+<https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_337/phase/charged> a cacontology:LegalProcessPhase,
         cac-core:Phase ;
-    cacontology:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology:hasPhaseBeginPoint "2022-11-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/east-main-st> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "East Main St." ;
+    uco-core:name "East Main St." .
+
+<https://caselinker.up.railway.app/resource/location/marlborough> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Marlborough" ;
+    uco-core:name "Marlborough" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_337/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

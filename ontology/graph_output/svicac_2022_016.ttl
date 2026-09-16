@@ -10,6 +10,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -27,13 +28,17 @@
 
 <https://caselinker.up.railway.app/resource/agency/fbi> a cacontology-multi:FederalAgency .
 
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
+
 <https://caselinker.up.railway.app/resource/case/svicac_2022_016> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:13:54.395690" ;
+    dcterms:created "2026-09-15T20:29:58.136826" ;
     dcterms:identifier "svicac_2022_016" ;
-    dcterms:modified "2026-09-10T20:13:54.395690" ;
+    dcterms:modified "2026-09-15T20:29:58.136826" ;
     dcterms:source <https://www.mercurynews.com/2022/03/01/san-jose-man-charged-with-possession-of-child-pornography-2/>,
         "SVICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/campbell>,
+        <https://caselinker.up.railway.app/resource/location/san-jose> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/svicac_2022_016/phase/convicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/svicac_2022_016/phase/convicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/svicac_2022_016/admission/1>,
@@ -42,7 +47,10 @@
         <https://caselinker.up.railway.app/resource/case/svicac_2022_016/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/svicac_2022_016/legal-step/convicted>,
         <https://caselinker.up.railway.app/resource/case/svicac_2022_016/operation> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/fbi> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/fbi>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/campbell>,
+        <https://caselinker.up.railway.app/resource/location/san-jose> .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2022_016/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -56,8 +64,7 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/svicac_2022_016/charge/1> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/svicac_2022_016/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/svicac_2022_016/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/svicac_2022_016/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2022_016/legal-step/convicted> a cac-core:Event,
         cac-core:LegalEvent,
@@ -81,12 +88,8 @@
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/svicac_2022_016/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2022_016/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "20 years" .
-
-<https://caselinker.up.railway.app/resource/case/svicac_2022_016/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$250,000" .
+    rdfs:label "[\"20 years\", \"$250,000\"]" .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2022_016/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "was a maintenance worker for the city of Campbell and had an office in a building that also houses a preschool" ;
@@ -102,6 +105,14 @@
 <https://caselinker.up.railway.app/resource/case/svicac_2022_016/phase/convicted> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/campbell> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Campbell" ;
+    uco-core:name "Campbell" .
+
+<https://caselinker.up.railway.app/resource/location/san-jose> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2022_016/event/online-only> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event .

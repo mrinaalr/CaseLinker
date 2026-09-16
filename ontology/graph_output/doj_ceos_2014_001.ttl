@@ -10,16 +10,21 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2014_001> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T22:32:49.600387" ;
+    dcterms:created "2026-09-15T21:47:04.235941" ;
     dcterms:identifier "doj_ceos_2014_001" ;
-    dcterms:modified "2026-09-14T22:32:49.600387" ;
+    dcterms:modified "2026-09-15T21:47:04.235941" ;
     dcterms:source <https://www.justice.gov/usao-ndtx/pr/plainview-texas-man-sentenced-210-months-federal-prison-producing-child-pornography>,
         "DOJ CEOS" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/lubbock>,
+        <https://caselinker.up.railway.app/resource/location/plainview>,
+        <https://caselinker.up.railway.app/resource/location/texas>,
+        <https://caselinker.up.railway.app/resource/location/the-northern-district> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_ceos_2014_001/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_ceos_2014_001/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_ceos_2014_001/event/csam>,
@@ -28,7 +33,17 @@
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2014_001/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2014_001/legal-step/sentenced>,
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2014_001/offense-event/charge-4> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/doj> .
+    cacontology:investigationStatus "unknown" ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ceos>,
+        <https://caselinker.up.railway.app/resource/agency/doj>,
+        <https://caselinker.up.railway.app/resource/agency/hsi>,
+        <https://caselinker.up.railway.app/resource/agency/ice>,
+        <https://caselinker.up.railway.app/resource/agency/plainview-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/lubbock>,
+        <https://caselinker.up.railway.app/resource/location/plainview>,
+        <https://caselinker.up.railway.app/resource/location/texas>,
+        <https://caselinker.up.railway.app/resource/location/the-northern-district> .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2014_001/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -46,7 +61,19 @@
         <https://caselinker.up.railway.app/resource/case/doj_ceos_2014_001/offense-event/charge-4> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/doj_ceos_2014_001/person/victim/1> .
 
+<https://caselinker.up.railway.app/resource/agency/ceos> a cacontology-multi:FederalAgency .
+
 <https://caselinker.up.railway.app/resource/agency/doj> a cacontology-multi:FederalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/hsi> a cacontology-multi:FederalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/ice> a cacontology-multi:FederalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/plainview-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Plainview Police Department" .
+
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2014_001/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -96,11 +123,25 @@
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2014_001/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "210 Months" .
+    rdfs:label "[\"210 Months\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2014_001/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2014-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/lubbock> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/plainview> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Plainview" ;
+    uco-core:name "Plainview" .
+
+<https://caselinker.up.railway.app/resource/location/texas> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/the-northern-district> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/doj_ceos_2014_001/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

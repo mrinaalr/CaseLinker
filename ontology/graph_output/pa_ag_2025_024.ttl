@@ -4,26 +4,34 @@
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/pa_ag_2025_024> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:04:19.680996" ;
+    dcterms:created "2026-09-15T20:12:06.783024" ;
     dcterms:identifier "pa_ag_2025_024" ;
-    dcterms:modified "2026-09-10T20:04:19.680996" ;
+    dcterms:modified "2026-09-15T20:12:06.783024" ;
     dcterms:source <https://www.attorneygeneral.gov/taking-action/ag-sundays-agents-nab-sexually-violent-predator-from-mifflin-county-for-third-strike-offenses-against-children/>,
         "PA AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/harrisburg>,
+        <https://caselinker.up.railway.app/resource/location/mcveytown>,
+        <https://caselinker.up.railway.app/resource/location/mifflin-county> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/pa_ag_2025_024/phase/convicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/pa_ag_2025_024/phase/convicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/pa_ag_2025_024/event/possession>,
         <https://caselinker.up.railway.app/resource/case/pa_ag_2025_024/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/pa_ag_2025_024/legal-step/convicted> ;
     cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/office-of-the-attorney-general> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/office-of-the-attorney-general> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/harrisburg>,
+        <https://caselinker.up.railway.app/resource/location/mcveytown>,
+        <https://caselinker.up.railway.app/resource/location/mifflin-county> .
 
 <https://caselinker.up.railway.app/resource/case/pa_ag_2025_024/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -51,8 +59,7 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/pa_ag_2025_024/charge/1> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/pa_ag_2025_024/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/pa_ag_2025_024/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/pa_ag_2025_024/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/pa_ag_2025_024/legal-step/convicted> a cac-core:Event,
         cac-core:LegalEvent,
@@ -66,16 +73,25 @@
 <https://caselinker.up.railway.app/resource/case/pa_ag_2025_024/person/victim/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/pa_ag_2025_024/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$1" .
-
-<https://caselinker.up.railway.app/resource/case/pa_ag_2025_024/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:ProbationSentence ;
-    rdfs:label "Probation" .
+    rdfs:label "[\"$1\", \"Probation\"]" .
 
 <https://caselinker.up.railway.app/resource/case/pa_ag_2025_024/phase/convicted> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/harrisburg> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/mcveytown> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Mcveytown" ;
+    uco-core:name "Mcveytown" .
+
+<https://caselinker.up.railway.app/resource/location/mifflin-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Mifflin County" ;
+    uco-core:name "Mifflin County" .
 
 <https://caselinker.up.railway.app/resource/case/pa_ag_2025_024/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

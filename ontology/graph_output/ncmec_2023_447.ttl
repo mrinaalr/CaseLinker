@@ -1,68 +1,116 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_447> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:12:26.959572" ;
+    dcterms:created "2026-09-15T20:55:01.139964" ;
     dcterms:identifier "ncmec_2023_447" ;
-    dcterms:modified "2026-09-10T19:12:26.959572" ;
-    dcterms:source <https://www.waaytv.com/news/dekalb-county-man-indicted-on-42-child-porn-possession-charges/article_049cfbec-a484-11ec-bb9a-abcd610d1024.html>,
+    dcterms:modified "2026-09-15T20:55:01.139964" ;
+    dcterms:source <https://www.thenews-messenger.com/story/news/local/2023/02/13/ottawa-county-man-arrested-on-charges-related-to-child-obscenity/69898183007/>,
         "NCMEC" ;
-    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_447/phase/indicted> ;
-    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_447/phase/indicted> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_447/event/possession>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2023_447/legal-proceeding> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/dekalb-county-sheriffs-office> .
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/lebanon>,
+        <https://caselinker.up.railway.app/resource/location/martin>,
+        <https://caselinker.up.railway.app/resource/location/ohio>,
+        <https://caselinker.up.railway.app/resource/location/ottawa-county> ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_447/phase/sentenced> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2023_447/phase/sentenced> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2023_447/legal-proceeding>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2023_447/legal-step/sentenced>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2023_447/offense-event/charge-1> ;
+    cacontology:investigationStatus "unknown" ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/lebanon>,
+        <https://caselinker.up.railway.app/resource/location/martin>,
+        <https://caselinker.up.railway.app/resource/location/ohio>,
+        <https://caselinker.up.railway.app/resource/location/ottawa-county> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_447/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
     cacontology:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_447/event/possession> ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_447/offense-event/charge-1> ;
+    cacontology:perpetratorRegisteredSexOffender true ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_447/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_447/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
     cacontology:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_447/event/possession> ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_447/offense-event/charge-1> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2023_447/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/dekalb-county-sheriffs-office> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_447/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_447/charge/1> a cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "illegal use of a minor in nudity-oriented material and four" ;
+    rdfs:seeAlso <https://caselinker.up.railway.app/resource/case/ncmec_2023_447/offense-event/charge-1> ;
+    cacontology-legal-outcomes:indictmentCounts 15 ;
+    ns1:chargeCluster "nudity_oriented_minor" ;
+    ns1:chargeOffenseEvent <https://caselinker.up.railway.app/resource/case/ncmec_2023_447/offense-event/charge-1> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_447/charge/2> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "possession of child" ;
-    cacontology-legal-outcomes:indictmentCounts 43 .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_447/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+    rdfs:label "pandering obscenity involving a minor" ;
+    cacontology-legal-outcomes:indictmentCounts 3 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_447/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_447/charge/1> ;
+    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2023_447/charge/1>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2023_447/charge/2> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2023_447/sentence/1> .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_447/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_447/legal-step/sentenced> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding,
+        cacontology-legal-outcomes:SentencingHearing ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_447/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 25 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_447/person/victim/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2023_447/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$400,000," .
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_447/phase/indicted> a cacontology:LegalProcessPhase,
-        cac-core:Phase ;
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_447/phase/sentenced> a cac-core:Phase,
+        cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2023_447/event/possession> a cacontology:CSAMIncident,
-        cac-core:Event ;
-    uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2023_447/facet/possession> .
+<https://caselinker.up.railway.app/resource/location/lebanon> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Lebanon" ;
+    uco-core:name "Lebanon" .
+
+<https://caselinker.up.railway.app/resource/location/martin> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Martin" ;
+    uco-core:name "Martin" .
+
+<https://caselinker.up.railway.app/resource/location/ohio> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/ottawa-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Ottawa County" ;
+    uco-core:name "Ottawa County" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2023_447/offense-event/charge-1> a cacontology:ChildSexualAbuseEvent,
+        cac-core:Event,
+        uco-action:Crime ;
+    rdfs:label "Inferred offense from charge: illegal use of a minor in nudity-oriented material and four" .
 

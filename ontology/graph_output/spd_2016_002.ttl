@@ -11,6 +11,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -29,11 +30,15 @@
 
 <https://caselinker.up.railway.app/resource/case/spd_2016_002> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:12:56.505844" ;
+    dcterms:created "2026-09-15T20:28:56.174069" ;
     dcterms:identifier "spd_2016_002" ;
-    dcterms:modified "2026-09-10T20:12:56.505844" ;
+    dcterms:modified "2026-09-15T20:28:56.174069" ;
     dcterms:source <https://spdblotter.seattle.gov/2016/06/23/child-sex-abuse-investigation-leads-police-to-man-who-offered-dog-for-sex/>,
         "SPD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/california>,
+        <https://caselinker.up.railway.app/resource/location/toledo>,
+        <https://caselinker.up.railway.app/resource/location/washington>,
+        <https://caselinker.up.railway.app/resource/location/washington-state> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/spd_2016_002/phase/convicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/spd_2016_002/phase/convicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/spd_2016_002/admission/1>,
@@ -42,7 +47,11 @@
         <https://caselinker.up.railway.app/resource/case/spd_2016_002/event/possession>,
         <https://caselinker.up.railway.app/resource/case/spd_2016_002/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/spd_2016_002/legal-step/convicted> ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/icac> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/california>,
+        <https://caselinker.up.railway.app/resource/location/toledo>,
+        <https://caselinker.up.railway.app/resource/location/washington>,
+        <https://caselinker.up.railway.app/resource/location/washington-state> .
 
 <https://caselinker.up.railway.app/resource/case/spd_2016_002/event/distribution> a cac-core:Event,
         cacontology-legal-outcomes:CSAM_Distribution ;
@@ -57,8 +66,8 @@
 <https://caselinker.up.railway.app/resource/case/spd_2016_002/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Lewis County Jail" ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2016-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2016-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/spd_2016_002/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/spd_2016_002/legal-step/convicted> a cac-core:Event,
         cac-core:LegalEvent,
@@ -78,9 +87,29 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/spd_2016_002/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/spd_2016_002/person/offender/1> .
 
+<https://caselinker.up.railway.app/resource/case/spd_2016_002/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/spd_2016_002/phase/convicted> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2016-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/california> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/toledo> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Toledo" ;
+    uco-core:name "Toledo" .
+
+<https://caselinker.up.railway.app/resource/location/washington> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/washington-state> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Washington State" ;
+    uco-core:name "Washington State" .
 
 <https://caselinker.up.railway.app/resource/case/spd_2016_002/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "liked to watch adults sexually abusing children, offered to set up an encounter with a young child, and later asked f..." ;

@@ -1,49 +1,92 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
-@prefix cacontology-custodial: <https://cacontology.projectvic.org/custodial#> .
 @prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
-@prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
+@prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_546> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:08:34.497989" ;
+    dcterms:created "2026-09-15T20:45:06.466105" ;
     dcterms:identifier "ncmec_2022_546" ;
-    dcterms:modified "2026-09-10T19:08:34.497989" ;
-    dcterms:source <https://ocfs.ny.gov/programs/childcare/referral-agencies.php%22>,
+    dcterms:modified "2026-09-15T20:45:06.466105" ;
+    dcterms:source <https://www.nbcboston.com/news/local/nh-pastor-faces-new-charges-investigation-dates-back-over-5-years/2672043/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/blaine>,
+        <https://caselinker.up.railway.app/resource/location/colorado>,
+        <https://caselinker.up.railway.app/resource/location/denver>,
+        <https://caselinker.up.railway.app/resource/location/florida>,
+        <https://caselinker.up.railway.app/resource/location/nashua>,
+        <https://caselinker.up.railway.app/resource/location/new-hampshire>,
+        <https://caselinker.up.railway.app/resource/location/tallahassee>,
+        <https://caselinker.up.railway.app/resource/location/washington> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_546/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2022_546/phase/arrested> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2022_546/event/online-only>,
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2022_546/cybertip>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_546/event/distribution>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_546/event/multi-jurisdiction>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_546/event/possession>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_546/event/trust-violation>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2022_546/legal-proceeding> ;
-    cacontology:investigationStatus "unknown" .
+    cacontology:investigationStatus "unknown" ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/department-of-homeland-security>,
+        <https://caselinker.up.railway.app/resource/agency/nashua-police-department>,
+        <https://caselinker.up.railway.app/resource/agency/ncmec> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/blaine>,
+        <https://caselinker.up.railway.app/resource/location/colorado>,
+        <https://caselinker.up.railway.app/resource/location/denver>,
+        <https://caselinker.up.railway.app/resource/location/florida>,
+        <https://caselinker.up.railway.app/resource/location/nashua>,
+        <https://caselinker.up.railway.app/resource/location/new-hampshire>,
+        <https://caselinker.up.railway.app/resource/location/tallahassee>,
+        <https://caselinker.up.railway.app/resource/location/washington> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_546/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2022-03-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_546/event/possession> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_546/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_546/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2022-03-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_546/event/possession> ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_546/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/agency/department-of-homeland-security> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Department of Homeland Security" .
+
+<https://caselinker.up.railway.app/resource/agency/nashua-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Nashua Police Department" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_546/charge/1> a cacontology-legal-outcomes:CriminalCharge,
         cacontology-legal-outcomes:StateCharge ;
-    rdfs:label "sexual exploitation of children" .
+    rdfs:label "sexual exploitation of a child" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_546/charge/2> a cacontology-legal-outcomes:CSAM_Possession,
-        cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "child pornography" ;
-    cacontology-legal-outcomes:indictmentCounts 2 .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_546/charge/3> a cacontology-legal-outcomes:CriminalCharge ;
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_546/charge/2> a cacontology-legal-outcomes:CriminalCharge ;
     rdfs:label "sexual exploitation" ;
     ns1:chargeCluster "sexual_exploitation_unspecified" .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_546/event/trust-violation> a cacontology-custodial:CustodialAbuse,
-        cacontology-custodial:TrustViolation ;
-    cacontology-custodial:violatesRelationship <https://caselinker.up.railway.app/resource/case/ncmec_2022_546/relationship/mother> .
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_546/cybertip> a cacontology-us-ncmec:NCMECCybertipReport ;
+    cacontology-us-ncmec:supportedBy <https://caselinker.up.railway.app/resource/agency/ncmec> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_546/event/distribution> a cac-core:Event,
+        cacontology-legal-outcomes:CSAM_Distribution ;
+    cacontology:severityLevel 3 .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_546/event/multi-jurisdiction> a cac-core:Event,
+        cacontology-multi:MultiJurisdictionalInvestigation ;
+    cacontology:severityLevel 3 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_546/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
@@ -51,71 +94,69 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2022_546/charge/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_546/charge/2>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_546/charge/3> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2022_546/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_546/sentence/2> .
+        <https://caselinker.up.railway.app/resource/case/ncmec_2022_546/charge/2> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2022-03-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2022_546/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_546/person/offender/1> a uco-identity:Person ;
-    cacontology-detection:ageEstimate 32 .
+    cacontology-detection:ageEstimate 46 .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_546/person/victim/1> a uco-identity:Person ;
-    cacontology-production:victimAge 12 .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_546/relationship/mother> a cacontology-custodial:CustodialRelationship,
-        cacontology-custodial:FamilialRelationship ;
-    cacontology-custodial:involvesChild <https://caselinker.up.railway.app/resource/case/ncmec_2022_546/role/victim/1> ;
-    cacontology-custodial:involvesCustodian <https://caselinker.up.railway.app/resource/case/ncmec_2022_546/role/offender/1> ;
-    cacontology-custodial:relationshipType "mother" .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_546/role/offender/1> a cacontology:OffenderRole,
-        uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2022-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_546/event/online-only>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_546/event/possession> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_546/person/offender/1> .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_546/role/victim/1> a cacontology:VictimRole,
-        uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2022-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2022_546/event/online-only>,
-        <https://caselinker.up.railway.app/resource/case/ncmec_2022_546/event/possession> ;
-    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2022_546/person/victim/1> .
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_546/person/victim/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_546/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$100,000" .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_546/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:MonetaryPenalty ;
-    rdfs:label "$300,000" .
-
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_546/phase/arrested> a cacontology:InitialPhase,
-        cac-core:Phase ;
-    cacontology:hasPhaseBeginPoint "2022-05-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://caselinker.up.railway.app/resource/platform/chat> a cacontology-platforms:AnonymousChatPlatform ;
-    rdfs:label "chat" .
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/platform/social-media> a cacontology-platforms:SocialMediaPlatform ;
     rdfs:label "social media" .
 
-<https://caselinker.up.railway.app/resource/platform/telegram> a cacontology-platforms:MessagingService ;
-    rdfs:label "Telegram" .
+<https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2022_546/event/online-only> a cacontology:ChildSexualAbuseEvent,
-        cac-core:Event ;
-    cacontology:severityLevel 3 ;
-    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/chat>,
-        <https://caselinker.up.railway.app/resource/platform/social-media>,
-        <https://caselinker.up.railway.app/resource/platform/telegram> .
+<https://caselinker.up.railway.app/resource/case/ncmec_2022_546/phase/arrested> a cacontology:InitialPhase,
+        cac-core:Phase ;
+    cacontology:hasPhaseBeginPoint "2022-03-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/blaine> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Blaine" ;
+    uco-core:name "Blaine" .
+
+<https://caselinker.up.railway.app/resource/location/colorado> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Colorado" ;
+    uco-core:name "Colorado" .
+
+<https://caselinker.up.railway.app/resource/location/denver> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Denver" ;
+    uco-core:name "Denver" .
+
+<https://caselinker.up.railway.app/resource/location/florida> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/nashua> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Nashua" ;
+    uco-core:name "Nashua" .
+
+<https://caselinker.up.railway.app/resource/location/new-hampshire> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "New Hampshire" ;
+    uco-core:name "New Hampshire" .
+
+<https://caselinker.up.railway.app/resource/location/tallahassee> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Tallahassee" ;
+    uco-core:name "Tallahassee" .
+
+<https://caselinker.up.railway.app/resource/location/washington> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Washington" ;
+    uco-core:name "Washington" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2022_546/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
     cacontology:severityLevel 3 ;
-    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/chat>,
-        <https://caselinker.up.railway.app/resource/platform/social-media>,
-        <https://caselinker.up.railway.app/resource/platform/telegram> ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/social-media> ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2022_546/facet/possession> .
 

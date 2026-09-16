@@ -2,63 +2,126 @@
 @prefix cacontology: <https://cacontology.projectvic.org#> .
 @prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
+@prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_264> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:16:29.309413" ;
+    dcterms:created "2026-09-15T21:08:10.397659" ;
     dcterms:identifier "ncmec_2024_264" ;
-    dcterms:modified "2026-09-10T19:16:29.309413" ;
-    dcterms:source <https://www.nbc-2.com/article/north-port-man-arrested-child-pornography-charges/61570729>,
+    dcterms:modified "2026-09-15T21:08:10.397659" ;
+    dcterms:source <https://www.fdle.state.fl.us/News/2024/October/FDLE-arrests-registered-sex-offender-for-possessio>,
         "NCMEC" ;
-    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_264/phase/arrested> ;
-    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_264/phase/arrested> ;
-    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_264/event/possession>,
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/chipley>,
+        <https://caselinker.up.railway.app/resource/location/fla>,
+        <https://caselinker.up.railway.app/resource/location/florida> ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_264/phase/booked> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2024_264/phase/booked> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2024_264/cybertip>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_264/event/distribution>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_264/event/multi-jurisdiction>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_264/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2024_264/legal-proceeding> ;
-    cacontology:investigationStatus "unknown" .
+    cacontology:investigationStatus "unknown" ;
+    cacontology:usesMethod <https://caselinker.up.railway.app/resource/case/ncmec_2024_264/tech/cybertipline> ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/florida-department-of-law-enforcement>,
+        <https://caselinker.up.railway.app/resource/agency/ncmec>,
+        <https://caselinker.up.railway.app/resource/agency/office-of-the-state-attorney> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/chipley>,
+        <https://caselinker.up.railway.app/resource/location/fla>,
+        <https://caselinker.up.railway.app/resource/location/florida> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_264/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
-    cacontology:hasRoleBeginPoint "2024-07-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:hasRoleBeginPoint "2024-10-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_264/event/possession> ;
+    cacontology:perpetratorRegisteredSexOffender true ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_264/person/offender/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_264/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
-    cacontology:hasRoleBeginPoint "2024-07-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology:hasRoleBeginPoint "2024-10-01T00:00:00Z"^^xsd:dateTimeStamp ;
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2024_264/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2024_264/person/victim/1> .
 
+<https://caselinker.up.railway.app/resource/agency/florida-department-of-law-enforcement> a cacontology-multi:LocalAgency .
+
+<https://caselinker.up.railway.app/resource/agency/office-of-the-state-attorney> a cacontology-multi:StateAgency .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_264/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
-    rdfs:label "possession of child pornography" ;
-    cacontology-legal-outcomes:indictmentCounts 44 .
+    rdfs:label "possession of child sexual abuse material and two counts of" ;
+    cacontology-legal-outcomes:indictmentCounts 11 .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_264/charge/2> a cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:label "sexual exploitation" ;
+    ns1:chargeCluster "sexual_exploitation_unspecified" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_264/cybertip> a cacontology-us-ncmec:NCMECCybertipReport ;
+    cacontology-us-ncmec:supportedBy <https://caselinker.up.railway.app/resource/agency/ncmec> .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_264/event/distribution> a cac-core:Event,
+        cacontology-legal-outcomes:CSAM_Distribution ;
+    cacontology:severityLevel 3 .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_264/event/multi-jurisdiction> a cac-core:Event,
+        cacontology-multi:MultiJurisdictionalInvestigation ;
+    cacontology:severityLevel 3 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_264/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_264/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Sarasota County Jail" ;
-    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2024_264/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-07-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2024_264/charge/1>,
+        <https://caselinker.up.railway.app/resource/case/ncmec_2024_264/charge/2> ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2024-10-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2024_264/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_264/person/offender/1> a uco-identity:Person ;
-    cacontology-detection:ageEstimate 79 .
+    cacontology-detection:ageEstimate 58 .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_264/person/victim/1> a uco-identity:Person .
 
-<https://caselinker.up.railway.app/resource/case/ncmec_2024_264/phase/arrested> a cacontology:InitialPhase,
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_264/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_264/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
+    rdfs:label "CyberTipline" .
+
+<https://caselinker.up.railway.app/resource/platform/social-media> a cacontology-platforms:SocialMediaPlatform ;
+    rdfs:label "social media" .
+
+<https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
+
+<https://caselinker.up.railway.app/resource/case/ncmec_2024_264/phase/booked> a cacontology:InitialPhase,
         cac-core:Phase ;
-    cacontology:hasPhaseBeginPoint "2024-07-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology:hasPhaseBeginPoint "2024-10-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/chipley> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Chipley" ;
+    uco-core:name "Chipley" .
+
+<https://caselinker.up.railway.app/resource/location/fla> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/florida> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2024_264/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
-    cacontology:severityLevel 2 ;
+    cacontology:severityLevel 3 ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/social-media> ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/ncmec_2024_264/facet/possession> .
 

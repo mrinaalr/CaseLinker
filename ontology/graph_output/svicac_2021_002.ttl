@@ -14,6 +14,7 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -22,7 +23,9 @@
     cac-core:generatedBy <https://caselinker.up.railway.app/resource/case/svicac_2021_002> ;
     cac-core:hasConfidence 0.65 .
 
-<https://caselinker.up.railway.app/resource/agency/ceos> a cacontology-multi:FederalAgency .
+<https://caselinker.up.railway.app/resource/agency/ceos> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:FederalAgency ;
+    rdfs:label "CEOS" .
 
 <https://caselinker.up.railway.app/resource/agency/contra-costa-county-district-attorneys-office> a cacontology-multi:StateAgency .
 
@@ -30,13 +33,20 @@
 
 <https://caselinker.up.railway.app/resource/agency/icac> a cacontology-taskforce:StateICACtaskForce .
 
+<https://caselinker.up.railway.app/resource/agency/usao> a cacontology-multi:FederalAgency .
+
 <https://caselinker.up.railway.app/resource/case/svicac_2021_002> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:13:58.098011" ;
+    dcterms:created "2026-09-15T20:29:58.150083" ;
     dcterms:identifier "svicac_2021_002" ;
-    dcterms:modified "2026-09-10T20:13:58.098011" ;
+    dcterms:modified "2026-09-15T20:29:58.150083" ;
     dcterms:source <https://www.mercurynews.com/2021/11/09/fairfield-man-gets-14-years-for-attempted-online-coercion-of-a-child/amp/>,
         "SVICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/bay-area>,
+        <https://caselinker.up.railway.app/resource/location/california>,
+        <https://caselinker.up.railway.app/resource/location/fairfield>,
+        <https://caselinker.up.railway.app/resource/location/pleasant-hill>,
+        <https://caselinker.up.railway.app/resource/location/washington> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/svicac_2021_002/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/svicac_2021_002/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/svicac_2021_002/admission/1>,
@@ -55,7 +65,13 @@
         <https://caselinker.up.railway.app/resource/agency/contra-costa-county-district-attorneys-office>,
         <https://caselinker.up.railway.app/resource/agency/hsi>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
-        <https://caselinker.up.railway.app/resource/agency/ncmec> .
+        <https://caselinker.up.railway.app/resource/agency/ncmec>,
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/bay-area>,
+        <https://caselinker.up.railway.app/resource/location/california>,
+        <https://caselinker.up.railway.app/resource/location/fairfield>,
+        <https://caselinker.up.railway.app/resource/location/pleasant-hill>,
+        <https://caselinker.up.railway.app/resource/location/washington> .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2021_002/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -99,8 +115,7 @@
         <https://caselinker.up.railway.app/resource/case/svicac_2021_002/charge/2>,
         <https://caselinker.up.railway.app/resource/case/svicac_2021_002/charge/3> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/svicac_2021_002/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/svicac_2021_002/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/svicac_2021_002/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2021_002/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -131,12 +146,8 @@
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/svicac_2021_002/person/victim/1> .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2021_002/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "14 years" .
-
-<https://caselinker.up.railway.app/resource/case/svicac_2021_002/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "10 years of supervised release" .
+    rdfs:label "[\"14 years\", \"10 years of supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
@@ -163,6 +174,23 @@
         <https://caselinker.up.railway.app/resource/case/svicac_2021_002/offense-event/charge-3> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/svicac_2021_002/person/offender/1> .
 
+<https://caselinker.up.railway.app/resource/location/bay-area> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/california> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/fairfield> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/pleasant-hill> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/washington> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Washington" ;
+    uco-core:name "Washington" .
+
 <https://caselinker.up.railway.app/resource/case/svicac_2021_002/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;
     cacontology:severityLevel 3 ;
@@ -179,8 +207,11 @@
 <https://caselinker.up.railway.app/resource/platform/social-media> a cacontology-platforms:SocialMediaPlatform ;
     rdfs:label "social media" .
 
-<https://caselinker.up.railway.app/resource/platform/whisper> a cacontology-platforms:AnonymousChatPlatform ;
-    rdfs:label "Whisper" .
+<https://caselinker.up.railway.app/resource/platform/whisper> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:AnonymousChatPlatform ;
+    rdfs:label "Whisper" ;
+    cacontology-platforms:guestAccountsAllowed "true" ;
+    cacontology-platforms:identityVerificationRequired "false" .
 
 <https://caselinker.up.railway.app/resource/case/svicac_2021_002/offense-event/charge-3> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event,

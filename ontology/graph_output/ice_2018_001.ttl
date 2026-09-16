@@ -5,23 +5,44 @@
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ice_2018_001> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:46:08.895591" ;
+    dcterms:created "2026-09-15T19:35:19.267230" ;
     dcterms:identifier "ice_2018_001" ;
-    dcterms:modified "2026-09-10T19:46:08.895591" ;
+    dcterms:modified "2026-09-15T19:35:19.267230" ;
     dcterms:source <https://www.ice.gov/news/releases/ice-dallas-deports-nigerian-who-had-his-us-citizenship-revoked-after-sexually-abusing>,
         "ICE" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/dallas>,
+        <https://caselinker.up.railway.app/resource/location/grand-prairie>,
+        <https://caselinker.up.railway.app/resource/location/ikeja>,
+        <https://caselinker.up.railway.app/resource/location/new-york-city>,
+        <https://caselinker.up.railway.app/resource/location/nigeria>,
+        <https://caselinker.up.railway.app/resource/location/northern-district-of-texas>,
+        <https://caselinker.up.railway.app/resource/location/texas>,
+        <https://caselinker.up.railway.app/resource/location/united-states> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ice_2018_001/phase/convicted> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ice_2018_001/phase/convicted> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ice_2018_001/event/multi-jurisdiction>,
+        <https://caselinker.up.railway.app/resource/case/ice_2018_001/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/ice_2018_001/legal-step/convicted> ;
     cacontology:investigationStatus "unknown" ;
-    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ice> .
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ice> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/dallas>,
+        <https://caselinker.up.railway.app/resource/location/grand-prairie>,
+        <https://caselinker.up.railway.app/resource/location/ikeja>,
+        <https://caselinker.up.railway.app/resource/location/new-york-city>,
+        <https://caselinker.up.railway.app/resource/location/nigeria>,
+        <https://caselinker.up.railway.app/resource/location/northern-district-of-texas>,
+        <https://caselinker.up.railway.app/resource/location/texas>,
+        <https://caselinker.up.railway.app/resource/location/united-states> .
 
 <https://caselinker.up.railway.app/resource/case/ice_2018_001/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -39,6 +60,12 @@
         cacontology-multi:MultiJurisdictionalInvestigation ;
     cacontology-multi:crossesBorders true .
 
+<https://caselinker.up.railway.app/resource/case/ice_2018_001/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2018-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ice_2018_001/sentence/1> .
+
 <https://caselinker.up.railway.app/resource/case/ice_2018_001/legal-step/convicted> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding,
@@ -51,7 +78,45 @@
 <https://caselinker.up.railway.app/resource/case/ice_2018_001/person/victim/1> a uco-identity:Person ;
     cacontology-production:victimAge 7 .
 
+<https://caselinker.up.railway.app/resource/case/ice_2018_001/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/ice_2018_001/phase/convicted> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2018-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/dallas> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/grand-prairie> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Grand Prairie" ;
+    uco-core:name "Grand Prairie" .
+
+<https://caselinker.up.railway.app/resource/location/ikeja> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Ikeja" ;
+    uco-core:name "Ikeja" .
+
+<https://caselinker.up.railway.app/resource/location/new-york-city> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "New York City" ;
+    uco-core:name "New York City" .
+
+<https://caselinker.up.railway.app/resource/location/nigeria> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Nigeria" ;
+    uco-core:name "Nigeria" .
+
+<https://caselinker.up.railway.app/resource/location/northern-district-of-texas> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Northern District of Texas" ;
+    uco-core:name "Northern District of Texas" .
+
+<https://caselinker.up.railway.app/resource/location/texas> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 

@@ -11,16 +11,20 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2023_005> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:24:01.253153" ;
+    dcterms:created "2026-09-15T20:39:17.445935" ;
     dcterms:identifier "vt_ag_2023_005" ;
-    dcterms:modified "2026-09-10T20:24:01.253153" ;
+    dcterms:modified "2026-09-15T20:39:17.445935" ;
     dcterms:source <https://ago.vermont.gov/blog/2023/05/12/two-men-arrested-possession-child-sexual-abuse-material>,
         "VT AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/essex>,
+        <https://caselinker.up.railway.app/resource/location/northfield>,
+        <https://caselinker.up.railway.app/resource/location/vermont> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/vt_ag_2023_005/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/vt_ag_2023_005/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/vt_ag_2023_005/cybertip>,
@@ -40,7 +44,10 @@
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
         <https://caselinker.up.railway.app/resource/agency/northfield-police-department>,
         <https://caselinker.up.railway.app/resource/agency/randolph-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/vermont-state-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/vermont-state-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/essex>,
+        <https://caselinker.up.railway.app/resource/location/northfield>,
+        <https://caselinker.up.railway.app/resource/location/vermont> .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2023_005/role/victim/1> a cacontology:VictimRole,
         uco-role:VictimRole ;
@@ -65,7 +72,9 @@
         cacontology-multi:LocalAgency ;
     rdfs:label "Northfield Police Department" .
 
-<https://caselinker.up.railway.app/resource/agency/randolph-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/randolph-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Randolph Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/vermont-state-police-department> a cacontology-multi:StateAgency .
 
@@ -96,7 +105,8 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/vt_ag_2023_005/charge/1>,
         <https://caselinker.up.railway.app/resource/case/vt_ag_2023_005/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/vt_ag_2023_005/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2023_005/operation> a cac-core:Event,
         cacontology-taskforce:TaskForceOperation .
@@ -123,6 +133,10 @@
         <https://caselinker.up.railway.app/resource/case/vt_ag_2023_005/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/vt_ag_2023_005/person/offender/2> .
 
+<https://caselinker.up.railway.app/resource/case/vt_ag_2023_005/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/case/vt_ag_2023_005/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
 
@@ -132,7 +146,19 @@
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
-<https://caselinker.up.railway.app/resource/platform/telegram> a cacontology-platforms:MessagingService ;
+<https://caselinker.up.railway.app/resource/location/essex> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/northfield> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Northfield" ;
+    uco-core:name "Northfield" .
+
+<https://caselinker.up.railway.app/resource/location/vermont> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/platform/telegram> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:MessagingService ;
     rdfs:label "Telegram" .
 
 <https://caselinker.up.railway.app/resource/case/vt_ag_2023_005/event/conspiracy> a cacontology:ConspiracyToCommitCSA,

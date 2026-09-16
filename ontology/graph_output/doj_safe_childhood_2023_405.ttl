@@ -10,6 +10,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -70,7 +71,8 @@
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_405/charge/1>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_405/charge/2> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_405/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_405/legal-step/pleaded-guilty> a cac-core:Event,
         cac-core:LegalEvent,
@@ -83,6 +85,10 @@
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_405/person/victim/1> a uco-identity:Person .
 
+<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_405/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
 <https://caselinker.up.railway.app/resource/platform/social-media> a cacontology-platforms:SocialMediaPlatform ;
     rdfs:label "social media" .
 
@@ -90,13 +96,19 @@
         cacontology-legal-outcomes:PreTrialPhase ;
     cacontology:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
+<https://caselinker.up.railway.app/resource/location/claremore> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Claremore" ;
+    uco-core:name "Claremore" .
+
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_405> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T21:23:00.916913" ;
+    dcterms:created "2026-09-15T22:12:28.303717" ;
     dcterms:identifier "doj_safe_childhood_2023_405" ;
-    dcterms:modified "2026-09-14T21:23:00.916913" ;
+    dcterms:modified "2026-09-15T22:12:28.303717" ;
     dcterms:source <https://www.justice.gov/usao-ndok/pr/claremore-man-pleads-guilty-after-being-found-500-images-child-pornography>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/claremore> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_405/phase/pleaded-guilty> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_405/phase/pleaded-guilty> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_405/admission/1>,
@@ -112,7 +124,8 @@
         <https://caselinker.up.railway.app/resource/agency/doj>,
         <https://caselinker.up.railway.app/resource/agency/hsi>,
         <https://caselinker.up.railway.app/resource/agency/rogers-county-sheriffs-office>,
-        <https://caselinker.up.railway.app/resource/agency/usao> .
+        <https://caselinker.up.railway.app/resource/agency/usao> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/claremore> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2023_405/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "distributing and receiving child pornography via social media from Jan" ;

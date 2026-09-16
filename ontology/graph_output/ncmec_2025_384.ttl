@@ -11,6 +11,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -25,9 +26,13 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2025_384/event/csam> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_384/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/criminal-investigation-division> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/criminal-investigation-division> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Criminal Investigation Division" .
 
-<https://caselinker.up.railway.app/resource/agency/hopkinsville-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/hopkinsville-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Hopkinsville Police Department" .
 
 <https://caselinker.up.railway.app/resource/agency/jessamine-county-sheriffs-office> a cac-core:OrganizationLikeEntity,
         cacontology-multi:LocalAgency ;
@@ -35,11 +40,12 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_384> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:28:39.997382" ;
+    dcterms:created "2026-09-15T21:27:13.520050" ;
     dcterms:identifier "ncmec_2025_384" ;
-    dcterms:modified "2026-09-10T19:28:39.997382" ;
+    dcterms:modified "2026-09-15T21:27:13.520050" ;
     dcterms:source <https://whopam.com/2025/11/18/police-arrest-hopkinsville-man-for-child-pornography-distribution/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/hopkinsville> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_384/phase/charged> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_384/phase/charged> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_384/admission/1>,
@@ -49,7 +55,8 @@
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/criminal-investigation-division>,
         <https://caselinker.up.railway.app/resource/agency/hopkinsville-police-department>,
-        <https://caselinker.up.railway.app/resource/agency/jessamine-county-sheriffs-office> .
+        <https://caselinker.up.railway.app/resource/agency/jessamine-county-sheriffs-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/hopkinsville> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_384/charge/1> a cacontology-legal-outcomes:CSAM_Possession,
         cacontology-legal-outcomes:CriminalCharge ;
@@ -66,7 +73,8 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/ncmec_2025_384/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-11-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2025-11-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ncmec_2025_384/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_384/person/offender/1> a uco-identity:Person ;
     cacontology-detection:ageEstimate 23 .
@@ -80,8 +88,14 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2025_384/event/csam> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_384/person/offender/1> .
 
-<https://caselinker.up.railway.app/resource/platform/snapchat> a cacontology-platforms:MessagingService ;
-    rdfs:label "Snapchat" .
+<https://caselinker.up.railway.app/resource/case/ncmec_2025_384/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
+<https://caselinker.up.railway.app/resource/platform/snapchat> a cac-core:DigitalSystemEntity,
+        cacontology-platforms:MessagingService ;
+    rdfs:label "Snapchat" ;
+    cacontology-platforms:encryptionLevel "end-to-end" .
 
 <https://caselinker.up.railway.app/resource/platform/social-media> a cacontology-platforms:SocialMediaPlatform ;
     rdfs:label "social media" .
@@ -90,10 +104,15 @@
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2025-11-01T00:00:00Z"^^xsd:dateTimeStamp .
 
+<https://caselinker.up.railway.app/resource/location/hopkinsville> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Hopkinsville" ;
+    uco-core:name "Hopkinsville" .
+
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_384/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "owning the Snapchat account and sending the suspected files" ;
     dcterms:source <https://whopam.com/2025/11/18/police-arrest-hopkinsville-man-for-child-pornography-distribution/> ;
-    ns1:admissionContext "ested for a 15-year-old female victim to send explicit videos of her herself. As Reed was being taken into custody, he reportedly admitte..." ;
+    ns1:admissionContext "sted for a 15-year-old female victim to send explicit videos of her herself. As Reed was being taken into custody, he reportedly admitted..." ;
     ns1:admissionFrame "admitted_to" ;
     ns1:admissionTheme "tech_use" ;
     ns1:attributedToOffenderRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_384/role/offender/1> ;

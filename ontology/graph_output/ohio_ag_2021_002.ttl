@@ -3,18 +3,26 @@
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2021_002> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:02:32.397409" ;
+    dcterms:created "2026-09-15T20:10:06.539753" ;
     dcterms:identifier "ohio_ag_2021_002" ;
-    dcterms:modified "2026-09-10T20:02:32.397409" ;
+    dcterms:modified "2026-09-15T20:10:06.539753" ;
     dcterms:source <https://www.ohioattorneygeneral.gov/Media/News-Releases/August-2021/Jackson-County-Man-Sentenced-for-Child-Rape>,
         "OHIO AG" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/jackson>,
+        <https://caselinker.up.railway.app/resource/location/jackson-county>,
+        <https://caselinker.up.railway.app/resource/location/ohio>,
+        <https://caselinker.up.railway.app/resource/location/seattle>,
+        <https://caselinker.up.railway.app/resource/location/the-west-coast> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ohio_ag_2021_002/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ohio_ag_2021_002/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ohio_ag_2021_002/event/hands-on>,
@@ -23,7 +31,12 @@
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/attorney-generals-office>,
         <https://caselinker.up.railway.app/resource/agency/ohio-bureau-of-criminal-investigation>,
-        <https://caselinker.up.railway.app/resource/agency/seattle-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/seattle-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/jackson>,
+        <https://caselinker.up.railway.app/resource/location/jackson-county>,
+        <https://caselinker.up.railway.app/resource/location/ohio>,
+        <https://caselinker.up.railway.app/resource/location/seattle>,
+        <https://caselinker.up.railway.app/resource/location/the-west-coast> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2021_002/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -41,14 +54,15 @@
 
 <https://caselinker.up.railway.app/resource/agency/ohio-bureau-of-criminal-investigation> a cacontology-multi:LocalAgency .
 
-<https://caselinker.up.railway.app/resource/agency/seattle-police-department> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/seattle-police-department> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Seattle Police Department" .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2021_002/legal-proceeding> a cac-core:Event,
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ohio_ag_2021_002/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/ohio_ag_2021_002/sentence/2> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/ohio_ag_2021_002/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2021_002/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -62,15 +76,30 @@
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2021_002/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:LifeImprisonmentSentence ;
-    rdfs:label "sentenced to life" .
-
-<https://caselinker.up.railway.app/resource/case/ohio_ag_2021_002/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:LifeImprisonmentSentence ;
-    rdfs:label "life in prison" .
+    rdfs:label "[\"sentenced to life\", \"life in prison\"]" .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2021_002/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2021-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/jackson> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/jackson-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/ohio> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/seattle> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Seattle" ;
+    uco-core:name "Seattle" .
+
+<https://caselinker.up.railway.app/resource/location/the-west-coast> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "the West Coast" ;
+    uco-core:name "the West Coast" .
 
 <https://caselinker.up.railway.app/resource/case/ohio_ag_2021_002/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

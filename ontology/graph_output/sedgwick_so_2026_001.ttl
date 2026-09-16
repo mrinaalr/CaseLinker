@@ -1,27 +1,37 @@
 @prefix cac-core: <https://cacontology.projectvic.org/core#> .
 @prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/sedgwick_so_2026_001> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:12:00.710083" ;
+    dcterms:created "2026-09-15T20:26:10.963822" ;
     dcterms:identifier "sedgwick_so_2026_001" ;
-    dcterms:modified "2026-09-10T20:12:00.710083" ;
+    dcterms:modified "2026-09-15T20:26:10.963822" ;
     dcterms:source <https://www.sedgwickcounty.org/district-attorney/criminal-division/criminal-division-media-releases/sedgwick-county-man-sentenced-for-rape-of-child-in-haysville/>,
         "SEDGWICK SO" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/kan>,
+        <https://caselinker.up.railway.app/resource/location/sedgwick-county>,
+        <https://caselinker.up.railway.app/resource/location/wichita> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/sedgwick_so_2026_001/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/sedgwick_so_2026_001/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/sedgwick_so_2026_001/event/hands-on>,
         <https://caselinker.up.railway.app/resource/case/sedgwick_so_2026_001/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/sedgwick_so_2026_001/legal-step/sentenced> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/district-attorneys-office>,
-        <https://caselinker.up.railway.app/resource/agency/haysville-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/haysville-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/kan>,
+        <https://caselinker.up.railway.app/resource/location/sedgwick-county>,
+        <https://caselinker.up.railway.app/resource/location/wichita> .
 
 <https://caselinker.up.railway.app/resource/case/sedgwick_so_2026_001/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -53,17 +63,33 @@
         cacontology-legal-outcomes:SentencingHearing ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
-<https://caselinker.up.railway.app/resource/case/sedgwick_so_2026_001/person/offender/1> a uco-identity:Person .
+<https://caselinker.up.railway.app/resource/case/sedgwick_so_2026_001/person/offender/1> a uco-identity:Person ;
+    cacontology-detection:ageEstimate 43 .
 
 <https://caselinker.up.railway.app/resource/case/sedgwick_so_2026_001/person/victim/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/sedgwick_so_2026_001/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "330 months" .
+    rdfs:label "[\"330 months\"]" .
 
 <https://caselinker.up.railway.app/resource/case/sedgwick_so_2026_001/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/kan> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Kan." ;
+    uco-core:name "Kan." .
+
+<https://caselinker.up.railway.app/resource/location/sedgwick-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Sedgwick County" ;
+    uco-core:name "Sedgwick County" .
+
+<https://caselinker.up.railway.app/resource/location/wichita> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Wichita" ;
+    uco-core:name "Wichita" .
 
 <https://caselinker.up.railway.app/resource/case/sedgwick_so_2026_001/event/hands-on> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event ;

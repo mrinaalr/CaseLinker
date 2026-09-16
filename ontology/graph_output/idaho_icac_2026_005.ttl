@@ -9,16 +9,18 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2026_005> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:50:24.968128" ;
+    dcterms:created "2026-09-15T19:36:56.107397" ;
     dcterms:identifier "idaho_icac_2026_005" ;
-    dcterms:modified "2026-09-10T19:50:24.968128" ;
+    dcterms:modified "2026-09-15T19:36:56.107397" ;
     dcterms:source <https://www.ag.idaho.gov/newsroom/category/icac/?showall=true>,
         "Idaho ICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/idaho> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/idaho_icac_2026_005/phase/arrested> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/idaho_icac_2026_005/phase/arrested> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/idaho_icac_2026_005/cybertip>,
@@ -27,7 +29,8 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ada-county-sheriffs-office>,
         <https://caselinker.up.railway.app/resource/agency/icac>,
         <https://caselinker.up.railway.app/resource/agency/ncmec>,
-        <https://caselinker.up.railway.app/resource/agency/star-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/star-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/idaho> .
 
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2026_005/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -63,17 +66,25 @@
         cac-core:LegalEvent,
         cacontology-legal-outcomes:LegalProceeding ;
     cacontology-legal-outcomes:hasCharge <https://caselinker.up.railway.app/resource/case/idaho_icac_2026_005/charge/1> ;
-    cacontology-legal-outcomes:hasProceedingBeginPoint "2026-02-01T00:00:00Z"^^xsd:dateTimeStamp .
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2026-02-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/idaho_icac_2026_005/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2026_005/person/offender/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2026_005/person/victim/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/idaho_icac_2026_005/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
 
 <https://caselinker.up.railway.app/resource/agency/ncmec> a cacontology-multi:FederalAgency .
 
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2026_005/phase/arrested> a cacontology:InitialPhase,
         cac-core:Phase ;
     cacontology:hasPhaseBeginPoint "2026-02-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/idaho> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
 
 <https://caselinker.up.railway.app/resource/case/idaho_icac_2026_005/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

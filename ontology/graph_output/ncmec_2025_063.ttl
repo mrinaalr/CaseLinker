@@ -3,26 +3,30 @@
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_063> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T19:25:46.134784" ;
+    dcterms:created "2026-09-15T21:27:13.209691" ;
     dcterms:identifier "ncmec_2025_063" ;
-    dcterms:modified "2026-09-10T19:25:46.134784" ;
+    dcterms:modified "2026-09-15T21:27:13.209691" ;
     dcterms:source <https://www.whiterivernow.com/2025/07/17/batesville-man-sentenced-for-csam-possession/>,
         "NCMEC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/batesville> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_063/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/ncmec_2025_063/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/ncmec_2025_063/event/possession>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_063/legal-proceeding>,
         <https://caselinker.up.railway.app/resource/case/ncmec_2025_063/legal-step/sentenced> ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/arkansas-department-of-corrections>,
-        <https://caselinker.up.railway.app/resource/agency/arkansas-state-police-department> .
+        <https://caselinker.up.railway.app/resource/agency/arkansas-state-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/batesville> .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_063/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -36,7 +40,9 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/ncmec_2025_063/event/possession> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/ncmec_2025_063/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/arkansas-department-of-corrections> a cacontology-multi:LocalAgency .
+<https://caselinker.up.railway.app/resource/agency/arkansas-department-of-corrections> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:LocalAgency ;
+    rdfs:label "Arkansas Department of Corrections" .
 
 <https://caselinker.up.railway.app/resource/agency/arkansas-state-police-department> a cacontology-multi:StateAgency .
 
@@ -60,11 +66,16 @@
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_063/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "48 months" .
+    rdfs:label "[\"48 months\"]" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_063/phase/sentenced> a cac-core:Phase,
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2025-07-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/batesville> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Batesville" ;
+    uco-core:name "Batesville" .
 
 <https://caselinker.up.railway.app/resource/case/ncmec_2025_063/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;

@@ -9,6 +9,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -33,7 +34,9 @@
     cacontology:participatesInEvent <https://caselinker.up.railway.app/resource/case/south_florida_icac_2024_013/event/csam> ;
     cac-core:hasRole <https://caselinker.up.railway.app/resource/case/south_florida_icac_2024_013/person/victim/1> .
 
-<https://caselinker.up.railway.app/resource/agency/doj> a cacontology-multi:FederalAgency .
+<https://caselinker.up.railway.app/resource/agency/doj> a cac-core:OrganizationLikeEntity,
+        cacontology-multi:FederalAgency ;
+    rdfs:label "U.S. Department of Justice" .
 
 <https://caselinker.up.railway.app/resource/agency/hsi> a cacontology-multi:FederalAgency .
 
@@ -64,7 +67,7 @@
 
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2024_013/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "30 years" .
+    rdfs:label "[\"30 years\"]" .
 
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2024_013/admission/1> a cacontology-undercover:IncriminatingStatement ;
     rdfs:label "serially spying on young girls as soon as he started working on the Symphony of the Seas in December" ;
@@ -103,13 +106,33 @@
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
+<https://caselinker.up.railway.app/resource/location/broward-county> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/fla> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/fort-lauderdale> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/port-everglades> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/south-florida> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2024_013> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-10T20:14:54.482115" ;
+    dcterms:created "2026-09-15T20:27:39.185051" ;
     dcterms:identifier "south_florida_icac_2024_013" ;
-    dcterms:modified "2026-09-10T20:14:54.482115" ;
+    dcterms:modified "2026-09-15T20:27:39.185051" ;
     dcterms:source <https://www.local10.com/news/local/2024/08/28/cruise-ship-worker-gets-30-years-for-planting-hidden-cameras-in-cabins-recording-children/>,
         "SOUTH FLORIDA ICAC" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/broward-county>,
+        <https://caselinker.up.railway.app/resource/location/fla>,
+        <https://caselinker.up.railway.app/resource/location/fort-lauderdale>,
+        <https://caselinker.up.railway.app/resource/location/port-everglades>,
+        <https://caselinker.up.railway.app/resource/location/south-florida> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/south_florida_icac_2024_013/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/south_florida_icac_2024_013/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/south_florida_icac_2024_013/admission/1>,
@@ -120,7 +143,12 @@
         <https://caselinker.up.railway.app/resource/case/south_florida_icac_2024_013/legal-step/sentenced> ;
     cacontology:investigationStatus "unknown" ;
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/doj>,
-        <https://caselinker.up.railway.app/resource/agency/hsi> .
+        <https://caselinker.up.railway.app/resource/agency/hsi> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/broward-county>,
+        <https://caselinker.up.railway.app/resource/location/fla>,
+        <https://caselinker.up.railway.app/resource/location/fort-lauderdale>,
+        <https://caselinker.up.railway.app/resource/location/port-everglades>,
+        <https://caselinker.up.railway.app/resource/location/south-florida> .
 
 <https://caselinker.up.railway.app/resource/case/south_florida_icac_2024_013/event/csam> a cacontology:CSAMIncident,
         cac-core:Event ;

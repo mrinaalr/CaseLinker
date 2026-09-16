@@ -2,6 +2,7 @@
 @prefix cacontology: <https://cacontology.projectvic.org#> .
 @prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
 @prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
@@ -9,16 +10,20 @@
 @prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
 @prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
 @prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_307> a cacontology:CACInvestigation,
         cac-core:EnduringEntity ;
-    dcterms:created "2026-09-14T21:22:31.801682" ;
+    dcterms:created "2026-09-15T22:12:26.919992" ;
     dcterms:identifier "doj_safe_childhood_2025_307" ;
-    dcterms:modified "2026-09-14T21:22:31.801682" ;
+    dcterms:modified "2026-09-15T22:12:26.919992" ;
     dcterms:source <https://www.justice.gov/usao-edwi/pr/neenah-man-sentenced-five-years-imprisonment-distribution-child-pornography>,
         "DOJ SAFE CHILDHOOD" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/neenah>,
+        <https://caselinker.up.railway.app/resource/location/united-states>,
+        <https://caselinker.up.railway.app/resource/location/wisconsin> ;
     cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_307/phase/sentenced> ;
     cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_307/phase/sentenced> ;
     cacontology:hasStep <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_307/event/distribution>,
@@ -32,7 +37,10 @@
     cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/ceos>,
         <https://caselinker.up.railway.app/resource/agency/doj>,
         <https://caselinker.up.railway.app/resource/agency/usao>,
-        <https://caselinker.up.railway.app/resource/agency/winnebago-county-sheriffs-office> .
+        <https://caselinker.up.railway.app/resource/agency/winnebago-county-sheriffs-office> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/neenah>,
+        <https://caselinker.up.railway.app/resource/location/united-states>,
+        <https://caselinker.up.railway.app/resource/location/wisconsin> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_307/role/offender/1> a cacontology:OffenderRole,
         uco-role:OffenderRole ;
@@ -88,9 +96,7 @@
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_307/charge/2>,
         <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_307/charge/3> ;
     cacontology-legal-outcomes:hasProceedingBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_307/sentence/1>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_307/sentence/2>,
-        <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_307/sentence/3> .
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_307/sentence/1> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_307/legal-step/sentenced> a cac-core:Event,
         cac-core:LegalEvent,
@@ -103,16 +109,8 @@
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_307/person/victim/1> a uco-identity:Person .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_307/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "60 months" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_307/sentence/2> a cacontology-legal-outcomes:CriminalSentence,
-        cacontology-legal-outcomes:PrisonSentence ;
-    rdfs:label "7 years" .
-
-<https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_307/sentence/3> a cacontology-legal-outcomes:CriminalSentence,
         cacontology-legal-outcomes:SupervisedRelease ;
-    rdfs:label "supervised release" .
+    rdfs:label "[\"60 months\", \"7 years\", \"supervised release\"]" .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_307/tech/cybertipline> a cacontology-us-ncmec:NCMECCybertipReport ;
     rdfs:label "CyberTipline" .
@@ -121,13 +119,29 @@
         cacontology-legal-outcomes:SentencingPhase ;
     cacontology:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
 
+<https://caselinker.up.railway.app/resource/location/neenah> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Neenah" ;
+    uco-core:name "Neenah" .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/location/wisconsin> a cac-core:PlaceLikeEntity,
+        uco-location:Location .
+
+<https://caselinker.up.railway.app/resource/platform/twitter-x> a cacontology-platforms:SocialMediaPlatform ;
+    rdfs:label "Twitter / X" .
+
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_307/event/possession> a cacontology:CSAMIncident,
         cac-core:Event ;
     cacontology:severityLevel 3 ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/twitter-x> ;
     uco-core:hasFacet <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_307/facet/possession> .
 
 <https://caselinker.up.railway.app/resource/case/doj_safe_childhood_2025_307/offense-event/charge-3> a cacontology:ChildSexualAbuseEvent,
         cac-core:Event,
         uco-action:Crime ;
-    rdfs:label "Inferred offense from charge: child exploitation" .
+    rdfs:label "Inferred offense from charge: child exploitation" ;
+    cacontology:usesChannel <https://caselinker.up.railway.app/resource/platform/twitter-x> .
 
