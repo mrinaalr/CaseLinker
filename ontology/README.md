@@ -98,12 +98,12 @@ How to query the live store, including GET vs POST, `VALUES` + `LIMIT` ordering,
 
 ## Graph pools
 
-The repo holds **10,282** press-release case graphs (`cac:CACInvestigation`, one named graph per case) for the **10,282 case reports** / **125,891 extracted features** corpus. Live SPARQL on Railway updates when those graphs are loaded. Separately, **297** PACER CASE-UCO graphs live under `urn:pacer:kg:…` (see [docs/SPARQL.md](docs/SPARQL.md#two-pacer-named-graph-families)). The Ontology & Graphs UI / MCP use smaller locked viz subsets. Display membership is the txt files — do not edit the counts by hand.
+The repo holds **10,282** press-release case graphs (`cac:CACInvestigation`, one named graph per case) for the **10,282 case reports** / **125,891 extracted features** corpus. Live SPARQL on Railway updates when those graphs are loaded. Separately, **297** PACER CASE-UCO graphs live under `urn:pacer:kg:…` (see [docs/SPARQL.md](docs/SPARQL.md#two-pacer-named-graph-families)). Ontology & Graphs **Find/load/compare** uses the full staging set (`pool=full`, max **2000** graphs merged at once). Big Bang / Universe / Analysis remain secret merge modes over locked subsets (`*_ids.txt`).
 
 | Pool | ID list | Folder | Used by |
 |---|---|---|---|
-| Full mapped corpus | all sqlite IDs | `graph_output/*.ttl` (staging) | Oxigraph / SPARQL |
-| Universe | [`universe_ids.txt`](universe_ids.txt) (1,969) | `graph_output/universe/` | `/patterns` Universe |
+| Full mapped corpus | all sqlite IDs | `graph_output/*.ttl` (staging) | Oxigraph / SPARQL + `/patterns` Find/load (`pool=full`, max 2000 merge) |
+| Universe | [`universe_ids.txt`](universe_ids.txt) (1,969) | `graph_output/universe/` | `/patterns` secret Universe |
 | Big Bang | [`big_bang_ids.txt`](big_bang_ids.txt) (968) | `graph_output/big_bang/` | `/patterns` Big Bang |
 | Analysis | [`analysis_ids.txt`](analysis_ids.txt) (124) | `graph_output/analysis/` | MCP / research cohorts |
 | Compare | [`selected_200_ids.txt`](selected_200_ids.txt) (200) | subset of universe | `/patterns` compare chips |

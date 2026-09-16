@@ -338,6 +338,52 @@
             outline: none;
             border-color: #4CAF50;
         }
+        .case-suggest-wrap {
+            position: relative;
+            margin-bottom: 8px;
+        }
+        .case-suggest-wrap .field {
+            margin-bottom: 0;
+        }
+        .case-suggest {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: calc(100% + 2px);
+            z-index: 40;
+            max-height: 220px;
+            overflow: auto;
+            margin: 0;
+            padding: 4px 0;
+            list-style: none;
+            background: #0b111a;
+            border: 1px solid var(--line);
+            border-radius: 4px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+        }
+        .case-suggest[hidden] { display: none; }
+        .case-suggest-option {
+            display: block;
+            width: 100%;
+            text-align: left;
+            border: 0;
+            background: transparent;
+            color: var(--text);
+            font: inherit;
+            font-size: 0.8rem;
+            padding: 6px 10px;
+            cursor: pointer;
+        }
+        .case-suggest-option:hover,
+        .case-suggest-option[aria-selected="true"] {
+            background: var(--accent-dim);
+            color: #a7f3d0;
+        }
+        .case-suggest-hint {
+            padding: 4px 10px 2px;
+            font-size: 0.68rem;
+            color: var(--text-mute);
+        }
         .chip-row {
             display: flex;
             flex-wrap: wrap;
@@ -916,6 +962,19 @@
 
                 <label class="field-label" for="lookup-agency">Agency</label>
                 <input id="lookup-agency" class="field" type="search" placeholder="U.S. Marshals…" autocomplete="off">
+
+                <label class="field-label" for="lookup-case-q">Case ID / text</label>
+                <div class="case-suggest-wrap">
+                    <input id="lookup-case-q" class="field" type="search"
+                        placeholder="doj_safe_childhood_2024_216…"
+                        autocomplete="off"
+                        spellcheck="false"
+                        role="combobox"
+                        aria-autocomplete="list"
+                        aria-controls="lookup-case-suggest"
+                        aria-expanded="false">
+                    <ul id="lookup-case-suggest" class="case-suggest" hidden role="listbox" aria-label="Matching case IDs"></ul>
+                </div>
 
                 <div class="btn-row">
                     <button type="button" class="btn primary" id="lookup-run">Search</button>

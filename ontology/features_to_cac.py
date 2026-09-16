@@ -1898,19 +1898,20 @@ class CaseToCAC:
         slug: str,
         label: str,
     ) -> URIRef:
-        """Return shared singleton location URIRef, creating it if new."""
+        """Return shared singleton location URIRef, creating it if new.
+
+        Always (re)assert ``rdfs:label`` / ``uco-core:name`` on the current graph.
+        Registry hits from earlier cases in a batch used to omit labels, which made
+        location nodes look vacuous in per-case TTL/JSON-LD.
+        """
         uri = self._location_registry.get(slug)
         if uri is None:
             uri = BASE[f"location/{slug}"]
             self._location_registry[slug] = uri
-            g.add((uri, RDF.type, UCO_LOCATION.Location))
-            g.add((uri, RDF.type, CAC_CORE.PlaceLikeEntity))
-            g.add((uri, RDFS.label, Literal(label)))
-            g.add((uri, UCO_CORE.name, Literal(label)))
-        else:
-            # Ensure types present in this graph even if registry hit from prior case
-            g.add((uri, RDF.type, UCO_LOCATION.Location))
-            g.add((uri, RDF.type, CAC_CORE.PlaceLikeEntity))
+        g.add((uri, RDF.type, UCO_LOCATION.Location))
+        g.add((uri, RDF.type, CAC_CORE.PlaceLikeEntity))
+        g.add((uri, RDFS.label, Literal(label)))
+        g.add((uri, UCO_CORE.name, Literal(label)))
         return uri
 
     def _classify_agency(

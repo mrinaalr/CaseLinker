@@ -191,6 +191,10 @@ logger = logging.getLogger(__name__)
 # Published taxonomy: 54 non-DOJ + DOJ CEOS + DOJ SAFE CHILDHOOD = 56.
 # CEOS Archives fold into DOJ CEOS. AI-CSAM USAO harvest folds into Safe Childhood
 # (PSC umbrella; not a separate agency — splitting AI/Archives would hit 57–58).
+# Bump _STATS_TAXONOMY_VER when this map changes so Redis stats keys invalidate
+# even if case_count is unchanged (stale cache previously reported 55 when PSC
+# was incorrectly folded into DOJ CEOS).
+_STATS_TAXONOMY_VER = 2
 _SOURCE_COUNT_FAMILY = {
     "DOJ AI CSAM": "DOJ SAFE CHILDHOOD",
     "DOJ ARCHIVES": "DOJ CEOS",
@@ -2057,7 +2061,11 @@ def get_stats(request: Request):
         current_case_count = get_case_count()
         
         # Build cache key
-        cache_key = get_cache_key('stats', version=current_case_count)
+        cache_key = get_cache_key(
+            'stats',
+            version=current_case_count,
+            taxonomy=_STATS_TAXONOMY_VER,
+        )
         
         # Try Redis cache first
         cached_result = get_cached(cache_key)
@@ -4242,8 +4250,8 @@ _viz_assets = Path(__file__).resolve().parent.parent / "visualization" / "assets
 if _viz_assets.is_dir():
     app.mount("/viz-assets", StaticFiles(directory=str(_viz_assets)), name="viz_assets")
 
-# Serve ontology/graph_output/ (staging + universe/ + big_bang/ subdirs).
-# Patterns viz loads only graph_output/universe/ and graph_output/big_bang/.
+# Serve ontology/graph_output/ (staging root + universe/ + big_bang/ + analysis/).
+# Find/load/compare use staging (pool=full, ~10k). Secret merge modes use subdirs.
 _graph_output = Path(__file__).resolve().parent.parent / "ontology" / "graph_output"
 _graph_output.mkdir(parents=True, exist_ok=True)
 app.mount(
@@ -4313,9 +4321,14 @@ def _compare_pool_id_order() -> List[str]:
     return [ln.strip() for ln in p.read_text().splitlines() if ln.strip()]
 
 
-def _graph_pool_subdir(pool: str) -> str:
-    """Filesystem subdir under graph_output/ for a Patterns pool."""
+def _graph_pool_subdir(pool: str) -> Optional[str]:
+    """Filesystem subdir under graph_output/ for a Patterns pool.
+
+    ``full`` is the staging root (``graph_output/*.jsonld``) — not a subdir.
+    """
     p = (pool or "compare").strip().lower()
+    if p == "full":
+        return None
     if p == "compare":
         return "universe"
     if p in ("all", "big_bang"):
@@ -4333,14 +4346,19 @@ _ontology_entries_mem: Dict[str, Dict[str, Any]] = {}
 def _ontology_graph_case_entries(
     pool: str = "all",
 ) -> Dict[str, Dict[str, Any]]:
-    """case_id -> {case_id, path, ttl_path} for graphs in graph_output/{subdir}/."""
+    """case_id -> {case_id, path, ttl_path} for graphs in the pool directory."""
     by_id: Dict[str, Dict[str, Any]] = {}
     subdir = _graph_pool_subdir(pool)
-    scan_dir = _graph_output / subdir
-    url_prefix = f"/ontology/graph_output/{subdir}"
+    if subdir is None:
+        scan_dir = _graph_output
+        url_prefix = "/ontology/graph_output"
+    else:
+        scan_dir = _graph_output / subdir
+        url_prefix = f"/ontology/graph_output/{subdir}"
     if not scan_dir.is_dir():
         return by_id
     # Assume paired .ttl next to each .jsonld (avoids thousands of exists() stats on Railway FS).
+    # Non-recursive: staging root only — never walk universe/big_bang/analysis.
     for entry in scan_dir.glob("*.jsonld"):
         case_id = entry.stem
         by_id[case_id] = {
@@ -4367,17 +4385,25 @@ def _universe_graph_count() -> int:
     return len(list(d.glob("*.jsonld"))) if d.is_dir() else 0
 
 
+def _staging_graph_count() -> int:
+    """Mapped press-release graphs at graph_output/*.jsonld (full Oxigraph corpus)."""
+    if not _graph_output.is_dir():
+        return 0
+    return len(list(_graph_output.glob("*.jsonld")))
+
+
 @app.get("/api/ontology/cases")
 def api_ontology_cases(
     pool: str = Query(
         "compare",
-        description="compare | all (Big Bang half-sample) | universe | analysis (big_bang.py 1000)",
+        description="compare | full (staging ~10k) | all (Big Bang) | universe | analysis",
     ),
 ):
     """
     Patterns graph case catalog (metadata only — no JSON-LD bodies).
 
     - pool=compare (default): up to 200 curated cases with graphs in graph_output/universe/
+    - pool=full: every staging graph at graph_output/*.jsonld (~10k; Find/load paths)
     - pool=all: Big Bang half-sample at graph_output/big_bang/
     - pool=universe: every graph in graph_output/universe/
     - pool=analysis: analysis_ids.txt cases in graph_output/analysis/ (MCP/research cohorts)
@@ -4385,10 +4411,10 @@ def api_ontology_cases(
     from fastapi.responses import JSONResponse
 
     pool_norm = (pool or "compare").strip().lower()
-    if pool_norm not in ("compare", "all", "universe", "analysis"):
+    if pool_norm not in ("compare", "full", "all", "universe", "analysis"):
         raise HTTPException(
             status_code=400,
-            detail="pool must be 'compare', 'all', 'universe', or 'analysis'",
+            detail="pool must be 'compare', 'full', 'all', 'universe', or 'analysis'",
         )
 
     if pool_norm == "compare" and pool_norm in _ontology_catalog_mem:
@@ -4402,6 +4428,7 @@ def api_ontology_cases(
         sys.path.insert(0, str(_ontology_dir))
     from merge_graph_cache import graph_dir_for_pool, graph_manifest  # noqa: E402
 
+    staging_total = _staging_graph_count()
     universe_total = _universe_graph_count()
 
     if pool_norm == "compare":
@@ -4409,6 +4436,10 @@ def api_ontology_cases(
         redis_key = get_cache_key("ontology_catalog", pool="compare", manifest=manifest)
         redis_hit = get_cached(redis_key)
         if isinstance(redis_hit, dict) and redis_hit.get("graph_manifest") == manifest:
+            # Refresh corpus_total without invalidating the curated chip list.
+            redis_hit = dict(redis_hit)
+            redis_hit["corpus_total"] = staging_total or redis_hit.get("corpus_total") or universe_total
+            redis_hit["universe_total"] = universe_total
             _ontology_catalog_mem["compare"] = redis_hit
             return JSONResponse(
                 content=redis_hit,
@@ -4420,7 +4451,8 @@ def api_ontology_cases(
         payload = {
             "pool": "compare",
             "cases": cases,
-            "corpus_total": universe_total,
+            "corpus_total": staging_total or universe_total,
+            "universe_total": universe_total,
             "compare_pool_size": len(cases),
             "graph_manifest": manifest,
         }
@@ -4435,6 +4467,27 @@ def api_ontology_cases(
             headers={"Cache-Control": "public, max-age=3600"},
         )
 
+    if pool_norm == "full":
+        if "full" in _ontology_catalog_mem:
+            return JSONResponse(
+                content=_ontology_catalog_mem["full"],
+                headers={"Cache-Control": "public, max-age=300"},
+            )
+        graphs = _ontology_graph_case_entries_cached("full")
+        cases = sorted(graphs.values(), key=lambda r: r["case_id"])
+        payload = {
+            "pool": "full",
+            "cases": cases,
+            "corpus_total": len(cases),
+            "universe_total": universe_total,
+            "graph_manifest": f"staging:{len(cases)}",
+        }
+        _ontology_catalog_mem["full"] = payload
+        return JSONResponse(
+            content=payload,
+            headers={"Cache-Control": "public, max-age=300"},
+        )
+
     if pool_norm in ("all", "universe", "analysis"):
         scan_pool = (
             "all" if pool_norm == "all"
@@ -4447,11 +4500,16 @@ def api_ontology_cases(
         payload = {
             "pool": pool_norm,
             "cases": cases,
-            "corpus_total": universe_total if pool_norm in ("all", "analysis") else len(cases),
+            "corpus_total": staging_total or universe_total,
+            "universe_total": universe_total,
             "graph_manifest": manifest,
         }
         if pool_norm == "analysis":
             payload["analysis_pool_size"] = len(cases)
+        if pool_norm == "all":
+            payload["big_bang_pool_size"] = len(cases)
+        if pool_norm == "universe":
+            payload["universe_pool_size"] = len(cases)
         return JSONResponse(
             content=payload,
             headers={"Cache-Control": "public, max-age=300"},
@@ -4582,6 +4640,7 @@ def api_ontology_merged(
     Pre-merged flat RDF nodes for Patterns (Redis + disk + in-process cache).
 
     After graph_output changes, manifest rotates and cache rebuilds on first request.
+    ``pool=full`` is not supported (too large); Find/load merges client-side up to 2000.
     """
     pool_norm = (pool or "compare").strip().lower()
     if pool_norm not in ("compare", "all", "universe", "analysis"):
@@ -4735,19 +4794,61 @@ def _ontology_class_facets_cached(pool_norm: str, payload: Dict[str, Any]) -> li
 
 def _ontology_merged_for_lookup(pool_norm: str) -> Dict[str, Any]:
     """Prefer in-process merged payload; fall back to disk/redis/build."""
-    mem = _ontology_merged_mem.get(pool_norm)
+    # pool=full has no pre-merged payload — borrow universe facets/index.
+    merge_pool = "universe" if pool_norm == "full" else pool_norm
+    mem = _ontology_merged_mem.get(merge_pool)
     if isinstance(mem, dict) and mem.get("flat_nodes") is not None:
         return mem
     if str(_ontology_dir) not in sys.path:
         sys.path.insert(0, str(_ontology_dir))
     from merge_graph_cache import get_or_build_merged  # noqa: E402
     payload = get_or_build_merged(
-        pool_norm,
+        merge_pool,
         redis_get=get_cached,
         redis_set=lambda k, v, ttl=604800: set_cached(k, v, ttl=ttl),
     )
-    _ontology_merged_mem[pool_norm] = payload
+    _ontology_merged_mem[merge_pool] = payload
     return payload
+
+
+def _ontology_class_case_ids_via_sparql(class_token: str, limit: int = 5000) -> Optional[set[str]]:
+    """Resolve case IDs with a given CAC/UCO type from Oxigraph (full corpus)."""
+    oxi = os.environ.get("OXIGRAPH_URL", "").strip().rstrip("/")
+    if not oxi or not class_token:
+        return None
+    local = class_token.rsplit("#", 1)[-1].rsplit("/", 1)[-1].strip()
+    if not local or not re.match(r"^[A-Za-z_][A-Za-z0-9_]*$", local):
+        return None
+    query = (
+        "PREFIX dcterms: <http://purl.org/dc/terms/>\n"
+        "PREFIX cac: <https://cacontology.projectvic.org#>\n"
+        "SELECT DISTINCT ?id WHERE {\n"
+        "  ?inv a cac:CACInvestigation ;\n"
+        "       dcterms:identifier ?id .\n"
+        "  ?s a ?type .\n"
+        f'  FILTER(STRENDS(STR(?type), "#{local}") || STRENDS(STR(?type), "/{local}"))\n'
+        f"}} LIMIT {int(limit)}\n"
+    )
+    try:
+        resp = requests.post(
+            f"{oxi}/query",
+            data={"query": query},
+            headers={"Accept": "application/sparql-results+json"},
+            timeout=20,
+        )
+        if resp.status_code >= 400:
+            return None
+        payload = resp.json()
+        bindings = (payload.get("results") or {}).get("bindings") or []
+        out: set[str] = set()
+        for row in bindings:
+            cell = row.get("id") or {}
+            val = cell.get("value")
+            if val:
+                out.add(str(val))
+        return out
+    except Exception:
+        return None
 
 
 @app.get("/api/ontology/lookup")
@@ -4757,24 +4858,26 @@ def api_ontology_lookup(
     agency: str = Query("", max_length=160),
     class_name: str = Query("", max_length=120),
     shared_only: bool = Query(False),
-    pool: str = Query("universe"),
-    limit: int = Query(120, ge=1, le=200),
+    pool: str = Query("full"),
+    limit: int = Query(120, ge=1, le=2000),
 ):
     """
     Case lookup for Ontology & Graphs.
 
-    Platform / agency / free-text ``q`` filter lean stored features (not get_all_cases).
-    ``class_name`` / ``shared_only`` use a cached type→cases index over the merged graph.
-    Feature-only searches never touch the merged universe payload or graph_manifest.
+    Default ``pool=full`` searches every staging graph (``graph_output/*.jsonld``).
+    Platform / agency / free-text ``q`` filter lean stored features.
+    ``class_name`` on pool=full prefers Oxigraph SPARQL; other pools use merged indexes.
+    Secret merge pools (universe / all / analysis) remain available for Big Bang modes.
     """
-    pool_norm = (pool or "universe").strip().lower()
-    if pool_norm not in ("compare", "all", "universe", "analysis"):
+    pool_norm = (pool or "full").strip().lower()
+    if pool_norm not in ("compare", "full", "all", "universe", "analysis"):
         raise HTTPException(status_code=400, detail="unknown graph pool")
 
     plat = (platform or "").strip().casefold()
     ag = (agency or "").strip().casefold()
     query = (q or "").strip().casefold()
-    wanted_class = (class_name or "").strip().casefold()
+    class_raw = (class_name or "").strip()
+    wanted_class = class_raw.casefold()
 
     entries = _ontology_graph_case_entries_cached(
         "all" if pool_norm == "all" else pool_norm
@@ -4824,21 +4927,24 @@ def api_ontology_lookup(
                 if query not in hay:
                     continue
             feature_hits.add(str(cid))
+        # Staging ID substring match even when lean feature rows omit a case.
+        if query:
+            for cid in entries:
+                if query in str(cid).casefold():
+                    feature_hits.add(str(cid))
         matched_cases = feature_hits
 
     class_facets: list = []
-    # Always return class facets for the Find-cases dropdown. Feature-only searches
-    # used to skip this, leaving the UI stuck on the ~10 hardcoded <option>s.
-    # Facets are memoized per merged manifest after the first load.
+    # Facets always come from a mergeable pool (universe when pool=full).
+    facet_pool = "universe" if pool_norm == "full" else pool_norm
     index: Optional[Dict[str, Any]] = None
     try:
-        payload = _ontology_merged_for_lookup(pool_norm)
-        index = _ontology_class_index_cached(pool_norm, payload)
+        payload = _ontology_merged_for_lookup(facet_pool)
+        index = _ontology_class_index_cached(facet_pool, payload)
         class_facets = index["facets"]
     except Exception:
-        # Fall back to any already-warm facets for this pool (e.g. compare boot).
         for key, facets in _ontology_class_facet_mem.items():
-            if key.startswith(f"{pool_norm}:") and isinstance(facets, list):
+            if key.startswith(f"{facet_pool}:") and isinstance(facets, list):
                 class_facets = facets
                 break
         if not class_facets:
@@ -4848,27 +4954,42 @@ def api_ontology_lookup(
                     break
 
     if wanted_class or shared_only:
-        if index is None:
-            try:
-                payload = _ontology_merged_for_lookup(pool_norm)
-                index = _ontology_class_index_cached(pool_norm, payload)
-                class_facets = index["facets"]
-            except Exception as exc:
-                raise HTTPException(status_code=500, detail=str(exc)) from exc
-
-        graph_hits: set[str]
-        if wanted_class and shared_only:
-            graph_hits = index["by_class"].get(wanted_class, set()) & index["shared_cases"]
-        elif wanted_class:
-            graph_hits = set(index["by_class"].get(wanted_class, set()))
-        else:
-            graph_hits = set(index["shared_cases"])
+        graph_hits: Optional[set[str]] = None
+        if pool_norm == "full" and class_raw and not shared_only:
+            graph_hits = _ontology_class_case_ids_via_sparql(class_raw)
+        if graph_hits is None:
+            if index is None:
+                try:
+                    payload = _ontology_merged_for_lookup(facet_pool)
+                    index = _ontology_class_index_cached(facet_pool, payload)
+                    class_facets = index["facets"]
+                except Exception as exc:
+                    raise HTTPException(status_code=500, detail=str(exc)) from exc
+            if wanted_class and shared_only:
+                graph_hits = index["by_class"].get(wanted_class, set()) & index["shared_cases"]
+            elif wanted_class:
+                graph_hits = set(index["by_class"].get(wanted_class, set()))
+            else:
+                graph_hits = set(index["shared_cases"])
         matched_cases = graph_hits if matched_cases is None else (matched_cases & graph_hits)
 
     if matched_cases is None:
         matched_cases = set(entries.keys())
 
-    ordered = sorted(cid for cid in matched_cases if cid in entries)
+    def _lookup_rank(cid: str) -> tuple:
+        c = str(cid).casefold()
+        if query:
+            if c.startswith(query):
+                return (0, c)
+            if query in c:
+                return (1, c)
+            return (2, c)
+        return (0, c)
+
+    ordered = sorted(
+        (cid for cid in matched_cases if cid in entries),
+        key=_lookup_rank,
+    )
     return {
         "pool": pool_norm,
         "matched_case_count": len(ordered),

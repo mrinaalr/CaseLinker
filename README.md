@@ -536,12 +536,12 @@ When the ML stack is enabled, NER adds organizations, locations, dates, and ages
 - `GET /patterns` — Ontology & Graphs explorer (CAC force graph + lookup; research below the fold)
 - `GET /patterns/graph` — same page (alias)
 - `GET /patterns/questions/{question_id}` — Q01–Q03 findings pages
-- `GET /api/ontology/cases` — graph pool catalog (`pool=compare|all|universe|analysis`; metadata only)
-- `GET /api/ontology/merged` — pre-merged flat nodes for a pool (public, cached)
-- `GET /api/ontology/lookup` — find cases by CAC class / text / shared nodes over the merged cache
+- `GET /api/ontology/cases` — graph pool catalog (`pool=compare|full|all|universe|analysis`; metadata only)
+- `GET /api/ontology/merged` — pre-merged flat nodes for a pool (public, cached; not `full`)
+- `GET /api/ontology/lookup` — find cases across full staging (`pool=full` default, max 2000); class/platform/agency/case text
 - `GET /api/ontology/pacer` — PACER investigation catalog (`ontology/PACER/`)
 - `POST /api/ontology/cache/warm` — rebuild/warm merged-graph cache (`pool=compare|all|universe|analysis|both`)
-- `GET /ontology/graph_output/{pool}/{case_id}.jsonld|.ttl` — static per-case CAC graphs
+- `GET /ontology/graph_output/{case_id}.jsonld|.ttl` — staging (full corpus); also `{pool}/{case_id}…` for universe/big_bang/analysis
 - `GET /ontology/PACER/...` — static PACER CASE-UCO JSON-LD
 - `GET /ontology/q1/*`, `/ontology/q2/*`, `/ontology/q3/*`, `/ontology/question_data/*` — Q1–Q3 evidence JSON
 - `GET /ontology/q_results.json` — aggregated question results when present

@@ -1,19 +1,20 @@
     /* ============================================================
      * CAC Ontology Knowledge Graph visualizer
      * ------------------------------------------------------------
-     * Boot: GET /api/ontology/cases?pool=compare (curated 200 metadata only).
+     * Boot: GET /api/ontology/cases?pool=compare (curated 200 chips only).
+     * Find/load/compare: pool=full staging graphs (~10k); max canvas merge 2000.
      * Big Bang: ?pool=all — half-sample at graph_output/big_bang/
-     * Universe (secret): double-click Exit Big Bang → ?pool=universe
-     * Analysis (secret): triple-click Exit Universe → ?pool=analysis (big_bang.py 1000)
+     * Universe (secret): double-click Exit Big Bang → ?pool=universe (~1969)
+     * Analysis (secret): triple-click Exit Universe → ?pool=analysis
      *
-     * There is no embedded graph data. Run
-     *     python ontology/features_to_cac.py <case_id>
-     * and refresh the page to see new cases in the selector.
+     * There is no embedded graph data. Staging JSON-LD lives at
+     *     /ontology/graph_output/{case_id}.jsonld
      * ============================================================ */
 
     // ---------- Endpoints (only source of truth) ----------
     const API_CASES_URL = '/api/ontology/cases';
-    const MAX_COMPARE_CASES = 200;
+    /** Railway UI can merge at most ~2000 graphs at once. */
+    const MAX_COMPARE_CASES = 2000;
     /** Cases merged per tick when building client-side (fallback if /api/ontology/merged unavailable). */
     const BIG_BANG_FETCH_BATCH = 80;
     const UNIVERSE_FETCH_BATCH = 80;
@@ -30,7 +31,8 @@
     let UNIVERSE_POOL = [];          // Secret full corpus (pool=universe)
     let ANALYSIS_POOL = [];          // Bridge-dense 1000 (pool=analysis, big_bang.py)
     let DEFAULT_COMPARE_POOL = [];   // Restored after a corpus lookup
-    let CORPUS_GRAPH_TOTAL = 0;      // Total graphs in universe (for labels)
+    let CORPUS_GRAPH_TOTAL = 0;      // Staging / full mapped corpus size (~10k)
+    let UNIVERSE_POOL_TOTAL = 0;     // Secret universe pool size (~1969)
     let GRAPH_MANIFEST = '';         // Invalidates stored merged graph when graphs change
     let CURRENT_CASE_ID = null;
     let MODE = 'single';
@@ -65,6 +67,7 @@
     // ---------- Vocabulary constants ----------
     const BASE_IRI           = 'https://caselinker.up.railway.app/resource/';
     const RDFS_LABEL         = 'http://www.w3.org/2000/01/rdf-schema#label';
+    const UCO_NAME           = 'https://ontology.unifiedcyberontology.org/uco/core/name';
     const CAC_HAS_CONFIDENCE = 'https://cacontology.projectvic.org/core#hasConfidence';
     const NLP_GRAPH_REGEX    = /\/graphs\/nlp$/;
     const RESERVED_KEYS      = new Set(['@id', '@type', '@context', '_isNlp']);
@@ -172,12 +175,39 @@
     }
 
     // ---------- Display label for a node ----------
+    function humanizeSlug(slug) {
+        return String(slug || '')
+            .replace(/[-_]+/g, ' ')
+            .replace(/\b\w/g, c => c.toUpperCase())
+            .trim();
+    }
+
+    function nodePropLiteral(node, ...keys) {
+        for (const key of keys) {
+            if (!key || node[key] == null) continue;
+            const raw = node[key];
+            if (typeof raw === 'string' || typeof raw === 'number') return String(raw);
+            const lit = firstLiteral(Array.isArray(raw) ? raw : [raw]);
+            if (lit != null) return String(lit);
+        }
+        return null;
+    }
+
     function nodeLabel(node) {
-        const lbl = firstLiteral(node[RDFS_LABEL]);
-        if (lbl) return String(lbl);
+        const lbl = nodePropLiteral(node, RDFS_LABEL, 'rdfs:label', 'label');
+        if (lbl) return lbl;
+
+        const ucoName = nodePropLiteral(node, UCO_NAME, 'uco-core:name', 'name');
+        if (ucoName) return ucoName;
 
         const path = shortId(node['@id']);
         const st   = shortType(node['@type']);
+
+        // Location IRIs always encode the place slug even when rdfs:label was omitted
+        // in batch mapping (registry reuse). Prefer that over the vacuous type name.
+        if (path.startsWith('location/')) {
+            return humanizeSlug(path.slice('location/'.length)) || 'Location';
+        }
 
         const conf = firstLiteral(node[CAC_HAS_CONFIDENCE]);
         if (conf != null) return 'Confidence: ' + conf;
@@ -496,13 +526,15 @@
         const titleEl = document.getElementById('case-title');
         ensureGraphSvg();
 
-        // Pre-merged payload is only valid for the full pool (200 or Big Bang).
-        // Hand-picked 2–199 must merge client-side from selected JSON-LD only.
+        // Pre-merged payload is only for secret pool merges or the curated 200 compare set.
+        // Hand-picked selections (including Find/load from full corpus) merge client-side.
         const useServerMerge =
             pool === 'all' ||
             pool === 'universe' ||
             pool === 'analysis' ||
-            (pool === 'compare' && caseEntries.length >= COMPARE_POOL.length);
+            (pool === 'compare' &&
+                DEFAULT_COMPARE_POOL.length > 0 &&
+                caseEntries.length === DEFAULT_COMPARE_POOL.length);
         const merged = useServerMerge ? await fetchServerMerged(pool) : null;
         if (merged && merged.flat_nodes && merged.flat_nodes.length) {
             const n = merged.n_cases || caseEntries.length;
@@ -923,13 +955,15 @@
     function applyCatalogPayload(payload) {
         COMPARE_POOL = Array.isArray(payload.cases) ? payload.cases : [];
         CORPUS_GRAPH_TOTAL = payload.corpus_total || COMPARE_POOL.length;
+        UNIVERSE_POOL_TOTAL = payload.universe_total || UNIVERSE_POOL_TOTAL || 0;
         GRAPH_MANIFEST = payload.graph_manifest || '';
         BIG_BANG_POOL = [];
         UNIVERSE_POOL = [];
         ANALYSIS_POOL = [];
         const bangBtnEl = document.getElementById('big-bang-btn');
         if (bangBtnEl) {
-            bangBtnEl.title = 'Merge Big Bang half-sample (' + (CORPUS_GRAPH_TOTAL ? '~' + Math.round(CORPUS_GRAPH_TOTAL / 2) : '?') + ' graphs)';
+            bangBtnEl.title =
+                'Merge Big Bang sample (graph_output/big_bang; secret Universe/Analysis via Exit clicks)';
         }
     }
 
@@ -1143,8 +1177,9 @@
         if (selected.length > MAX_COMPARE_CASES) {
             titleEl.textContent = 'Too many cases selected (' + selected.length + ')';
             showCompareEmpty(
-                'Select up to ' + MAX_COMPARE_CASES + ' cases from the stratified pool. ' +
-                'Use Big Bang below to merge the full corpus slice.'
+                'Select up to ' + MAX_COMPARE_CASES + ' cases at once (Railway UI limit). ' +
+                'Search Find cases to load any of the ~' + (CORPUS_GRAPH_TOTAL || '10k') +
+                ' staging graphs, or use Big Bang / Universe for curated merges.'
             );
             syncOpenButtons();
             return;
@@ -1702,25 +1737,237 @@
         });
     }
 
+    // ---------- Case ID autocomplete ----------
+    let CASE_SUGGEST_TIMER = null;
+    let CASE_SUGGEST_ITEMS = [];
+    let CASE_SUGGEST_INDEX = -1;
+    let CASE_SUGGEST_SEQ = 0;
+
+    function commonPrefix(strings) {
+        if (!strings.length) return '';
+        let prefix = String(strings[0]);
+        for (let i = 1; i < strings.length; i++) {
+            const s = String(strings[i]);
+            let j = 0;
+            while (j < prefix.length && j < s.length && prefix[j] === s[j]) j++;
+            prefix = prefix.slice(0, j);
+            if (!prefix) break;
+        }
+        return prefix;
+    }
+
+    function hideCaseSuggest() {
+        const list = document.getElementById('lookup-case-suggest');
+        const input = document.getElementById('lookup-case-q');
+        if (list) {
+            list.hidden = true;
+            list.innerHTML = '';
+        }
+        if (input) input.setAttribute('aria-expanded', 'false');
+        CASE_SUGGEST_ITEMS = [];
+        CASE_SUGGEST_INDEX = -1;
+    }
+
+    function renderCaseSuggest(items, query) {
+        const list = document.getElementById('lookup-case-suggest');
+        const input = document.getElementById('lookup-case-q');
+        if (!list || !input) return;
+        CASE_SUGGEST_ITEMS = items.slice(0, 20);
+        CASE_SUGGEST_INDEX = CASE_SUGGEST_ITEMS.length ? 0 : -1;
+        list.innerHTML = '';
+        if (!CASE_SUGGEST_ITEMS.length) {
+            list.hidden = true;
+            input.setAttribute('aria-expanded', 'false');
+            return;
+        }
+        const hint = document.createElement('div');
+        hint.className = 'case-suggest-hint';
+        hint.textContent = 'Tab to complete · ↑↓ to choose · Enter to search';
+        list.appendChild(hint);
+        CASE_SUGGEST_ITEMS.forEach((id, ix) => {
+            const li = document.createElement('li');
+            li.setAttribute('role', 'option');
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'case-suggest-option';
+            btn.id = 'case-suggest-' + ix;
+            btn.setAttribute('aria-selected', ix === CASE_SUGGEST_INDEX ? 'true' : 'false');
+            const q = String(query || '');
+            if (q && id.toLowerCase().startsWith(q.toLowerCase())) {
+                btn.innerHTML = '<strong>' + escapeHtml(id.slice(0, q.length)) + '</strong>' +
+                    escapeHtml(id.slice(q.length));
+            } else {
+                btn.textContent = id;
+            }
+            btn.addEventListener('mousedown', (ev) => {
+                ev.preventDefault();
+                applyCaseSuggest(id);
+            });
+            li.appendChild(btn);
+            list.appendChild(li);
+        });
+        list.hidden = false;
+        input.setAttribute('aria-expanded', 'true');
+    }
+
+    function setCaseSuggestActive(ix) {
+        if (!CASE_SUGGEST_ITEMS.length) return;
+        CASE_SUGGEST_INDEX = (ix + CASE_SUGGEST_ITEMS.length) % CASE_SUGGEST_ITEMS.length;
+        CASE_SUGGEST_ITEMS.forEach((_, i) => {
+            const btn = document.getElementById('case-suggest-' + i);
+            if (btn) btn.setAttribute('aria-selected', i === CASE_SUGGEST_INDEX ? 'true' : 'false');
+        });
+        const active = document.getElementById('case-suggest-' + CASE_SUGGEST_INDEX);
+        if (active && typeof active.scrollIntoView === 'function') {
+            active.scrollIntoView({ block: 'nearest' });
+        }
+    }
+
+    function applyCaseSuggest(id) {
+        const input = document.getElementById('lookup-case-q');
+        if (!input || !id) return;
+        input.value = id;
+        hideCaseSuggest();
+        // Keep path metadata for Open/Load without an extra Search click.
+        if (!COMPARE_POOL.some(c => c.case_id === id)) {
+            COMPARE_POOL.push(caseEntryFromId(id));
+        }
+        LOOKUP_CASE_IDS = [id];
+        renderLookupResults(LOOKUP_CASE_IDS);
+        setLookupStatus('Selected ' + id + ' · Open or Search for more');
+    }
+
+    function tabCompleteCaseSuggest(input) {
+        if (!CASE_SUGGEST_ITEMS.length) return false;
+        const typed = (input.value || '');
+        const typedLower = typed.toLowerCase();
+        // Extend to shared stem first (doj → doj_safe_childhood_, idaho → idaho_icac_).
+        const prefix = commonPrefix(CASE_SUGGEST_ITEMS);
+        if (prefix && prefix.toLowerCase().startsWith(typedLower) && prefix.length > typed.length) {
+            input.value = prefix;
+            scheduleCaseSuggest(prefix);
+            return true;
+        }
+        // Otherwise accept the highlighted row (or the only match).
+        const pick = (CASE_SUGGEST_INDEX >= 0 && CASE_SUGGEST_ITEMS[CASE_SUGGEST_INDEX])
+            || (CASE_SUGGEST_ITEMS.length === 1 ? CASE_SUGGEST_ITEMS[0] : null);
+        if (pick) {
+            applyCaseSuggest(pick);
+            return true;
+        }
+        return false;
+    }
+
+    async function fetchCaseIdSuggestions(query) {
+        const q = String(query || '').trim();
+        if (q.length < 2) {
+            hideCaseSuggest();
+            return;
+        }
+        const seq = ++CASE_SUGGEST_SEQ;
+        try {
+            const params = new URLSearchParams({
+                pool: 'full',
+                q: q,
+                limit: '20'
+            });
+            const resp = await fetch('/api/ontology/lookup?' + params.toString(), { cache: 'no-store' });
+            if (!resp.ok) throw new Error('HTTP ' + resp.status);
+            const payload = await resp.json();
+            if (seq !== CASE_SUGGEST_SEQ) return;
+            const ids = (payload.cases || []).map(c => c.case_id).filter(Boolean);
+            // Prefer IDs that start with the typed prefix (doj…, azicac…, idaho…).
+            // If any prefix hits exist, show only those — Tab then completes the stem.
+            const needle = q.toLowerCase();
+            const prefixHits = ids.filter(id => id.toLowerCase().startsWith(needle));
+            const ranked = (prefixHits.length ? prefixHits : ids).slice().sort((a, b) =>
+                a.localeCompare(b)
+            );
+            (payload.cases || []).forEach(c => {
+                if (!c || !c.case_id) return;
+                if (!COMPARE_POOL.some(x => x.case_id === c.case_id)) COMPARE_POOL.push(c);
+            });
+            renderCaseSuggest(ranked, q);
+        } catch (_) {
+            if (seq === CASE_SUGGEST_SEQ) hideCaseSuggest();
+        }
+    }
+
+    function scheduleCaseSuggest(query) {
+        if (CASE_SUGGEST_TIMER) clearTimeout(CASE_SUGGEST_TIMER);
+        CASE_SUGGEST_TIMER = setTimeout(() => fetchCaseIdSuggestions(query), 180);
+    }
+
+    function wireCaseIdSuggest() {
+        const input = document.getElementById('lookup-case-q');
+        if (!input || input.dataset.suggestWired === '1') return;
+        input.dataset.suggestWired = '1';
+
+        input.addEventListener('input', () => {
+            scheduleCaseSuggest(input.value);
+        });
+        input.addEventListener('focus', () => {
+            if ((input.value || '').trim().length >= 2) scheduleCaseSuggest(input.value);
+        });
+        input.addEventListener('blur', () => {
+            setTimeout(() => hideCaseSuggest(), 120);
+        });
+        input.addEventListener('keydown', (ev) => {
+            const list = document.getElementById('lookup-case-suggest');
+            const open = list && !list.hidden && CASE_SUGGEST_ITEMS.length;
+            if (ev.key === 'ArrowDown' && open) {
+                ev.preventDefault();
+                setCaseSuggestActive(CASE_SUGGEST_INDEX + 1);
+                return;
+            }
+            if (ev.key === 'ArrowUp' && open) {
+                ev.preventDefault();
+                setCaseSuggestActive(CASE_SUGGEST_INDEX - 1);
+                return;
+            }
+            if (ev.key === 'Tab' && open) {
+                if (tabCompleteCaseSuggest(input)) {
+                    ev.preventDefault();
+                }
+                return;
+            }
+            if (ev.key === 'Escape') {
+                hideCaseSuggest();
+                return;
+            }
+            if (ev.key === 'Enter' && open && CASE_SUGGEST_INDEX >= 0) {
+                // Fill selection first; second Enter (or Search) runs lookup.
+                const pick = CASE_SUGGEST_ITEMS[CASE_SUGGEST_INDEX];
+                if (pick && input.value !== pick) {
+                    ev.preventDefault();
+                    ev.stopImmediatePropagation();
+                    applyCaseSuggest(pick);
+                }
+            }
+        });
+    }
+
     async function runOntologyLookup() {
         const classIri = (document.getElementById('lookup-class') || {}).value || '';
         const className = classIri ? localName(classIri) : '';
         const platform = ((document.getElementById('lookup-platform') || {}).value || '').trim();
         const agency = ((document.getElementById('lookup-agency') || {}).value || '').trim();
-        if (!className && !platform && !agency) {
-            setLookupStatus('Pick a CAC class and/or enter platform or agency text.');
+        const caseQ = ((document.getElementById('lookup-case-q') || {}).value || '').trim();
+        if (!className && !platform && !agency && !caseQ) {
+            setLookupStatus('Enter a case ID / text, platform, agency, and/or CAC class.');
             return;
         }
-        setLookupStatus('Searching mapped corpus…');
+        setLookupStatus('Searching full mapped corpus…');
         const runBtn = document.getElementById('lookup-run');
         if (runBtn) runBtn.disabled = true;
         try {
-            // Prefer the existing lookup API (pool-scoped). Platform/agency filter
-            // case features server-side — do not join into one substring ``q``.
-            const params = new URLSearchParams({ pool: 'universe', limit: '80' });
+            // pool=full → every staging graph_output/*.jsonld (~10k). Cap listed results;
+            // Load on graph still respects MAX_COMPARE_CASES (2000).
+            const params = new URLSearchParams({ pool: 'full', limit: String(MAX_COMPARE_CASES) });
             if (className) params.set('class_name', className);
             if (platform) params.set('platform', platform);
             if (agency) params.set('agency', agency);
+            if (caseQ) params.set('q', caseQ);
             let ids = [];
             let usedSparql = false;
             try {
@@ -1732,7 +1979,7 @@
                     }
                     ids = (payload.cases || []).map(c => c.case_id).filter(Boolean);
                     LOOKUP_CASE_IDS = ids;
-                    // Keep catalog entries so Load can fetch paths from the API response.
+                    // Keep catalog entries so Load can fetch staging paths from the API response.
                     (payload.cases || []).forEach(c => {
                         if (!COMPARE_POOL.some(x => x.case_id === c.case_id)) {
                             COMPARE_POOL.push(c);
@@ -1740,8 +1987,11 @@
                     });
                     setLookupStatus(
                         (payload.matched_case_count || ids.length) +
-                        ' matches' +
-                        (ids.length ? ' · ' + ids.length + ' listed' : '')
+                        ' matches in full corpus' +
+                        (ids.length ? ' · ' + ids.length + ' listed' : '') +
+                        (payload.matched_case_count > ids.length
+                            ? ' (showing first ' + ids.length + ')'
+                            : '')
                     );
                 } else {
                     throw new Error('HTTP ' + resp.status);
@@ -1757,14 +2007,18 @@
                 }));
                 const bindings = (payload.results && payload.results.bindings) || [];
                 ids = bindings.map(b => b.caseId && b.caseId.value).filter(Boolean);
-                LOOKUP_CASE_IDS = ids;
-                setLookupStatus(ids.length
-                    ? ids.length + ' SPARQL matches'
+                if (caseQ) {
+                    const needle = caseQ.toLowerCase();
+                    ids = ids.filter(id => String(id).toLowerCase().includes(needle));
+                }
+                LOOKUP_CASE_IDS = ids.slice(0, MAX_COMPARE_CASES);
+                setLookupStatus(LOOKUP_CASE_IDS.length
+                    ? LOOKUP_CASE_IDS.length + ' SPARQL matches'
                     : 'No SPARQL matches.');
             }
             renderLookupResults(LOOKUP_CASE_IDS);
             if (!LOOKUP_CASE_IDS.length && !usedSparql) {
-                setLookupStatus('No matches in universe pool.');
+                setLookupStatus('No matches in full mapped corpus.');
             }
         } catch (err) {
             console.error(err);
@@ -1880,7 +2134,7 @@
         const ul = document.getElementById('lookup-results');
         if (!ul) return;
         ul.innerHTML = '';
-        ids.slice(0, 40).forEach(id => {
+        ids.slice(0, 80).forEach(id => {
             const li = document.createElement('li');
             const span = document.createElement('span');
             span.textContent = id;
@@ -1898,9 +2152,11 @@
         const known = COMPARE_POOL.concat(BIG_BANG_POOL, UNIVERSE_POOL, ANALYSIS_POOL)
             .find(c => c.case_id === caseId);
         if (known) return known;
+        // Staging root = full mapped corpus (not universe/ subset).
         return {
             case_id: caseId,
-            path: '/ontology/graph_output/universe/' + encodeURIComponent(caseId) + '.jsonld'
+            path: '/ontology/graph_output/' + encodeURIComponent(caseId) + '.jsonld',
+            ttl_path: '/ontology/graph_output/' + encodeURIComponent(caseId) + '.ttl'
         };
     }
 
@@ -2186,6 +2442,7 @@
         if (clear) clear.addEventListener('click', () => clearCanvasFilter());
         if (pacerLoad) pacerLoad.addEventListener('click', () => loadSelectedPacer());
         if (pacerSearch) pacerSearch.addEventListener('click', () => runPacerLookup());
+        wireCaseIdSuggest();
 
         document.getElementById('corpus-source-row')?.addEventListener('click', async (ev) => {
             const chip = ev.target.closest('.facet-chip');
@@ -2214,7 +2471,7 @@
             }
         });
 
-        ['lookup-platform', 'lookup-agency', 'filter-type'].forEach(id => {
+        ['lookup-case-q', 'lookup-platform', 'lookup-agency', 'filter-type'].forEach(id => {
             const el = document.getElementById(id);
             if (!el) return;
             el.addEventListener('keydown', (ev) => {

@@ -2,11 +2,14 @@
 """
 Build + cache merged JSON-LD flat node lists for Patterns compare / Big Bang / Universe.
 
-Layout (Patterns visualizer reads subdirs only — not graph_output/ root):
-  graph_output/            — new batch output (staging; not loaded by viz)
-  graph_output/universe/   — full corpus (compare chips + secret Universe mode)
-  graph_output/big_bang/   — half-sample (Big Bang button)
+Layout:
+  graph_output/            — full mapped corpus staging (~10k; Find/load pool=full)
+  graph_output/universe/   — secret Universe mode + compare chips source (~1969)
+  graph_output/big_bang/   — Big Bang button half-sample
   graph_output/analysis/   — custom MCP/research cohorts (Analysis mode; see analysis_ids.txt)
+
+Patterns visualizer: Find/load/compare use staging (max 2000 merge). Secret double-click
+modes still merge universe / big_bang / analysis via /api/ontology/merged.
 
 Caches to:
   ontology/cache/merged_compare.json
