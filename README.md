@@ -162,8 +162,8 @@ You can process additional PDFs to add more cases to the database.
    - Provides REST API endpoints for case data, analysis, and statistics
 
 3. **`caselinker_mcp/server.py`** - **MCP server for agents and operators**
-   - Exposes **47 tools**: corpus search, triage, Q1 platform evidence, on-demand `case2cac` graphs, free CourtListener/RECAP lookup, and the press-release **collector** suite (DOJ API + URL path)
-   - Corpus and analysis tools are read-only. Collector tools write local JSON/PDFs only. They do not ingest into sqlite or mutate the database.
+   - **Local stdio:** **47 tools** (corpus + free RECAP/DOJ search + full collector READ/WRITE). Collector WRITE writes JSON/PDFs under `collector_output/` on your machine; nothing auto-ingests into sqlite.
+   - **Railway hosted MCP:** **42 tools** — same corpus/READ surface; collector **WRITE tools are not registered** (no ephemeral-disk side effects). Use local MCP or the `collector/` CLI to harvest PDFs.
    - Reach out for private mcp.json keys and review `caselinker_mcp/README.md` and `caselinker_mcp/tool_registry.md` for setup, auth, and the full catalog
 
 **Typical use case:**
@@ -181,77 +181,39 @@ Visit the **Sources** page for agency links and what is already in the corpus:
 - **Live Demo Sources Page**: [https://caselinker.up.railway.app/sources](https://caselinker.up.railway.app/sources)
 - Or visit `/sources` when running locally: http://localhost:8000/sources
 
-Those links are discovery only — they do not download PDFs. To go from an agency listing to a CaseLinker-ready PDF, use the collector section below.
-
 Processed sources include:
-- **Arizona ICAC (AZICAC)**: Annual case reports and arrests (AZICAC)
-- **National Center for Missing & Exploited Children (NCMEC)**: Case 
-summaries and CyberTipline-related publications
-- **Georgia Bureau of Investigation (GBI)**: CEACC / Georgia ICAC press releases
-- **Idaho Office of Attorney General (Idaho ICAC)**: ICAC newsroom press releases
-- **Texas Office of the Attorney General (Texas AG)**: Cyber Crimes / ICAC-related press releases
-- **Michigan State Police (Michigan ICAC)**: MSP newsroom ICAC releases
-- **Silicon Valley ICAC (SVICAC)**: Regional "In The News" articles
-- **Tennessee Bureau of Investigation (TBI ICAC)**: TBI newsroom ICAC search results
-- **South Carolina Attorney General (SCAG ICAC)**: ICAC-tagged news releases
-- **New York State Police (NEWYORK SP)**: NYSP newsroom ICAC keyword search
-- **Illinois Attorney General (ILLINOIS AG)**: ICAC press release search
-- **Pennsylvania Office of the Attorney General (PA AG)**: Child Predator / ICAC-related releases
-- **New Jersey Office of the Attorney General (NJ AG)**: ICAC site search
-- **Washoe County Sheriff's Office (WCSO)**: Nevada ICAC newsroom search
-- **Fresno County Sheriff's Office (FRESNO SO)**: ICAC site search
-- **Osceola County Sheriff's Office (OSCEOLA SO)**: ICAC site search
-- **Las Vegas Metropolitan Police Department (LVMPD)**: ICAC site search
-- **San Jose Police Department (SJPD)**: ICAC / child exploitation press search
-- **Los Angeles Police Department (LAPD)**: ICAC news search
-- **Seattle Police Department (SPD)**: SPD Blotter ICAC search
-- **San Diego Police Department (SDPD)**: City of San Diego ICAC site search
-- **Colorado Springs Police Department (CSPD)**: ICAC site search
-- **Hawaii Department of the Attorney General (HI AG)**: HICAC media and press
-- **Cook County State's Attorney (CCSAO)**: ICAC unit news releases
-- **South Florida ICAC (SOUTH FLORIDA ICAC)**: Regional task force news index
-- **Florida Office of the Attorney General (FL AG)**: ICAC site search
-- **Vermont Office of the Attorney General (VT AG)**: Child-related / ICAC releases
-- **Rhode Island Office of the Attorney General (RI AG)**: ICAC site search
-- **Ohio Attorney General (OHIO AG)**: ICAC / child-related news search
-- **Delaware Department of Justice (DE AG)**: Child Predator Task Force / ICAC releases
-- **Sedgwick County Sheriff's Office (SEDGWICK SO)**: Child exploitation press search
-- **Anchorage Police Department (ANCHORAGE PD)**: Alaska ICAC-related releases
-- **Mississippi Attorney General (MS AG)**: ICAC media releases
-- **Montana Department of Justice (MT DOJ)**: Child-related press releases
-- **New Mexico Attorney General's Office (NM AG)**: ICAC site search
-- **North Carolina State Bureau of Investigation (NC SBI)**: ICAC news search
-- **Louisiana Office of the Attorney General (LA AG)**: ICAC news releases
-- **Utah Attorney General (UT AG)**: ICAC site search
-- **Washington State Office of the Attorney General (WA AG)**: Child-related news search
-- **Oregon Department of Justice (OREGON DOJ)**: ICAC site search
-- **Wyoming Division of Criminal Investigation (WY DCI)**: ICAC / Computer Crime news
-- **Iowa Division of Criminal Investigation (IA DCI)**: ICAC site search
-- **Arkansas Department of Public Safety (ARKANSAS DPS)**: ICAC / ASP news search
-- **Alabama Law Enforcement Agency (ALEA)**: SBI / ICAC news search
-- **South Dakota Office of the Attorney General (SD AG)**: ICAC press releases
-- **Kentucky State Police (KY SP)**: News archive ICAC search
-- **Nebraska State Patrol (NE SP)**: Child exploitation press search
-- **U.S. Army Criminal Investigation Division (ARMY CID)**: ICAC releases
-- **U.S. Air Force Office of Special Investigations (AF OSI)**: Child sexual abuse material and exploitation press releases 
-- **U.S. Customs and Border Protection (CBP)**: Newsroom releases on child sexual exploitation and related border enforcement (site search)
-- **U.S. Immigration and Customs Enforcement (ICE)**: HSI child-exploitation press releases
-- **Naval Criminal Investigative Service (NCIS)**: Child exploitation and related investigation press releases 
-- **U.S. DOJ CEOS (DOJ CEOS)**: Child Exploitation and Obscenity Section press releases
-- **U.S. DOJ CEOS Archives (DOJ ARCHIVES)**: Archived CEOS criminal press releases (2002-2008)
-- **U.S. Secret Service (USSS)**: ICAC-related newsroom press releases (ICAC task forces, CSAM, and child exploitation search results)
-- **U.S. Marshals Service (US MARSHALS)**: Press releases on child predators, sexual-assault fugitives, and recovered minors 
+
+- **ICAC task forces / regional units** — Arizona ICAC, Silicon Valley ICAC, South Florida ICAC, plus ICAC-tagged feeds from state and local newsrooms
+- **State Attorneys General / state DOJs** — e.g. Texas, Illinois, Pennsylvania, New Jersey, Florida, Ohio, Washington, Oregon, Utah, New Mexico, Mississippi, Louisiana, South Carolina, Hawaii, Vermont, Rhode Island, Delaware, Montana, South Dakota, Idaho
+- **State police / investigative bureaus** — e.g. Michigan SP, New York SP, TBI, GBI, NC SBI, Kentucky SP, Nebraska SP, Wyoming DCI, Iowa DCI, ALEA, Arkansas DPS
+- **Local police / sheriffs / prosecutors** — e.g. LAPD, SJPD, SDPD, SPD, LVMPD, CSPD, Anchorage PD; Fresno / Osceola / Washoe / Sedgwick sheriffs; Cook County State's Attorney
+- **NCMEC** — public case summaries and CyberTipline-related publications
+- **Federal** — DOJ CEOS (incl. 2002–2008 archives); ICE/HSI; CBP; NCIS; Army CID; AF OSI; USSS; U.S. Marshals Service
 
 ### Agency → PDF (in-house collector)
 
-Once you selected an agency (from the list above or `/sources`), use the CaseLinker collector suite to turn its press-release listing into a merged PDF ready for ingestion:
+Use the **collector suite** to turn press releases and public agency / task-force case records into structured PDFs. 
+
+**CLI (under `collector/`)**
+
+1. **URL path** - `fetch_source_urls.py` harvests article URLs from a listing/search page → `resolve_press_urls.py` resolves them (`justice.gov` via the DOJ API; other hosts pass through) → `build_press_pdf.py` builds the merged PDF
+2. **DOJ News API** - `harvest_doj_press.py` discovers by title term → resolved JSON → `build_press_pdf.py` builds the PDF (no live justice.gov HTML; Akamai)
 
 ```mermaid
 flowchart LR
-  A["Agency listing / search"] --> B["fetch_source_urls.py<br/>→ urls.txt"]
-  B --> C["scrape_pdf.py<br/>→ merged PDF"]
-  C --> D["src/main.py<br/>→ database"]
+  L["Listing / search page"] --> F["fetch_source_urls.py"]
+  F --> R["resolve_press_urls.py"]
+  API["DOJ News API<br/>title term"] --> H["harvest_doj_press.py"]
+  H --> R
+  R --> P["build_press_pdf.py<br/>→ merged PDF"]
+  P --> D["src/main.py<br/>→ database"]
 ```
+
+For federal cases, corresponding court documents can be searched and collected after a press hit via **`ontology/PACER/cases2records.py`**. Try free CourtListener / RECAP first, paid PACER if unavailable.
+
+Outputs under `collector_output/` stay local (gitignored) and do not auto-ingest.
+
+> Agents can orchestrate the same steps (`harvest_doj_press_topic`, `resolve_press_urls`, `build_press_pdf`, `search_courtlistener`, …) over MCP.
 
 Full workflow, flags, and collection framework: **[collector/README.md](collector/README.md)** / **[PRESS_RELEASE_COLLECTION.md](collector/PRESS_RELEASE_COLLECTION.md)**.
 
@@ -305,7 +267,7 @@ Access the **Platform Harm Dashboard** via the [live demo](https://caselinker.up
 
 Access Search via the [live demo](https://caselinker.up.railway.app/search) or locally at http://localhost:8000/search
 
-Search provides a **facet decision tree** over the stored case corpus: the server builds a deterministic partition tree from structured facets (not a precomputed file on disk). The view uses **D3.js** (SVG) to render cohort nodes and edges. You can limit tree depth, **prune** which partition dimensions apply and optionally filter allowed values per facet (extracted feature), then **click any node** (branch or leaf) to list **case IDs** in that cohort for use elsewhere (e.g. single-case visualization, manual cross-case analysis). Small cohorts (fewer than three cases) have IDs gated behind a demo access key. See `src/Storage Layer/facet_tree.py` and `/api/facet-tree` for the partition order and semantics.
+Search provides a **facet decision tree** over the stored case corpus: the server builds a deterministic partition tree from structured facets (not a precomputed file on disk). The view uses **D3.js** (SVG) to render cohort nodes and edges. You can limit tree depth, **prune** which partition dimensions apply and optionally filter allowed values per facet (extracted feature), then **click any node** (branch or leaf) to list **case IDs** in that cohort for use elsewhere (e.g. single-case visualization, manual cross-case analysis). Small cohorts (fewer than three cases) have IDs gated behind a demo access key. See `src/Storage Layer/facet_tree.py` and `/api/facet-tree` for the partition order and semantics. How Search relates to SPARQL, Query, LLM, Patterns, and MCP: **[search.md](search.md)**.
 
 
 ## Using Advanced Case Analysis and Triage
@@ -334,7 +296,7 @@ Navigate to [live demo](https://caselinker.up.railway.app/analysis) or run serve
    - **Top Keywords**: View most frequent keywords extracted from case text
    - **Expandable Details**: Click any box to view raw case data with highlighted priority indicators and detailed explanations of why the analysis prioritized/grouped the case
 
-Access Triage via the [live demo](https://caselinker.up.railway.app/triage) or locally at http://localhost:8000/triage. Current implementation uses **rule-based** priority tiers, **ML Classification for triage** (random forest or decision tree trained on features from the database with labels derived from deterministic rules), optionally constrained by the same facet-dimension filtering used in Search, and supports **paste-in live triage** that scores text in memory without writing to the database. For the full triage documentation (rules, bundle paths, APIs, live paste), see **`triage.md`** in the repo root.
+Access Triage via the [live demo](https://caselinker.up.railway.app/triage) or locally at http://localhost:8000/triage. Current implementation uses **rule-based** priority tiers, **ML Classification for triage** (random forest or decision tree trained on features from the database with labels derived from deterministic rules), optionally constrained by the same facet-dimension filtering used in Search, and supports **paste-in live triage** that scores text in memory without writing to the database. For the full triage documentation (rules, bundle paths, APIs, live paste), see **[triage.md](triage.md)**.
 
 ## Ontology & Graphs ([local](http://localhost:8000/patterns) · [live](https://caselinker.up.railway.app/patterns))
 
@@ -386,7 +348,7 @@ LIMIT 8
 SPARQL
 ```
 
-Full ontology documentation (vocabulary, pipeline, graph pools, Q1–Q3, PACER, code map): **[ontology/README.md](ontology/README.md)**. 
+Full ontology documentation (vocabulary, pipeline, graph pools, Q1–Q3, PACER, code map): **[ontology/README.md](ontology/README.md)**. PACER lifecycle state machines and L*: **[state_machines/README.md](state_machines/README.md)**.
 
 **References**
 - [CAC Ontology repository](https://github.com/Project-VIC-International/CAC-Ontology)
@@ -402,7 +364,7 @@ Full ontology documentation (vocabulary, pipeline, graph pools, Q1–Q3, PACER, 
 - **Clusters Tab**: View pre-computed clusters and analyze case reports
 - **Stats Tab**: Coverage over the dataset and case distributions
 - **Tech Landscape**: Technology revolver (platforms, investigation tech, anonymization, P2P) by era
-- **Lifecycle**: PACER exploitation lifecycles. Five offense types as CAC ontology state machines
+- **Lifecycle**: PACER exploitation lifecycles. Five offense types as CAC ontology state machines — see [`state_machines/README.md`](state_machines/README.md)
 - **Query**: Custom analysis lab (public APIs)
 - **LLM**: Natural-language queries over case statistics (SQL-backed; rate limited on production)
 - **Case Studies Tab**: Era-organized narrative case studies (`data/case_studies.json`)
@@ -426,7 +388,7 @@ CaseLinker/
 │   ├── sparql_proxy.py               # SPARQL parser policy (LIMIT / Update / SERVICE)
 │   ├── redis_cache.py                # Optional Redis caching (production)
 │   └── auth.py                       # Access gates / keys for sensitive views
-├── collector/                        # press-release collector suite (fetch_source_urls, scrape_pdf, DOJ harvest)
+├── collector/                        # press → PDF suite; DOJ API + URL path (MCP-wrappable)
 ├── scripts/
 │   ├── rebuild_oxigraph.py           # Wholesale Oxigraph reload (N-Quads PUT /store)
 │   ├── stats/                        # Corpus statistics scripts
@@ -463,10 +425,18 @@ CaseLinker/
 │   ├── q1/ q2/ q3/                   # Research evidence
 │   ├── PACER/                        # PACER → lifecycle facts
 │   └── graph_output/                 # staging + universe/ + big_bang/ + analysis/
-├── caselinker_mcp/                   # MCP server (47 tools; SSE + Streamable HTTP on Railway)
+├── state_machines/                   # PACER CAC state machines + L* (AfH Appendix X)
+│   ├── README.md                     # Lifecycle machines, backbone, recompute
+│   ├── graphs/                       # 30 case JSON-LD phase machines
+│   ├── data/lstar_all_cases.json     # Transition matrix + L* trajectories
+│   ├── compute_lstar.py              # Rebuild L* export
+│   └── lifecycle_api.py              # /lifecycle + trusted API payload
+├── caselinker_mcp/                   # MCP server (47 local / 42 Railway; corpus + collector + RECAP)
 │   ├── server.py                     # MCPServer (mcp 2.x) entry point
+│   ├── collector_tools.py            # Collector wrappers (WRITE local-only)
+│   ├── public_records.py             # DOJ API + CourtListener/RECAP READ
 │   ├── README.md                     # Hosted auth, Cursor config, graph workflow
-│   └── tool_registry.md              # Full tool catalog
+│   └── tool_registry.md              # Full tool catalog (READ vs WRITE)
 ├── models/                           # triage_bundle.joblib (optional; see /triage)
 ├── data/                             # case_studies.json for /case-studies
 ├── setup.sh
@@ -475,6 +445,7 @@ CaseLinker/
 ├── config.py
 ├── caselinker.db                     # SQLite (local; created on first ingest)
 ├── triage.md                         # Triage rules and model docs
+├── search.md                         # Search / facets vs SPARQL / MCP discovery map
 ├── Procfile                          # Railway / Heroku start command
 └── Architecture design.md
 ```
@@ -527,7 +498,7 @@ When the ML stack is enabled, NER adds organizations, locations, dates, and ages
 - `GET /lifecycle` - Exploitation lifecycle visualization (public HTML; payload embedded server-side)
 - `GET /api/lifecycle/cases` - Lifecycle JSON (trusted `CaseLinker-Key` or localhost; same gate as `GET /api/cases`)
 - `GET /api/lifecycle/lstar` - Full L* output (`state_machines/data/lstar_all_cases.json`; trusted key or localhost)
-- `GET /api/lifecycle/canonical` - Public JSON for the 5 canonical PACER state-machine cases (no key; rate limited; intended for external embeds)
+- `GET /api/lifecycle/anchors` - Public JSON for the 5 anchor PACER state-machine cases (no key; rate limited; intended for external embeds)
 - `GET /analysis` - Advanced case analysis page with tag-based filtering and automated analysis
 - `GET /api/facet-tree` - Build facet tree JSON (`max_depth`, optional prune query params)
 - `GET /api/facet-distinct` - Distinct primary-bucket values per facet (for Search prune UI)

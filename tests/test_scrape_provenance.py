@@ -12,7 +12,7 @@ from provenance import (
     DEFAULT_DOCUMENT_TYPE,
     JINA_DOCUMENT_TYPE,
     JINA_PARSER_NAME,
-    SCRAPE_PARSER_NAME,
+    BUILD_PRESS_PDF_PARSER_NAME,
     load_provenance_sidecar,
     provenance_sidecar_path,
     sha256_bytes,
@@ -20,9 +20,9 @@ from provenance import (
 )
 
 
-def _load_scrape_pdf():
-    path = Path(__file__).resolve().parents[1] / "collector" / "scrape_pdf.py"
-    spec = importlib.util.spec_from_file_location("scrape_pdf", path)
+def _load_build_press_pdf():
+    path = Path(__file__).resolve().parents[1] / "collector" / "build_press_pdf.py"
+    spec = importlib.util.spec_from_file_location("build_press_pdf", path)
     module = importlib.util.module_from_spec(spec)
     assert spec.loader is not None
     sys.modules[spec.name] = module
@@ -31,7 +31,7 @@ def _load_scrape_pdf():
 
 
 def test_scrape_sidecar_leaves_merged_pdf_bytes_unchanged(tmp_path: Path):
-    scrape = _load_scrape_pdf()
+    scrape = _load_build_press_pdf()
     merged = tmp_path / "scraped_cases.pdf"
     merged.write_bytes(b"%PDF-1.4\n%merged-fixture\n")
     before = merged.read_bytes()
@@ -54,7 +54,7 @@ def test_scrape_sidecar_leaves_merged_pdf_bytes_unchanged(tmp_path: Path):
         None,
     )
     assert row is not None
-    assert row["parser_name"] == SCRAPE_PARSER_NAME
+    assert row["parser_name"] == BUILD_PRESS_PDF_PARSER_NAME
     assert row["document_type"] == DEFAULT_DOCUMENT_TYPE
     assert row["content_sha256"] == sha256_bytes(fetched.content)
 
@@ -67,7 +67,7 @@ def test_scrape_sidecar_leaves_merged_pdf_bytes_unchanged(tmp_path: Path):
 
 
 def test_jina_fetch_is_labeled_and_not_the_agency_document():
-    scrape = _load_scrape_pdf()
+    scrape = _load_build_press_pdf()
     jina_payload = b"Title: Example\nMarkdown Content:\nproxy of the page\n"
     fetched = scrape.HttpFetch(
         content=jina_payload,

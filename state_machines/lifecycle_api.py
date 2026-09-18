@@ -8,7 +8,7 @@ import sys
 from typing import Any
 
 from state_machines.iris import (
-    CANONICAL_CASE_IDS,
+    ANCHOR_CASE_IDS,
     CASE_META,
     EXPANSION_CASE_IDS,
     LSTAR_JSON,
@@ -70,19 +70,19 @@ def _transitions_for_case(
     return transitions
 
 
-def _canonical_fundamental(data: dict[str, Any]) -> list[str]:
+def _anchor_fundamental(data: dict[str, Any]) -> list[str]:
     sequences = {
         case_id: data["cases"][case_id]["phase_sequence"]
-        for case_id in CANONICAL_CASE_IDS
+        for case_id in ANCHOR_CASE_IDS
         if case_id in data.get("cases", {})
     }
     return cross_case_comparison(sequences)["fundamental"]
 
 
-def _canonical_type_cases(data: dict[str, Any]) -> dict[str, list[str]]:
+def _anchor_type_cases(data: dict[str, Any]) -> dict[str, list[str]]:
     sequences = {
         case_id: data["cases"][case_id]["phase_sequence"]
-        for case_id in CANONICAL_CASE_IDS
+        for case_id in ANCHOR_CASE_IDS
         if case_id in data.get("cases", {})
     }
     return cross_case_comparison(sequences)["type_cases"]
@@ -92,20 +92,20 @@ def _expansion_ids_in_file_order(all_cases: dict[str, Any]) -> list[str]:
     """Expansion swimlane order follows EXPANSION_CASE_IDS in iris.py."""
     ordered = [cid for cid in EXPANSION_CASE_IDS if cid in all_cases]
     for case_id in sorted(all_cases):
-        if case_id not in CANONICAL_CASE_IDS and case_id not in ordered:
+        if case_id not in ANCHOR_CASE_IDS and case_id not in ordered:
             ordered.append(case_id)
     return ordered
 
 
 def _lifecycle_case_ids(data: dict[str, Any]) -> list[str]:
     all_cases = data.get("cases", {})
-    canonical = [cid for cid in CANONICAL_CASE_IDS if cid in all_cases]
+    anchors = [cid for cid in ANCHOR_CASE_IDS if cid in all_cases]
     expansion = _expansion_ids_in_file_order(all_cases)
-    return canonical + expansion
+    return anchors + expansion
 
 
 def _all_cases_type_cases(data: dict[str, Any]) -> dict[str, list[str]]:
-    """Phase-type → case ids (one per case) across canonical + expansion rows."""
+    """Phase-type → case ids (one per case) across anchor + expansion rows."""
     case_ids = _lifecycle_case_ids(data)
     sequences = {
         case_id: data["cases"][case_id]["phase_sequence"]
@@ -116,7 +116,7 @@ def _all_cases_type_cases(data: dict[str, Any]) -> dict[str, list[str]]:
 
 def _offense_type_for_case(case_id: str, data: dict[str, Any]) -> str:
     """Map a lifecycle case id to its exploitation modality / offense type label."""
-    if case_id in CANONICAL_CASE_IDS:
+    if case_id in ANCHOR_CASE_IDS:
         return case_id
     meta = CASE_META.get(case_id, {})
     block = data.get("cases", {}).get(case_id, {})
@@ -124,7 +124,7 @@ def _offense_type_for_case(case_id: str, data: dict[str, Any]) -> str:
 
 
 def _unique_offense_types(case_ids: list[str], data: dict[str, Any]) -> list[str]:
-    """Deduplicated offense types for cases that contain a phase, canonical order first."""
+    """Deduplicated offense types for cases that contain a phase, anchor order first."""
     lifecycle_order = {
         cid: idx for idx, cid in enumerate(_lifecycle_case_ids(data))
     }
@@ -132,9 +132,9 @@ def _unique_offense_types(case_ids: list[str], data: dict[str, Any]) -> list[str
     for case_id in sorted(case_ids, key=lambda cid: lifecycle_order.get(cid, 999)):
         offense_type = _offense_type_for_case(case_id, data)
         seen.add(offense_type)
-    canonical_part = [ot for ot in CANONICAL_CASE_IDS if ot in seen]
-    other_part = sorted(ot for ot in seen if ot not in CANONICAL_CASE_IDS)
-    return canonical_part + other_part
+    anchor_part = [ot for ot in ANCHOR_CASE_IDS if ot in seen]
+    other_part = sorted(ot for ot in seen if ot not in ANCHOR_CASE_IDS)
+    return anchor_part + other_part
 
 
 def _build_case_record(
@@ -146,7 +146,7 @@ def _build_case_record(
     type_cases: dict[str, list[str]],
     fundamental: list[str],
     affordance_rows: list[dict[str, Any]],
-    n_canonical: int,
+    n_anchor: int,
 ) -> dict[str, Any]:
     # Prefer explicit CASE_META modality/citation; fall back to lstar block for older rows.
     explicit_modality = meta.get("modality")
@@ -210,35 +210,35 @@ def _build_case_record(
         "phases": phases,
         "transitions": _transitions_for_case(phase_details, affordance_rows),
         "path_weight": block.get("path_weight"),
-        "n_canonical": n_canonical,
+        "n_anchor": n_anchor,
     }
 
 
 def build_lifecycle_payload(raw: dict[str, Any] | None = None) -> dict[str, Any]:
     data = raw if raw is not None else _ensure_lstar_json()
-    fundamental = _canonical_fundamental(data)
-    type_cases = _canonical_type_cases(data)
+    fundamental = _anchor_fundamental(data)
+    type_cases = _anchor_type_cases(data)
     all_type_cases = _all_cases_type_cases(data)
     lifecycle_case_ids = _lifecycle_case_ids(data)
     n_lifecycle = len(lifecycle_case_ids)
-    n_canonical = len(CANONICAL_CASE_IDS)
+    n_anchor = len(ANCHOR_CASE_IDS)
     affordance_rows = data.get("affordance_annotations", [])
     all_cases = data.get("cases", {})
 
-    canonical_cases: list[dict[str, Any]] = []
-    for case_id in CANONICAL_CASE_IDS:
+    anchor_cases: list[dict[str, Any]] = []
+    for case_id in ANCHOR_CASE_IDS:
         block = all_cases.get(case_id, {})
         meta = CASE_META.get(case_id, {})
-        canonical_cases.append(
+        anchor_cases.append(
             _build_case_record(
                 case_id,
                 block,
                 meta,
-                tier="canonical",
+                tier="anchor",
                 type_cases=type_cases,
                 fundamental=fundamental,
                 affordance_rows=affordance_rows,
-                n_canonical=n_canonical,
+                n_anchor=n_anchor,
             )
         )
 
@@ -255,7 +255,7 @@ def build_lifecycle_payload(raw: dict[str, Any] | None = None) -> dict[str, Any]
                 type_cases=type_cases,
                 fundamental=fundamental,
                 affordance_rows=affordance_rows,
-                n_canonical=n_canonical,
+                n_anchor=n_anchor,
             )
         )
 
@@ -279,16 +279,16 @@ def build_lifecycle_payload(raw: dict[str, Any] | None = None) -> dict[str, Any]
         }
 
     shared_transitions = len(data.get("raw_transitions", []))
-    canonical_types = set()
-    for case in canonical_cases:
+    anchor_types = set()
+    for case in anchor_cases:
         for phase in case["phases"]:
-            canonical_types.add(phase.get("type"))
+            anchor_types.add(phase.get("type"))
 
     return {
-        "n_cases": data.get("n_cases", n_canonical),
-        "n_canonical": n_canonical,
+        "n_cases": data.get("n_cases", n_anchor),
+        "n_anchor": n_anchor,
         "n_expansion": len(expansion_cases),
-        "canonical_stage_count": len(canonical_types),
+        "anchor_stage_count": len(anchor_types),
         "shared_transition_count": shared_transitions,
         "fundamental": fundamental,
         "fundamental_display": [display_type(t) for t in fundamental],
@@ -296,7 +296,7 @@ def build_lifecycle_payload(raw: dict[str, Any] | None = None) -> dict[str, Any]
         "cross_case_all": cross_case_all,
         "n_lifecycle": n_lifecycle,
         "affordance_annotations": affordance_rows,
-        "canonical_cases": canonical_cases,
+        "anchor_cases": anchor_cases,
         "expansion_cases": expansion_cases,
-        "cases": canonical_cases,
+        "cases": anchor_cases,
     }

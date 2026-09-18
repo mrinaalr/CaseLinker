@@ -135,7 +135,7 @@ def build_claims() -> list[Claim]:
         "pacer",
         "file",
         bold=True,
-        why="Ground-truth court anchor count; must match BULK_FOLDER + canonical 5.",
+        why="Ground-truth court anchor count; must match BULK_FOLDER + anchor 5.",
         expected="8",
     )
     add(
@@ -391,11 +391,11 @@ def build_claims() -> list[Claim]:
         "Four additional federal prosecution records captured via facet-tree traversal (targeting 50 total).",
         "pacer",
         "file",
-        why="Expansion beyond canonical 5 lifecycle cases.",
+        why="Expansion beyond the 5 anchor lifecycle cases.",
         expected=">=4",
     )
     add(
-        "s3.q2_canonical_five",
+        "s3.q2_anchor_five",
         "§3.3",
         "Q2 anchored on five PACER federal cases (Rehman, Amin, Pathmanathan, Bermudez, Riley).",
         "lifecycle",
@@ -524,7 +524,7 @@ def build_claims() -> list[Claim]:
     add(
         "s7.law2_backbone",
         "§7.3 Law 2",
-        "Backbone stages achieve 5/5 coverage across five canonical PACER offense types.",
+        "Backbone stages achieve 5/5 coverage across five anchor PACER offense types.",
         "lifecycle",
         "lifecycle",
         bold=True,

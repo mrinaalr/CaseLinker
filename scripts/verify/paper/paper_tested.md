@@ -56,7 +56,7 @@ Database: `/Users/mrinaalramachandran/Projects/CaseLinker/caselinker.db`
 - substring not found in extracted text
 
 ### `s7.law2_backbone`
-- Backbone stages achieve 5/5 coverage across five canonical PACER offense types.
+- Backbone stages achieve 5/5 coverage across five anchor PACER offense types.
 - fundamental stages=4/5
 
 ### `s7.theorem_h_closed`
@@ -101,7 +101,7 @@ Database: `/Users/mrinaalramachandran/Projects/CaseLinker/caselinker.db`
 | 🌐 external | `s3.case_uco_classes` | §3.2 |  |  | CASE-UCO SDK / Project VIC | Requires manual or web verification against cited primary source. |
 | 🌐 external | `s3.opensource_mit` | §3.1 |  |  | external source | Requires manual or web verification against cited primary source. |
 | ⚠️ warn | `s3.pacer_expansion_four` | §3.3 | 3 | >=4 | BULK_FOLDER | bulk folders=3 |
-| ✅ pass | `s3.q2_canonical_five` | §3.3 | 8 | 5 canonical | state_machines/graphs | jsonld graphs=8 |
+| ✅ pass | `s3.q2_anchor_five` | §3.3 | 8 | 5 anchors | state_machines/graphs | jsonld graphs=8 |
 | ✅ pass | `manifest.kik` | §4 Table 1 | 208 stated · 352 total | 208/352 | q1_evidence.json | 208 stated · 352 total |
 | ✅ pass | `manifest.snapchat` | §4 Table 1 | 169 stated · 257 total | 169/257 | q1_evidence.json | 169 stated · 257 total |
 | ✅ pass | `manifest.discord` | §4 Table 1 | 43 stated · 99 total | 43/99 | q1_evidence.json | 43 stated · 99 total |

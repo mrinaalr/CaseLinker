@@ -70,7 +70,7 @@ def test_capture_derives_sha256_and_storage_key():
         http_status=200,
         http_etag='"abc"',
         http_last_modified=None,
-        parser_name="scrape_pdf",
+        parser_name="build_press_pdf",
         parser_version="v1",
         normalized_text="press release",
     )
@@ -94,7 +94,7 @@ def test_capture_rejects_non_utc_and_non_200():
             http_status=200,
             http_etag=None,
             http_last_modified=None,
-            parser_name="scrape_pdf",
+            parser_name="build_press_pdf",
             parser_version="v1",
             normalized_text=None,
         )
@@ -110,7 +110,7 @@ def test_capture_rejects_non_utc_and_non_200():
             http_status=404,
             http_etag=None,
             http_last_modified=None,
-            parser_name="scrape_pdf",
+            parser_name="build_press_pdf",
             parser_version="v1",
             normalized_text=None,
         )

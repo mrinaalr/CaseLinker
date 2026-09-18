@@ -1,15 +1,19 @@
 # CaseLinker MCP Server
 
-The CaseLinker MCP (Model Context Protocol) server exposes **47 structured tools** for operators and agents: corpus search and analysis, knowledge graphs, triage, free court records (CourtListener/RECAP), and the **press-release collector suite**.
+The CaseLinker MCP (Model Context Protocol) server exposes structured tools to agents and AI Applications (Cursor, Claude Desktop, and other MCP clients). Tools include corpus search and analysis, knowledge graphs, triage, free court records search (CourtListener/RECAP), and the **press-release collector suite**.
 
 - **29** tools wrap the CaseLinker REST API
 - **8** are MCP-only corpus / graph helpers
 - **4** search free public court and DOJ press records
-- **6** wrap `collector/` (DOJ API + URL-path collection)
+- **1** collector READ (`probe_press_url`) always
+- **5** collector WRITE — **local MCP only** (not registered on Railway)
 
-Corpus and analysis tools are read-only. Collector tools write local JSON/PDFs only. They do not ingest into sqlite or mutate the database.
+**Local stdio / local FastAPI mount:** **47 tools** (full READ + WRITE).
+**Railway hosted MCP:** **42 tools** (WRITE omitted — no writes to ephemeral Railway disk).
 
-See [`tool_registry.md`](tool_registry.md) for the full catalog, including **READ vs WRITE**.
+Corpus and analysis tools are read-only against the database. Collector WRITE tools write local JSON/PDFs only; they do not ingest into sqlite.
+
+See [`tool_registry.md`](tool_registry.md) for the full catalog, including **READ vs WRITE** and the host split.
 
 ## Prerequisites
 
@@ -50,14 +54,16 @@ CASELINKER_API_URL=http://localhost:8000 python -m caselinker_mcp.server
 |----------|---------|---------|
 | `CASELINKER_API_URL` | `https://caselinker.up.railway.app` | Base URL for the CaseLinker REST API |
 | `CASELINKER_KEY` | (unset) | Sent as `CaseLinker-Key` header when set (trusted bulk access) |
+| `MCP_COLLECTOR_WRITE` | auto | `1` force-enable / `0` force-disable collector WRITE tools. Default: on locally, off when `RAILWAY_*` is set |
 
 Set `CASELINKER_KEY` to a value listed in `CASELINKER_TRUSTED_KEYS` on Railway only if you need bulk export, unsanitized single-case narratives, lifecycle exports, or LLM daily-cap exemption (see **Trusted-key sensitive** below).
 
 ## Tool tiers
 
-**42 public** + **5 trusted-key sensitive** = **47 tools**.
+**42 public** + **5 trusted-key sensitive** = **47 tools** on local MCP.
+On Railway hosted MCP the five collector WRITE tools are omitted → **37 public** + **5 trusted** = **42 tools**.
 
-### Public tier (42 tools)
+### Public tier
 
 Trusted key does **not** change behavior. Includes corpus search, analysis, ontology, stats, on-demand graphs, free public-record search, and collector helpers:
 
@@ -69,8 +75,8 @@ Trusted key does **not** change behavior. Includes corpus search, analysis, onto
 - Reference: `get_case_studies`, `get_case_study_notes`, `list_sources`
 - Q1 research: `q1_platform_evidence` (platform harm evidence cohorts)
 - On-demand graphs (MCP-only): `case2cac`, `graph_get_neighbors`, `graph_find_cases_by_concept`, `graph_summarize`, `graph_compare_cohorts`, `export_case_graph_ttl`
-- Free public records (**READ**): `search_doj_press_releases`, `search_courtlistener`, `list_free_recap_documents`, `resolve_free_recap_download`
-- Press collector suite: `probe_press_url` (**READ**); **WRITE**: `harvest_doj_press_topic`, `fetch_press_listing_urls`, `resolve_press_urls`, `build_press_pdf`, `collect_case_dual_path`
+- Free public records (**READ**, all hosts): `search_doj_press_releases`, `search_courtlistener`, `list_free_recap_documents`, `resolve_free_recap_download`, `probe_press_url`
+- Press collector **WRITE** (**local MCP only**): `harvest_doj_press_topic`, `fetch_press_listing_urls`, `resolve_press_urls`, `build_press_pdf`, `collect_case_dual_path`
 
 ### Trusted-key sensitive (5 tools)
 
@@ -86,7 +92,7 @@ Trusted key does **not** change behavior. Includes corpus search, analysis, onto
 
 **Database:** no MCP tool mutates CaseLinker sqlite or triggers PDF ingestion into the corpus.
 
-**Disk WRITE (intentional):** collector tools may write under `collector_output/` or `collector/sources/`. Responses include `"write": true` / `"tool_kind": "WRITE"`. See `tool_registry.md` → *READ vs WRITE*. `collector_output/` is gitignored.
+**Disk WRITE (local MCP only):** collector WRITE tools write under `collector_output/` or `collector/sources/` on the machine running MCP. They are **not registered** on Railway hosted MCP (ephemeral FS; callers would never see the files). Override with `MCP_COLLECTOR_WRITE=1|0`. Responses include `"write": true` / `"tool_kind": "WRITE"`. See `tool_registry.md` → *READ vs WRITE*. `collector_output/` is gitignored.
 
 ## Cursor configuration
 
@@ -112,7 +118,7 @@ Fill in `CASELINKER_KEY` locally only if you need bulk export, full case narrati
 
 ## Hosted (Railway)
 
-CaseLinker exposes **two HTTP transports** on Railway (pick one in your MCP client config):
+CaseLinker exposes **two HTTP transports** on Railway (pick one in your MCP client config). Hosted MCP is **42 tools**: corpus + READ collector/public-records. Collector **WRITE** tools are not registered here — run local stdio MCP or the `collector/` CLI to write PDFs on your machine.
 
 | Transport | Client URL | How messages flow |
 |-----------|------------|-------------------|
@@ -209,11 +215,11 @@ For a standalone SSE process (not via Railway mount), set `MCP_TRANSPORT=sse` an
 
 ## Tools
 
-**47 tools total.** See [`tool_registry.md`](tool_registry.md) for the authoritative list. Summary by tier:
+**47 tools locally / 42 on Railway.** See [`tool_registry.md`](tool_registry.md) for the authoritative list. Summary by tier:
 
-| Tier | Count | Examples |
-|------|------:|----------|
-| Public (trusted key irrelevant) | 42 | `get_cases_page`, `collect_case_dual_path`, `search_courtlistener` |
-| Trusted-key sensitive | 5 | `get_all_cases`, `get_lifecycle_cases`, `get_lifecycle_lstar`, `get_case`, `llm_chat` |
+| Tier | Local | Railway | Examples |
+|------|------:|--------:|----------|
+| Public (trusted key irrelevant) | 42 | 37 | `get_cases_page`, `search_courtlistener`; WRITE only local |
+| Trusted-key sensitive | 5 | 5 | `get_all_cases`, `get_lifecycle_cases`, `get_lifecycle_lstar`, `get_case`, `llm_chat` |
 
 Authoritative implementation: `@mcp.tool()` definitions in `server.py`. Tool docstrings there remain the source of parameter and behavior detail.

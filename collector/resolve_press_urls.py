@@ -1,24 +1,16 @@
 #!/usr/bin/env python3
 """
-Bridge between a source url-list and scrape_pdf.py that resolves justice.gov URLs
-via the DOJ press-release API instead of scraping the (Akamai-gated) live page.
+Resolve press-release URLs into records for build_press_pdf.py.
 
-For each URL in the input file:
-  - justice.gov -> query https://www.justice.gov/api/v1/press_releases.json,
-    match the API record whose `url` slug equals the input URL's slug, strip the
-    HTML `body` field into clean paragraphs, and emit a fully "resolved" record.
-  - anything else -> pass the URL through unchanged for scrape_pdf.py's existing
-    fetch/extract pipeline (no behavior change for state AG / other sources).
+justice.gov URLs are looked up in the DOJ News API (Akamai blocks live HTML).
+Other hosts pass through as mode=scrape for build_press_pdf.py's fetch/extract path.
 
-Output is a JSON list scrape_pdf.py consumes via --doj-file, so the final
-merged PDF looks the same regardless of source:
-  {"source_url": ..., "mode": "resolved", "title": ..., "byline": ...,
-   "pub_date": "YYYY-MM-DD", "body": "...", "agency": ..., "uuid": ...}
+Output JSON (via --doj-file / --resolved-file on build_press_pdf.py):
+  {"source_url": ..., "mode": "resolved", "title": ..., "body": ..., ...}
   {"source_url": ..., "mode": "scrape"}
 
-deps: pip install requests beautifulsoup4
 usage:
-    python3 scrape_doj.py --url-file sources/urls.txt --out sources/urls_resolved.json
+    python3 resolve_press_urls.py --url-file sources/urls.txt --out sources/urls_resolved.json
 """
 
 from __future__ import annotations

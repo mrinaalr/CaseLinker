@@ -9,7 +9,7 @@ from the filename stem (same contract as press-release TTLs).
 Added triples (only):
   <graph> dcterms:identifier "pacer_{slug}"
   paired bulk: <graph> prov:wasDerivedFrom <resource/case/{slug}>
-  canonical exemplars: <graph> dcterms:type "offense-family-exemplar"
+  anchor exemplars: <graph> dcterms:type "offense-family-exemplar"
 
 Instance triples from the JSON-LD are preserved.
 """
@@ -68,7 +68,7 @@ TTL_PREFIXES = {
     "gufo": Namespace("http://purl.org/nemo/gufo#"),
 }
 
-CANONICAL_SLUGS = (
+ANCHOR_SLUGS = (
     "sextortion",
     "enticement",
     "enterprise",
@@ -76,7 +76,7 @@ CANONICAL_SLUGS = (
     "production",
 )
 
-CANONICAL_JSONLD: Dict[str, Path] = {
+ANCHOR_JSONLD: Dict[str, Path] = {
     "sextortion": PACER_DIR / "SEXTORTION" / "sextortion.jsonld",
     "enticement": PACER_DIR / "ENTICEMENT" / "enticement.jsonld",
     "enterprise": PACER_DIR / "ENTERPRISE" / "enterprise.jsonld",
@@ -117,8 +117,8 @@ def pacer_sources() -> List[Tuple[str, Path, str]]:
     for slug, path in bulk_jsonld_paths():
         kind = "unpaired" if slug in UNPAIRED_BULK_SLUGS else "paired"
         rows.append((slug, path, kind))
-    for slug in CANONICAL_SLUGS:
-        path = CANONICAL_JSONLD[slug]
+    for slug in ANCHOR_SLUGS:
+        path = ANCHOR_JSONLD[slug]
         if path.is_file():
             rows.append((slug, path, "exemplar"))
     return rows
@@ -147,7 +147,7 @@ def convert_jsonld_file(
     if slug is None:
         slug = jsonld_path.stem
     if kind is None:
-        if slug in CANONICAL_SLUGS:
+        if slug in ANCHOR_SLUGS:
             kind = "exemplar"
         elif slug in UNPAIRED_BULK_SLUGS:
             kind = "unpaired"

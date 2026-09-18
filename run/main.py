@@ -3710,11 +3710,11 @@ def get_lifecycle_lstar(request: Request):
         raise HTTPException(status_code=500, detail=f"Lifecycle L* output unavailable: {e}") from e
 
 
-@app.get("/api/lifecycle/canonical")
+@app.get("/api/lifecycle/anchors")
 @limiter.limit("60/minute")
-def get_lifecycle_canonical(request: Request):
+def get_lifecycle_anchors(request: Request):
     """
-    Public: the 5 canonical PACER state-machine cases (enticement, production,
+    Public: the 5 anchor PACER state-machine cases (enticement, production,
     sextortion, enterprise, trafficking) with phases, transitions, and
     affordance annotations. Same data the public /lifecycle page embeds
     server-side, minus the expansion-case records. No CaseLinker-Key required;
@@ -3728,7 +3728,7 @@ def get_lifecycle_canonical(request: Request):
         raise HTTPException(status_code=500, detail=f"Lifecycle data unavailable: {e}") from e
 
     payload.pop("expansion_cases", None)
-    payload["cases"] = payload.get("canonical_cases", [])
+    payload["cases"] = payload.get("anchor_cases", [])
     return payload
 
 

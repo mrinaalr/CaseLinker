@@ -21,7 +21,7 @@ Legend: **bold** = headline / table stat picked for high scrutiny.
 - **cover.agencies** (Cover): Corpus reflects 3,500+ law enforcement agencies.
   - _Why:_ Agency normalization headline.
 - **cover.pacer_records** (Cover): PACER layer includes 8 federal prosecution records (3 indictments, 2 Statements of Offense).
-  - _Why:_ Ground-truth court anchor count; must match BULK_FOLDER + canonical 5.
+  - _Why:_ Ground-truth court anchor count; must match BULK_FOLDER + anchor 5.
 - **cover.timespan** (Cover): Corpus timespan is 2002–2026.
   - _Why:_ Temporal scope for era analysis.
 - **cover.platforms_analyzed** (Cover): 30+ platforms analyzed in affordance framework.
@@ -70,7 +70,7 @@ Legend: **bold** = headline / table stat picked for high scrutiny.
   - _Why:_ Section affordance-class denominators; require harm_analysis crosswalk.
 - **s7.law1_contact_primacy** (§7.3 Law 1): Law 1 (Contact Primacy): N=7,426 — no case documents exploitation without initial contact.
   - _Why:_ Formal invariant induced from corpus + PACER lifecycles.
-- **s7.law2_backbone** (§7.3 Law 2): Backbone stages achieve 5/5 coverage across five canonical PACER offense types.
+- **s7.law2_backbone** (§7.3 Law 2): Backbone stages achieve 5/5 coverage across five anchor PACER offense types.
   - _Why:_ L* fundamental stages from state_machines compute_lstar.
 
 ## Abstract
@@ -146,7 +146,7 @@ Legend: **bold** = headline / table stat picked for high scrutiny.
 | ID | Bold | Kind | Verify | Claim |
 |---|---|---|---|---|
 | `s3.pacer_expansion_four` |  | pacer | file | Four additional federal prosecution records captured via facet-tree traversal (targeting 50 total). |
-| `s3.q2_canonical_five` |  | lifecycle | lifecycle | Q2 anchored on five PACER federal cases (Rehman, Amin, Pathmanathan, Bermudez, Riley). |
+| `s3.q2_anchor_five` |  | lifecycle | lifecycle | Q2 anchored on five PACER federal cases (Rehman, Amin, Pathmanathan, Bermudez, Riley). |
 
 ## §4
 
@@ -234,7 +234,7 @@ Legend: **bold** = headline / table stat picked for high scrutiny.
 
 | ID | Bold | Kind | Verify | Claim |
 |---|---|---|---|---|
-| `s7.law2_backbone` | **yes** | lifecycle | lifecycle | Backbone stages achieve 5/5 coverage across five canonical PACER offense types. |
+| `s7.law2_backbone` | **yes** | lifecycle | lifecycle | Backbone stages achieve 5/5 coverage across five anchor PACER offense types. |
 
 ## §9 / PACER
 

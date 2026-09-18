@@ -1,6 +1,6 @@
 # CaseLinker MCP tool registry
 
-**Total: 47 tools.** Count `@mcp.tool()` decorators in `server.py`.
+**Local: 47 tools. Railway hosted: 42 tools** (five collector WRITE tools omitted). Count `@mcp.tool()` decorators in `server.py` (WRITE tools register only when `collector_disk_write_enabled()` is true).
 
 Authoritative implementation: `caselinker_mcp/server.py`. This file is the human-readable catalog for docs and agent hosts.
 
@@ -11,8 +11,10 @@ Authoritative implementation: `caselinker_mcp/server.py`. This file is the human
 | REST API wrappers | **29** | Proxy to `GET`/`POST /api/*` |
 | MCP-only (corpus graphs) | **8** | `tree_traversal`, `list_sources`, `case2cac`, four graph tools, `export_case_graph_ttl` |
 | MCP-only (free public records) | **4** | DOJ press search + CourtListener/RECAP (`public_records.py`) |
-| MCP-only (press collector suite) | **6** | Wrap `collector` via `collector_tools.py`. See **READ vs WRITE** below |
-| **Total** | **47** | |
+| MCP-only (press collector READ) | **1** | `probe_press_url` — all hosts |
+| MCP-only (press collector WRITE) | **5** | **Local MCP only** — not registered on Railway |
+| **Total (local)** | **47** | |
+| **Total (Railway)** | **42** | WRITE tools absent |
 
 There are **32** REST `/api/*` routes in `run/main.py`. **29** have MCP tools; four are intentionally excluded from MCP (admin/write/index): `POST /api/cache/clear`, `POST /api/case-studies/notes/{id}`, `POST /api/ontology/cache/warm`, `GET /api`.
 
@@ -22,13 +24,13 @@ No MCP resources (`@mcp.resource`) or prompts (`@mcp.prompt`) are registered.
 
 ## Tier model
 
-| Category | Count | Meaning |
-|----------|------:|---------|
-| Public (trusted key irrelevant) | **42** | Same behavior with or without trusted key |
-| Trusted-key sensitive | **5** | Blocked or reduced without trusted key |
-| **Total** | **47** | |
+| Category | Local | Railway | Meaning |
+|----------|------:|--------:|---------|
+| Public (trusted key irrelevant) | **42** | **37** | Same behavior with or without trusted key |
+| Trusted-key sensitive | **5** | **5** | Blocked or reduced without trusted key |
+| **Total** | **47** | **42** | |
 
-Corpus REST tools do **not** mutate the CaseLinker database. Collector WRITE tools create files on disk (JSON, url-lists, PDFs) under `collector_output/` or `collector/sources/`. They do **not** auto-ingest into sqlite.
+Corpus REST tools do **not** mutate the CaseLinker database. Collector WRITE tools create files on disk (JSON, url-lists, PDFs) under `collector_output/` or `collector/sources/` **on the MCP host**. They do **not** auto-ingest into sqlite. On Railway they are not registered (ephemeral FS).
 
 ---
 
@@ -36,7 +38,15 @@ Corpus REST tools do **not** mutate the CaseLinker database. Collector WRITE too
 
 Agents collecting cases should use this map. On disk the suite lives at repo-root `collector/`.
 
-### READ (no files written)
+### Host split
+
+| Host | Collector surface |
+|------|-------------------|
+| **Local stdio** / local FastAPI `/mcp` | Full suite: READ + WRITE (PDFs on your machine) |
+| **Railway** `/mcp/sse` or `/mcp-http/` | READ only (`probe_press_url`, DOJ/CourtListener search). Harvest/build via local MCP or `collector/` CLI |
+| Override | `MCP_COLLECTOR_WRITE=1` force on · `=0` force off |
+
+### READ (no files written; all hosts)
 
 | Tool | What it does |
 |------|----------------|
@@ -46,17 +56,17 @@ Agents collecting cases should use this map. On disk the suite lives at repo-roo
 | `list_free_recap_documents` | Free filings for a `docket_id` |
 | `resolve_free_recap_download` | Free storage URL when `is_available` |
 
-### WRITE (creates files on disk; responses set `write: true` / `tool_kind: WRITE`)
+### WRITE (creates files on disk; **local MCP only**; responses set `write: true` / `tool_kind: WRITE`)
 
 | Tool | Collection method | Writes |
 |------|-------------------|--------|
 | `harvest_doj_press_topic` | **A: DOJ API** | `*_resolved.json`, url list |
 | `fetch_press_listing_urls` | **B: URL path** (listing → urls) | `*.txt` url-file |
-| `resolve_press_urls` | **B: URL path** (router) | `*_resolved.json` (`scrape_doj`) |
+| `resolve_press_urls` | **B: URL path** (router) | `*_resolved.json` (`resolve_press_urls`) |
 | `build_press_pdf` | A or B final step | merged `.pdf` under `out_dir` |
 | `collect_case_dual_path` | A and B for one topic | both PDFs + resolve JSON + CourtListener search |
 
-**Agent workflow**
+**Agent workflow (local MCP)**
 
 1. Discover: `search_doj_press_releases` or `harvest_doj_press_topic`, or `fetch_press_listing_urls`
 2. Optional QA: `probe_press_url`
@@ -68,7 +78,7 @@ Agents collecting cases should use this map. On disk the suite lives at repo-roo
 
 ---
 
-## Public tier (42 tools)
+## Public tier
 
 Trusted key does **not** change behavior (still subject to normal slowapi / public rate limits).
 
@@ -110,12 +120,12 @@ Trusted key does **not** change behavior (still subject to normal slowapi / publ
 | `search_courtlistener` | CourtListener | **READ** free RECAP search |
 | `list_free_recap_documents` | CourtListener | **READ** free filings |
 | `resolve_free_recap_download` | CourtListener | **READ** free download URL |
-| `probe_press_url` | `collector_tools` / `collector` | **READ** extract/resolve probe |
-| `harvest_doj_press_topic` | `harvest_doj_psc.py` | **WRITE** DOJ API harvest JSON |
-| `fetch_press_listing_urls` | `fetch_source_urls.py` | **WRITE** listing → url-file |
-| `resolve_press_urls` | `scrape_doj.py` | **WRITE** URL-path resolve JSON |
-| `build_press_pdf` | `scrape_pdf.py` | **WRITE** merged PDF |
-| `collect_case_dual_path` | collector suite | **WRITE** A+B dual collect |
+| `probe_press_url` | `collector_tools` / `collector` | **READ** extract/resolve probe (all hosts) |
+| `harvest_doj_press_topic` | `harvest_doj_press.py` | **WRITE** local only — DOJ API harvest JSON |
+| `fetch_press_listing_urls` | `fetch_source_urls.py` | **WRITE** local only — listing → url-file |
+| `resolve_press_urls` | `resolve_press_urls.py` | **WRITE** local only — URL-path resolve JSON |
+| `build_press_pdf` | `build_press_pdf.py` | **WRITE** local only — merged PDF |
+| `collect_case_dual_path` | collector suite | **WRITE** local only — A+B dual collect |
 
 ### On-demand graph workflow
 

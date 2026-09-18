@@ -10,10 +10,10 @@ text. Emits ``Publication date: YYYY-MM-DD`` before ``Source:`` for merged-PDF b
 
 deps:  pip install requests beautifulsoup4 reportlab pypdf pdfplumber
 usage:
-    python3 scrape_pdf.py --url-file source_urls.txt --out-dir ./out --out-name batch.pdf
-    python3 scrape_pdf.py --url-file source_urls.txt --limit 5
-    python3 scrape_pdf.py --url-file urls.txt --jina-fallback   # hosts that return 403 to bots
-    python3 scrape_pdf.py --doj-file sources/urls_resolved.json  # after scrape_doj.py
+    python3 build_press_pdf.py --url-file source_urls.txt --out-dir ./out --out-name batch.pdf
+    python3 build_press_pdf.py --url-file source_urls.txt --limit 5
+    python3 build_press_pdf.py --url-file urls.txt --jina-fallback   # hosts that return 403 to bots
+    python3 build_press_pdf.py --doj-file sources/urls_resolved.json  # after resolve_press_urls.py
 """
 
 from __future__ import annotations
@@ -37,7 +37,7 @@ try:
         DEFAULT_DOCUMENT_TYPE,
         JINA_DOCUMENT_TYPE,
         JINA_PARSER_NAME,
-        SCRAPE_PARSER_NAME,
+        BUILD_PRESS_PDF_PARSER_NAME,
         FetchedCapture,
         date_to_utc_midnight,
         load_provenance_sidecar,
@@ -2544,7 +2544,7 @@ def _capture_row_from_fetch(
             http_last_modified=http_fetch.last_modified,
             published_at=date_to_utc_midnight(pub_date),
             normalized_text=body,
-            parser_name=JINA_PARSER_NAME if via_jina else SCRAPE_PARSER_NAME,
+            parser_name=JINA_PARSER_NAME if via_jina else BUILD_PRESS_PDF_PARSER_NAME,
             document_type=JINA_DOCUMENT_TYPE if via_jina else DEFAULT_DOCUMENT_TYPE,
         )
         return capture.to_sidecar_row()
@@ -2571,7 +2571,7 @@ def resolve_url_content(
     resolved into a usable article.
 
     Shared by the plain --url-file pipeline and --doj-file "scrape"-mode entries
-    (non-DOJ URLs passed through unchanged by scrape_doj.py).
+    (non-DOJ URLs passed through unchanged by resolve_press_urls.py).
     """
     parsed = urlparse(url)
     ref = args.referer or f"{parsed.scheme}://{parsed.netloc}/"
@@ -2706,18 +2706,21 @@ def _parse_iso_date(raw: str | None) -> date | None:
 
 def main():
     ap = argparse.ArgumentParser(
-        description="Scrape HTML URLs from a list into one merged PDF.",
+        description="Build a merged press-release PDF from a URL list or resolved JSON.",
     )
     ap.add_argument("--url-file", type=Path, default=DEFAULT_URL_FILE)
     ap.add_argument(
         "--doj-file",
+        "--resolved-file",
+        dest="doj_file",
         type=Path,
         default=None,
         help=(
-            "JSON produced by scrape_doj.py (list of {source_url, mode, ...}). "
-            "mode=resolved skips fetch/extract entirely (e.g. DOJ API records); "
-            "mode=scrape reuses the normal fetch/extract pipeline. "
-            "Alternative to --url-file; takes precedence when set."
+            "JSON from resolve_press_urls.py / harvest_doj_press.py "
+            "(list of {source_url, mode, ...}). "
+            "mode=resolved skips fetch/extract; mode=scrape uses the normal pipeline. "
+            "--resolved-file is the preferred alias; --doj-file remains accepted. "
+            "Takes precedence over --url-file when set."
         ),
     )
     ap.add_argument("--out-dir", type=Path, default=DEFAULT_OUT_DIR)

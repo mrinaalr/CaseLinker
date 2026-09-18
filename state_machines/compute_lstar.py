@@ -189,16 +189,16 @@ def main() -> None:
         for goal in BELLMAN_GOALS
     }
 
-    canonical_sequences = {
+    anchor_sequences = {
         cid: seq for cid, seq in sequences.items() if cid in BELLMAN_GOALS
     }
-    canonical_matrix = matrix_from_sequences(canonical_sequences)
+    anchor_matrix = matrix_from_sequences(anchor_sequences)
     intervention_at_backbone: list[dict] = []
     for phase in BACKBONE_FOR_INTERVENTION:
         row: dict = {"phase": display_type(phase), "by_goal": {}}
         for goal in BELLMAN_GOALS:
             delta = intervention_delta(
-                canonical_matrix,
+                anchor_matrix,
                 INITIAL_CONTACT_PHASE,
                 goal_reward_profile(goal),
                 phase,

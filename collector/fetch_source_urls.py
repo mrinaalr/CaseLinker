@@ -4,7 +4,7 @@ Collect http(s) links from one or more HTML pages.
 
 Give a page URL (or a paginated URL template), resolve all anchor hrefs to
 absolute URLs, optionally filter by host/path/substrings, and write a
-deduplicated list for scrape_pdf.py.
+deduplicated list for build_press_pdf.py.
 
 Examples
 --------
@@ -34,6 +34,15 @@ The listing HTML only exposes a first slice; pagination uses GET
         -o collector/anchorage_pd_child_search_urls.txt
 
 deps: pip install requests beautifulsoup4
+
+WordPress REST (sites whose HTML listing is empty / Next.js)::
+
+    python3 collector/fetch_source_urls.py \\
+        --wordpress-rest 'https://wp.kentuckystatepolice.ky.gov/wp-json/wp/v2/posts' \\
+        --wp-search 'child sexual' \\
+        --wp-public-host www.kentuckystatepolice.ky.gov \\
+        --wp-path-prefix /news/ \\
+        -o collector/state/ky_sp_urls.txt
 """
 
 from __future__ import annotations
@@ -1005,6 +1014,97 @@ def collect_google_cse_search_pages(
     return out
 
 
+def wp_rest_public_url(
+    link: str,
+    slug: str,
+    *,
+    public_host: str,
+    path_prefix: str,
+) -> str:
+    """Map a WP REST ``link`` + ``slug`` to the public article URL."""
+    prefix = path_prefix if path_prefix.startswith("/") else f"/{path_prefix}"
+    if not prefix.endswith("/"):
+        prefix = prefix + "/"
+    p = urlparse(link or "")
+    path = p.path or f"{prefix}{slug}/"
+    if not path.startswith(prefix.rstrip("/")):
+        path = f"{prefix}{slug.strip('/')}/"
+    host = public_host.lower().lstrip(".")
+    return f"https://{host}{path.rstrip('/')}/"
+
+
+def collect_wordpress_rest_urls(
+    api_url: str,
+    *,
+    search: str,
+    public_host: str,
+    path_prefix: str = "/news/",
+    per_page: int = 100,
+    timeout: int = DEFAULT_TIMEOUT,
+    verify: bool = True,
+    delay: float = 0.3,
+    path_filter: str | None = None,
+    exclude_substrings: list[str] | None = None,
+    require_any_substrings: list[str] | None = None,
+) -> list[str]:
+    """Page a WP REST ``/wp/v2/posts`` (or similar) endpoint into public article URLs."""
+    exclude_substrings = exclude_substrings or []
+    require_any_substrings = require_any_substrings or []
+    out: list[str] = []
+    seen: set[str] = set()
+    page = 1
+    while True:
+        try:
+            r = requests.get(
+                api_url,
+                params={"search": search, "per_page": per_page, "page": page},
+                headers={**HEADERS, "Accept": "application/json"},
+                timeout=timeout,
+                verify=verify,
+            )
+            r.raise_for_status()
+        except Exception as e:
+            print(f"  [wp-rest error] page {page}: {e}", file=sys.stderr)
+            break
+        posts = r.json()
+        if not isinstance(posts, list) or not posts:
+            break
+        page_new = 0
+        for post in posts:
+            if not isinstance(post, dict):
+                continue
+            url = wp_rest_public_url(
+                post.get("link") or "",
+                post.get("slug") or "",
+                public_host=public_host,
+                path_prefix=path_prefix,
+            )
+            key = url.lower().rstrip("/")
+            if key in seen:
+                continue
+            path = _path(url)
+            if path_filter and not path.startswith(path_filter):
+                continue
+            low = url.lower()
+            if any(x.lower() in low for x in exclude_substrings):
+                continue
+            if require_any_substrings and not any(x.lower() in low for x in require_any_substrings):
+                continue
+            seen.add(key)
+            out.append(url)
+            page_new += 1
+        total_pages = int(r.headers.get("X-WP-TotalPages", page))
+        print(
+            f"  [wp-rest {page}/{total_pages}] +{page_new} (total {len(out)})",
+            file=sys.stderr,
+        )
+        if page >= total_pages:
+            break
+        page += 1
+        time.sleep(delay)
+    return out
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(
         description="Collect links from HTML pages (optionally paginated)."
@@ -1148,10 +1248,49 @@ def main() -> None:
         action="store_true",
         help="Resolve truncated slugs via site sitemap (ice.gov, usmarshals.gov press releases).",
     )
+    ap.add_argument(
+        "--wordpress-rest",
+        metavar="API_URL",
+        help="WordPress REST posts endpoint (e.g. https://wp.example.gov/wp-json/wp/v2/posts). "
+        "Use when the public newsroom HTML has no links (Next.js shells).",
+    )
+    ap.add_argument(
+        "--wp-search",
+        default="",
+        help="Search term for --wordpress-rest (WP ``search`` query param).",
+    )
+    ap.add_argument(
+        "--wp-public-host",
+        default="",
+        help="Public hostname for rewritten article URLs (required with --wordpress-rest).",
+    )
+    ap.add_argument(
+        "--wp-path-prefix",
+        default="/news/",
+        help="Public path prefix for rewritten article URLs (default /news/).",
+    )
+    ap.add_argument(
+        "--wp-per-page",
+        type=int,
+        default=100,
+        help="WP REST per_page (default 100).",
+    )
+    ap.add_argument(
+        "--via-jina",
+        action="store_true",
+        help="Fetch listing pages through https://r.jina.ai/ (bot walls / JS shells). "
+        "Applies to --url / --url-template HTML harvest only.",
+    )
     args = ap.parse_args()
 
     if args.url_template and args.page_range is None:
         ap.error("--url-template requires --page-range START:END")
+
+    if args.wordpress_rest:
+        if not args.wp_public_host.strip():
+            ap.error("--wordpress-rest requires --wp-public-host")
+        if args.url or args.url_template or args.squarespace_search_page or args.google_cse_search_page or args.usa_search:
+            ap.error("--wordpress-rest cannot be combined with other listing modes")
 
     if args.squarespace_search_page:
         if args.url or args.url_template:
@@ -1194,6 +1333,27 @@ def main() -> None:
             urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
         except Exception:
             pass
+
+    if args.wordpress_rest:
+        all_urls = collect_wordpress_rest_urls(
+            args.wordpress_rest,
+            search=args.wp_search,
+            public_host=args.wp_public_host,
+            path_prefix=args.wp_path_prefix,
+            per_page=max(1, int(args.wp_per_page)),
+            timeout=args.timeout,
+            verify=verify_tls,
+            delay=args.delay,
+            path_filter=args.path_prefix,
+            exclude_substrings=exclude,
+            require_any_substrings=require_any,
+        )
+        with open(args.out, "w", encoding="utf-8") as f:
+            for u in all_urls:
+                f.write(u + "\n")
+        print(f"\nTotal URLs: {len(all_urls)}", file=sys.stderr)
+        print(f"Saved -> {args.out}", file=sys.stderr)
+        return
 
     if args.usa_search:
         sitemap_releases: list[str] | None = None
@@ -1295,8 +1455,9 @@ def main() -> None:
     stop_texts = [t.lower() for t in args.stop_if_text]
 
     for i, page_url in enumerate(page_urls):
-        print(f"  [{i + 1}/{len(page_urls)}] {page_url}", file=sys.stderr)
-        html, status = fetch(page_url, args.timeout, verify=verify_tls)
+        fetch_url = ("https://r.jina.ai/" + page_url) if args.via_jina else page_url
+        print(f"  [{i + 1}/{len(page_urls)}] {fetch_url}", file=sys.stderr)
+        html, status = fetch(fetch_url, args.timeout, verify=verify_tls)
         if status == 404 or not html:
             print(f"  [stop] HTTP {status}", file=sys.stderr)
             break

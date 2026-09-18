@@ -176,22 +176,22 @@ def _pacer_bulk_stats(root: Path) -> dict[str, Any]:
                         total_cost = float(parts[-1])
                     except ValueError:
                         pass
-    canonical = root / "ontology" / "PACER"
+    pacer_root = root / "ontology" / "PACER"
     canon_dirs = [
         p.name
-        for p in canonical.iterdir()
+        for p in pacer_root.iterdir()
         if p.is_dir() and p.name not in {"BULK_FOLDER", "__pycache__"}
-    ] if canonical.is_dir() else []
+    ] if pacer_root.is_dir() else []
     return {
         "bulk_folders": len(folders),
         "bulk_ids": sorted(p.name for p in folders),
-        "canonical_pacer_dirs": len(canon_dirs),
+        "anchor_pacer_dirs": len(canon_dirs),
         "total_pacer_dirs": len(folders) + len(canon_dirs),
         "pacer_cost_total": total_cost,
     }
 
 
-def _lifecycle_canonical_count(root: Path) -> int:
+def _lifecycle_anchor_count(root: Path) -> int:
     graphs = root / "state_machines" / "graphs"
     if not graphs.is_dir():
         return 0
@@ -205,8 +205,8 @@ def _lifecycle_fundamental(root: Path) -> str:
 
         p = build_lifecycle_payload()
         n = len(p.get("fundamental", []))
-        n_canon = p.get("n_canonical", 5)
-        return f"{n}/{n_canon}"
+        n_anchor = p.get("n_anchor", 5)
+        return f"{n}/{n_anchor}"
     except Exception as exc:
         return f"error:{exc}"
 
@@ -377,11 +377,11 @@ def verify_claim(claim: Claim, ctx: VerifyContext) -> VerifyResult:
     if claim.id == "cover.pacer_records":
         p = _pacer_bulk_stats(ctx.root)
         obs = str(p["total_pacer_dirs"])
-        notes.append(f"bulk={p['bulk_ids']}; canonical dirs={p['canonical_pacer_dirs']}")
-        # Paper: 8 total (5 canonical + 3 expansion) — bulk has 3, canonical 5
+        notes.append(f"bulk={p['bulk_ids']}; anchor dirs={p['anchor_pacer_dirs']}")
+        # Paper: 8 total (5 anchors + 3 expansion) — bulk has 3, canonical 5
         status = "pass" if p["total_pacer_dirs"] >= 8 else "warn"
         if p["bulk_folders"] == 3:
-            notes.append("BULK_FOLDER has 3 expansion pulls; paper cites 8 including 5 canonical textbook PACER cases.")
+            notes.append("BULK_FOLDER has 3 expansion pulls; paper cites 8 including 5 anchor PACER cases.")
         return VerifyResult(claim.id, status, f"total PACER dirs={obs}", obs, "8", "ontology/PACER", notes)
 
     if claim.id == "s3.pacer_expansion_four":
@@ -396,12 +396,12 @@ def verify_claim(claim: Claim, ctx: VerifyContext) -> VerifyResult:
         return VerifyResult(claim.id, "pass" if ok else "fail", f"TOTAL={obs}", obs, "10.20", "pacer_cost.csv")
 
     # --- Lifecycle ---
-    if claim.id == "s3.q2_canonical_five":
-        n = _lifecycle_canonical_count(ctx.root)
-        # 5 canonical + 3 expansion = 8 jsonld files
+    if claim.id == "s3.q2_anchor_five":
+        n = _lifecycle_anchor_count(ctx.root)
+        # 5 anchors + 3 expansion = 8 jsonld files
         obs = str(n)
-        notes.append("state_machines/graphs has 5 canonical + 3 expansion JSON-LD files.")
-        return VerifyResult(claim.id, "pass" if n >= 5 else "fail", f"jsonld graphs={n}", obs, "5 canonical", "state_machines/graphs", notes)
+        notes.append("state_machines/graphs has 5 anchors + 3 expansion JSON-LD files.")
+        return VerifyResult(claim.id, "pass" if n >= 5 else "fail", f"jsonld graphs={n}", obs, "5 anchors", "state_machines/graphs", notes)
 
     if claim.id == "s7.law2_backbone":
         fund = _lifecycle_fundamental(ctx.root)

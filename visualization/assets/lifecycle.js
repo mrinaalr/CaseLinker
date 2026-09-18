@@ -10,7 +10,7 @@
   const UNDERCOVER = "https://cacontology.projectvic.org/undercover#";
   const CAC = "https://cacontology.projectvic.org#";
 
-  const CANONICAL_ROWS = [
+  const ANCHOR_ROWS = [
     { id: "enticement", color: "#6ee7b7", bg: "#0d1f16", label: "Enticement", short: "ENT" },
     { id: "production", color: "#f97316", bg: "#1a1008", label: "Production", short: "PRD" },
     { id: "sextortion", color: "#fbbf24", bg: "#1a1608", label: "Sextortion", short: "EXT" },
@@ -98,7 +98,7 @@
   }
 
   function lifecycleCases() {
-    return [...(payload.canonical_cases || payload.cases || []), ...(payload.expansion_cases || [])];
+    return [...(payload.anchor_cases || payload.cases || []), ...(payload.expansion_cases || [])];
   }
 
   function lifecycleDenom() {
@@ -111,7 +111,7 @@
   }
 
   /**
-   * Affordance transitions at this phase across all lifecycle cases (canonical +
+   * Affordance transitions at this phase across all lifecycle cases (anchor +
    * expansion). Aggregates by affordance with unique case counts — not the
    * SPARQL annotation dump (parent-class duplicates, /5 denominators).
    */
@@ -252,20 +252,20 @@
   }
 
   let panelEl, backdropEl, payload;
-  let selectedOffenseTypes = new Set(CANONICAL_ROWS.map((r) => r.id));
+  let selectedOffenseTypes = new Set(ANCHOR_ROWS.map((r) => r.id));
   let offenseFilterOpen = false;
 
   function caseOffenseType(caseData) {
     return caseData.modality || caseData.id;
   }
 
-  function filteredCanonicalCases() {
-    const cases = payload.canonical_cases || payload.cases || [];
+  function filteredAnchorCases() {
+    const cases = payload.anchor_cases || payload.cases || [];
     return cases.filter((c) => selectedOffenseTypes.has(caseOffenseType(c)));
   }
 
-  function filteredCanonicalRows() {
-    return CANONICAL_ROWS.filter((r) => selectedOffenseTypes.has(r.id));
+  function filteredAnchorRows() {
+    return ANCHOR_ROWS.filter((r) => selectedOffenseTypes.has(r.id));
   }
 
   function filteredExpansionCases() {
@@ -275,12 +275,12 @@
   function updateOffenseSummary() {
     const summaryEl = document.getElementById("offense-filter-summary");
     if (!summaryEl) return;
-    const allSelected = selectedOffenseTypes.size === CANONICAL_ROWS.length;
+    const allSelected = selectedOffenseTypes.size === ANCHOR_ROWS.length;
     if (allSelected) {
       summaryEl.innerHTML = '<span class="offense-filter-summary-all">All</span>';
       return;
     }
-    summaryEl.innerHTML = CANONICAL_ROWS.filter((r) => selectedOffenseTypes.has(r.id))
+    summaryEl.innerHTML = ANCHOR_ROWS.filter((r) => selectedOffenseTypes.has(r.id))
       .map(
         (r) =>
           `<span class="offense-filter-chip" style="background:${r.color}" title="${escapeHtml(r.label)}"></span>`
@@ -326,8 +326,8 @@
   }
 
   function toggleAllOffenseTypes() {
-    const allSelected = selectedOffenseTypes.size === CANONICAL_ROWS.length;
-    selectedOffenseTypes = allSelected ? new Set(["enticement"]) : new Set(CANONICAL_ROWS.map((r) => r.id));
+    const allSelected = selectedOffenseTypes.size === ANCHOR_ROWS.length;
+    selectedOffenseTypes = allSelected ? new Set(["enticement"]) : new Set(ANCHOR_ROWS.map((r) => r.id));
     applyOffenseFilter();
   }
 
@@ -337,7 +337,7 @@
     const allBtn = document.getElementById("offense-filter-all");
     if (!optionsEl || !trigger) return;
 
-    optionsEl.innerHTML = CANONICAL_ROWS.map(
+    optionsEl.innerHTML = ANCHOR_ROWS.map(
       (row) =>
         `<button type="button" class="offense-filter-option is-on" data-type="${row.id}" style="--chip-color:${row.color}" aria-pressed="true">${row.short}</button>`
     ).join("");
@@ -408,7 +408,7 @@
       <div class="panel-section">
         <h4>Coverage</h4>
         <p>${coverageCount}/${denom} cases: ${offenseTypes.join(", ") || "—"}</p>
-        ${phase.is_fundamental ? "<p><strong>Appears in all 5 canonical offense types</strong> (fundamental)</p>" : ""}
+        ${phase.is_fundamental ? "<p><strong>Appears in all 5 anchor offense types</strong> (fundamental)</p>" : ""}
       </div>
       <div class="panel-section">
         <h4>Transitions in</h4>
@@ -514,12 +514,12 @@
 
   function renderStats() {
     const nTotal = payload.n_cases
-      || (payload.canonical_cases || payload.cases || []).length
+      || (payload.anchor_cases || payload.cases || []).length
       + (payload.expansion_cases || []).length
       || 5;
     setText("stat-cases", nTotal);
-    setText("stat-canonical", nTotal);
-    setText("stat-stages", payload.canonical_stage_count || "—");
+    setText("stat-cases", nTotal);
+    setText("stat-stages", payload.anchor_stage_count || "—");
     setText("stat-transitions", payload.shared_transition_count || "—");
   }
 
@@ -560,7 +560,7 @@
     const opts = options || {};
     const markerId = opts.markerId || "arrow";
     const showDecorations = opts.showDecorations !== false;
-    const nCanonical = payload.n_canonical || 5;
+    const nAnchor = payload.n_anchor || 5;
 
     const caseMap = {};
     caseList.forEach((c) => {
@@ -763,14 +763,14 @@
           .attr("fill", row.color)
           .text(phase.short_type || shortType(phase.type));
 
-        if (phase.is_fundamental || phase.coverage === nCanonical) {
+        if (phase.is_fundamental || phase.coverage === nAnchor) {
           ng
             .append("text")
             .attr("class", "coverage-badge")
             .attr("x", NODE_W - 10)
             .attr("y", 20)
             .attr("text-anchor", "end")
-            .text(`${nCanonical}/${nCanonical}`);
+            .text(`${nAnchor}/${nAnchor}`);
         } else if (phase.coverage) {
           ng
             .append("text")
@@ -778,7 +778,7 @@
             .attr("x", NODE_W - 10)
             .attr("y", 20)
             .attr("text-anchor", "end")
-            .text(`${phase.coverage}/${nCanonical}`);
+            .text(`${phase.coverage}/${nAnchor}`);
         }
 
         const label = phase.label || "";
@@ -820,10 +820,10 @@
   }
 
   function renderSwimlanes() {
-    const canonicalCases = filteredCanonicalCases();
-    const rows = filteredCanonicalRows();
-    renderSwimlaneCanvas("lifecycle-canvas", rows, canonicalCases, {
-      markerId: "arrow-canonical",
+    const anchorCases = filteredAnchorCases();
+    const rows = filteredAnchorRows();
+    renderSwimlaneCanvas("lifecycle-canvas", rows, anchorCases, {
+      markerId: "arrow-anchor",
       showDecorations: selectedOffenseTypes.has("sextortion"),
     });
   }

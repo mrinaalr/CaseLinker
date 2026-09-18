@@ -1,6 +1,8 @@
-# Search: conceptual direction, tree, mechanism, and future work
+# Search and corpus discovery
 
-This document describes the **Search** tab: an interactive way to explore the CaseLinker corpus without exposing individual records in ways that conflict with mosaic-style privacy / adversial misuse. Implementation will live on the `search` branch and evolve in phases.
+This document maps how CaseLinker lets researchers, law enforcement, and agents **find, narrow, and query** the corpus. **Search** (the `/search` tab) is one surface: a **facet decision tree**. It is not SPARQL, not the Query lab, and not the LLM chat. Those are sibling discovery tools on different backends.
+
+Live: [Search](https://caselinker.up.railway.app/search) · [Query](https://caselinker.up.railway.app/query) · [LLM](https://caselinker.up.railway.app/llm) · [Patterns / graphs](https://caselinker.up.railway.app/patterns) · [SPARQL](https://caselinker.up.railway.app/sparql) (API). Local: same paths on `http://localhost:8000`.
 
 ---
 
@@ -8,116 +10,125 @@ This document describes the **Search** tab: an interactive way to explore the Ca
 
 ### Primary goals
 
-- **Interactive exploration**: A prominent search experience (e.g. a dedicated tab) where the user can type or select criteria and **drill into** the dataset along a structured path—not a single flat keyword dump.
-- **Queryable backend**: Requests resolve against the existing case store (SQLite locally, PostgreSQL in production) and any auxiliary indices we add for search facets.
-- **Phased intelligence**: Start with a **deterministic decision tree / guided graph** over known dimensions (topics, platforms, severity buckets, jurisdiction, time windows, etc.). Reserve a path to richer **natural-language or agent-style** interaction later.
+- **Cohort-first exploration**: Drill the corpus along structured dimensions (topics, platforms, severity, jurisdiction, era, …) and land on **groups** (counts, signatures, opaque cohort ids), not a phone-book of case narratives.
+- **Deterministic partitions**: The facet tree is reproducible given the same features and prune settings (suitable for audit and replication).
+- **Hand-off to the rest of the app**: Cohort case IDs (when policy allows) feed Audit, Patterns, triage, MCP graph tools, and manual cross-case review.
+- **Mosaic-oriented disclosure**: Small cohorts gate raw case IDs behind a demo / access key so Search does not become a directory service by default.
 
-### Mosaic-oriented disclosure
+### Non-goals (current design)
 
-- **Do not optimize for “open this exact case”** as the default success mode.
-- The **search result schema** should emphasize **groups**: sets of anonymized or opaque identifiers (e.g. internal cluster keys, cohort labels, or bucketing keys), **counts**, and **aggregate descriptors**—not a direct “here is case `azicac_2013_january_001`” unless a separate policy explicitly allows it.
-- The UI can still **drive** the rest of the app (e.g. “highlight this region of the similarity graph”) using those **group ids** or **filters**, keeping per-case detail behind thresholds or separate flows.
-
-This aligns with using CaseLinker for **pattern discovery** and **research navigation** rather than case lookup as a directory service.
-
----
-
-## 2. Conceptual model: tree vs graph
-
-### Decision tree (phase 1)
-
-- **Nodes** = questions or facets drawn from the data model: e.g. source/jurisdiction, broad `case_topics`, `platforms_used`, coarse time range, high-level `severity_indicators` buckets, investigation posture, etc.
-- **Edges** = user choices or parsed intent that narrow the population.
-- **Leaves** (or stopping points) = **cohorts**: `{ group_id, member_ids_or_hashes, count, summary_stats }` where `member_*` may be opaque or omitted in the API depending on policy.
-
-The tree is **authoritative** (curated from the schema and safe enumerations) so behavior is reproducible and explainable.
-
-### Graph (phase 1.5+)
-
-- The same facets can be modeled as a **directed graph** with multiple paths to similar cohorts (e.g. “platform → topic → era” vs “topic → platform → era”).
-- **Combined phrases** in the search bar map to **paths** or **subgraphs**: conjunctions narrow; disjunctions branch; negation excludes subtrees where supported.
-- Precomputed structures already in the stack (e.g. cluster-related tables) can feed **group ids** that are stable enough to reference in search results without exposing raw case narratives in the search response itself.
+- Search is **not** free-text full-text search over narratives (no Lucene/Elastic layer today).
+- Search is **not** SPARQL. Graph pattern queries live on Oxigraph via `/sparql` and the Patterns UI.
+- Search is **not** natural-language SQL. That is the LLM tab (`/llm` → `/api/llm/chat`).
+- Search is **not** the collector. Finding new press releases is `collector/` CLI or **local** MCP WRITE tools (see `collector/README.md`). Hosted Railway MCP is READ-only for collection.
 
 ---
 
-## 3. Search bar UX (copy and composition)
+## 2. Discovery map (what is which)
 
-### Prompt pattern
+| Surface | What it answers | Backend | UI / entry |
+|---------|-----------------|---------|------------|
+| **Search** | “Partition the corpus by facets; show cohort sizes and (gated) members” | SQLite / Postgres case store + `facet_tree.py` | `/search` |
+| **Query** | Ad-hoc analysis recipes calling public REST APIs from the browser | Same REST APIs as the app | `/query` |
+| **Tag / analysis** | Intersection of extracted tags; automated grouping | `/api/return-tagged-cases`, analysis pipeline | `/analysis` |
+| **LLM** | Natural-language questions over **stats / SQL-shaped** answers | `/api/llm/chat` (function-calling over DB stats) | `/llm` |
+| **Patterns** | Browse / compare CAC case graphs, Q1–Q3 evidence | RDF under `ontology/graph_output/` + APIs | `/patterns` |
+| **SPARQL** | Formal graph queries (platforms, steps, agencies, PACER kgs, …) | Oxigraph `GET\|POST /sparql` | API + Patterns; guide `ontology/docs/SPARQL.md` |
+| **MCP tools** | Agents do the above without the browser | REST wrappers + MCP-only graph helpers + collector | `caselinker_mcp/` |
 
-A guiding template such as:
-
-> I am interested in cases involving **___** **___** **___** **___**.
-
-- Blanks map to **slots**: e.g. domain phrases (topics), modality (online / hands-on), geography bucket, time period, platform family, or outcome class—exact slot design follows the tree.
-- Users can **combine** fragments: multiple topics, “and/or” style composition (initially simplified to AND-only or fixed templates to avoid ambiguous boolean parsing).
-
-### Interaction modes
-
-1. **Structured**: chips / dropdowns synced to the tree (fast, accessible).
-2. **Semi-natural**: typed text parsed into **known facet tokens** + confidence; unknown tokens become “soft” filters or are ignored with UI feedback.
-3. **Future**: full NL or agent loop—see §5.
+**Facet vs SPARQL (short):** facets slice the **tabular** case store (extracted features). SPARQL queries the **graph** store (CASE/UCO/CAC + PACER named graphs). Same corpus story, different representation. Use Search for cohort exploration; use SPARQL when the question is relational over ontology edges.
 
 ---
 
-## 4. Search mechanism and API shape (intended)
+## 3. What ships today (Search / facets)
 
-### Request (conceptual)
+### UI
 
-- `query`: string (optional) — free text aligned with the template.
-- `facets`: explicit key/value or path segments (optional) — mirrors tree choices for reproducibility.
-- `cursor` / `step`: optional state for multi-step drill-down in the tree.
+- **D3.js** SVG tree of cohort nodes and edges.
+- **Depth control**: `max_depth` limits how many partition dimensions are used.
+- **Prune**: enable/disable dimensions and optionally restrict allowed values per facet.
+- **Click a node**: load cohort case IDs for hand-off elsewhere. Cohorts with fewer than three cases gate IDs behind a demo access key.
 
-### Response (conceptual) — **group-centric schema**
+### Partition order (default)
 
-- **`groups`**: array of objects such as:
-  - `group_id` — stable reference for UI and downstream visualization (not necessarily a case id).
-  - `case_count` — aggregate size.
-  - `labels` — human-readable summary of the cohort (no verbatim PII).
-  - `facet_signature` — what dimensions define this group (for transparency).
-  - Optional: `representative_features` — aggregated stats only.
+Implemented in `src/Storage Layer/facet_tree.py` as `DEFAULT_FACET_ORDER` (Topic → Severity → Platform → Inv. type → Source → Agency → Prosecution outcome → Location → Severity phrase → Perp admission → Date range / era, …). Counts use **any-tag** semantics: a case with multiple topics can appear under each matching branch for membership/count.
 
-- **`next_options`**: suggested branches (child nodes) to continue the tree/graph from the current state.
+### HTTP APIs
 
-- **`provenance`**: which tree version / dataset snapshot was used (for audits).
+| Endpoint | Role |
+|----------|------|
+| `GET /api/facet-tree` | Build tree JSON (`max_depth`, prune query params) |
+| `POST /api/facet-cohort-members` | Case IDs for a facet path |
+| `GET /api/facet-distinct` | Distinct values for prune UI |
+| `POST /api/return-tagged-cases` | Tag intersection (Analysis / MCP) |
+| `POST /api/tag-threader` | Tag intersection + thread-style grouping |
+| `GET /api/case-ids` (and related filters) | Filtered ID lists for labs |
 
-Individual case ids may appear only in **non-search** endpoints or under **stricter** policies—not as the default payload of search.
+Code: `visualization/search.html`, `run/main.py` routes, `facet_tree.py`.
 
-### Backend implementation sketch
+### MCP (agent-facing, same ideas)
 
-- **Phase A**: Map facets to SQL/JSON filters over `cases` and related tables (`case_topics`, `platforms_used`, demographics, etc.—see `Architecture design.md` and storage layer).
-- **Phase B**: Materialized facet counts or small rollup tables if interactive performance requires it.
-- **Phase C**: Optional embedding or LLM layer **only** where policy allows, still returning **groups** by default.
+| Tool | Role |
+|------|------|
+| `get_facet_tree` | Facet tree; optional `case_ids` subset |
+| `get_cohort_members` | Cohort membership for a path |
+| `get_facet_distinct` | Prune values |
+| `tree_traversal` | MCP-only random + targeted facet samples over a subset |
+| `filter_cases_by_tags` / `tag_threader` / `get_case_ids_by_filter` | Tag and filter cohorts |
+| `case2cac` → `graph_*` / `export_case_graph_ttl` | Cohort → on-demand CAC graph (not the facet tree itself) |
+| `llm_chat` | NL over stats (trusted-key sensitive rate limits) |
+| Collector + CourtListener tools | Press/PDF collection and free RECAP lookup (orthogonal to Search) |
 
----
-
-## 5. Future expansion
-
-| Direction | Role |
-|-----------|------|
-| **Richer NL** | Parse “interested in …” into facet paths; clarify via disambiguation prompts instead of one-shot black-box retrieval. |
-| **Interactive agent** | Multi-turn refinement (“narrow to X”, “compare A vs B cohorts”), tool calls that only expose aggregates unless elevated. |
-| **LLM-assisted labeling** | Offline or gated use to suggest new facet nodes or synonyms; human-approved before affecting the public tree. |
-| **Visualization tie-in** | Search `group_id` selects regions of cluster views or filters the mosaic without listing cases. |
-
----
-
-## 6. Relation to existing codebase
-
-- **Storage**: `cases` and related tables in the storage layer already expose filterable dimensions (JSON arrays for topics, platforms, severity, etc.).
-- **Raw vs features vs narrative** (see `case_storage_utils.py`):
-  - **`cases.raw_data`**: Canonical **ingestion blob** (includes `case_text`, `source_file`, batch metadata). This is the **raw material** from the pipeline.
-  - **`cases.extracted_features`**: JSON of **structured fields only** — `comparison_values`, demographics objects, `evidence_volume`, `date_range`, etc. It **excludes** `case_text`, `raw_data`, and fields duplicated in other `cases` columns (`source`, `case_topics`, …) so narrative is not stored twice in the blob.
-  - **Reads**: `get_case()` loads `raw_data` and **hydrates** `case_text` from `raw_data.case_text` when needed. `get_all_cases(include_raw_data=False)` **omits** `raw_data` and **`case_text`** from each case dict (slim API); use `include_raw_data=True` when server-side code needs the narrative (e.g. full automated analysis).
-- **Clusters**: `precomputed_clusters` / `cluster_groups_slim` suggest existing **group-level** artifacts search can align with.
-- **UI**: A new **Search** tab in the visualization shell will call new endpoints and render cohort summaries + next steps along the tree/graph.
+Catalog: `caselinker_mcp/tool_registry.md`.
 
 ---
 
-## 7. Open decisions (to resolve during implementation)
+## 4. Related shipped surfaces (not Search, but discovery)
 
-1. Exact **group_id** strategy: cluster-based vs facet-hash vs explicit cohort tables.
-2. **Minimum cell size** for reporting counts (k-anonymity-style thresholds).
-3. **Boolean and negation** grammar for combined phrases in the search bar.
-4. Whether **case-level** detail remains entirely outside search or is gated behind a separate affordance.
+- **Query lab** (`/query`): browser-only recipes over public APIs without requiring an MCP host.
+- **Audit** (`/audit`): case-level feature highlighting for **data accuracy** review (pairs with Search cohorts).
+- **Stats / Clusters / Tech landscape**: aggregate views; not interactive facet drill-down.
+- **Lifecycle** (`/lifecycle`): PACER state machines; see `state_machines/README.md`.
+- **Public SPARQL**: rate-limited, query-only; see `ontology/docs/SPARQL.md`. LLM-assisted SPARQL and CASE/UCO SDK `execute_sparql_query` are optional agent paths into the same store.
 
-This document is the working contract for direction on the `search` branch; update it as the tree and API solidify.
+---
+
+## 5. Research and open work
+
+Directions worth exploring (not committed product plans):
+
+1. **Cross-walk facet cohorts ↔ SPARQL / Patterns**  
+   Export a Search cohort as a SPARQL `VALUES` block or named-graph filter; open Patterns with the same case set. Today that hand-off is mostly manual (copy IDs).
+
+2. **Guided NL → facet path (not full-text)**  
+   Map short analyst phrases (“Discord + production + 2024”) onto prune constraints or a path, keeping mosaic defaults. Distinct from `/llm` SQL chat and from Elastic-style keyword search.
+
+3. **Richer graph search UX**  
+   Patterns already browse CAC classes / platforms / agencies. Deeper “search the graph” (path queries, shared-neighbor cohorts) without requiring hand-written SPARQL.
+
+4. **Full-text / hybrid retrieval**  
+   Optional narrative index for press-release bodies, always behind the same disclosure policy as small cohorts. Not started; would be a new stack beside facets.
+
+5. **Agent evaluation**  
+   Compare MCP facet tools (`get_facet_tree`, `tree_traversal`, `get_cohort_members`) against the UI and SPARQL for the same cohort: sizes and membership should agree.
+
+6. **Privacy policy tightening**  
+   Formalize when cohort IDs are public vs key-gated; align Query lab and MCP exports with the same rules as `/search`.
+
+7. **Facet schema evolution**  
+   Adding a dimension is an append to `DEFAULT_FACET_ORDER` (see docstring in `facet_tree.py`). Research which new extractors (agencies, modalities, eras) earn a permanent tree level without exploding width.
+
+---
+
+## 6. Quick paths
+
+| Task | Start here |
+|------|------------|
+| Explore cohorts visually | `/search` |
+| Verify extraction on a cohort | Search → copy IDs → `/audit` |
+| Count platforms / ontology relations | `/sparql` or Patterns; `ontology/docs/SPARQL.md` |
+| Agent-driven cohort work | MCP `get_facet_tree` / `get_cohort_members` / `filter_cases_by_tags` |
+| Collect new press / court docs | `collector/README.md` + MCP collector tools (not Search) |
+| Accuracy / CAC gates on PDFs | `scripts/verify/verify_cac.py`, `check_expand_novelty.py` |
+
+Product overview also lives in the root **README** (Using Search, Ontology & Graphs, MCP). This file is the discovery map and research backlog for Search-adjacent work.

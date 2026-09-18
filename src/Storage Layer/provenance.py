@@ -34,9 +34,9 @@ TOKEN_PATTERN: Final = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._+-]{0,127}$")
 
 CANONICALIZATION_VERSION: Final = "urlcanon_v1"
 SIDECAR_SCHEMA: Final = "caselinker.provenance.capture.v1"
-SCRAPE_PARSER_NAME: Final = "scrape_pdf"
+BUILD_PRESS_PDF_PARSER_NAME: Final = "build_press_pdf"
 SCRAPE_PARSER_VERSION: Final = "v1"
-JINA_PARSER_NAME: Final = "scrape_pdf.jina"
+JINA_PARSER_NAME: Final = "build_press_pdf.jina"
 DEFAULT_DOCUMENT_TYPE: Final = "press_release"
 JINA_DOCUMENT_TYPE: Final = "jina_reader_payload"
 
@@ -383,7 +383,7 @@ class FetchedCapture:
     http_etag: str | None = None
     http_last_modified: datetime | None = None
     published_at: datetime | None = None
-    parser_name: str = SCRAPE_PARSER_NAME
+    parser_name: str = BUILD_PRESS_PDF_PARSER_NAME
     parser_version: str = SCRAPE_PARSER_VERSION
     normalized_text: str | None = None
     document_type: str = DEFAULT_DOCUMENT_TYPE
@@ -480,7 +480,7 @@ def models_from_sidecar_row(row: Mapping[str, Any]) -> tuple[SourceDocument, Sou
         http_status=int(row["http_status"]),
         http_etag=str(row["http_etag"]) if row.get("http_etag") else None,
         http_last_modified=last_modified,
-        parser_name=str(row.get("parser_name") or SCRAPE_PARSER_NAME),
+        parser_name=str(row.get("parser_name") or BUILD_PRESS_PDF_PARSER_NAME),
         parser_version=str(row.get("parser_version") or SCRAPE_PARSER_VERSION),
         normalized_text_sha256=(
             str(row["normalized_text_sha256"]) if row.get("normalized_text_sha256") else None
@@ -501,7 +501,7 @@ def write_provenance_sidecar(pdf_path: str | Path, rows: Sequence[Mapping[str, A
         "schema": SIDECAR_SCHEMA,
         "generated_at": canonical_utc(utcnow()),
         "canonicalization_version": CANONICALIZATION_VERSION,
-        "parser_name": SCRAPE_PARSER_NAME,
+        "parser_name": BUILD_PRESS_PDF_PARSER_NAME,
         "parser_version": SCRAPE_PARSER_VERSION,
         "documents": list(rows),
     }

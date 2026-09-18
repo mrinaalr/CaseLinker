@@ -62,7 +62,7 @@ DISTRIBUTION_INFRASTRUCTURE = f"{PLATFORMS_NS}DistributionInfrastructure"
 COORDINATION = f"{PLATFORMS_NS}Coordination"
 COERCION_LEVERAGE = f"{PLATFORMS_NS}CoercionLeverage"
 
-CANONICAL_CASE_IDS = (
+ANCHOR_CASE_IDS = (
     "enticement",
     "production",
     "sextortion",
@@ -99,7 +99,7 @@ EXPANSION_CASE_IDS = (
 )
 
 CASE_FILES = (
-    *(f"{case_id}.jsonld" for case_id in CANONICAL_CASE_IDS),
+    *(f"{case_id}.jsonld" for case_id in ANCHOR_CASE_IDS),
     *(f"{case_id}.jsonld" for case_id in EXPANSION_CASE_IDS),
 )
 
@@ -609,7 +609,7 @@ def infer_modality(case_id: str, meta: dict | None = None) -> str:
   conduct signals are present in facts, metadata, or case jsonld graphs.
     """
     meta = meta or CASE_META.get(case_id, {})
-    if case_id in CANONICAL_CASE_IDS:
+    if case_id in ANCHOR_CASE_IDS:
         return case_id
 
     explicit = meta.get("modality")

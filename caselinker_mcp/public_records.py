@@ -138,7 +138,7 @@ async def search_doj_press_releases(
         "returned": len(records),
         "results": records,
         "note": (
-            "justice.gov HTML pages are behind Akamai; use this API (or scrape_doj.py) "
+            "justice.gov HTML pages are behind Akamai; use this API (or resolve_press_urls.py) "
             "instead of fetching article URLs directly."
         ),
     }

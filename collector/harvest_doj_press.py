@@ -13,17 +13,17 @@ component, and body parameters are ignored). This harvester therefore:
   4. Keeps the richest public stage (sentencing > plea/conviction) so arrest
      and indictment write-ups of the same matter do not inflate the count
   5. Requires the existing verify_cac.py gate
-  6. Emits scrape_pdf.py --doj-file resolved records
+  6. Emits build_press_pdf.py --doj-file resolved records
 
 No API key. Self-throttles under the documented 4 req/s cap.
 
 usage:
-    python3 harvest_doj_psc.py
-    python3 harvest_doj_psc.py --limit-pages 2   # smoke
-    python3 harvest_doj_psc.py --max-keep 0      # no cap (older than the last 2,200)
+    python3 harvest_doj_press.py
+    python3 harvest_doj_press.py --limit-pages 2   # smoke
+    python3 harvest_doj_press.py --max-keep 0      # no cap (older than the last 2,200)
 
     # Same pipeline, different topic (CAC gate off — that filter is ICAC-specific):
-    python3 harvest_doj_psc.py --slug doj_fentanyl --skip-cac \\
+    python3 harvest_doj_press.py --slug doj_fentanyl --skip-cac \\
         --require 'fentanyl|methamphetamine' --title-term fentanyl --max-keep 2200
 """
 
@@ -101,8 +101,8 @@ PLEA_RE = re.compile(r"\bplead|\bpleads|\bpleaded|\bguilty|\bconvict", re.I)
 EARLY_RE = re.compile(r"\barrest|\bindict|\bcharg(?:ed|es)\b", re.I)
 
 
-def _load_scrape_doj():
-    spec = importlib.util.spec_from_file_location("scrape_doj", HERE / "scrape_doj.py")
+def _load_resolve_press_urls():
+    spec = importlib.util.spec_from_file_location("resolve_press_urls", HERE / "resolve_press_urls.py")
     mod = importlib.util.module_from_spec(spec)
     sys.modules[spec.name] = mod
     spec.loader.exec_module(mod)
@@ -245,7 +245,7 @@ def canonical_url(raw: str) -> str:
 def main() -> None:
     ap = argparse.ArgumentParser(
         description=(
-            "Page the DOJ News API by title terms, filter, emit scrape_pdf.py --doj-file JSON. "
+            "Page the DOJ News API by title terms, filter, emit build_press_pdf.py --doj-file JSON. "
             "Defaults are the Project Safe Childhood recipe; override --title-term/--require/--skip-cac "
             "for any other DOJ topic (drugs, fraud, …)."
         )
@@ -313,7 +313,7 @@ def main() -> None:
     )
     args = ap.parse_args()
 
-    scrape_doj = _load_scrape_doj()
+    resolve_press_urls = _load_resolve_press_urls()
     verify_cac = None if args.skip_cac else _load_verify_cac()
     require_re = re.compile(args.require, re.I) if args.require else PSC_RE
     title_terms = tuple(args.title_terms) if args.title_terms else TITLE_TERMS
@@ -350,7 +350,7 @@ def main() -> None:
         title = (rec.get("title") or "").strip()
         raw_body = rec.get("body") or ""
         url = canonical_url(rec.get("url") or "")
-        pub_date = scrape_doj._epoch_to_date(rec.get("date"))
+        pub_date = resolve_press_urls._epoch_to_date(rec.get("date"))
         if until_s:
             if not pub_date or pub_date.isoformat() >= until_s:
                 stats["drop_until"] += 1
@@ -370,7 +370,7 @@ def main() -> None:
         if stage == "other":
             stats["drop_other_stage"] += 1
             return False
-        body = scrape_doj.clean_doj_api_body(raw_body)
+        body = resolve_press_urls.clean_doj_api_body(raw_body)
         if len(body) < MIN_BODY_CHARS:
             stats["drop_thin_body"] += 1
             return False
@@ -445,7 +445,7 @@ def main() -> None:
                     hit_cap = True
                     break
                 if until_s:
-                    pd = scrape_doj._epoch_to_date(rec.get("date"))
+                    pd = resolve_press_urls._epoch_to_date(rec.get("date"))
                     if pd and pd.isoformat() >= until_s:
                         page_past_until += 1
             if hit_cap or not results:

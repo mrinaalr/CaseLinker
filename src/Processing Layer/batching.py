@@ -1744,7 +1744,7 @@ _MERGED_NEWS_PUBLICATION_DATE_RE = re.compile(
     r"^\s*Publication\s+date:\s*\d{4}-\d{2}-\d{2}\s*$",
     re.I,
 )
-# ReportLab scrape_pdf titles: "Headline fragment — Agency Name" (Title Case, not ALL-CAPS).
+# ReportLab build_press_pdf titles: "Headline fragment — Agency Name" (Title Case, not ALL-CAPS).
 _MERGED_NEWS_SCRAPE_MASTHEAD_SUFFIXES = (
     "police department",
     "sheriff",
@@ -1760,7 +1760,7 @@ _MERGED_NEWS_SCRAPE_MASTHEAD_SUFFIXES = (
 
 
 def _merged_news_line_looks_like_scrape_masthead_title(line: str) -> bool:
-    """Wrapped headline line ending with em-dash org masthead (Anchorage PD / scrape_pdf layout)."""
+    """Wrapped headline line ending with em-dash org masthead (Anchorage PD / build_press_pdf layout)."""
     s = line.strip()
     if len(s) < 20 or len(s) > 160:
         return False
@@ -1799,7 +1799,7 @@ def _merged_news_line_looks_like_scrape_wrapped_title_lead(line: str, next_line:
 
 def _merged_news_hi_immediately_before_source(lines: List[str], si: int, prev_barrier: int) -> int:
     """
-    Last non-empty line before ``Source:`` — skip ``Publication date:`` emitted by scrape_pdf.
+    Last non-empty line before ``Source:`` — skip ``Publication date:`` emitted by build_press_pdf.
     """
     hi = si - 1
     while hi > prev_barrier and not lines[hi].strip():

@@ -21,6 +21,28 @@ from caselinker_mcp.client import BULK_TIMEOUT, DEFAULT_TIMEOUT, api_get, api_po
 PORT = int(os.getenv("PORT", 8001))
 MCP_TRANSPORT = os.getenv("MCP_TRANSPORT", "stdio")
 
+
+def collector_disk_write_enabled() -> bool:
+    """Collector WRITE tools write to the MCP host disk.
+
+    Local stdio / local FastAPI mounts: enabled (PDFs land on the researcher's machine).
+    Railway hosted MCP: disabled (ephemeral FS; callers never see the files).
+
+    Override with MCP_COLLECTOR_WRITE=1|0.
+    """
+    flag = os.getenv("MCP_COLLECTOR_WRITE", "").strip().lower()
+    if flag in {"1", "true", "yes", "on"}:
+        return True
+    if flag in {"0", "false", "no", "off"}:
+        return False
+    # Railway injects these on every hosted service.
+    if os.getenv("RAILWAY_ENVIRONMENT") or os.getenv("RAILWAY_SERVICE_NAME"):
+        return False
+    return True
+
+
+_COLLECTOR_WRITE_ENABLED = collector_disk_write_enabled()
+
 _GRAPH_TTL = 7200
 _GRAPH_KEY_PREFIX = "caselinker:mcp:graph:"
 _graph_store: dict[str, dict[str, Any]] = {}
@@ -1431,7 +1453,12 @@ async def resolve_free_recap_download(document_id: str) -> dict[str, Any]:
         return {"error": str(e)}
 
 
-# --- Press-release collector suite (collector): READ vs WRITE ---
+# --- Press-release collector suite (collector): READ always; WRITE local only ---
+
+logger.info(
+    "Collector disk WRITE tools %s (MCP_COLLECTOR_WRITE / Railway gate)",
+    "enabled" if _COLLECTOR_WRITE_ENABLED else "disabled",
+)
 
 
 @mcp.tool()
@@ -1439,7 +1466,7 @@ async def probe_press_url(url: str, jina_fallback: bool = True) -> dict[str, Any
     """READ. Probe one press-release URL without writing a PDF.
 
     justice.gov uses DOJ API resolve (Akamai blocks live HTML). Other hosts use HTML/Jina extract.
-    Use before build_press_pdf to verify title/body quality.
+    Use before build_press_pdf (local MCP) to verify title/body quality.
     """
     try:
         from caselinker_mcp.collector_tools import probe_press_url as _probe
@@ -1450,157 +1477,153 @@ async def probe_press_url(url: str, jina_fallback: bool = True) -> dict[str, Any
         return {"error": str(e), "write": False}
 
 
-@mcp.tool()
-async def harvest_doj_press_topic(
-    title_term: str,
-    require_regex: str = "",
-    max_keep: int = 1,
-    limit_pages: int = 1,
-    slug: str = "",
-    keep_early: bool = True,
-    out_dir: str = "",
-) -> dict[str, Any]:
-    """WRITE. DOJ News API harvest by title term → resolved JSON on disk (collection method A).
+if _COLLECTOR_WRITE_ENABLED:
 
-    Wraps harvest_doj_psc.py with --skip-cac. Creates files under collector/sources/
-    or out_dir. Does not ingest into CaseLinker sqlite.
-    """
-    try:
-        from caselinker_mcp.collector_tools import harvest_doj_press_topic as _harvest
+    @mcp.tool()
+    async def harvest_doj_press_topic(
+        title_term: str,
+        require_regex: str = "",
+        max_keep: int = 1,
+        limit_pages: int = 1,
+        slug: str = "",
+        keep_early: bool = True,
+        out_dir: str = "",
+    ) -> dict[str, Any]:
+        """WRITE (local MCP only). DOJ News API harvest → resolved JSON on disk (method A).
 
-        return await asyncio.to_thread(
-            _harvest,
-            title_term,
-            require_regex=require_regex,
-            max_keep=max_keep,
-            limit_pages=limit_pages,
-            slug=slug,
-            keep_early=keep_early,
-            out_dir=out_dir,
-        )
-    except Exception as e:
-        logger.exception("harvest_doj_press_topic failed")
-        return {"error": str(e), "write": True}
+        Creates files under collector/sources/ or out_dir. Does not ingest into sqlite.
+        Not registered on Railway hosted MCP.
+        """
+        try:
+            from caselinker_mcp.collector_tools import harvest_doj_press_topic as _harvest
 
+            return await asyncio.to_thread(
+                _harvest,
+                title_term,
+                require_regex=require_regex,
+                max_keep=max_keep,
+                limit_pages=limit_pages,
+                slug=slug,
+                keep_early=keep_early,
+                out_dir=out_dir,
+            )
+        except Exception as e:
+            logger.exception("harvest_doj_press_topic failed")
+            return {"error": str(e), "write": True}
 
-@mcp.tool()
-async def fetch_press_listing_urls(
-    listing_url: str,
-    out_name: str = "mcp_listing_urls.txt",
-    same_host: bool = True,
-    path_prefix: str = "",
-    require_any: str = "",
-    max_urls: int = 20,
-    out_dir: str = "",
-) -> dict[str, Any]:
-    """WRITE. Harvest article URLs from a newsroom listing/search page → url-file (method B start).
+    @mcp.tool()
+    async def fetch_press_listing_urls(
+        listing_url: str,
+        out_name: str = "mcp_listing_urls.txt",
+        same_host: bool = True,
+        path_prefix: str = "",
+        require_any: str = "",
+        max_urls: int = 20,
+        out_dir: str = "",
+    ) -> dict[str, Any]:
+        """WRITE (local MCP only). Listing/search page → url-file (method B start).
 
-    Wraps fetch_source_urls.py. require_any: comma-separated path/slug tokens.
-    Does not fetch article bodies or write PDFs.
-    """
-    try:
-        from caselinker_mcp.collector_tools import fetch_press_listing_urls as _fetch
+        Wraps fetch_source_urls.py. Not registered on Railway hosted MCP.
+        """
+        try:
+            from caselinker_mcp.collector_tools import fetch_press_listing_urls as _fetch
 
-        return await asyncio.to_thread(
-            _fetch,
-            listing_url,
-            out_name=out_name,
-            same_host=same_host,
-            path_prefix=path_prefix,
-            require_any=require_any,
-            max_urls=max_urls,
-            out_dir=out_dir,
-        )
-    except Exception as e:
-        logger.exception("fetch_press_listing_urls failed")
-        return {"error": str(e), "write": True}
+            return await asyncio.to_thread(
+                _fetch,
+                listing_url,
+                out_name=out_name,
+                same_host=same_host,
+                path_prefix=path_prefix,
+                require_any=require_any,
+                max_urls=max_urls,
+                out_dir=out_dir,
+            )
+        except Exception as e:
+            logger.exception("fetch_press_listing_urls failed")
+            return {"error": str(e), "write": True}
 
+    @mcp.tool()
+    async def resolve_press_urls(
+        urls: list[str] | None = None,
+        url_file: str = "",
+        out_name: str = "mcp_urls_resolved.json",
+        out_dir: str = "",
+        limit: int = 0,
+    ) -> dict[str, Any]:
+        """WRITE (local MCP only). URL-path router → resolved JSON for build_press_pdf.
 
-@mcp.tool()
-async def resolve_press_urls(
-    urls: list[str] | None = None,
-    url_file: str = "",
-    out_name: str = "mcp_urls_resolved.json",
-    out_dir: str = "",
-    limit: int = 0,
-) -> dict[str, Any]:
-    """WRITE. URL-path router (scrape_doj.py): justice.gov → API resolve; else mode=scrape JSON.
+        Not registered on Railway hosted MCP.
+        """
+        try:
+            from caselinker_mcp.collector_tools import resolve_press_urls as _resolve
 
-    Pass urls[] and/or url_file. Output is a --doj-file for build_press_pdf.
-    """
-    try:
-        from caselinker_mcp.collector_tools import resolve_press_urls as _resolve
+            return await asyncio.to_thread(
+                _resolve,
+                urls,
+                url_file=url_file,
+                out_name=out_name,
+                out_dir=out_dir,
+                limit=limit,
+            )
+        except Exception as e:
+            logger.exception("resolve_press_urls failed")
+            return {"error": str(e), "write": True}
 
-        return await asyncio.to_thread(
-            _resolve,
-            urls,
-            url_file=url_file,
-            out_name=out_name,
-            out_dir=out_dir,
-            limit=limit,
-        )
-    except Exception as e:
-        logger.exception("resolve_press_urls failed")
-        return {"error": str(e), "write": True}
+    @mcp.tool()
+    async def build_press_pdf(
+        doj_file: str = "",
+        url_file: str = "",
+        out_name: str = "MCP_PRESS.pdf",
+        out_dir: str = "",
+        limit: int = 1,
+        jina_fallback: bool = True,
+        insecure: bool = False,
+    ) -> dict[str, Any]:
+        """WRITE (local MCP only). Build merged press-release PDF under out_dir.
 
+        Does NOT ingest into the CaseLinker database. Not registered on Railway.
+        """
+        try:
+            from caselinker_mcp.collector_tools import build_press_pdf as _build
 
-@mcp.tool()
-async def build_press_pdf(
-    doj_file: str = "",
-    url_file: str = "",
-    out_name: str = "MCP_PRESS.pdf",
-    out_dir: str = "",
-    limit: int = 1,
-    jina_fallback: bool = True,
-    insecure: bool = False,
-) -> dict[str, Any]:
-    """WRITE. Build merged press-release PDF via scrape_pdf.py (writes PDF under out_dir).
+            return await asyncio.to_thread(
+                _build,
+                doj_file=doj_file,
+                url_file=url_file,
+                out_name=out_name,
+                out_dir=out_dir,
+                limit=limit,
+                jina_fallback=jina_fallback,
+                insecure=insecure,
+            )
+        except Exception as e:
+            logger.exception("build_press_pdf failed")
+            return {"error": str(e), "write": True}
 
-    Prefer doj_file from harvest_doj_press_topic / resolve_press_urls. For non-DOJ hosts,
-    url_file + jina_fallback works. Does NOT ingest into the CaseLinker database.
-    """
-    try:
-        from caselinker_mcp.collector_tools import build_press_pdf as _build
+    @mcp.tool()
+    async def collect_case_dual_path(
+        title_term: str,
+        topic_slug: str = "",
+        require_regex: str = "",
+        out_dir: str = "",
+    ) -> dict[str, Any]:
+        """WRITE (local MCP only). Dual-path A/B collect + CourtListener search for one topic.
 
-        return await asyncio.to_thread(
-            _build,
-            doj_file=doj_file,
-            url_file=url_file,
-            out_name=out_name,
-            out_dir=out_dir,
-            limit=limit,
-            jina_fallback=jina_fallback,
-            insecure=insecure,
-        )
-    except Exception as e:
-        logger.exception("build_press_pdf failed")
-        return {"error": str(e), "write": True}
+        Writes under collector_output/mcp_collect/<slug>/. Not registered on Railway.
+        """
+        try:
+            from caselinker_mcp.collector_tools import collect_case_dual_path as _dual
 
-
-@mcp.tool()
-async def collect_case_dual_path(
-    title_term: str,
-    topic_slug: str = "",
-    require_regex: str = "",
-    out_dir: str = "",
-) -> dict[str, Any]:
-    """WRITE. One topic: DOJ API harvest→PDF and same URL via url-path resolve→PDF, plus CourtListener search.
-
-    Agent helper for A/B collection. Writes under collector_output/mcp_collect/<slug>/ by default.
-    """
-    try:
-        from caselinker_mcp.collector_tools import collect_case_dual_path as _dual
-
-        return await asyncio.to_thread(
-            _dual,
-            title_term,
-            topic_slug=topic_slug,
-            require_regex=require_regex,
-            out_dir=out_dir,
-        )
-    except Exception as e:
-        logger.exception("collect_case_dual_path failed")
-        return {"error": str(e), "write": True}
+            return await asyncio.to_thread(
+                _dual,
+                title_term,
+                topic_slug=topic_slug,
+                require_regex=require_regex,
+                out_dir=out_dir,
+            )
+        except Exception as e:
+            logger.exception("collect_case_dual_path failed")
+            return {"error": str(e), "write": True}
 
 
 if __name__ == "__main__":

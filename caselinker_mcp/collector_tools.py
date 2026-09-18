@@ -6,7 +6,8 @@ Two collection methods (same as PRESS_RELEASE_COLLECTION.md):
 2. URL path: start from article URL(s) or a listing page.
 
 WRITE tools create files under the repo (JSON url-lists, resolved records, PDFs).
-READ tools return structured data only. Nothing here mutates CaseLinker sqlite.
+They are registered only on local MCP (not Railway hosted). READ tools return
+structured data only. Nothing here mutates CaseLinker sqlite.
 """
 
 from __future__ import annotations
@@ -15,11 +16,36 @@ import argparse
 import concurrent.futures
 import importlib.util
 import json
+import os
 import re
 import subprocess
 import sys
 from pathlib import Path
 from typing import Any, Coroutine, TypeVar
+
+
+def collector_disk_write_enabled() -> bool:
+    """Same gate as ``caselinker_mcp.server.collector_disk_write_enabled``."""
+    flag = os.getenv("MCP_COLLECTOR_WRITE", "").strip().lower()
+    if flag in {"1", "true", "yes", "on"}:
+        return True
+    if flag in {"0", "false", "no", "off"}:
+        return False
+    if os.getenv("RAILWAY_ENVIRONMENT") or os.getenv("RAILWAY_SERVICE_NAME"):
+        return False
+    return True
+
+
+def _write_disabled_error() -> dict[str, Any]:
+    return {
+        "error": (
+            "Collector WRITE tools are disabled on hosted MCP (Railway). "
+            "Run local stdio MCP or set MCP_COLLECTOR_WRITE=1 on a machine you own."
+        ),
+        "write": True,
+        "tool_kind": "WRITE",
+        "collector_write_enabled": False,
+    }
 
 _T = TypeVar("_T")
 
@@ -74,15 +100,15 @@ def probe_press_url(url: str, *, jina_fallback: bool = True) -> dict[str, Any]:
     """READ: probe one press-release URL (no PDF write).
 
     justice.gov URLs resolve via the DOJ API (Akamai blocks live HTML).
-    Other hosts use scrape_pdf extract (optional Jina fallback).
+    Other hosts use build_press_pdf extract (optional Jina fallback).
     """
     url = (url or "").strip()
     if not url.startswith("http"):
         return {"error": "url must be an http(s) URL", "write": False}
 
-    scrape_doj = _load_module("scrape_doj_mcp", _COLLECTOR / "scrape_doj.py")
-    if scrape_doj.is_justice_gov_url(url):
-        rec = scrape_doj.resolve_justice_gov_url(url)
+    resolve_mod = _load_module("resolve_press_urls_mcp", _COLLECTOR / "resolve_press_urls.py")
+    if resolve_mod.is_justice_gov_url(url):
+        rec = resolve_mod.resolve_justice_gov_url(url)
         return {
             "write": False,
             "method": "doj_api_resolve",
@@ -96,14 +122,14 @@ def probe_press_url(url: str, *, jina_fallback: bool = True) -> dict[str, Any]:
             "note": "justice.gov must use DOJ API. Live HTML hits Akamai.",
         }
 
-    scrape_pdf = _load_module("scrape_pdf_mcp", _COLLECTOR / "scrape_pdf.py")
+    pdf_mod = _load_module("build_press_pdf_mcp", _COLLECTOR / "build_press_pdf.py")
 
     ns = argparse.Namespace(
         referer=None,
         jina_fallback=jina_fallback,
         insecure=False,
     )
-    resolved = scrape_pdf.resolve_url_content(url, ns, verify_tls=True)
+    resolved = pdf_mod.resolve_url_content(url, ns, verify_tls=True)
     if not resolved:
         return {
             "write": False,
@@ -142,7 +168,9 @@ def harvest_doj_press_topic(
     keep_early: bool = True,
     out_dir: str = "",
 ) -> dict[str, Any]:
-    """WRITE: run harvest_doj_psc.py for a topic → resolved JSON under sources/ or out_dir."""
+    """WRITE: run harvest_doj_press.py for a topic → resolved JSON under sources/ or out_dir."""
+    if not collector_disk_write_enabled():
+        return _write_disabled_error()
     title_term = (title_term or "").strip()
     if not title_term:
         return {"error": "title_term is required", "write": True}
@@ -154,7 +182,7 @@ def harvest_doj_press_topic(
 
     cmd = [
         sys.executable,
-        str(_COLLECTOR / "harvest_doj_psc.py"),
+        str(_COLLECTOR / "harvest_doj_press.py"),
         "--slug",
         slug_s,
         "--skip-cac",
@@ -231,6 +259,8 @@ def fetch_press_listing_urls(
     out_dir: str = "",
 ) -> dict[str, Any]:
     """WRITE: harvest article URLs from one listing/search page → url-file."""
+    if not collector_disk_write_enabled():
+        return _write_disabled_error()
     listing_url = (listing_url or "").strip()
     if not listing_url.startswith("http"):
         return {"error": "listing_url must be http(s)", "write": True}
@@ -298,7 +328,9 @@ def resolve_press_urls(
     out_dir: str = "",
     limit: int = 0,
 ) -> dict[str, Any]:
-    """WRITE: scrape_doj router. justice.gov → API resolve; others → mode=scrape JSON."""
+    """WRITE: resolve_press_urls router. justice.gov → API resolve; others → mode=scrape JSON."""
+    if not collector_disk_write_enabled():
+        return _write_disabled_error()
     out = _ensure_out(out_dir)
     collected: list[str] = []
     if url_file.strip():
@@ -326,8 +358,8 @@ def resolve_press_urls(
     if not ordered:
         return {"error": "Provide urls[] and/or url_file with http(s) lines", "write": True}
 
-    scrape_doj = _load_module("scrape_doj_mcp", _COLLECTOR / "scrape_doj.py")
-    records = scrape_doj.build_records(ordered)
+    resolve_mod = _load_module("resolve_press_urls_mcp", _COLLECTOR / "resolve_press_urls.py")
+    records = resolve_mod.build_records(ordered)
     out_path = out / (out_name if out_name.endswith(".json") else f"{_safe_slug(out_name)}.json")
     out_path.write_text(json.dumps(records, indent=2), encoding="utf-8")
 
@@ -363,7 +395,9 @@ def build_press_pdf(
     jina_fallback: bool = True,
     insecure: bool = False,
 ) -> dict[str, Any]:
-    """WRITE: scrape_pdf.py → merged press-release PDF (doj-file or url-file)."""
+    """WRITE: build_press_pdf.py → merged press-release PDF (doj-file or url-file)."""
+    if not collector_disk_write_enabled():
+        return _write_disabled_error()
     if not doj_file.strip() and not url_file.strip():
         return {"error": "Provide doj_file and/or url_file", "write": True}
 
@@ -372,7 +406,7 @@ def build_press_pdf(
 
     cmd = [
         sys.executable,
-        str(_COLLECTOR / "scrape_pdf.py"),
+        str(_COLLECTOR / "build_press_pdf.py"),
         "--out-dir",
         str(out),
         "--out-name",
@@ -429,8 +463,10 @@ def collect_case_dual_path(
 ) -> dict[str, Any]:
     """WRITE helper: one topic → DOJ harvest PDF + same URL via url-path resolve PDF.
 
-    Intern/agent convenience for A/B collection (API discovery vs URL-path router).
+    Convenience helper for A/B collection (API discovery vs URL-path router).
     """
+    if not collector_disk_write_enabled():
+        return _write_disabled_error()
     slug = _safe_slug(topic_slug or title_term)
     out = _ensure_out(out_dir or f"collector_output/mcp_collect/{slug}")
 
