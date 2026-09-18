@@ -1,6 +1,6 @@
 # CaseLinker MCP tool registry
 
-**Total: 37 tools** — count `@mcp.tool()` decorators in `server.py`.
+**Total: 47 tools.** Count `@mcp.tool()` decorators in `server.py`.
 
 Authoritative implementation: `caselinker_mcp/server.py`. This file is the human-readable catalog for docs and agent hosts.
 
@@ -9,8 +9,10 @@ Authoritative implementation: `caselinker_mcp/server.py`. This file is the human
 | Backend | Count | Notes |
 |---------|------:|-------|
 | REST API wrappers | **29** | Proxy to `GET`/`POST /api/*` |
-| MCP-only | **8** | `tree_traversal`, `list_sources`, `case2cac`, four graph traversal tools, `export_case_graph_ttl` |
-| **Total** | **37** | |
+| MCP-only (corpus graphs) | **8** | `tree_traversal`, `list_sources`, `case2cac`, four graph tools, `export_case_graph_ttl` |
+| MCP-only (free public records) | **4** | DOJ press search + CourtListener/RECAP (`public_records.py`) |
+| MCP-only (press collector suite) | **6** | Wrap `collector` via `collector_tools.py`. See **READ vs WRITE** below |
+| **Total** | **47** | |
 
 There are **32** REST `/api/*` routes in `run/main.py`. **29** have MCP tools; four are intentionally excluded from MCP (admin/write/index): `POST /api/cache/clear`, `POST /api/case-studies/notes/{id}`, `POST /api/ontology/cache/warm`, `GET /api`.
 
@@ -20,15 +22,53 @@ No MCP resources (`@mcp.resource`) or prompts (`@mcp.prompt`) are registered.
 
 ## Tier model
 
-Almost every tool is **public** — callable without a trusted `CASELINKER_KEY`. **Five** tools require trusted access for full export behavior (see below).
-
 | Category | Count | Meaning |
 |----------|------:|---------|
-| Public (trusted key irrelevant) | **32** | Same behavior with or without trusted key |
+| Public (trusted key irrelevant) | **42** | Same behavior with or without trusted key |
 | Trusted-key sensitive | **5** | Blocked or reduced without trusted key |
-| **Total** | **37** | |
+| **Total** | **47** | |
 
-## Public tier (32 tools)
+Corpus REST tools do **not** mutate the CaseLinker database. Collector WRITE tools create files on disk (JSON, url-lists, PDFs) under `collector_output/` or `collector/sources/`. They do **not** auto-ingest into sqlite.
+
+---
+
+## READ vs WRITE (press + court collection)
+
+Agents collecting cases should use this map. On disk the suite lives at repo-root `collector/`.
+
+### READ (no files written)
+
+| Tool | What it does |
+|------|----------------|
+| `search_doj_press_releases` | DOJ News API title search → JSON previews (method A discovery) |
+| `probe_press_url` | One URL extract/resolve preview (no PDF) |
+| `search_courtlistener` | Free RECAP / opinion search |
+| `list_free_recap_documents` | Free filings for a `docket_id` |
+| `resolve_free_recap_download` | Free storage URL when `is_available` |
+
+### WRITE (creates files on disk; responses set `write: true` / `tool_kind: WRITE`)
+
+| Tool | Collection method | Writes |
+|------|-------------------|--------|
+| `harvest_doj_press_topic` | **A: DOJ API** | `*_resolved.json`, url list |
+| `fetch_press_listing_urls` | **B: URL path** (listing → urls) | `*.txt` url-file |
+| `resolve_press_urls` | **B: URL path** (router) | `*_resolved.json` (`scrape_doj`) |
+| `build_press_pdf` | A or B final step | merged `.pdf` under `out_dir` |
+| `collect_case_dual_path` | A and B for one topic | both PDFs + resolve JSON + CourtListener search |
+
+**Agent workflow**
+
+1. Discover: `search_doj_press_releases` or `harvest_doj_press_topic`, or `fetch_press_listing_urls`
+2. Optional QA: `probe_press_url`
+3. If you have URLs: `resolve_press_urls` then `build_press_pdf`
+4. Court filings ($0): `search_courtlistener` → `list_free_recap_documents` → `resolve_free_recap_download`
+5. Shortcut: `collect_case_dual_path(title_term)` runs A and B for one topic
+
+`justice.gov` article HTML is behind Akamai. Do not fetch it live. Resolve through the DOJ News API (`harvest_*` / `resolve_press_urls` / `probe_press_url`).
+
+---
+
+## Public tier (42 tools)
 
 Trusted key does **not** change behavior (still subject to normal slowapi / public rate limits).
 
@@ -66,6 +106,16 @@ Trusted key does **not** change behavior (still subject to normal slowapi / publ
 | `get_location_stats` | `GET /api/location-stats` | Map aggregation |
 | `get_triage_model_corpus` | `GET /api/triage-model-corpus` | Bundle predictions |
 | `get_case_study_notes` | `GET /api/case-studies/notes/{id}` | Community notes |
+| `search_doj_press_releases` | DOJ News API | **READ** press search |
+| `search_courtlistener` | CourtListener | **READ** free RECAP search |
+| `list_free_recap_documents` | CourtListener | **READ** free filings |
+| `resolve_free_recap_download` | CourtListener | **READ** free download URL |
+| `probe_press_url` | `collector_tools` / `collector` | **READ** extract/resolve probe |
+| `harvest_doj_press_topic` | `harvest_doj_psc.py` | **WRITE** DOJ API harvest JSON |
+| `fetch_press_listing_urls` | `fetch_source_urls.py` | **WRITE** listing → url-file |
+| `resolve_press_urls` | `scrape_doj.py` | **WRITE** URL-path resolve JSON |
+| `build_press_pdf` | `scrape_pdf.py` | **WRITE** merged PDF |
+| `collect_case_dual_path` | collector suite | **WRITE** A+B dual collect |
 
 ### On-demand graph workflow
 

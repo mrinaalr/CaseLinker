@@ -86,7 +86,7 @@ _MURRILL_CHARGE_TAIL = re.compile(
     r"^(AG\s+Murrill's\s+Louisiana Bureau of Investigation)(?:\s+for\b.*)?$",
     re.IGNORECASE,
 )
-# Truncated LBI in scraper/NCMEC digest (ellipsis mid-phrase; full name recoverable)
+# Truncated LBI in collector/NCMEC digest (ellipsis mid-phrase; full name recoverable)
 _MURRILL_LBI_TRUNC_RE = re.compile(
     r"^(?:AG\s+(?:Liz\s+)?Murrill's\s+)?Louisiana Bureau o\.?…(?:\s+Source)?$",
     re.IGNORECASE,

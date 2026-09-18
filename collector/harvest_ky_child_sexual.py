@@ -12,7 +12,7 @@ from urllib.parse import urlparse
 
 import requests
 
-REPO = Path(__file__).resolve().parents[2]
+REPO = Path(__file__).resolve().parents[1]
 API = "https://wp.kentuckystatepolice.ky.gov/wp-json/wp/v2/posts"
 SEARCH = "child sexual"
 PER_PAGE = 100
@@ -60,7 +60,7 @@ def harvest() -> list[str]:
 
 
 def main() -> None:
-    dest = REPO / "scripts/scraper/state/ky_sp_child_sexual_harvest.txt"
+    dest = REPO / "collector/state/ky_sp_child_sexual_harvest.txt"
     dest.parent.mkdir(parents=True, exist_ok=True)
     urls = harvest()
     dest.write_text("\n".join(urls) + "\n", encoding="utf-8")

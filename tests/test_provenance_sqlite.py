@@ -101,13 +101,13 @@ def test_immutability_trigger_rejects_update(tmp_path: Path):
 
 def test_scrape_sidecar_ingest_links_version_and_run(tmp_path: Path, monkeypatch):
     repo_root = tmp_path / "repo"
-    output_dir = repo_root / "scrape_output"
+    output_dir = repo_root / "collector_output"
     output_dir.mkdir(parents=True)
     monkeypatch.chdir(repo_root)
 
     db = tmp_path / "caselinker.db"
     storage = CaseStorage(str(db))
-    ingest_path = Path("scrape_output") / "scraped_cases.pdf"
+    ingest_path = Path("collector_output") / "scraped_cases.pdf"
     pdf = repo_root / ingest_path
     pdf.write_bytes(b"%PDF-1.4 fake")
     url = "https://agency.gov/news/linked-case"

@@ -577,13 +577,13 @@
         station: "collect",
         kicker: "The crash · 04",
         title: "Collection is press-release → PDF",
-        lede: "The scraper suite turns any public press release — a URL list or a DOJ News API harvest — into a structured PDF. The engine is topic-agnostic; ICAC/CAC filters are optional gates.",
+        lede: "The collector suite turns any public press release — a URL list or a DOJ News API harvest — into a structured PDF. The engine is topic-agnostic; ICAC/CAC filters are optional gates.",
         points: [
           ["Topic-agnostic engine", "scrape_pdf.py will convert any public article URL, or any DOJ API resolved record, into the same Title / Publication date / Source: https:// / body layout."],
           ["Two things to notice", "Discovery and PDF conversion are separate. Empty or wrong inputs produce empty or wrong PDFs."]
         ],
         figure: "Agency listing  →  fetch_source_urls.py  →  urls.txt  →  scrape_pdf.py  →  merged PDF  →  ingest",
-        links: [repo("scripts/scraper/README.md"), repo("scripts/scraper/PRESS_RELEASE_SCRAPING.md"), repo("README.md#agency--pdf-in-house-scraper", "README.md · Agency → PDF")]
+        links: [repo("collector/README.md"), repo("collector/PRESS_RELEASE_COLLECTION.md"), repo("README.md#agency--pdf-in-house-collector", "README.md · Agency → PDF")]
       },
       {
         id: "ingest",
@@ -627,8 +627,8 @@
           ["At mapping", "noise_filter.py — platform mention signal vs noise. Used at corpus selection time."]
         ],
         links: [
-          repo("scripts/scraper/README.md#after-the-merge-quality-gates", "scripts/scraper/README.md · After the merge"),
-          repo("scripts/scraper/EXPAND_SOURCES.md"),
+          repo("collector/README.md#after-the-merge-quality-gates", "collector/README.md · After the merge"),
+          repo("collector/EXPAND_SOURCES.md"),
           repo("scripts/verify/verify_cac.py", "verify_cac.py"),
           repo("ontology/noise_filter.py", "noise_filter.py"),
           repo("src/Processing Layer/agency_context_gate.py", "agency_context_gate.py")
@@ -692,7 +692,7 @@
           ["How it is built", "scrape_pdf.py uses ReportLab, then merges with pypdf. Generic HTML works for many sites; some hosts need host-specific extractors or Jina cleanup."],
           ["Healthy probe", "Title looks like the headline. Body well above 80 characters (MIN_BODY_CHARS). Preview reads like a press release."]
         ],
-        links: [repo("scripts/scraper/PRESS_RELEASE_SCRAPING.md"), repo("scripts/scraper/scrape_pdf.py", "scrape_pdf.py")]
+        links: [repo("collector/PRESS_RELEASE_COLLECTION.md"), repo("collector/scrape_pdf.py", "scrape_pdf.py")]
       },
       {
         id: "suite",
@@ -701,7 +701,7 @@
         kicker: "Deeper · collection",
         nav: "Suite map",
         title: "Suite map",
-        lede: "Onboarding is scripts/scraper/README.md. Extractors and DOJ quirks are PRESS_RELEASE_SCRAPING.md. The ICAC expansion queue is EXPAND_SOURCES.md.",
+        lede: "Onboarding is collector/README.md. Extractors and DOJ quirks are PRESS_RELEASE_COLLECTION.md. The ICAC expansion queue is EXPAND_SOURCES.md.",
         points: [
           ["scrape_pdf.py", "The core engine. Any press-release URL, or a --doj-file resolved record → one ReportLab page → merged PDF. Topic-agnostic."],
           ["harvest_doj_psc.py", "DOJ API discovery. Pages parameters[title], newest first. Defaults are Project Safe Childhood; same script does other topics with flags."],
@@ -709,7 +709,7 @@
           ["fetch_source_urls.py", "HTML listing harvester. Paginated newsrooms, Squarespace, Google CSE, search.usa.gov."],
           ["After merge", "filter_merged_pdf.py, remove_pdf_pages_by_text.py, check_expand_novelty.py."]
         ],
-        links: [repo("scripts/scraper/README.md#suite-map", "scripts/scraper/README.md · Suite map")]
+        links: [repo("collector/README.md#suite-map", "collector/README.md · Suite map")]
       },
       {
         id: "entry",
@@ -724,7 +724,7 @@
           ["You only have a listing page", "fetch_source_urls.py, then either quickstart above."],
           ["DOJ by topic, no URL list", "Do not crawl justice.gov/psc/press-room (page>0 is HTTP 403). Do not call scrape_doj.py with an empty url-file. harvest_doj_psc.py, then --doj-file."]
         ],
-        links: [repo("scripts/scraper/README.md#quickstart", "scripts/scraper/README.md · Quickstart"), repo("scripts/scraper/PRESS_RELEASE_SCRAPING.md#canonical-workflow-new-source", "Canonical workflow")]
+        links: [repo("collector/README.md#quickstart", "collector/README.md · Quickstart"), repo("collector/PRESS_RELEASE_COLLECTION.md#canonical-workflow-new-source", "Canonical workflow")]
       },
       {
         id: "doj",
@@ -739,7 +739,7 @@
           ["Two jobs", "Discover records by topic: harvest_doj_psc.py. Resolve URLs you already have: scrape_doj.py."],
           ["Novelty", "URL vs existing DOJ PDFs. Dedup inside the harvest is by API uuid."]
         ],
-        links: [repo("scripts/scraper/README.md#why-doj-justicegov-is-different", "Why DOJ is different"), repo("scripts/scraper/PRESS_RELEASE_SCRAPING.md"), repo("scripts/scraper/harvest_doj_psc.py", "harvest_doj_psc.py"), repo("scripts/scraper/scrape_doj.py", "scrape_doj.py")]
+        links: [repo("collector/README.md#why-doj-justicegov-is-different", "Why DOJ is different"), repo("collector/PRESS_RELEASE_COLLECTION.md"), repo("collector/harvest_doj_psc.py", "harvest_doj_psc.py"), repo("collector/scrape_doj.py", "scrape_doj.py")]
       },
       {
         id: "canon",
@@ -754,7 +754,7 @@
           ["4–6", "One-URL extract() probe. Build the merged PDF. QA: one article per section, each with Source: https://. Succeeded: N | Failed: M. Investigate every failed URL."],
           ["When to ask a human", "Login, CAPTCHA, or paid API. Releases only on Facebook or PDF email blasts with no stable URL list. robots.txt or legal terms block automated access. A bot-wall that would require solving a JS challenge — the same call already made for justice.gov."]
         ],
-        links: [repo("scripts/scraper/PRESS_RELEASE_SCRAPING.md#canonical-workflow-new-source", "Canonical workflow"), repo("scripts/scraper/README.md#when-to-stop-and-ask-a-human", "When to ask a human")]
+        links: [repo("collector/PRESS_RELEASE_COLLECTION.md#canonical-workflow-new-source", "Canonical workflow"), repo("collector/README.md#when-to-stop-and-ask-a-human", "When to ask a human")]
       },
       {
         id: "cache",
@@ -769,7 +769,7 @@
           ["ICAC / CAC corpus", "check_expand_novelty.py then verify_cac.py --all-failures --default-fail-csv. Remove failures before ingest."],
           ["Any other topic", "Skip verify_cac.py (harvest_doj_psc.py --skip-cac). Still drop grants, rollups, speeches; collapse arrest vs sentencing; novelty-check against existing merged PDFs. scrape_pdf.py is topic-agnostic."]
         ],
-        links: [repo("scripts/scraper/README.md#output--caching", "Output & caching"), repo("scripts/scraper/EXPAND_SOURCES.md"), repo("scripts/scraper/check_expand_novelty.py", "check_expand_novelty.py"), repo("scripts/verify/verify_cac.py", "verify_cac.py")]
+        links: [repo("collector/README.md#output--caching", "Output & caching"), repo("collector/EXPAND_SOURCES.md"), repo("collector/check_expand_novelty.py", "check_expand_novelty.py"), repo("scripts/verify/verify_cac.py", "verify_cac.py")]
       },
       {
         id: "pacer",
@@ -811,7 +811,7 @@
           ["IDs", "Assigned after the split. Form: org_name_year_month_number."]
         ],
         figure: "Source: https://  →  cases  →  org_name_year_month_number",
-        links: [repo("Architecture design.md#2-data-processing-layer", "Case Batching"), repo("src/Processing Layer/batching.py", "batching.py"), repo("scripts/scraper/PRESS_RELEASE_SCRAPING.md#scrape_pdfpy-internals-what-agents-may-extend", "Source line")]
+        links: [repo("Architecture design.md#2-data-processing-layer", "Case Batching"), repo("src/Processing Layer/batching.py", "batching.py"), repo("collector/PRESS_RELEASE_COLLECTION.md#scrape_pdfpy-internals-what-agents-may-extend", "Source line")]
       },
       {
         id: "extract",
@@ -1203,7 +1203,7 @@
           ["Already decided", "justice.gov sits behind Akamai Bot Manager. Use the public News API. Do not attempt to solve the challenge."],
           ["PACER money", "Court records run $3–5 each (41 records collected for $154). cases2records.py will not purchase PACER documents unless you pass --charge-pacer. Default is free RECAP only."]
         ],
-        links: [repo("scripts/scraper/README.md#when-to-stop-and-ask-a-human", "When to ask a human"), repo("scripts/scraper/PRESS_RELEASE_SCRAPING.md"), repo("ontology/PACER/cases2records.py", "cases2records.py")]
+        links: [repo("collector/README.md#when-to-stop-and-ask-a-human", "When to ask a human"), repo("collector/PRESS_RELEASE_COLLECTION.md"), repo("ontology/PACER/cases2records.py", "cases2records.py")]
       }
     ];
 

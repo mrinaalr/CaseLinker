@@ -43,7 +43,7 @@ from urllib.parse import urlparse
 import requests
 
 HERE = Path(__file__).resolve().parent
-REPO = HERE.parents[1]
+REPO = HERE.parent
 
 DOJ_API_URL = "https://www.justice.gov/api/v1/press_releases.json"
 PAGESIZE = 50

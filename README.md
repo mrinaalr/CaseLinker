@@ -161,10 +161,10 @@ You can process additional PDFs to add more cases to the database.
    - Uses pre-computes clusters on startup for fast performance
    - Provides REST API endpoints for case data, analysis, and statistics
 
-3. **`caselinker_mcp/server.py`** — **MCP server for agent and LLM analysis**
-   - Exposes **37 tools**: corpus search, triage, Q1 platform evidence, on-demand `case2cac` cohort graphs, Turtle export (`export_case_graph_ttl`), and graph traversal
-   - Read-only; wraps the existing REST API; no database mutation
-   - Reach out for private mcp.json keys and review `caselinker_mcp/README.md` & `caselinker_mcp/tool_registry.md` for setup, auth and the full tool catalog
+3. **`caselinker_mcp/server.py`** - **MCP server for agents and operators**
+   - Exposes **47 tools**: corpus search, triage, Q1 platform evidence, on-demand `case2cac` graphs, free CourtListener/RECAP lookup, and the press-release **collector** suite (DOJ API + URL path)
+   - Corpus and analysis tools are read-only. Collector tools write local JSON/PDFs only. They do not ingest into sqlite or mutate the database.
+   - Reach out for private mcp.json keys and review `caselinker_mcp/README.md` and `caselinker_mcp/tool_registry.md` for setup, auth, and the full catalog
 
 **Typical use case:**
 1. First, populate the database with processed PDFs or request a trusted API key
@@ -181,7 +181,7 @@ Visit the **Sources** page for agency links and what is already in the corpus:
 - **Live Demo Sources Page**: [https://caselinker.up.railway.app/sources](https://caselinker.up.railway.app/sources)
 - Or visit `/sources` when running locally: http://localhost:8000/sources
 
-Those links are discovery only — they do not download PDFs. To go from an agency listing to a CaseLinker-ready PDF, use the scraper section below.
+Those links are discovery only — they do not download PDFs. To go from an agency listing to a CaseLinker-ready PDF, use the collector section below.
 
 Processed sources include:
 - **Arizona ICAC (AZICAC)**: Annual case reports and arrests (AZICAC)
@@ -242,9 +242,9 @@ summaries and CyberTipline-related publications
 - **U.S. Secret Service (USSS)**: ICAC-related newsroom press releases (ICAC task forces, CSAM, and child exploitation search results)
 - **U.S. Marshals Service (US MARSHALS)**: Press releases on child predators, sexual-assault fugitives, and recovered minors 
 
-### Agency → PDF (in-house scraper)
+### Agency → PDF (in-house collector)
 
-Once you selected an agency (from the list above or `/sources`), use the CaseLinker scraping suite to turn its press-release listing into a merged PDF ready for ingestion:
+Once you selected an agency (from the list above or `/sources`), use the CaseLinker collector suite to turn its press-release listing into a merged PDF ready for ingestion:
 
 ```mermaid
 flowchart LR
@@ -253,7 +253,7 @@ flowchart LR
   C --> D["src/main.py<br/>→ database"]
 ```
 
-Full workflow, flags, and collection framework: **[scripts/scraper/README.md](scripts/scraper/README.md)** / **[PRESS_RELEASE_SCRAPING.md](scripts/scraper/PRESS_RELEASE_SCRAPING.md)**.
+Full workflow, flags, and collection framework: **[collector/README.md](collector/README.md)** / **[PRESS_RELEASE_COLLECTION.md](collector/PRESS_RELEASE_COLLECTION.md)**.
 
 ### Processing PDFs to Populate Database
 
@@ -426,12 +426,12 @@ CaseLinker/
 │   ├── sparql_proxy.py               # SPARQL parser policy (LIMIT / Update / SERVICE)
 │   ├── redis_cache.py                # Optional Redis caching (production)
 │   └── auth.py                       # Access gates / keys for sensitive views
+├── collector/                        # press-release collector suite (fetch_source_urls, scrape_pdf, DOJ harvest)
 ├── scripts/
 │   ├── rebuild_oxigraph.py           # Wholesale Oxigraph reload (N-Quads PUT /store)
 │   ├── stats/                        # Corpus statistics scripts
 │   ├── verify/                       # Claims, uniqueness, ICAC TF alignment, triage tests
-│   ├── run/                          # ingest_all_pdfs.sh, import_corpus_from_api.py, clear_postgres.py, train_triage_model.py
-│   └── scraper/                      # fetch_source_urls.py, scrape_pdf.py
+│   └── run/                          # ingest_all_pdfs.sh, import_corpus_from_api.py, clear_postgres.py, train_triage_model.py
 ├── visualization/                    # Static HTML (served by run/main.py)
 │   ├── assets/                       # caselinker-api.js, cover.png
 │   ├── home.html                     # /
@@ -463,7 +463,7 @@ CaseLinker/
 │   ├── q1/ q2/ q3/                   # Research evidence
 │   ├── PACER/                        # PACER → lifecycle facts
 │   └── graph_output/                 # staging + universe/ + big_bang/ + analysis/
-├── caselinker_mcp/                   # MCP server (37 tools; SSE + Streamable HTTP on Railway)
+├── caselinker_mcp/                   # MCP server (47 tools; SSE + Streamable HTTP on Railway)
 │   ├── server.py                     # MCPServer (mcp 2.x) entry point
 │   ├── README.md                     # Hosted auth, Cursor config, graph workflow
 │   └── tool_registry.md              # Full tool catalog

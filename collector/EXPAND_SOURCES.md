@@ -2,16 +2,16 @@
 
 **Pipeline** (you provide the search/listing URL; agent runs the rest):
 
-1. **Harvest** — `fetch_source_urls.py`, site API, or Jina (SPA sites). Query must be **`child sexual`** (not bare `child`).
-2. **Dedupe** — drop URLs already in the merged `*_ICAC_All.pdf` (and obvious noise: grants, bills, DEI, index pages).
-3. **Novelty gate** — `python3 scripts/scraper/check_expand_novelty.py --batch-pdf … --baseline *.pre_expand.bak --new-urls-file …` (must PASS before append). Uses **raw PDF URLs** (authoritative) plus body fingerprint vs baseline.
-4. **Scrape** — `scrape_pdf.py --url-file …` → `batch.pdf`
-5. **Append** — merge into repo-root `*_ICAC_All.pdf` (backup `*.pre_expand.bak` first).
-6. **Re-check** — `check_expand_novelty.py --pdf … --baseline *.pre_expand.bak` (no double-dip in merged file).
-7. **CAC verify (required)** — every batched case in the final merged PDF must pass `verify_cac.py`. **Print and save ALL failures** (not just a sample). Do not ingest until failures are removed or justified.
-8. **Recommend** — next source from the table below.
+1. **Harvest** - `fetch_source_urls.py`, site API, or Jina (SPA sites). Query must be **`child sexual`** (not bare `child`).
+2. **Dedupe** - drop URLs already in the merged `*_ICAC_All.pdf` (and obvious noise: grants, bills, DEI, index pages).
+3. **Novelty gate** - `python3 collector/check_expand_novelty.py --batch-pdf … --baseline *.pre_expand.bak --new-urls-file …` (must PASS before append). Uses **raw PDF URLs** (authoritative) plus body fingerprint vs baseline.
+4. **Scrape** - `scrape_pdf.py --url-file …` → `batch.pdf`
+5. **Append** - merge into repo-root `*_ICAC_All.pdf` (backup `*.pre_expand.bak` first).
+6. **Re-check** - `check_expand_novelty.py --pdf … --baseline *.pre_expand.bak` (no double-dip in merged file).
+7. **CAC verify (required)** - every batched case in the final merged PDF must pass `verify_cac.py`. **Print and save ALL failures** (not just a sample). Do not ingest until failures are removed or justified.
+8. **Recommend** - next source from the table below.
 
-### Step 7 — CAC verify on final PDF (all failures)
+### Step 7 - CAC verify on final PDF (all failures)
 
 After append, run (repo root):
 
@@ -23,11 +23,11 @@ python3 scripts/verify/verify_cac.py \
   --default-fail-csv
 ```
 
-- **`--all-failures`** — prints **every** non-CAC case to the terminal in a numbered block (`case_id`, URL, preview).
-- **`--default-fail-csv`** — writes a full machine-readable list to  
-  `scripts/scraper/state/<pdf_stem>_cac_failures.csv` (one row per failure).
+- **`--all-failures`** - prints **every** non-CAC case to the terminal in a numbered block (`case_id`, URL, preview).
+- **`--default-fail-csv`** - writes a full machine-readable list to  
+  `collector/state/<pdf_stem>_cac_failures.csv` (one row per failure).
 - Exit code **1** if any case fails → treat as blocking until you review the CSV.
-- Optional: `--json scripts/scraper/state/<stem>_cac_verify.json` for automation.
+- Optional: `--json collector/state/<stem>_cac_verify.json` for automation.
 
 Same pattern for each expanded source, e.g. Kentucky:
 
@@ -39,14 +39,14 @@ python3 scripts/verify/verify_cac.py \
   --default-fail-csv
 ```
 
-**What to do with failures:** grants, bills, fugitive manhunts, election/DEI press, etc. → delete those pages from the merged PDF (or exclude URL and re-merge). Borderline CAC wording may pass on manual read even if regex misses — note in CSV, don’t auto-delete.
+**What to do with failures:** grants, bills, fugitive manhunts, election/DEI press, etc. → delete those pages from the merged PDF (or exclude URL and re-merge). Borderline CAC wording may pass on manual read even if regex misses - note in CSV, don’t auto-delete.
 
 **Already expanded (re-verify anytime):**
 
 | PDF | Source key | Failures CSV (after `--default-fail-csv`) |
 |-----|------------|-------------------------------------------|
-| `SCAG_ICAC_All.pdf` | `SCAG ICAC` | `scripts/scraper/state/scag_icac_all_cac_failures.csv` |
-| `KYSP_ICAC_All.pdf` | `KY SP` | `scripts/scraper/state/kysp_icac_all_cac_failures.csv` |
+| `SCAG_ICAC_All.pdf` | `SCAG ICAC` | `collector/state/scag_icac_all_cac_failures.csv` |
+| `KYSP_ICAC_All.pdf` | `KY SP` | `collector/state/kysp_icac_all_cac_failures.csv` |
 
 ---
 
@@ -55,7 +55,7 @@ python3 scripts/verify/verify_cac.py \
 | Priority | Source key | Merged PDF | Child-sexual search URL | Notes |
 |---------:|------------|------------|-------------------------|--------|
 | ✅ done | SCAG ICAC | `SCAG_ICAC_All.pdf` | `https://www.scag.gov/search?s=child%20sexual&p={1-50}` | Paginated site search |
-| ✅ done | **KY SP** | `KYSP_ICAC_All.pdf` | `https://www.kentuckystatepolice.ky.gov/news?searchTerm=child+sexual` | WP REST harvest — `harvest_ky_child_sexual.py` (+164 new) |
+| ✅ done | **KY SP** | `KYSP_ICAC_All.pdf` | `https://www.kentuckystatepolice.ky.gov/news?searchTerm=child+sexual` | WP REST harvest - `harvest_ky_child_sexual.py` (+164 new) |
 | 1 | ILLINOIS AG | `ILLNOISAG_ICAC_All.pdf` | `https://illinoisattorneygeneral.gov/site-search-page/press-releases/index?q=child+sexual` | |
 | 2 | Idaho ICAC | `IDAHO_ICAC_All.pdf` | (newsroom ICAC category + child sexual site search) | |
 | ✅ done | NJ AG | `NJOAG_ICAC_All.pdf` | `https://www.njoag.gov/?s=child+sexual` (+ `page/N`) | Jina search harvest; HTML extract + `_trim_njoag_body` (+116 novel) |
@@ -89,9 +89,9 @@ DB counts (approx., pre-expansion): see `visualization/query.html` ICAC-search t
 
 ---
 
-## DOJ (justice.gov) — API source, not a URL-harvest source
+## DOJ (justice.gov) - API source, not a URL-harvest source
 
-`justice.gov` is Akamai-gated (see `PRESS_RELEASE_SCRAPING.md`). Do not use `fetch_source_urls.py` on USAO HTML. Two entry points:
+`justice.gov` is Akamai-gated (see `PRESS_RELEASE_COLLECTION.md`). Do not use `fetch_source_urls.py` on USAO HTML. Two entry points:
 
 | Job | Entry point | Then |
 |-----|-------------|------|
@@ -105,7 +105,7 @@ DB counts (approx., pre-expansion): see `visualization/query.html` ICAC-search t
 | DOJ SAFE CHILDHOOD | `https://www.justice.gov/api/v1/press_releases.json` | First pull: `--max-keep 2200` → 2,192 novel vs CEOS/archives/AI-CSAM. Next batch: `--max-keep 0 --baseline-pdf ../../DOJ_SAFE_CHILDHOOD.pdf`. |
 | Any other DOJ topic | same API | `--slug … --skip-cac --title-term … --require …` |
 
-**Recon (title-substring counts)** — probe with `pagesize=1` before paging. Counts move; 2026-07-18 snapshot:
+**Recon (title-substring counts)** - probe with `pagesize=1` before paging. Counts move; 2026-07-18 snapshot:
 
 | Category | Term | Count |
 |---|---|---:|
@@ -129,9 +129,9 @@ Single-term search **undercounts** (same matter under “fraud” vs “abuse”
 
 ## Next expansion phase: fetch_source_urls.py as a general URL/record discovery system
 
-**Status: planning / scoping only — nothing below is built.** No API integration beyond DOJ exists yet. This section documents the next phase of work, not current capability.
+**Status: planning / scoping only - nothing below is built.** No API integration beyond DOJ exists yet. This section documents the next phase of work, not current capability.
 
-**Standing first step, not a one-off insight.** The DOJ case revealed a pattern that should now be checked for *every* new agency before writing a scraper for it: does a public API already exist? Many .gov sites (especially Drupal-based ones, which a large share of state AG and federal agency sites are) expose one whether or not it's advertised — check `/api/v1/...`, `/jsonapi/...`, search "`[agency] developer API`", and view-source for Drupal meta tags (`Drupal.settings`, `X-Generator: Drupal`, `/jsonapi` links in `<head>`) before assuming a site needs HTML scraping. Finding an API before building a harvester avoids exactly the class of problem `justice.gov` posed (bot-wall-gated HTML with a perfectly good API sitting behind it, unused).
+**Standing first step, not a one-off insight.** The DOJ case revealed a pattern that should now be checked for *every* new agency before writing a scraper for it: does a public API already exist? Many .gov sites (especially Drupal-based ones, which a large share of state AG and federal agency sites are) expose one whether or not it's advertised - check `/api/v1/...`, `/jsonapi/...`, search "`[agency] developer API`", and view-source for Drupal meta tags (`Drupal.settings`, `X-Generator: Drupal`, `/jsonapi` links in `<head>`) before assuming a site needs HTML scraping. Finding an API before building a harvester avoids exactly the class of problem `justice.gov` posed (bot-wall-gated HTML with a perfectly good API sitting behind it, unused).
 
 **`fetch_source_urls.py`'s current scope** is HTML-listing-page harvesting only: plain pagination (`--url-template` + `--page-range`), Squarespace's search API (`--squarespace-search-page`), Google Programmable Search / CSE (`--google-cse-search-page`), and `search.usa.gov` (`--usa-search`). All four output a deduplicated URL list. They do not talk to an agency's own structured data API.
 

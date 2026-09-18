@@ -1345,6 +1345,264 @@ async def llm_chat(question: str, model: str = "", provider: str = "") -> dict[s
         return {"error": str(e)}
 
 
+# --- Free public records (outside CaseLinker corpus) ---
+
+
+@mcp.tool()
+async def search_doj_press_releases(
+    title_term: str,
+    page: int = 0,
+    pagesize: int = 20,
+    require_regex: str = "",
+) -> dict[str, Any]:
+    """Search the public DOJ News API by title substring (free, no key).
+
+    Use for press releases. Does not fetch justice.gov HTML (Akamai).
+    Returns API body text. Optional require_regex filters title+body.
+    """
+    try:
+        from caselinker_mcp.public_records import search_doj_press_releases as _search
+
+        return await _search(
+            title_term,
+            page=page,
+            pagesize=pagesize,
+            require_regex=require_regex,
+        )
+    except Exception as e:
+        logger.exception("search_doj_press_releases failed")
+        return {"error": str(e)}
+
+
+@mcp.tool()
+async def search_courtlistener(
+    query: str,
+    search_type: str = "r",
+    free_only: bool = True,
+    max_results: int = 10,
+) -> dict[str, Any]:
+    """Search CourtListener / RECAP for free public court records (no PACER fees).
+
+    search_type: r=dockets+nested filings, rd=filings only, d=docket metadata, o=opinions.
+    free_only=True keeps only RECAP-available downloads. Optional COURTLISTENER_API_TOKEN
+    raises rate limits / unlocks detail endpoints (free signup). Never buys PACER pages.
+    """
+    try:
+        from caselinker_mcp.public_records import search_courtlistener as _search
+
+        return await _search(
+            query,
+            search_type=search_type,
+            free_only=free_only,
+            max_results=max_results,
+        )
+    except Exception as e:
+        logger.exception("search_courtlistener failed")
+        return {"error": str(e)}
+
+
+@mcp.tool()
+async def list_free_recap_documents(
+    docket_id: str,
+    max_results: int = 20,
+) -> dict[str, Any]:
+    """List RECAP filings for a CourtListener docket_id that are free to download ($0)."""
+    try:
+        from caselinker_mcp.public_records import list_free_recap_documents as _list
+
+        return await _list(docket_id, max_results=max_results)
+    except Exception as e:
+        logger.exception("list_free_recap_documents failed")
+        return {"error": str(e)}
+
+
+@mcp.tool()
+async def resolve_free_recap_download(document_id: str) -> dict[str, Any]:
+    """Resolve a RECAP document id to a free storage.courtlistener.com URL when available.
+
+    Returns cost=not free via RECAP when the filing is not in the free archive (do not PACER-fetch).
+    """
+    try:
+        from caselinker_mcp.public_records import resolve_free_recap_download as _resolve
+
+        return await _resolve(document_id)
+    except Exception as e:
+        logger.exception("resolve_free_recap_download failed")
+        return {"error": str(e)}
+
+
+# --- Press-release collector suite (collector): READ vs WRITE ---
+
+
+@mcp.tool()
+async def probe_press_url(url: str, jina_fallback: bool = True) -> dict[str, Any]:
+    """READ. Probe one press-release URL without writing a PDF.
+
+    justice.gov uses DOJ API resolve (Akamai blocks live HTML). Other hosts use HTML/Jina extract.
+    Use before build_press_pdf to verify title/body quality.
+    """
+    try:
+        from caselinker_mcp.collector_tools import probe_press_url as _probe
+
+        return await asyncio.to_thread(_probe, url, jina_fallback=jina_fallback)
+    except Exception as e:
+        logger.exception("probe_press_url failed")
+        return {"error": str(e), "write": False}
+
+
+@mcp.tool()
+async def harvest_doj_press_topic(
+    title_term: str,
+    require_regex: str = "",
+    max_keep: int = 1,
+    limit_pages: int = 1,
+    slug: str = "",
+    keep_early: bool = True,
+    out_dir: str = "",
+) -> dict[str, Any]:
+    """WRITE. DOJ News API harvest by title term → resolved JSON on disk (collection method A).
+
+    Wraps harvest_doj_psc.py with --skip-cac. Creates files under collector/sources/
+    or out_dir. Does not ingest into CaseLinker sqlite.
+    """
+    try:
+        from caselinker_mcp.collector_tools import harvest_doj_press_topic as _harvest
+
+        return await asyncio.to_thread(
+            _harvest,
+            title_term,
+            require_regex=require_regex,
+            max_keep=max_keep,
+            limit_pages=limit_pages,
+            slug=slug,
+            keep_early=keep_early,
+            out_dir=out_dir,
+        )
+    except Exception as e:
+        logger.exception("harvest_doj_press_topic failed")
+        return {"error": str(e), "write": True}
+
+
+@mcp.tool()
+async def fetch_press_listing_urls(
+    listing_url: str,
+    out_name: str = "mcp_listing_urls.txt",
+    same_host: bool = True,
+    path_prefix: str = "",
+    require_any: str = "",
+    max_urls: int = 20,
+    out_dir: str = "",
+) -> dict[str, Any]:
+    """WRITE. Harvest article URLs from a newsroom listing/search page → url-file (method B start).
+
+    Wraps fetch_source_urls.py. require_any: comma-separated path/slug tokens.
+    Does not fetch article bodies or write PDFs.
+    """
+    try:
+        from caselinker_mcp.collector_tools import fetch_press_listing_urls as _fetch
+
+        return await asyncio.to_thread(
+            _fetch,
+            listing_url,
+            out_name=out_name,
+            same_host=same_host,
+            path_prefix=path_prefix,
+            require_any=require_any,
+            max_urls=max_urls,
+            out_dir=out_dir,
+        )
+    except Exception as e:
+        logger.exception("fetch_press_listing_urls failed")
+        return {"error": str(e), "write": True}
+
+
+@mcp.tool()
+async def resolve_press_urls(
+    urls: list[str] | None = None,
+    url_file: str = "",
+    out_name: str = "mcp_urls_resolved.json",
+    out_dir: str = "",
+    limit: int = 0,
+) -> dict[str, Any]:
+    """WRITE. URL-path router (scrape_doj.py): justice.gov → API resolve; else mode=scrape JSON.
+
+    Pass urls[] and/or url_file. Output is a --doj-file for build_press_pdf.
+    """
+    try:
+        from caselinker_mcp.collector_tools import resolve_press_urls as _resolve
+
+        return await asyncio.to_thread(
+            _resolve,
+            urls,
+            url_file=url_file,
+            out_name=out_name,
+            out_dir=out_dir,
+            limit=limit,
+        )
+    except Exception as e:
+        logger.exception("resolve_press_urls failed")
+        return {"error": str(e), "write": True}
+
+
+@mcp.tool()
+async def build_press_pdf(
+    doj_file: str = "",
+    url_file: str = "",
+    out_name: str = "MCP_PRESS.pdf",
+    out_dir: str = "",
+    limit: int = 1,
+    jina_fallback: bool = True,
+    insecure: bool = False,
+) -> dict[str, Any]:
+    """WRITE. Build merged press-release PDF via scrape_pdf.py (writes PDF under out_dir).
+
+    Prefer doj_file from harvest_doj_press_topic / resolve_press_urls. For non-DOJ hosts,
+    url_file + jina_fallback works. Does NOT ingest into the CaseLinker database.
+    """
+    try:
+        from caselinker_mcp.collector_tools import build_press_pdf as _build
+
+        return await asyncio.to_thread(
+            _build,
+            doj_file=doj_file,
+            url_file=url_file,
+            out_name=out_name,
+            out_dir=out_dir,
+            limit=limit,
+            jina_fallback=jina_fallback,
+            insecure=insecure,
+        )
+    except Exception as e:
+        logger.exception("build_press_pdf failed")
+        return {"error": str(e), "write": True}
+
+
+@mcp.tool()
+async def collect_case_dual_path(
+    title_term: str,
+    topic_slug: str = "",
+    require_regex: str = "",
+    out_dir: str = "",
+) -> dict[str, Any]:
+    """WRITE. One topic: DOJ API harvest→PDF and same URL via url-path resolve→PDF, plus CourtListener search.
+
+    Agent helper for A/B collection. Writes under collector_output/mcp_collect/<slug>/ by default.
+    """
+    try:
+        from caselinker_mcp.collector_tools import collect_case_dual_path as _dual
+
+        return await asyncio.to_thread(
+            _dual,
+            title_term,
+            topic_slug=topic_slug,
+            require_regex=require_regex,
+            out_dir=out_dir,
+        )
+    except Exception as e:
+        logger.exception("collect_case_dual_path failed")
+        return {"error": str(e), "write": True}
+
+
 if __name__ == "__main__":
     if MCP_TRANSPORT == "sse":
         _sse_app = build_mcp_sse_app()

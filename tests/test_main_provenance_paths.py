@@ -41,7 +41,7 @@ def _load_main(monkeypatch):
 
 def test_main_forwards_cli_paths_to_store_cases(monkeypatch):
     main_module = _load_main(monkeypatch)
-    ingest_path = str(Path("scrape_output") / "batch.pdf")
+    ingest_path = str(Path("collector_output") / "batch.pdf")
     frame = _SingleRowFrame(
         {
             "extracted_text": "Case 1: fixture",
