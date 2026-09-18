@@ -182,7 +182,10 @@ def _normalize_cl_result(item: dict[str, Any], *, search_type: str) -> dict[str,
         "court": item.get("court"),
         "court_id": item.get("court_id"),
         "date_filed": item.get("dateFiled") or item.get("date_filed"),
-        "docket_id": item.get("docket_id") or item.get("id") if search_type in ("r", "d") else item.get("docket_id"),
+        "docket_id": (
+            item.get("docket_id")
+            or (item.get("id") if search_type in ("r", "d") else None)
+        ),
         "document_id": item.get("id") if search_type == "rd" else None,
         "description": item.get("description") or item.get("short_description"),
         "is_available": item.get("is_available"),
