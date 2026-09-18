@@ -21,7 +21,7 @@ from provenance import (
 
 
 def _load_scrape_pdf():
-    path = Path(__file__).resolve().parents[1] / "scripts" / "scraper" / "scrape_pdf.py"
+    path = Path(__file__).resolve().parents[1] / "collector" / "scrape_pdf.py"
     spec = importlib.util.spec_from_file_location("scrape_pdf", path)
     module = importlib.util.module_from_spec(spec)
     assert spec.loader is not None

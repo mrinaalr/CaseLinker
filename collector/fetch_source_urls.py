@@ -28,10 +28,10 @@ Squarespace Universal site search **search page** URL (Anchorage PD, etc.).
 The listing HTML only exposes a first slice; pagination uses GET
 ``/api/search/GeneralSearch?q=…&p=…``::
 
-    python3 scripts/scraper/fetch_source_urls.py \\
+    python3 collector/fetch_source_urls.py \\
         --squarespace-search-page 'https://www.anchoragepolice.com/search?q=child' \\
         --path-prefix /news/ \\
-        -o scripts/scraper/anchorage_pd_child_search_urls.txt
+        -o collector/anchorage_pd_child_search_urls.txt
 
 deps: pip install requests beautifulsoup4
 """

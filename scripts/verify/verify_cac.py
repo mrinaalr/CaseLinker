@@ -488,7 +488,7 @@ def main() -> int:
     ap.add_argument(
         "--default-fail-csv",
         action="store_true",
-        help="With --pdf, write scripts/scraper/state/<pdf_stem>_cac_failures.csv",
+        help="With --pdf, write collector/state/<pdf_stem>_cac_failures.csv",
     )
     ap.add_argument("--quiet", action="store_true", help="Only print summary line unless failures")
     args = ap.parse_args()

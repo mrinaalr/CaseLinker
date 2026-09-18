@@ -1,4 +1,4 @@
-# Press release → structured PDF (agent guide)
+# Press release → structured PDF (collector guide)
 
 This document is for **agents and humans** who add or refresh **press-release sources** for CaseLinker. It covers:
 
@@ -14,44 +14,44 @@ Every article in the merged PDF must be a **self-contained press-release page** 
 
 1. **Title** (headline)
 2. **Byline** (optional human date under the title)
-3. **`Publication date: YYYY-MM-DD`** (when we can resolve it — helps downstream year assignment)
-4. **`Source: https://…`** (canonical article URL — **required**; downstream splitting keys off this line)
+3. **`Publication date: YYYY-MM-DD`** (when we can resolve it - helps downstream year assignment)
+4. **`Source: https://…`** (canonical article URL - **required**; downstream splitting keys off this line)
 5. **Body** (paragraphs of the release, not site chrome)
 
 `scrape_pdf.py` builds that layout with ReportLab and merges pages with `pypdf`. Generic HTML works for many sites; some hosts need **host-specific extractors** in `extract()` or Jina cleanup in `extract_from_jina_reader()`.
 
-### justice.gov (DOJ) — API route, not scraping
+### justice.gov (DOJ) - API route, not scraping
 
-`www.justice.gov/usao-*/pr/*` and `/archives/opa/pr/*` sit behind an **Akamai Bot Manager JS interstitial** (a proof-of-work challenge page, not the article — confirmed host-wide across multiple USAOs, not specific to one release). Direct `requests`/`curl` gets back a ~2.4KB challenge shell instead of content. Jina Reader (`r.jina.ai`) can *also* independently refuse anonymous requests on network-reputation grounds, unrelated to Akamai. **Do not try to solve the JS challenge** — that is bot-wall evasion, not scraping, and this repo does not do that.
+`www.justice.gov/usao-*/pr/*` and `/archives/opa/pr/*` sit behind an **Akamai Bot Manager JS interstitial** (a proof-of-work challenge page, not the article - confirmed host-wide across multiple USAOs, not specific to one release). Direct `requests`/`curl` gets back a ~2.4KB challenge shell instead of content. Jina Reader (`r.jina.ai`) can *also* independently refuse anonymous requests on network-reputation grounds, unrelated to Akamai. **Do not try to solve the JS challenge** - that is bot-wall evasion, not scraping, and this repo does not do that.
 
 Instead, DOJ publishes a public press-release API that needs no bot-wall workaround:
 
 - `GET https://www.justice.gov/api/v1/press_releases.json?parameters[title]=<substring>&pagesize=50&page=N`
 - Docs: `https://www.justice.gov/developer/api-documentation/api_v1`
-- `parameters[title]` does a **substring** match against the title — not exact/quoted, despite how the docs example reads
+- `parameters[title]` does a **substring** match against the title - not exact/quoted, despite how the docs example reads
 - `page=` and `pagesize=` are **top-level** query params, *not* nested under `parameters[...]`
 - Rate limit per the docs: **4 requests/second** (`harvest_doj_psc.py` and `scrape_doj.py` self-throttle to ~3 req/s)
 - No API key required
-- `parameters[topic]`, `body`, and `component` **do nothing** — title + date only. Confirm with a `pagesize=1` count before a long harvest.
+- `parameters[topic]`, `body`, and `component` **do nothing** - title + date only. Confirm with a `pagesize=1` count before a long harvest.
 - Title `"Project Safe Childhood"` is ~87 hits (mostly quarterly rollups). Most PSC prosecutions hide the phrase in the **body** footer.
 - `justice.gov/psc/press-room` is a curated listing (~12/page) but **page>0 returns HTTP 403**. Do not crawl it.
-- The `body` field is raw HTML — `<p>` blocks, `&nbsp;`, embedded `<a>`/`<br>`, and sometimes an addendum `<table>` (defendant / role / charges / status rows). A naive "grab all `<p>` text" strip silently **drops the table**. `scrape_doj.py`'s `clean_doj_api_body()` walks `<p>` and `<tr>` in document order so table rows survive as their own line.
+- The `body` field is raw HTML - `<p>` blocks, `&nbsp;`, embedded `<a>`/`<br>`, and sometimes an addendum `<table>` (defendant / role / charges / status rows). A naive "grab all `<p>` text" strip silently **drops the table**. `scrape_doj.py`'s `clean_doj_api_body()` walks `<p>` and `<tr>` in document order so table rows survive as their own line.
 
-There is **no** “search by URL” parameter. Two tools, two jobs — do not mix them up:
+There is **no** “search by URL” parameter. Two tools, two jobs - do not mix them up:
 
 | Job | Tool | What it does |
 |-----|------|----------------|
 | Discover records by topic | `harvest_doj_psc.py` | Pages each `--title-term` newest-first until `--max-keep` or the resultset ends. Filters. Writes `--doj-file` JSON. |
-| Resolve URLs you already have | `scrape_doj.py` | For each `justice.gov` URL: derive slug keywords, query title, **exact slug match**. Max **6 pages (300 hits)** per URL — enough for lookup, not for a 14k title crawl. |
+| Resolve URLs you already have | `scrape_doj.py` | For each `justice.gov` URL: derive slug keywords, query title, **exact slug match**. Max **6 pages (300 hits)** per URL - enough for lookup, not for a 14k title crawl. |
 
 Do not call the API from a one-off `urllib` script unless you are probing a count (`pagesize=1`). Harvest and resolve already exist.
 
-### `harvest_doj_psc.py` — DOJ discovery (PSC recipe, any topic)
+### `harvest_doj_psc.py` - DOJ discovery (PSC recipe, any topic)
 
 Defaults keep Project Safe Childhood prosecutions (CAC title terms, PSC in title/body, drop grants/rollups, sentencing over plea, `verify_cac.py`). Override flags for the next PSC batch or a different crime type.
 
 ```bash
-cd scripts/scraper
+cd collector
 
 # Smoke
 python3 harvest_doj_psc.py --limit-pages 1 --max-keep 20
@@ -61,7 +61,7 @@ python3 harvest_doj_psc.py --max-keep 0 --baseline-pdf ../../DOJ_SAFE_CHILDHOOD.
 python3 scrape_pdf.py --doj-file sources/doj_psc_resolved_novel.json \
   --out-dir ../.. --out-name DOJ_SAFE_CHILDHOOD_MORE.pdf
 
-# DOJ drugs / any other title universe — same PDF path, no CAC gate
+# DOJ drugs / any other title universe - same PDF path, no CAC gate
 python3 harvest_doj_psc.py --slug doj_fentanyl --skip-cac \
   --require 'fentanyl' --title-term fentanyl --title-term 'controlled substance' \
   --max-keep 2200
@@ -81,7 +81,7 @@ After the PDF: wire a new source like CEOS (`ingestion.py`, `batching.py`, `src/
 
 ## Prerequisites
 
-From repo root (or `scripts/scraper/`):
+From repo root (or `collector/`):
 
 ```bash
 pip install requests beautifulsoup4 reportlab pypdf pdfplumber
@@ -101,12 +101,12 @@ Identify where the agency publishes what you care about:
 
 | Pattern | Examples |
 |--------|----------|
-| **DOJ News API** (no HTML listing) | `harvest_doj_psc.py` — see justice.gov section above |
+| **DOJ News API** (no HTML listing) | `harvest_doj_psc.py` - see justice.gov section above |
 | Site search `?s=…` / `?q=…` | Osceola `?s=ICAC`, Iowa DPS `?q=ICAC` |
 | Dedicated news index | `/news/`, `/media-relations/`, `/press-releases/` |
 | Paginated search template | `…&page={page}`, `start=0,20,40`, `start_rank=1:91:10` |
 | Squarespace search | HTML search page + `/api/search/GeneralSearch?q=…&p=…` |
-| Google Programmable Search (CSE) | Widget on `/search?goog=…#gsc.q=…` — static HTML has no hits; use `--google-cse-search-page` (Jina + sitemap slug resolve) |
+| Google Programmable Search (CSE) | Widget on `/search?goog=…#gsc.q=…` - static HTML has no hits; use `--google-cse-search-page` (Jina + sitemap slug resolve) |
 | Drupal / WordPress search | `search/node?keys=…&page={page}` |
 
 **Topic is not limited to ICAC.** Use keywords that match the future CaseLinker domain (e.g. `trafficking`, `human trafficking`, `CSAM`, task force name, statute language the agency uses in headlines).
@@ -116,17 +116,17 @@ Identify where the agency publishes what you care about:
 Open **one** result link. Confirm:
 
 - The page is a **real press release** (not a program overview, award, newsletter index, or search page).
-- Body text is substantial (roughly **≥ 80 characters** after stripping nav — that is `MIN_BODY_CHARS` in `scrape_pdf.py`).
+- Body text is substantial (roughly **≥ 80 characters** after stripping nav - that is `MIN_BODY_CHARS` in `scrape_pdf.py`).
 - You can see a plausible **publication date** (meta tag, visible dateline, or URL path like `/2024/03/15/`).
 
 If the listing mixes good and bad links, you will filter with **require/exclude substrings** when harvesting URLs (step 3), not by hoping scrape fixes it.
 
 ### 3. Harvest article URLs
 
-**Option A — `fetch_source_urls.py`** (preferred when many pages share one listing pattern):
+**Option A - `fetch_source_urls.py`** (preferred when many pages share one listing pattern):
 
 ```bash
-cd scripts/scraper
+cd collector
 
 # Single search / listing page
 python3 fetch_source_urls.py \
@@ -146,20 +146,20 @@ python3 fetch_source_urls.py \
   -o sources/example_icac_urls.txt
 ```
 
-**Option B — manual `urls.txt`** (preferred for small, curated sets or after manual cleanup):
+**Option B - manual `urls.txt`** (preferred for small, curated sets or after manual cleanup):
 
 - One `https://` URL per line
 - Lines starting with `#` are comments
 - Order is preserved in the merged PDF
 
-Put working lists under `scripts/scraper/sources/<agency>_<topic>_urls.txt` (create `sources/` as needed). Keep a short-lived `urls.txt` only when you are about to run `scrape_pdf.py` in one shot.
+Put working lists under `collector/sources/<agency>_<topic>_urls.txt` (create `sources/` as needed). Keep a short-lived `urls.txt` only when you are about to run `scrape_pdf.py` in one shot.
 
 **Harvest hygiene (always):**
 
 - Exclude: `/search`, `?s=`, `/page/`, `/tag/`, `/category/`, `/feed/`, `rss`, `wp-content`, login, newsletter shells.
 - Require (when needed): topic tokens in the path or slug (`trafficking`, `icac`, `arrest`, `csam`, etc.).
-- Deduplicate: same article with/without trailing slash — normalize to one form.
-- Open 2–3 random URLs from the file before scraping the full list.
+- Deduplicate: same article with/without trailing slash - normalize to one form.
+- Open 2-3 random URLs from the file before scraping the full list.
 
 **`fetch_source_urls.py` toolbox:**
 
@@ -183,7 +183,7 @@ Put working lists under `scripts/scraper/sources/<agency>_<topic>_urls.txt` (cre
 ### 4. Probe extract on one URL (before full batch)
 
 ```bash
-cd scripts/scraper
+cd collector
 python3 - <<'PY'
 import importlib.util, subprocess
 from pathlib import Path
@@ -217,7 +217,7 @@ PY
 ### 5. Build the merged PDF
 
 ```bash
-cd scripts/scraper
+cd collector
 
 python3 scrape_pdf.py \
   --url-file sources/example_trafficking_urls.txt \
@@ -237,7 +237,7 @@ python3 scrape_pdf.py \
 
 **Output:** `{out-dir}/{out-name}` plus per-URL cache under `{out-dir}/tmp/`.
 
-**Cache behavior:** Each URL is cached as `tmp/{index:04d}_{sha256(url)[:16]}.pdf`. Re-runs skip download if cache file exists and is > 500 bytes. **Important:** cache is keyed by URL hash, not slot number — safe when you switch `url-file` between agencies. To force refresh, delete `tmp/` or specific cache files.
+**Cache behavior:** Each URL is cached as `tmp/{index:04d}_{sha256(url)[:16]}.pdf`. Re-runs skip download if cache file exists and is > 500 bytes. **Important:** cache is keyed by URL hash, not slot number - safe when you switch `url-file` between agencies. To force refresh, delete `tmp/` or specific cache files.
 
 ### 6. QA the merged PDF
 
@@ -253,19 +253,19 @@ Read the console summary: `Succeeded: N | Failed: M`. Investigate every failed U
 
 ---
 
-## `scrape_doj.py` — DOJ API bridge (run before `scrape_pdf.py` when the source list may contain justice.gov URLs)
+## `scrape_doj.py` - DOJ API bridge (run before `scrape_pdf.py` when the source list may contain justice.gov URLs)
 
 If a url-file mixes `justice.gov` URLs with state AG / other self-hosted sources, run `scrape_doj.py` **first** instead of feeding the url-file straight to `scrape_pdf.py`:
 
 ```bash
-cd scripts/scraper
+cd collector
 python3 scrape_doj.py --url-file sources/urls.txt --out sources/urls_resolved.json
 ```
 
 For each URL, it classifies and routes:
 
-- **`justice.gov`** → resolved via the DOJ API (see above), never fetched live. Emits `{"source_url", "mode": "resolved", "title", "byline", "pub_date", "body", "agency", "uuid"}` — `body` is already clean paragraph text, ready for `write_pdf()`.
-- **anything else** → passed through unchanged: `{"source_url", "mode": "scrape"}`. **No behavior change** for state AG / other existing sources — `scrape_pdf.py` fetches and extracts these exactly as it always has.
+- **`justice.gov`** → resolved via the DOJ API (see above), never fetched live. Emits `{"source_url", "mode": "resolved", "title", "byline", "pub_date", "body", "agency", "uuid"}` - `body` is already clean paragraph text, ready for `write_pdf()`.
+- **anything else** → passed through unchanged: `{"source_url", "mode": "scrape"}`. **No behavior change** for state AG / other existing sources - `scrape_pdf.py` fetches and extracts these exactly as it always has.
 - **no exact API match found** for a `justice.gov` URL → `{"source_url", "mode": "unresolved"}`. `scrape_pdf.py` counts these as failures rather than guessing at a fetch that will just hit the Akamai wall.
 
 Then feed the output into `scrape_pdf.py` with `--doj-file` instead of `--url-file`:
@@ -275,7 +275,7 @@ python3 scrape_pdf.py --doj-file sources/urls_resolved.json \
   --out-dir ../.. --out-name MIXED_BATCH_All.pdf
 ```
 
-`--doj-file` takes precedence over `--url-file` when both are given. `mode: "resolved"` records skip network entirely and go straight to `write_pdf()` (no rate-limit delay applied — no request was made). `mode: "scrape"` records run through the same `resolve_url_content()` helper the plain `--url-file` path always used (native-PDF handling, Jina-first hosts, njoag/ncis-follow cleanup — unchanged), so the merged PDF looks identical regardless of whether an article came from the DOJ API or a live scrape. Per-URL PDF caching under `tmp/` works the same in both modes (keyed by URL hash).
+`--doj-file` takes precedence over `--url-file` when both are given. `mode: "resolved"` records skip network entirely and go straight to `write_pdf()` (no rate-limit delay applied - no request was made). `mode: "scrape"` records run through the same `resolve_url_content()` helper the plain `--url-file` path always used (native-PDF handling, Jina-first hosts, njoag/ncis-follow cleanup - unchanged), so the merged PDF looks identical regardless of whether an article came from the DOJ API or a live scrape. Per-URL PDF caching under `tmp/` works the same in both modes (keyed by URL hash).
 
 ---
 
@@ -284,7 +284,7 @@ python3 scrape_pdf.py --doj-file sources/urls_resolved.json \
 ### HTML extract path (`extract()`)
 
 1. Strip `script`, `style`, `nav`, `footer`, etc.
-2. **Title:** `og:title` / `twitter:title`, then smart `<h1>` handling, then `<title>` split on `|`, `–`, `-`, then URL slug.
+2. **Title:** `og:title` / `twitter:title`, then smart `<h1>` handling, then `<title>` split on `|`, `-`, `-`, then URL slug.
 3. **Container:** host-specific CSS first, else `article`, `main`, `[role=main]`, common content classes, then `body`.
 4. **Body:** `<p>` paragraphs (dedupe consecutive duplicates), fallback to container text.
 5. **Date:** meta `article:published_time`, URL path, visible date fields, first Month D, YYYY in body (skipping DOB lines).
@@ -297,7 +297,7 @@ python3 scrape_pdf.py --doj-file sources/urls_resolved.json \
 | `fresnosheriff.org` | `.item-page`; title from `h2` if h1 is “Media Relations” |
 | `osceolasheriff.org` | `.l-main .entry-content` |
 | `dps.iowa.gov` | `.field--name-field-news__body` (Drupal news body field) |
-| `michigan.gov` | `.news-item__section-content`; plain `main` also picks up a hidden browser-detection modal **and** a "related news" widget that inlines the full body text of *other* releases (not just teaser links) — using bare `main` silently merges two unrelated press releases into one body |
+| `michigan.gov` | `.news-item__section-content`; plain `main` also picks up a hidden browser-detection modal **and** a "related news" widget that inlines the full body text of *other* releases (not just teaser links) - using bare `main` silently merges two unrelated press releases into one body |
 
 **Adding a new host:** in `extract()`, after `netloc = urlparse(url).netloc.lower()`, add an `elif netloc in (...): container = soup.select_one("...")` block. Prefer the **smallest** node that still contains all `<p>` body copy. Re-run the one-URL probe.
 
@@ -327,7 +327,7 @@ Use Jina when you see `[fetch error]`, HTTP 403, or `[FAILED] extract: body too 
 | Duplicate paragraphs / two full articles | Fusion/Avada double column | Delaware helpers: `_trim_news_delaware_duplicate_press_rail`, `_dedupe_news_delaware_paragraph_blocks` |
 | `[fetch error]` / 403 | Bot blocking | `--jina-fallback`; realistic `--referer`; slower `--delay` |
 | SSL certificate verify failed | Bad .gov chain | `--insecure` (only for that host) |
-| Wrong article in cached PDF | Old bug: slot-based cache | Current code uses URL hash — delete stale `tmp/` if unsure |
+| Wrong article in cached PDF | Old bug: slot-based cache | Current code uses URL hash - delete stale `tmp/` if unsure |
 | `[cached]` but content wrong | HTML changed on server | Delete that URL’s `tmp/NNNN_{hash}.pdf` and re-run |
 | Jina body is entire homepage | No trim for this host | Add `_trim_*_jina_preface/postface` or fix direct HTML |
 | Listing URLs in merge | Harvest too loose | Tighten `--path-prefix`, `--require-any`, manual exclude |
@@ -347,7 +347,7 @@ python3 scrape_pdf.py --url-file <(echo 'https://...') --out-dir /tmp/scrape-tes
 ## File organization (recommended)
 
 ```
-scripts/scraper/
+collector/
   scrape_pdf.py              # HTML/PDF / --doj-file → per-article PDF → merge
   scrape_doj.py              # known justice.gov URLs → resolved JSON
   harvest_doj_psc.py         # DOJ API discovery (PSC defaults; any topic via flags)
@@ -371,7 +371,7 @@ Naming merged outputs: `{AGENCY}_{TOPIC}_All.pdf` at repo root or `scrape_output
 
 ## Weekly / live refresh automation
 
-Press releases change; CaseLinker should re-harvest and re-scrape on a schedule. **This repo does not ship a daemon** — wire cron (macOS/Linux) or CI on a machine that can reach public agency sites.
+Press releases change; CaseLinker should re-harvest and re-scrape on a schedule. **This repo does not ship a daemon** - wire cron (macOS/Linux) or CI on a machine that can reach public agency sites.
 
 ### Recommended loop
 
@@ -395,7 +395,7 @@ Same `fetch_source_urls.py` command as initial discovery. Write to a **dated** o
 Keep `state/<source>_last_urls.txt` (sorted URL list from previous week). New articles:
 
 ```bash
-cd scripts/scraper
+cd collector
 sort -u sources/osceola_icac_urls.txt -o /tmp/current.txt
 sort -u state/osceola_icac_last_urls.txt -o /tmp/last.txt 2>/dev/null || true
 comm -23 /tmp/current.txt /tmp/last.txt > sources/osceola_icac_new.txt
@@ -418,14 +418,14 @@ date -u +%Y-%m-%dT%H:%MZ > state/osceola_icac_last_run.txt
 ### 3. Cron example (Sunday 03:00 local)
 
 ```cron
-0 3 * * 0 cd /path/to/CaseLinker/scripts/scraper && \
+0 3 * * 0 cd /path/to/CaseLinker/collector && \
   /usr/bin/python3 fetch_source_urls.py \
     --url 'https://www.osceolasheriff.org/?s=ICAC' \
     --url 'https://www.osceolasheriff.org/page/2/?s=ICAC' \
     --same-host --require-any child --require-any arrest --require-any possession \
     --exclude /search --exclude /feed --exclude '?s=' \
     -o sources/osceola_icac_urls.txt >> logs/osceola_fetch.log 2>&1 && \
-  /path/to/CaseLinker/scripts/scraper/weekly_scrape.sh osceola_icac
+  /path/to/CaseLinker/collector/weekly_scrape.sh osceola_icac
 ```
 
 Implement `weekly_scrape.sh` as a thin wrapper: diff → choose url file → `scrape_pdf.py` → update state → log failures.
@@ -434,14 +434,14 @@ Implement `weekly_scrape.sh` as a thin wrapper: diff → choose url file → `sc
 
 - Per-URL cache means **re-scraping an unchanged URL is cheap** (prints `[cached]`).
 - For **brand-new** URLs only, you can merge new per-article PDFs into an existing bundle with a small script, or re-merge the full url list (simplest; cache keeps old URLs fast).
-- If an agency **deletes** a release, your PDF will still contain it until you regenerate from a curated url list — document that limitation.
+- If an agency **deletes** a release, your PDF will still contain it until you regenerate from a curated url list - document that limitation.
 
 ### 5. Operational notes
 
 - Respect `REQUEST_DELAY` / `--delay`; government sites are not CDNs.
-- Log stdout/stderr per source under `scripts/scraper/logs/`.
+- Log stdout/stderr per source under `collector/logs/`.
 - Alert on `Failed: > 0` or `New URLs: > 50` (possible harvest break).
-- When a site redesigns, expect extract failures — fix `extract()` and delete `tmp/` for that host.
+- When a site redesigns, expect extract failures - fix `extract()` and delete `tmp/` for that host.
 
 ---
 
@@ -471,7 +471,7 @@ python3 scrape_pdf.py --url-file sources/foo_urls.txt --limit 3 --jina-fallback
 python3 scrape_pdf.py --url-file sources/foo_urls.txt \
   --out-dir ../.. --out-name FOO_All.pdf --insecure --jina-fallback
 
-# USSS — Google CSE ICAC search (page 1 only; drop program/overview noise)
+# USSS - Google CSE ICAC search (page 1 only; drop program/overview noise)
 python3 fetch_source_urls.py \
   --google-cse-search-page 'https://www.secretservice.gov/search?goog=ICAC#gsc.tab=0&gsc.q=ICAC&gsc.page=1' \
   --cse-max-results 10 \
@@ -487,7 +487,7 @@ python3 fetch_source_urls.py \
 python3 scrape_pdf.py --url-file sources/uss_icac_urls.txt \
   --out-dir ../.. --out-name USSS_ICAC_ALL.pdf --referer 'https://www.secretservice.gov/' --jina-fallback
 
-# ICE — search.usa.gov child query (pages 1–10 via Jina; filter noise + body keywords)
+# ICE - search.usa.gov child query (pages 1-10 via Jina; filter noise + body keywords)
 python3 fetch_source_urls.py \
   --usa-search --usa-affiliate ice.gov --usa-query child --usa-page-range 1:10 \
   --usa-sitemap --path-prefix /news/releases/ \
@@ -502,12 +502,12 @@ python3 filter_merged_pdf.py \
 # Clear cache for one host
 rm -rf ../../tmp ../scrape_output/tmp  # adjust path to your --out-dir/tmp
 
-# DOJ — already have justice.gov URLs
+# DOJ - already have justice.gov URLs
 python3 scrape_doj.py --url-file sources/urls.txt --out sources/urls_resolved.json
 python3 scrape_pdf.py --doj-file sources/urls_resolved.json \
   --out-dir ../.. --out-name MIXED_BATCH_All.pdf
 
-# DOJ — discovery by topic (no URL list). Next PSC batch or any crime type.
+# DOJ - discovery by topic (no URL list). Next PSC batch or any crime type.
 python3 harvest_doj_psc.py --max-keep 0 --baseline-pdf ../../DOJ_SAFE_CHILDHOOD.pdf
 python3 scrape_pdf.py --doj-file sources/doj_psc_resolved_novel.json \
   --out-dir ../.. --out-name DOJ_SAFE_CHILDHOOD_MORE.pdf

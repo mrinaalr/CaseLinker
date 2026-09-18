@@ -9,14 +9,14 @@ Checks (in order):
   3. Optional --batch-pdf: validate a scrape batch before append
 
 Usage::
-    python3 scripts/scraper/check_expand_novelty.py \\
+    python3 collector/check_expand_novelty.py \\
         --pdf SCAG_ICAC_All.pdf --baseline SCAG_ICAC_All.pdf.pre_expand.bak --source "SCAG ICAC"
 
-    python3 scripts/scraper/check_expand_novelty.py \\
+    python3 collector/check_expand_novelty.py \\
         --pdf KYSP_ICAC_All.pdf --baseline KYSP_ICAC_All.pdf.pre_expand.bak --source "KY SP"
 
-    python3 scripts/scraper/check_expand_novelty.py \\
-        --batch-pdf scripts/scraper/state/ky_sp/tmp/batch.pdf \\
+    python3 collector/check_expand_novelty.py \\
+        --batch-pdf collector/state/ky_sp/tmp/batch.pdf \\
         --baseline KYSP_ICAC_All.pdf.pre_expand.bak --source "KY SP"
 """
 
@@ -32,7 +32,7 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
-REPO = Path(__file__).resolve().parents[2]
+REPO = Path(__file__).resolve().parents[1]
 PROCESSING = REPO / "src" / "Processing Layer"
 
 DEFAULT_NEAR_DUP = 0.88

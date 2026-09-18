@@ -1596,13 +1596,13 @@ _MERGED_ICAC_NEWS_PDF_CANDIDATES: Dict[str, List[str]] = {
         "DOJ_ARCHIVES_All.pdf",
         "doj_archives_output/DOJ_ARCHIVES_All.pdf",
     ],
-    "DOJ AI CSAM": ["DOJ_AI_CSAM_All.pdf", "scripts/scraper/state/ai_csam_backfill/AI_CSAM_DOJ_batch.pdf"],
+    "DOJ AI CSAM": ["DOJ_AI_CSAM_All.pdf", "collector/state/ai_csam_backfill/AI_CSAM_DOJ_batch.pdf"],
     "DOJ ARCHIVES": ["DOJ_ARCHIVES_All.pdf", "doj_archives_output/DOJ_ARCHIVES_All.pdf"],
     "DOJ SAFE CHILDHOOD": [
         "DOJ_SAFE_CHILDHOOD.pdf",
         "DOJ_SAFE_CHILDHOOD_All.pdf",
         "DOJ_AI_CSAM_All.pdf",
-        "scripts/scraper/state/ai_csam_backfill/AI_CSAM_DOJ_batch.pdf",
+        "collector/state/ai_csam_backfill/AI_CSAM_DOJ_batch.pdf",
     ],
 }
 
