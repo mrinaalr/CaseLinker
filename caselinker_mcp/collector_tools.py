@@ -11,13 +11,17 @@ READ tools return structured data only. Nothing here mutates CaseLinker sqlite.
 
 from __future__ import annotations
 
+import argparse
+import concurrent.futures
 import importlib.util
 import json
 import re
 import subprocess
 import sys
 from pathlib import Path
-from typing import Any
+from typing import Any, Coroutine, TypeVar
+
+_T = TypeVar("_T")
 
 _REPO = Path(__file__).resolve().parent.parent
 # On-disk path: repo-root collector/.
@@ -46,6 +50,19 @@ def _ensure_out(out_dir: str | Path | None) -> Path:
         path = _REPO / path
     path.mkdir(parents=True, exist_ok=True)
     return path
+
+
+def _run_async(coro: Coroutine[Any, Any, _T]) -> _T:
+    """Run an async helper from sync collector code (incl. asyncio.to_thread)."""
+    import asyncio
+
+    try:
+        asyncio.get_running_loop()
+    except RuntimeError:
+        return asyncio.run(coro)
+    # Already inside a running loop (rare for this module): isolate on a worker.
+    with concurrent.futures.ThreadPoolExecutor(max_workers=1) as pool:
+        return pool.submit(asyncio.run, coro).result()
 
 
 # ---------------------------------------------------------------------------
@@ -80,7 +97,6 @@ def probe_press_url(url: str, *, jina_fallback: bool = True) -> dict[str, Any]:
         }
 
     scrape_pdf = _load_module("scrape_pdf_mcp", _COLLECTOR / "scrape_pdf.py")
-    import argparse
 
     ns = argparse.Namespace(
         referer=None,
@@ -464,13 +480,11 @@ def collect_case_dual_path(
         limit=1,
     )
 
-    import asyncio
-
     from caselinker_mcp.public_records import search_courtlistener
 
     cl_query = (rec.get("title") or title_term)[:120]
     try:
-        court = asyncio.run(
+        court = _run_async(
             search_courtlistener(cl_query, search_type="r", free_only=True, max_results=3)
         )
     except Exception as exc:  # noqa: BLE001  surface in packet, don't fail dual collect

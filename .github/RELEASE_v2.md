@@ -14,7 +14,7 @@
 ### Corpus & Ingestion
 - 47 AZICAC cases → **7,426 cases across 56 ingestion sources** — live counts and per-source coverage on the [Sources tab](https://caselinker.up.railway.app/sources)
 - Federal coverage added: DOJ CEOS + archives, ICE/HSI, CBP, NCIS, Army CID, AF OSI, USSS, U.S. Marshals
-- Scraper utilities (`scripts/scraper/`) and one-shot batch ingestion (`./scripts/run/ingest_all_pdfs.sh`)
+- Collector utilities (`collector/`, formerly `scripts/scraper/`) and one-shot batch ingestion (`./scripts/run/ingest_all_pdfs.sh`)
 
 ### Platform Harm Dashboard (Q1) — [/visualization](https://caselinker.up.railway.app/visualization)
 - Lifecycle map placing platforms on six exploitation lanes: distribution, storage, communities, discovery, messaging, production
