@@ -1471,12 +1471,24 @@
         return parts.join('\n');
     }
 
+    function isOxigraphWaking(payload) {
+        return !!(payload && payload.status === 'waking' && payload.retry === true);
+    }
+
+    function oxigraphWakingMessage(payload) {
+        if (payload && payload.message) return payload.message;
+        const wait = payload && payload.retry_after_seconds;
+        return wait
+            ? 'Graph store is waking up. Try again shortly (' + wait + 's).'
+            : 'Graph store is waking up. Try again shortly.';
+    }
+
     async function runSparqlSelect(query) {
         const resp = await fetch(SPARQL_URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/sparql-query',
-                'Accept': 'application/sparql-results+json'
+                'Accept': 'application/json, application/sparql-results+json'
             },
             body: query
         });
@@ -1607,6 +1619,12 @@
         const t0 = performance.now();
         try {
             const payload = await runSparqlSelect(query);
+            if (isOxigraphWaking(payload)) {
+                const box = document.getElementById('sparql-results');
+                if (box) box.innerHTML = '';
+                setSparqlStatus(oxigraphWakingMessage(payload), false);
+                return;
+            }
             const n = renderSparqlResults(payload);
             const ms = Math.round(performance.now() - t0);
             if (payload && typeof payload.boolean === 'boolean') {
@@ -1974,6 +1992,12 @@
                 const resp = await fetch('/api/ontology/lookup?' + params.toString(), { cache: 'no-store' });
                 if (resp.ok) {
                     const payload = await resp.json();
+                    if (isOxigraphWaking(payload)) {
+                        setLookupStatus(oxigraphWakingMessage(payload));
+                        LOOKUP_CASE_IDS = [];
+                        renderLookupResults([]);
+                        return;
+                    }
                     if (Array.isArray(payload.class_facets)) {
                         enrichLookupClassOptions(payload.class_facets);
                     }
@@ -2005,6 +2029,12 @@
                     platform: platform || null,
                     agency: agency || null
                 }));
+                if (isOxigraphWaking(payload)) {
+                    setLookupStatus(oxigraphWakingMessage(payload));
+                    LOOKUP_CASE_IDS = [];
+                    renderLookupResults([]);
+                    return;
+                }
                 const bindings = (payload.results && payload.results.bindings) || [];
                 ids = bindings.map(b => b.caseId && b.caseId.value).filter(Boolean);
                 if (caseQ) {

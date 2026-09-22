@@ -112,6 +112,14 @@ from sparql_proxy import (
     sparql_cors_allow_origin,
 )
 from sparql_rebuild_lock import rebuild_in_progress
+from oxigraph_wake import (
+    aquery_once_then_retry,
+    query_once_then_retry,
+    sparql_waking_body,
+    waking_envelope,
+    waking_headers,
+    warm_until_ready,
+)
 
 _mcp_streamable_enabled = False
 
@@ -4811,14 +4819,21 @@ def _ontology_merged_for_lookup(pool_norm: str) -> Dict[str, Any]:
     return payload
 
 
-def _ontology_class_case_ids_via_sparql(class_token: str, limit: int = 5000) -> Optional[set[str]]:
-    """Resolve case IDs with a given CAC/UCO type from Oxigraph (full corpus)."""
+def _ontology_class_case_ids_via_sparql(
+    class_token: str, limit: int = 5000
+) -> tuple[Optional[set[str]], bool]:
+    """Resolve case IDs with a given CAC/UCO type from Oxigraph (full corpus).
+
+    Returns ``(ids, waking)``. ``waking`` means the store was asleep after one
+    retry — callers must surface the wake envelope instead of an empty result.
+    ``(None, False)`` keeps the previous local-index fallback.
+    """
     oxi = os.environ.get("OXIGRAPH_URL", "").strip().rstrip("/")
     if not oxi or not class_token:
-        return None
+        return None, False
     local = class_token.rsplit("#", 1)[-1].rsplit("/", 1)[-1].strip()
     if not local or not re.match(r"^[A-Za-z_][A-Za-z0-9_]*$", local):
-        return None
+        return None, False
     query = (
         "PREFIX dcterms: <http://purl.org/dc/terms/>\n"
         "PREFIX cac: <https://cacontology.projectvic.org#>\n"
@@ -4829,26 +4844,47 @@ def _ontology_class_case_ids_via_sparql(class_token: str, limit: int = 5000) -> 
         f'  FILTER(STRENDS(STR(?type), "#{local}") || STRENDS(STR(?type), "/{local}"))\n'
         f"}} LIMIT {int(limit)}\n"
     )
-    try:
-        resp = requests.post(
+
+    def _post():
+        return requests.post(
             f"{oxi}/query",
             data={"query": query},
             headers={"Accept": "application/sparql-results+json"},
-            timeout=20,
+            timeout=(5, 20),
         )
-        if resp.status_code >= 400:
-            return None
-        payload = resp.json()
-        bindings = (payload.get("results") or {}).get("bindings") or []
-        out: set[str] = set()
-        for row in bindings:
-            cell = row.get("id") or {}
-            val = cell.get("value")
-            if val:
-                out.add(str(val))
-        return out
+
+    try:
+        kind, resp = query_once_then_retry(_post, sleep=time.sleep)
     except Exception:
-        return None
+        return None, False
+    if kind == "waking":
+        return None, True
+    if kind != "ok" or resp is None or resp.status_code >= 400:
+        return None, False
+    try:
+        payload = resp.json()
+    except Exception:
+        return None, False
+    bindings = (payload.get("results") or {}).get("bindings") or []
+    out: set[str] = set()
+    for row in bindings:
+        cell = row.get("id") or {}
+        val = cell.get("value")
+        if val:
+            out.add(str(val))
+    return out, False
+
+
+def _ontology_lookup_waking(pool_norm: str, class_facets: list) -> JSONResponse:
+    """Normal lookup shape plus the agent-facing wake envelope."""
+    body = {
+        "pool": pool_norm,
+        "matched_case_count": 0,
+        "cases": [],
+        "class_facets": class_facets,
+    }
+    body.update(waking_envelope())
+    return JSONResponse(body, headers=waking_headers())
 
 
 @app.get("/api/ontology/lookup")
@@ -4956,7 +4992,9 @@ def api_ontology_lookup(
     if wanted_class or shared_only:
         graph_hits: Optional[set[str]] = None
         if pool_norm == "full" and class_raw and not shared_only:
-            graph_hits = _ontology_class_case_ids_via_sparql(class_raw)
+            graph_hits, oxigraph_waking = _ontology_class_case_ids_via_sparql(class_raw)
+            if oxigraph_waking:
+                return _ontology_lookup_waking(pool_norm, class_facets)
         if graph_hits is None:
             if index is None:
                 try:
@@ -5196,6 +5234,13 @@ async def sparql_query(request: Request):
     `application/sparql-query` / form `query=`. Default `Accept` is SPARQL Results
     JSON. Named graph per case; default graph is the union. 30/minute per IP.
     Update and `SERVICE` are rejected. User-facing guide: ontology/docs/SPARQL.md.
+
+    Cold start (Oxigraph serverless): one retry, then HTTP 200 with SPARQL
+    Results JSON plus ``status=waking``, ``retry=true``,
+    ``retry_after_seconds``, and ``reason=oxigraph_cold_start``. Empty
+    ``results.bindings`` is not an answer — check ``retry`` before using it.
+    Same envelope is what MCP / tool clients receive; they do not need to
+    catch a 502.
     """
     if not _OXIGRAPH_URL:
         raise HTTPException(
@@ -5227,28 +5272,34 @@ async def sparql_query(request: Request):
         )
 
     accept = request.headers.get("accept") or "application/sparql-results+json"
-    try:
-        upstream = await _post_oxigraph_cancellable(
+
+    async def _call():
+        return await _post_oxigraph_cancellable(
             request,
             url=f"{_OXIGRAPH_URL}/query",
             query=prepared.query,
             accept=accept,
             digest=digest,
         )
-    except httpx.TimeoutException as exc:
-        raise HTTPException(
-            status_code=504,
-            detail=f"SPARQL query timed out after {_SPARQL_HTTP_TIMEOUT_S:.0f}s.",
-        ) from exc
-    except httpx.RequestError as exc:
-        raise HTTPException(
-            status_code=503,
-            detail="SPARQL store is unreachable.",
-        ) from exc
+
+    try:
+        kind, upstream = await aquery_once_then_retry(
+            _call,
+            sleep=asyncio.sleep,
+            is_disconnected=request.is_disconnected,
+        )
     finally:
         _oxigraph_sem().release()
 
-    if upstream is None:
+    if kind == "waking":
+        logger.info("SPARQL oxigraph still waking sha256=%s", digest)
+        return JSONResponse(
+            sparql_waking_body(),
+            headers=waking_headers(),
+            media_type="application/sparql-results+json",
+        )
+    if kind == "disconnected" or upstream is None:
+        logger.info("SPARQL client disconnected before Oxigraph sha256=%s", digest)
         return Response(status_code=499)
 
     media_type = upstream.headers.get("content-type") or "application/sparql-results+json"
@@ -5257,6 +5308,54 @@ async def sparql_query(request: Request):
         status_code=upstream.status_code,
         media_type=media_type,
     )
+
+
+_OXIGRAPH_WARM_QUERY = "SELECT ?s WHERE { ?s ?p ?o } LIMIT 1"
+_OXIGRAPH_WARM_BUDGET_S = float(os.environ.get("OXIGRAPH_WARM_BUDGET_S", "45"))
+
+
+@app.post("/api/oxigraph/warm", tags=["SPARQL"])
+@limiter.limit("6/minute")
+async def api_oxigraph_warm(request: Request):
+    """Wake Oxigraph before a demo.
+
+    Polls the store until it answers or the budget runs out. Awake:
+    ``status=awake``, ``retry=false``. Still opening: the same waking
+    envelope as ``/sparql`` (``retry=true``, ``reason=oxigraph_cold_start``).
+    """
+    if not _OXIGRAPH_URL:
+        raise HTTPException(
+            status_code=503,
+            detail="SPARQL store is not configured (set OXIGRAPH_URL).",
+        )
+    if rebuild_in_progress():
+        raise HTTPException(
+            status_code=503,
+            detail="SPARQL store is being rebuilt. Retry shortly.",
+        )
+
+    timeout = httpx.Timeout(15.0, connect=5.0)
+
+    async def _call():
+        async with httpx.AsyncClient(timeout=timeout) as client:
+            return await client.post(
+                f"{_OXIGRAPH_URL}/query",
+                content=_OXIGRAPH_WARM_QUERY.encode("utf-8"),
+                headers={
+                    "Content-Type": "application/sparql-query",
+                    "Accept": "application/sparql-results+json",
+                },
+            )
+
+    body = await warm_until_ready(
+        _call,
+        sleep=asyncio.sleep,
+        budget_s=_OXIGRAPH_WARM_BUDGET_S,
+    )
+    headers = waking_headers() if body.get("status") == "waking" else {
+        "X-CaseLinker-Status": "awake",
+    }
+    return JSONResponse(body, headers=headers)
 
 
 # MCP mounts: legacy SSE at /mcp/sse + Streamable HTTP at /mcp-http
