@@ -128,11 +128,11 @@ LIMIT 50
 
 | Fact | How to read it |
 |---|---|
-| Relational case count | `GET https://caselinker.up.railway.app/api/case-count` (local sqlite **10,282**) |
-| Extracted features / agencies | `GET /api/stats` → `unique_features` **125,891**, `unique_organizations` **4,000+** distinct LE agencies after ingest normalize plus LE-only filter (`source_count` **56** = 54 non-DOJ + `DOJ CEOS` + `DOJ SAFE CHILDHOOD`; CEOS Archives → CEOS; AI-CSAM USAO harvest → Safe Childhood) |
-| Graph case count | `SELECT (COUNT(DISTINCT ?s) AS ?n) WHERE { GRAPH ?g { ?s a cac:CACInvestigation } FILTER(STRSTARTS(STR(?g), "https://caselinker.up.railway.app/resource/case/")) }` (local set **10,282**; hosted SPARQL matches after Oxigraph load) |
+| Relational case count | `GET https://caselinker.up.railway.app/api/case-count` (local sqlite **10,362**) |
+| Extracted features / agencies | `GET /api/stats` → `unique_features` **126,314**, `unique_organizations` **4,000+** distinct LE agencies after ingest normalize plus LE-only filter (`source_count` **61** = 59 non-DOJ + `DOJ CEOS` + `DOJ SAFE CHILDHOOD`; CEOS Archives → CEOS; AI-CSAM USAO harvest → Safe Childhood; international adds AFP, QPS, Brazil Federal Police, Europol, and the UK National Crime Agency) |
+| Graph case count | `SELECT (COUNT(DISTINCT ?s) AS ?n) WHERE { GRAPH ?g { ?s a cac:CACInvestigation } FILTER(STRSTARTS(STR(?g), "https://caselinker.up.railway.app/resource/case/")) }` (local set **10,362**; hosted SPARQL matches after Oxigraph load) |
 | PACER KG graphs | `SELECT (COUNT(DISTINCT ?g) AS ?n) WHERE { GRAPH ?g { ?s ?p ?o } FILTER(STRSTARTS(STR(?g), "urn:pacer:kg:")) }` (expect **297**) |
-| Named graphs (press release) | one per case; **10,282** locally |
+| Named graphs (press release) | one per case; **10,362** locally |
 | Graph generation time | `dcterms:created` / `dcterms:modified` on the investigation (remap time, not offense date) |
 | Public source | `dcterms:source` (press-release URL and/or source label) |
 | Reload | wholesale `python3 scripts/rebuild_oxigraph.py` (not incremental) |

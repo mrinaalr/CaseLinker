@@ -95,6 +95,39 @@ python3 build_press_pdf.py --url-file sources/example_trafficking_urls.txt \
 
 Smoke-test with `--limit 3` before running a full list. See `PRESS_RELEASE_COLLECTION.md` → "Canonical workflow" for the full step-by-step (verify one article in a browser, harvest hygiene, one-URL extractor probe) before scraping hundreds of URLs.
 
+Australia (URL path, no DOJ API). Two CSEA newsrooms the suite already harvests:
+
+```bash
+# Australian Federal Police — HTML search, one release per result, paginated
+python3 fetch_source_urls.py \
+  --url-template 'https://www.afp.gov.au/search?keys=child+exploitation&content_type_id=1&page={page}' \
+  --page-range 0:1 --same-host --path-prefix /news-centre/media-release/ \
+  -o sources/afp_csea_urls.txt
+
+# Queensland Police — the search page is a Google CSE widget, not article HTML
+python3 fetch_source_urls.py \
+  --google-cse-search-page 'https://mypolice.qld.gov.au/?s=child+exploitation' \
+  --path-prefix /news/ --require-any child --exclude /category/ \
+  --cse-max-results 12 \
+  -o sources/qps_csea_urls.txt
+```
+
+Europol articles are a JavaScript shell. The body is in `window.SERVER_DATA`, which `build_press_pdf.py` reads from the HTML response:
+
+```bash
+python3 build_press_pdf.py --url-file ../collector_output/europol/europol_csea_ops_urls.txt \
+  --out-dir .. --out-name EUROPOL_CSEA_All.pdf
+```
+
+UK National Crime Agency case stories (search harvest, twelve prosecutions):
+
+```bash
+python3 build_press_pdf.py --url-file ../collector_output/nca/nca_csea_urls.txt \
+  --out-dir .. --out-name NCA_CSEA_All.pdf
+```
+
+Local MCP: `fetch_press_listing_urls` takes `url_template` + `page_range`, or `google_cse=true`. That tool is local-only. It writes a url-file. It does not ingest.
+
 ### You want DOJ cases by topic (no URL list yet)
 
 Do **not** crawl `justice.gov/psc/press-room` (page>0 is HTTP 403). Do **not** call `resolve_press_urls.py` with an empty url-file. Page the public News API, then `--doj-file`:

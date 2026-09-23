@@ -6,10 +6,11 @@ The CaseLinker MCP (Model Context Protocol) server exposes structured tools to a
 - **8** are MCP-only corpus / graph helpers
 - **4** search free public court and DOJ press records
 - **1** collector READ (`probe_press_url`) always
-- **5** collector WRITE — **local MCP only** (not registered on Railway)
+- **6** collector WRITE — **local MCP only** (not registered on Railway)
+- **2** local-disk READ tools (`find_ingested_duplicates`, `verify_duplicate_pdf_pages`) — local MCP only
 
-**Local stdio / local FastAPI mount:** **47 tools** (full READ + WRITE).
-**Railway hosted MCP:** **42 tools** (WRITE omitted — no writes to ephemeral Railway disk).
+**Local stdio / local FastAPI mount:** **50 tools** (full READ + WRITE).
+**Railway hosted MCP:** **42 tools** (collector WRITE and local-disk duplicate tools omitted).
 
 Corpus and analysis tools are read-only against the database. Collector WRITE tools write local JSON/PDFs only; they do not ingest into sqlite.
 
@@ -60,8 +61,8 @@ Set `CASELINKER_KEY` to a value listed in `CASELINKER_TRUSTED_KEYS` on Railway o
 
 ## Tool tiers
 
-**42 public** + **5 trusted-key sensitive** = **47 tools** on local MCP.
-On Railway hosted MCP the five collector WRITE tools are omitted → **37 public** + **5 trusted** = **42 tools**.
+**45 public** + **5 trusted-key sensitive** = **50 tools** on local MCP.
+On Railway hosted MCP the six collector WRITE tools and the two local-disk duplicate tools are omitted → **37 public** + **5 trusted** = **42 tools**.
 
 ### Public tier
 
@@ -176,7 +177,7 @@ Add `.cursor/mcp.json` to `.gitignore` if it contains secrets.
 
 ## Local corpus
 
-Useful once you are pointing MCP at localhost. The processed sqlite corpus is **10,282 case reports**, **125,891 extracted features**, and **4,000+ distinct law-enforcement agencies** (**56** sources, **10,282** per-case CAC graphs under `ontology/graph_output/`).
+Useful once you are pointing MCP at localhost. The processed sqlite corpus is **10,362 case reports**, **126,314 extracted features**, and **4,000+ distinct law-enforcement agencies** (**61** sources, **10,362** per-case CAC graphs under `ontology/graph_output/`).
 
 - **Railway:** same deployed snapshot, public rate limits. Set `CASELINKER_API_URL=https://caselinker.up.railway.app`.
 - **Localhost:** set `CASELINKER_API_URL=http://localhost:8000` after `python3 run/main.py`. The local DB starts empty unless you populate it.
@@ -215,11 +216,11 @@ For a standalone SSE process (not via Railway mount), set `MCP_TRANSPORT=sse` an
 
 ## Tools
 
-**47 tools locally / 42 on Railway.** See [`tool_registry.md`](tool_registry.md) for the authoritative list. Summary by tier:
+**50 tools locally / 42 on Railway.** See [`tool_registry.md`](tool_registry.md) for the authoritative list. Summary by tier:
 
 | Tier | Local | Railway | Examples |
 |------|------:|--------:|----------|
-| Public (trusted key irrelevant) | 42 | 37 | `get_cases_page`, `search_courtlistener`; WRITE only local |
+| Public (trusted key irrelevant) | 45 | 37 | `get_cases_page`, `verify_duplicate_pdf_pages`; WRITE only local |
 | Trusted-key sensitive | 5 | 5 | `get_all_cases`, `get_lifecycle_cases`, `get_lifecycle_lstar`, `get_case`, `llm_chat` |
 
 Authoritative implementation: `@mcp.tool()` definitions in `server.py`. Tool docstrings there remain the source of parameter and behavior detail.

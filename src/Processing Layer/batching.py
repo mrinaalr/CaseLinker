@@ -189,6 +189,11 @@ def case_batching(text: str, org_name: str = "case", source: str = None, source_
     is_sjpd = False
     is_arkansas_dps = False
     is_alea = False
+    is_afp = False
+    is_qps = False
+    is_brazil_pf = False
+    is_europol = False
+    is_nca = False
     is_doj_ceos = False
     is_doj_ai_csam = False
     is_doj_archives = False
@@ -303,6 +308,16 @@ def case_batching(text: str, org_name: str = "case", source: str = None, source_
             is_arkansas_dps = True
         elif source_upper == 'ALEA':
             is_alea = True
+        elif source_upper == 'AFP':
+            is_afp = True
+        elif source_upper == 'QPS':
+            is_qps = True
+        elif source_upper == 'BRAZIL PF':
+            is_brazil_pf = True
+        elif source_upper == 'EUROPOL':
+            is_europol = True
+        elif source_upper == 'NCA':
+            is_nca = True
         elif source_upper == 'DOJ CEOS':
             is_doj_ceos = True
         elif source_upper == 'DOJ AI CSAM':
@@ -425,6 +440,16 @@ def case_batching(text: str, org_name: str = "case", source: str = None, source_
         return _batch_merged_icac_news_cases(text, org_name, source_file, "ARKANSAS DPS")
     elif is_alea:
         return _batch_merged_icac_news_cases(text, org_name, source_file, "ALEA")
+    elif is_afp:
+        return _batch_merged_icac_news_cases(text, org_name, source_file, "AFP")
+    elif is_qps:
+        return _batch_merged_icac_news_cases(text, org_name, source_file, "QPS")
+    elif is_brazil_pf:
+        return _batch_merged_icac_news_cases(text, org_name, source_file, "BRAZIL PF")
+    elif is_europol:
+        return _batch_merged_icac_news_cases(text, org_name, source_file, "EUROPOL")
+    elif is_nca:
+        return _batch_merged_icac_news_cases(text, org_name, source_file, "NCA")
     elif is_doj_ceos or is_doj_archives:
         # Archives PDFs share the DOJ CEOS source label.
         return _batch_merged_icac_news_cases(text, org_name, source_file, "DOJ CEOS")
@@ -1589,6 +1614,11 @@ _MERGED_ICAC_NEWS_PDF_CANDIDATES: Dict[str, List[str]] = {
     ],
     "ARKANSAS DPS": ["ARKDPS_ICAC_All.pdf", "arkansas_dps_output/ARKDPS_ICAC_All.pdf"],
     "ALEA": ["alea_icac_news.pdf", "data/ingestion/alea/alea_icac_news.pdf"],
+    "AFP": ["AFP_CSEA_All.pdf"],
+    "QPS": ["QPS_CSEA_All.pdf"],
+    "BRAZIL PF": ["BRAZIL_PF_CSEA_All.pdf"],
+    "EUROPOL": ["EUROPOL_CSEA_All.pdf"],
+    "NCA": ["NCA_CSEA_All.pdf"],
     "DOJ CEOS": [
         "DOJ_CEOS_All.pdf",
         "DOJ_BULK.pdf",

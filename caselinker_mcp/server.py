@@ -216,6 +216,11 @@ _SOURCES: list[dict[str, str]] = [
     {"code": "CBP", "name": "U.S. Customs and Border Protection", "description": "Child sexual exploitation border enforcement releases"},
     {"code": "ARMY CID", "name": "U.S. Army Criminal Investigation Division", "description": "ICAC releases"},
     {"code": "AF OSI", "name": "U.S. Air Force Office of Special Investigations", "description": "CSAM and exploitation press releases"},
+    {"code": "AFP", "name": "Australian Federal Police", "description": "Child exploitation media releases (harvested, ingest on request)"},
+    {"code": "QPS", "name": "Queensland Police Service", "description": "Child exploitation news posts (harvested, ingest on request)"},
+    {"code": "BRAZIL PF", "name": "Brazil Federal Police", "description": "Child sexual abuse operation press releases (harvested, ingest on request)"},
+    {"code": "EUROPOL", "name": "Europol", "description": "Child sexual exploitation operation press releases (harvested, ingest on request)"},
+    {"code": "NCA", "name": "UK National Crime Agency", "description": "Child sexual abuse prosecution press releases (harvested, ingest on request)"},
 ]
 
 
@@ -1518,11 +1523,18 @@ if _COLLECTOR_WRITE_ENABLED:
         same_host: bool = True,
         path_prefix: str = "",
         require_any: str = "",
+        exclude: str = "",
         max_urls: int = 20,
         out_dir: str = "",
+        google_cse: bool = False,
+        cse_max_results: int = 0,
+        url_template: str = "",
+        page_range: str = "",
     ) -> dict[str, Any]:
         """WRITE (local MCP only). Listing/search page → url-file (method B start).
 
+        One HTML page, a ``{page}`` template plus ``page_range`` (``0:1``), or
+        ``google_cse=true`` for a Programmable Search widget (Queensland Police).
         Wraps fetch_source_urls.py. Not registered on Railway hosted MCP.
         """
         try:
@@ -1535,8 +1547,13 @@ if _COLLECTOR_WRITE_ENABLED:
                 same_host=same_host,
                 path_prefix=path_prefix,
                 require_any=require_any,
+                exclude=exclude,
                 max_urls=max_urls,
                 out_dir=out_dir,
+                google_cse=google_cse,
+                cse_max_results=cse_max_results,
+                url_template=url_template,
+                page_range=page_range,
             )
         except Exception as e:
             logger.exception("fetch_press_listing_urls failed")
@@ -1624,6 +1641,96 @@ if _COLLECTOR_WRITE_ENABLED:
         except Exception as e:
             logger.exception("collect_case_dual_path failed")
             return {"error": str(e), "write": True}
+
+    @mcp.tool()
+    async def drop_collected_pdf_pages(
+        pdf: str,
+        pages: str,
+        dry_run: bool = True,
+        confirm_write: bool = False,
+    ) -> dict[str, Any]:
+        """WRITE (local MCP only). Preview or drop 1-based pages from a collected PDF.
+
+        Wraps collector/remove_pdf_pages_by_text.py. Default is a preview and does not
+        rewrite the file. A real drop requires dry_run=false and confirm_write=true,
+        and writes a backup beside the PDF. Does not touch sqlite or Postgres.
+        Not registered on Railway hosted MCP.
+        """
+        try:
+            from caselinker_mcp.collector_tools import drop_collected_pdf_pages as _drop
+
+            return await asyncio.to_thread(
+                _drop,
+                pdf,
+                pages,
+                dry_run=dry_run,
+                confirm_write=confirm_write,
+            )
+        except Exception as e:
+            logger.exception("drop_collected_pdf_pages failed")
+            return {"error": str(e), "write": True, "mutated": False}
+
+
+# Local disk only: sqlite is opened mode=ro and PDFs are read for text. Not on Railway.
+_LOCAL_DISK_TOOLS = not (os.getenv("RAILWAY_ENVIRONMENT") or os.getenv("RAILWAY_SERVICE_NAME"))
+
+if _LOCAL_DISK_TOOLS:
+
+    @mcp.tool()
+    async def find_ingested_duplicates(
+        source: str = "",
+        match: str = "exact",
+        limit: int = 50,
+    ) -> dict[str, Any]:
+        """READ (local MCP only). Group ingested cases that share a source_url.
+
+        Opens caselinker.db read-only. Does not open PDFs and does not write.
+        match is 'exact' (Layla's check) or 'normalized' (scheme / www / trailing slash).
+        Use verify_duplicate_pdf_pages on a group before any page cut.
+        """
+        try:
+            from caselinker_mcp.clean_and_validate import find_ingested_duplicates as _find
+
+            return await asyncio.to_thread(
+                _find,
+                source=source,
+                match=match,
+                limit=limit,
+            )
+        except Exception as e:
+            logger.exception("find_ingested_duplicates failed")
+            return {"error": str(e), "write": False, "mutated": False}
+
+    @mcp.tool()
+    async def verify_duplicate_pdf_pages(
+        case_ids: list[str] | None = None,
+        source_url: str = "",
+        source: str = "",
+        match: str = "exact",
+        max_groups: int = 8,
+        include_listing: bool = False,
+    ) -> dict[str, Any]:
+        """READ (local MCP only). Trace duplicate groups to pages in the source PDFs.
+
+        Reports same-PDF repeats and cross-PDF repeats (NCMEC year vs year, or NCMEC
+        vs another agency PDF). cut_from_pdf is a suggestion only — this tool never
+        deletes pages or database rows. max_groups caps PDF work (0 means every group).
+        """
+        try:
+            from caselinker_mcp.clean_and_validate import verify_duplicate_pdf_pages as _verify
+
+            return await asyncio.to_thread(
+                _verify,
+                case_ids=case_ids,
+                source_url=source_url,
+                source=source,
+                match=match,
+                max_groups=max_groups,
+                include_listing=include_listing,
+            )
+        except Exception as e:
+            logger.exception("verify_duplicate_pdf_pages failed")
+            return {"error": str(e), "write": False, "mutated": False}
 
 
 if __name__ == "__main__":

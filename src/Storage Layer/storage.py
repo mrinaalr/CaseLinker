@@ -110,6 +110,7 @@ class CaseStorage:
             cursor.execute('ALTER TABLE cases ADD COLUMN source_url TEXT')
         except sqlite3.OperationalError:
             pass
+        cursor.execute('CREATE INDEX IF NOT EXISTS idx_cases_source_url ON cases(source_url)')
         apply_sqlite_provenance_schema(cursor)
         
         cursor.execute('''
@@ -585,6 +586,25 @@ class CaseStorage:
             print(f"Error retrieving case: {e}")
             return None
     
+    def list_source_url_rows(self) -> List[Dict[str, str]]:
+        """Slim ``id``, ``source``, ``source_url`` rows. No raw text."""
+        conn = get_connection(self.db_path)
+        try:
+            cursor = conn.cursor()
+            cursor.execute(
+                """
+                SELECT id, source, source_url
+                FROM cases
+                WHERE source_url IS NOT NULL AND TRIM(source_url) != ''
+                """
+            )
+            return [
+                {"id": row[0] or "", "source": row[1] or "", "source_url": row[2] or ""}
+                for row in cursor.fetchall()
+            ]
+        finally:
+            conn.close()
+
     def get_case_count(self) -> int:
         """
         Get total number of cases in database (fast query).

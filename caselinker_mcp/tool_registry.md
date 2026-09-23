@@ -1,6 +1,6 @@
 # CaseLinker MCP tool registry
 
-**Local: 47 tools. Railway hosted: 42 tools** (five collector WRITE tools omitted). Count `@mcp.tool()` decorators in `server.py` (WRITE tools register only when `collector_disk_write_enabled()` is true).
+**Local: 50 tools. Railway hosted: 42 tools** (six collector WRITE tools and two local-disk duplicate tools omitted). Count `@mcp.tool()` decorators in `server.py` (WRITE tools register only when `collector_disk_write_enabled()` is true; `find_ingested_duplicates` and `verify_duplicate_pdf_pages` register only when not on Railway).
 
 Authoritative implementation: `caselinker_mcp/server.py`. This file is the human-readable catalog for docs and agent hosts.
 
@@ -12,9 +12,10 @@ Authoritative implementation: `caselinker_mcp/server.py`. This file is the human
 | MCP-only (corpus graphs) | **8** | `tree_traversal`, `list_sources`, `case2cac`, four graph tools, `export_case_graph_ttl` |
 | MCP-only (free public records) | **4** | DOJ press search + CourtListener/RECAP (`public_records.py`) |
 | MCP-only (press collector READ) | **1** | `probe_press_url` — all hosts |
-| MCP-only (press collector WRITE) | **5** | **Local MCP only** — not registered on Railway |
-| **Total (local)** | **47** | |
-| **Total (Railway)** | **42** | WRITE tools absent |
+| MCP-only (press collector WRITE) | **6** | **Local MCP only** — not registered on Railway |
+| MCP-only (local duplicate audit) | **2** | `find_ingested_duplicates`, `verify_duplicate_pdf_pages` — local disk, read-only |
+| **Total (local)** | **50** | |
+| **Total (Railway)** | **42** | WRITE and local-disk duplicate tools absent |
 
 There are **32** REST `/api/*` routes in `run/main.py`. **29** have MCP tools; four are intentionally excluded from MCP (admin/write/index): `POST /api/cache/clear`, `POST /api/case-studies/notes/{id}`, `POST /api/ontology/cache/warm`, `GET /api`.
 
@@ -26,9 +27,9 @@ No MCP resources (`@mcp.resource`) or prompts (`@mcp.prompt`) are registered.
 
 | Category | Local | Railway | Meaning |
 |----------|------:|--------:|---------|
-| Public (trusted key irrelevant) | **42** | **37** | Same behavior with or without trusted key |
+| Public (trusted key irrelevant) | **45** | **37** | Same behavior with or without trusted key |
 | Trusted-key sensitive | **5** | **5** | Blocked or reduced without trusted key |
-| **Total** | **47** | **42** | |
+| **Total** | **50** | **42** | |
 
 Corpus REST tools do **not** mutate the CaseLinker database. Collector WRITE tools create files on disk (JSON, url-lists, PDFs) under `collector_output/` or `collector/sources/` **on the MCP host**. They do **not** auto-ingest into sqlite. On Railway they are not registered (ephemeral FS).
 
@@ -65,6 +66,7 @@ Agents collecting cases should use this map. On disk the suite lives at repo-roo
 | `resolve_press_urls` | **B: URL path** (router) | `*_resolved.json` (`resolve_press_urls`) |
 | `build_press_pdf` | A or B final step | merged `.pdf` under `out_dir` |
 | `collect_case_dual_path` | A and B for one topic | both PDFs + resolve JSON + CourtListener search |
+| `drop_collected_pdf_pages` | page cut on a collected PDF | rewrites that PDF only when `dry_run=false` and `confirm_write=true`; preview otherwise. Does not touch sqlite |
 
 **Agent workflow (local MCP)**
 
@@ -121,8 +123,11 @@ Trusted key does **not** change behavior (still subject to normal slowapi / publ
 | `list_free_recap_documents` | CourtListener | **READ** free filings |
 | `resolve_free_recap_download` | CourtListener | **READ** free download URL |
 | `probe_press_url` | `collector_tools` / `collector` | **READ** extract/resolve probe (all hosts) |
+| `find_ingested_duplicates` | `clean_and_validate.py` | **READ** local only — source_url duplicate groups, sqlite `mode=ro` |
+| `verify_duplicate_pdf_pages` | `clean_and_validate.py` | **READ** local only — trace those groups to PDF pages; suggests cuts, never writes |
+| `drop_collected_pdf_pages` | `remove_pdf_pages_by_text.py` | **WRITE** local only — preview by default; real page drop needs `confirm_write` |
 | `harvest_doj_press_topic` | `harvest_doj_press.py` | **WRITE** local only — DOJ API harvest JSON |
-| `fetch_press_listing_urls` | `fetch_source_urls.py` | **WRITE** local only — listing → url-file |
+| `fetch_press_listing_urls` | `fetch_source_urls.py` | **WRITE** local only — HTML listing, `{page}` template, or Google CSE → url-file |
 | `resolve_press_urls` | `resolve_press_urls.py` | **WRITE** local only — URL-path resolve JSON |
 | `build_press_pdf` | `build_press_pdf.py` | **WRITE** local only — merged PDF |
 | `collect_case_dual_path` | collector suite | **WRITE** local only — A+B dual collect |

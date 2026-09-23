@@ -239,6 +239,16 @@ def detect_source_from_content(text: str, filename: str) -> str:
         return 'ARKANSAS DPS'
     elif 'alea' in filename_lower and 'icac' in filename_lower:
         return 'ALEA'
+    elif 'afp_csea' in filename_lower or ('afp' in filename_lower and 'csea' in filename_lower):
+        return 'AFP'
+    elif 'qps_csea' in filename_lower or ('qps' in filename_lower and 'csea' in filename_lower):
+        return 'QPS'
+    elif 'brazil_pf' in filename_lower or 'pf_csea' in filename_lower:
+        return 'BRAZIL PF'
+    elif 'europol_csea' in filename_lower or ('europol' in filename_lower and 'csea' in filename_lower):
+        return 'EUROPOL'
+    elif 'nca_csea' in filename_lower or ('nca' in filename_lower and 'csea' in filename_lower):
+        return 'NCA'
     elif (
         'doj_ai_csam' in filename_lower
         or ('doj' in filename_lower and 'ai' in filename_lower and 'csam' in filename_lower)
@@ -266,6 +276,17 @@ def detect_source_from_content(text: str, filename: str) -> str:
         return 'DOJ CEOS'
     elif 'fbi' in filename_lower:
         return 'FBI'
+
+    if re.search(r'afp\.gov\.au/news-centre', text_sample, re.I):
+        return 'AFP'
+    if re.search(r'mypolice\.qld\.gov\.au', text_sample, re.I):
+        return 'QPS'
+    if re.search(r'gov\.br/pf/', text_sample, re.I):
+        return 'BRAZIL PF'
+    if re.search(r'europol\.europa\.eu/media-press', text_sample, re.I):
+        return 'EUROPOL'
+    if re.search(r'nationalcrimeagency\.gov\.uk/news', text_sample, re.I):
+        return 'NCA'
 
     # Washoe County Sheriff site / newsroom ICAC scrape (merged PDF)
     if re.search(r'washoesheriff\.com', text_sample, re.I) and re.search(
@@ -929,6 +950,35 @@ def _extract_pdf_text_pdfplumber(pdf_path: str) -> str:
     return "\n".join(text_content)
 
 
+def _prepare_international_text(text: str, source: str) -> str:
+    """English-normalize international press text before it reaches the processor.
+
+    Detection still sees the original PDF text. English sources stay as written.
+    Portuguese is translated locally. A missing model or a failed translation
+    stops ingest instead of handing foreign text to the processor.
+    """
+    from international_text import (
+        InternationalTranslationError,
+        is_international_source,
+        normalize_international_text,
+    )
+
+    if not is_international_source(source):
+        return text
+    try:
+        updated = normalize_international_text(text, source)
+    except InternationalTranslationError:
+        raise
+    if updated == text:
+        print(f"✓ International source {source}: English text left unchanged")
+    else:
+        print(
+            f"✓ International source {source}: translated to English locally "
+            f"({len(text):,} → {len(updated):,} characters)"
+        )
+    return updated
+
+
 def extract_pdf_text(pdf_path: str) -> str:
     """
     Extract all text from a PDF file.
@@ -991,6 +1041,7 @@ def ingest_file(file_path: str, file_type: Optional[str] = None, source_url: Opt
     if file_type == 'pdf':
         text = extract_pdf_text(str(path))
         source = detect_source_from_content(text, path.name)
+        text = _prepare_international_text(text, source)
         detected_source_url = extract_source_url_from_text(text)
         resolved_source_url = source_url or detected_source_url or get_source_url_fallback(source)
         
@@ -1038,10 +1089,13 @@ def _ingest_one_pdf_row(
         print(f"⚠️  Warning: Not a PDF file, skipping: {pdf_path}")
         return None
 
+    from international_text import InternationalTranslationError
+
     try:
         text = extract_pdf_text(str(path))
 
         org_name = detect_source_from_content(text, path.name)
+        text = _prepare_international_text(text, org_name)
         detected_source_url = extract_source_url_from_text(text)
         resolved_source_url = (
             (source_urls_by_file or {}).get(str(path))
@@ -1061,6 +1115,8 @@ def _ingest_one_pdf_row(
             "source": org_name,
             "source_url": resolved_source_url,
         }
+    except InternationalTranslationError:
+        raise
     except Exception as e:
         print(f"❌ Error processing {path.name}: {e}")
         return None

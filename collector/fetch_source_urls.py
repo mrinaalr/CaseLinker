@@ -179,6 +179,7 @@ def _normalize_regex_extracted_url(raw: str) -> str | None:
     for sep in ("&quot;", "&quot", "\\u0026quot;", "%22", "\\", '"', "'", "<", ">"):
         if sep in s:
             s = s.split(sep)[0]
+    s = re.sub(r"\)\S*$", "", s)
     s = s.strip().rstrip(".,);]}")
     if not s.startswith("http"):
         return None

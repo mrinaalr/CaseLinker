@@ -207,9 +207,32 @@ def store_cases(
     else:
         storage = CaseStorage()  # PostgreSQL (uses DATABASE_URL)
 
-    # Novelty filter (DOJ / NCMEC de-dupe before insert): off by default — uncomment to restore.
+    # Text-similarity novelty filter stays off (difflib over full case text).
+    # Processing gate: do not write a case whose article URL is already held
+    # by another source. Same-source repeats are a source-PDF problem.
     cases_to_store = cases
-    # cases_to_store = _filter_incoming_cases_by_novelty(cases, storage)
+    try:
+        from source_url_gate import drop_obvious_duplicate_cases
+
+        cases_to_store, skipped = drop_obvious_duplicate_cases(
+            cases,
+            storage.list_source_url_rows(),
+        )
+        if skipped:
+            print(
+                f"✓ source_url gate: skipped {len(skipped)} obvious duplicate(s) "
+                "(canonical URL already stored under another source)"
+            )
+            for row in skipped[:20]:
+                print(
+                    f"  {row['id']} ({row['source']}) duplicate_of "
+                    f"{row['duplicate_of_case_id']} ({row['duplicate_of_source']})"
+                )
+            if len(skipped) > 20:
+                print(f"  … +{len(skipped) - 20} more")
+    except Exception as exc:
+        print(f"⚠️  source_url gate skipped (ingest continues): {exc}")
+        cases_to_store = cases
 
     try:
         from provenance import attach_ingest_provenance

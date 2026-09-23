@@ -248,6 +248,44 @@ def harvest_doj_press_topic(
 # ---------------------------------------------------------------------------
 
 
+def listing_fetch_argv(
+    listing_url: str,
+    out_file: Path,
+    *,
+    same_host: bool = True,
+    path_prefix: str = "",
+    require_any: str = "",
+    exclude: str = "",
+    google_cse: bool = False,
+    cse_max_results: int = 0,
+    url_template: str = "",
+    page_range: str = "",
+) -> list[str]:
+    """CLI argv for fetch_source_urls.py. HTML page, paginated template, or Google CSE."""
+    cmd = [sys.executable, str(_COLLECTOR / "fetch_source_urls.py")]
+    template = (url_template or "").strip()
+    pages = (page_range or "").strip()
+    if google_cse:
+        cmd.extend(["--google-cse-search-page", listing_url])
+        if cse_max_results and int(cse_max_results) > 0:
+            cmd.extend(["--cse-max-results", str(int(cse_max_results))])
+    elif template:
+        cmd.extend(["--url-template", template, "--page-range", pages or "0:0"])
+    else:
+        cmd.extend(["--url", listing_url])
+    cmd.extend(["-o", str(out_file)])
+    if same_host and not google_cse:
+        cmd.append("--same-host")
+    if path_prefix.strip():
+        cmd.extend(["--path-prefix", path_prefix.strip()])
+    for flag, blob in (("--require-any", require_any), ("--exclude", exclude)):
+        for token in (blob or "").split(","):
+            t = token.strip()
+            if t:
+                cmd.extend([flag, t])
+    return cmd
+
+
 def fetch_press_listing_urls(
     listing_url: str,
     *,
@@ -255,15 +293,24 @@ def fetch_press_listing_urls(
     same_host: bool = True,
     path_prefix: str = "",
     require_any: str = "",
+    exclude: str = "",
     max_urls: int = 20,
     out_dir: str = "",
+    google_cse: bool = False,
+    cse_max_results: int = 0,
+    url_template: str = "",
+    page_range: str = "",
 ) -> dict[str, Any]:
-    """WRITE: harvest article URLs from one listing/search page → url-file."""
+    """WRITE: harvest article URLs from a listing, a {page} template, or a Google CSE page."""
     if not collector_disk_write_enabled():
         return _write_disabled_error()
     listing_url = (listing_url or "").strip()
-    if not listing_url.startswith("http"):
-        return {"error": "listing_url must be http(s)", "write": True}
+    template = (url_template or "").strip()
+    if google_cse or not template:
+        if not listing_url.startswith("http"):
+            return {"error": "listing_url must be http(s)", "write": True}
+    elif "{page}" not in template and "{n}" not in template:
+        return {"error": "url_template must contain {page} or {n}", "write": True}
 
     out = _ensure_out(out_dir)
     if out_name.endswith(".txt"):
@@ -271,22 +318,18 @@ def fetch_press_listing_urls(
     else:
         out_file = out / f"{_safe_slug(out_name)}.txt"
 
-    cmd = [
-        sys.executable,
-        str(_COLLECTOR / "fetch_source_urls.py"),
-        "--url",
+    cmd = listing_fetch_argv(
         listing_url,
-        "-o",
-        str(out_file),
-    ]
-    if same_host:
-        cmd.append("--same-host")
-    if path_prefix.strip():
-        cmd.extend(["--path-prefix", path_prefix.strip()])
-    for token in (require_any or "").split(","):
-        t = token.strip()
-        if t:
-            cmd.extend(["--require-any", t])
+        out_file,
+        same_host=same_host,
+        path_prefix=path_prefix,
+        require_any=require_any,
+        exclude=exclude,
+        google_cse=google_cse,
+        cse_max_results=cse_max_results,
+        url_template=template,
+        page_range=page_range,
+    )
 
     proc = subprocess.run(
         cmd,
@@ -309,7 +352,7 @@ def fetch_press_listing_urls(
     return {
         "write": True,
         "tool_kind": "WRITE",
-        "method": "url_listing_harvest",
+        "method": "google_cse" if google_cse else ("url_template" if template else "url_listing_harvest"),
         "ok": proc.returncode == 0,
         "exit_code": proc.returncode,
         "listing_url": listing_url,
@@ -538,4 +581,101 @@ def collect_case_dual_path(
         "url_resolve": resolved_b,
         "out_dir": str(out),
         "courtlistener": court,
+    }
+
+
+def drop_collected_pdf_pages(
+    pdf: str,
+    pages: str,
+    *,
+    dry_run: bool = True,
+    confirm_write: bool = False,
+) -> dict[str, Any]:
+    """Drop 1-based pages from a collected PDF.
+
+    Prepared for source-level dedup (cut a repeated clipping out of an aggregate
+    PDF, then re-ingest). Default is a preview: nothing is written unless
+    ``dry_run`` is false AND ``confirm_write`` is true. A backup is written beside
+    the PDF by ``collector/remove_pdf_pages_by_text.py`` on a real drop.
+
+    Does not touch sqlite or Postgres.
+    """
+    will_write = (not dry_run) and bool(confirm_write)
+    if will_write and not collector_disk_write_enabled():
+        return _write_disabled_error()
+
+    spec = (pages or "").strip()
+    if not spec:
+        return {
+            "error": "pages is required, for example '365' or '12,15-17' (1-based).",
+            "write": True,
+            "tool_kind": "WRITE",
+            "mutated": False,
+        }
+
+    raw = Path(pdf)
+    path = raw if raw.is_absolute() else (_REPO / raw)
+    try:
+        resolved = path.resolve()
+    except OSError as exc:
+        return {"error": str(exc), "write": True, "mutated": False}
+    repo = _REPO.resolve()
+    if not resolved.is_relative_to(repo):
+        return {
+            "error": "pdf must stay inside the CaseLinker repo",
+            "write": True,
+            "mutated": False,
+        }
+    if resolved.suffix.lower() != ".pdf" or not resolved.is_file():
+        return {"error": f"pdf not found: {resolved.name}", "write": True, "mutated": False}
+
+    remover = _load_module("remove_pdf_pages_by_text_mcp", _COLLECTOR / "remove_pdf_pages_by_text.py")
+    from pypdf import PdfReader
+
+    reader = PdfReader(str(resolved))
+    n_pages = len(reader.pages)
+    try:
+        drop = remover.parse_page_spec(spec, n_pages)
+    except ValueError as exc:
+        return {"error": f"could not parse pages: {exc}", "write": True, "mutated": False}
+
+    preview: list[dict[str, Any]] = []
+    for index in sorted(drop):
+        text = reader.pages[index].extract_text() or ""
+        preview.append({
+            "page": index + 1,
+            "snippet": re.sub(r"\s+", " ", text).strip()[:180],
+        })
+
+    base = {
+        "write": True,
+        "tool_kind": "WRITE",
+        "pdf": resolved.name,
+        "page_count": n_pages,
+        "requested_pages": spec,
+        "drop_pages": [index + 1 for index in sorted(drop)],
+        "preview": preview,
+        "dry_run": not will_write,
+        "confirm_write": bool(confirm_write),
+    }
+    if not drop:
+        return {**base, "mutated": False, "error": "no in-range pages matched"}
+    if not will_write:
+        return {
+            **base,
+            "mutated": False,
+            "note": "Preview only. Pass dry_run=false and confirm_write=true to rewrite the PDF.",
+        }
+
+    before, after, _written_preview = remover.write_pdf_without_pages(
+        resolved, drop, dry_run=False
+    )
+    backup = resolved.with_suffix(resolved.suffix + ".pre_remove_failures.bak")
+    return {
+        **base,
+        "dry_run": False,
+        "mutated": True,
+        "pages_before": before,
+        "pages_after": after,
+        "backup": str(backup) if backup.is_file() else None,
     }

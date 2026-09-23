@@ -156,6 +156,9 @@ class CaseStorage:
                     END IF;
                 END $$;
             ''')
+            cursor.execute(
+                'CREATE INDEX IF NOT EXISTS idx_cases_source_url ON cases(source_url)'
+            )
             apply_postgres_provenance_schema(cursor)
             
             cursor.execute('''
@@ -715,6 +718,26 @@ class CaseStorage:
                 return_connection(conn)
             return None
     
+    def list_source_url_rows(self) -> List[Dict[str, str]]:
+        """Slim ``id``, ``source``, ``source_url`` rows. No raw text."""
+        conn = get_connection()
+        cursor = conn.cursor()
+        try:
+            cursor.execute(
+                """
+                SELECT id, source, source_url
+                FROM cases
+                WHERE source_url IS NOT NULL AND BTRIM(source_url) != ''
+                """
+            )
+            return [
+                {"id": row[0] or "", "source": row[1] or "", "source_url": row[2] or ""}
+                for row in cursor.fetchall()
+            ]
+        finally:
+            cursor.close()
+            return_connection(conn)
+
     def get_case_count(self) -> int:
         """
         Get total number of cases in database (fast query).

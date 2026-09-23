@@ -1,0 +1,97 @@
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-production: <https://cacontology.projectvic.org/production#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://caselinker.up.railway.app/resource/vocab/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
+@prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://caselinker.up.railway.app/resource/case/europol_2018_002> a cacontology:CACInvestigation,
+        cac-core:EnduringEntity ;
+    dcterms:created "2026-09-23T17:43:34.428981" ;
+    dcterms:identifier "europol_2018_002" ;
+    dcterms:modified "2026-09-23T17:43:34.428981" ;
+    dcterms:source <https://www.europol.europa.eu/media-press/newsroom/news/over-2-million-pieces-of-child-abuse-material-seized-in-spain>,
+        "EUROPOL" ;
+    dcterms:spatial <https://caselinker.up.railway.app/resource/location/europe>,
+        <https://caselinker.up.railway.app/resource/location/member-states>,
+        <https://caselinker.up.railway.app/resource/location/spain>,
+        <https://caselinker.up.railway.app/resource/location/united-states> ;
+    cacontology:currentPhase <https://caselinker.up.railway.app/resource/case/europol_2018_002/phase/arrested> ;
+    cacontology:hasPhase <https://caselinker.up.railway.app/resource/case/europol_2018_002/phase/arrested> ;
+    cacontology:hasStep <https://caselinker.up.railway.app/resource/case/europol_2018_002/event/distribution>,
+        <https://caselinker.up.railway.app/resource/case/europol_2018_002/event/multi-jurisdiction>,
+        <https://caselinker.up.railway.app/resource/case/europol_2018_002/legal-proceeding> ;
+    cacontology:investigationStatus "unknown" ;
+    cacontology-multi:involvesAgency <https://caselinker.up.railway.app/resource/agency/spanish-national-police-department> ;
+    ns1:mentionsLocation <https://caselinker.up.railway.app/resource/location/europe>,
+        <https://caselinker.up.railway.app/resource/location/member-states>,
+        <https://caselinker.up.railway.app/resource/location/spain>,
+        <https://caselinker.up.railway.app/resource/location/united-states> .
+
+<https://caselinker.up.railway.app/resource/case/europol_2018_002/role/offender/1> a cacontology:OffenderRole,
+        uco-role:OffenderRole ;
+    cacontology:hasRoleBeginPoint "2018-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/europol_2018_002/person/offender/1> .
+
+<https://caselinker.up.railway.app/resource/case/europol_2018_002/role/victim/1> a cacontology:VictimRole,
+        uco-role:VictimRole ;
+    cacontology:hasRoleBeginPoint "2018-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cac-core:hasRole <https://caselinker.up.railway.app/resource/case/europol_2018_002/person/victim/1> .
+
+<https://caselinker.up.railway.app/resource/agency/spanish-national-police-department> a cacontology-multi:LocalAgency .
+
+<https://caselinker.up.railway.app/resource/case/europol_2018_002/event/distribution> a cac-core:Event,
+        cacontology-legal-outcomes:CSAM_Distribution ;
+    cacontology:severityLevel 3 .
+
+<https://caselinker.up.railway.app/resource/case/europol_2018_002/event/multi-jurisdiction> a cac-core:Event,
+        cacontology-multi:MultiJurisdictionalInvestigation ;
+    cacontology:severityLevel 3 ;
+    cacontology-multi:crossesBorders true .
+
+<https://caselinker.up.railway.app/resource/case/europol_2018_002/legal-proceeding> a cac-core:Event,
+        cac-core:LegalEvent,
+        cacontology-legal-outcomes:LegalProceeding ;
+    cacontology-legal-outcomes:hasProceedingBeginPoint "2018-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
+    cacontology-legal-outcomes:resultsSentence <https://caselinker.up.railway.app/resource/case/europol_2018_002/sentence/1> .
+
+<https://caselinker.up.railway.app/resource/case/europol_2018_002/person/offender/1> a uco-identity:Person .
+
+<https://caselinker.up.railway.app/resource/case/europol_2018_002/person/victim/1> a uco-identity:Person ;
+    cacontology-production:victimAge 8 .
+
+<https://caselinker.up.railway.app/resource/case/europol_2018_002/sentence/1> a cacontology-legal-outcomes:CriminalSentence,
+        cacontology-legal-outcomes:PrisonSentence ;
+    rdfs:label "[]" .
+
+<https://caselinker.up.railway.app/resource/case/europol_2018_002/phase/arrested> a cacontology:InitialPhase,
+        cac-core:Phase ;
+    cacontology:hasPhaseBeginPoint "2018-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+
+<https://caselinker.up.railway.app/resource/location/europe> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Europe" ;
+    uco-core:name "Europe" .
+
+<https://caselinker.up.railway.app/resource/location/member-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Member States" ;
+    uco-core:name "Member States" .
+
+<https://caselinker.up.railway.app/resource/location/spain> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "Spain" ;
+    uco-core:name "Spain" .
+
+<https://caselinker.up.railway.app/resource/location/united-states> a cac-core:PlaceLikeEntity,
+        uco-location:Location ;
+    rdfs:label "United States" ;
+    uco-core:name "United States" .
+

@@ -1057,6 +1057,71 @@
                             casesUsed: 0
                         }
                     ]
+                },
+                {
+                    name: "Australian Federal Police – child exploitation media releases",
+                    url: "https://www.afp.gov.au/search?keys=child+exploitation&content_type_id=1",
+                    description: "AFP media releases on child exploitation charges, arrests, and sentences. URL-path harvest.",
+                    type: "Official website",
+                    yearLinks: [
+                        {
+                            year: "Child exploitation search",
+                            url: "https://www.afp.gov.au/search?keys=child+exploitation&content_type_id=1",
+                            casesUsed: 0
+                        }
+                    ]
+                },
+                {
+                    name: "Queensland Police Service – child exploitation news",
+                    url: "https://mypolice.qld.gov.au/?s=child+exploitation",
+                    description: "Queensland Police news posts on child exploitation material charges. URL-path harvest.",
+                    type: "Official website",
+                    yearLinks: [
+                        {
+                            year: "Child exploitation search",
+                            url: "https://mypolice.qld.gov.au/?s=child+exploitation",
+                            casesUsed: 0
+                        }
+                    ]
+                },
+                {
+                    name: "Brazil Federal Police – child sexual abuse operations",
+                    url: "https://www.gov.br/pf/pt-br/assuntos/noticias",
+                    description: "Polícia Federal press releases on child sexual abuse material, online sharing, and related operations. URL-path harvest from the news listing.",
+                    type: "Official website",
+                    yearLinks: [
+                        {
+                            year: "Newsroom",
+                            url: "https://www.gov.br/pf/pt-br/assuntos/noticias",
+                            casesUsed: 0
+                        }
+                    ]
+                },
+                {
+                    name: "Europol – child sexual exploitation operations",
+                    url: "https://www.europol.europa.eu/media-press/newsroom",
+                    description: "Europol newsroom releases on child sexual exploitation arrests, rescues, and platform takedowns. Sitemap harvest of operation stories.",
+                    type: "Official website",
+                    yearLinks: [
+                        {
+                            year: "Newsroom",
+                            url: "https://www.europol.europa.eu/media-press/newsroom",
+                            casesUsed: 0
+                        }
+                    ]
+                },
+                {
+                    name: "National Crime Agency – child sexual abuse prosecutions",
+                    url: "https://www.nationalcrimeagency.gov.uk/news",
+                    description: "UK National Crime Agency news on child sexual abuse prosecutions. Search harvest of individual case stories.",
+                    type: "Official website",
+                    yearLinks: [
+                        {
+                            year: "Newsroom",
+                            url: "https://www.nationalcrimeagency.gov.uk/news",
+                            casesUsed: 0
+                        }
+                    ]
                 }
                
             ];
@@ -2055,6 +2120,66 @@
                         if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
                             staticSource.yearLinks[0].casesUsed = aleaCases.length;
                         }
+                    } else if (staticSource.name.includes('Australian Federal Police')) {
+                        const afpCases = cases.filter(c => {
+                            const s = (c.source || c.raw_data?.source || '')
+                                .toUpperCase()
+                                .replace(/_/g, ' ')
+                                .trim();
+                            return s === 'AFP';
+                        });
+                        staticSource.cases = afpCases;
+                        const r = getDateRange(afpCases);
+                        if (r && staticSource.yearLinks?.length) staticSource.yearLinks[0].year = r;
+                        if (staticSource.yearLinks?.length) staticSource.yearLinks[0].casesUsed = afpCases.length;
+                    } else if (staticSource.name.includes('Queensland Police')) {
+                        const qpsCases = cases.filter(c => {
+                            const s = (c.source || c.raw_data?.source || '')
+                                .toUpperCase()
+                                .replace(/_/g, ' ')
+                                .trim();
+                            return s === 'QPS';
+                        });
+                        staticSource.cases = qpsCases;
+                        const r = getDateRange(qpsCases);
+                        if (r && staticSource.yearLinks?.length) staticSource.yearLinks[0].year = r;
+                        if (staticSource.yearLinks?.length) staticSource.yearLinks[0].casesUsed = qpsCases.length;
+                    } else if (staticSource.name.includes('Brazil Federal Police')) {
+                        const pfCases = cases.filter(c => {
+                            const s = (c.source || c.raw_data?.source || '')
+                                .toUpperCase()
+                                .replace(/_/g, ' ')
+                                .trim();
+                            return s === 'BRAZIL PF';
+                        });
+                        staticSource.cases = pfCases;
+                        const r = getDateRange(pfCases);
+                        if (r && staticSource.yearLinks?.length) staticSource.yearLinks[0].year = r;
+                        if (staticSource.yearLinks?.length) staticSource.yearLinks[0].casesUsed = pfCases.length;
+                    } else if (staticSource.name.includes('Europol')) {
+                        const euCases = cases.filter(c => {
+                            const s = (c.source || c.raw_data?.source || '')
+                                .toUpperCase()
+                                .replace(/_/g, ' ')
+                                .trim();
+                            return s === 'EUROPOL';
+                        });
+                        staticSource.cases = euCases;
+                        const r = getDateRange(euCases);
+                        if (r && staticSource.yearLinks?.length) staticSource.yearLinks[0].year = r;
+                        if (staticSource.yearLinks?.length) staticSource.yearLinks[0].casesUsed = euCases.length;
+                    } else if (staticSource.name.includes('National Crime Agency')) {
+                        const ncaCases = cases.filter(c => {
+                            const s = (c.source || c.raw_data?.source || '')
+                                .toUpperCase()
+                                .replace(/_/g, ' ')
+                                .trim();
+                            return s === 'NCA';
+                        });
+                        staticSource.cases = ncaCases;
+                        const r = getDateRange(ncaCases);
+                        if (r && staticSource.yearLinks?.length) staticSource.yearLinks[0].year = r;
+                        if (staticSource.yearLinks?.length) staticSource.yearLinks[0].casesUsed = ncaCases.length;
                     }
                 });
                 

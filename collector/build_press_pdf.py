@@ -2008,6 +2008,23 @@ def _trim_dps_iowa_jina_body(body: str) -> str:
     return trimmed
 
 
+def _trim_europol_jina_body(body: str, title: str) -> str:
+    """Drop the Europol site nav and the email-alert footer around the article."""
+    if not (body or "").strip():
+        return body
+    trimmed = body
+    if title:
+        marker = re.search(rf"(?m)^#\s+{re.escape(title.strip())}\s*$", trimmed)
+        if marker and marker.start() > 0:
+            trimmed = trimmed[marker.start():]
+    end = re.search(r"(?m)^## Email Alerts\s*$", trimmed)
+    if end:
+        trimmed = trimmed[: end.start()]
+    trimmed = re.sub(r"(?m)^\[Previous\].*$", "", trimmed)
+    trimmed = re.sub(r"(?m)^Content type news\s*$", "", trimmed)
+    return trimmed.strip()
+
+
 def extract_from_jina_reader(markdown_blob: str, original_url: str) -> tuple[str, str, str, date | None] | None:
     """
     Parse r.jina.ai plain-text response (Title / URL Source / Published Time / Markdown Content).
@@ -2070,6 +2087,10 @@ def extract_from_jina_reader(markdown_blob: str, original_url: str) -> tuple[str
         body = _trim_ice_gov_jina_body(body)
         if "|" in title:
             title = title.split("|", 1)[0].strip()
+    if "europol.europa.eu" in (original_url or "").lower():
+        if "|" in title:
+            title = title.split("|", 1)[0].strip()
+        body = _trim_europol_jina_body(body, title)
     if "justice.gov" in (original_url or "").lower():
         body = _trim_justice_gov_jina_body(body)
         if "|" in title:
@@ -2253,8 +2274,80 @@ def _html_headline_title(soup: BeautifulSoup) -> str:
     return ""
 
 
+def _extract_europol_server_data(html: str, url: str) -> tuple[str, str, str, date | None] | None:
+    """Europol news pages are a JS shell; the article is in window.SERVER_DATA."""
+    if "europol.europa.eu" not in (url or "").lower():
+        return None
+    match = re.search(r"window\.SERVER_DATA=(\{.*?\})\s*;?\s*</script>", html, re.S)
+    if not match:
+        return None
+    try:
+        data = json.loads(match.group(1))
+    except json.JSONDecodeError:
+        return None
+    node = ((data.get("NodeLoader") or {}).get("node") or {})
+    title = str(node.get("title") or "").strip()
+    body_html = str(node.get("body") or "")
+    body = BeautifulSoup(body_html, "html.parser").get_text("\n", strip=True)
+    body = re.sub(r"\n{3,}", "\n\n", body).strip()
+    if len(body) < MIN_BODY_CHARS or not title:
+        return None
+    published = node.get("published")
+    pub: date | None = None
+    if isinstance(published, (int, float)) and published > 0:
+        pub = datetime.fromtimestamp(int(published), tz=timezone.utc).date()
+    return title, format_display_byline(pub, None), body, pub
+
+
+_NCA_PUBLISHED = re.compile(
+    r"(?m)^(\d{1,2})\s+"
+    r"(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|"
+    r"Aug(?:ust)?|Sept?(?:ember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\s+"
+    r"(20\d{2})\s*$"
+)
+
+
+def _nca_published_date(day: str, month: str, year: str) -> date | None:
+    key = "Sep" if month.lower().startswith("sep") else month[:3].title()
+    try:
+        return datetime.strptime(f"{int(day)} {key} {year}", "%d %b %Y").date()
+    except ValueError:
+        return None
+
+
+def _extract_nca(html: str, url: str) -> tuple[str, str, str, date | None] | None:
+    """UK National Crime Agency news (Joomla articleBody, date on the last line)."""
+    if "nationalcrimeagency.gov.uk" not in (url or "").lower():
+        return None
+    soup = BeautifulSoup(html, "html.parser")
+    heading = soup.select_one(".item-page h1") or soup.select_one('[itemprop="headline"]')
+    title = heading.get_text(" ", strip=True) if heading else ""
+    if not title:
+        title = (_meta_content(soup, prop="og:title") or "").split(" - ", 1)[0].strip()
+    node = soup.select_one('[itemprop="articleBody"]')
+    if not node or not title:
+        return None
+    body = re.sub(r"\n{3,}", "\n\n", node.get_text("\n", strip=True)).strip()
+    pub = None
+    match = None
+    for match in _NCA_PUBLISHED.finditer(body):
+        pass
+    if match and match.end() >= len(body) - 5:
+        pub = _nca_published_date(match.group(1), match.group(2), match.group(3))
+        body = body[: match.start()].strip()
+    if len(body) < MIN_BODY_CHARS:
+        return None
+    return title, format_display_byline(pub, None), body, pub
+
+
 def extract(html: str, url: str) -> tuple[str, str, str, date | None] | None:
     netloc = urlparse(url).netloc.lower()
+    europol = _extract_europol_server_data(html, url)
+    if europol:
+        return europol
+    nca = _extract_nca(html, url)
+    if nca:
+        return nca
 
     # ncsbi.gov puts release text inside a <form>; extract before form decompose below.
     if netloc in ("www.ncsbi.gov", "ncsbi.gov"):
