@@ -6,7 +6,7 @@
 
 **Try the latest version online:** [https://caselinker.up.railway.app/](https://caselinker.up.railway.app/)
 
-The live release includes all features and a processed case corpus from publicly available ICAC / NCMEC / DOJ / State Attorneys General press materials, plus international agency releases. The processed corpus holds **10,362 case reports**, **126,314 extracted features**, and **4,000+ distinct law-enforcement agencies** across **61** sources. Per-source coverage is on the in-app **Sources** page. These reports summarize investigations, arrests, and prosecutions, redacted for public release. No PII was processed; all data was already in the public domain. No installation required — just open the link in your browser.
+The live release includes all features and a processed case corpus from publicly available ICAC / NCMEC / DOJ / State Attorneys General press materials. The processed corpus holds **10,362 case reports**, **126,314 extracted features**, and **4,000+ distinct law-enforcement agencies** across **61** sources. Per-source coverage is on the in-app **Sources** page. These reports summarize investigations, arrests, and prosecutions, redacted for public release. No PII was processed; all data was already in the public domain. No installation required — just open the link in your browser.
 
 ## Technical Reports
 
