@@ -162,8 +162,8 @@ You can process additional PDFs to add more cases to the database.
    - Provides REST API endpoints for case data, analysis, and statistics
 
 3. **`caselinker_mcp/server.py`** - **MCP server for agents and operators**
-   - **Local stdio:** **50 tools** (corpus + free RECAP/DOJ search + full collector READ/WRITE + local duplicate audit). Collector WRITE writes JSON/PDFs under `collector_output/` on your machine; nothing auto-ingests into sqlite.
-   - **Railway hosted MCP:** **42 tools** — same corpus/READ surface; collector **WRITE tools** and the local-disk duplicate tools are not registered (no ephemeral-disk side effects). Use local MCP or the `collector/` CLI to harvest PDFs.
+   - **Local stdio:** **52 tools** (corpus + free RECAP/DOJ search + full collector READ/WRITE + local duplicate audit). Collector WRITE writes JSON/PDFs under `collector_output/` on your machine; nothing auto-ingests into sqlite.
+   - **Railway hosted MCP:** **42 tools** — same corpus/READ surface; collector **WRITE tools** are not registered (no ephemeral-disk side effects). Use local MCP or the `collector/` CLI to harvest PDFs.
    - Reach out for private mcp.json keys and review `caselinker_mcp/README.md` and `caselinker_mcp/tool_registry.md` for setup, auth, and the full catalog
 
 **Typical use case:**
@@ -215,6 +215,7 @@ For federal cases, corresponding court documents can be searched and collected a
 Outputs under `collector_output/` stay local (gitignored) and do not auto-ingest.
 
 > Agents can orchestrate the same steps (`harvest_doj_press_topic`, `resolve_press_urls`, `build_press_pdf`, `search_courtlistener`, …) over MCP.
+
 
 Full workflow, flags, and collection framework: **[collector/README.md](collector/README.md)** / **[PRESS_RELEASE_COLLECTION.md](collector/PRESS_RELEASE_COLLECTION.md)**.
 
@@ -389,7 +390,7 @@ CaseLinker/
 │   ├── sparql_proxy.py               # SPARQL parser policy (LIMIT / Update / SERVICE)
 │   ├── redis_cache.py                # Optional Redis caching (production)
 │   └── auth.py                       # Access gates / keys for sensitive views
-├── collector/                        # press → PDF suite; DOJ API + URL path (MCP-wrappable)
+├── collector/                        # press → PDF, plus collector/pacer/ court fetch
 ├── scripts/
 │   ├── rebuild_oxigraph.py           # Wholesale Oxigraph reload (N-Quads PUT /store)
 │   ├── stats/                        # Corpus statistics scripts
@@ -424,7 +425,7 @@ CaseLinker/
 │   ├── graph_generate.py             # Batch TTL / JSON-LD
 │   ├── oxigraph_rebuild.py           # Canonical TTL → named-graph N-Quads
 │   ├── q1/ q2/ q3/                   # Research evidence
-│   ├── PACER/                        # PACER → lifecycle facts
+│   ├── PACER/                        # PACER graphs + BULK_FOLDER (fetchers live in collector/pacer/)
 │   └── graph_output/                 # staging + universe/ + big_bang/ + analysis/
 ├── state_machines/                   # PACER CAC state machines + L* (AfH Appendix X)
 │   ├── README.md                     # Lifecycle machines, backbone, recompute
@@ -432,7 +433,7 @@ CaseLinker/
 │   ├── data/lstar_all_cases.json     # Transition matrix + L* trajectories
 │   ├── compute_lstar.py              # Rebuild L* export
 │   └── lifecycle_api.py              # /lifecycle + trusted API payload
-├── caselinker_mcp/                   # MCP server (47 local / 42 Railway; corpus + collector + RECAP)
+├── caselinker_mcp/                   # MCP server (52 local / 42 Railway; corpus + collector + RECAP)
 │   ├── server.py                     # MCPServer (mcp 2.x) entry point
 │   ├── collector_tools.py            # Collector wrappers (WRITE local-only)
 │   ├── public_records.py             # DOJ API + CourtListener/RECAP READ

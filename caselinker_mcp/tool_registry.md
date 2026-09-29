@@ -1,6 +1,6 @@
 # CaseLinker MCP tool registry
 
-**Local: 50 tools. Railway hosted: 42 tools** (six collector WRITE tools and two local-disk duplicate tools omitted). Count `@mcp.tool()` decorators in `server.py` (WRITE tools register only when `collector_disk_write_enabled()` is true; `find_ingested_duplicates` and `verify_duplicate_pdf_pages` register only when not on Railway).
+**Local: 52 tools. Railway hosted: 42 tools** (eight collector WRITE tools and two local-disk duplicate tools omitted). Count `@mcp.tool()` decorators in `server.py` (WRITE tools register only when `collector_disk_write_enabled()` is true; `find_ingested_duplicates` and `verify_duplicate_pdf_pages` register only when not on Railway).
 
 Authoritative implementation: `caselinker_mcp/server.py`. This file is the human-readable catalog for docs and agent hosts.
 
@@ -12,9 +12,9 @@ Authoritative implementation: `caselinker_mcp/server.py`. This file is the human
 | MCP-only (corpus graphs) | **8** | `tree_traversal`, `list_sources`, `case2cac`, four graph tools, `export_case_graph_ttl` |
 | MCP-only (free public records) | **4** | DOJ press search + CourtListener/RECAP (`public_records.py`) |
 | MCP-only (press collector READ) | **1** | `probe_press_url` — all hosts |
-| MCP-only (press collector WRITE) | **6** | **Local MCP only** — not registered on Railway |
+| MCP-only (press collector WRITE) | **8** | **Local MCP only** — not registered on Railway |
 | MCP-only (local duplicate audit) | **2** | `find_ingested_duplicates`, `verify_duplicate_pdf_pages` — local disk, read-only |
-| **Total (local)** | **50** | |
+| **Total (local)** | **52** | |
 | **Total (Railway)** | **42** | WRITE and local-disk duplicate tools absent |
 
 There are **32** REST `/api/*` routes in `run/main.py`. **29** have MCP tools; four are intentionally excluded from MCP (admin/write/index): `POST /api/cache/clear`, `POST /api/case-studies/notes/{id}`, `POST /api/ontology/cache/warm`, `GET /api`.
@@ -27,9 +27,9 @@ No MCP resources (`@mcp.resource`) or prompts (`@mcp.prompt`) are registered.
 
 | Category | Local | Railway | Meaning |
 |----------|------:|--------:|---------|
-| Public (trusted key irrelevant) | **45** | **37** | Same behavior with or without trusted key |
+| Public (trusted key irrelevant) | **47** | **37** | Same behavior with or without trusted key |
 | Trusted-key sensitive | **5** | **5** | Blocked or reduced without trusted key |
-| **Total** | **50** | **42** | |
+| **Total** | **52** | **42** | |
 
 Corpus REST tools do **not** mutate the CaseLinker database. Collector WRITE tools create files on disk (JSON, url-lists, PDFs) under `collector_output/` or `collector/sources/` **on the MCP host**. They do **not** auto-ingest into sqlite. On Railway they are not registered (ephemeral FS).
 
@@ -44,7 +44,7 @@ Agents collecting cases should use this map. On disk the suite lives at repo-roo
 | Host | Collector surface |
 |------|-------------------|
 | **Local stdio** / local FastAPI `/mcp` | Full suite: READ + WRITE (PDFs on your machine) |
-| **Railway** `/mcp/sse` or `/mcp-http/` | READ only (`probe_press_url`, DOJ/CourtListener search). Harvest/build via local MCP or `collector/` CLI |
+| **Railway** `/mcp/sse` or `/mcp-http/` | READ only (`probe_press_url`, DOJ/CourtListener search and free RECAP URLs). Harvest, PDF build, `download_free_recap`, and `fetch_free_key_docs` via local MCP or the `collector/` CLI |
 | Override | `MCP_COLLECTOR_WRITE=1` force on · `=0` force off |
 
 ### READ (no files written; all hosts)
@@ -67,13 +67,15 @@ Agents collecting cases should use this map. On disk the suite lives at repo-roo
 | `build_press_pdf` | A or B final step | merged `.pdf` under `out_dir` |
 | `collect_case_dual_path` | A and B for one topic | both PDFs + resolve JSON + CourtListener search |
 | `drop_collected_pdf_pages` | page cut on a collected PDF | rewrites that PDF only when `dry_run=false` and `confirm_write=true`; preview otherwise. Does not touch sqlite |
+| `download_free_recap` | one free RECAP filing | PDF under `collector_output/recap/`. Never purchases PACER |
+| `fetch_free_key_docs` | free key filings on one docket | indictment / plea / sentencing PDFs under `collector_output/recap/<docket_id>/`. Lists the rest as `needs_pacer`. Never purchases PACER |
 
 **Agent workflow (local MCP)**
 
 1. Discover: `search_doj_press_releases` or `harvest_doj_press_topic`, or `fetch_press_listing_urls`
 2. Optional QA: `probe_press_url`
 3. If you have URLs: `resolve_press_urls` then `build_press_pdf`
-4. Court filings ($0): `search_courtlistener` → `list_free_recap_documents` → `resolve_free_recap_download`
+4. Court filings ($0, local): `search_courtlistener` → `list_free_recap_documents` → `download_free_recap`, or `fetch_free_key_docs` for the free indictment/plea/sentencing set. Railway stops at `resolve_free_recap_download` (URL only). Paid PACER is `python collector/pacer/cases2records.py --charge-pacer --max-spend N`, not an MCP tool.
 5. Shortcut: `collect_case_dual_path(title_term)` runs A and B for one topic
 
 `justice.gov` article HTML is behind Akamai. Do not fetch it live. Resolve through the DOJ News API (`harvest_*` / `resolve_press_urls` / `probe_press_url`).
@@ -131,6 +133,8 @@ Trusted key does **not** change behavior (still subject to normal slowapi / publ
 | `resolve_press_urls` | `resolve_press_urls.py` | **WRITE** local only — URL-path resolve JSON |
 | `build_press_pdf` | `build_press_pdf.py` | **WRITE** local only — merged PDF |
 | `collect_case_dual_path` | collector suite | **WRITE** local only — A+B dual collect |
+| `download_free_recap` | `collector_tools` | **WRITE** local only — one free RECAP PDF; never PACER |
+| `fetch_free_key_docs` | `collector_tools` | **WRITE** local only — free key docs on one docket; never PACER |
 
 ### On-demand graph workflow
 

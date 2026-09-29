@@ -110,7 +110,7 @@ def load_cases_by_ids(case_ids: Sequence[str]) -> List[Dict[str, Any]]:
 def load_pacer_case_ids(min_confidence: str = "low") -> List[str]:
     if not PACER_CASES_JSON.exists():
         raise FileNotFoundError(
-            f"PACER pool not found: {PACER_CASES_JSON}. Run: python ontology/PACER/corpus2pacer.py"
+            f"PACER pool not found: {PACER_CASES_JSON}. Run: python collector/pacer/corpus2pacer.py"
         )
     data = json.loads(PACER_CASES_JSON.read_text(encoding="utf-8"))
     rank = {"high": 3, "medium": 2, "low": 1}

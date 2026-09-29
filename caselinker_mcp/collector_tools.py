@@ -1,9 +1,15 @@
-"""MCP wrappers over ``collector`` for the press-release collector suite.
+"""MCP wrappers over ``collector``.
 
-Two collection methods (same as PRESS_RELEASE_COLLECTION.md):
+Press releases (same as PRESS_RELEASE_COLLECTION.md):
 
 1. DOJ News API: discover by title term. Do not fetch justice.gov HTML (Akamai).
 2. URL path: start from article URL(s) or a listing page.
+
+Court records: ``download_free_recap`` saves one already-free RECAP PDF.
+``fetch_free_key_docs`` saves the free indictment, plea, and sentencing
+filings on a docket. Paid PACER stays on
+``collector/pacer/cases2records.py --charge-pacer --max-spend``
+and is not an MCP tool.
 
 WRITE tools create files under the repo (JSON url-lists, resolved records, PDFs).
 They are registered only on local MCP (not Railway hosted). READ tools return
@@ -679,3 +685,239 @@ def drop_collected_pdf_pages(
         "pages_after": after,
         "backup": str(backup) if backup.is_file() else None,
     }
+
+
+def download_free_recap(
+    *,
+    document_id: str = "",
+    out_dir: str = "",
+) -> dict[str, Any]:
+    """WRITE: save one already-free RECAP PDF under collector_output/recap/. Never purchases PACER."""
+    if not collector_disk_write_enabled():
+        err = _write_disabled_error()
+        err["pacer_purchases"] = 0
+        return err
+    document_id = (document_id or "").strip()
+    if not document_id:
+        return {
+            "error": "document_id is required",
+            "write": True,
+            "pacer_purchases": 0,
+        }
+
+    from caselinker_mcp.public_records import resolve_free_recap_download
+
+    resolved = _run_async(resolve_free_recap_download(document_id))
+    if resolved.get("error"):
+        return {**resolved, "write": True, "tool_kind": "WRITE", "pacer_purchases": 0}
+    download_url = resolved.get("download_url")
+    if not resolved.get("is_available") or not download_url:
+        return {
+            "error": "Document is not free in RECAP. This tool does not purchase PACER.",
+            "write": True,
+            "tool_kind": "WRITE",
+            "pacer_purchases": 0,
+            "cost": "free",
+            "document_id": document_id,
+            "is_available": False,
+        }
+
+    from urllib.parse import urlparse
+
+    host = (urlparse(str(download_url)).hostname or "").lower()
+    if host != "storage.courtlistener.com":
+        return {
+            "error": "Refusing a download URL that is not storage.courtlistener.com.",
+            "write": True,
+            "tool_kind": "WRITE",
+            "pacer_purchases": 0,
+            "document_id": document_id,
+        }
+
+    raw_name = Path(str(resolved.get("filepath_local") or "")).name
+    if not raw_name or raw_name in {".", ".."} or "/" in raw_name or "\\" in raw_name:
+        raw_name = f"{document_id}.pdf"
+    raw_name = re.sub(r"[^A-Za-z0-9._-]+", "_", raw_name)
+    if not raw_name.lower().endswith(".pdf"):
+        raw_name = f"{_safe_slug(document_id)}.pdf"
+
+    out = _ensure_out(out_dir or (_REPO / "collector_output" / "recap"))
+    dest = out / raw_name
+    import httpx
+
+    with httpx.Client(timeout=60.0, follow_redirects=True) as client:
+        resp = client.get(
+            str(download_url),
+            headers={"User-Agent": "CaseLinker-MCP/1.0 (research; free public records)"},
+        )
+        resp.raise_for_status()
+        final_host = (resp.url.host or "").lower()
+        if final_host != "storage.courtlistener.com":
+            return {
+                "error": "Refusing a redirect off storage.courtlistener.com. Nothing was written.",
+                "write": True,
+                "tool_kind": "WRITE",
+                "pacer_purchases": 0,
+                "document_id": document_id,
+            }
+        content = resp.content
+    if not content.startswith(b"%PDF"):
+        return {
+            "error": "Download was not a PDF. Nothing was written.",
+            "write": True,
+            "tool_kind": "WRITE",
+            "pacer_purchases": 0,
+            "document_id": document_id,
+            "bytes": len(content),
+        }
+    dest.write_bytes(content)
+    try:
+        rel = str(dest.relative_to(_REPO))
+    except ValueError:
+        rel = str(dest)
+    return {
+        "write": True,
+        "tool_kind": "WRITE",
+        "method": "download_free_recap",
+        "cost": "free",
+        "pacer_purchases": 0,
+        "document_id": document_id,
+        "path": rel,
+        "bytes": len(content),
+        "description": resolved.get("description"),
+        "download_url": download_url,
+    }
+
+
+def _safe_recap_name(filepath_local: str, fallback: str) -> str | None:
+    text = str(filepath_local or "")
+    parts = Path(text).parts
+    raw_name = ""
+    if text and "://" not in text and ".." not in parts:
+        raw_name = Path(text).name
+    if not raw_name or raw_name in {".", ".."}:
+        raw_name = fallback
+    raw_name = re.sub(r"[^A-Za-z0-9._-]+", "_", raw_name).strip("._")
+    if not raw_name:
+        return None
+    if not raw_name.lower().endswith(".pdf"):
+        raw_name += ".pdf"
+    return raw_name
+
+
+def save_free_key_targets(
+    targets: list[tuple[str, str, str]],
+    lookup,
+    download,
+    dest_dir: Path,
+) -> dict[str, Any]:
+    """Save free key filings. ``lookup`` and ``download`` are injected so tests skip the network.
+
+    ``targets`` is ``(entry_number, description, action)`` from ``select_key_entry_targets``.
+    A filing that is not already in RECAP is reported and not purchased.
+    """
+    saved: list[dict[str, Any]] = []
+    needs_pacer: list[dict[str, Any]] = []
+    errors: list[dict[str, Any]] = []
+    dest_dir.mkdir(parents=True, exist_ok=True)
+
+    for entry_number, description, action in targets:
+        doc = lookup(entry_number) or {}
+        filepath = doc.get("filepath_local") or ""
+        if not doc.get("is_available") or not filepath or "://" in str(filepath) or ".." in Path(str(filepath)).parts:
+            needs_pacer.append(
+                {
+                    "entry_number": entry_number,
+                    "description": description,
+                    "action": action,
+                    "document_id": doc.get("id"),
+                }
+            )
+            continue
+        try:
+            content = download(filepath)
+        except Exception as exc:  # noqa: BLE001
+            errors.append({"entry_number": entry_number, "action": action, "error": str(exc)})
+            continue
+        if not isinstance(content, (bytes, bytearray)) or not bytes(content).startswith(b"%PDF"):
+            errors.append({"entry_number": entry_number, "action": action, "error": "download was not a PDF"})
+            continue
+        name = _safe_recap_name(str(filepath), f"{_safe_slug(action)}_{entry_number}.pdf")
+        if not name:
+            errors.append({"entry_number": entry_number, "action": action, "error": "unsafe filename"})
+            continue
+        dest = dest_dir / name
+        dest.write_bytes(bytes(content))
+        try:
+            rel = str(dest.relative_to(_REPO))
+        except ValueError:
+            rel = str(dest)
+        saved.append(
+            {
+                "entry_number": entry_number,
+                "action": action,
+                "description": description,
+                "document_id": doc.get("id"),
+                "path": rel,
+                "bytes": len(content),
+            }
+        )
+
+    return {
+        "write": True,
+        "tool_kind": "WRITE",
+        "method": "fetch_free_key_docs",
+        "cost": "free",
+        "pacer_purchases": 0,
+        "saved": saved,
+        "needs_pacer": needs_pacer,
+        "errors": errors,
+    }
+
+
+def fetch_free_key_docs(
+    *,
+    docket_id: str = "",
+    max_docs: int = 4,
+    out_dir: str = "",
+) -> dict[str, Any]:
+    """WRITE: save free indictment/plea/sentencing PDFs for one docket. Never purchases PACER."""
+    if not collector_disk_write_enabled():
+        err = _write_disabled_error()
+        err["pacer_purchases"] = 0
+        return err
+    docket_id = (docket_id or "").strip()
+    try:
+        did = int(docket_id)
+    except ValueError:
+        return {
+            "error": "docket_id must be an integer CourtListener docket id",
+            "write": True,
+            "pacer_purchases": 0,
+        }
+    max_docs = max(1, min(int(max_docs), 4))
+
+    mod = _load_module("cases2records_mcp", _COLLECTOR / "pacer" / "cases2records.py")
+    mod._load_dotenv()
+    token = (os.getenv("COURTLISTENER_API_TOKEN") or os.getenv("COURTLISTENER_TOKEN") or "").strip()
+    if not token:
+        return {
+            "error": "COURTLISTENER_API_TOKEN is required. This tool does not purchase PACER.",
+            "write": True,
+            "pacer_purchases": 0,
+            "docket_id": did,
+        }
+
+    client = mod.CourtListenerClient(token, min_interval=1.5)
+    descriptions = client.list_docket_entry_descriptions(did)
+    targets = mod.select_key_entry_targets(descriptions, max_docs=max_docs)
+    out = _ensure_out(out_dir or (_REPO / "collector_output" / "recap" / str(did)))
+    result = save_free_key_targets(
+        targets,
+        lambda entry: client.lookup_recap_document(did, entry),
+        client.download_pdf,
+        out,
+    )
+    result["docket_id"] = did
+    result["key_docs"] = len(targets)
+    return result

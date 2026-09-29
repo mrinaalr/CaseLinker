@@ -24,6 +24,20 @@ def test_canonical_key_ignores_trailing_slash_fragment_and_whitespace():
     assert article_url_key(wrapped) == article_url_key(ARTICLE)
 
 
+def test_www_host_matches_the_bare_agency_host():
+    bare = (
+        "https://illinoisattorneygeneral.gov/news/story/"
+        "attorney-general-raoul-charges-fairfield-man-with-child-pornography-possession"
+    )
+    wrapped = "https://www." + bare.removeprefix("https://")
+    assert article_url_key(bare) == article_url_key(wrapped)
+    existing = [{"id": "illinois_ag_2023_019", "source": "ILLINOIS AG", "source_url": bare}]
+    incoming = [{"id": "ncmec_2023_084", "source": "NCMEC", "source_url": wrapped}]
+    kept, skipped = drop_obvious_duplicate_cases(incoming, existing)
+    assert kept == []
+    assert skipped[0]["duplicate_of_case_id"] == "illinois_ag_2023_019"
+
+
 def test_placeholder_and_listing_urls_are_not_article_keys():
     assert article_url_key("https://report.cybertip.org/") is None
     assert article_url_key("https://www.justice.gov/psc") is None

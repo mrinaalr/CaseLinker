@@ -776,7 +776,7 @@ async def tree_traversal(
     leaf cohorts (or an explicit targeted_path).
 
     Typical workflow for the 50-case PACER lookup:
-      1. python ontology/PACER/corpus2pacer.py  →  pacer_cases.json
+      1. python collector/pacer/corpus2pacer.py  →  ontology/PACER/pacer_cases.json
       2. tree_traversal(use_pacer_pool=true, random_count=25, targeted_count=25)
 
     use_pacer_pool: load IDs from ontology/PACER/pacer_cases.json instead of case_ids.
@@ -1669,6 +1669,54 @@ if _COLLECTOR_WRITE_ENABLED:
         except Exception as e:
             logger.exception("drop_collected_pdf_pages failed")
             return {"error": str(e), "write": True, "mutated": False}
+
+    @mcp.tool()
+    async def download_free_recap(
+        document_id: str,
+        out_dir: str = "",
+    ) -> dict[str, Any]:
+        """WRITE (local MCP only). Save one already-free RECAP PDF under collector_output/recap/.
+
+        Uses the CourtListener storage URL when is_available. Does not purchase PACER.
+        Paid docket pulls stay on the CLI: collector/pacer/cases2records.py --charge-pacer --max-spend.
+        Not registered on Railway hosted MCP.
+        """
+        try:
+            from caselinker_mcp.collector_tools import download_free_recap as _dl
+
+            return await asyncio.to_thread(
+                _dl,
+                document_id=document_id,
+                out_dir=out_dir,
+            )
+        except Exception as e:
+            logger.exception("download_free_recap failed")
+            return {"error": str(e), "write": True, "pacer_purchases": 0}
+
+    @mcp.tool()
+    async def fetch_free_key_docs(
+        docket_id: str,
+        max_docs: int = 4,
+        out_dir: str = "",
+    ) -> dict[str, Any]:
+        """WRITE (local MCP only). Save free key filings for one CourtListener docket.
+
+        Indictment, plea, and sentencing memos already in RECAP, up to max_docs (cap 4).
+        Filings that are not free are listed as needs_pacer and not purchased.
+        Writes under collector_output/recap/<docket_id>/. Not registered on Railway.
+        """
+        try:
+            from caselinker_mcp.collector_tools import fetch_free_key_docs as _fetch
+
+            return await asyncio.to_thread(
+                _fetch,
+                docket_id=docket_id,
+                max_docs=max_docs,
+                out_dir=out_dir,
+            )
+        except Exception as e:
+            logger.exception("fetch_free_key_docs failed")
+            return {"error": str(e), "write": True, "pacer_purchases": 0}
 
 
 # Local disk only: sqlite is opened mode=ro and PDFs are read for text. Not on Railway.

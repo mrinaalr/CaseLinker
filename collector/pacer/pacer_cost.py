@@ -7,8 +7,8 @@ import re
 from pathlib import Path
 from typing import List, Optional, Tuple
 
-PACER_DIR = Path(__file__).resolve().parent
-BULK_DIR = PACER_DIR / "BULK_FOLDER"
+REPO_ROOT = Path(__file__).resolve().parents[2]
+BULK_DIR = REPO_ROOT / "ontology" / "PACER" / "BULK_FOLDER"
 DEFAULT_CSV = BULK_DIR / "pacer_cost.csv"
 
 CostRow = Tuple[str, str, str, float]
@@ -72,3 +72,20 @@ def estimate_pacer_pdf_cost(page_count: Optional[int] = None) -> float:
     if page_count and page_count > 0:
         return min(page_count * 0.10, 3.00)
     return 3.00  # conservative default when pages unknown
+
+
+def estimate_transcript_pacer_cost(page_count: Optional[int] = None) -> Optional[float]:
+    """Transcript PDFs are $0.10/page with no $3 cap.
+
+    Unknown page count returns None. Do not substitute the $3 default:
+    transcripts are often longer than 30 pages.
+    """
+    if page_count is None:
+        return None
+    try:
+        pages = int(page_count)
+    except (TypeError, ValueError):
+        return None
+    if pages <= 0:
+        return None
+    return round(pages * 0.10, 2)

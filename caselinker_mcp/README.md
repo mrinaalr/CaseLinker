@@ -1,15 +1,15 @@
 # CaseLinker MCP Server
 
-The CaseLinker MCP (Model Context Protocol) server exposes structured tools to agents and AI Applications (Cursor, Claude Desktop, and other MCP clients). Tools include corpus search and analysis, knowledge graphs, triage, free court records search (CourtListener/RECAP), and the **press-release collector suite**.
+The CaseLinker MCP (Model Context Protocol) server exposes structured tools to agents and AI Applications (Cursor, Claude Desktop, and other MCP clients). Tools include corpus search and analysis, knowledge graphs, triage, free court records search (via CourtListener), and the **collector suite** (press PDFs and free RECAP downloads).
 
 - **29** tools wrap the CaseLinker REST API
 - **8** are MCP-only corpus / graph helpers
 - **4** search free public court and DOJ press records
 - **1** collector READ (`probe_press_url`) always
-- **6** collector WRITE — **local MCP only** (not registered on Railway)
+- **8** collector WRITE — **local MCP only** (not registered on Railway)
 - **2** local-disk READ tools (`find_ingested_duplicates`, `verify_duplicate_pdf_pages`) — local MCP only
 
-**Local stdio / local FastAPI mount:** **50 tools** (full READ + WRITE).
+**Local stdio / local FastAPI mount:** **52 tools** (full READ + WRITE).
 **Railway hosted MCP:** **42 tools** (collector WRITE and local-disk duplicate tools omitted).
 
 Corpus and analysis tools are read-only against the database. Collector WRITE tools write local JSON/PDFs only; they do not ingest into sqlite.
@@ -61,8 +61,8 @@ Set `CASELINKER_KEY` to a value listed in `CASELINKER_TRUSTED_KEYS` on Railway o
 
 ## Tool tiers
 
-**45 public** + **5 trusted-key sensitive** = **50 tools** on local MCP.
-On Railway hosted MCP the six collector WRITE tools and the two local-disk duplicate tools are omitted → **37 public** + **5 trusted** = **42 tools**.
+**47 public** + **5 trusted-key sensitive** = **52 tools** on local MCP.
+On Railway hosted MCP the eight collector WRITE tools and the two local-disk duplicate tools are omitted → **37 public** + **5 trusted** = **42 tools**.
 
 ### Public tier
 
@@ -77,7 +77,7 @@ Trusted key does **not** change behavior. Includes corpus search, analysis, onto
 - Q1 research: `q1_platform_evidence` (platform harm evidence cohorts)
 - On-demand graphs (MCP-only): `case2cac`, `graph_get_neighbors`, `graph_find_cases_by_concept`, `graph_summarize`, `graph_compare_cohorts`, `export_case_graph_ttl`
 - Free public records (**READ**, all hosts): `search_doj_press_releases`, `search_courtlistener`, `list_free_recap_documents`, `resolve_free_recap_download`, `probe_press_url`
-- Press collector **WRITE** (**local MCP only**): `harvest_doj_press_topic`, `fetch_press_listing_urls`, `resolve_press_urls`, `build_press_pdf`, `collect_case_dual_path`
+- Collector **WRITE** (**local MCP only**): `harvest_doj_press_topic`, `fetch_press_listing_urls`, `resolve_press_urls`, `build_press_pdf`, `collect_case_dual_path`, `download_free_recap`, `fetch_free_key_docs`, `drop_collected_pdf_pages`
 
 ### Trusted-key sensitive (5 tools)
 
@@ -216,11 +216,11 @@ For a standalone SSE process (not via Railway mount), set `MCP_TRANSPORT=sse` an
 
 ## Tools
 
-**50 tools locally / 42 on Railway.** See [`tool_registry.md`](tool_registry.md) for the authoritative list. Summary by tier:
+**52 tools locally / 42 on Railway.** See [`tool_registry.md`](tool_registry.md) for the authoritative list. Summary by tier:
 
 | Tier | Local | Railway | Examples |
 |------|------:|--------:|----------|
-| Public (trusted key irrelevant) | 45 | 37 | `get_cases_page`, `verify_duplicate_pdf_pages`; WRITE only local |
+| Public (trusted key irrelevant) | 47 | 37 | `get_cases_page`, `verify_duplicate_pdf_pages`; WRITE only local |
 | Trusted-key sensitive | 5 | 5 | `get_all_cases`, `get_lifecycle_cases`, `get_lifecycle_lstar`, `get_case`, `llm_chat` |
 
 Authoritative implementation: `@mcp.tool()` definitions in `server.py`. Tool docstrings there remain the source of parameter and behavior detail.

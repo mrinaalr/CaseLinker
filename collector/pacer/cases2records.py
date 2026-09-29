@@ -11,16 +11,21 @@ Output naming (flat in BULK_FOLDER):
 
 Usage:
   # Safe: audit what's free vs needs PACER (no downloads, no charges)
-  python ontology/PACER/cases2records.py --preset wayerski --dry-run
+  python collector/pacer/cases2records.py --preset wayerski --dry-run
 
   # Safe: pull only free key docs (indictment/plea/sentencing), max 4 per case
-  python ontology/PACER/cases2records.py --preset wayerski --key-docs --log-cost
+  python collector/pacer/cases2records.py --preset wayerski --key-docs --log-cost
 
   # Berger + 3 more bridge cases, free RECAP only
-  python ontology/PACER/cases2records.py --batch bridge4 --key-docs --log-cost
+  python collector/pacer/cases2records.py --batch bridge4 --key-docs --log-cost
 
-  # PAID — only when you explicitly want PACER charges via CourtListener recap-fetch
-  python ontology/PACER/cases2records.py --preset wayerski --key-docs --charge-pacer --log-cost
+  # PAID — requires an explicit dollar cap. Charges your PACER account via recap-fetch.
+  python collector/pacer/cases2records.py --preset wayerski --key-docs --charge-pacer --max-spend 10 --log-cost
+
+  # Transcripts are off unless you pass --transcripts. Listing only, until --download.
+  # Buying a transcript also needs --charge-pacer --max-spend and a known page count ($0.10/page, no $3 cap).
+  python collector/pacer/cases2records.py --preset wayerski --transcripts
+  python collector/pacer/cases2records.py --preset wayerski --transcripts --download
 """
 
 from __future__ import annotations
@@ -32,7 +37,7 @@ import re
 import sys
 import time
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Iterator, List, Optional, Tuple
 from urllib.parse import urljoin
@@ -40,12 +45,19 @@ from urllib.parse import urljoin
 import requests
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-PACER_DIR = Path(__file__).resolve().parent
-BULK_DIR = PACER_DIR / "BULK_FOLDER"
+SCRIPT_DIR = Path(__file__).resolve().parent
+# Graphs and the cost log stay with the modeled PACER corpus. This script only fetches.
+ONTOLOGY_PACER = REPO_ROOT / "ontology" / "PACER"
+BULK_DIR = ONTOLOGY_PACER / "BULK_FOLDER"
 DEFAULT_ENV = REPO_ROOT / ".env"
 
-sys.path.insert(0, str(PACER_DIR))
-from pacer_cost import append_cost_row, append_cost_rows, estimate_pacer_pdf_cost  # noqa: E402
+sys.path.insert(0, str(SCRIPT_DIR))
+from pacer_cost import (  # noqa: E402
+    append_cost_row,
+    append_cost_rows,
+    estimate_pacer_pdf_cost,
+    estimate_transcript_pacer_cost,
+)
 
 API_BASE = "https://www.courtlistener.com/api/rest/v4/"
 STORAGE_BASE = "https://storage.courtlistener.com/"
@@ -68,6 +80,26 @@ KEY_DOC_RULES: Tuple[Tuple[re.Pattern[str], str, int], ...] = (
     (re.compile(r"plea\s+agreement", re.I), "plea agreement", 4),
     (re.compile(r"sentencing\s+(memo|memorandum)", re.I), "sentencing memo", 5),
     (re.compile(r"statement\s+of\s+offense", re.I), "statement of offense", 6),
+)
+
+# Docket text for a transcript filing. Default --key-docs does not select these.
+TRANSCRIPT_FILING_RE = re.compile(
+    r"\btranscript\s+of\s+proceedings\b|\bofficial\s+transcript\b",
+    re.I,
+)
+_PRETRIAL_RE = re.compile(r"\bpre-?\s*trial\b", re.I)
+_TRIAL_RE = re.compile(r"\b(?:jury\s+)?trial\b", re.I)
+_RESTRICTION_RE = re.compile(
+    r"Release of (?:the )?Transcript Restriction(?: is)? (?:set for|deadline of)\s+(\d{1,2}/\d{1,2}/\d{4})",
+    re.I,
+)
+_PAGE_SPAN_RE = re.compile(
+    r"(?:Page\s*Nos?(?:\(s\))?|Page\s*Numbers?|Pages?)\s*:?\s*(\d+)\s*[-–—]\s*(\d+)",
+    re.I,
+)
+_HEARING_DATE_RE = re.compile(
+    r"\bheld on\s+(\d{1,2}/\d{1,2}/\d{4}|[A-Za-z]+ \d{1,2}, \d{4})",
+    re.I,
 )
 
 BRIDGE4_PRESETS: Tuple[str, ...] = ("wayerski", "herrera", "katsampes", "ramirez")
@@ -170,7 +202,7 @@ def _load_dotenv() -> None:
         from dotenv import load_dotenv
 
         load_dotenv(REPO_ROOT / ".env", override=False)
-        load_dotenv(PACER_DIR / ".env", override=False)
+        load_dotenv(SCRIPT_DIR / ".env", override=False)
     except ImportError:
         pass
 
@@ -527,8 +559,126 @@ def manifest_path_for(spec: CaseSpec, base: Path) -> Path:
     return base / f"pacer -- {case_id_for(spec)} -- manifest.json"
 
 
-def classify_key_action(description: str, doc_type: str) -> Optional[Tuple[str, int]]:
+def is_transcript_filing(description: str) -> bool:
+    """True when the docket entry is itself a transcript, not a notice that one exists."""
+    text = (description or "").strip()
+    if not text or not TRANSCRIPT_FILING_RE.search(text):
+        return False
+    if re.match(r"(?i)(minute|notice|order|see)\b", text):
+        return False
+    return bool(
+        re.match(
+            r"(?i)(?:\d+\s+)?(?:sealed\s+)?(?:official\s+)?transcript\s+of\s+proceedings\b",
+            text,
+        )
+        or re.match(r"(?i).{0,40}transcript\s+of\s+proceedings\b", text)
+    )
+
+
+def hearing_type_of(description: str) -> str:
+    """detention, change_of_plea, sentencing, trial, or other. Pretrial is not trial."""
+    text = description or ""
+    masked = _PRETRIAL_RE.sub(" ", text)
+    if _TRIAL_RE.search(masked):
+        return "trial"
+    low = text.lower()
+    if re.search(r"\bsentenc", low):
+        return "sentencing"
+    if re.search(r"change of plea|plea colloquy|guilty plea|rearraignment|plea hearing|\bre:\s*plea\b", low):
+        return "change_of_plea"
+    if re.search(r"\bdetention\b|\bbond hearing\b|initial appearance", low):
+        return "detention"
+    if re.search(r"\bvol(?:ume|\.)\b", low):
+        return "trial"
+    return "other"
+
+
+def restriction_release_date(description: str) -> Optional[date]:
+    match = _RESTRICTION_RE.search(description or "")
+    if not match:
+        return None
+    return datetime.strptime(match.group(1), "%m/%d/%Y").date()
+
+
+def page_count_from_description(description: str) -> Optional[int]:
+    text = description or ""
+    match = _PAGE_SPAN_RE.search(text)
+    if match:
+        start, end = int(match.group(1)), int(match.group(2))
+        if end >= start:
+            return end - start + 1
+    match = re.search(r"Number of Pages[:\s]+(\d+)", text, re.I)
+    if match:
+        return int(match.group(1))
+    match = re.search(r"\b(\d+)\s+pages?\b", text, re.I)
+    if match:
+        return int(match.group(1))
+    return None
+
+
+def hearing_date_of(description: str) -> str:
+    match = _HEARING_DATE_RE.search(description or "")
+    return match.group(1) if match else ""
+
+
+def assess_transcript(description: str, *, today: Optional[date] = None) -> Dict[str, Any]:
+    """Eligibility for a transcript docket entry. Does not read the PDF."""
+    today = today or date.today()
+    text = description or ""
+    hearing = hearing_type_of(text)
+    release = restriction_release_date(text)
+    pages = page_count_from_description(text)
+    reason = ""
+    if not is_transcript_filing(text):
+        reason = "notice_only" if re.match(r"(?i)notice\b", text.strip()) else "not_transcript"
+    elif re.search(r"\b(sealed|under seal|in camera)\b", text, re.I):
+        reason = "sealed"
+    elif re.search(r"3509|closed proceeding|closed to the public", text, re.I):
+        reason = "closed_proceeding"
+    elif re.search(r"\brestricted\b", text, re.I) and not re.search(
+        r"transcript restriction", text, re.I
+    ):
+        reason = "restricted"
+    elif hearing == "trial":
+        reason = "trial"
+    elif release is None:
+        reason = "unclear_status"
+    elif release >= today:
+        reason = "reporter_only"
+    if reason:
+        eligible = False
+    else:
+        eligible = True
+        reason = "ok"
+    return {
+        "eligible": eligible,
+        "reason": reason,
+        "hearing_type": hearing,
+        "hearing_date": hearing_date_of(text),
+        "page_count": pages,
+        "restriction_release_date": release.isoformat() if release else "",
+    }
+
+
+def classify_key_action(
+    description: str,
+    doc_type: str,
+    *,
+    include_transcripts: bool = False,
+) -> Optional[Tuple[str, int]]:
     blob = f"{description} {doc_type}"
+    # Transcripts are their own document type. Default key-doc pulls skip them
+    # even when the entry text also contains "plea" or "sentencing".
+    if is_transcript_filing(blob):
+        if not include_transcripts:
+            return None
+        assessment = assess_transcript(blob)
+        if not assessment["eligible"]:
+            return None
+        rank = {"sentencing": 1, "change_of_plea": 2, "detention": 3}.get(
+            assessment["hearing_type"], 4
+        )
+        return "transcript", rank
     if KEY_DOC_SKIP.search(blob):
         return None
     for pat, action, priority in KEY_DOC_RULES:
@@ -537,11 +687,20 @@ def classify_key_action(description: str, doc_type: str) -> Optional[Tuple[str, 
     return None
 
 
+def _keep_candidate(action: str, seen_actions: set[str], charging_slot: Tuple[str, ...]) -> bool:
+    if action == "transcript":
+        return True
+    if action in charging_slot:
+        return not any(a in seen_actions for a in charging_slot)
+    return action not in seen_actions
+
+
 def select_key_documents(
     docs: List[Dict[str, Any]],
     entry_descriptions: Dict[str, str],
     *,
     max_docs: int = 4,
+    include_transcripts: bool = False,
 ) -> List[Dict[str, Any]]:
     """Pick up to max_docs filings matching indictment / plea / sentencing / etc."""
     candidates: List[Tuple[int, int, Dict[str, Any], str]] = []
@@ -552,7 +711,7 @@ def select_key_documents(
         if not desc:
             desc = entry_descriptions.get(str(entry_num or doc_num or ""), "")
         doc_type = doc_type_label(desc, entry_num=entry_num, doc_num=doc_num)
-        match = classify_key_action(desc, doc_type)
+        match = classify_key_action(desc, doc_type, include_transcripts=include_transcripts)
         if not match:
             continue
         action, priority = match
@@ -562,13 +721,9 @@ def select_key_documents(
     candidates.sort(key=lambda t: (t[0], t[1]))
     chosen: List[Dict[str, Any]] = []
     seen_actions: set[str] = set()
-    # One charging doc: prefer superseding indictment over indictment.
     charging_slot = ("superseding indictment", "indictment")
     for _priority, _neg_entry, doc, action in candidates:
-        if action in charging_slot:
-            if any(a in seen_actions for a in charging_slot):
-                continue
-        elif action in seen_actions:
+        if not _keep_candidate(action, seen_actions, charging_slot):
             continue
         seen_actions.add(action)
         doc = dict(doc)
@@ -583,15 +738,23 @@ def select_key_entry_targets(
     entry_descriptions: Dict[str, str],
     *,
     max_docs: int = 4,
+    include_transcripts: bool = False,
+    transcripts_only: bool = False,
 ) -> List[Tuple[str, str, str]]:
     """Return (entry_number, description, action) without scanning all RECAP pages."""
     candidates: List[Tuple[int, int, str, str, str]] = []
     for en, desc in entry_descriptions.items():
+        if transcripts_only and not is_transcript_filing(desc):
+            continue
         doc_type = doc_type_label(desc, entry_num=en)
-        match = classify_key_action(desc, doc_type)
+        match = classify_key_action(
+            desc, doc_type, include_transcripts=include_transcripts or transcripts_only
+        )
         if not match:
             continue
         action, priority = match
+        if transcripts_only and action != "transcript":
+            continue
         sort_entry = int(en) if str(en).isdigit() else 0
         candidates.append((priority, -sort_entry, str(en), desc, action))
 
@@ -600,16 +763,27 @@ def select_key_entry_targets(
     seen_actions: set[str] = set()
     charging_slot = ("superseding indictment", "indictment")
     for _priority, _neg_entry, en, desc, action in candidates:
-        if action in charging_slot:
-            if any(a in seen_actions for a in charging_slot):
-                continue
-        elif action in seen_actions:
+        if not _keep_candidate(action, seen_actions, charging_slot):
             continue
         seen_actions.add(action)
         chosen.append((en, desc, action))
         if len(chosen) >= max_docs:
             break
     return chosen
+
+
+class SpendCap:
+    """Dollar cap for one paid run. A purchase that would exceed it is refused."""
+
+    def __init__(self, max_spend: float) -> None:
+        self.max_spend = float(max_spend)
+        self.spent = 0.0
+
+    def allows(self, estimate: float) -> bool:
+        return self.spent + float(estimate) <= self.max_spend + 1e-9
+
+    def commit(self, amount: float) -> None:
+        self.spent = round(self.spent + float(amount), 2)
 
 
 def fetch_case_records(
@@ -619,9 +793,11 @@ def fetch_case_records(
     output_base: Path = BULK_DIR,
     dry_run: bool = False,
     key_docs_only: bool = False,
+    transcripts: bool = False,
     max_docs: int = 4,
     log_cost: bool = False,
     charge_pacer: bool = False,
+    spend_cap: Optional[SpendCap] = None,
     pacer_username: Optional[str] = None,
     pacer_password: Optional[str] = None,
 ) -> FetchResult:
@@ -644,8 +820,26 @@ def fetch_case_records(
     print(f"  Output:    {out_dir}/pacer -- {case_id} -- <doc type>.pdf")
 
     entry_descriptions = client.list_docket_entry_descriptions(docket_id)
-    if key_docs_only:
-        targets = select_key_entry_targets(entry_descriptions, max_docs=max_docs)
+    if key_docs_only or transcripts:
+        targets: List[Tuple[str, str, str]] = []
+        seen_entries: set[str] = set()
+        groups: List[List[Tuple[str, str, str]]] = []
+        if key_docs_only:
+            groups.append(select_key_entry_targets(entry_descriptions, max_docs=max_docs))
+        if transcripts:
+            groups.append(
+                select_key_entry_targets(
+                    entry_descriptions,
+                    max_docs=max_docs,
+                    transcripts_only=True,
+                )
+            )
+        for group in groups:
+            for item in group:
+                if item[0] in seen_entries:
+                    continue
+                seen_entries.add(item[0])
+                targets.append(item)
         docs: List[Dict[str, Any]] = []
         for en, desc, action in targets:
             doc = client.lookup_recap_document(docket_id, en) or {
@@ -660,7 +854,13 @@ def fetch_case_records(
             if not (doc.get("description") or "").strip():
                 doc["description"] = desc
             docs.append(doc)
-        print(f"  Key docs:  {len(docs)} selected (max {max_docs})")
+        if transcripts and key_docs_only:
+            label = "Key docs + transcripts"
+        elif transcripts:
+            label = "Transcripts"
+        else:
+            label = "Key docs"
+        print(f"  {label}: {len(docs)} selected (max {max_docs} each)")
     else:
         docs = client.list_recap_documents(docket_id)
         print(f"  RECAP docs: {len(docs)} total")
@@ -670,8 +870,22 @@ def fetch_case_records(
     cost_rows: List[Tuple[str, str, str, float]] = []
     docket_number = str(docket.get("docket_number") or spec.docket or "")
 
-    if log_cost and not dry_run and charge_pacer:
-        cost_rows.append((case_id, docket_number, "search", 0.10))
+    if charge_pacer and not dry_run:
+        if spend_cap is None:
+            raise ValueError("charge_pacer requires a SpendCap (--max-spend)")
+        search_fee = 0.10
+        if spend_cap is not None and not spend_cap.allows(search_fee):
+            print(
+                f"  stop: docket search ${search_fee:.2f} would exceed "
+                f"--max-spend ${spend_cap.max_spend:.2f} "
+                f"(spent ${spend_cap.spent:.2f})",
+                file=sys.stderr,
+            )
+            return result
+        if spend_cap is not None:
+            spend_cap.commit(search_fee)
+        if log_cost:
+            cost_rows.append((case_id, docket_number, "search", search_fee))
 
     for doc in docs:
         doc_id = doc.get("id")
@@ -686,6 +900,11 @@ def fetch_case_records(
         if isinstance(key_action, tuple):
             key_action = key_action[0]
         cost_action = key_action or doc_type.lower()
+        is_transcript = cost_action == "transcript" or is_transcript_filing(desc)
+        transcript_est = None
+        if is_transcript:
+            pages = doc.get("page_count") or page_count_from_description(desc)
+            transcript_est = estimate_transcript_pacer_cost(pages)
         pdf_path = resolve_pdf_path(
             out_dir,
             case_id,
@@ -713,18 +932,48 @@ def fetch_case_records(
                 print(f"  FREE:       {pdf_path.name}")
                 result.downloaded.append(meta)
             else:
-                est = estimate_pacer_pdf_cost(doc.get("page_count")) if charge_pacer else None
+                if is_transcript:
+                    est = transcript_est
+                else:
+                    est = estimate_pacer_pdf_cost(doc.get("page_count")) if charge_pacer else None
                 meta["needs_pacer"] = True
                 if est is not None:
                     meta["estimated_pacer_cost"] = est
-                tag = f"NEEDS PACER (~${est:.2f})" if est else "NEEDS PACER"
+                if is_transcript and est is None:
+                    tag = "NEEDS PACER (transcript page count unknown; no $3 cap)"
+                elif est:
+                    tag = f"NEEDS PACER (~${est:.2f})"
+                else:
+                    tag = "NEEDS PACER"
                 print(f"  {tag}: {pdf_path.name}")
                 result.skipped.append(meta)
             continue
 
         if not doc.get("is_available") or not doc.get("filepath_local"):
             if charge_pacer and pacer_username and pacer_password and doc_id:
-                est = estimate_pacer_pdf_cost(doc.get("page_count"))
+                if is_transcript and transcript_est is None:
+                    meta["needs_pacer"] = True
+                    meta["error"] = "page_count_unknown"
+                    result.skipped.append(meta)
+                    print(
+                        f"  refuse doc {doc_id}: transcript page count unknown (no $3 substitute)",
+                        file=sys.stderr,
+                    )
+                    continue
+                est = transcript_est if is_transcript else estimate_pacer_pdf_cost(doc.get("page_count"))
+                if spend_cap is not None and not spend_cap.allows(est):
+                    meta["needs_pacer"] = True
+                    meta["error"] = "max_spend"
+                    meta["estimated_pacer_cost"] = est
+                    meta["spent_usd"] = spend_cap.spent
+                    meta["max_spend"] = spend_cap.max_spend
+                    result.skipped.append(meta)
+                    print(
+                        f"  stop: est ${est:.2f} would exceed --max-spend "
+                        f"${spend_cap.max_spend:.2f} (spent ${spend_cap.spent:.2f})",
+                        file=sys.stderr,
+                    )
+                    break
                 try:
                     print(f"  PACER purchase doc {doc_id} ({cost_action}) est ~${est:.2f} …")
                     client.fetch_missing_pdf(
@@ -737,8 +986,17 @@ def fetch_case_records(
                     meta["is_available"] = True
                     meta["filepath_local"] = doc.get("filepath_local")
                     meta["page_count"] = doc.get("page_count")
-                    actual_cost = estimate_pacer_pdf_cost(doc.get("page_count"))
+                    if is_transcript:
+                        actual_cost = estimate_transcript_pacer_cost(
+                            doc.get("page_count") or page_count_from_description(desc)
+                        )
+                        if actual_cost is None:
+                            actual_cost = est
+                    else:
+                        actual_cost = estimate_pacer_pdf_cost(doc.get("page_count"))
                     meta["pacer_cost"] = actual_cost
+                    if spend_cap is not None:
+                        spend_cap.commit(actual_cost)
                     if log_cost:
                         cost_rows.append((case_id, docket_number, cost_action, actual_cost))
                     if pdf_path.exists():
@@ -904,7 +1162,21 @@ def main() -> int:
         action="store_true",
         help="Only indictment/plea/sentencing/complaint-class filings (max --max-docs)",
     )
-    parser.add_argument("--max-docs", type=int, default=4, help="Cap per case with --key-docs")
+    parser.add_argument("--max-docs", type=int, default=4, help="Cap per case with --key-docs or --transcripts")
+    parser.add_argument(
+        "--transcripts",
+        action="store_true",
+        help=(
+            "Select transcript-of-proceedings filings. --key-docs skips them. "
+            "Listing only unless --download. Buying also requires --charge-pacer and --max-spend. "
+            "$0.10/page, no $3 cap. Unknown page count is refused."
+        ),
+    )
+    parser.add_argument(
+        "--download",
+        action="store_true",
+        help="With --transcripts, download free RECAP PDFs. Still no PACER unless --charge-pacer.",
+    )
     parser.add_argument(
         "--log-cost",
         action="store_true",
@@ -913,7 +1185,13 @@ def main() -> int:
     parser.add_argument(
         "--charge-pacer",
         action="store_true",
-        help="BUY missing PDFs via CourtListener recap-fetch (charges your PACER account)",
+        help="BUY missing PDFs via CourtListener recap-fetch (charges your PACER account). Requires --max-spend.",
+    )
+    parser.add_argument(
+        "--max-spend",
+        type=float,
+        default=None,
+        help="PACER dollar cap for this run. Required with --charge-pacer. Stops before a buy that would exceed it.",
     )
     parser.add_argument("--pacer-username", default=os.environ.get("PACER_USERNAME"))
     parser.add_argument("--pacer-password", default=os.environ.get("PACER_PASSWORD"))
@@ -926,6 +1204,14 @@ def main() -> int:
 
     if not args.preset and not args.batch and not args.defendant:
         parser.error("Provide --preset, --batch recommended, or --defendant with --district")
+    if args.transcripts and not args.download:
+        args.dry_run = True
+    if args.charge_pacer and args.max_spend is None:
+        parser.error("--charge-pacer requires --max-spend (dollars for this run)")
+    if args.max_spend is not None and args.max_spend < 0:
+        parser.error("--max-spend must be >= 0")
+
+    spend_cap = SpendCap(args.max_spend) if args.charge_pacer else None
 
     try:
         client = CourtListenerClient(args.token)
@@ -944,9 +1230,11 @@ def main() -> int:
                     output_base=args.output_base,
                     dry_run=args.dry_run,
                     key_docs_only=args.key_docs,
+                    transcripts=args.transcripts,
                     max_docs=args.max_docs,
                     log_cost=args.log_cost,
                     charge_pacer=args.charge_pacer,
+                    spend_cap=spend_cap,
                     pacer_username=args.pacer_username,
                     pacer_password=args.pacer_password,
                 )
@@ -959,6 +1247,8 @@ def main() -> int:
     total_dl = sum(len(r.downloaded) for r in results)
     total_skip = sum(len(r.skipped) for r in results)
     print(f"\nAll cases: {len(results)} processed, {total_dl} PDFs, {total_skip} unavailable")
+    if spend_cap is not None and not args.dry_run:
+        print(f"PACER spent this run: ${spend_cap.spent:.2f} of ${spend_cap.max_spend:.2f}")
     return 0 if results else 1
 
 

@@ -19,7 +19,7 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 from typing import Any, Mapping, Sequence
-from urllib.parse import urlsplit
+from urllib.parse import urlsplit, urlunsplit
 
 _STORAGE = Path(__file__).resolve().parents[1] / "Storage Layer"
 if str(_STORAGE) not in sys.path:
@@ -72,7 +72,15 @@ def article_url_key(url: str | None) -> str | None:
     blob = canonical.lower()
     if any(marker in blob for marker in _LISTING_MARKERS):
         return None
-    return canonical
+    # Yearbook clippings often keep www while the agency row does not.
+    port = parsed.port
+    if port is not None and not (
+        (parsed.scheme == "http" and port == 80) or (parsed.scheme == "https" and port == 443)
+    ):
+        netloc = f"{host}:{port}"
+    else:
+        netloc = host
+    return urlunsplit((parsed.scheme, netloc, parsed.path, parsed.query, ""))
 
 
 def _case_source(case: Mapping[str, Any]) -> str:

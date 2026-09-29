@@ -1,6 +1,8 @@
-# Press-release collector suite
+# Press-release and court-record collection
 
 This directory turns **any public press release** (a URL list or a DOJ News API harvest) into a structured **PDF** for CaseLinker. ICAC/CAC filters are optional gates, not the engine. This file is onboarding; extractors and DOJ API quirks are `PRESS_RELEASE_COLLECTION.md`.
+
+Federal court filings can also be collected: free RECAP by default, paid PACER with `--charge-pacer --max-spend`.
 
 ## The pipeline, in one picture
 
@@ -20,7 +22,7 @@ flowchart LR
     I --> J["ingest"]
 ```
 
-The suite is **press-release → PDF**, not ICAC-only. Topic filters (`verify_cac.py`, PSC body regex, “child sexual” listing queries) are **optional gates** for the ICAC corpus. `build_press_pdf.py` will turn any public article URL - or any DOJ API resolved record - into the same `Title / Publication date / Source: https:// / body` layout.
+The suite is **press-release → PDF**, not ICAC-only. Topic filters (`verify_cac.py`, PSC body regex, csea listing queries) are **optional gates** for the ICAC corpus. `build_press_pdf.py` will turn any public article URL - or any DOJ API resolved record - into the same `Title / Publication date / Source: https:// / body` layout.
 
 Two things to notice:
 
@@ -39,6 +41,9 @@ Two things to notice:
 | `remove_pdf_pages_by_text.py` | Drop merged-PDF pages by regex / exact-text dedupe / page list. |
 | `check_expand_novelty.py` | Dedup vs an existing merged PDF before append. |
 | `sources/urls.txt` | Active URL list for `resolve_press_urls.py` / `build_press_pdf.py --url-file`. |
+| `pacer/cases2records.py` | One federal docket → PDFs in `ontology/PACER/BULK_FOLDER/`. Free RECAP unless `--charge-pacer --max-spend`. |
+| `pacer/corpus2pacer.py` | Corpus rows that look federal → `ontology/PACER/pacer_cases.json`. |
+| `pacer/pacer_cost.py` | Appends rows to `ontology/PACER/BULK_FOLDER/pacer_cost.csv`. |
 | `PRESS_RELEASE_COLLECTION.md` | Agent guide: extractors, DOJ API quirks, discovery vs resolve, troubleshooting. |
 
 ## Install
@@ -188,6 +193,26 @@ Hard hosts (login, CAPTCHA, JS bot-wall with no API) are stop-and-ask. See **Whe
 **ICAC / CAC topics** (what enters the public corpus, analysis surfaces, and database): `check_expand_novelty.py` then `scripts/verify/verify_cac.py --all-failures --default-fail-csv`. Do not ingest until failures are removed.
 
 **Any other topic** (DOJ drugs, elder fraud, mixed USAO, …): the collector suite is domain-agnostic. Use `harvest_doj_press.py --skip-cac`, skip `verify_cac.py`, still drop grants/rollups/speeches, collapse arrest vs sentencing when the same matter appears twice, and novelty-check against existing merged PDFs. `build_press_pdf.py` does not care what the crime is. Those PDFs stay local research artifacts unless a separate ingest policy is decided; the shipped CaseLinker release and live DB are ICAC/CAC-scoped.
+
+## Court records
+
+Free first. Paid only on the CLI, with a dollar cap, and never from MCP. Run these from the repo root.
+
+```bash
+# Which ingested cases look like they have a federal docket
+python3 collector/pacer/corpus2pacer.py
+# Audit a docket. No download, no charge.
+python3 collector/pacer/cases2records.py --preset wayerski --dry-run
+# Free key docs already in RECAP (indictment / plea / sentencing)
+python3 collector/pacer/cases2records.py --preset wayerski --key-docs --log-cost
+# Transcripts: list only. Add --download for free RECAP copies. Buying needs --charge-pacer --max-spend.
+python3 collector/pacer/cases2records.py --preset wayerski --transcripts
+# Buy missing PDFs. Refuses to run without --max-spend. Stops before a purchase that would exceed it.
+python3 collector/pacer/cases2records.py --preset wayerski --key-docs --charge-pacer --max-spend 10 --log-cost
+```
+
+Local MCP can save one already-free filing with `download_free_recap`, or the free key docs on a docket with `fetch_free_key_docs` (under `collector_output/recap/`). Railway MCP can search CourtListener and return a free URL. 
+
 
 ## When to stop and ask a human
 

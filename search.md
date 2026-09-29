@@ -20,7 +20,7 @@ Live: [Search](https://caselinker.up.railway.app/search) · [Query](https://case
 - Search is **not** free-text full-text search over narratives (no Lucene/Elastic layer today).
 - Search is **not** SPARQL. Graph pattern queries live on Oxigraph via `/sparql` and the Patterns UI.
 - Search is **not** natural-language SQL. That is the LLM tab (`/llm` → `/api/llm/chat`).
-- Search is **not** the collector. Finding new press releases is `collector/` CLI or **local** MCP WRITE tools (see `collector/README.md`). Hosted Railway MCP is READ-only for collection.
+- Search is **not** the collector. Finding new press releases, or a free RECAP filing, is the `collector/` CLI or **local** MCP WRITE tools (see `collector/README.md`). Hosted Railway MCP is READ-only for collection. Paid PACER is CLI-only (`--charge-pacer --max-spend`).
 
 ---
 
