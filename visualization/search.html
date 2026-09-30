@@ -3,744 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CaseLinker - Search</title>
+    <title>CaseLinker — Search</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: #f5f5f5;
-        }
-        .nav {
-            background: white;
-            padding: 15px 24px 15px 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            display: flex;
-            flex-wrap: nowrap;
-            align-items: center;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            white-space: nowrap;
-            overflow-x: auto;
-        }
-        .nav a {
-            white-space: nowrap;
-            flex-shrink: 0;
-            color: #4CAF50;
-            text-decoration: none;
-            margin-right: 16px;
-        }
-        .nav a:hover {
-            text-decoration: underline;
-        }
-        .nav a.patterns {
-            margin-left: 10px;
-            color: #dc2626;
-            font-weight: 700;
-
-            animation: pulseRed 8s ease-in-out infinite;
-        }
-        @keyframes pulseRed {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.92; }
-        }
-        .hood-link {
-            margin-left: auto;
-            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ff6b35 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: pulseOrange 6s ease-in-out infinite;
-            position: relative;
-            font-weight: 600;
-        }
-        @keyframes pulseOrange {
-            0%, 100% { opacity: 0.75; }
-            50% { opacity: 0.90; }
-        }
-        .tech-landscape-link {
-            display: inline-block;
-            vertical-align: baseline;
-            font-weight: 400;
-            position: relative;
-            text-decoration: none;
-            white-space: nowrap;
-        }
-        .tech-landscape-link .tls-gate--left {
-            display: inline;
-            vertical-align: baseline;
-            background: linear-gradient(135deg, #2e7d32 0%, #43a047 38%, #66bb6a 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            filter: drop-shadow(0 0 5px rgba(76, 175, 80, 0.44)) drop-shadow(0 0 11px rgba(102, 187, 106, 0.28)) drop-shadow(-5px 0 4px rgba(46, 125, 50, 0.24));
-            animation: tlsGatePulse 16s ease-in-out infinite;
-        }
-        .tech-landscape-link .tls-gate--mid {
-            display: inline;
-            vertical-align: baseline;
-            color: #2e7d32;
-            -webkit-text-fill-color: #2e7d32;
-            font-weight: 400;
-            filter: none;
-            opacity: 0.88;
-            padding: 0 5px;
-        }
-        .tech-landscape-link .tls-gate--right {
-            display: inline;
-            vertical-align: baseline;
-            background: linear-gradient(135deg, #43a047 0%, #66bb6a 52%, #2e7d32 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            filter: drop-shadow(0 0 5px rgba(76, 175, 80, 0.44)) drop-shadow(0 0 11px rgba(102, 187, 106, 0.28)) drop-shadow(5px 0 4px rgba(46, 125, 50, 0.24));
-            animation: tlsGatePulse 16s ease-in-out infinite;
-        }
-        @keyframes tlsGatePulse {
-            0%, 100% { opacity: 0.87; }
-            50% { opacity: 0.94; }
-        }
-        .nav a.tech-landscape-link:hover {
-            text-decoration: none;
-        }
-        .nav a.tech-landscape-link::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: -2px;
-            height: 2px;
-            background: rgba(67, 160, 71, 0.62);
-            opacity: 0;
-            transition: opacity 0.12s ease;
-            pointer-events: none;
-        }
-        .nav a.tech-landscape-link:hover::after {
-            opacity: 1;
-        }
-        .search-page .container {
-            max-width: 1100px;
-        }
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: white;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            margin-top: 20px;
-            margin-bottom: 20px;
-        }
-        h1 {
-            color: #66bb6a;
-            margin-bottom: 10px;
-            font-size: 2.5em;
-            font-weight: 700;
-        }
-        .subtitle {
-            color: #666;
-            margin-bottom: 24px;
-            font-size: 1.1em;
-        }
-        .panel {
-            background: #f9f9f9;
-            border-left: 4px solid #4CAF50;
-            padding: 20px 24px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-        }
-        .panel h2 {
-            margin-top: 0;
-            color: #333;
-            font-size: 1.15em;
-        }
-        .panel ul {
-            margin: 0;
-            padding-left: 1.25em;
-            color: #444;
-            line-height: 1.6;
-        }
-        .placeholder {
-            color: #666;
-            font-style: italic;
-            margin-top: 8px;
-        }
-        .search-dev-badge {
-            font-size: 0.88em;
-            font-weight: 600;
-            color: #6e7781;
-        }
-        .semantic-search-intro {
-            font-style: normal;
-            color: #444;
-            line-height: 1.55;
-        }
-        .tree-panel-wrap {
-            max-width: 1100px;
-            margin: 0 auto 20px;
-        }
-        .tree-intro {
-            color: #555;
-            font-size: 0.95rem;
-            margin-bottom: 12px;
-            line-height: 1.5;
-        }
-        .tree-controls {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 14px;
-        }
-        .tree-controls label {
-            font-size: 0.9rem;
-            color: #444;
-        }
-        .tree-controls select {
-            padding: 6px 10px;
-            border: 1px solid #4CAF50;
-            border-radius: 4px;
-            font-size: 0.9rem;
-        }
-        .tree-controls button {
-            padding: 6px 14px;
-            background: #4CAF50;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
-        .tree-controls button:hover {
-            background: #45a049;
-        }
-        .tree-sentence-prune {
-            flex: 1 1 100%;
-            width: 100%;
-            box-sizing: border-box;
-            min-width: 0;
-            font-size: 0.8rem;
-            color: #444;
-            line-height: 1.55;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 6px 8px;
-        }
-        .tree-sentence-lead {
-            font-weight: 600;
-            color: #333;
-            white-space: nowrap;
-        }
-        .tree-sentence-wrap {
-            display: inline-flex;
-            align-items: center;
-            border: 1px solid #90a4ae;
-            border-radius: 4px;
-            background: #fafafa;
-            padding: 0 6px 0 4px;
-            min-height: 26px;
-            max-width: 14rem;
-            vertical-align: middle;
-        }
-        .tree-sentence-wrap:focus-within {
-            border-color: #4CAF50;
-            background: #fff;
-        }
-        .tree-sentence-wrap.tree-sentence-input-dead {
-            border-color: #d1242f;
-            background: #fff5f5;
-        }
-        .tree-sentence-wrap.tree-sentence-input-invalid {
-            border-color: #9a6700;
-            background: #fff8c5;
-        }
-        .tree-sentence-wrap .tree-sentence-input {
-            border: none;
-            outline: none;
-            background: transparent;
-            padding: 4px 0;
-            min-width: 0.6ch;
-            width: 2.5rem;
-            max-width: 11rem;
-            font-size: 0.76rem;
-            font-family: ui-monospace, monospace;
-            color: #24292f;
-        }
-        .tree-sentence-ghost-suffix {
-            color: #9ca3af;
-            font-family: ui-monospace, monospace;
-            font-size: 0.76rem;
-            pointer-events: none;
-            white-space: nowrap;
-            line-height: 1.35;
-            user-select: none;
-        }
-        .tree-sentence-hint {
-            flex: 1 0 100%;
-            font-size: 0.72rem;
-            color: #6e7781;
-            margin: 0;
-            line-height: 1.35;
-        }
-        .facet-zoom-tools {
-            display: none;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 10px;
-            flex-wrap: wrap;
-        }
-        .facet-zoom-tools.visible {
-            display: flex;
-        }
-        .facet-zoom-tools button {
-            min-width: 36px;
-            padding: 6px 12px;
-            border: 1px solid #4CAF50;
-            border-radius: 4px;
-            background: #fff;
-            color: #2e7d32;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-        }
-        .facet-zoom-tools button:hover {
-            background: #e8f5e9;
-        }
-        .facet-zoom-tools .facet-zoom-fit {
-            min-width: auto;
-            font-size: 0.85rem;
-            font-weight: 500;
-        }
-        .tree-meta {
-            font-size: 0.85rem;
-            color: #8b949e;
-            margin-bottom: 6px;
-            font-family: ui-monospace, monospace;
-        }
-        .facet-tree-host {
-            background: #0d1117;
-            color: #e6edf3;
-            border: 1px solid #30363d;
-            border-radius: 10px;
-            padding: 12px 12px 16px;
-            min-height: 200px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-            overflow: hidden;
-            position: relative;
-        }
-        .facet-pan-tools {
-            position: absolute;
-            top: 12px;
-            left: 12px;
-            z-index: 4;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            padding: 6px;
-            border-radius: 8px;
-            background: rgba(13, 17, 23, 0.72);
-            border: 1px solid rgba(110, 118, 129, 0.7);
-            backdrop-filter: blur(1.5px);
-        }
-        .facet-pan-tools button {
-            width: 32px;
-            height: 32px;
-            border: 1px solid #3fb950;
-            border-radius: 6px;
-            background: #161b22;
-            color: #aff5b4;
-            font-size: 16px;
-            line-height: 1;
-            cursor: pointer;
-        }
-        .facet-pan-tools button:hover {
-            background: #1f2937;
-        }
-        .facet-tree-host .tree-loading,
-        .facet-tree-host .tree-error {
-            padding: 24px;
-            text-align: center;
-            color: #8b949e;
-        }
-        .facet-tree-host .tree-error {
-            color: #f85149;
-        }
-        .facet-tree-host svg {
-            display: block;
-            width: 100%;
-            max-height: min(85vh, 920px);
-            cursor: grab;
-        }
-        .facet-tree-host svg:active {
-            cursor: grabbing;
-        }
-        .facet-tree-hint {
-            font-size: 0.8rem;
-            color: #8b949e;
-            margin: 0 0 8px 4px;
-        }
-        .tree-facet-order {
-            font-size: 0.78rem;
-            color: #6a737d;
-            line-height: 1.45;
-            margin: 0 0 10px 0;
-            word-break: break-word;
-        }
-        .facet-tree-host .node-rect {
-            fill: #1a3d24;
-            stroke: #0d1117;
-            stroke-width: 2px;
-            cursor: pointer;
-        }
-        .facet-tree-host .node-rect.leaf {
-            fill: #234d2e;
-        }
-        .facet-tree-host .node-rect:hover {
-            filter: brightness(1.12);
-        }
-        .facet-tree-host .link {
-            fill: none;
-            stroke: #6e7681;
-            stroke-width: 1.75px;
-            stroke-linecap: round;
-        }
-        .facet-tree-host .node-label {
-            fill: #f0f6fc;
-            font-size: 11px;
-            font-weight: 600;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            pointer-events: none;
-        }
-        .facet-tree-host .node-sub {
-            fill: #8b949e;
-            font-size: 9px;
-            font-family: ui-monospace, monospace;
-            pointer-events: none;
-        }
-        .facet-tree-host .node-count {
-            fill: #aff5b4;
-            font-size: 10px;
-            font-weight: 700;
-            font-family: ui-monospace, monospace;
-            pointer-events: none;
-        }
-        .facet-prune-panel {
-            margin: 14px 0 16px;
-            padding: 12px 14px;
-            background: #f6f8fa;
-            border: 1px solid #d0d7de;
-            border-radius: 8px;
-        }
-        .facet-prune-panel summary {
-            cursor: pointer;
-            font-weight: 600;
-            color: #24292f;
-            font-size: 0.95rem;
-        }
-        .facet-prune-help {
-            font-size: 0.8rem;
-            color: #57606a;
-            margin: 10px 0 12px;
-            line-height: 1.45;
-        }
-        .facet-prune-rows {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .facet-prune-row {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: flex-start;
-            gap: 12px 20px;
-            padding: 8px 10px;
-            background: #fff;
-            border: 1px solid #e1e4e8;
-            border-radius: 6px;
-        }
-        .facet-prune-inc {
-            flex: 0 0 230px;
-            font-size: 0.85rem;
-            color: #333;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-        .facet-prune-inc input {
-            flex-shrink: 0;
-        }
-        .facet-prune-val-wrap {
-            flex: 1;
-            min-width: 200px;
-            font-size: 0.8rem;
-            color: #555;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-        .facet-prune-picker {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: flex-start;
-            gap: 10px 18px;
-            width: 100%;
-        }
-        .facet-prune-dropdown {
-            min-width: 200px;
-            max-width: 280px;
-            flex: 0 0 auto;
-            padding: 6px 8px;
-            border: 1px solid #4CAF50;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            font-family: ui-monospace, monospace;
-            background: #fff;
-        }
-        .facet-prune-dropdown:disabled {
-            opacity: 0.65;
-            cursor: not-allowed;
-        }
-        .facet-prune-chips {
-            flex: 1;
-            min-width: 140px;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 6px;
-            justify-content: flex-end;
-        }
-        .facet-prune-chip {
-            display: inline-flex;
-            align-items: center;
-            gap: 2px;
-            padding: 3px 4px 3px 10px;
-            background: #ddf4ff;
-            border: 1px solid rgba(84, 174, 255, 0.45);
-            border-radius: 999px;
-            font-size: 0.76rem;
-            font-family: ui-monospace, monospace;
-            color: #0550ae;
-            max-width: 100%;
-        }
-        .facet-prune-chip-remove {
-            border: none;
-            background: transparent;
-            cursor: pointer;
-            padding: 0 6px 0 2px;
-            line-height: 1.2;
-            color: #656d76;
-            font-size: 1.05rem;
-            border-radius: 4px;
-        }
-        .facet-prune-chip-remove:hover {
-            color: #cf222e;
-            background: rgba(207, 34, 46, 0.08);
-        }
-        .facet-prune-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 12px;
-        }
-        .facet-prune-actions button {
-            padding: 6px 14px;
-            border-radius: 4px;
-            font-size: 0.88rem;
-            cursor: pointer;
-            border: none;
-        }
-        .facet-prune-actions .facet-prune-apply {
-            background: #2da44e;
-            color: #fff;
-        }
-        .facet-prune-actions .facet-prune-apply:hover {
-            background: #2c974b;
-        }
-        .facet-prune-actions .facet-prune-clear {
-            background: #eaeef2;
-            color: #24292f;
-            border: 1px solid #d0d7de;
-        }
-        .facet-prune-actions .facet-prune-clear:hover {
-            background: #d8dee4;
-        }
-        .facet-prune-status {
-            font-size: 0.78rem;
-            color: #6e7781;
-            margin-top: 8px;
-        }
-        .cohort-modal-backdrop {
-            position: fixed;
-            inset: 0;
-            z-index: 2000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-            background: rgba(13, 17, 23, 0.55);
-            box-sizing: border-box;
-        }
-        .cohort-modal-backdrop[hidden] {
-            display: none !important;
-        }
-        .cohort-modal {
-            position: relative;
-            width: 100%;
-            max-width: 520px;
-            max-height: min(90vh, 640px);
-            overflow: auto;
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 16px 48px rgba(0,0,0,0.2);
-            padding: 22px 24px 20px;
-            color: #24292f;
-        }
-        .cohort-modal-close {
-            position: absolute;
-            top: 10px;
-            right: 12px;
-            border: none;
-            background: transparent;
-            font-size: 1.5rem;
-            line-height: 1;
-            cursor: pointer;
-            color: #656d76;
-            padding: 4px 8px;
-            border-radius: 6px;
-        }
-        .cohort-modal-close:hover {
-            background: #f3f4f6;
-            color: #24292f;
-        }
-        .cohort-modal h3 {
-            margin: 0 36px 8px 0;
-            font-size: 1.15rem;
-            color: #1a7f37;
-        }
-        .cohort-modal-meta {
-            font-size: 0.82rem;
-            color: #57606a;
-            font-family: ui-monospace, monospace;
-            margin: 0 0 14px;
-            word-break: break-all;
-        }
-        .cohort-modal-gate {
-            font-size: 0.88rem;
-            line-height: 1.5;
-            color: #444;
-            background: #fff8c5;
-            border: 1px solid #eac54f;
-            border-radius: 8px;
-            padding: 12px 14px;
-            margin: 0 0 12px;
-        }
-        .cohort-modal-key-row {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: flex-end;
-            gap: 10px;
-            margin-bottom: 14px;
-        }
-        .cohort-modal-key-row label {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            font-size: 0.85rem;
-            color: #444;
-        }
-        .cohort-modal-key-row input {
-            padding: 8px 10px;
-            border: 1px solid #d0d7de;
-            border-radius: 6px;
-            min-width: 200px;
-            font-size: 0.9rem;
-        }
-        .cohort-modal-key-row .cohort-modal-unlock {
-            padding: 8px 14px;
-            background: #2da44e;
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.88rem;
-        }
-        .cohort-modal-key-row .cohort-modal-unlock:hover {
-            background: #2c974b;
-        }
-        .cohort-modal-id-links {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            max-height: 200px;
-            overflow: auto;
-            margin: 0 0 12px;
-            padding: 8px 10px;
-            border: 1px solid #d0d7de;
-            border-radius: 8px;
-            background: #f6f8fa;
-        }
-        .cohort-modal-id-links:empty {
-            display: none;
-        }
-        .cohort-modal-id-link {
-            font-family: ui-monospace, monospace;
-            font-size: 0.8rem;
-            color: #0969da;
-            text-decoration: none;
-            word-break: break-all;
-        }
-        .cohort-modal-id-link:hover {
-            text-decoration: underline;
-        }
-        .cohort-modal-ids-wrap label {
-            display: block;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 6px;
-            color: #333;
-        }
-        .cohort-modal-ids {
-            width: 100%;
-            box-sizing: border-box;
-            min-height: 140px;
-            padding: 10px 12px;
-            font-family: ui-monospace, monospace;
-            font-size: 0.8rem;
-            border: 1px solid #d0d7de;
-            border-radius: 8px;
-            resize: vertical;
-            margin-bottom: 10px;
-        }
-        .cohort-modal-copy {
-            padding: 6px 14px;
-            background: #eaeef2;
-            border: 1px solid #d0d7de;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.85rem;
-        }
-        .cohort-modal-copy:hover {
-            background: #d8dee4;
-        }
-        .cohort-modal-error {
-            color: #cf222e;
-            font-size: 0.88rem;
-            margin: 10px 0 0;
-        }
-    </style>
     <link rel="stylesheet" href="/viz-assets/site-nav.css">
+    <link rel="stylesheet" href="/viz-assets/search.css">
 </head>
 <body class="search-page">
-    <div class="nav">
+    <nav class="nav" aria-label="Main">
         <a href="/">Home</a>
         <a href="/visualization">Visualization</a>
         <a href="/analysis">Analysis</a>
         <a href="/clusters">Clusters</a>
         <a href="/stats">Stats</a>
-        <a href="/search">Search</a>
+        <a href="/search" aria-current="page">Search</a>
         <a href="/lifecycle">Lifecycle</a>
         <a href="/query">Query</a>
         <a href="/triage">Triage</a>
@@ -751,92 +29,87 @@
         <a href="/audit">Audit</a>
         <a href="/patterns" class="patterns">Ontology & Graphs</a>
         <a href="/under-the-hood" class="hood-link">Look Under the Hood</a>
-    </div>
+    </nav>
 
-    <div class="container">
-        <h1>Search</h1>
-        <p class="subtitle">Tree-first exploration of the dataset: an accurate traversal model of the DB, then search on top</p>
+    <div class="search-shell">
+        <header class="search-header">
+            <div>
+                <p class="search-eyebrow">Corpus · Facet partition</p>
+                <h1>Search</h1>
+                <p class="search-lede">Partition the corpus along the dimensions CaseLinker speaks to isolate a cohort and analyze cases.</p>
+            </div>
+            <div class="search-readout" id="facet-meta" aria-live="polite"></div>
+        </header>
 
-        <div class="panel tree-panel-wrap" style="max-width: none; background: #fff;">
-            <h2>Facet tree (live)</h2>
-            <p class="tree-intro">
-                Below is a facet tree built from the case database
-                (extracted labels only, no raw narratives): each box is a cohort node, lines are parent→child edges (a <em>decision tree</em> over facets). You can search via filling in the <em> I am interested in </em> box  or manual <em> prune and focus</em>.
-            </p>
-            <div class="facet-zoom-tools" id="facet-zoom-tools" aria-label="Tree zoom controls">
-                <button type="button" id="facet-zoom-in" title="Zoom in">+</button>
-                <button type="button" id="facet-zoom-out" title="Zoom out">−</button>
-                <button type="button" class="facet-zoom-fit" id="facet-zoom-fit" title="Fit whole tree">Fit all</button>
+        <section class="partition" aria-label="Sentence filters">
+            <p class="tree-sentence-lead">I am interested in cases involving</p>
+            <div class="tree-sentence-prune" id="facet-sentence-blanks">
+                <span class="tree-sentence-wrap" data-sentence-slot="case_topics"><span class="slot-index">01</span><span class="slot-name">Topic</span><span class="slot-field"><input type="text" class="tree-sentence-input" data-field="case_topics" id="facet-sent-case_topics" placeholder="any" title="Topic — grey text completes the first matching value" spellcheck="false" autocomplete="off" /><span class="tree-sentence-ghost-suffix" aria-hidden="true"></span></span></span>
+                <span class="tree-sentence-wrap" data-sentence-slot="severity_indicators"><span class="slot-index">02</span><span class="slot-name">Severity</span><span class="slot-field"><input type="text" class="tree-sentence-input" data-field="severity_indicators" id="facet-sent-severity_indicators" placeholder="any" title="Severity" spellcheck="false" autocomplete="off" /><span class="tree-sentence-ghost-suffix" aria-hidden="true"></span></span></span>
+                <span class="tree-sentence-wrap" data-sentence-slot="platforms_used"><span class="slot-index">03</span><span class="slot-name">Platform</span><span class="slot-field"><input type="text" class="tree-sentence-input" data-field="platforms_used" id="facet-sent-platforms_used" placeholder="any" title="Platform" spellcheck="false" autocomplete="off" /><span class="tree-sentence-ghost-suffix" aria-hidden="true"></span></span></span>
+                <span class="tree-sentence-wrap" data-sentence-slot="investigation_type"><span class="slot-index">04</span><span class="slot-name">Investigation</span><span class="slot-field"><input type="text" class="tree-sentence-input" data-field="investigation_type" id="facet-sent-investigation_type" placeholder="any" title="Investigation type" spellcheck="false" autocomplete="off" /><span class="tree-sentence-ghost-suffix" aria-hidden="true"></span></span></span>
+                <span class="tree-sentence-wrap" data-sentence-slot="source"><span class="slot-index">05</span><span class="slot-name">Source</span><span class="slot-field"><input type="text" class="tree-sentence-input" data-field="source" id="facet-sent-source" placeholder="any" title="Source" spellcheck="false" autocomplete="off" /><span class="tree-sentence-ghost-suffix" aria-hidden="true"></span></span></span>
+                <span class="tree-sentence-wrap" data-sentence-slot="agencies_involved"><span class="slot-index">06</span><span class="slot-name">Agency</span><span class="slot-field"><input type="text" class="tree-sentence-input" data-field="agencies_involved" id="facet-sent-agencies_involved" placeholder="any" title="Agency" spellcheck="false" autocomplete="off" /><span class="tree-sentence-ghost-suffix" aria-hidden="true"></span></span></span>
+                <span class="tree-sentence-wrap" data-sentence-slot="prosecution_outcome"><span class="slot-index">07</span><span class="slot-name">Outcome</span><span class="slot-field"><input type="text" class="tree-sentence-input" data-field="prosecution_outcome" id="facet-sent-prosecution_outcome" placeholder="any" title="Prosecution outcome" spellcheck="false" autocomplete="off" /><span class="tree-sentence-ghost-suffix" aria-hidden="true"></span></span></span>
+                <span class="tree-sentence-wrap" data-sentence-slot="locations"><span class="slot-index">08</span><span class="slot-name">Location</span><span class="slot-field"><input type="text" class="tree-sentence-input" data-field="locations" id="facet-sent-locations" placeholder="any" title="Location" spellcheck="false" autocomplete="off" /><span class="tree-sentence-ghost-suffix" aria-hidden="true"></span></span></span>
+                <span class="tree-sentence-wrap" data-sentence-slot="severity_phrases"><span class="slot-index">09</span><span class="slot-name">Phrase</span><span class="slot-field"><input type="text" class="tree-sentence-input" data-field="severity_phrases" id="facet-sent-severity_phrases" placeholder="any" title="Severity phrase" spellcheck="false" autocomplete="off" /><span class="tree-sentence-ghost-suffix" aria-hidden="true"></span></span></span>
+                <span class="tree-sentence-wrap" data-sentence-slot="era_period"><span class="slot-index">10</span><span class="slot-name">Era</span><span class="slot-field"><input type="text" class="tree-sentence-input" data-field="era_period" id="facet-sent-era_period" placeholder="any" title="Date range" spellcheck="false" autocomplete="off" /><span class="tree-sentence-ghost-suffix" aria-hidden="true"></span></span></span>
             </div>
-            <div class="tree-controls">
-                <div class="tree-sentence-prune" id="facet-sentence-blanks" aria-label="Quick sentence filters">
-                    <span class="tree-sentence-lead">I am interested in cases involving</span>
-                    <span class="tree-sentence-wrap" data-sentence-slot="case_topics"><input type="text" class="tree-sentence-input" data-field="case_topics" id="facet-sent-case_topics" placeholder="Topic" title="1. Topic — grey text completes first matching bucket (A→Z)" spellcheck="false" autocomplete="off" /><span class="tree-sentence-ghost-suffix" aria-hidden="true"></span></span>
-                    <span class="tree-sentence-wrap" data-sentence-slot="severity_indicators"><input type="text" class="tree-sentence-input" data-field="severity_indicators" id="facet-sent-severity_indicators" placeholder="Severity" title="2. Severity" spellcheck="false" autocomplete="off" /><span class="tree-sentence-ghost-suffix" aria-hidden="true"></span></span>
-                    <span class="tree-sentence-wrap" data-sentence-slot="platforms_used"><input type="text" class="tree-sentence-input" data-field="platforms_used" id="facet-sent-platforms_used" placeholder="Platform" title="3. Platform" spellcheck="false" autocomplete="off" /><span class="tree-sentence-ghost-suffix" aria-hidden="true"></span></span>
-                    <span class="tree-sentence-wrap" data-sentence-slot="investigation_type"><input type="text" class="tree-sentence-input" data-field="investigation_type" id="facet-sent-investigation_type" placeholder="Inv. type" title="4. Inv. type" spellcheck="false" autocomplete="off" /><span class="tree-sentence-ghost-suffix" aria-hidden="true"></span></span>
-                    <span class="tree-sentence-wrap" data-sentence-slot="source"><input type="text" class="tree-sentence-input" data-field="source" id="facet-sent-source" placeholder="Source" title="5. Source" spellcheck="false" autocomplete="off" /><span class="tree-sentence-ghost-suffix" aria-hidden="true"></span></span>
-                    <span class="tree-sentence-wrap" data-sentence-slot="agencies_involved"><input type="text" class="tree-sentence-input" data-field="agencies_involved" id="facet-sent-agencies_involved" placeholder="Agency" title="6. Agency — type A to see first bucket starting with A" spellcheck="false" autocomplete="off" /><span class="tree-sentence-ghost-suffix" aria-hidden="true"></span></span>
-                    <span class="tree-sentence-wrap" data-sentence-slot="prosecution_outcome"><input type="text" class="tree-sentence-input" data-field="prosecution_outcome" id="facet-sent-prosecution_outcome" placeholder="Prosecution" title="7. Prosecution Outcome" spellcheck="false" autocomplete="off" /><span class="tree-sentence-ghost-suffix" aria-hidden="true"></span></span>
-                    <span class="tree-sentence-wrap" data-sentence-slot="locations"><input type="text" class="tree-sentence-input" data-field="locations" id="facet-sent-locations" placeholder="Location" title="8. Location" spellcheck="false" autocomplete="off" /><span class="tree-sentence-ghost-suffix" aria-hidden="true"></span></span>
-                    <span class="tree-sentence-wrap" data-sentence-slot="severity_phrases"><input type="text" class="tree-sentence-input" data-field="severity_phrases" id="facet-sent-severity_phrases" placeholder="Sev. phrase" title="9. Severity phrase" spellcheck="false" autocomplete="off" /><span class="tree-sentence-ghost-suffix" aria-hidden="true"></span></span>
-                    <span class="tree-sentence-wrap" data-sentence-slot="era_period"><input type="text" class="tree-sentence-input" data-field="era_period" id="facet-sent-era_period" placeholder="Date range" title="10. Date range" spellcheck="false" autocomplete="off" /><span class="tree-sentence-ghost-suffix" aria-hidden="true"></span></span>
-                    <p class="tree-sentence-hint"><strong>Live search:</strong> type a label in any box below — <strong>grey</strong> completes the first prefix match (A→Z). <strong>Tab</strong> or <strong>Enter</strong> accepts it and reloads the tree immediately. Typing a full valid label also reloads after a short pause. Red border = no label starts that way. For multi-value filters or split dimensions, use <em>Prune &amp; focus</em> or <strong>Reload tree</strong>.</p>
-                </div>
-                <button type="button" id="facet-reload">Reload tree</button>
-                <label for="facet-depth">Facet depth</label>
-                <select id="facet-depth" title="Fewer levels = smaller tree, faster load">
-                    <option value="">Full (all facet levels)</option>
-                    <option value="2">2 levels</option>
-                    <option value="3">3 levels</option>
-                    <option value="4">4 levels</option>
-                    <option value="5">5 levels</option>
-                    <option value="6">6 levels</option>
-                    <option value="7">7 levels</option>
-                    <option value="8">8 levels</option>
-                    <option value="9">9 levels</option>
-                    <option value="10">10 levels (full)</option>
-                </select>
-            </div>
-            <details class="facet-prune-panel" id="facet-prune-panel">
-                <summary>Prune &amp; focus (facet drill-down)</summary>
-                <p class="facet-prune-help">
-                    Use <strong>Split on</strong> to include a dimension in the tree (leave unchecked to skip it; if none are checked, the tree is a single cohort).
-                    For <strong>Allow values</strong>, choose from the dropdown; each pick appears on the right and disappears from the list until you remove it with ×.
-                    A case matches when <strong>any</strong> of its tags on that field are among your picks (OR within a row); between rows, AND.
-                    The tree <em>shape</em> follows one primary tag per case per depth (fast layout). Numbers on each box and the cohort ID list count every case that <em>includes</em> that tag on the path (any position), so sibling topic counts can add up to more than the parent.
-                </p>
+        </section>
+
+        <div class="search-workspace">
+            <aside class="split-rail" id="facet-prune-panel" aria-label="Split dimensions">
+                <p class="rail-kicker">Dimensions</p>
+                <h2>Split on</h2>
+                <p class="facet-prune-help">Check a dimension to isolate it in the tree. Leave unchecked to use every dimension.</p>
                 <div class="facet-prune-rows" id="facet-prune-rows"></div>
                 <div class="facet-prune-actions">
-                    <button type="button" class="facet-prune-apply" id="facet-prune-apply">Apply prune</button>
-                    <button type="button" class="facet-prune-clear" id="facet-prune-clear">Clear value filters</button>
+                    <button type="button" class="facet-prune-apply" id="facet-prune-apply">Apply</button>
+                    <button type="button" class="facet-prune-clear" id="facet-prune-clear">Clear</button>
+                    <button type="button" class="facet-prune-select-all" id="facet-prune-select-all">Select all</button>
                 </div>
                 <p class="facet-prune-status" id="facet-prune-status" aria-live="polite"></p>
-            </details>
-            <div class="tree-meta" id="facet-meta"></div>
-            <div class="tree-facet-order">Partition order (10 steps): 1.Topic → 2.Severity → 3.Platform → 4.Inv. type → 5.Source → 6.Agency → 7.Prosecution Outcome → 8.Location → 9.Severity Phrase → 10.Date range.</div>
-            <div class="facet-tree-host" id="facet-tree-root">
-                <div class="tree-loading">Loading facet tree…</div>
-            </div>
-        </div>
+            </aside>
 
-        <div class="panel">
-            <h2>Phase 1</h2>
-            <ul>
-                <li><strong>Database → tree</strong>: Derive a deterministic decision tree from the case store—nodes, edges, and state at each step (counts, facet signature, valid next branches). Dimensions follow curated enumerations so behavior is explainable.</li>
-                <li><strong>Traversal semantics</strong>: Each branch narrows the population; paths are reproducible (same choices → same cohort). Multi-step drill-down can use <code>cursor</code> / step state aligned with the tree.</li>
-                <li><strong>Leaves = cohorts</strong>: Terminal nodes expose <strong>group-centric</strong> payloads—<code>case_count</code>, labels, <code>facet_signature</code>, optional opaque member refs—not raw case narratives in the default search response.</li>
-                <li><strong>Foundation for search UX</strong>: Structured chips / paths on top of this tree; optional richer graph (multiple routes to similar cohorts) in a later phase. Implementation sketch: facet filters over the storage layer, then rollups if needed for speed.</li>
-            </ul>
-        </div>
-
-        <div class="panel">
-            <h2>Semantic search <span class="search-dev-badge">(in development)</span></h2>
-            <p class="placeholder semantic-search-intro">
-                This is a <strong>different direction</strong> from the facet tree above: <strong>text-based exploration</strong> using <strong>semantic search</strong> to find cases that match <em>ideas</em> in language (meaning and similarity), not only drill-down along fixed facet partitions.
-                A <strong>transformer-based embedding model</strong> would encode the corpus and each natural-language question as dense vectors; <strong>cases whose embeddings are closest to the question embedding</strong> (by similarity in that space) would be retrieved and displayed.
-                Nothing here is wired yet; the live tree remains the supported path today.
-            </p>
+            <section class="tree-stage" aria-label="Facet tree">
+                <div class="stage-bar">
+                    <div>
+                        <span class="stage-kicker">Decision tree</span>
+                        <span class="stage-note">Click a cohort for its case IDs.</span>
+                    </div>
+                    <div class="stage-bar-tools">
+                        <div class="facet-zoom-tools" id="facet-zoom-tools" aria-label="Tree zoom controls">
+                            <button type="button" id="facet-zoom-in" title="Zoom in">+</button>
+                            <button type="button" id="facet-zoom-out" title="Zoom out">−</button>
+                            <button type="button" class="facet-zoom-fit" id="facet-zoom-fit" title="Fit whole tree">Fit</button>
+                        </div>
+                        <label class="depth-control" for="facet-depth">Depth
+                            <select id="facet-depth" title="Fewer levels = smaller tree, faster load">
+                                <option value="">Full</option>
+                                <option value="2">2 levels</option>
+                                <option value="3" selected>3 levels</option>
+                                <option value="4">4 levels</option>
+                                <option value="5">5 levels</option>
+                                <option value="6">6 levels</option>
+                                <option value="7">7 levels</option>
+                                <option value="8">8 levels</option>
+                                <option value="9">9 levels</option>
+                                <option value="10">10 levels</option>
+                            </select>
+                        </label>
+                        <button type="button" id="facet-reload">Redraw</button>
+                    </div>
+                </div>
+                <div class="tree-legend" aria-hidden="true">
+                    <span><i></i>Corpus</span>
+                    <span><i class="swatch-branch"></i>Branch</span>
+                    <span><i class="swatch-leaf"></i>Leaf</span>
+                </div>
+                <div class="facet-tree-host" id="facet-tree-root">
+                    <div class="tree-loading">Building the partition…</div>
+                </div>
+                <p class="search-footnote">This page partitions extracted labels.</p>
+            </section>
         </div>
     </div>
 
@@ -848,15 +121,15 @@
             <p class="cohort-modal-gate" id="cohort-modal-gate" hidden></p>
             <div class="cohort-modal-key-row" id="cohort-modal-key-row" hidden>
                 <label>Access key
-                    <input type="password" id="cohort-modal-key" autocomplete="off" placeholder="Demo key: demo" />
+                    <input type="password" id="cohort-modal-key" autocomplete="off" placeholder="Demo key" />
                 </label>
                 <button type="button" class="cohort-modal-unlock" id="cohort-modal-unlock">Show case IDs</button>
             </div>
             <div class="cohort-modal-ids-wrap" id="cohort-modal-ids-wrap" hidden>
                 <div id="cohort-modal-id-links" class="cohort-modal-id-links" aria-label="Open case in audit"></div>
-                <label for="cohort-modal-ids">Case IDs (one per line — copy for notes)</label>
-                <textarea id="cohort-modal-ids" class="cohort-modal-ids" readonly rows="10" spellcheck="false"></textarea>
+                <p class="cohort-modal-ids-note">Each link opens the case in Audit.</p>
                 <button type="button" class="cohort-modal-copy" id="cohort-modal-copy">Copy all</button>
+                <textarea id="cohort-modal-ids" class="cohort-modal-ids" hidden readonly spellcheck="false" aria-hidden="true"></textarea>
             </div>
             <p class="cohort-modal-error" id="cohort-modal-error" hidden></p>
         </div>
@@ -969,10 +242,10 @@
             return d.children && d.children.length ? d.children : null;
         });
 
-        var nodeW = 168;
-        var nodeH = 44;
-        var sepX = 52;
-        var sepY = 210;
+        var nodeW = 184;
+        var nodeH = 52;
+        var sepX = 36;
+        var sepY = 248;
 
         d3.tree().nodeSize([nodeH + sepX, sepY])(hierarchy);
 
@@ -1001,11 +274,18 @@
         var bx = bx0 - margin;
         var by = by0 - margin;
 
+        var hostW = Math.max(host.clientWidth || 0, 320);
+        var hostH = Math.max(host.clientHeight || 0, 560);
+        var rootSvgX = (pad - minY) + hierarchy.y;
+        var rootSvgY = (pad - minX) + hierarchy.x;
+        var viewX = rootSvgX - 120;
+        var viewY = rootSvgY - hostH / 2;
+
         var svg = d3.select(host).append('svg')
-            .attr('viewBox', [bx, by, vbW, vbH])
+            .attr('viewBox', [viewX, viewY, hostW, hostH])
             .attr('width', '100%')
-            .attr('preserveAspectRatio', 'xMidYMid meet')
-            .style('aspect-ratio', vbW + ' / ' + vbH);
+            .attr('height', hostH)
+            .attr('preserveAspectRatio', 'xMidYMid meet');
 
         var gZoom = svg.append('g');
         /* One shared offset so edges and boxes align */
@@ -1040,12 +320,15 @@
 
         nodeG.append('rect')
             .attr('class', function (d) {
-                return 'node-rect' + (d.data.is_leaf ? ' leaf' : '');
+                var cls = 'node-rect';
+                if (!d.parent) cls += ' root';
+                else if (d.data.is_leaf) cls += ' leaf';
+                return cls;
             })
             .attr('x', -nodeW / 2)
             .attr('y', -nodeH / 2)
-            .attr('rx', 4)
-            .attr('ry', 4)
+            .attr('rx', 8)
+            .attr('ry', 8)
             .attr('width', nodeW)
             .attr('height', nodeH);
 
@@ -1073,14 +356,52 @@
                 return truncate(String(d.data.cohort_group_id), 14);
             });
 
+        function selectCohortNode(nodeSel, data) {
+            nodeG.select('.node-rect').classed('is-selected', false);
+            nodeSel.select('.node-rect').classed('is-selected', true);
+            openCohortModal(data);
+        }
+
         nodeG.on('click', function (event, d) {
             event.stopPropagation();
-            openCohortModal(d.data);
+            selectCohortNode(d3.select(this), d.data);
         });
 
-        /* Min scale: don’t zoom out into a tiny sliver of empty canvas. Max: read labels. */
+        var fitK = Math.min(hostW / vbW, hostH / vbH);
+        var fitTx = viewX + (hostW - vbW * fitK) / 2 - bx * fitK;
+        var fitTy = viewY + (hostH - vbH * fitK) / 2 - by * fitK;
+        var fitAll = d3.zoomIdentity.translate(fitTx, fitTy).scale(fitK);
+
+        /* Frame whatever already sits in the vertical band around the root,
+           including later columns, so the first visible branches stay on stage. */
+        var slicePadY = hostH * 0.46;
+        var minFX = rootSvgX - nodeW / 2;
+        var maxFX = rootSvgX + nodeW / 2;
+        var minFY = rootSvgY - nodeH / 2;
+        var maxFY = rootSvgY + nodeH / 2;
+        hierarchy.each(function (d) {
+            var sx = (pad - minY) + d.y;
+            var sy = (pad - minX) + d.x;
+            if (Math.abs(sy - rootSvgY) > slicePadY) return;
+            minFX = Math.min(minFX, sx - nodeW / 2);
+            maxFX = Math.max(maxFX, sx + nodeW / 2);
+            minFY = Math.min(minFY, sy - nodeH / 2);
+            maxFY = Math.max(maxFY, sy + nodeH / 2);
+        });
+        var frameW = Math.max(maxFX - minFX, 1);
+        var frameH = Math.max(maxFY - minFY, 1);
+        var framePad = 36;
+        var frameK = Math.min(
+            (hostW - framePad * 2) / frameW,
+            (hostH - framePad * 2) / frameH,
+            1
+        );
+        var frameTx = viewX + (hostW - frameW * frameK) / 2 - minFX * frameK;
+        var frameTy = viewY + (hostH - frameH * frameK) / 2 - minFY * frameK;
+        var framedView = d3.zoomIdentity.translate(frameTx, frameTy).scale(frameK);
+
         var zoom = d3.zoom()
-            .scaleExtent([0.12, 160])
+            .scaleExtent([Math.min(fitK, frameK) * 0.85, Math.max(frameK, 2.5)])
             .on('zoom', function (event) {
                 facetZoomState.transform = event.transform;
                 gZoom.attr('transform', event.transform);
@@ -1088,11 +409,10 @@
 
         svg.call(zoom);
 
-        /* Tight viewBox + identity: graph fills the SVG; no bogus height or extra fit scale. */
-        var initial = d3.zoomIdentity;
+        var initial = fitK >= 0.9 ? fitAll : framedView;
         facetZoomState.svg = svg;
         facetZoomState.zoom = zoom;
-        facetZoomState.initial = initial;
+        facetZoomState.initial = fitAll;
         facetZoomState.transform = initial;
         svg.call(zoom.transform, initial);
         if (zoomTools) zoomTools.classList.add('visible');
@@ -1210,12 +530,14 @@
         var wrap = getSentenceWrap(inp);
         var ghost = wrap && wrap.querySelector('.tree-sentence-ghost-suffix');
 
+        if (!wrap) return;
         wrap.classList.remove('tree-sentence-input-dead');
         if (raw.length > 0 && !full.some(function (v) {
             return v.toLowerCase().startsWith(raw.toLowerCase());
         })) {
             wrap.classList.add('tree-sentence-input-dead');
         }
+        wrap.classList.toggle('is-set', !!canonicalSentenceValue(full, raw.trim()));
 
         if (ghost) {
             ghost.textContent = '';
@@ -1225,8 +547,8 @@
             }
         }
 
-        var mw = measureSentenceTextWidth(raw, inp);
-        var minW = 56;
+        var mw = measureSentenceTextWidth(raw || inp.placeholder || '', inp);
+        var minW = 28;
         var pad = 10;
         inp.style.width = Math.max(mw + pad, minW) + 'px';
     }
@@ -1406,9 +728,7 @@
             params.set('facet_constraints', JSON.stringify(constraints));
         }
         var checked = getCheckedSplitFields();
-        if (checked.length === 0 && !isInitialFacetTreeLoad) {
-            params.set('include_facets', '');
-        } else if (checked.length > 0 && checked.length < FACET_SCHEMA.length) {
+        if (checked.length > 0 && checked.length < FACET_SCHEMA.length) {
             params.set('include_facets', checked.join(','));
         }
         var s = params.toString();
@@ -1417,7 +737,7 @@
 
     function renderPruneRows(facetsPayload) {
         pruneRowsEl.innerHTML = '';
-        FACET_SCHEMA.forEach(function (step) {
+        FACET_SCHEMA.forEach(function (step, i) {
             var metaF = facetsPayload && facetsPayload[step.field];
             var vals = metaF && metaF.values ? metaF.values.slice() : [];
 
@@ -1434,13 +754,18 @@
             chk.className = 'facet-prune-split';
             chk.dataset.field = step.field;
             chk.checked = false;
+            var idx = document.createElement('span');
+            idx.className = 'facet-prune-idx';
+            idx.textContent = String(i + 1).padStart(2, '0');
             labInc.appendChild(chk);
-            labInc.appendChild(document.createTextNode(' Split on: ' + step.label));
+            labInc.appendChild(idx);
+            labInc.appendChild(document.createTextNode(step.label.replace(/^\d+\.\s*/, '')));
 
             var labVal = document.createElement('div');
             labVal.className = 'facet-prune-val-wrap';
             var cap = document.createElement('span');
-            cap.textContent = 'Allow values (optional)';
+            cap.className = 'facet-prune-allow';
+            cap.textContent = 'Allow';
             labVal.appendChild(cap);
 
             var picker = document.createElement('div');
@@ -1470,7 +795,7 @@
     }
 
     async function loadFacetDistinctOptions() {
-        pruneStatusEl.textContent = 'Loading facet value lists…';
+        pruneStatusEl.textContent = 'Loading value lists…';
         try {
             var r = await fetch('/api/facet-distinct');
             var data = await r.json();
@@ -1482,7 +807,7 @@
             }
             renderPruneRows(data.facets || {});
             populateSentenceDatalists(data.facets || {});
-            pruneStatusEl.textContent = 'Value lists loaded (' + (data.total_cases || 0) + ' cases). Pick from each dropdown; chips show on the right.';
+            pruneStatusEl.textContent = (data.total_cases || 0) + ' cases in the value lists.';
         } catch (e) {
             pruneStatusEl.textContent = 'Could not load /api/facet-distinct.';
             renderPruneRows({});
@@ -1490,13 +815,17 @@
         }
     }
 
+    function setAllSplitFields(on) {
+        pruneRowsEl.querySelectorAll('.facet-prune-split').forEach(function (chk) {
+            chk.checked = on;
+        });
+    }
+
     function clearPruneValueFilters() {
+        setAllSplitFields(false);
         pruneRowsEl.querySelectorAll('.facet-prune-row').forEach(function (row) {
             row._picked = [];
             syncPruneRow(row);
-        });
-        pruneRowsEl.querySelectorAll('.facet-prune-split').forEach(function (chk) {
-            chk.checked = false;
         });
         var sb = document.getElementById('facet-sentence-blanks');
         if (sb) {
@@ -1642,7 +971,7 @@
         facetZoomState.zoom = null;
         facetZoomState.initial = null;
         if (zoomTools) zoomTools.classList.remove('visible');
-        host.innerHTML = '<div class="tree-loading">Loading facet tree…</div>';
+        host.innerHTML = '<div class="tree-loading">Building the partition…</div>';
         meta.textContent = '';
         var q = buildFacetTreeQuery();
         try {
@@ -1653,21 +982,27 @@
                 return;
             }
             var root = data.root;
-            var fl = data.facet_levels != null ? data.facet_levels : '?';
             var metaParts = [
                 'cases=' + data.total_cases,
                 'nodes=' + data.node_count,
-                'facetLevels=' + fl,
                 'maxDepth=' + data.tree_max_depth
             ];
             if (data.source_case_count != null && data.total_cases !== data.source_case_count) {
                 metaParts.push('corpus=' + data.source_case_count + '→' + data.total_cases);
             }
-            if (data.facet_levels_full != null && String(fl) !== String(data.facet_levels_full)) {
-                metaParts.push('partitionSteps=' + fl + '/' + data.facet_levels_full);
-            }
-            if (data.max_depth_param != null) metaParts.push('param=max_depth:' + data.max_depth_param);
-            meta.textContent = metaParts.join('  ');
+            var readoutLabels = {
+                cases: 'Cases',
+                nodes: 'Nodes',
+                maxDepth: 'Depth',
+                corpus: 'Corpus'
+            };
+            meta.innerHTML = metaParts.map(function (part) {
+                var cut = part.indexOf('=');
+                var key = cut === -1 ? part : part.slice(0, cut);
+                var val = cut === -1 ? '' : part.slice(cut + 1);
+                var label = readoutLabels[key] || key;
+                return '<span class="stat-pill"><span class="readout-k">' + esc(label) + '</span><strong>' + esc(val) + '</strong></span>';
+            }).join('');
             if (!root) {
                 host.innerHTML = '<div class="tree-error">Empty tree.</div>';
                 return;
@@ -1685,6 +1020,10 @@
     document.getElementById('facet-prune-apply').addEventListener('click', loadTree);
     document.getElementById('facet-prune-clear').addEventListener('click', function () {
         clearPruneValueFilters();
+        loadTree();
+    });
+    document.getElementById('facet-prune-select-all').addEventListener('click', function () {
+        setAllSplitFields(true);
         loadTree();
     });
 
