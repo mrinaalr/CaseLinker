@@ -111,6 +111,10 @@ from sparql_proxy import (
     prepare_sparql_query,
     sparql_cors_allow_origin,
 )
+_ontology_dir = str(_REPO_ROOT / "ontology")
+if _ontology_dir not in sys.path:
+    sys.path.append(_ontology_dir)
+from cohort_sparql import build_cohort_case_query
 from sparql_rebuild_lock import rebuild_in_progress
 from oxigraph_wake import (
     aquery_once_then_retry,
@@ -1948,6 +1952,27 @@ def post_facet_cohort_members(request: Request, body: FacetCohortMembersBody):
     except Exception as e:
         logger.exception("facet-cohort-members failed: %s", e)
         return {"error": str(e), "count": 0, "case_ids": None, "requires_access_key": False}
+
+
+class CohortSparqlBody(BaseModel):
+    case_ids: List[str] = Field(default_factory=list, max_length=12000)
+    label: Optional[str] = Field(default=None, max_length=120)
+
+
+@app.post("/api/cohort-sparql")
+@limiter.limit("60/minute")
+def post_cohort_sparql(request: Request, body: CohortSparqlBody):
+    """
+    One-row-per-case SPARQL over the named graphs for these case ids.
+
+    Does not look up membership. Callers that already hold cohort ids (the
+    Search dialog, after the small-cohort gate) pass them here. Invalid ids
+    are dropped. At most 400 graphs are written into VALUES.
+    """
+    built = build_cohort_case_query(body.case_ids, label=body.label)
+    if built["included"] == 0:
+        raise HTTPException(status_code=400, detail="No valid case ids.")
+    return built
 
 
 # Technology revolver: platforms_used + technology-signal buckets in extracted_features

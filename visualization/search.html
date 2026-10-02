@@ -127,8 +127,12 @@
             </div>
             <div class="cohort-modal-ids-wrap" id="cohort-modal-ids-wrap" hidden>
                 <div id="cohort-modal-id-links" class="cohort-modal-id-links" aria-label="Open case in audit"></div>
-                <p class="cohort-modal-ids-note">Each link opens the case in Audit.</p>
-                <button type="button" class="cohort-modal-copy" id="cohort-modal-copy">Copy all</button>
+                <p class="cohort-modal-ids-note">Each link opens the case in Audit. SPARQL returns each case with its source, platforms, agencies, phase, steps, charges, and sentences. Graphs opens the same cases.</p>
+                <div class="cohort-modal-actions">
+                    <button type="button" class="cohort-modal-copy" id="cohort-modal-copy">Copy IDs</button>
+                    <button type="button" class="cohort-modal-sparql" id="cohort-modal-sparql">Copy SPARQL</button>
+                    <button type="button" class="cohort-modal-patterns" id="cohort-modal-patterns">Open in graphs</button>
+                </div>
                 <textarea id="cohort-modal-ids" class="cohort-modal-ids" hidden readonly spellcheck="false" aria-hidden="true"></textarea>
             </div>
             <p class="cohort-modal-error" id="cohort-modal-error" hidden></p>
@@ -950,15 +954,73 @@
     document.getElementById('cohort-modal-key').addEventListener('keydown', function (e) {
         if (e.key === 'Enter') fetchCohortMembers(e.target.value);
     });
+    var SEARCH_COHORT_KEY = 'caselinker.searchCohort';
+    var SEARCH_COHORT_MAX = 2000;
+
+    function cohortModalIds() {
+        return document.getElementById('cohort-modal-ids').value
+            .split('\n')
+            .map(function (s) { return s.trim(); })
+            .filter(Boolean);
+    }
+
+    function flashCohortButton(btn, text) {
+        var prev = btn.textContent;
+        btn.textContent = text;
+        setTimeout(function () { btn.textContent = prev; }, 1600);
+    }
+
+    function cohortModalLabel() {
+        var title = document.getElementById('cohort-modal-title');
+        return (title && title.textContent) ? title.textContent : 'Search cohort';
+    }
+
     document.getElementById('cohort-modal-copy').addEventListener('click', function () {
         var t = document.getElementById('cohort-modal-ids').value;
         if (!t) return;
         navigator.clipboard.writeText(t).then(function () {
-            var btn = document.getElementById('cohort-modal-copy');
-            var prev = btn.textContent;
-            btn.textContent = 'Copied';
-            setTimeout(function () { btn.textContent = prev; }, 1600);
+            flashCohortButton(document.getElementById('cohort-modal-copy'), 'Copied');
         }).catch(function () {});
+    });
+    document.getElementById('cohort-modal-sparql').addEventListener('click', async function () {
+        var btn = document.getElementById('cohort-modal-sparql');
+        var ids = cohortModalIds();
+        if (!ids.length || !btn) return;
+        btn.disabled = true;
+        try {
+            var r = await fetch('/api/cohort-sparql', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ case_ids: ids, label: cohortModalLabel() })
+            });
+            var data = await r.json();
+            if (!r.ok || !data.sparql) {
+                var detail = data && (data.detail || data.error);
+                throw new Error(typeof detail === 'string' ? detail : 'No query');
+            }
+            await navigator.clipboard.writeText(data.sparql);
+            flashCohortButton(btn, data.truncated ? ('Copied first ' + data.included) : 'Copied');
+        } catch (e) {
+            flashCohortButton(btn, 'Failed');
+        } finally {
+            btn.disabled = false;
+        }
+    });
+    document.getElementById('cohort-modal-patterns').addEventListener('click', function () {
+        var ids = cohortModalIds();
+        if (!ids.length) return;
+        var stored = ids.slice(0, SEARCH_COHORT_MAX);
+        try {
+            localStorage.setItem(SEARCH_COHORT_KEY, JSON.stringify({
+                v: 1,
+                label: cohortModalLabel(),
+                ids: stored,
+                total: ids.length
+            }));
+        } catch (e) {
+            return;
+        }
+        window.open('/patterns?cohort=search', '_blank');
     });
     document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape' && cohortModalBackdrop && !cohortModalBackdrop.hidden) {

@@ -104,7 +104,7 @@ running locally, initially empty
 | Included | Path | Local use |
 |-------|------|-----------|
 | Ontology case graphs (~10k+ expressed via CASE/UCO/CAC) | `ontology/graph_output/` | `/patterns`, `/api/ontology/*` |
-| PACER knowledge graphs (41 investigations, 128 docs, 297 graph, modeled by the CASE-UCO SDK) | `ontology/PACER/` | `/patterns` |
+| PACER knowledge graphs (41 investigations, 128 docs, 297 graphs, modeled by the CASE-UCO SDK) | `ontology/PACER/` | `/patterns` |
 | PACER lifecycle state machines (30 cases) | `state_machines/graphs/` | `/lifecycle` |
 | L* trajectories / transition matrix | `state_machines/data/lstar_all_cases.json` | `/api/lifecycle/lstar` |
 | Case studies (21 across 4 eras) | `data/case_studies.json` | `/case-studies` |
@@ -162,7 +162,7 @@ You can process additional PDFs to add more cases to the database.
    - Provides REST API endpoints for case data, analysis, and statistics
 
 3. **`caselinker_mcp/server.py`** - **MCP server for agents and operators**
-   - **Local stdio:** **52 tools** (corpus + free RECAP/DOJ search + full collector READ/WRITE + local duplicate audit). Collector WRITE writes JSON/PDFs under `collector_output/` on your machine; nothing auto-ingests into sqlite.
+   - **Local stdio:** **52 tools** (corpus + free RECAP/DOJ search + full collector READ/WRITE + local duplicate audit). Collector WRITE writes JSON/PDFs under `collector_output/` on your machine
    - **Railway hosted MCP:** **42 tools** — same corpus/READ surface; collector **WRITE tools** are not registered (no ephemeral-disk side effects). Use local MCP or the `collector/` CLI to harvest PDFs.
    - Reach out for private mcp.json keys and review `caselinker_mcp/README.md` and `caselinker_mcp/tool_registry.md` for setup, auth, and the full catalog
 
@@ -269,7 +269,7 @@ Access the **Platform Harm Dashboard** via the [live demo](https://caselinker.up
 
 Access Search via the [live demo](https://caselinker.up.railway.app/search) or locally at http://localhost:8000/search
 
-Search provides a **facet decision tree** over the stored case corpus: the server builds a deterministic partition tree from structured facets (not a precomputed file on disk). The view uses **D3.js** (SVG) to render cohort nodes and edges. You can limit tree depth, **prune** which partition dimensions apply and optionally filter allowed values per facet (extracted feature), then **click any node** (branch or leaf) to list **case IDs** in that cohort for use elsewhere (e.g. single-case visualization, manual cross-case analysis). Small cohorts (fewer than three cases) have IDs gated behind a demo access key. See `src/Storage Layer/facet_tree.py` and `/api/facet-tree` for the partition order and semantics. How Search relates to SPARQL, Query, LLM, Patterns, and MCP: **[search.md](search.md)**.
+Search provides a **facet decision tree** over the stored case corpus: the server builds a deterministic partition tree from structured facets (not a precomputed file on disk). The view uses **D3.js** (SVG) to render cohort nodes and edges. You can limit tree depth, **prune** which partition dimensions apply and optionally filter allowed values per facet (extracted feature), then **click any node** (branch or leaf) to list **case IDs** in that cohort for use elsewhere (e.g. single-case visualization, manual cross-case analysis). Small cohorts (fewer than three cases) have IDs gated behind a demo access key. When IDs are listed, the dialog can copy a SPARQL query limited to those case graphs, or open the same set on Ontology & Graphs. See `src/Storage Layer/facet_tree.py` and `/api/facet-tree` for the partition order and semantics. How Search relates to SPARQL, Query, LLM, Patterns, and MCP: **[search.md](search.md)**.
 
 
 ## Using Advanced Case Analysis and Triage
@@ -505,6 +505,7 @@ When the ML stack is enabled, NER adds organizations, locations, dates, and ages
 - `GET /api/facet-tree` - Build facet tree JSON (`max_depth`, optional prune query params)
 - `GET /api/facet-distinct` - Distinct primary-bucket values per facet (for Search prune UI)
 - `POST /api/facet-cohort-members` - Case IDs for a facet path (same prune semantics as tree; small cohorts gated)
+- `POST /api/cohort-sparql` - One-row-per-case SPARQL (source, platforms, agencies, phase, steps, charges, sentences) for a list of case ids (public, rate limited; does not reveal gated cohorts)
 - `GET /triage` - Triage page (rules, model evaluation, corpus model tiers, live paste)
 - `GET /patterns` — Ontology & Graphs explorer (CAC force graph + lookup; research below the fold)
 - `GET /patterns/graph` — same page (alias)

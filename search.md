@@ -47,7 +47,7 @@ Live: [Search](https://caselinker.up.railway.app/search) · [Query](https://case
 - **D3.js** SVG tree of cohort nodes and edges.
 - **Depth control**: `max_depth` limits how many partition dimensions are used.
 - **Prune**: enable/disable dimensions and optionally restrict allowed values per facet.
-- **Click a node**: load cohort case IDs for hand-off elsewhere. Cohorts with fewer than three cases gate IDs behind a demo access key.
+- **Click a node**: load cohort case IDs for hand-off elsewhere. Cohorts with fewer than three cases gate IDs behind a demo access key. When IDs are visible: **Copy SPARQL** (one row per case: source, platforms, agencies, phase, steps, charges, sentences) or **Open in graphs** (`/patterns?cohort=search`, same case set; the SPARQL panel is filled from `POST /api/cohort-sparql`).
 
 ### Partition order (default)
 
@@ -59,6 +59,7 @@ Implemented in `src/Storage Layer/facet_tree.py` as `DEFAULT_FACET_ORDER` (Topic
 |----------|------|
 | `GET /api/facet-tree` | Build tree JSON (`max_depth`, prune query params) |
 | `POST /api/facet-cohort-members` | Case IDs for a facet path |
+| `POST /api/cohort-sparql` | One-row-per-case SPARQL over named graphs for a list of case ids (max 400) |
 | `GET /api/facet-distinct` | Distinct values for prune UI |
 | `POST /api/return-tagged-cases` | Tag intersection (Analysis / MCP) |
 | `POST /api/tag-threader` | Tag intersection + thread-style grouping |
@@ -97,8 +98,8 @@ Catalog: `caselinker_mcp/tool_registry.md`.
 
 Directions worth exploring (not committed product plans):
 
-1. **Cross-walk facet cohorts ↔ SPARQL / Patterns**  
-   Export a Search cohort as a SPARQL `VALUES` block or named-graph filter; open Patterns with the same case set. Today that hand-off is mostly manual (copy IDs).
+1. **Cross-walk facet cohorts ↔ SPARQL / Patterns** — shipped for the Search dialog.  
+   Visible cohorts copy a SPARQL query (`POST /api/cohort-sparql`: inline `VALUES` of named graphs `…/resource/case/{id}`, one row per case with source, platforms, agencies, phase, steps, charges, and sentences) or open `/patterns?cohort=search` with the same ids (auto-merge when the set has at most 8 cases; otherwise Find cases + Load on graph). Builder: `ontology/cohort_sparql.py`. Small cohorts stay behind the existing id gate, so this path does not reveal them. The facet path itself is not replayed in SPARQL; those tags live on the case rows.
 
 2. **Guided NL → facet path (not full-text)**  
    Map short analyst phrases (“Discord + production + 2024”) onto prune constraints or a path, keeping mosaic defaults. Distinct from `/llm` SQL chat and from Elastic-style keyword search.
@@ -126,6 +127,7 @@ Directions worth exploring (not committed product plans):
 |------|------------|
 | Explore cohorts visually | `/search` |
 | Verify extraction on a cohort | Search → copy IDs → `/audit` |
+| Same cohort in the graph / SPARQL | Search → **Open in graphs** or **Copy SPARQL** |
 | Count platforms / ontology relations | `/sparql` or Patterns; `ontology/docs/SPARQL.md` |
 | Agent-driven cohort work | MCP `get_facet_tree` / `get_cohort_members` / `filter_cases_by_tags` |
 | Collect new press / court docs | `collector/README.md` + MCP collector tools (not Search) |

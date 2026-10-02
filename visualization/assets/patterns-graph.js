@@ -2584,6 +2584,105 @@
         return resp.json();
     }
 
+    const SEARCH_COHORT_KEY = 'caselinker.searchCohort';
+    const SEARCH_COHORT_ID_RE = /^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$/;
+    /** Auto-merge only small handoffs. Larger sets stay in Find cases. */
+    const SEARCH_COHORT_AUTO_LOAD = 8;
+
+    function searchCohortRequested() {
+        try {
+            return new URLSearchParams(window.location.search).get('cohort') === 'search';
+        } catch (_) {
+            return false;
+        }
+    }
+
+    async function applySearchCohortHandoff() {
+        if (!searchCohortRequested()) return;
+        let payload = null;
+        try {
+            payload = JSON.parse(localStorage.getItem(SEARCH_COHORT_KEY) || 'null');
+        } catch (_) {
+            payload = null;
+        }
+        if (!payload || !Array.isArray(payload.ids)) {
+            setLookupStatus('No Search cohort was passed to this page.');
+            return;
+        }
+        const seen = new Set();
+        const ids = [];
+        payload.ids.forEach(id => {
+            const s = String(id || '').trim();
+            if (!SEARCH_COHORT_ID_RE.test(s) || seen.has(s)) return;
+            seen.add(s);
+            ids.push(s);
+        });
+        if (!ids.length) {
+            setLookupStatus('Search cohort had no usable case ids.');
+            return;
+        }
+        const capped = ids.slice(0, MAX_COMPARE_CASES);
+        const label = String(payload.label || 'Search cohort').replace(/\s+/g, ' ').slice(0, 80);
+        CORPUS_SOURCE = 'cases';
+        syncCorpusSourceUi();
+        BIG_BANG_MODE = false;
+        UNIVERSE_MODE = false;
+        ANALYSIS_MODE = false;
+        capped.forEach(id => {
+            if (!COMPARE_POOL.some(c => c.case_id === id)) {
+                COMPARE_POOL.push(caseEntryFromId(id));
+            }
+        });
+        LOOKUP_CASE_IDS = capped;
+        renderLookupResults(LOOKUP_CASE_IDS);
+        const omitted = (payload.total || ids.length) - capped.length;
+        setLookupStatus(
+            label + ' · ' + capped.length + ' cases from Search' +
+            (omitted > 0 ? ' · ' + omitted + ' not listed (cap ' + MAX_COMPARE_CASES + ')' : '') +
+            (capped.length > SEARCH_COHORT_AUTO_LOAD ? ' · Load on graph to merge' : '')
+        );
+        if (capped.length <= SEARCH_COHORT_AUTO_LOAD) {
+            try {
+                await loadLookupCases(capped);
+            } catch (err) {
+                console.error(err);
+            }
+        }
+        const ta = document.getElementById('sparql-query');
+        try {
+            const resp = await fetch('/api/cohort-sparql', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+                body: JSON.stringify({ case_ids: capped, label: label })
+            });
+            const data = await resp.json().catch(() => ({}));
+            if (!resp.ok || !data.sparql) {
+                const detail = data && (data.detail || data.error);
+                throw new Error(typeof detail === 'string' ? detail : ('HTTP ' + resp.status));
+            }
+            if (ta) {
+                ta.value = data.sparql;
+                ta.classList.remove('sparql-nl-mode');
+                ta.spellcheck = false;
+            }
+            const qLabel = document.getElementById('sparql-query-label');
+            if (qLabel) qLabel.textContent = 'Query';
+            const runBtn = document.getElementById('sparql-run');
+            if (runBtn) runBtn.textContent = 'Run';
+            setSparqlStatus(
+                data.truncated
+                    ? 'Search cohort query uses ' + data.included + ' of ' + data.case_count + ' graphs · Run to execute'
+                    : 'Search cohort query ready · Run to execute'
+            );
+        } catch (err) {
+            setSparqlStatus(
+                'Could not build the cohort SPARQL query' +
+                (err && err.message ? ' (' + err.message + ')' : '') + '.',
+                true
+            );
+        }
+    }
+
     // ---------- Boot ----------
     async function boot() {
         buildLegend();
@@ -2631,6 +2730,7 @@
                 showEmptyState();
             }
         }
+        await applySearchCohortHandoff();
     }
 
     boot();
