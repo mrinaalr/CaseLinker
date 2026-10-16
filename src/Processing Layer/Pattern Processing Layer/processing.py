@@ -726,11 +726,12 @@ def extract_date_range(case: Dict[str, Any]) -> Optional[Dict[str, str]]:
         except (ValueError, AttributeError):
             pass
 
-    # Year-only (e.g. SVICAC: publication year from article URL or lead text)
+    # Year-only (e.g. SVICAC: publication year from article URL or lead text).
+    # Never invent Dec 31 — that makes MAX(date_end) look like a future corpus cutoff.
     if not month:
         ys = str(year).strip()
         if re.match(r"^\d{4}$", ys):
-            return {"start": f"{ys}-01-01", "end": f"{ys}-12-31"}
+            return {"start": f"{ys}-01-01", "end": None}
 
     return None
 
@@ -2201,8 +2202,43 @@ _SENTENCING_CLAUSE_RE = re.compile(
     re.I,
 )
 
+# Statutory exposure / charged-with language — not an imposed term (#24).
+_SENTENCE_EXPOSURE_RE = re.compile(
+    r'\bfaces\s+up\s+to\b|'
+    r'\bcould\s+face\b|'
+    r'\bpunishable\s+by\b|'
+    r'\bmaximum\s+(?:of|sentence)\b|'
+    r'\bcarries?\s+a\s+sentence\s+of\b|'
+    r'\bcarry\s+a\s+sentence\s+of\b|'
+    r'\bwill\s+face\s+a\s+(?:state\s+)?prison\s+term\b|'
+    r'\bif\s+convicted\b',
+    re.I,
+)
+
+_SENTENCE_IMPOSED_ANCHOR_RE = re.compile(
+    r'\bsentenced\s+to\b|'
+    r'\bwas\s+sentenced\b|'
+    r'\bordered\s+(?:today\s+)?to\s+serve\b|'
+    r'\breceived\s+a\s+(?:prison\s+)?sentence\s+of\b',
+    re.I,
+)
+
 _SENTENCE_URL_JUNK_RE = re.compile(r'[#%]|%20|://|crime#', re.I)
 _SENTENCE_AGE_AFTER_RE = re.compile(r'^\s*old\b', re.I)
+
+
+def _sentence_match_is_statutory_exposure(
+    case_text: str, start: int, end: int, *, window: int = 140
+) -> bool:
+    """True when the duration sits in exposure language without an imposed-term anchor."""
+    window_start = max(0, start - window)
+    window_end = min(len(case_text), end + window)
+    chunk = case_text[window_start:window_end]
+    if not _SENTENCE_EXPOSURE_RE.search(chunk):
+        return False
+    if _SENTENCE_IMPOSED_ANCHOR_RE.search(chunk):
+        return False
+    return True
 
 
 def _extract_prosecution_status(case_text: str) -> Optional[str]:
@@ -2371,6 +2407,8 @@ def _extract_sentence_durations(case_text: str) -> List[str]:
         ):
             return
         phrase = _normalize_prosecution_charge_text(raw)
+        if _sentence_match_is_statutory_exposure(case_text, start, end):
+            return
         if _sentence_duration_requires_anchor(phrase) and not _sentence_match_in_sentencing_clause(
             case_text, start, end
         ):

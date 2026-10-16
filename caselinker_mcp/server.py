@@ -1250,7 +1250,12 @@ async def get_case_ids_by_filter(
     year: str = "",
     investigation_type: str = "",
 ) -> dict[str, Any]:
-    """Filter case IDs by organization, platform, severity, year, etc. Wraps GET /api/case-ids-by-filter."""
+    """Filter case IDs by organization, platform, severity, year, etc.
+
+    Wraps GET /api/case-ids-by-filter. Requires at least one non-empty filter —
+    empty calls no longer dump the full corpus. For topic+platform intersections
+    use filter_cases_by_tags instead.
+    """
     try:
         params = {
             k: v
@@ -1266,7 +1271,24 @@ async def get_case_ids_by_filter(
             }.items()
             if v
         }
-        result = await api_get("/api/case-ids-by-filter", params=params or None)
+        if not params:
+            return {
+                "error": "Provide at least one filter",
+                "allowed": [
+                    "organization",
+                    "relationship",
+                    "prosecution_status",
+                    "age_range",
+                    "severity_indicator",
+                    "platform",
+                    "year",
+                    "investigation_type",
+                ],
+                "hint": "Use filter_cases_by_tags for topic/platform intersections.",
+                "case_ids": [],
+                "count": 0,
+            }
+        result = await api_get("/api/case-ids-by-filter", params=params)
         return result if isinstance(result, dict) else {"case_ids": result}
     except Exception as e:
         logger.exception("get_case_ids_by_filter failed")

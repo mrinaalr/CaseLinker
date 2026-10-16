@@ -2202,6 +2202,28 @@ def get_stats(request: Request):
             if case.get('perpetrator_gender'):
                 total_features += 1
         
+        # Prefer publication starts for corpus bounds. Year-only rows historically
+        # stored end=YYYY-12-31 (#23); ignore those synthetic Dec 31 ends so
+        # get_corpus_stats does not advertise a future cutoff.
+        pub_starts: list[str] = []
+        pub_ends: list[str] = []
+        for c in cases:
+            dr = c.get("date_range") if isinstance(c.get("date_range"), dict) else {}
+            start = c.get("date_start") or (dr.get("start") if dr else None)
+            end = c.get("date_end") if c.get("date_end") is not None else (dr.get("end") if dr else None)
+            if start:
+                pub_starts.append(str(start))
+            if end:
+                end_s = str(end)
+                start_s = str(start) if start else ""
+                year_bucket = (
+                    len(start_s) >= 10
+                    and start_s.endswith("-01-01")
+                    and end_s == f"{start_s[:4]}-12-31"
+                )
+                if not year_bucket:
+                    pub_ends.append(end_s)
+        corpus_end = max(pub_ends) if pub_ends else (max(pub_starts) if pub_starts else None)
         result = {
             "total_cases": len(cases),
             "sources": list(sources),
@@ -2209,8 +2231,8 @@ def get_stats(request: Request):
             "unique_features": total_features,
             "unique_organizations": len(distinct_named_agencies(agency_labels)),
             "date_range": {
-                "start": min((c.get('date_range', {}).get('start') for c in cases if c.get('date_range', {}).get('start')), default=None),
-                "end": max((c.get('date_range', {}).get('end') for c in cases if c.get('date_range', {}).get('end')), default=None)
+                "start": min(pub_starts) if pub_starts else None,
+                "end": corpus_end,
             }
         }
         
@@ -2310,6 +2332,29 @@ def get_tagged_cases(request: Request, selected_tags: List[Dict[str, str]]):
     return _sanitize_tagged_cases_response(request, out)
 
 
+_CASE_IDS_FILTER_KEYS = (
+    "organization",
+    "relationship",
+    "prosecution_status",
+    "age_range",
+    "severity_indicator",
+    "platform",
+    "year",
+    "investigation_type",
+)
+
+
+def _parse_age_range_bounds(age_range: str) -> tuple[int, int]:
+    """Parse ``min-max`` age_range; raises ValueError when invalid."""
+    parts = age_range.strip().split("-")
+    if len(parts) != 2:
+        raise ValueError("age_range must look like '25-29'")
+    age_min, age_max = int(parts[0]), int(parts[1])
+    if age_min > age_max:
+        raise ValueError("age_range min must be <= max")
+    return age_min, age_max
+
+
 @app.get("/api/case-ids-by-filter")
 @limiter.limit("100/minute")
 def get_case_ids_by_filter(
@@ -2326,22 +2371,63 @@ def get_case_ids_by_filter(
     """
     Get case IDs filtered by various criteria.
     Returns just the case IDs that match the filter.
+
+    Requires at least one recognized filter. Empty / unknown-only queries no longer
+    dump the full corpus (#27).
     """
     try:
+        organization = (organization or "").strip() or None
+        relationship = (relationship or "").strip() or None
+        prosecution_status = (prosecution_status or "").strip() or None
+        age_range = (age_range or "").strip() or None
+        severity_indicator = (severity_indicator or "").strip() or None
+        platform = (platform or "").strip() or None
+        year = (year or "").strip() or None
+        investigation_type = (investigation_type or "").strip() or None
+
+        applied = {
+            "organization": organization,
+            "relationship": relationship,
+            "prosecution_status": prosecution_status,
+            "age_range": age_range,
+            "severity_indicator": severity_indicator,
+            "platform": platform,
+            "year": year,
+            "investigation_type": investigation_type,
+        }
+        if not any(applied.values()):
+            unknown = [
+                k for k in request.query_params.keys()
+                if k not in _CASE_IDS_FILTER_KEYS and k not in ("token",)
+            ]
+            detail = {
+                "error": "Provide at least one filter",
+                "allowed": list(_CASE_IDS_FILTER_KEYS),
+                "hint": "Use POST /api/return-tagged-cases or MCP filter_cases_by_tags for topic/platform intersections.",
+            }
+            if unknown:
+                detail["ignored_unknown_keys"] = unknown
+            raise HTTPException(status_code=400, detail=detail)
+
+        if age_range:
+            try:
+                age_min, age_max = _parse_age_range_bounds(age_range)
+            except ValueError as exc:
+                raise HTTPException(
+                    status_code=400,
+                    detail={
+                        "error": f"Invalid age_range: {exc}",
+                        "age_range": age_range,
+                        "hint": "Use min-max integers, e.g. '25-29'.",
+                    },
+                ) from exc
+        else:
+            age_min = age_max = None
+
         current_count = get_case_count()
         rk = None
         if REDIS_AVAILABLE:
-            filter_params = {
-                "organization": organization,
-                "relationship": relationship,
-                "prosecution_status": prosecution_status,
-                "age_range": age_range,
-                "severity_indicator": severity_indicator,
-                "platform": platform,
-                "year": year,
-                "investigation_type": investigation_type,
-            }
-            ph = _redis_cache_payload_hash(filter_params)
+            ph = _redis_cache_payload_hash(applied)
             rk = get_cache_key("case-ids-filter", h=ph, version=current_count)
             cached = get_cached(rk)
             if cached is not None and "error" not in cached:
@@ -2353,7 +2439,7 @@ def get_case_ids_by_filter(
             if isinstance(field, str):
                 try:
                     return json.loads(field)
-                except:
+                except Exception:
                     return []
             return field if field else []
         
@@ -2361,7 +2447,7 @@ def get_case_ids_by_filter(
         
         # Filter by organization (exact match on stored agencies_involved)
         if organization:
-            org_search = organization.strip()
+            org_search = organization
             filtered_cases = [
                 c for c in filtered_cases
                 if org_search in _agencies_involved_for_case(c, parse_field)
@@ -2399,22 +2485,18 @@ def get_case_ids_by_filter(
         
         # Filter by age range (e.g., "25-29")
         # Match bubble chart logic: only count ages between 18-99
-        if age_range:
-            try:
-                age_min, age_max = map(int, age_range.split('-'))
-                filtered_cases = [
-                    c for c in filtered_cases
-                    if c.get('perpetrator_age') and (
-                        (isinstance(c.get('perpetrator_age'), list) and
-                         any(age_min <= age <= age_max for age in c.get('perpetrator_age') 
-                             if isinstance(age, (int, float)) and 18 <= age <= 99)) or
-                        (isinstance(c.get('perpetrator_age'), (int, float)) and 
-                         18 <= c.get('perpetrator_age') <= 99 and
-                         age_min <= c.get('perpetrator_age') <= age_max)
-                    )
-                ]
-            except:
-                pass
+        if age_range is not None and age_min is not None and age_max is not None:
+            filtered_cases = [
+                c for c in filtered_cases
+                if c.get('perpetrator_age') and (
+                    (isinstance(c.get('perpetrator_age'), list) and
+                     any(age_min <= age <= age_max for age in c.get('perpetrator_age') 
+                         if isinstance(age, (int, float)) and 18 <= age <= 99)) or
+                    (isinstance(c.get('perpetrator_age'), (int, float)) and 
+                     18 <= c.get('perpetrator_age') <= 99 and
+                     age_min <= c.get('perpetrator_age') <= age_max)
+                )
+            ]
         
         # Filter by severity indicator
         if severity_indicator:
@@ -2423,11 +2505,15 @@ def get_case_ids_by_filter(
                 if severity_indicator in parse_field(c.get('severity_indicators', []))
             ]
         
-        # Filter by platform
+        # Filter by platform (case-insensitive; aligns with return_tagged_cases)
         if platform:
+            plat_key = platform.lower()
             filtered_cases = [
                 c for c in filtered_cases
-                if platform in parse_field(c.get('platforms_used', []))
+                if any(
+                    isinstance(p, str) and p.lower() == plat_key
+                    for p in parse_field(c.get('platforms_used', []))
+                )
             ]
         
         # Filter by year
@@ -2453,20 +2539,14 @@ def get_case_ids_by_filter(
         out = {
             "case_ids": case_ids,
             "count": len(case_ids),
-            "filter": {
-                "organization": organization,
-                "relationship": relationship,
-                "prosecution_status": prosecution_status,
-                "age_range": age_range,
-                "severity_indicator": severity_indicator,
-                "platform": platform,
-                "year": year,
-                "investigation_type": investigation_type
-            }
+            "filter": applied,
+            "applied_filters": {k: v for k, v in applied.items() if v},
         }
         if REDIS_AVAILABLE and rk:
             set_cached(rk, out, ttl=3600)
         return out
+    except HTTPException:
+        raise
     except Exception as e:
         from error_handler import handle_error
         return handle_error(e)
