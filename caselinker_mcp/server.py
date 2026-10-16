@@ -17,6 +17,13 @@ from mcp.server.mcpserver import MCPServer
 from mcp.server.transport_security import TransportSecuritySettings
 
 from caselinker_mcp.client import BULK_TIMEOUT, DEFAULT_TIMEOUT, api_get, api_post, require_caselinker_key
+from caselinker_mcp.tag_categories import (
+    UnknownTagError,
+    ingest_unique_tags,
+    live_tag_categories,
+    resolve_tags,
+    unknown_tag_error_payload,
+)
 
 PORT = int(os.getenv("PORT", 8001))
 MCP_TRANSPORT = os.getenv("MCP_TRANSPORT", "stdio")
@@ -80,118 +87,6 @@ _MCP_SSE_MESSAGE_PATH = "/messages"
 _MCP_STREAMABLE_HTTP_PATH = "/"
 _MCP_SSE_PATH = "/sse"
 
-# Tag string -> API category for POST /api/return-tagged-cases
-_TAG_CATEGORIES: dict[str, str] = {
-    # case_topics
-    "csam": "case_topics",
-    "production": "case_topics",
-    "possession": "case_topics",
-    "online_only": "case_topics",
-    "hands_on": "case_topics",
-    "multi_state": "case_topics",
-    "international": "case_topics",
-    "family": "case_topics",
-    "stranger": "case_topics",
-    # severity_indicators
-    "infant": "severity_indicators",
-    "very_young": "severity_indicators",
-    "under_10": "severity_indicators",
-    "under_12": "severity_indicators",
-    "rape": "severity_indicators",
-    "physical_abuse": "severity_indicators",
-    # investigation_type
-    "proactive": "investigation_type",
-    "reactive": "investigation_type",
-    "undercover": "investigation_type",
-    "cybertipline": "investigation_type",
-    "online": "investigation_type",
-    # perpetrator_status
-    "registered_sex_offender": "registered_sex_offender",
-    # platforms_used (common examples; unknown platform-like tags default here)
-    "facebook": "platforms_used",
-    "discord": "platforms_used",
-    "kik": "platforms_used",
-    "telegram": "platforms_used",
-    "roblox": "platforms_used",
-    "snapchat": "platforms_used",
-    "instagram": "platforms_used",
-    "tiktok": "platforms_used",
-    "twitter": "platforms_used",
-    "skype": "platforms_used",
-    "omegle": "platforms_used",
-    "minecraft": "platforms_used",
-    "tor": "platforms_used",
-    "dark_web": "platforms_used",
-    "dropbox": "platforms_used",
-    "youtube": "platforms_used",
-    "twitch": "platforms_used",
-    # relationship_to_victim
-    "father": "relationship_to_victim",
-    "mother": "relationship_to_victim",
-    "parent": "relationship_to_victim",
-    "brother": "relationship_to_victim",
-    "sister": "relationship_to_victim",
-    "uncle": "relationship_to_victim",
-    "aunt": "relationship_to_victim",
-    "cousin": "relationship_to_victim",
-    "teacher": "relationship_to_victim",
-    "coach": "relationship_to_victim",
-}
-
-_PLATFORM_LIKE = {
-    "facebook",
-    "discord",
-    "kik",
-    "telegram",
-    "roblox",
-    "snapchat",
-    "instagram",
-    "tiktok",
-    "twitter",
-    "skype",
-    "omegle",
-    "minecraft",
-    "tor",
-    "dark_web",
-    "dropbox",
-    "youtube",
-    "twitch",
-    "mewe",
-    "fortnite",
-    "xbox",
-    "psn",
-    "irc",
-    "aim",
-    "myspace",
-    "craigslist",
-    "mega",
-    "onedrive",
-    "googledrive",
-    "google_drive",
-    "limewire",
-    "bittorrent",
-    "kazaa",
-}
-
-_RELATIONSHIP_LIKE = {
-    "father",
-    "mother",
-    "parent",
-    "brother",
-    "sister",
-    "sibling",
-    "uncle",
-    "aunt",
-    "cousin",
-    "teacher",
-    "coach",
-    "stranger",
-    "neighbor",
-    "babysitter",
-    "stepfather",
-    "stepmother",
-}
-
 _SOURCES: list[dict[str, str]] = [
     {"code": "AZICAC", "name": "Arizona ICAC", "description": "Annual case reports and arrests"},
     {"code": "NCMEC", "name": "National Center for Missing & Exploited Children", "description": "Case summaries and CyberTipline-related publications"},
@@ -224,19 +119,24 @@ _SOURCES: list[dict[str, str]] = [
 ]
 
 
-def _infer_tag_category(tag: str) -> str:
-    key = tag.strip().lower()
-    if key in _TAG_CATEGORIES:
-        return _TAG_CATEGORIES[key]
-    if key in _PLATFORM_LIKE:
-        return "platforms_used"
-    if key in _RELATIONSHIP_LIKE:
-        return "relationship_to_victim"
-    return "platforms_used"
+async def _ensure_live_tag_categories() -> dict[str, str]:
+    """Warm the live tag→category cache from GET /api/tags (best-effort)."""
+    cached = live_tag_categories()
+    if cached:
+        return cached
+    try:
+        result = await api_get("/api/tags")
+        if isinstance(result, dict):
+            return ingest_unique_tags(result)
+    except Exception:
+        logger.exception("Failed to warm live tag categories from /api/tags")
+    return live_tag_categories()
 
 
-def _tags_to_api_payload(tags: list[str]) -> list[dict[str, str]]:
-    return [{"tag": t.strip().lower(), "category": _infer_tag_category(t)} for t in tags if t.strip()]
+async def _tags_to_api_payload(tags: list[str]) -> list[dict[str, str]]:
+    """Resolve plain MCP tags to API payload; raises UnknownTagError on unknowns."""
+    live = await _ensure_live_tag_categories()
+    return resolve_tags(tags, live=live)
 
 
 def _truthy_env(name: str) -> bool:
@@ -614,24 +514,46 @@ async def filter_cases_by_tags(tags: list[str]) -> dict[str, Any]:
     """Return cases matching ALL supplied tags (intersection logic).
 
     Tag dimensions (pass plain tag strings; category is inferred automatically):
-      - case_topics: csam, production, possession, online_only, hands_on,
-                     multi_state, international, family, stranger
-      - severity_indicators: infant, very_young, under_10, rape, physical_abuse
-      - platforms_used: facebook, discord, kik, telegram, roblox,
-                        snapchat, tor, dark_web, and others
-      - investigation_types: proactive, reactive, undercover, cybertipline
+      - case_topics: csam, production, possession, distribution, sextortion,
+                     trafficking, ai_csam, project_safe_childhood, online_only,
+                     hands_on, multi_state, international, family, stranger
+      - severity_indicators: infant, very_young, under_10, under_12, grooming,
+                             sexual_abuse, multiple_perpetrators, rape, physical_abuse
+      - platforms_used: facebook, discord, kik, telegram, roblox, snapchat,
+                        whatsapp, tor, dark_web, and others from get_unique_tags
+      - investigation_types: proactive, reactive, undercover, cybertip (alias: cybertipline)
       - perpetrator_relationships: father, stranger, teacher, coach, etc.
       - perpetrator_status: registered_sex_offender
+
+    Unknown tags fail closed with an error (they are never treated as platforms).
+    Response includes resolved_tags showing the inferred {tag, category} pairs.
 
     Example: filter_cases_by_tags(["discord", "infant"]) returns cases involving
     Discord where an infant was a victim.
     """
     try:
-        payload = _tags_to_api_payload(tags)
+        payload = await _tags_to_api_payload(tags)
         if not payload:
-            return {"cases": [], "count": 0, "note": "No tags provided; returning empty result."}
+            return {
+                "cases": [],
+                "count": 0,
+                "resolved_tags": [],
+                "note": "No tags provided; returning empty result.",
+            }
         result = await api_post("/api/return-tagged-cases", payload)
-        return result if isinstance(result, dict) else {"data": result}
+        if not isinstance(result, dict):
+            return {"data": result, "resolved_tags": payload, "count": 0}
+        cases = result.get("cases")
+        if isinstance(cases, list):
+            out = dict(result)
+            out["count"] = len(cases)
+            out["resolved_tags"] = payload
+            return out
+        out = dict(result)
+        out["resolved_tags"] = payload
+        return out
+    except UnknownTagError as e:
+        return unknown_tag_error_payload(e)
     except Exception as e:
         logger.exception("filter_cases_by_tags failed")
         return {"error": str(e)}
@@ -1219,7 +1141,10 @@ async def get_unique_tags() -> dict[str, Any]:
     """All unique tag values across the corpus (topics, severity, platforms, etc.). Wraps GET /api/tags."""
     try:
         result = await api_get("/api/tags")
-        return result if isinstance(result, dict) else {"data": result}
+        if isinstance(result, dict):
+            ingest_unique_tags(result)
+            return result
+        return {"data": result}
     except Exception as e:
         logger.exception("get_unique_tags failed")
         return {"error": str(e)}
@@ -1227,13 +1152,22 @@ async def get_unique_tags() -> dict[str, Any]:
 
 @mcp.tool()
 async def tag_threader(tags: list[str]) -> dict[str, Any]:
-    """Tag-threader analysis: intersection cases plus threaded tag links. Wraps POST /api/tag-threader."""
+    """Tag-threader analysis: intersection cases plus threaded tag links. Wraps POST /api/tag-threader.
+
+    Uses the same fail-closed tag category resolver as filter_cases_by_tags.
+    """
     try:
-        payload = _tags_to_api_payload(tags)
+        payload = await _tags_to_api_payload(tags)
         if not payload:
             return {"error": "Provide at least one tag"}
         result = await api_post("/api/tag-threader", payload)
-        return result if isinstance(result, dict) else {"data": result}
+        if isinstance(result, dict):
+            out = dict(result)
+            out["resolved_tags"] = payload
+            return out
+        return {"data": result, "resolved_tags": payload}
+    except UnknownTagError as e:
+        return unknown_tag_error_payload(e)
     except Exception as e:
         logger.exception("tag_threader failed")
         return {"error": str(e)}
