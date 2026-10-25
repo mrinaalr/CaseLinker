@@ -93,6 +93,7 @@ Trusted key does **not** change behavior (still subject to normal slowapi / publ
 | `get_cases_page` | `GET /api/cases-summaries-chunk` | Paginated summaries |
 | `get_cases_by_ids` | `POST /api/cases-summaries-by-ids` | Batch summaries |
 | `get_field_disagreements` | `GET /api/assertions/disagreements` | Cases whose latest field resolution is `needs_review` / `disagreement` / `partial`, with contested mentions and per-field status counts |
+| `get_sentencing_stats` | MCP-only (local DB) | Imposed-only sentence summary for `case_ids` from the persisted sentence-kind buckets: per-case outcome or drop reason (`kind_unknown`, `statutory_max`, `pending`, …), custodial months; `interpretation_kind` `imposed_sentence_summary` |
 | `filter_cases_by_tags` | `POST /api/return-tagged-cases` | Tag intersection (fail-closed category inference + `resolved_tags`) |
 | `get_facet_tree` | `GET /api/facet-tree` or MCP-local | Facet tree; optional `case_ids` for subset |
 | `get_cohort_members` | `POST /api/facet-cohort-members` or MCP-local | Cohort case IDs; optional `case_ids` |
