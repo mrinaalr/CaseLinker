@@ -96,6 +96,7 @@ Trusted key does **not** change behavior (still subject to normal slowapi / publ
 | `filter_cases_by_tags` | `POST /api/return-tagged-cases` | Tag intersection (fail-closed category inference + `resolved_tags`) |
 | `get_facet_tree` | `GET /api/facet-tree` or MCP-local | Facet tree; optional `case_ids` for subset |
 | `get_cohort_members` | `POST /api/facet-cohort-members` or MCP-local | Cohort case IDs; optional `case_ids` |
+| `filter_cases_by_jurisdiction` | MCP-only (local DB) | Derived prosecuting jurisdiction `federal` / `state` / `unknown` per case (source + prosecutor/court/charging text; never stored), counts, optional filter; also on `GET /api/cases/{case_id}` as `jurisdiction` / `jurisdiction_basis` |
 | `tree_traversal` | MCP-only | Random + targeted facet samples over a case subset |
 | `run_automated_analysis` | `GET /api/automated-analysis` | Similarity + triage insights |
 | `triage_text` | `POST /api/triage-live` | In-memory narrative triage |

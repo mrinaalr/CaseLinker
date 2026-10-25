@@ -70,6 +70,7 @@ if os.getenv("DATABASE_URL"):
 else:
     from storage import CaseStorage
     print("✅ Using SQLite database (local development)")
+from case_jurisdiction import derive_jurisdiction
 from corpus_export import iter_corpus_json
 from platform_affordance_evidence_freshness import (
     read_corpus_identity,
@@ -2138,6 +2139,8 @@ def get_case(request: Request, case_id: str):
     case = storage.get_case(case_id)
     if not case:
         raise HTTPException(status_code=404, detail="Case not found")
+    # Derived at read time from source + text, before the text is stripped; never stored (#29).
+    case.update(derive_jurisdiction(case))
     # Public callers can still fetch a case, but never raw narrative payloads.
     if not _has_bulk_corpus_access(request):
         case = _sanitize_case_for_public(case)
