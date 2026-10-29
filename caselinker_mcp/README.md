@@ -91,7 +91,7 @@ Use `filter_cases_by_tags` for current database cohorts and `get_corpus_stats` f
 | `get_all_cases` | **403** (bulk export blocked) | Full corpus via `GET /api/corpus` (every column) |
 | `get_lifecycle_cases` | **403** (lifecycle export blocked) | Lifecycle swimlane / visualization payload |
 | `get_lifecycle_lstar` | **403** (L* export blocked) | Full `lstar_all_cases.json` (transition matrix, global L*, per-case details) |
-| `get_case` | Sanitized case (no `raw_data`) | Full case including narratives |
+| `get_case` | Sanitized case: no `raw_data`; `case_text_redacted` (full release, people masked); features and admission excerpts with people masked | Full case including narratives |
 | `get_case_assertions` | Per-method assertions and resolutions with offsets, no span excerpts, no person names | Includes span excerpts and LLM quotes; still no person names |
 | `llm_chat` | 50 requests/IP/day | Daily cap exempt (slowapi 15/min still applies) |
 

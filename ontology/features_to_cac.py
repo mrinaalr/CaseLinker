@@ -232,6 +232,43 @@ def _case_feature(case: Dict[str, Any], key: str, default: Any = None) -> Any:
     return default
 
 
+_CASE_RAW_KEYS = frozenset({"id", "raw_data", "case_text", "source_url", "assertions", "resolutions"})
+
+
+def _mask_case_people(case: Dict[str, Any]) -> Dict[str, Any]:
+    """Copy of a case whose features carry no person names (graphs never hold them)."""
+    import importlib.util
+
+    if "person_keys" not in sys.modules:
+        path = Path(__file__).resolve().parents[1] / "src" / "Processing Layer" / "field_assertions" / "person_keys.py"
+        spec = importlib.util.spec_from_file_location("person_keys", path)
+        mod = importlib.util.module_from_spec(spec)
+        assert spec.loader
+        sys.modules["person_keys"] = mod
+        spec.loader.exec_module(mod)
+    pk = sys.modules["person_keys"]
+
+    raw = case.get("raw_data")
+    if isinstance(raw, str):
+        try:
+            raw = json.loads(raw)
+        except (json.JSONDecodeError, TypeError):
+            raw = None
+    text = case.get("case_text") or (raw.get("case_text") if isinstance(raw, dict) else "") or ""
+    out = dict(case)
+    hoisted = {k: v for k, v in case.items() if k not in _CASE_RAW_KEYS and k != "extracted_features"}
+    out.update(pk.mask_feature_strings(hoisted, text))
+    ef = case.get("extracted_features")
+    if isinstance(ef, str):
+        try:
+            ef = json.loads(ef)
+        except (json.JSONDecodeError, TypeError):
+            ef = None
+    if isinstance(ef, dict):
+        out["extracted_features"] = pk.mask_feature_strings(ef, text or str(ef.get("case_text") or ""))
+    return out
+
+
 def _to_xsd_datetime_stamp(value: Any) -> Optional[str]:
     """
     Normalize a CaseLinker date/year string into an ``xsd:dateTimeStamp``
@@ -944,6 +981,7 @@ class CaseToCAC:
             warnings : list of human-readable warning strings for unmapped values
         """
         warnings: List[str] = []
+        case = _mask_case_people(case)
         cg = ConjunctiveGraph()
         self._bind_namespaces(cg)
 

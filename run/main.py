@@ -90,6 +90,7 @@ from facet_tree import (
     max_tree_depth,
 )
 from case_storage_utils import investigation_types_for_case
+from field_assertions import person_keys
 from agency_label_normalize import distinct_named_agencies
 from analysis import tag_threader, return_tagged_cases, run_automated_analysis
 # Import Redis cache helper
@@ -407,13 +408,31 @@ def _strip_person_names(obj: Any) -> Any:
     return obj
 
 
+_PUBLIC_CASE_RAW_KEYS = ("raw_data", "case_text")
+
+
 def _sanitize_case_for_public(case: Dict[str, Any]) -> Dict[str, Any]:
-    """Remove raw narrative material from public case payloads."""
-    case.pop("raw_data", None)
-    extracted = case.get("extracted_features")
-    if isinstance(extracted, dict):
-        extracted.pop("raw_data", None)
-        extracted.pop("case_text", None)
+    """Public case payload: no raw narrative, people masked, full release served redacted.
+
+    Raw text stays for localhost and trusted keys. Public callers get
+    ``case_text_redacted`` (the release with every person span masked) and features
+    whose labels and admission excerpts carry no names.
+    """
+    text = _extract_case_text_value(case)
+    had_features = isinstance(case.get("extracted_features"), dict)
+    extracted = case.get("extracted_features") if had_features else {}
+    text = text or str(extracted.get("case_text") or "")
+    spans = person_keys.spans_for(extracted or case, text)
+    for key in _PUBLIC_CASE_RAW_KEYS:
+        case.pop(key, None)
+        extracted.pop(key, None)
+    case = {**person_keys.mask_feature_strings(
+        {**{k: v for k, v in case.items() if k not in ("extracted_features", "id")}, "person_spans": spans}, text),
+        "id": case.get("id")}
+    if had_features:
+        case["extracted_features"] = person_keys.mask_feature_strings({**extracted, "person_spans": spans}, text)
+    if text:
+        case["case_text_redacted"] = person_keys.public_text(text, spans)
     return case
 
 
@@ -453,10 +472,14 @@ def _extract_case_text_value(case: Dict[str, Any]) -> str:
     return ""
 
 
-def _attach_case_text_to_automated_analysis(analysis: Dict[str, Any]) -> Dict[str, Any]:
+def _attach_case_text_to_automated_analysis(analysis: Dict[str, Any], public: bool = True) -> Dict[str, Any]:
     """
-    Ensure triaged cases include `case_text` for public automated-analysis UI.
-    Keeps `raw_data` out of response while preserving quick modal rendering.
+    Copy of ``analysis`` whose triaged cases carry ``case_text`` for the UI modal.
+
+    Public callers get the release with people masked (``person_keys.public_text``);
+    localhost and trusted keys get the raw text. The cached analysis is never
+    mutated, so one caller's view cannot leak into another's. ``raw_data`` is never
+    served here.
     """
     if not isinstance(analysis, dict):
         return analysis
@@ -477,6 +500,7 @@ def _attach_case_text_to_automated_analysis(analysis: Dict[str, Any]) -> Dict[st
 
     full_cases = storage.get_cases_by_ids(ids, include_raw_data=True) or []
     text_by_id: Dict[str, str] = {}
+    spans_by_id: Dict[str, Any] = {}
     for fc in full_cases:
         if not isinstance(fc, dict):
             continue
@@ -486,21 +510,28 @@ def _attach_case_text_to_automated_analysis(analysis: Dict[str, Any]) -> Dict[st
         text = _extract_case_text_value(fc)
         if text:
             text_by_id[cid] = text
+            ef = fc.get("extracted_features")
+            spans_by_id[cid] = person_keys.spans_for(ef if isinstance(ef, dict) else fc, text)
 
+    out_triaged = []
     for c in triaged:
         if not isinstance(c, dict):
+            out_triaged.append(c)
             continue
+        c = dict(c)
         cid = c.get("id")
-        if not isinstance(cid, str) or not cid:
-            continue
-        if not c.get("case_text"):
-            case_text = text_by_id.get(cid, "")
-            if case_text:
-                c["case_text"] = case_text
+        text = c.get("case_text") or text_by_id.get(cid, "") if isinstance(cid, str) else c.get("case_text")
+        if text:
+            if public:
+                spans = spans_by_id.get(cid) if text == text_by_id.get(cid) else None
+                c["case_text"] = person_keys.public_text(text, spans if spans is not None else person_keys.person_spans(text))
+            else:
+                c["case_text"] = text
         # Never expose raw_data via this endpoint.
         c.pop("raw_data", None)
+        out_triaged.append(c)
 
-    return analysis
+    return {**analysis, "triaged_cases": out_triaged}
 
 
 def _case_summary_slim(case: Dict[str, Any]) -> Dict[str, Any]:
@@ -767,6 +798,17 @@ def _nl_validate_select_sql(sql: str) -> str:
             raise ValueError(f"Disallowed identifier: {ident}")
     if not re.search(r"(?is)\bfrom\s+cases\b", s):
         raise ValueError("Query must read from the cases table (FROM cases)")
+    # Public SQL never returns source text: raw_data is off limits, extracted_features may filter but not be selected.
+    if re.search(r"(?i)\braw_data\b", s):
+        raise ValueError("raw_data (source text) is not available to the assistant")
+    if re.search(r"(?i)\b(?:union|intersect|except)\b", s):
+        raise ValueError("Compound SELECTs (UNION / INTERSECT / EXCEPT) are not allowed")
+    sel = re.match(r"(?is)^\s*select\s+(.*?)\s+from\s+cases\b", s)
+    select_list = sel.group(1) if sel else s
+    if re.search(r"(?i)\bextracted_features\b|\bselect\b", select_list):
+        raise ValueError("extracted_features can filter rows (WHERE) but cannot be selected")
+    if re.search(r"(?<![(\w])\*", select_list.replace("count(*)", "").replace("COUNT(*)", "")):
+        raise ValueError("SELECT * is not allowed; name the columns")
     if re.search(r"(?is)\binto\s+", s):
         raise ValueError("SELECT INTO is not allowed")
     return _nl_ensure_outer_limit(s, cap=100)
@@ -791,8 +833,11 @@ def _nl_sanitize_rows(rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
             if k == "raw_data":
                 d[k] = "[omitted]"
                 continue
-            if isinstance(v, str) and len(v) > _NL_MAX_CELL_CHARS:
-                v = v[:_NL_MAX_CELL_CHARS] + "..."
+            if isinstance(v, str):
+                # Defense in depth: no person name reaches the model, whatever the SELECT.
+                v = person_keys.mask_person_names(v, surnames=person_keys.person_surnames(v))[0]
+                if len(v) > _NL_MAX_CELL_CHARS:
+                    v = v[:_NL_MAX_CELL_CHARS] + "..."
             d[k] = v
         out.append(d)
     return out
@@ -890,7 +935,7 @@ def _nl_system_prompt(dialect_label: str) -> str:
 Answer directly in plain language; avoid repetitive disclaimers unless the user asks for legal advice.
 For any count, filter, or aggregate from stored cases, call query_cases_database once with a single SELECT on table cases only. Never invent numbers.
 
-Table cases (TEXT unless noted): id, source, source_url, date_start, date_end, victim_count (int), perpetrator_count (int), relationship_to_victim, platforms_used, severity_indicators, case_topics, tags, notes, raw_data, extracted_features. JSON arrays live as text—use LIKE or ILIKE (Postgres). Prefer COUNT(*) or narrow columns; avoid SELECT *; raw narrative is omitted from tool results.
+Table cases (TEXT unless noted): id, source, source_url, date_start, date_end, victim_count (int), perpetrator_count (int), relationship_to_victim, platforms_used, severity_indicators, case_topics, tags, notes, extracted_features. JSON arrays live as text—use LIKE or ILIKE (Postgres). extracted_features may be used in WHERE to filter but cannot be selected. Name columns (no SELECT *). Source text and person names are never available; do not try to name people.
 
 Tool SQL: one SELECT, must include FROM cases; no comments or multi-statement; server adds LIMIT 100.
 
@@ -1503,8 +1548,10 @@ def _schedule_automated_analysis_warmup(case_count: int, reason: str = "request"
     return True
 
 
-def _build_automated_analysis_response(analysis: Dict[str, Any], source: str, cached: bool) -> Dict[str, Any]:
-    analysis = _attach_case_text_to_automated_analysis(analysis) if isinstance(analysis, dict) else analysis
+def _build_automated_analysis_response(
+    analysis: Dict[str, Any], source: str, cached: bool, public: bool = True
+) -> Dict[str, Any]:
+    analysis = _attach_case_text_to_automated_analysis(analysis, public) if isinstance(analysis, dict) else analysis
     return {
         "success": True,
         "analysis": analysis,
@@ -3535,6 +3582,7 @@ async def automated_analysis_endpoint(request: Request):
                 analysis if isinstance(analysis, dict) else {},
                 source="memory",
                 cached=True,
+                public=not _has_bulk_corpus_access(request),
             )
 
         cache_key = get_cache_key('automated-analysis', version=current_case_count)
@@ -3543,7 +3591,9 @@ async def automated_analysis_endpoint(request: Request):
         if cached_result is not None:
             analysis = cached_result.get("analysis")
             if isinstance(analysis, dict):
-                out = _build_automated_analysis_response(analysis, source="redis", cached=True)
+                out = _build_automated_analysis_response(
+                    analysis, source="redis", cached=True, public=not _has_bulk_corpus_access(request)
+                )
                 _automated_analysis_mem_cache = {
                     "success": True,
                     "analysis": analysis,
@@ -3567,7 +3617,9 @@ async def automated_analysis_endpoint(request: Request):
             set_cached(cache_key, result, ttl=86400)
             _automated_analysis_mem_cache = result
             _automated_analysis_mem_case_count = current_case_count
-            return _build_automated_analysis_response(aa_from_db, source="database", cached=True)
+            return _build_automated_analysis_response(
+                aa_from_db, source="database", cached=True, public=not _has_bulk_corpus_access(request)
+            )
 
         # Cold: never compute inline. Refuse spawn on Railway.
         if _schedule_automated_analysis_warmup(current_case_count, reason="automated-analysis"):
