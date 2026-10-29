@@ -29,48 +29,48 @@ LLM = processing.llm_module
 
 # doj_safe_childhood_2025_325
 C325 = (
-    "LEXINGTON, Ky. – A Lexington man, Eric Kelsey Shepherd, 30, was sentenced on Friday, by U.S. District\n"
+    "LEXINGTON, Ky. – A Lexington man, Casey Kendall Blackwillow, 30, was sentenced on Friday, by U.S. District\n"
     "Judge Karen Caldwell, to 50 years in prison, for production of child pornography.\n"
     "According to his plea agreement, in January 2022, law enforcement was contacted about a 12-year-old victim\n"
-    "who was sexually exploited by an adult male. Further investigation revealed that Shepherd, then 27 years-old,\n"
+    "who was sexually exploited by an adult male. Further investigation revealed that Blackwillow, then 27 years-old,\n"
     "met the victim on Snapchat, where he initially claimed he was 17 years-old."
 )
 # doj_safe_childhood_2025_131
 C131 = (
     "A man who sexually exploited children and distributed child pornography was sentenced September 3, 2025, to\n"
     "20 years in federal prison.\n"
-    "Bryce Bock, 32, from Sioux City, Iowa, received the prison term after an April 7, 2025, guilty plea to sexual\n"
+    "Sawyer Kestrelson, 32, from Sioux City, Iowa, received the prison term after an April 7, 2025, guilty plea to sexual\n"
     "exploitation of a minor and distribution of child pornography.\n"
-    "Evidence at the plea and sentencing hearings showed that from July 1, 2022, through July 2, 2024, Bock used\n"
+    "Evidence at the plea and sentencing hearings showed that from July 1, 2022, through July 2, 2024, Kestrelson used\n"
     "and coerced a minor under the age of 18 to engage in sexually explicit conduct for the purpose of producing\n"
-    "visual depictions of such conduct. Bock admitted to utilizing an app called Anonymous Chat to receive and\n"
+    "visual depictions of such conduct. Kestrelson admitted to utilizing an app called Anonymous Chat to receive and\n"
     "send images of child pornography some included toddlers and sadistic and masochistic conduct. A forensic\n"
-    "review of Bock’s phone found he possessed 24 images of child sexual abuse material, including images of a\n"
+    "review of Kestrelson’s phone found he possessed 24 images of child sexual abuse material, including images of a\n"
     "known minor victim.\n"
-    "Bock was sentenced in Sioux City by United States District Court Judge Leonard T. Strand. Bock was\n"
+    "Kestrelson was sentenced in Sioux City by United States District Court Judge Leonard T. Strand. Kestrelson was\n"
     "sentenced to 240 months’ imprisonment and was ordered to pay $1,200 in fines and assessments. He must also\n"
     "serve a 5-year term of supervised release after the prison term. There is no parole in the federal system.\n"
-    "Bock is being held in the United States Marshal’s custody until he can be transported to a federal prison."
+    "Kestrelson is being held in the United States Marshal’s custody until he can be transported to a federal prison."
 )
 # doj_safe_childhood_2025_327
 C327 = (
     "ALBUQUERQUE – An Albuquerque man was sentenced to 25 years in prison for sexually exploiting a\n"
     "13-year-old girl and producing child pornography.\n"
     "There is no parole in the federal system.\n"
-    "According to court records, Kevin Vallo , 41, was on supervised released after serving a sentence for first\n"
+    "According to court records, Logan Foxglove , 41, was on supervised released after serving a sentence for first\n"
     "degree murder when he used the social media app, Telegram, to communicate with Jane Doe, a 13-year-old girl,\n"
     "while falsely claiming to be 16 years old.\n"
-    "Vallo was sentenced to an additional 30 months in prison for violating his supervision terms related to the\n"
+    "Foxglove was sentenced to an additional 30 months in prison for violating his supervision terms related to the\n"
     "murder charge, for a total of 27 and a half years."
 )
 # ncmec_2022_512
 C512 = (
-    "Robert Michael Timchak Jr., 56, of 871 Miller St., Luzerne, became the target of an\n"
+    "Skyler Riley Elderkin Jr., 56, of 871 Miller St., Luzerne, became the target of an\n"
     "investigation last month after Google reported he uploaded two videos depicting child\n"
     "sexual abuse.\n\n"
     "Police searched his computer and found photographs of naked, underage boys —\n"
     "many around 11 years old, authorities said — and evidence that he tried to delete\n"
-    "them. Timchak, who at the time was serving as an assistant pastor for the Diocese of\n"
+    "them. Elderkin, who at the time was serving as an assistant pastor for the Diocese of\n"
     "Scranton in Pike County, pleaded guilty to 19 child porn charges and was sentenced to\n"
     "serve six to 72 months in state prison."
 )
@@ -78,12 +78,12 @@ C512 = (
 C1175 = (
     "SPOKANE, Wash. – A man was arrested for the second time after police caught him in a child sex sting operation\n"
     "posing as a 13-year-old girl.\n"
-    "A Kittitas County Sheriff’s Deputy posed as 13-year-old ‘Alex’ who met John Cotton, 55, on the ‘MeetMe’ app.\n"
-    "Cotton was previously arrested in 2018, after a successful sting operation where he was sentenced to three\n"
+    "A Kittitas County Sheriff’s Deputy posed as 13-year-old ‘Avery’ who met Jamie Orrindale, 55, on the ‘MeetMe’ app.\n"
+    "Orrindale was previously arrested in 2018, after a successful sting operation where he was sentenced to three\n"
     "months in prison.\n"
-    "Cotton was also found again on ‘Meet Me’ and was communicating with another agent from the Montana\n"
+    "Orrindale was also found again on ‘Meet Me’ and was communicating with another agent from the Montana\n"
     "Bureau of Investigations who was posing as a 14-year-old girl.\n"
-    "A cybertip from Facebook also aided police in their arrest after a user under the name of ‘Cody Smith’ uploaded\n"
+    "A cybertip from Facebook also aided police in their arrest after a user under the name of ‘Finley Dunmarrow’ uploaded\n"
     "child pornography material and sent it to another user.\n"
     "Police estimate that material to be of a child between the ages of 6 and 11."
 )
@@ -129,11 +129,11 @@ C2026 = (
     "September 11, 2026\n"
     "Publication date: 2026-09-11\n"
     "Source:\n"
-    "Scott Devries, 57, from Hardy, Iowa, was sentenced in federal court in Sioux City on September 11, 2026, to 90\n"
-    "months’ imprisonment. Devries pled guilty April 20, 2026, to one count of possession of child pornography.\n"
-    "States District Court Judge Leonard T. Strand sentenced Devries to 90 months’ imprisonment and 5\n"
-    "years’ of supervised release following his imprisonment. There is no parole in the federal system. Devries must\n"
-    "also pay restitution in the amount of $39,500 to the victims in the case. Devries remains in custody of the\n"
+    "Tatum Fenwright, 57, from Hardy, Iowa, was sentenced in federal court in Sioux City on September 11, 2026, to 90\n"
+    "months’ imprisonment. Fenwright pled guilty April 20, 2026, to one count of possession of child pornography.\n"
+    "States District Court Judge Leonard T. Strand sentenced Fenwright to 90 months’ imprisonment and 5\n"
+    "years’ of supervised release following his imprisonment. There is no parole in the federal system. Fenwright must\n"
+    "also pay restitution in the amount of $39,500 to the victims in the case. Fenwright remains in custody of the\n"
     "United States Marshal until he can be transported to a federal prison."
 )
 # azicac_2011_001 (full case text)
@@ -153,7 +153,7 @@ CAZ = (
 CNCIS = (
     "Navy Sailor Sentenced To 10 Years In Federal Prison For Attempting To Entice And Meet A 13-Year-Old Child "
     "To Engage In Sexual Activity\n"
-    "Jacksonville, Florida – United States District Judge Marcia Morales Howard has sentenced Michael Buck "
+    "Jacksonville, Florida – United States District Judge Marcia Morales Howard has sentenced Riley Buck "
     "Brockway (40, Jacksonville) to 10 years in federal prison for using the internet and his cellphone to "
     "attempt to entice a 13-year-old child to engage in sexual activity. On July 17, 2023, an agent with the "
     "Naval Criminal Investigative Service (NCIS), posing as a 13-year-old child, began an undercover "
@@ -172,7 +172,7 @@ C2013 = (
 )
 # ncmec_2023_279
 C279 = (
-    "Jeffrey James Gruber, 60, was sentenced to five years and three months in federal prison on charges of "
+    "Elliot Drew Rookhaven, 60, was sentenced to five years and three months in federal prison on charges of "
     "possession of child pornography during a hearing U.S. District Court in Cedar Rapids on Wednesday. "
     "Following prison, he will be on supervised release for five years."
 )
@@ -204,6 +204,12 @@ def sentence_final(res):
     return res["sentence"]["final_value"] or {}
 
 
+def name_key_at_age(case, age):
+    """The per-case name tokens a reader tied to this age (names are never stored)."""
+    keys = [(a.get("extras") or {}).get("name_key") for a in case["assertions"] if a["field"] == "age" and a["value"] == age]
+    return next((k for k in keys if k), "")
+
+
 def excluded(res):
     return {(x["age"], x["role"]) for x in age_final(res).get("excluded") or []}
 
@@ -230,12 +236,12 @@ def test_325_defendant_age_27_is_not_a_victim():
     assert case["case_demographics"]["ages"] == [12]
 
 
-# A father "Ingram Sr." and his son "Ingram" are two defendants. The suffix is
+# A father "Porter Sr." and his son "Porter" are two defendants. The suffix is
 # part of who they are. Stripping it and matching the surname collapses the son
 # into the father and drops 24 from the perpetrator ages.
 SR_AND_SON = (
-    "PHOENIX – John Ingram Sr., 52, of Phoenix, was sentenced to 10 years in prison. "
-    "His son, John Ingram, 24, of Phoenix, was sentenced to 5 years in prison."
+    "PHOENIX – Samuel Porter Sr., 52, of Phoenix, was sentenced to 10 years in prison. "
+    "His son, Samuel Porter, 24, of Phoenix, was sentenced to 5 years in prison."
 )
 # Two different people, neither named, same age. Value equality is not identity.
 TWO_UNNAMED = (
@@ -246,24 +252,26 @@ TWO_UNNAMED = (
 
 def test_a_judges_suffix_does_not_become_the_defendants_name():
     text = (
-        "Judge D.P. Marshall, Jr. Blair Michael Williams, 34, of Little Rock, "
+        "Judge D.P. Marshall, Jr. Harper Riley Greywater, 34, of Little Rock, "
         "was sentenced to 10 years in prison."
     )
-    _, res = run(text, "judge_suffix_leak")
-    entity = age_final(res)["perpetrator_entities"][0]["entity"] or ""
-    assert "Williams" in entity
-    assert "Jr" not in entity.split()
+    case, res = run(text, "judge_suffix_leak")
+    assert age_final(res)["perpetrator_entities"][0]["named"]
+    # What the resolver reads from the stored tokens: three name tokens, no judge's suffix.
+    key = A.resolution._entity_key({"extras": {"name_key": name_key_at_age(case, 34)}}) or ""
+    assert len(key.split()) == 3
+    assert "Jr" not in key.split()
 
 
 def test_suffix_keeps_father_and_son_as_two_defendants():
-    _, res = run(SR_AND_SON, "suffix_father_son")
+    case, res = run(SR_AND_SON, "suffix_father_son")
     final = age_final(res)
     assert final["perpetrators"] == [24, 52]
     entities = final["perpetrator_entities"]
     assert len(entities) == 2
-    by_age = {e["age"]: e["entity"] for e in entities}
-    assert "Sr" in (by_age[52] or "")
-    assert "Sr" not in (by_age[24] or "")
+    assert all(e["named"] for e in entities)
+    assert name_key_at_age(case, 52).split()[-1] == "Sr"
+    assert "Sr" not in name_key_at_age(case, 24).split()
 
 
 def test_unnamed_defendants_of_the_same_age_stay_separate():
@@ -297,35 +305,35 @@ def test_nameless_age_joins_the_only_named_defendant_of_that_age():
     text = (
         "A Celina man has been sentenced to four years. "
         "The 35-year-old man was indicted on 88 charges. "
-        "Brian Evers, 35, of Celina, was sentenced to four years in prison."
+        "Emerson Halloway, 35, of Celina, was sentenced to four years in prison."
     )
     _, res = run(text, "headline_and_name")
     entities = age_final(res)["perpetrator_entities"]
-    named = [e for e in entities if e.get("entity") and "Evers" in e["entity"]]
-    assert len(named) == 1 and named[0]["age"] == 35
-    assert not any(e.get("entity") is None and e["age"] == 35 for e in entities)
+    named = [e for e in entities if e["named"] and e["age"] == 35]
+    assert len(named) == 1
+    assert not any(not e["named"] and e["age"] == 35 for e in entities)
 
 
 def test_nameless_age_stays_apart_when_the_wording_is_plural():
     text = (
         "Investigators arrested two 40-year-old men in Tulsa. "
-        "John Smith, 40, of Tulsa, was charged with sexual exploitation of a minor."
+        "Jamie Dunmarrow, 40, of Tulsa, was charged with sexual exploitation of a minor."
     )
     _, res = run(text, "two_men_40")
     entities = age_final(res)["perpetrator_entities"]
-    assert any(e.get("entity") and "Smith" in e["entity"] and e["age"] == 40 for e in entities)
-    assert any(e.get("entity") is None and e["age"] == 40 for e in entities)
+    assert any(e["named"] and e["age"] == 40 for e in entities)
+    assert any(not e["named"] and e["age"] == 40 for e in entities)
 
 
 def test_nameless_age_stays_apart_when_the_place_is_different():
     text = (
         "Police arrested a 40-year-old man in Tulsa. "
-        "John Smith, 40, of Omaha, was arrested and charged with sexual exploitation of a minor."
+        "Jamie Dunmarrow, 40, of Omaha, was arrested and charged with sexual exploitation of a minor."
     )
     _, res = run(text, "two_places_40")
     entities = age_final(res)["perpetrator_entities"]
-    assert any(e.get("entity") and "Smith" in e["entity"] and e["age"] == 40 for e in entities)
-    assert any(e.get("entity") is None and e["age"] == 40 for e in entities)
+    assert any(e["named"] and e["age"] == 40 for e in entities)
+    assert any(not e["named"] and e["age"] == 40 for e in entities)
 
 
 # Surface family asserts both a victim noun and a defendant cue on one mention.
@@ -345,15 +353,15 @@ def test_self_contradiction_hold_is_not_labeled_unknown():
 
 def test_imposed_sentence_attaches_to_the_person_sentenced_not_the_judge():
     text = (
-        "U.S. District Judge James K. Bredar sentenced Margaret Ellen Jones, 38, of Parkville, "
-        "to 15 years in prison. John Andrew Blaes was sentenced to 27 years in prison."
+        "U.S. District Judge Drew K. Bredar sentenced Parker Jordan Underhay, 38, of Parkville, "
+        "to 15 years in prison. Jamie Quinn Quillfeather was sentenced to 27 years in prison."
     )
     case, _ = run(text, "judge_sentenced_defendant")
     imposed = [a for a in case["assertions"] if a["field"] == "sentence" and a.get("role") == "imposed"]
-    by_value = {a["value"]: (a.get("extras") or {}).get("defendant_entity") or "" for a in imposed}
-    assert "Jones" in by_value.get("15 years", "")
-    assert "Bredar" not in by_value.get("15 years", "")
-    assert "Blaes" in by_value.get("27 years", "")
+    by_value = {a["value"]: (a.get("extras") or {}).get("defendant_key") or "" for a in imposed}
+    defendant = name_key_at_age(case, 38).split()  # the person sentenced, tokenized
+    assert by_value.get("15 years", "").split()[-1:] == defendant[-1:]
+    assert by_value.get("27 years") and by_value["27 years"].split()[-1] != defendant[-1]
 
 
 def test_imposed_sentences_attach_to_the_subject_defendant():
@@ -362,10 +370,11 @@ def test_imposed_sentences_attach_to_the_subject_defendant():
     assert sentence_final(res)["imposed"] == ["10 years", "5 years"]
     assert case["prosecution_outcome"]["sentences"] == ["10 years", "5 years"]
     imposed = [a for a in case["assertions"] if a["field"] == "sentence" and a.get("role") == "imposed"]
-    by_value = {a["value"]: (a.get("extras") or {}).get("defendant_entity") for a in imposed}
-    assert "Sr" in (by_value.get("10 years") or "")
-    son = by_value.get("5 years") or ""
-    assert "Ingram" in son and "Sr" not in son
+    by_value = {a["value"]: (a.get("extras") or {}).get("defendant_key") for a in imposed}
+    father = (by_value.get("10 years") or "").split()
+    son = (by_value.get("5 years") or "").split()
+    assert father[-1:] == ["Sr"]
+    assert son and son[-1] == father[-2] and "Sr" not in son  # same surname token, no suffix
 
 
 def test_131_twenty_years_is_a_duration_not_an_age():
@@ -399,7 +408,7 @@ def test_1175_decoys_need_the_persona_phrase():
     _, res = run(C1175, "ncmec_2024_1175")
     final = age_final(res)
     assert final["victims"] == []
-    assert final["perpetrators"] == [55]  # 55 sits near "posed as" but is Cotton's age
+    assert final["perpetrators"] == [55]  # 55 sits near "posed as" but is Orrindale's age
     assert {(13, "decoy"), (14, "decoy")} <= excluded(res)
     assert {(6, "depicted_in_material"), (11, "depicted_in_material")} <= excluded(res)
     assert sentence_final(res)["imposed"] == []  # the 2018 term is a prior case
@@ -460,7 +469,7 @@ def test_pictured_child_who_was_later_found_stays_depicted():
 def test_adult_crime_victim_is_not_a_csea_victim():
     # us_marshals_2025_016 class: "sexual assault of a 76-year-old woman"
     text = (
-        "John Locke, 32, wanted for the kidnapping and sexual assault of a 76-year-old woman in Camden County, "
+        "Jamie Wickersham, 32, wanted for the kidnapping and sexual assault of a 76-year-old woman in Camden County, "
         "was also charged with the attempted sexual assault of a 12-year-old female."
     )
     case, res = run(text, "us_marshals_adult_victim", year="2025")
@@ -672,7 +681,7 @@ def test_runs_without_spacy_or_llm(monkeypatch):
 # --- LLM layer (canned model output; the case text and gate are real) --------------------
 
 def _llm_case():
-    text = C1175 + "\nKCSO posed as ‘Alex’ for nearly three months while messaging Cotton."
+    text = C1175 + "\nKCSO posed as ‘Avery’ for nearly three months while messaging Orrindale."
     assertions = A.collect_assertions(text, case_id="ncmec_2024_1175", use_spacy=False, overrides={})
     return text, assertions, A.resolve(assertions)
 
@@ -683,7 +692,7 @@ def test_llm_alone_never_finalizes_and_quotes_are_gated(monkeypatch, tmp_path):
     _prompt, _windows, cands = LLM.build_prompt(text, targets)
     messaging = next(c for c in cands if "nearly three months" in text[c["span"][0]:c["span"][1]])
     others = [c for c in cands if c is not messaging]
-    reply = {"items": [{"id": messaging["id"], "role": "imposed", "quote": "posed as ‘Alex’ for nearly three months"}]}
+    reply = {"items": [{"id": messaging["id"], "role": "imposed", "quote": "posed as ‘Avery’ for nearly three months"}]}
     reply["items"] += [{"id": c["id"], "role": "imposed", "quote": "a quote that is not in the window"} for c in others]
     monkeypatch.setattr(LLM, "_generate", lambda cfg, prompt: (json.dumps(reply), 5, "ok"))
     cfg = {**LLM.llm_config(), "provider": "ollama", "model": "test-model"}
@@ -861,8 +870,8 @@ def test_year_old_name_of_city_is_the_defendant_and_publication_day_replaces_jan
         "February 23, 2012\n"
         "Source: https://www.lapdonline.org/newsroom/example/\n"
         "Los Angeles: LA ICAC had received a cyber-tip about the suspect, "
-        "34-year-old Alvaro Rosas of Los Angeles, being involved with child pornography. "
-        "Rosas was booked at Van Nuys Jail."
+        "34-year-old Rowan Zephyrine of Los Angeles, being involved with child pornography. "
+        "Zephyrine was booked at Van Nuys Jail."
     )
     case, res = run(text, "lapd_year_old_name", year="2012")
     assert age_final(res)["perpetrators"] == [34]
@@ -896,11 +905,11 @@ def test_azicac_year_old_suspect_and_age_pair_finalize():
 
 
 def test_stanza_most_mentioned_name_cannot_finalize_alone():
-    text = "John Smith met John Smith, 35, yesterday."
-    second = text.index("John Smith, 35")
+    text = "Jamie Dunmarrow met Jamie Dunmarrow, 35, yesterday."
+    second = text.index("Jamie Dunmarrow, 35")
     persons = [
-        (text.index("John Smith"), text.index("John Smith") + len("John Smith"), "John Smith"),
-        (second, second + len("John Smith"), "John Smith"),
+        (text.index("Jamie Dunmarrow"), text.index("Jamie Dunmarrow") + len("Jamie Dunmarrow"), "Jamie Dunmarrow"),
+        (second, second + len("Jamie Dunmarrow"), "Jamie Dunmarrow"),
     ]
     start = text.index("35")
     ner = {
@@ -931,8 +940,8 @@ def test_year_old_name_with_initial_and_a_prior_arrest_is_still_this_defendant()
     assert age_final(res)["perpetrators"] == [19]
 
     prior = (
-        "19-year-old Alex Rivera, of Scott, was previously arrested in January. "
-        "Rivera was arrested on April 1, 2026, on federal charges."
+        "19-year-old Avery Yarrowby, of Tatum, was previously arrested in January. "
+        "Yarrowby was arrested on April 1, 2026, on federal charges."
     )
     _, res = run(prior, "year_old_prior_arrest", year="2026")
     assert age_final(res)["perpetrators"] == [19]
@@ -965,7 +974,7 @@ def test_previously_jailed_term_is_not_todays_sentence_and_licence_is_not_prison
 
 
 def test_abuse_lasted_for_over_five_years_is_not_the_sentence():
-    text = "Michael Ross was sentenced to 35 years for sexually abusing a minor for over 5 years."
+    text = "Riley Alderhouse was sentenced to 35 years for sexually abusing a minor for over 5 years."
     _, res = run(text, "abuse_duration_not_sentence")
     assert sentence_final(res)["imposed"] == ["35 years"]
 
@@ -988,7 +997,7 @@ def test_one_of_the_is_not_an_age_and_a_range_is_not_two_victims():
     assert age_final(res)["victims"] == []
     assert age_final(res)["perpetrators"] == []
 
-    named = "John Smith, 32, of Phoenix, was arrested for possession of child pornography."
+    named = "Jamie Dunmarrow, 32, of Phoenix, was arrested for possession of child pornography."
     _, res = run(named, "name_comma_still_age")
     assert age_final(res)["perpetrators"] == [32]
 
@@ -1070,8 +1079,8 @@ def test_sting_headline_and_the_next_article_title_do_not_finalize():
     text = (
         "Jacksonville Sex Offender Indicted For Attempting To Meet A 13-Year-Old Child "
         "To Engage In Sexual Activity\nSource:\n"
-        "charging Jeremy Wayne Leggett (36, Jacksonville) with using the internet to attempt to entice a child. "
-        "If convicted, Leggett faces a minimum penalty of 10 years, up to life, in federal prison.\n"
+        "charging Hayden Dakota Vantreece (36, Jacksonville) with using the internet to attempt to entice a child. "
+        "If convicted, Vantreece faces a minimum penalty of 10 years, up to life, in federal prison.\n"
         "On June 16, 2023, an undercover FBI agent, posing as a minor child, was working online "
         "to identify individuals seeking to make contact with children. The agent engaged in online "
         "conversation with an app username who posted a notice in a public chat room. "
@@ -1090,8 +1099,8 @@ def test_sting_headline_and_the_next_article_title_do_not_finalize():
 def test_charged_name_parenthetical_age_is_the_defendant():
     text = (
         "Attorney General Peter F. Neronha announced that a Providence man has been charged. "
-        "The Office charged Erick Gonzalez Galvez (age 20), by way of criminal information, with possession of child pornography. "
-        "The Office charged Cesar Garcia (age 45) by way of criminal information, with solicitation of a minor "
+        "The Office charged Morgan Blake Corbridge (age 20), by way of criminal information, with possession of child pornography. "
+        "The Office charged Reese Pellowe (age 45) by way of criminal information, with solicitation of a minor "
         "following an undercover investigation posing as a 14-year-old female."
     )
     case, res = run(text, "ri_ag_paren_age", year="2024")
@@ -1109,7 +1118,7 @@ def test_press_detectors_do_not_run_on_pacer():
 
 
 def test_a_pacer_detector_can_be_registered():
-    text = "Smith, 40, was indicted."
+    text = "Dunmarrow, 40, was indicted."
     start = text.index("40")
     seen = []
 

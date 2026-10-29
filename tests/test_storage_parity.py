@@ -37,8 +37,8 @@ def _forbid_remote(url: str) -> None:
 
 def _pipeline_case() -> dict:
     text = (
-        "LEXINGTON, Ky. – A Lexington man, Eric Kelsey Shepherd, 30, was sentenced to 50 years in prison. "
-        "A 12-year-old victim met Shepherd on Snapchat."
+        "LEXINGTON, Ky. – A Lexington man, Avery Rowan Ravensworth, 30, was sentenced to 50 years in prison. "
+        "A 12-year-old victim met Ravensworth on Snapchat."
     )
     raw = {
         "case_text": text,

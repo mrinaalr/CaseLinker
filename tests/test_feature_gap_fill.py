@@ -182,7 +182,7 @@ class TestRsoAndPriorConviction(unittest.TestCase):
 
     def test_prior_conviction_without_rso_phrase(self):
         text = (
-            "Due to his prior conviction, Gonzalez faces a mandatory minimum penalty "
+            "Due to his prior conviction, Moorcroft faces a mandatory minimum penalty "
             "of 15 years in prison."
         )
         demo = proc.extract_perpetrator_demographics({"case_text": text})
@@ -213,7 +213,7 @@ class TestRsoAndPriorConviction(unittest.TestCase):
 class TestOfAnchoredPerpAge(unittest.TestCase):
     def test_name_age_of_was_sentenced_keeps_age(self):
         text = (
-            "Homeland Security Investigations announced that Richard James Miller, 41, "
+            "Homeland Security Investigations announced that Quinn Rowan Northcote, 41, "
             "of St. Francois County, was sentenced to 50 years in federal prison."
         )
         ages, _ = proc._collect_perp_comma_ages(text)
@@ -233,7 +233,7 @@ class TestOfAnchoredPerpAge(unittest.TestCase):
 
     def test_doj_style_dateline(self):
         text = (
-            "Further investigation revealed that the user was Antonio Rudy Gonzalez, 41, "
+            "Further investigation revealed that the user was Avery Harper Moorcroft, 41, "
             "of Alexandria, who sent dozens of images. He is scheduled to be sentenced."
         )
         demo = proc.extract_perpetrator_demographics({"case_text": text})
@@ -250,8 +250,8 @@ class TestEndToEndSamplePress(unittest.TestCase):
             "A district court judge yesterday convicted a previously convicted sex offender "
             "of distributing and possessing child sexual abuse material (CSAM).\n"
             "According to court documents, law enforcement began an investigation into a "
-            "Kik user. Antonio Rudy Gonzalez, 41, of Alexandria, sent dozens of images.\n"
-            "Due to his prior conviction, Gonzalez faces a mandatory minimum.\n"
+            "Kik user. Avery Harper Moorcroft, 41, of Alexandria, sent dozens of images.\n"
+            "Due to his prior conviction, Moorcroft faces a mandatory minimum.\n"
             "U.S. Attorney Erik S. Siebert for the Eastern District of Virginia announced "
             "the verdict. The FBI Washington Field Office investigated the case.\n"
             "This case was brought as part of Project Safe Childhood, a nationwide initiative."
@@ -271,8 +271,8 @@ class TestEndToEndSamplePress(unittest.TestCase):
             "sex offenders and child sex traffickers.\n"
             "Missouri man sentenced to 50 years for recording child sexual abuse after "
             "HSI St. Louis investigation\n"
-            "Richard James Miller, 41, of St. Francois County, was sentenced to 50 years "
-            "in federal prison. Miller pleaded guilty to production of child sexual abuse "
+            "Quinn Rowan Northcote, 41, of St. Francois County, was sentenced to 50 years "
+            "in federal prison. Northcote pleaded guilty to production of child sexual abuse "
             "material.\n"
             "Assistant U.S. Attorney Kyle Bateman prosecuted the case.\n"
             "This case was brought as part of Project Safe Childhood, a nationwide initiative."

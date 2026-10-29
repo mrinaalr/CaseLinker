@@ -67,7 +67,7 @@ class TestStatutoryMaxSentences(unittest.TestCase):
 
     def test_imposed_sentenced_to_still_works(self):
         text = (
-            "Earlier today Lorenzo Arana was sentenced to 210 months in prison "
+            "Earlier today Avery Quarrington was sentenced to 210 months in prison "
             "for distribution of child pornography."
         )
         sents = pp._extract_sentence_durations(text)

@@ -151,8 +151,8 @@ def test_reresolve_applies_resolved_publication_dates(tmp_path: Path):
 def test_batched_reresolve_matches_one_commit_per_case(tmp_path: Path):
     texts = {
         "doj_safe_childhood_2025_325": (
-            "LEXINGTON, Ky. – A Lexington man, Eric Kelsey Shepherd, 30, was sentenced to 50 years in prison. "
-            "Shepherd, then 27 years-old, met the 12-year-old victim on Snapchat."
+            "LEXINGTON, Ky. – A Lexington man, Avery Quinn Oakhollow, 30, was sentenced to 50 years in prison. "
+            "Oakhollow, then 27 years-old, met the 12-year-old victim on Snapchat."
         ),
         "self_contradiction_student": (
             "The jailing of a 22-year-old student followed his arrest on the charge."
@@ -176,7 +176,7 @@ def test_batched_reresolve_matches_one_commit_per_case(tmp_path: Path):
 
 
 def test_batch_of_one_still_commits(tmp_path: Path):
-    case = _case("John Smith, 40, of Tulsa, was sentenced to 8 years in prison.", "batch_one")
+    case = _case("Rowan Pinecrest, 40, of Tulsa, was sentenced to 8 years in prison.", "batch_one")
     path = tmp_path / "one.db"
     _seed(path, [case])
     storage = CaseStorage(str(path))
