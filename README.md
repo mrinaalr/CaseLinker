@@ -444,7 +444,7 @@ CaseLinker/
 ├── triage.md                         # Triage rules and model docs
 ├── search.md                         # Search / facets vs SPARQL / MCP discovery map
 ├── Procfile                          # Railway / Heroku start command
-└── Architecture design.md
+└── ARCHITECTURE.md                   # System map: layers, data flow, diagrams, hand-off docs
 ```
 
 ## Case Schema & Feature Extraction
