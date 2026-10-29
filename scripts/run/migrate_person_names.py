@@ -10,8 +10,8 @@ into ``field_assertions.extras_json`` (``entity``, ``defendant_entity``,
 This script rewrites, per case:
 - ``cases.extracted_features``: records ``person_spans`` (offsets from ``--spans``,
   NER output of ``compute_person_spans.py``), and drops a person filed as a location /
-  organization / agency (``person_keys.scrub_people``, as extraction now does)
-- assertion extras: names -> ``name_key`` / ``defendant_key`` tokens (``person_keys.pseudonymize``)
+  organization / agency (``people_mask.scrub_people``, as extraction now does)
+- assertion extras: names -> ``name_key`` / ``defendant_key`` tokens (``people_mask.pseudonymize``)
 - resolution finals: ``perpetrator_entities[]`` -> ``{person: "pN", named, age, other_ages}``
 
 Ages, roles, spans and statuses are not touched. ``field_assertions`` is
@@ -42,10 +42,10 @@ from typing import Any, Dict, List, Tuple
 REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO / "src" / "Processing Layer" / "field_assertions"))
 
-import person_keys  # noqa: E402
+import people_mask  # noqa: E402
 import resolution  # noqa: E402
 
-NAME_EXTRA_KEYS = tuple(person_keys.NAME_KEYS)
+NAME_EXTRA_KEYS = tuple(people_mask.NAME_KEYS)
 
 
 def _connect(args) -> Tuple[Any, str]:
@@ -106,7 +106,7 @@ def migrate_assertions(cur, dialect: str) -> Tuple[List[Tuple[str, int]], int]:
         items = [{"id": rid, "span_start": s, "extras": json.loads(ex or "{}") or {}} for rid, s, ex in rows]
         before = {it["id"]: json.dumps(it["extras"], sort_keys=True) for it in items}
         scanned += sum(1 for it in items if _has_raw_name(it["extras"]))
-        person_keys.pseudonymize(items)
+        people_mask.pseudonymize(items)
         for it in items:
             after = json.dumps(it["extras"], sort_keys=True)
             if after != before[it["id"]]:
@@ -150,19 +150,20 @@ def migrate_features(cur, dialect: str, spans: Dict[str, Dict]) -> Tuple[List[Tu
         rec = spans.get(case_id)
         if rec and rec.get("text_sha256") == hashlib.sha256(text.encode("utf-8")).hexdigest():
             # Re-derive from the raw NER offsets with the current filters (the file may predate them).
-            person_spans = person_keys.person_spans(text, rec.get("ner_person") or [])
+            person_spans = people_mask.person_spans(text, rec.get("ner_person") or [], feats.get("agencies_involved") or [])
             stats["spans_from_ner"] += 1
         else:
-            person_spans = person_keys.person_spans(text, ())
+            person_spans = people_mask.person_spans(text, (), feats.get("agencies_involved") or [])
             stats["spans_text_changed" if rec else "spans_cue_only"] += 1
         grounded = [g.get(k) for key in ("location_grounds", "agency_grounds") for g in feats.get(key) or []
                     if isinstance(g, dict) and g.get("status") == "grounded" for k in ("mention", "entity_name")]
-        full, surnames = person_keys.case_people(text, [text[a:b] for a, b in person_spans], grounded)
+        grounded += [x for x in (feats.get("agencies_involved") or []) if isinstance(x, str)]
+        full, surnames = people_mask.case_people(text, [text[a:b] for a, b in person_spans], grounded)
         new = dict(feats)
         new["person_spans"] = person_spans
         for key in FEATURE_KEYS:
             if key in feats:
-                new[key] = person_keys.scrub_people(feats[key], full, surnames)
+                new[key] = people_mask.scrub_people(feats[key], full, surnames)
                 if json.dumps(feats[key]) != json.dumps(new[key]):
                     stats[f"scrubbed:{key}"] += 1
         if new != feats:

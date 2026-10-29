@@ -38,7 +38,7 @@ from typing import Dict, Set
 REPO = Path(__file__).resolve().parents[2]
 sys.path[:0] = [str(REPO / "src" / "Processing Layer" / "field_assertions"), str(REPO / "src" / "Storage Layer")]
 
-import person_keys as PK  # noqa: E402
+import people_mask as PK  # noqa: E402
 
 
 def case_people(db: sqlite3.Connection) -> Dict[str, Set[str]]:
@@ -50,6 +50,7 @@ def case_people(db: sqlite3.Connection) -> Dict[str, Set[str]]:
         spans = PK.spans_for(feats, text)
         grounded = [g.get(k) for key in ("location_grounds", "agency_grounds") for g in feats.get(key) or []
                     if isinstance(g, dict) and g.get("status") == "grounded" for k in ("mention", "entity_name")]
+        grounded += [x for x in (feats.get("agencies_involved") or []) if isinstance(x, str)]
         full, _ = PK.case_people(text, [text[a:b] for a, b in spans], grounded)
         full = {n for n in full if len(n.split()) >= 2 and len(n) >= 6}
         if full:

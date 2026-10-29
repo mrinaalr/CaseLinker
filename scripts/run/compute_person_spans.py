@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Compute person-name offsets for stored cases (CaseLinker 3.x, ``person_keys``).
+Compute person-name offsets for stored cases (CaseLinker 3.x, ``people_mask``).
 
 For each case, runs Stanza NER (tokenize, ner) over the case text and writes one
 JSON line: ``{case_id, text_sha256, ner_person, person_spans}``. Values are
@@ -28,7 +28,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO / "src" / "Processing Layer" / "field_assertions"))
 
-import person_keys  # noqa: E402
+import people_mask  # noqa: E402
 
 
 def text_sha256(text: str) -> str:
@@ -76,7 +76,7 @@ def main() -> None:
                     "case_id": cid,
                     "text_sha256": text_sha256(text),
                     "ner_person": ner,
-                    "person_spans": person_keys.person_spans(text, ner),
+                    "person_spans": people_mask.person_spans(text, ner),
                 }) + "\n")
             fh.flush()
             n = i + len(chunk)

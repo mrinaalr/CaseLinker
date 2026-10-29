@@ -1,15 +1,24 @@
 """
-Per-case pseudonymous name tokens (CaseLinker 3.x).
+People masking (CaseLinker 3.x): CaseLinker reads names; it never stores or serves them.
 
-Readers tie an age to the person named next to it ("Smith, 32,"). The resolver
-needs only the *shape* of that name to tell people apart: which mentions share a
-surname, a first name, a generational suffix. It never needs the letters.
+Two halves:
 
-``pseudonymize`` replaces every name a reader recorded with per-case tokens
-before anything is stored: "John Smith" -> "N1 N2", "Smith" -> "N2",
-"John Smith Jr." -> "N1 N2 Jr". The same token string maps to the same code
-everywhere in one case and to nothing outside it, so ``_same_named_person``
-gives the same answers on codes as on names.
+1. **Where people are, never who.** ``person_spans`` finds the people named in a
+   release (Stanza ``PERSON`` spans, age cues, repeats of their surnames) and
+   returns character offsets, filtered so places, agencies and organization-name
+   parts are never included. Extraction stores the offsets as
+   ``extracted_features.person_spans``. Every outward surface redacts from them:
+   ``public_text`` (the release with ``[PERSON]``), ``mask_admissions``,
+   ``mask_feature_strings``, and ``scrub_people`` for entity lists.
+
+2. **Tokens, not names, in structured data.** Readers tie an age to the person
+   named next to it ("Smith, 32,"). The resolver needs only the *shape* of that
+   name to tell people apart: which mentions share a surname, a first name, a
+   generational suffix. ``pseudonymize`` replaces every name a reader recorded
+   with per-case tokens before anything is stored: "John Smith" -> "N1 N2",
+   "Smith" -> "N2", "John Smith Jr." -> "N1 N2 Jr". The same token string maps to
+   the same code everywhere in one case and to nothing outside it, so
+   ``_same_named_person`` gives the same answers on codes as on names.
 """
 
 from __future__ import annotations
@@ -344,15 +353,18 @@ def mask_feature_strings(features: Dict, case_text: str = "") -> Dict:
 # Dropping misreads at the source (a person filed as a location / organization)
 # ---------------------------------------------------------------------------
 
-_PLACE_AFTER = re.compile(r"^\W{0,3}(?:police|county|sheriff|township|city|parish|borough|village|department|"
+_PLACE_AFTER = re.compile(r"^(?:['’]s)?\s{1,3}(?:police|county|sheriff|township|city|parish|borough|village|department|"
                           r"fire|school|district|area|region|airport|station|park|mall)\b", re.I)
 
 
 def _reads_as_place(name: str, text: str, not_people: Set[str]) -> bool:
     """A "name" that is a known place, a grounded place/agency here, or used as one in the text."""
     low = name.lower()
-    if low in _places() or name in not_people or any(name in x for x in not_people):
+    if low in _places() or name in not_people:
         return True
+    if any(re.search(re.escape(name) + r"\s+(?:" + "|".join(sorted(_INSTITUTION)) + r")\b", x or "", re.I)
+           for x in not_people):
+        return True  # "Spring Grove" in "Spring Grove Police Department"
     return any(_PLACE_AFTER.match(text[m.end():m.end() + 16]) for m in re.finditer(re.escape(name), text or ""))
 
 
@@ -447,7 +459,7 @@ _ORG_AFTER = re.compile(
 )
 
 
-def _span_is_person(text: str, s: int, e: int) -> bool:
+def _span_is_person(text: str, s: int, e: int, not_people: Set[str] = frozenset()) -> bool:
     if _ORG_BEFORE.search(re.sub(r"\s+", " ", text[max(0, s - 40):s])) or _ORG_AFTER.match(text[e:e + 20]):
         return False
     name = text[s:e].strip()
@@ -459,7 +471,7 @@ def _span_is_person(text: str, s: int, e: int) -> bool:
         return False
     if toks[-1].lower() in _ABBREV_TAIL - {"jr", "sr"}:
         return False  # "Boyd Co." is a county
-    return not _reads_as_place(name, text, set())
+    return not _reads_as_place(name, text, set(not_people))
 
 
 def _trim_span(text: str, s: int, e: int) -> List[List[int]]:
@@ -483,7 +495,7 @@ def _trim_span(text: str, s: int, e: int) -> List[List[int]]:
     return [[seg_start, end]]
 
 
-def person_spans(text: str, ner_person_spans: Iterable = ()) -> List[List[int]]:
+def person_spans(text: str, ner_person_spans: Iterable = (), not_people: Iterable[str] = ()) -> List[List[int]]:
     """Offsets of person names in ``text``: NER PERSON spans, reader cues, and repeats of their surnames.
 
     NER spans that read as a place or an institution ("Medicine Hat", "Kik Messenger")
@@ -491,10 +503,11 @@ def person_spans(text: str, ner_person_spans: Iterable = ()) -> List[List[int]]:
     is added. Returns sorted, merged [start, end] pairs.
     """
     text = text or ""
+    not_people = frozenset(x for x in not_people if isinstance(x, str) and x)
     spans: List[List[int]] = []
     for sp in ner_person_spans or ():
         s, e = int(sp[0]), int(sp[1])
-        if 0 <= s < e <= len(text) and _span_is_person(text, s, e):
+        if 0 <= s < e <= len(text) and _span_is_person(text, s, e, not_people):
             spans.append([s, e])
     # Age cues ("Smith, 32," / "32-year-old John Smith") name a person on their own.
     for pat in _PERSON_CUES[:2]:
@@ -503,7 +516,7 @@ def person_spans(text: str, ner_person_spans: Iterable = ()) -> List[List[int]]:
             toks = _person_tokens(m.group(1))
             if toks and toks[0] in m.group(1):
                 s += m.group(1).find(toks[0])
-                if _span_is_person(text, s, e):
+                if _span_is_person(text, s, e, not_people):
                     spans.append([s, e])
     # A verb cue ("... said", "... admitted") only confirms someone NER or an age cue already found:
     # on its own it also fires on "Workforce Development said".
@@ -514,15 +527,18 @@ def person_spans(text: str, ner_person_spans: Iterable = ()) -> List[List[int]]:
         core = [t.strip(".,’'") for t in toks if t.strip(".").lower() not in NAME_SUFFIXES]
         if core and core[-1] in known and toks[0] in m.group(1):
             s += m.group(1).find(toks[0])
-            if _span_is_person(text, s, e):
+            if _span_is_person(text, s, e, not_people):
                 spans.append([s, e])
     surnames = set()
     for s, e in spans:
         core = [t.strip(".,’'") for t in text[s:e].split() if t.strip(".,").lower() not in NAME_SUFFIXES]
         if core and _surname_ok(core[-1]):
             surnames.add(core[-1])
-    for sur in surnames:
-        for m in re.finditer(rf"\b{re.escape(sur)}\b", text):
+    glue = r"(?:\b|(?=(?:is|was|has|had|and|who|will|were|faces|pleaded|allegedly)\b))"
+    names = {_norm_name(text[a:b]) for a, b in spans if len(text[a:b].split()) >= 2} | surnames
+    for name in sorted(names, key=len, reverse=True):
+        # "Smithhas been arraigned": PDF text sometimes drops the space after a name.
+        for m in re.finditer(r"\b" + r"\s+".join(re.escape(t) for t in name.split()) + glue, text):
             if _PLACE_AFTER.match(text[m.end():m.end() + 16]):
                 continue  # "Smith County" stays
             spans.append([m.start(), m.end()])

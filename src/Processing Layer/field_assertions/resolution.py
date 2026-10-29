@@ -172,7 +172,7 @@ def _parse_entity(ent: str) -> Optional[Tuple[List[str], Optional[str]]]:
 
 
 def _entity_key(a: Dict) -> Optional[str]:
-    # name_key: per-case tokens (person_keys.py). entity: rows written before names were tokenized.
+    # name_key: per-case tokens (people_mask.py). entity: rows written before names were tokenized.
     extras = a.get("extras") or {}
     parsed = _parse_entity((extras.get("name_key") or extras.get("entity") or "").strip())
     if not parsed:

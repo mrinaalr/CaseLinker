@@ -53,7 +53,7 @@ This is a feature of the pipeline, not a patch. Keep it that way.
 
 - **Offsets, not names.** Extraction records where people are: `extracted_features.person_spans` =
   `[[start, end], …]` into the case text (Stanza `PERSON` spans plus the age readers' cues, filtered so places
-  and agencies are never in it). Code: `src/Processing Layer/field_assertions/person_keys.py`.
+  and agencies are never in it). Code: `src/Processing Layer/field_assertions/people_mask.py`.
 - **Tokens, not names.** Readers may use a name in memory to decide whose age a number is. Before anything is
   stored, names become per-case tokens (`extras.name_key` like `N1 N2 Sr`, `extras.defendant_key`). Tokens are
   consistent within one case and meaningless outside it.
@@ -64,7 +64,7 @@ This is a feature of the pipeline, not a patch. Keep it that way.
 
 ### 1.3 Every outward surface redacts
 
-Any code path that returns case data to someone outside the machine uses `person_keys`:
+Any code path that returns case data to someone outside the machine uses `people_mask`:
 `public_text`, `mask_admissions`, `mask_feature_strings`, `scrub_people`. This includes new endpoints, new MCP
 tools, new graph properties, exports, and anything sent to an external model provider (the public assistant's
 SQL tool cannot read `raw_data` or select `extracted_features`, and its rows are masked before the model sees

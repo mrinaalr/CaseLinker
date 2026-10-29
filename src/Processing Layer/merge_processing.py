@@ -93,7 +93,7 @@ def _pattern_processing():
     return _pattern_processing_mod
 
 
-# Entity lists a reader can wrongly fill with a person's name (person_keys.scrub_people).
+# Entity lists a reader can wrongly fill with a person's name (people_mask.scrub_people).
 _PERSON_FREE_KEYS = (
     "locations", "organizations", "agencies_involved", "pathway_agencies_federal",
     "pathway_agencies_state_local", "location_grounds", "agency_grounds",
@@ -277,9 +277,12 @@ class MergeProcessing:
         merged = self._apply_resolved_dates(merged, resolutions.get("date") or {})
 
         # Where the people are, never who: offsets every public surface redacts from.
-        pk = _assertions().person_keys
+        pk = _assertions().people_mask
         text = merged.get("case_text") or ""
-        merged["person_spans"] = pk.person_spans(text, (ner_entities or {}).get("person_spans") or [])
+        merged["person_spans"] = pk.person_spans(
+            text, (ner_entities or {}).get("person_spans") or [],
+            [x for x in (merged.get("agencies_involved") or []) if isinstance(x, str)],
+        )
         person_names = [text[s:e] for s, e in merged["person_spans"]]
 
         # A person is not a location or an organization. Readers sometimes file one there;
@@ -314,6 +317,7 @@ class MergeProcessing:
         merged = self._apply_agency_grounds(merged)
         grounded = [g.get(k) for key in ("location_grounds", "agency_grounds") for g in merged.get(key) or []
                     if isinstance(g, dict) and g.get("status") == "grounded" for k in ("mention", "entity_name")]
+        grounded += [x for x in (merged.get("agencies_involved") or []) if isinstance(x, str)]
         people = pk.case_people(text, person_names, grounded)
         for key in _PERSON_FREE_KEYS + ("ml_features",):
             if key in merged:

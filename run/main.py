@@ -90,7 +90,7 @@ from facet_tree import (
     max_tree_depth,
 )
 from case_storage_utils import investigation_types_for_case
-from field_assertions import person_keys
+from field_assertions import people_mask
 from agency_label_normalize import distinct_named_agencies
 from analysis import tag_threader, return_tagged_cases, run_automated_analysis
 # Import Redis cache helper
@@ -422,17 +422,17 @@ def _sanitize_case_for_public(case: Dict[str, Any]) -> Dict[str, Any]:
     had_features = isinstance(case.get("extracted_features"), dict)
     extracted = case.get("extracted_features") if had_features else {}
     text = text or str(extracted.get("case_text") or "")
-    spans = person_keys.spans_for(extracted or case, text)
+    spans = people_mask.spans_for(extracted or case, text)
     for key in _PUBLIC_CASE_RAW_KEYS:
         case.pop(key, None)
         extracted.pop(key, None)
-    case = {**person_keys.mask_feature_strings(
+    case = {**people_mask.mask_feature_strings(
         {**{k: v for k, v in case.items() if k not in ("extracted_features", "id")}, "person_spans": spans}, text),
         "id": case.get("id")}
     if had_features:
-        case["extracted_features"] = person_keys.mask_feature_strings({**extracted, "person_spans": spans}, text)
+        case["extracted_features"] = people_mask.mask_feature_strings({**extracted, "person_spans": spans}, text)
     if text:
-        case["case_text_redacted"] = person_keys.public_text(text, spans)
+        case["case_text_redacted"] = people_mask.public_text(text, spans)
     return case
 
 
@@ -476,7 +476,7 @@ def _attach_case_text_to_automated_analysis(analysis: Dict[str, Any], public: bo
     """
     Copy of ``analysis`` whose triaged cases carry ``case_text`` for the UI modal.
 
-    Public callers get the release with people masked (``person_keys.public_text``);
+    Public callers get the release with people masked (``people_mask.public_text``);
     localhost and trusted keys get the raw text. The cached analysis is never
     mutated, so one caller's view cannot leak into another's. ``raw_data`` is never
     served here.
@@ -511,7 +511,7 @@ def _attach_case_text_to_automated_analysis(analysis: Dict[str, Any], public: bo
         if text:
             text_by_id[cid] = text
             ef = fc.get("extracted_features")
-            spans_by_id[cid] = person_keys.spans_for(ef if isinstance(ef, dict) else fc, text)
+            spans_by_id[cid] = people_mask.spans_for(ef if isinstance(ef, dict) else fc, text)
 
     out_triaged = []
     for c in triaged:
@@ -524,7 +524,7 @@ def _attach_case_text_to_automated_analysis(analysis: Dict[str, Any], public: bo
         if text:
             if public:
                 spans = spans_by_id.get(cid) if text == text_by_id.get(cid) else None
-                c["case_text"] = person_keys.public_text(text, spans if spans is not None else person_keys.person_spans(text))
+                c["case_text"] = people_mask.public_text(text, spans if spans is not None else people_mask.person_spans(text))
             else:
                 c["case_text"] = text
         # Never expose raw_data via this endpoint.
@@ -835,7 +835,7 @@ def _nl_sanitize_rows(rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
                 continue
             if isinstance(v, str):
                 # Defense in depth: no person name reaches the model, whatever the SELECT.
-                v = person_keys.mask_person_names(v, surnames=person_keys.person_surnames(v))[0]
+                v = people_mask.mask_person_names(v, surnames=people_mask.person_surnames(v))[0]
                 if len(v) > _NL_MAX_CELL_CHARS:
                     v = v[:_NL_MAX_CELL_CHARS] + "..."
             d[k] = v

@@ -239,14 +239,14 @@ def _mask_case_people(case: Dict[str, Any]) -> Dict[str, Any]:
     """Copy of a case whose features carry no person names (graphs never hold them)."""
     import importlib.util
 
-    if "person_keys" not in sys.modules:
-        path = Path(__file__).resolve().parents[1] / "src" / "Processing Layer" / "field_assertions" / "person_keys.py"
-        spec = importlib.util.spec_from_file_location("person_keys", path)
+    if "people_mask" not in sys.modules:
+        path = Path(__file__).resolve().parents[1] / "src" / "Processing Layer" / "field_assertions" / "people_mask.py"
+        spec = importlib.util.spec_from_file_location("people_mask", path)
         mod = importlib.util.module_from_spec(spec)
         assert spec.loader
-        sys.modules["person_keys"] = mod
+        sys.modules["people_mask"] = mod
         spec.loader.exec_module(mod)
-    pk = sys.modules["person_keys"]
+    pk = sys.modules["people_mask"]
 
     raw = case.get("raw_data")
     if isinstance(raw, str):

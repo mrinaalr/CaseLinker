@@ -27,7 +27,7 @@ import span_gate as sg  # noqa: E402
 import resolution  # noqa: E402
 import detectors  # noqa: E402
 import compiled_rules  # noqa: E402
-import person_keys  # noqa: E402
+import people_mask  # noqa: E402
 
 
 def _load(name: str, path: Path):
@@ -296,7 +296,7 @@ def collect_assertions(
     if ctx.spacy_doc is not None:
         spacy_patterns.attach_imposed_defendants(ctx.spacy_doc, gated)
     # Names stay in memory; stored rows carry per-case tokens only.
-    return person_keys.pseudonymize(gated)
+    return people_mask.pseudonymize(gated)
 
 
 def resolve(

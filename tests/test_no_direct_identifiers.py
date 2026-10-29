@@ -20,7 +20,7 @@ sys.path.insert(0, str(ROOT / "tests"))
 
 from test_field_assertions import A, run  # noqa: E402
 
-import person_keys as PK  # noqa: E402  (on sys.path via processing)
+import people_mask as PK  # noqa: E402  (on sys.path via processing)
 
 # Shapes the readers latch onto: appositive, "N-year-old Name", a judge's suffix,
 # father/son suffixes, a sentencing subject.
@@ -254,3 +254,12 @@ def test_surname_with_suffix_label_is_a_person_but_a_county_abbreviation_is_not(
     feats = {"person_spans": spans, "organizations": ["Ashcombe Jr.’s", "Boyd County Detention Center"]}
     assert PK.mask_feature_strings(feats, text)["organizations"] == ["[PERSON]", "Boyd County Detention Center"]
     assert "Boyd County Detention Center" in PK.public_text(text, spans)
+
+
+def test_repeats_after_a_comma_and_glued_words_are_masked_and_agency_places_are_not():
+    text = ("Rowan Quinn Brambleton, 38, was arraigned. According to the complaint filed against Rowan Quinn Brambleton, "
+            "police pursued leads. Brambletonhas been released. Spring Grove officers assisted.")
+    ner = [[0, text.index(", 38")], [text.index("Spring"), text.index(" officers")]]
+    public = PK.public_text(text, PK.person_spans(text, ner, ["Spring Grove Police Department"]))
+    assert "Brambleton" not in public and "Rowan" not in public
+    assert "Spring Grove officers" in public  # a place this case's agencies are named after
