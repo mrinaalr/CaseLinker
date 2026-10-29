@@ -27,6 +27,7 @@ import span_gate as sg  # noqa: E402
 import resolution  # noqa: E402
 import detectors  # noqa: E402
 import compiled_rules  # noqa: E402
+import person_keys  # noqa: E402
 
 
 def _load(name: str, path: Path):
@@ -294,7 +295,8 @@ def collect_assertions(
     # Imposed terms stay a flat list. The subject of the sentencing clause is an extra.
     if ctx.spacy_doc is not None:
         spacy_patterns.attach_imposed_defendants(ctx.spacy_doc, gated)
-    return gated
+    # Names stay in memory; stored rows carry per-case tokens only.
+    return person_keys.pseudonymize(gated)
 
 
 def resolve(
