@@ -357,6 +357,13 @@ _PLACE_AFTER = re.compile(r"^(?:['’]s)?\s{1,3}(?:police|county|sheriff|townshi
                           r"fire|school|district|area|region|airport|station|park|mall)\b", re.I)
 
 
+# "of Hudson Falls, NY" / "a Hudson Falls man": what follows a town, never a person.
+_TOWN_AFTER = re.compile(
+    r"^(?:,\s*(?:[A-Z]{2}|N\.\s?Y\.|Pa\.|Ky\.|Ga\.|Fla\.|Ohio|Texas|Calif\.)(?=[\s,.;)])"
+    r"|\s+(?:man|woman|men|women|teen|teenager|resident|residents|native|couple|area|-based)\b)"
+)
+
+
 def _reads_as_place(name: str, text: str, not_people: Set[str]) -> bool:
     """A "name" that is a known place, a grounded place/agency here, or used as one in the text."""
     name = _norm_name(name)  # "Spring Grove's police" is still Spring Grove
@@ -366,7 +373,8 @@ def _reads_as_place(name: str, text: str, not_people: Set[str]) -> bool:
     if any(re.search(re.escape(name) + r"\s+(?:" + "|".join(sorted(_INSTITUTION)) + r")\b", x or "", re.I)
            for x in not_people):
         return True  # "Spring Grove" in "Spring Grove Police Department"
-    return any(_PLACE_AFTER.match(text[m.end():m.end() + 16]) for m in re.finditer(re.escape(name), text or ""))
+    return any(_PLACE_AFTER.match(text[m.end():m.end() + 16]) or _TOWN_AFTER.match(text[m.end():m.end() + 16])
+               for m in re.finditer(re.escape(name), text or ""))
 
 
 def case_people(case_text: str, person_names: Iterable[str] = (),

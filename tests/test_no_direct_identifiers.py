@@ -270,3 +270,11 @@ def test_a_town_in_possessive_form_is_not_masked_when_agencies_are_named_after_i
     ner = [[0, text.index("’s")], [text.index("Rowan"), text.index(", 61")]]
     public = PK.public_text(text, PK.person_spans(text, ner, ["Spring Grove Police Department"]))
     assert public.startswith("Spring Grove’s police department") and "Brambleton" not in public
+
+
+def test_a_small_town_ner_calls_a_person_stays_unmasked():
+    text = ("Troopers arrest Hollow Brook man for possession. Rowan Quinn Brambleton,25, of Hollow Brook, NY, "
+            "was arraigned in the Hollow Brook Town Court.")
+    ner = [[text.index("Hollow"), text.index(" man")], [text.index("Rowan"), text.index(",25")]]
+    public = PK.public_text(text, PK.person_spans(text, ner))
+    assert public.count("Hollow Brook") == 3 and "Brambleton" not in public
