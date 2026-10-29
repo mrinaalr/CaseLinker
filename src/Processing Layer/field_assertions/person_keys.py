@@ -212,16 +212,32 @@ def mask_person_names(*texts: str, surnames: Iterable[str] = (), lone: bool = Tr
     return [bare.sub(PERSON_MASK, t) for t in masked]
 
 
+def _surname_ok(tok: str) -> bool:
+    """A usable surname: 3+ letters, or a 2-letter one like "Wu" / "Le" (not an acronym like "US")."""
+    return len(tok) > 2 or (len(tok) == 2 and tok[0].isupper() and tok[1].islower())
+
+
+def _norm_name(name: str) -> str:
+    """A person's name without a trailing possessive or dot: "Smith Jr.'s" -> "Smith Jr"."""
+    return re.sub(r"(?:['’]s?)$", "", (name or "").strip()).strip().rstrip(" .,")
+
+
+def _name_key(name: str) -> str:
+    """Comparison key for dropping entries: no possessive, no suffix, collapsed spaces."""
+    toks = [t.strip(".,") for t in _norm_name(name).split()]
+    return " ".join(t for t in toks if t and t.lower() not in NAME_SUFFIXES)
+
+
 def _people_from_spans(text: str, spans: Iterable) -> Tuple[Set[str], Set[str]]:
     """(full names, surnames) read from person spans, in memory only."""
     full: Set[str] = set()
     surnames: Set[str] = set()
     for s, e in spans or ():
-        name = (text or "")[int(s):int(e)].strip()
+        name = _norm_name((text or "")[int(s):int(e)])
         toks = [t.strip(".,’'") for t in name.split() if t.strip(".,").lower() not in NAME_SUFFIXES]
         if len(toks) >= 2:
             full.add(name)
-        if toks and len(toks[-1]) > 2:
+        if toks and _surname_ok(toks[-1]):
             surnames.add(toks[-1])
     return full, surnames
 
@@ -246,8 +262,12 @@ def mask_admissions(records: Iterable[Dict], case_text: str = "", spans: Iterabl
     the surname masker runs after as a backstop.
     """
     spans = person_spans(case_text, ()) if spans is None else list(spans)
-    _full, surnames = _people_from_spans(case_text, spans)
+    full, surnames = _people_from_spans(case_text, spans)
     surnames |= person_surnames(case_text)
+    # Excerpts can come from a differently normalized copy of the text, so offsets may not
+    # place them; the case's known names are also replaced directly, whitespace-tolerant.
+    known = [re.compile(r"\s+".join(re.escape(t) for t in n.split()) + r"(?:['’]s)?") for n in
+             sorted(full, key=len, reverse=True)]
     out: List[Dict] = []
     for rec in records or []:
         if not isinstance(rec, dict):
@@ -256,6 +276,8 @@ def mask_admissions(records: Iterable[Dict], case_text: str = "", spans: Iterabl
         for key in ("quote", "context"):
             if rec.get(key) is not None:
                 masked = redact_excerpt(str(rec[key]), case_text, spans)
+                for pat in known:
+                    masked = pat.sub(PERSON_MASK, masked)
                 rec[key] = mask_person_names(masked, surnames=surnames)[0]
         out.append(rec)
     return out
@@ -276,11 +298,12 @@ def mask_feature_strings(features: Dict, case_text: str = "") -> Dict:
     """
     spans = spans_for(features, case_text)
     full, surnames = _people_from_spans(case_text, spans)
+    full_keys = {_name_key(n) for n in full}
     inst = "|".join(sorted(_INSTITUTION))
 
     def label(v: str) -> str:
-        run = re.sub(r"(?:['’]s?)$", "", v.strip().removeprefix("the ").removeprefix("The ")).strip()
-        if run in full:
+        key = _name_key(v.strip().removeprefix("the ").removeprefix("The "))
+        if len(key.split()) >= 2 and key in full_keys:
             return PERSON_MASK
         for name in sorted(full, key=len, reverse=True):
             if name in v:
@@ -334,8 +357,8 @@ def case_people(case_text: str, person_names: Iterable[str] = (),
             continue
         if _reads_as_place(name, case_text, not_people):
             continue
-        full.add(name)
-        if len(toks) >= 2 and len(toks[-1]) > 2:
+        full.add(_norm_name(name))
+        if len(toks) >= 2 and _surname_ok(toks[-1]):
             surnames.add(toks[-1])
     return full, surnames
 
@@ -346,8 +369,8 @@ def _is_person_value(value: str, full: Set[str], surnames: Set[str]) -> bool:
     Surnames alone are not enough here: "Boston" or "Marshals" can be a cue-word
     surname and a real place or agency. (Free text uses the broader surname set.)
     """
-    run = re.sub(r"(?:['’]s?)$", "", (value or "").strip().removeprefix("the ").removeprefix("The ")).strip()
-    return bool(run) and run in full and len(run.split()) >= 2
+    key = _name_key((value or "").strip().removeprefix("the ").removeprefix("The "))
+    return len(key.split()) >= 2 and key in {_name_key(n) for n in full}
 
 
 # Dict keys whose value names the entity a grounding / gate row is about.
@@ -479,7 +502,7 @@ def person_spans(text: str, ner_person_spans: Iterable = ()) -> List[List[int]]:
     surnames = set()
     for s, e in spans:
         core = [t.strip(".,’'") for t in text[s:e].split() if t.strip(".,").lower() not in NAME_SUFFIXES]
-        if core and len(core[-1]) > 2:
+        if core and _surname_ok(core[-1]):
             surnames.add(core[-1])
     for sur in surnames:
         for m in re.finditer(rf"\b{re.escape(sur)}\b", text):

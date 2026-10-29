@@ -227,3 +227,21 @@ def test_two_people_are_both_masked_and_an_agency_is_not():
 def test_org_name_parts_are_not_people():
     text = "Agents with the Department of Labor and Workforce Development said the Kik Corporation cooperated."
     assert PK.person_spans(text, [[text.index("Workforce"), text.index(" said")]]) == []
+
+
+def test_possessive_person_entries_are_dropped():
+    text = "Corin Ashcombe Jr., 33, was charged. Agents searched Corin Ashcombe Jr.’s phone."
+    spans = PK.person_spans(text, [[0, text.index(", 33")]])
+    full, sur = PK.case_people(text, [text[a:b] for a, b in spans])
+    out = PK.scrub_people({"organizations": ["Corin Ashcombe Jr.’s", "Kik"], "locations": ["Corin Ashcombe's"]}, full, sur)
+    assert out == {"organizations": ["Kik"], "locations": []}
+
+
+def test_two_letter_surname_is_masked_even_when_the_excerpt_is_not_in_the_text():
+    # A short surname ("Wu"-length) and an excerpt from a differently normalized copy of the release.
+    text = "From the United States Attorney’s Office, Reese Qo, 42, of Tulsa, pleaded guilty."
+    excerpt = "from the United States Attorney’s Office,  Reese Qo, 42, of Tulsa, pleaded"  # not in text
+    spans = PK.person_spans(text, [[text.index("Reese"), text.index(", 42")]])
+    assert PK.public_text(text, spans).startswith("From the United States Attorney’s Office, [PERSON], 42")
+    [pub] = PK.mask_admissions([{"quote": "he shared the files", "context": excerpt}], text, spans)
+    assert "Qo" not in pub["context"] and "Reese" not in pub["context"]
