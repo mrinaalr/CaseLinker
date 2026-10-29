@@ -172,7 +172,9 @@ def _parse_entity(ent: str) -> Optional[Tuple[List[str], Optional[str]]]:
 
 
 def _entity_key(a: Dict) -> Optional[str]:
-    parsed = _parse_entity(((a.get("extras") or {}).get("entity") or "").strip())
+    # name_key: per-case tokens (people_mask.py). entity: rows written before names were tokenized.
+    extras = a.get("extras") or {}
+    parsed = _parse_entity((extras.get("name_key") or extras.get("entity") or "").strip())
     if not parsed:
         return None
     toks, suffix = parsed
@@ -336,11 +338,12 @@ def _collapse_perpetrators(perp_mentions: List[Tuple[int, Dict]], text: Optional
         kept.append(ent)
     entities = _merge_same_unnamed(kept, text)
     out = []
-    for ent in entities:
+    for n, ent in enumerate(entities, start=1):
         unqualified = [v for v, q in zip(ent["ages"], ent["qualified"]) if not q]
         age = unqualified[0] if unqualified else ent["ages"][0]
         out.append({
-            "entity": ent["entity"],
+            "person": f"p{n}",
+            "named": bool(ent["entity"]),
             "age": age,
             "other_ages": sorted({v for v in ent["ages"] if v != age}),
         })

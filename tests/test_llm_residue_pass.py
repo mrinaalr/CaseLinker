@@ -40,7 +40,7 @@ def _store(tmp_path, case_id: str, text: str):
 
 
 def test_pass_adds_a_weak_victim_and_vetoes_a_defendant(tmp_path, monkeypatch):
-    text = "Police described an 11-year-old female. John Smith, 40, of Phoenix, was arrested."
+    text = "Police described an 11-year-old female. Emerson Kingsmere, 40, of Phoenix, was arrested."
     storage, assertions, before = _store(tmp_path, "residue_case", text)
     assert 40 in (before["age"]["final_value"]["perpetrators"])
     assert 11 not in (before["age"]["final_value"]["victims"])
@@ -56,7 +56,7 @@ def test_pass_adds_a_weak_victim_and_vetoes_a_defendant(tmp_path, monkeypatch):
             if quoted == "11":
                 items.append({"id": cid, "role": "victim", "quote": "an 11-year-old female"})
             elif quoted == "40":
-                items.append({"id": cid, "role": "decoy", "quote": "John Smith, 40, of Phoenix"})
+                items.append({"id": cid, "role": "decoy", "quote": "Emerson Kingsmere, 40, of Phoenix"})
         import json
         return json.dumps({"items": items}), 12, "ok"
 
@@ -89,8 +89,8 @@ def test_compare_finals_counts_a_value_that_disappears():
 def test_lvmpd_repeated_23_is_accepted_inside_its_window(monkeypatch, tmp_path):
     """lvmpd_2026_001 has two '23's in one sentence. Each mention's own span is the quote."""
     text = (
-        "Jose Alberto Perez-Torres, 35; Aniket Brajeshkumar Sadani, 23; "
-        "James Ramon Reddick, 23; Ramon Manuel Parra Valenzuela, 29. "
+        "Sawyer Avery Hartwell, 35; Rowan Quinn Juniperton, 23; "
+        "Harper Jordan Ivorydale, 23; Jordan Reese Finley Lindqvast, 29. "
         "A later paragraph mentions 23 only as a count in a different section."
     )
     spans = []
