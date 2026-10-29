@@ -245,3 +245,12 @@ def test_two_letter_surname_is_masked_even_when_the_excerpt_is_not_in_the_text()
     assert PK.public_text(text, spans).startswith("From the United States Attorney’s Office, [PERSON], 42")
     [pub] = PK.mask_admissions([{"quote": "he shared the files", "context": excerpt}], text, spans)
     assert "Qo" not in pub["context"] and "Reese" not in pub["context"]
+
+
+def test_surname_with_suffix_label_is_a_person_but_a_county_abbreviation_is_not():
+    text = "Corin Ashcombe Jr., 29, of Boyd Co., was arrested. Ashcombe Jr. was lodged in the Boyd County Detention Center."
+    spans = PK.person_spans(text, [[0, text.index(", 29")]])
+    assert not any(text[a:b].startswith("Boyd") for a, b in spans)  # "Boyd Co." is a county
+    feats = {"person_spans": spans, "organizations": ["Ashcombe Jr.’s", "Boyd County Detention Center"]}
+    assert PK.mask_feature_strings(feats, text)["organizations"] == ["[PERSON]", "Boyd County Detention Center"]
+    assert "Boyd County Detention Center" in PK.public_text(text, spans)

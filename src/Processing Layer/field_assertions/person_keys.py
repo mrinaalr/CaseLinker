@@ -212,14 +212,31 @@ def mask_person_names(*texts: str, surnames: Iterable[str] = (), lone: bool = Tr
     return [bare.sub(PERSON_MASK, t) for t in masked]
 
 
+# Two-letter abbreviations that end place names ("Boyd Co.", "Port St."), never surnames.
+_ABBREV_TAIL = frozenset({"co", "st", "mt", "ft", "pt", "rd", "dr", "ln", "ct", "av", "jr", "sr", "mr", "ms"})
+
+
 def _surname_ok(tok: str) -> bool:
-    """A usable surname: 3+ letters, or a 2-letter one like "Wu" / "Le" (not an acronym like "US")."""
+    """A usable surname: 3+ letters, or a 2-letter one like "Wu" / "Le" (not an acronym or "Co.")."""
+    tok = tok.strip(".")
+    if tok.lower() in _ABBREV_TAIL:
+        return False
     return len(tok) > 2 or (len(tok) == 2 and tok[0].isupper() and tok[1].islower())
 
 
 def _norm_name(name: str) -> str:
     """A person's name without a trailing possessive or dot: "Smith Jr.'s" -> "Smith Jr"."""
     return re.sub(r"(?:['’]s?)$", "", (name or "").strip()).strip().rstrip(" .,")
+
+
+def _is_person_label(value: str, full_keys: Set[str], surnames: Set[str]) -> bool:
+    """A label that *is* a person: a known full name, or a known surname with a suffix ("Smith Jr.'s")."""
+    raw = _norm_name((value or "").strip().removeprefix("the ").removeprefix("The "))
+    key = _name_key(raw)
+    if len(key.split()) >= 2:
+        return key in full_keys
+    had_suffix = len(raw.split()) > len(key.split())
+    return bool(key) and had_suffix and key in surnames
 
 
 def _name_key(name: str) -> str:
@@ -302,8 +319,7 @@ def mask_feature_strings(features: Dict, case_text: str = "") -> Dict:
     inst = "|".join(sorted(_INSTITUTION))
 
     def label(v: str) -> str:
-        key = _name_key(v.strip().removeprefix("the ").removeprefix("The "))
-        if len(key.split()) >= 2 and key in full_keys:
+        if _is_person_label(v, full_keys, surnames):
             return PERSON_MASK
         for name in sorted(full, key=len, reverse=True):
             if name in v:
@@ -369,8 +385,7 @@ def _is_person_value(value: str, full: Set[str], surnames: Set[str]) -> bool:
     Surnames alone are not enough here: "Boston" or "Marshals" can be a cue-word
     surname and a real place or agency. (Free text uses the broader surname set.)
     """
-    key = _name_key((value or "").strip().removeprefix("the ").removeprefix("The "))
-    return len(key.split()) >= 2 and key in {_name_key(n) for n in full}
+    return _is_person_label(value, {_name_key(n) for n in full}, surnames)
 
 
 # Dict keys whose value names the entity a grounding / gate row is about.
@@ -442,6 +457,8 @@ def _span_is_person(text: str, s: int, e: int) -> bool:
     low = {t.lower() for t in toks}
     if low & _INSTITUTION or (len(toks) == 1 and toks[0].lower() in _LEADING | _TITLES):
         return False
+    if toks[-1].lower() in _ABBREV_TAIL - {"jr", "sr"}:
+        return False  # "Boyd Co." is a county
     return not _reads_as_place(name, text, set())
 
 
