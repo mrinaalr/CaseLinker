@@ -62,7 +62,27 @@ def _pattern(names) -> "re.Pattern[str]":
     return re.compile("|".join(re.escape(n) for n in sorted(names, key=len, reverse=True)))
 
 
-def scan_api(db_path: str, people: Dict[str, Set[str]], case_ids, report: Counter) -> None:
+def held_person_values(db: sqlite3.Connection, people: Dict[str, Set[str]]) -> Set[str]:
+    """Entity values that are a person *in a case that stores them* (what aggregates could leak).
+
+    A string that is a person in one release can be a town in another; aggregates
+    (facets, location stats) are judged against the cases that hold each value.
+    """
+    out: Set[str] = set()
+    for cid, fj in db.execute("SELECT id, extracted_features FROM cases"):
+        names = people.get(cid)
+        if not names:
+            continue
+        feats = json.loads(fj or "{}") or {}
+        for key in ("locations", "organizations", "agencies_involved"):
+            for v in feats.get(key) or []:
+                if isinstance(v, str) and PK._norm_name(v) in names:
+                    out.add(v)
+    return out
+
+
+def scan_api(db_path: str, people: Dict[str, Set[str]], case_ids, report: Counter,
+             held: Set[str] = frozenset()) -> None:
     spec = importlib.util.spec_from_file_location("caselinker_scan_main", REPO / "run" / "main.py")
     main = importlib.util.module_from_spec(spec)
     sys.modules["caselinker_scan_main"] = main
@@ -73,7 +93,7 @@ def scan_api(db_path: str, people: Dict[str, Set[str]], case_ids, report: Counte
     main.storage = CaseStorage(db_path)
     main.REDIS_AVAILABLE = False
     public = TestClient(main.app, client=("203.0.113.9", 50000))
-    every = _pattern(set().union(*people.values())) if people else None
+    every = _pattern(held) if held else None  # aggregates: values that are a person where stored
 
     def check(surface: str, body: str, names=None) -> None:
         pat = _pattern(names) if names else every
@@ -99,8 +119,17 @@ def scan_api(db_path: str, people: Dict[str, Set[str]], case_ids, report: Counte
             names = people.get(item.get("case_id"))
             if names:
                 check("/api/assertions/disagreements item", json.dumps(item), names)
+    main.limiter.reset()
+    r = public.get("/api/automated-analysis")
+    if r.status_code == 200:  # triaged cases carry text: check each against its own case's people
+        for item in ((r.json().get("analysis") or {}).get("triaged_cases") or []):
+            names = people.get(item.get("id")) if isinstance(item, dict) else None
+            if names:
+                check("/api/automated-analysis triaged case", json.dumps(item), names)
+    else:
+        report[f"api /api/automated-analysis: not scanned (HTTP {r.status_code})"] += 1
     for path in ("/api/facet-distinct", "/api/facet-tree", "/api/location-stats", "/api/stats-detailed",
-                 "/api/stats", "/api/tags", "/api/platform-affordance-evidence", "/api/automated-analysis",
+                 "/api/stats", "/api/tags", "/api/platform-affordance-evidence",
                  "/api/triage-eval", "/api/triage-model-corpus"):
         main.limiter.reset()
         r = public.get(path)
@@ -162,7 +191,7 @@ def main() -> None:
     report["cases with named people"] = len(people)
     scan_stored(db, people, report)
     if not args.no_api:
-        scan_api(args.sqlite, people, ids, report)
+        scan_api(args.sqlite, people, ids, report, held_person_values(db, people))
     if args.graphs:
         scan_graphs(people, report)
     for k in sorted(report):

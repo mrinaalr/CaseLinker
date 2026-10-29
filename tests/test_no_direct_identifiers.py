@@ -263,3 +263,10 @@ def test_repeats_after_a_comma_and_glued_words_are_masked_and_agency_places_are_
     public = PK.public_text(text, PK.person_spans(text, ner, ["Spring Grove Police Department"]))
     assert "Brambleton" not in public and "Rowan" not in public
     assert "Spring Grove officers" in public  # a place this case's agencies are named after
+
+
+def test_a_town_in_possessive_form_is_not_masked_when_agencies_are_named_after_it():
+    text = "Spring Grove’s police department led the case. Rowan Quinn Brambleton, 61, was charged."
+    ner = [[0, text.index("’s")], [text.index("Rowan"), text.index(", 61")]]
+    public = PK.public_text(text, PK.person_spans(text, ner, ["Spring Grove Police Department"]))
+    assert public.startswith("Spring Grove’s police department") and "Brambleton" not in public

@@ -359,6 +359,7 @@ _PLACE_AFTER = re.compile(r"^(?:['’]s)?\s{1,3}(?:police|county|sheriff|townshi
 
 def _reads_as_place(name: str, text: str, not_people: Set[str]) -> bool:
     """A "name" that is a known place, a grounded place/agency here, or used as one in the text."""
+    name = _norm_name(name)  # "Spring Grove's police" is still Spring Grove
     low = name.lower()
     if low in _places() or name in not_people:
         return True
