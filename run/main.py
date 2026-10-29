@@ -395,6 +395,18 @@ def _enforce_llm_daily_limit(request: Request) -> None:
         _llm_daily_counts[bucket] = count + 1
 
 
+def _strip_person_names(obj: Any) -> Any:
+    """Drop every ``entity`` key (the name a reader tied to an age) from an assertion payload."""
+    if isinstance(obj, dict):
+        obj.pop("entity", None)
+        for v in obj.values():
+            _strip_person_names(v)
+    elif isinstance(obj, list):
+        for v in obj:
+            _strip_person_names(v)
+    return obj
+
+
 def _sanitize_case_for_public(case: Dict[str, Any]) -> Dict[str, Any]:
     """Remove raw narrative material from public case payloads."""
     case.pop("raw_data", None)
@@ -2173,6 +2185,7 @@ def get_case_assertions(request: Request, case_id: str, field: Optional[str] = N
     Per-method field assertions (method, version, family, role, span) and the latest
     resolutions for one case. Same daily limit as GET /api/cases/{case_id}; public
     callers get offsets but not the narrative excerpts (span_text, LLM quotes).
+    Person names (``entity``) never leave localhost, trusted keys included.
     """
     _enforce_case_id_daily_limit(request)
     field = (field or "").strip() or None
@@ -2185,6 +2198,8 @@ def get_case_assertions(request: Request, case_id: str, field: Optional[str] = N
         for a in out["assertions"]:
             a.pop("span_text", None)
             (a.get("extras") or {}).pop("quote", None)
+    if not _is_local_request(request):
+        _strip_person_names(out)
     return out
 
 
@@ -2197,16 +2212,19 @@ def get_field_disagreements(
     limit: int = 50,
     offset: int = 0,
 ):
-    """Cases whose latest 3.0 resolution is needs_review, disagreement, or partial."""
+    """Cases whose latest 3.0 resolution is needs_review, disagreement, or partial (no person names off localhost)."""
     field = (field or "").strip() or None
     status = (status or "").strip() or None
     if field and field not in _ASSERTION_FIELDS:
         raise HTTPException(status_code=400, detail=f"field must be one of {list(_ASSERTION_FIELDS)}")
     if status and status not in _REVIEW_STATUSES:
         raise HTTPException(status_code=400, detail=f"status must be one of {list(_REVIEW_STATUSES)}")
-    return storage.get_field_disagreements(
+    out = storage.get_field_disagreements(
         field=field, status=status, limit=min(max(limit, 1), 500), offset=max(offset, 0)
     )
+    if not _is_local_request(request):
+        _strip_person_names(out)
+    return out
 
 
 @app.get("/api/stats")

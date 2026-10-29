@@ -92,7 +92,7 @@ Use `filter_cases_by_tags` for current database cohorts and `get_corpus_stats` f
 | `get_lifecycle_cases` | **403** (lifecycle export blocked) | Lifecycle swimlane / visualization payload |
 | `get_lifecycle_lstar` | **403** (L* export blocked) | Full `lstar_all_cases.json` (transition matrix, global L*, per-case details) |
 | `get_case` | Sanitized case (no `raw_data`) | Full case including narratives |
-| `get_case_assertions` | Per-method assertions and resolutions with offsets, no span excerpts | Includes span excerpts and LLM quotes |
+| `get_case_assertions` | Per-method assertions and resolutions with offsets, no span excerpts, no person names | Includes span excerpts and LLM quotes; still no person names |
 | `llm_chat` | 50 requests/IP/day | Daily cap exempt (slowapi 15/min still applies) |
 
 `get_all_cases` and lifecycle tools are blocked without trusted access. `get_case` and `llm_chat` are publicly accessible with reduced payload or stricter rate limits.

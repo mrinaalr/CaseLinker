@@ -92,7 +92,7 @@ Trusted key does **not** change behavior (still subject to normal slowapi / publ
 | `get_corpus_stats` | `GET /api/stats` | Corpus-wide counts |
 | `get_cases_page` | `GET /api/cases-summaries-chunk` | Paginated summaries |
 | `get_cases_by_ids` | `POST /api/cases-summaries-by-ids` | Batch summaries |
-| `get_field_disagreements` | `GET /api/assertions/disagreements` | Cases whose latest field resolution is `needs_review` / `disagreement` / `partial`, with contested mentions and per-field status counts |
+| `get_field_disagreements` | `GET /api/assertions/disagreements` | Cases whose latest field resolution is `needs_review` / `disagreement` / `partial`, with contested mentions and per-field status counts; no person names |
 | `filter_cases_by_tags` | `POST /api/return-tagged-cases` | Tag intersection (fail-closed category inference + `resolved_tags`) |
 | `get_facet_tree` | `GET /api/facet-tree` or MCP-local | Facet tree; optional `case_ids` for subset |
 | `get_cohort_members` | `POST /api/facet-cohort-members` or MCP-local | Cohort case IDs; optional `case_ids` |
@@ -160,7 +160,7 @@ Requires `CASELINKER_KEY` / `CaseLinker-Key` listed in server `CASELINKER_TRUSTE
 | `get_lifecycle_cases` | **403** from API (or MCP local error if no key configured) | Lifecycle swimlane / visualization payload |
 | `get_lifecycle_lstar` | **403** from API (or MCP local error if no key configured) | Full `lstar_all_cases.json` (transition matrix, global L*, per-case details) |
 | `get_case` | Works; **sanitized** (no `raw_data` / narrative blobs) | Works; **full** case payload including `raw_data` |
-| `get_case_assertions` | Works; per-method assertions with character offsets but **no** `span_text` / LLM quotes; same daily limit as `get_case` | Works; includes the span excerpts |
+| `get_case_assertions` | Works; per-method assertions with character offsets but **no** `span_text` / LLM quotes / person names; same daily limit as `get_case` | Works; includes the span excerpts, still no person names |
 | `llm_chat` | Works; **50 requests/IP/day** (+ slowapi 15/min) | Works; **daily cap exempt** (+ slowapi 15/min still applies) |
 
 `get_all_cases` and both lifecycle tools are blocked without trusted access. `get_case` and `llm_chat` are public tools with richer responses or limits when a trusted key is forwarded on REST calls. The public `/lifecycle` page embeds visualization data server-side and does not require a browser API key.
