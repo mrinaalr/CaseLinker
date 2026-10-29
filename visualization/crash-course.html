@@ -539,7 +539,7 @@
           ["Architecture", "Five layers: Ingestion, Processing, Storage, Clustering & Analysis, Visualization."]
         ],
         figure: "Ingestion → Processing → Storage → Clustering & Analysis → Visualization",
-        links: [repo("README.md"), repo("Architecture design.md"), app("/sources", "Sources")]
+        links: [repo("README.md"), repo("ARCHITECTURE.md"), app("/sources", "Sources")]
       },
       {
         id: "why",
@@ -597,7 +597,7 @@
           ["Then", "Batch cases, extract features, assign case IDs, store in SQLite (local) or PostgreSQL (production), pre-compute clusters."],
           ["Storage", "Database-agnostic. Cases in rawish form: original structure plus normalized fields. Tables include cases, victim_demographics, perpetrator_demographics, prosecution_outcomes, precomputed_clusters."]
         ],
-        links: [repo("README.md#process-your-own-pdf-files", "README.md · Process Your Own PDF Files"), repo("Architecture design.md"), repo("src/Ingestion Layer/ingestion.py", "ingestion.py")]
+        links: [repo("README.md#process-your-own-pdf-files", "README.md · Process Your Own PDF Files"), repo("ARCHITECTURE.md#4-ingestion-and-batching", "ARCHITECTURE.md · Ingestion"), repo("src/Ingestion Layer/ingestion.py", "ingestion.py")]
       },
       {
         id: "schema",
@@ -612,7 +612,7 @@
           ["ML enrichment", "When enabled, Stanza NER is primary. A victim-age gate drops decoy and headline ages. Semantic sentence scoring stores concept scores; only selected ones merge into main fields."],
           ["Comparison values", "Normalized vectors for similarity and pre-computed clusters. Raw narrative, source organization, source URL, and publication date are preserved."]
         ],
-        links: [repo("README.md#case-schema--feature-extraction", "README.md · Case Schema"), repo("Architecture design.md#2-data-processing-layer", "Architecture design.md · Case Entity Schema")]
+        links: [repo("README.md#case-schema--feature-extraction", "README.md · Case Schema"), repo("ARCHITECTURE.md#6-storage", "ARCHITECTURE.md · Case record")]
       },
       {
         id: "gates",
@@ -811,7 +811,7 @@
           ["IDs", "Assigned after the split. Form: org_name_year_month_number."]
         ],
         figure: "Source: https://  →  cases  →  org_name_year_month_number",
-        links: [repo("Architecture design.md#2-data-processing-layer", "Case Batching"), repo("src/Processing Layer/batching.py", "batching.py"), repo("collector/PRESS_RELEASE_COLLECTION.md#build_press_pdfpy-internals-what-agents-may-extend", "Source line")]
+        links: [repo("ARCHITECTURE.md#4-ingestion-and-batching", "Case Batching"), repo("src/Processing Layer/batching.py", "batching.py"), repo("collector/PRESS_RELEASE_COLLECTION.md#build_press_pdfpy-internals-what-agents-may-extend", "Source line")]
       },
       {
         id: "extract",
@@ -826,7 +826,7 @@
           ["NER", "Stanza is primary; transformers is true fallback only if Stanza is unavailable. Perp/victim ages are routed by extraction pattern context."],
           ["Semantic scores", "Most concept scores are kept for analysis. Merge-layer examples: possession_csam ≥ 0.5 appends possession; grooming ≥ 0.35 appends grooming to severity_indicators."]
         ],
-        links: [repo("README.md#case-schema--feature-extraction", "Case Schema & Feature Extraction"), repo("Architecture design.md"), repo("ontology/MAPPING_PLAN.md#4-nlp--semantic-features", "MAPPING_PLAN.md · NLP / semantic")]
+        links: [repo("README.md#case-schema--feature-extraction", "Case Schema & Feature Extraction"), repo("ARCHITECTURE.md#5-extraction-four-readers-one-decision", "ARCHITECTURE.md · Extraction"), repo("ontology/MAPPING_PLAN.md#4-nlp--semantic-features", "MAPPING_PLAN.md · NLP / semantic")]
       },
       {
         id: "merge",
