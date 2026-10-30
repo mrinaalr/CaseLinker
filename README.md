@@ -6,8 +6,7 @@
 
 **Try the latest version online:** [https://caselinker.up.railway.app/](https://caselinker.up.railway.app/)
 
-The live release includes all features and a processed case corpus from publicly available ICAC / NCMEC / DOJ / State Attorneys General press materials. The processed corpus holds **10,711 case reports**, **131,332 extracted features**, and **4,000+ distinct law-enforcement agencies** across **70** sources. Per-source coverage is on the in-app **Sources** page. These reports summarize investigations, arrests, and prosecutions, redacted for public release. No PII was processed; all data was already in the public domain. No installation required — just open the link in your browser.
-
+The live release includes all features and a processed case corpus from publicly available ICAC / NCMEC / DOJ / State Attorneys General press materials. The processed corpus holds **10,711 case reports**, **131,332 extracted features**, **4,000+ distinct law-enforcement agencies**, and ***52 online platforms*** across **70** sources. Per-source coverage is on the in-app **Sources** page. These reports summarize investigations, arrests, and prosecutions, redacted for public release. All data was already in the public domain. CaseLinker received a Not Human Subjects Research determination from the University of Massachusetts Amherst Human Research Protection Office (HRPO Determination #7668); this research does not involve identifiable private information under federal regulations [45 CFR 46.102(e)(1), (4)].
 ## Technical Reports
 
 - **Report #1: [CaseLinker: An Open-Source System for Cross-Case Analysis of Internet Crimes Against Children Reports](https://arxiv.org/pdf/2603.18020)** - Initial technical report documenting the prototype architecture, deterministic extraction pipeline, and evaluation baseline on 47 cases.
@@ -576,7 +575,7 @@ CaseLinker can be deployed to cloud platforms for public access. The app include
 
 
 ## Sources and Ethics
-- **No Sensitive Data**: This system contains cases from publicly available sources (ICAC Task Forces Cases and Arrests, NCMEC CyberTipline Success Stories, DOJ CEOS Press Releases, and State Attorneys General's Office Press Releases). These reports are publicly available, summarize investigations, arrests, and case details, and are redacted for public release. All data was already in the public domain. This project received a determination from the University of Massachusetts Amherst Human Research Protection Office (HRPO Determination #7668); this research does not contain private or identifiable information under federal regulations [45 CFR 46.102(f)(1), (2)].
+- **No Sensitive Data**: This system contains cases from publicly available sources (ICAC Task Forces Cases and Arrests, NCMEC CyberTipline Success Stories, DOJ CEOS Press Releases, and State Attorneys General's Office Press Releases). These reports are publicly available, summarize investigations, arrests, and case details, and are redacted for public release. All data was already in the public domain. This project received a determination from the University of Massachusetts Amherst Human Research Protection Office (HRPO Determination #7668); this research does not contain private or identifiable information under federal regulations [45 CFR 46.102(e)(1), (4)].
 - **See `/sources` page for full disclaimer regarding data usage**
 
 ## Contributing

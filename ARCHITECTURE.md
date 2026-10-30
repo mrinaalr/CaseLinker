@@ -549,7 +549,7 @@ Locally, `python3 run/main.py` serves on port 8000, `scripts/run/local_oxigraph.
 
 ## 13. Data policy
 
-- **Sources.** Public, redacted press materials and public federal court records. UMass Amherst HRPO Determination #7668: not private or identifiable information under 45 CFR 46.102(f)(1), (2).
+- **Sources.** Public, redacted press materials and public federal court records. UMass Amherst HRPO Determination #7668: not private or identifiable information under 45 CFR 46.102(e)(1), (4).
 - **Names stay in source text.** `raw_data.case_text`, the PDFs, process memory during extraction and verbatim review excerpts (`span_text`, LLM quotes, admission context) may hold a name. Structured derived fields, the public API, MCP responses, graph files, provenance graphs, exports, logs, issues, pull requests and commit messages never do. Excerpts are withheld from public assertion responses and returned only to a trusted key.
 - **Quasi-identifiers are research data.** Age, county or city, date, charge, occupation and relationship type are kept and published.
 - **Tiers.** Public (rate limited, sanitized), demo key (small cohort ids), trusted `CaseLinker-Key` (bulk export, narratives, excerpts, lifecycle data), `MCP_ACCESS_KEY` (who may connect to hosted MCP).
