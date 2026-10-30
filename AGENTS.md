@@ -354,8 +354,7 @@ skeptic, not the author: re-run the reproduce steps against the branch.
 
 ## 9. Breaking the rules
 
-This file describes how we usually work, but the best ideas rarely come from following a checklist. Sometimes the right move is to go
-fast, build the ambitious version, and figure out the shape as you go.
+This file describes how we usually work, but the best ideas rarely come from following a checklist. Sometimes the right move is to go fast, build the ambitious version, and figure out the shape as you go.
 
 **Who can break them.** The maintainer can set aside any rule in §2–§8 for a piece of work, in conversation. A developer with a bold idea asks the maintainer, says which rules they want to skip and
 why, and goes once they get a yes.
