@@ -52,6 +52,7 @@ WHERE {
     ?to_phase rdf:type ?to_type .
     ?from_phase cac-core:precedes ?to_phase .
   }
+  FILTER(?from_type != cac-core:Phase && ?to_type != cac-core:Phase)
 }
 GROUP BY ?from_type ?to_type
 ORDER BY DESC(?case_count)
@@ -59,6 +60,7 @@ ORDER BY DESC(?case_count)
 
 QUERY_AFFORDANCE_ANNOTATIONS = """
 PREFIX cac-platforms: <https://cacontology.projectvic.org/platforms#>
+PREFIX cac-core: <https://cacontology.projectvic.org/core#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 
 SELECT ?from_type ?to_type ?affordance_class (COUNT(DISTINCT ?case_graph) AS ?case_count)
@@ -71,6 +73,7 @@ WHERE {
     ?to_phase rdf:type ?to_type .
     ?misuse cac-platforms:affordanceClass ?affordance_class .
   }
+  FILTER(?from_type != cac-core:Phase && ?to_type != cac-core:Phase)
 }
 GROUP BY ?from_type ?to_type ?affordance_class
 ORDER BY DESC(?case_count)
@@ -124,14 +127,21 @@ def weighted_transition_matrix(
     graph: ConjunctiveGraph,
     filenames: tuple[str, ...] = CASE_FILES,
 ) -> tuple[dict[tuple[str, str], float], int]:
-    """Return ((from_type, to_type) -> weight), N case graphs."""
-    n = len(filenames)
-    raw = query_transition_matrix(graph)
-    matrix: dict[tuple[str, str], float] = {}
-    for row in raw:
-        key = (str(row["from_type"]), str(row["to_type"]))
-        matrix[key] = int(row["case_count"]) / n if n else 0.0
-    return matrix, n
+    """Observed phase chain P̂(s_j | s_i) from step counts, and N case graphs.
+
+    Row-normalised over the steps that leave s_i (state_machines/README.md).
+    """
+    from state_machines.estimators import phase_chain, step_counts, steps_from_case
+
+    steps = []
+    graphs = known_case_graph_uris(filenames)
+    for cgu in graphs:
+        uris = ordered_phase_sequence(graph, cgu)
+        types = [phase_type_for_instance(graph, cgu, u) for u in uris]
+        tags = [affordance_on_arrival(graph, cgu, u)[0] for u in uris]
+        keep = [i for i, t in enumerate(types) if t is not None]
+        steps.extend(steps_from_case(str(cgu), [types[i] for i in keep], [tags[i] for i in keep]))
+    return phase_chain(step_counts(steps)), len(graphs)
 
 
 def _ctx(cg: ConjunctiveGraph, case_graph: URIRef) -> Graph:

@@ -518,17 +518,31 @@ def _jsonld_type_names(payload: object) -> set[str]:
     return names
 
 
-def _scan_kg_conduct_types(case_id: str, meta: dict) -> list[str]:
+def _conduct_jsonld_paths(case_id: str, meta: dict) -> list[Path]:
+    """Graphs that may carry sextortion phase types for a case.
+
+    The phase machine in state_machines/graphs/ is authoritative. The PACER
+    folder holds one investigation graph plus one graph per court document
+    (``pacer -- {case} -- {document}.jsonld``); the older single
+    ``{case}.jsonld`` layout is kept for backward compatibility.
+    """
     corpus_id = _case_corpus_id(case_id, meta)
-    pac_jsonld = PACER_BULK_DIR / corpus_id / f"{corpus_id}.jsonld"
+    folder = PACER_BULK_DIR / corpus_id
+    paths = [GRAPHS_DIR / f"{case_id}.jsonld", folder / f"{corpus_id}.jsonld"]
+    paths.append(PACER_BULK_DIR / f"{corpus_id}-investigation.jsonld")
+    if folder.is_dir():
+        paths.extend(sorted(folder.glob("pacer -- * -- *.jsonld")))
+    return [p for p in paths if p.is_file()]
+
+
+def _scan_kg_conduct_types(case_id: str, meta: dict) -> list[str]:
     tags: list[str] = []
-    if not pac_jsonld.is_file():
-        return tags
-    try:
-        payload = json.loads(pac_jsonld.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
-        return tags
-    type_names = _jsonld_type_names(payload)
+    type_names: set[str] = set()
+    for path in _conduct_jsonld_paths(case_id, meta):
+        try:
+            type_names |= _jsonld_type_names(json.loads(path.read_text(encoding="utf-8")))
+        except (OSError, json.JSONDecodeError):
+            continue
     if "ThreatMechanism" in type_names:
         tags.append("threat_mechanism_kg")
     if "CoercionCycle" in type_names:
@@ -599,7 +613,8 @@ def collect_conduct_tags(case_id: str, meta: dict | None = None) -> list[str]:
 
 
 def _has_sextortion_conduct(case_id: str, meta: dict) -> bool:
-    return bool(_scan_conduct_signals(case_id, meta))
+    """Scanned signals or conduct tags declared in CASE_META."""
+    return bool(collect_conduct_tags(case_id, meta))
 
 
 def infer_modality(case_id: str, meta: dict | None = None) -> str:

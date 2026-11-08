@@ -74,23 +74,17 @@ python3 run/main.py
 
 Then open your browser to:
 - **Home**: http://localhost:8000/
-- **Visualizations**: http://localhost:8000/visualization
-- **Advanced Analysis**: http://localhost:8000/analysis
-- **Clusters**: http://localhost:8000/clusters
-- **Stats**: http://localhost:8000/stats
+- **Analysis** (question → SPARQL → answers → evidence): http://localhost:8000/analysis
+- **Graph** (load, compare and query case graphs): http://localhost:8000/patterns
+- **Explore** (walk the w3id IRIs): http://localhost:8000/explore
+- **State machines**: http://localhost:8000/lifecycle
+- **Affordances**: http://localhost:8000/visualization
 - **Search**: http://localhost:8000/search
-- **Query**: http://localhost:8000/query 
-- **Lifecycle**: http://localhost:8000/lifecycle
-- **Triage**: http://localhost:8000/triage
-- **Ontology & Graphs**: http://localhost:8000/patterns
-- **Tech Landscape**: http://localhost:8000/tech-landscape
-- **LLM**: http://localhost:8000/llm
-- **Data Sources**: http://localhost:8000/sources
-- **Data Audit**: http://localhost:8000/audit
-- **Look Under the Hood**: http://localhost:8000/under-the-hood
-- **Crash Course**: http://localhost:8000/crash-course
-- **Case Studies**: http://localhost:8000/case-studies
-- **API Documentation**: http://localhost:8000/docs
+- **Audit**: http://localhost:8000/audit
+- **Sources**: http://localhost:8000/sources
+- **Under the hood**: http://localhost:8000/under-the-hood
+- **Crash course**: http://localhost:8000/crash-course
+- **API documentation**: http://localhost:8000/docs
 
 
 **Database:**
@@ -106,8 +100,7 @@ running locally, initially empty
 | PACER knowledge graphs (41 investigations, 128 docs, 297 graphs, modeled by the CASE-UCO SDK) | `ontology/PACER/` | `/patterns` |
 | PACER lifecycle state machines (30 cases) | `state_machines/graphs/` | `/lifecycle` |
 | L* trajectories / transition matrix | `state_machines/data/lstar_all_cases.json` | `/api/lifecycle/lstar` |
-| Case studies (21 across 4 eras) | `data/case_studies.json` | `/case-studies` |
-| Triage model bundle | `models/triage_bundle.joblib` | `/triage`, `/api/triage-live` |
+| Triage model bundle | `models/triage_bundle.joblib` | `/api/triage-live`, `/api/triage-model-corpus` |
 
 
 **Reproduce the local corpus DB** (two options):
@@ -285,7 +278,7 @@ Navigate to [analysis](https://caselinker.up.railway.app/analysis) on the live d
 Priority scores combine weighted signals (severity indicators, victim count, case type, severity phrases, evidence volume, and registered-offender status), normalized to a 5–10 scale.
 
 
-Access Triage via the [live demo](https://caselinker.up.railway.app/triage) or locally at http://localhost:8000/triage. Current implementation uses **rule-based** priority tiers, **ML Classification for triage** (random forest or decision tree trained on features from the database with labels derived from deterministic rules), optionally constrained by the same facet-dimension filtering used in Search, and supports **paste-in live triage** that scores text in memory without writing to the database. For the full triage documentation (rules, bundle paths, APIs, live paste), see **[triage.md](triage.md)**.
+Triage is served through the API (`/api/triage-eval`, `/api/triage-model-corpus`, `/api/triage-live`) and the MCP `triage_text` tool; the standalone page was retired in the tools-first UI. The current implementation uses **rule-based** priority tiers, **ML Classification for triage** (random forest or decision tree trained on features from the database with labels derived from deterministic rules), optionally constrained by the same facet-dimension filtering used in Search, and supports **paste-in live triage** that scores text in memory without writing to the database. For the full triage documentation (rules, bundle paths, APIs, live paste), see **[triage.md](triage.md)**.
 
 ## Ontology & Graphs ([local](http://localhost:8000/patterns) · [live](https://caselinker.up.railway.app/patterns))
 
@@ -389,25 +382,19 @@ CaseLinker/
 │   ├── verify/                       # Claims, uniqueness, ICAC TF alignment, triage tests
 │   └── run/                          # ingest_all_pdfs.sh, import_corpus_from_api.py, clear_postgres.py, train_triage_model.py
 ├── visualization/                    # Static HTML (served by run/main.py)
-│   ├── assets/                       # caselinker-api.js, cover.png
+│   ├── assets/                       # v4.css, v4.js (shared shell), caselinker-api.js, page scripts, cover.png
 │   ├── home.html                     # /
-│   ├── visualization.html            # /visualization
+│   ├── analysis.html                 # /analysis (question → SPARQL → answers → evidence)
+│   ├── patterns-graph.html           # /patterns (+ /patterns/graph alias): graph viewer
+│   ├── explore.html                  # /explore: walk w3id IRIs, provenance, passages
+│   ├── lifecycle.html                # /lifecycle: PACER state machines
+│   ├── visualization.html            # /visualization: platform affordances
 │   ├── search.html                   # /search (facet tree)
-│   ├── analysis.html                 # /analysis
-│   ├── clusters.html                 # /clusters
-│   ├── stats.html                    # /stats
-│   ├── query.html                    # /query
-│   ├── lifecycle.html                # /lifecycle
-│   ├── triage.html                   # /triage
-│   ├── patterns-graph.html           # /patterns (+ /patterns/graph alias)
-│   ├── patterns.html                 # archived research writeup (not routed)
-│   ├── assets/patterns-graph.js      # Graph viewer logic
-│   ├── questions/                    # /patterns/questions/q01–q03
-│   ├── tech-landscape.html           # /tech-landscape
-│   ├── LLM.html                      # /llm
-│   ├── sources.html                  # /sources
-│   ├── case-studies.html             # /case-studies
 │   ├── audit.html                    # /audit
+│   ├── sources.html                  # /sources
+│   ├── under-the-hood.html           # /under-the-hood
+│   ├── crash-course.html             # /crash-course
+│   ├── questions/                    # /patterns/questions/q01–q03
 │   ├── under-the-hood.html           # /under-the-hood
 │   └── crash-course.html             # /crash-course
 ├── ontology/
@@ -433,8 +420,8 @@ CaseLinker/
 │   ├── public_records.py             # DOJ API + CourtListener/RECAP READ
 │   ├── README.md                     # Hosted auth, Cursor config, graph workflow
 │   └── tool_registry.md              # Full tool catalog (READ vs WRITE)
-├── models/                           # triage_bundle.joblib (optional; see /triage)
-├── data/                             # case_studies.json for /case-studies
+├── models/                           # triage_bundle.joblib (optional; /api/triage-live)
+├── data/                             # case_studies.json (served by /api/case-studies)
 ├── setup.sh
 ├── requirements.txt                  # Core deps
 ├── requirements-ml.txt               # Optional ML / NER stack
@@ -496,17 +483,15 @@ How the readers, the gate, and the resolver fit together in **[src/Processing La
 - `GET /visualization` - Platform Harm Dashboard (Q1 affordance-misuse-harm analysis, tiered evidence, manual platform analysis)
 - `GET /api/platform-affordance-evidence` - platform affordance evidence index or per-platform cohort (`platform`, optional `tier`, optional `require_fresh=true`)
 - `GET /search` - Facet decision tree over stored cases (D3); prune filters; cohort case IDs via API
-- `GET /query` - Custom analysis lab (browser-only JavaScript calling public APIs; see page for examples)
 - `GET /lifecycle` - Exploitation lifecycle visualization (public HTML; payload embedded server-side)
 - `GET /api/lifecycle/cases` - Lifecycle JSON (trusted `CaseLinker-Key` or localhost; same gate as `GET /api/cases`)
 - `GET /api/lifecycle/lstar` - Full L* output (`state_machines/data/lstar_all_cases.json`; trusted key or localhost)
 - `GET /api/lifecycle/anchors` - Public JSON for the 5 anchor PACER state-machine cases (no key; rate limited; intended for external embeds)
-- `GET /analysis` - Advanced case analysis page with tag-based filtering and automated analysis
+- `GET /analysis` - Analysis page: question → SPARQL → answers → evidence (templates or Groq; LLM mode over the case table)
 - `GET /api/facet-tree` - Build facet tree JSON (`max_depth`, optional prune query params)
 - `GET /api/facet-distinct` - Distinct primary-bucket values per facet (for Search prune UI)
 - `POST /api/facet-cohort-members` - Case IDs for a facet path (same prune semantics as tree; small cohorts gated)
 - `POST /api/cohort-sparql` - One-row-per-case SPARQL (source, platforms, agencies, phase, steps, charges, sentences) for a list of case ids (public, rate limited; does not reveal gated cohorts)
-- `GET /triage` - Triage page (rules, model evaluation, corpus model tiers, live paste)
 - `GET /patterns` — Ontology & Graphs explorer (CAC force graph + lookup; research below the fold)
 - `GET /patterns/graph` — same page (alias)
 - `GET /patterns/questions/{question_id}` — Q01–Q03 findings pages
@@ -526,7 +511,6 @@ How the readers, the gate, and the resolver fit together in **[src/Processing La
 - `GET /api/triage-model-corpus` - Saved bundle predictions over live DB; optional `facet_constraints` JSON query param (rate limited)
 - `POST /api/triage-live` - Classify pasted batch text in memory only; requires bundle; no persistence
 - `GET /sources` - Data sources page
-- `GET /case-studies` - Case studies reading room (eras + studies from `data/case_studies.json`)
 - `GET /api/case-studies` - Case study content document (eras, studies, default form URL)
 - `GET /api/case-studies/notes/{case_id}` - Community notes for a study id
 - `POST /api/case-studies/notes/{case_id}` - Append a community note (rate limited)
@@ -538,12 +522,8 @@ How the readers, the gate, and the resolver fit together in **[src/Processing La
 - `GET /api/location-stats` - Location/geography aggregates (public, rate limited)
 - `GET /api/technology-revolver` - Technology-by-era data keyed by era buckets (public, rate limited)
 - `GET /api/cluster-groups` - Pre-computed similarity cluster groups (public, rate limited)
-- `GET /stats` - Statistics dashboard page
-- `GET /clusters` - Cluster explorer page
-- `GET /tech-landscape` - Technology landscape page
 - `GET /under-the-hood` - Architecture/methodology page
 - `GET /crash-course` - Crash course (atlas + slides); linked from Under the Hood
-- `GET /llm` - LLM chat page
 - `POST /api/llm/chat` - LLM chat endpoint (public; per-IP daily cap, exempt for localhost/trusted key)
 - `POST /api/cache/clear` - Clear server caches (rate limited 10/hour)
 - `GET /api` - API info root; `GET /healthz` - health check

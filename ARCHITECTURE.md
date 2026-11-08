@@ -434,17 +434,18 @@ Hand-off: [`state_machines/README.md`](state_machines/README.md).
 
 | Page | File | What it does |
 |---|---|---|
-| `/` | `home.html` | Entry and content warning |
-| `/visualization` | `visualization.html` | Platform Harm Dashboard: platforms on six exploitation lanes; affordances, misuse surface, harm vectors, case evidence |
-| `/search` | `search.html` | Facet decision tree; copy a cohort as SPARQL or open it in the graph explorer |
-| `/analysis` | `analysis.html` | Tag intersection with highlighted text; automated groups, priority ranking, insights |
-| `/clusters`, `/stats`, `/tech-landscape` | | Precomputed clusters, corpus statistics, technology by era |
-| `/triage` | `triage.html` | Rule tiers, model evaluation, corpus model tiers, paste-in live triage |
-| `/patterns` (+ `/patterns/graph`, `/patterns/questions/q01–q03`) | `patterns-graph.html`, `questions/` | Ontology & Graphs explorer: force graph, class / platform / agency / case lookup, in-page SPARQL, PACER tab, Q1–Q3 findings |
-| `/lifecycle` | `lifecycle.html` | PACER state machines, swimlanes, L\* |
-| `/llm`, `/query` | `LLM.html`, `query.html` | Natural-language questions over corpus statistics (Groq or Gemini, function-calling over the DB); browser-only analysis lab over public APIs |
-| `/case-studies` | `case-studies.html` | 21 narrative studies across four eras from `data/case_studies.json`, with community notes |
-| `/audit`, `/sources`, `/under-the-hood`, `/crash-course` | | Feature-by-feature review with highlighting; source catalog and disclaimer; internals; guided tour |
+| `/` | `home.html` | Ask box, nine tools, corpus counts |
+| `/analysis` | `analysis.html` | Question → SPARQL (templates, or Groq for the rest) → rows → passages in the released text; LLM mode runs read-only SQL over the case table |
+| `/patterns` (+ `/patterns/graph`, `/patterns/questions/q01–q03`) | `patterns-graph.html`, `questions/` | Graph viewer: find cases by class / platform / agency / id, load or compare them on the canvas, filter by spine; Q1–Q3 findings |
+| `/explore` | `explore.html` | Walk w3id IRIs by hand: case → steps, agencies, platforms → provenance graph → annotation → passage, with the source text highlighted |
+| `/lifecycle` | `lifecycle.html` | PACER state machines: swimlanes per offence, the machine and its estimators ([`state_machines/README.md`](state_machines/README.md)) |
+| `/visualization` | `visualization.html` | Platform affordances: platforms on six lifecycle lanes; affordances, misuse surface, harm vectors, case evidence |
+| `/search` | `search.html` | Facet decision tree; copy a cohort as SPARQL or open it in the graph viewer |
+| `/audit` | `audit.html` | Feature-by-feature review with the passage highlighted |
+| `/sources` | `sources.html` | Source registry with live counts |
+| `/under-the-hood`, `/crash-course` | `under-the-hood.html`, `crash-course.html` | Pipeline layers; guided tour |
+
+Retired pages (their APIs remain): `/clusters`, `/stats`, `/query`, `/llm`, `/triage`, `/case-studies`, `/tech-landscape`.
 
 API families (full list with parameters in the README and at [`/docs`](https://caselinker.up.railway.app/docs)):
 
@@ -613,7 +614,7 @@ CaseLinker/
 │   ├── verify/                        extraction precision, phase-3 paired results, paper claims, verify_cac.py
 │   ├── stats/  explore/  validation/
 │   ├── rebuild_oxigraph.py  load_pacer_jsonld.py  warm_oxigraph.py
-├── visualization/                     18 HTML pages, assets/ (D3 viewers), questions/
+├── visualization/                     11 HTML pages, assets/ (v4 shell, D3 viewers), questions/
 ├── data/                              case_studies.json, gazetteer/, agency_registry/
 ├── config/                            victim_age_overrides.json (human verdicts)
 ├── models/                            triage_bundle.joblib (tracked), translation and student bundles (local)

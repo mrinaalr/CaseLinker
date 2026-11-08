@@ -1,942 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CaseLinker — Platform Harm Dashboard</title>
-    <script src="/viz-assets/caselinker-api.js"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
-    <style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Affordances · CaseLinker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/viz-assets/v4.css?v=4.1">
+  <script src="/viz-assets/caselinker-api.js"></script>
+  <script src="/viz-assets/v4.js?v=4.1" defer></script>
+  <style>
     :root {
-      --bg-deep: #051a0f;
-      --bg-panel: #0d2818;
-      --bg-card: #143d28;
-      --bg-card-hover: #1a4d32;
-      --border: rgba(134, 168, 140, 0.14);
-      --border-strong: rgba(134, 168, 140, 0.26);
-      --text: #e8f0ea;
-      --text-muted: #9cb8a4;
-      --text-dim: #6b8f78;
-      --accent: #4ade80;
-      --accent-dim: rgba(74, 222, 128, 0.14);
-      --gold: #c9b458;
-      --red: #ef4444;
-      --mono: "IBM Plex Mono", ui-monospace, monospace;
-      --sans: "DM Sans", "Segoe UI", system-ui, sans-serif;
-      --lane-distribution: #6366f1;
-      --lane-storage: #8b5cf6;
-      --lane-community: #a855f7;
-      --lane-discovery: #f59e0b;
-      --lane-messaging: #f97316;
-      --lane-production: #ef4444;
-      --hood-deep: #0a1612;
-      --hood-mid: #1a3d2e;
-      --hood-light: #2d6a4f;
-      --hood-leather: #4a6741;
-      --shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
-      --radius: 14px;
+      --lane-distribution: #5b5fc7;
+      --lane-storage: #7c5cbf;
+      --lane-community: #8f4fb5;
+      --lane-discovery: #b7791f;
+      --lane-messaging: #c25a2a;
+      --lane-production: #b4302b;
     }
 
-    *, *::before, *::after { box-sizing: border-box; }
+    .pf-stats { margin: 0 0 20px; }
+    .pf-toolbar { margin: 0 0 18px; }
+    .pf-toolbar .pf-search { flex: 1 1 220px; max-width: 320px; }
+    .pf-toggle { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ink-2); cursor: pointer; user-select: none; }
+    .pf-toggle input { margin: 0; accent-color: var(--ink); }
+    .pf-toolbar .pf-count { margin-left: auto; }
 
-        body {
-            margin: 0;
-      font-family: var(--sans);
-      background: var(--bg-deep);
-      color: var(--text);
-            min-height: 100vh;
-        }
+    .pf-status { margin: 0 0 18px; }
+    .pf-status[hidden] { display: none; }
 
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 80% 50% at 20% -10%, rgba(45, 106, 79, 0.22), transparent 55%),
-        radial-gradient(ellipse 60% 40% at 90% 10%, rgba(74, 103, 65, 0.16), transparent 50%),
-        radial-gradient(ellipse 50% 30% at 50% 100%, rgba(26, 61, 46, 0.35), transparent 45%),
-        linear-gradient(180deg, var(--hood-deep) 0%, var(--bg-deep) 40%, #0a2016 100%);
-      pointer-events: none;
-      z-index: 0;
+    /* ---------- Board + detail ---------- */
+    .pf-layout { display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 20px; align-items: start; }
+    @media (max-width: 1080px) { .pf-layout { grid-template-columns: 1fr; } }
+
+    /* Parchment: a warm, slightly uneven paper tone behind the lanes, no colour cast. */
+    .pf-board { overflow: hidden; background-color: #fbf8f1;
+      background-image:
+        radial-gradient(900px 420px at 18% 0%, rgba(214,196,160,.22), transparent 70%),
+        radial-gradient(700px 520px at 92% 100%, rgba(214,196,160,.18), transparent 70%),
+        linear-gradient(180deg, rgba(255,253,247,.6), rgba(243,237,224,.35));
+      border-color: #e2d9c4; }
+    .pf-lane { background: transparent; }
+    .pf-lane + .pf-lane { border-top-color: rgba(190,172,132,.35); }
+    .pf-board-wrap { min-width: 0; }
+    .pf-board-title { font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 8px 2px; }
+    .pf-lane {
+      display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 16px;
+      padding: 14px 18px 14px 15px; border-bottom: 1px solid var(--line);
+      border-left: 3px solid var(--lane-color, var(--line-2));
     }
-
-        .nav {
-            background: white;
-            padding: 15px 24px 15px 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            display: flex;
-            align-items: center;
-      flex-wrap: nowrap;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      font-size: 16px;
-      line-height: normal;
-      position: relative;
-      z-index: 20;
-            white-space: nowrap;
-            overflow-x: auto;
-        }
-        .nav a {
-            color: #4CAF50;
-            text-decoration: none;
-            margin-right: 16px;
-      font-family: inherit;
-      font-size: inherit;
-      line-height: normal;
-      white-space: nowrap;
-      flex-shrink: 0;
-        }
-        .nav a:hover {
-            text-decoration: underline;
-        }
-        .nav a.patterns {
-            margin-left: 10px;
-            color: #dc2626;
-            font-weight: 700;
-
-            animation: pulseRed 8s ease-in-out infinite;
-        }
-        @keyframes pulseRed {
-            0%, 100% { 
-                opacity: 1;
-            }
-            50% { 
-                opacity: 0.92;
-            }
-        }
-        .hood-link {
-            margin-left: auto;
-            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ff6b35 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: pulseOrange 6s ease-in-out infinite;
-            position: relative;
-            font-weight: 600;
-        }
-        @keyframes pulseOrange {
-            0%, 100% { 
-                opacity: 0.75;
-            }
-            50% { 
-                opacity: 0.90;
-            }
-        }
-        .tech-landscape-link {
-            display: inline-block;
-            vertical-align: baseline;
-            font-weight: 400;
-            position: relative;
-            text-decoration: none;
-            white-space: nowrap;
-        }
-        .tech-landscape-link .tls-gate--left {
-            display: inline;
-            vertical-align: baseline;
-            background: linear-gradient(135deg, #2e7d32 0%, #43a047 38%, #66bb6a 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: tlsGatePulse 16s ease-in-out infinite;
-        }
-        .tech-landscape-link .tls-gate--mid {
-            display: inline;
-            vertical-align: baseline;
-            color: #2e7d32;
-            -webkit-text-fill-color: #2e7d32;
-            font-weight: 400;
-            filter: none;
-            opacity: 0.88;
-            padding: 0 5px;
-        }
-        .tech-landscape-link .tls-gate--right {
-            display: inline;
-            vertical-align: baseline;
-            background: linear-gradient(135deg, #43a047 0%, #66bb6a 52%, #2e7d32 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: tlsGatePulse 16s ease-in-out infinite;
-        }
-        @keyframes tlsGatePulse {
-            0%, 100% { opacity: 0.87; }
-            50% { opacity: 0.94; }
-        }
-        .nav a.tech-landscape-link:hover {
-            text-decoration: none;
-        }
-        .nav a.tech-landscape-link::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: -2px;
-            height: 2px;
-            background: rgba(67, 160, 71, 0.62);
-            opacity: 0;
-            transition: opacity 0.12s ease;
-            pointer-events: none;
-        }
-        .nav a.tech-landscape-link:hover::after {
-            opacity: 1;
-        }
-
-    .shell {
-      position: relative;
-      z-index: 1;
-      max-width: 1600px;
-      margin: 0 auto;
-      padding: 28px 24px 48px;
-      line-height: 1.5;
+    .pf-lane:last-child { border-bottom: 0; }
+    .pf-lane__label { min-width: 0; }
+    .pf-lane__name { display: block; font-size: 13px; font-weight: 600; color: var(--ink); letter-spacing: .005em; }
+    .pf-lane__hint { display: block; font-size: 12px; color: var(--ink-3); margin-top: 2px; line-height: 1.4; }
+    .pf-lane__body { display: flex; flex-wrap: wrap; gap: 6px 8px; align-content: flex-start; min-width: 0; }
+    .pf-lane__none { font-size: 12.5px; color: var(--ink-4); align-self: center; padding: 6px 0; }
+    @media (max-width: 640px) {
+      .pf-lane { grid-template-columns: 1fr; gap: 8px; padding: 12px 14px 12px 11px; }
     }
 
-    .hero {
-            display: flex;
-      flex-wrap: wrap;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: 20px;
-      margin-bottom: 28px;
+    .pf-node {
+      position: relative; display: block; width: 156px; max-width: 100%;
+      padding: 7px 10px 8px; border: 1px solid var(--line); border-radius: var(--radius-sm);
+      background: var(--surface); text-align: left; cursor: pointer;
+      transition: border-color .15s var(--ease), background .15s var(--ease);
     }
-    .hero h1 {
-      margin: 0 0 6px;
-      font-size: clamp(1.6rem, 3vw, 2.2rem);
-      font-weight: 700;
-      letter-spacing: -0.03em;
+    .pf-node:hover { border-color: var(--ink-4); background: #fcfbf9; }
+    .pf-node[aria-pressed="true"] { outline: 2px solid var(--ink); outline-offset: -1px; border-color: var(--ink); }
+    .pf-node__row { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+    .pf-node__name { font-size: 13px; font-weight: 500; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+    .pf-node__n { font-family: var(--mono); font-size: 11.5px; color: var(--ink-3); font-variant-numeric: tabular-nums; flex: none; }
+    .pf-node__meta { display: block; font-size: 11px; color: var(--ink-3); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .pf-node__track { height: 3px; margin-top: 7px; background: var(--surface-2); border-radius: 2px; overflow: hidden; }
+    .pf-node__fill { height: 100%; background: var(--lane-color, var(--accent)); opacity: .7; border-radius: 2px; }
+    .pf-node--analysed .pf-node__name::after {
+      content: ""; display: inline-block; width: 5px; height: 5px; border-radius: 50%;
+      background: var(--ok); margin-left: 6px; vertical-align: 2px;
     }
-    .hero h1 .gold {
-      background: linear-gradient(135deg, #d4af37, #f4d03f, #d4af37);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .hero h1 .red {
-      background: linear-gradient(135deg, #dc2626, #ef4444);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .hero-sub {
-      margin: 0;
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      max-width: 52ch;
-    }
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.72rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--accent);
-      background: var(--accent-dim);
-      border: 1px solid rgba(34, 197, 94, 0.25);
-      padding: 5px 10px;
-      border-radius: 999px;
-      margin-bottom: 10px;
-    }
+    .pf-legend { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink-3); }
+    .pf-legend .cl-dot { color: var(--ok); width: 5px; height: 5px; }
 
-    .stats-strip {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
+    /* ---------- Detail panel ---------- */
+    .pf-detail { position: sticky; top: calc(var(--nav-h) + 16px); max-height: calc(100vh - var(--nav-h) - 32px); display: flex; flex-direction: column; overflow: hidden; }
+    @media (max-width: 1080px) { .pf-detail { position: static; max-height: none; } }
+    .pf-detail__head { padding: 18px 20px 14px; border-bottom: 1px solid var(--line); }
+    .pf-detail__title { font-family: var(--serif); font-weight: 400; font-size: 28px; line-height: 1.1; letter-spacing: -.015em; }
+    .pf-detail__type { font-size: 12.5px; color: var(--ink-3); margin-top: 4px; }
+    .pf-detail__chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+    .pf-chip-lane { border-left: 3px solid var(--lane-color, var(--line-2)); border-radius: 4px 999px 999px 4px; padding-left: 7px; }
+    .pf-tabs { display: flex; gap: 2px; padding: 0 12px; border-bottom: 1px solid var(--line); overflow-x: auto; scrollbar-width: none; }
+    .pf-tabs::-webkit-scrollbar { display: none; }
+    .pf-tab {
+      border: 0; background: transparent; padding: 10px 8px 9px; font-size: 13px; font-weight: 500; color: var(--ink-3);
+      cursor: pointer; position: relative; white-space: nowrap;
     }
-    .stat-pill {
-      background: var(--bg-panel);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 10px 16px;
-      min-width: 110px;
-    }
-    .stat-pill .val {
-      font-size: 1.35rem;
-            font-weight: 700;
-      font-variant-numeric: tabular-nums;
-      line-height: 1.1;
-    }
-    .stat-pill .lbl {
-      font-size: 0.72rem;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-top: 2px;
-    }
+    .pf-tab:hover { color: var(--ink); }
+    .pf-tab[aria-selected="true"] { color: var(--ink); }
+    .pf-tab[aria-selected="true"]::after { content: ""; position: absolute; left: 8px; right: 8px; bottom: -1px; height: 2px; background: var(--ink); }
+    .pf-tab__n { font-family: var(--mono); font-size: 11px; color: var(--ink-4); margin-left: 4px; }
+    .pf-detail__body { padding: 16px 20px 20px; overflow-y: auto; min-height: 0; flex: 1 1 auto; overscroll-behavior: contain; }
+    /* the panel's inner wrapper must be allowed to shrink, or the body can never scroll */
+    .pf-detail > div:not(.pf-detail__head) { display: flex; flex-direction: column; min-height: 0; flex: 1 1 auto; }
+    .pf-section[hidden] { display: none; }
+    .pf-harm { list-style: none; margin: 0; padding: 0; }
+    .pf-harm li { padding: 9px 0 9px 14px; border-bottom: 1px solid var(--line); font-size: 14px; line-height: 1.5; position: relative; }
+    .pf-harm li:last-child { border-bottom: 0; }
+    .pf-harm li::before { content: ""; position: absolute; left: 0; top: 17px; width: 5px; height: 5px; border-radius: 50%; background: var(--lane-color, var(--ink-4)); opacity: .8; }
+    .pf-author { margin-top: 12px; }
 
-    .toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 20px;
-      padding: 14px 16px;
-      background: var(--bg-panel);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-    }
-    .toolbar label {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      font-weight: 600;
-    }
-    .toolbar input[type="search"] {
-      flex: 1;
-      min-width: 180px;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 9px 12px;
-      color: var(--text);
-            font-family: inherit;
-      font-size: 0.9rem;
-        }
-    .toolbar input:focus {
-            outline: none;
-      border-color: rgba(34, 197, 94, 0.45);
-      box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
-    }
-    .tier-group {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-    .tier-btn {
-      font-family: inherit;
-      font-size: 0.78rem;
-      font-weight: 600;
-      padding: 7px 12px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background: var(--bg-card);
-      color: var(--text-muted);
-            cursor: pointer;
-      transition: all 0.15s;
-    }
-    .tier-btn:hover { border-color: var(--border-strong); color: var(--text); }
-    .tier-btn.active {
-      background: var(--accent-dim);
-      border-color: rgba(34, 197, 94, 0.4);
-      color: var(--accent);
-    }
-    .toggle-label {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.82rem;
-      color: var(--text-muted);
-            cursor: pointer;
-      user-select: none;
-    }
-    .toggle-label input { accent-color: var(--accent); }
+    .pf-ev { list-style: none; margin: 0; padding: 0; }
+    .pf-ev > li { padding: 14px 0; border-bottom: 1px solid var(--line); }
+    .pf-ev > li:first-child { padding-top: 4px; }
+    .pf-ev > li:last-child { border-bottom: 0; }
+    .pf-ev .cl-quote { font-size: 15px; }
+    .pf-ev__row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; margin-top: 8px; padding-left: 16px; font-size: 12.5px; }
+    .pf-ev__row a.cl-id { color: var(--accent); }
+    .pf-ev__role { font-size: 12.5px; color: var(--ink-3); margin-top: 6px; padding-left: 16px; }
+    .pf-ev__more { margin-top: 14px; width: 100%; }
+    .pf-ev__sum { margin: 0 0 8px; }
 
-    .dashboard {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(320px, 420px);
-      gap: 20px;
-      align-items: start;
-    }
-    @media (max-width: 1100px) {
-      .dashboard { grid-template-columns: 1fr; }
-      .detail-panel { order: -1; }
-    }
-
-    .lifecycle-board {
-      background: var(--bg-panel);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      position: relative;
-    }
-    .board-header {
-      padding: 16px 20px 12px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-    }
-    .board-header h2 {
-      margin: 0;
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: var(--text-muted);
-    }
-    .board-legend {
-      font-size: 0.72rem;
-      color: var(--text-dim);
-    }
-
-    .lanes-wrap {
-      position: relative;
-      padding: 8px 16px 20px 36px;
-      min-height: 640px;
-    }
-    .lane {
-      position: relative;
-            display: grid;
-      grid-template-columns: 148px 1fr;
-      gap: 12px;
-      align-items: stretch;
-      min-height: 96px;
-      margin-bottom: 4px;
-    }
-    .lane-label {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 10px 12px 10px 16px;
-      border-right: 2px solid var(--lane-color, var(--border));
-      text-align: right;
-    }
-    .lane-label .phase {
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: var(--lane-color, var(--text-muted));
-      line-height: 1.25;
-    }
-    .lane-label .hint {
-      font-size: 0.68rem;
-      color: var(--text-dim);
-      margin-top: 3px;
-      line-height: 1.3;
-    }
-    .lane-body {
-            display: flex;
-            flex-wrap: wrap;
-      align-content: flex-start;
-            gap: 8px;
-      padding: 10px 8px;
-      border-radius: 10px;
-      background: rgba(0, 0, 0, 0.15);
-      min-height: 88px;
-    }
-
-    @keyframes nodeIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .platform-node {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      padding: 10px 14px;
-      min-width: 128px;
-      max-width: 200px;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      cursor: pointer;
-      transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s, background 0.15s;
-      text-align: left;
-      font-family: inherit;
-      color: inherit;
-      animation: nodeIn 0.35s ease backwards;
-    }
-    .platform-node.analyzed .analyzed-dot {
-      animation: pulseDot 2.4s ease-in-out infinite;
-    }
-    @keyframes pulseDot {
-      0%, 100% { box-shadow: 0 0 6px rgba(34, 197, 94, 0.5); }
-      50% { box-shadow: 0 0 14px rgba(34, 197, 94, 0.9); }
-    }
-    .platform-node:hover {
-      transform: translateY(-2px);
-      background: var(--bg-card-hover);
-      border-color: var(--border-strong);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-    }
-    .platform-node.selected {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 2px rgba(74, 222, 128, 0.25), 0 12px 32px rgba(0, 0, 0, 0.35);
-      background: linear-gradient(145deg, #1a4d32, #143d28);
-    }
-    .platform-node.analyzed {
-      border-left: 3px solid var(--lane-color, var(--accent));
-    }
-    .platform-node.dimmed {
-      opacity: 0.35;
-      pointer-events: none;
-    }
-    .platform-node .name {
-      font-size: 0.88rem;
-      font-weight: 700;
-      line-height: 1.2;
-    }
-    .platform-node .meta {
-      font-size: 0.7rem;
-      color: var(--text-dim);
-    }
-    .platform-node .count-bar {
-      height: 3px;
-      border-radius: 2px;
-      background: rgba(255, 255, 255, 0.08);
-      margin-top: 2px;
-      overflow: hidden;
-    }
-    .platform-node .count-fill {
-      height: 100%;
-      border-radius: 2px;
-      background: var(--lane-color, var(--accent));
-      transition: width 0.4s ease;
-    }
-    .platform-node .analyzed-dot {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--accent);
-      box-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
-    }
-
-    .lifecycle-arrow {
-      position: absolute;
-      left: 14px;
-      top: 28px;
-      bottom: 28px;
-      width: 3px;
-      background: linear-gradient(
-        to top,
-        var(--lane-distribution) 0%,
-        var(--lane-storage) 20%,
-        var(--lane-community) 35%,
-        var(--lane-discovery) 55%,
-        var(--lane-messaging) 75%,
-        var(--lane-production) 100%
-      );
-      opacity: 0.55;
-      pointer-events: none;
-      border-radius: 2px;
-    }
-    .lifecycle-arrow::before {
-      content: "";
-      position: absolute;
-      top: -2px;
-      left: 50%;
-      transform: translateX(-50%);
-      border-left: 6px solid transparent;
-      border-right: 6px solid transparent;
-      border-bottom: 9px solid var(--lane-production);
-      opacity: 0.85;
-    }
-    .lifecycle-arrow::after {
-      content: "";
-      position: absolute;
-      bottom: -2px;
-      left: 50%;
-      transform: translateX(-50%);
-      border-left: 5px solid transparent;
-      border-right: 5px solid transparent;
-      border-top: 7px solid var(--lane-distribution);
-      opacity: 0.85;
-    }
-    .arrow-cap {
-      position: absolute;
-      left: 0;
-      top: 16px;
-      width: 12px;
-      font-size: 0.6rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--lane-production);
-      writing-mode: vertical-rl;
-      transform: rotate(180deg);
-      opacity: 0.75;
-      text-align: center;
-    }
-    .arrow-cap.bottom {
-      top: auto;
-      bottom: 16px;
-      color: var(--lane-distribution);
-      transform: rotate(180deg);
-    }
-
-    .detail-panel {
-      background: var(--bg-panel);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      position: sticky;
-      top: 16px;
-      max-height: calc(100vh - 32px);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-    .detail-empty {
-      padding: 48px 28px;
-      text-align: center;
-      color: var(--text-dim);
-    }
-    .detail-empty .icon {
-      font-size: 2.5rem;
-      margin-bottom: 12px;
-      opacity: 0.4;
-    }
-    .detail-empty p {
-      margin: 0;
-      font-size: 0.9rem;
-      line-height: 1.6;
-    }
-
-    .detail-head {
-      padding: 20px 22px 16px;
-      border-bottom: 1px solid var(--border);
-      flex-shrink: 0;
-    }
-    .detail-head .platform-title {
-      margin: 0 0 4px;
-      font-size: 1.35rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-    }
-    .detail-head .platform-type {
-      font-size: 0.8rem;
-      color: var(--text-dim);
-      margin-bottom: 12px;
-    }
-    .detail-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      align-items: center;
-    }
-    .chip {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.72rem;
-      font-weight: 600;
-      min-height: 30px;
-      padding: 6px 14px;
-      border-radius: 999px;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      color: var(--text-muted);
-      line-height: 1.25;
-      text-align: center;
-    }
-    .chip.stated { border-color: rgba(74, 222, 128, 0.4); color: #4ade80; }
-    .chip.inferred { border-color: rgba(245, 158, 11, 0.4); color: #fbbf24; }
-    .chip.named { border-color: rgba(148, 163, 184, 0.35); color: #94a3b8; }
-    .chip.lane {
-      border-color: transparent;
-      background: color-mix(in srgb, var(--lane-color) 20%, transparent);
-      color: var(--lane-color);
-      min-height: 34px;
-      padding: 8px 16px;
-    }
-
-    .detail-tabs {
-      display: flex;
-      gap: 0;
-      border-bottom: 1px solid var(--border);
-      flex-shrink: 0;
-      overflow-x: auto;
-    }
-    .detail-tab {
-      flex: 1;
-      min-width: 0;
-      font-family: inherit;
-      font-size: 0.75rem;
-      font-weight: 600;
-      padding: 12px 8px;
-      border: none;
-      background: transparent;
-      color: var(--text-dim);
-      cursor: pointer;
-      border-bottom: 2px solid transparent;
-      transition: color 0.15s, border-color 0.15s;
-      white-space: nowrap;
-    }
-    .detail-tab:hover { color: var(--text-muted); }
-    .detail-tab.active {
-      color: var(--accent);
-      border-bottom-color: var(--accent);
-    }
-
-    #detail-content {
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-      min-height: 0;
-      overflow: hidden;
-    }
-    #detail-content[hidden] { display: none; }
-
-    .detail-body {
-      flex: 1;
-      min-height: 0;
-      overflow-y: auto;
-      padding: 18px 22px 24px;
-      -webkit-overflow-scrolling: touch;
-    }
-    .detail-section { display: none; }
-    .detail-section.active { display: block; }
-
-    .harm-list {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-    }
-    .harm-list li {
-      position: relative;
-      padding: 10px 12px 10px 28px;
-      margin-bottom: 8px;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 0.86rem;
-      line-height: 1.45;
-      color: var(--text-muted);
-    }
-    .harm-list li::before {
-      content: "";
-      position: absolute;
-      left: 12px;
-      top: 16px;
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--lane-color, var(--accent));
-    }
-    .section-label {
-      font-size: 0.72rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-dim);
-      margin: 0 0 10px;
-    }
-    .pending-note {
-      font-size: 0.85rem;
-      color: var(--text-dim);
-      font-style: italic;
-      padding: 16px;
-      background: var(--bg-card);
-      border-radius: 8px;
-      border: 1px dashed var(--border);
-    }
-
-    .evidence-list { margin: 0; padding: 0; list-style: none; }
-    .evidence-item {
-      margin-bottom: 10px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      overflow: hidden;
-      background: var(--bg-card);
-    }
-    .evidence-item summary {
-      padding: 12px 14px;
-      cursor: pointer;
-      font-size: 0.82rem;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      list-style: none;
-    }
-    .evidence-item summary::-webkit-details-marker { display: none; }
-    .evidence-item summary::after {
-      content: "▸";
-      margin-left: auto;
-      color: var(--text-dim);
-      transition: transform 0.15s;
-    }
-    .evidence-item[open] summary::after { transform: rotate(90deg); }
-    .evidence-item .case-id {
-      font-family: var(--mono);
-      font-size: 0.75rem;
-      font-weight: 500;
-      color: var(--accent);
-    }
-    .tier-tag {
-      font-size: 0.65rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      padding: 2px 6px;
-      border-radius: 4px;
-    }
-    .tier-tag.stated { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
-    .tier-tag.inferred { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
-    .tier-tag.named_only { background: rgba(148, 163, 184, 0.12); color: #94a3b8; }
-    .quote-block {
-      padding: 0 14px 14px;
-      border-top: 1px solid var(--border);
-    }
-    .quote-block blockquote {
-      margin: 12px 0 10px;
-      padding: 12px 14px;
-      background: rgba(0, 0, 0, 0.25);
-      border-left: 3px solid var(--accent);
-      border-radius: 0 8px 8px 0;
-      font-size: 0.84rem;
-      line-height: 1.55;
-      color: var(--text-muted);
-      font-style: italic;
-    }
-    .quote-block .role {
-      font-size: 0.75rem;
-      color: var(--text-dim);
-    }
-    .quote-block a {
-      color: var(--accent);
-      font-family: var(--mono);
-      font-size: 0.75rem;
-      text-decoration: none;
-    }
-    .quote-block a:hover { text-decoration: underline; }
-
-    .load-more {
-      width: 100%;
-      margin-top: 8px;
-      padding: 10px;
-      font-family: inherit;
-      font-size: 0.82rem;
-      font-weight: 600;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      color: var(--text-muted);
-      cursor: pointer;
-    }
-    .load-more:hover { border-color: var(--border-strong); color: var(--text); }
-
-    .framing {
-      margin-top: 24px;
-      padding: 18px 20px;
-      background: var(--bg-panel);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      font-size: 0.84rem;
-      color: var(--text-dim);
-      line-height: 1.65;
-    }
-    .framing a { color: var(--accent); }
-    .framing strong { color: var(--text-muted); font-weight: 600; }
-
-    .loading-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(5, 26, 15, 0.9);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 100;
-      transition: opacity 0.3s;
-    }
-    .loading-overlay.hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
-    .spinner {
-      width: 40px;
-      height: 40px;
-      border: 3px solid var(--border);
-      border-top-color: var(--accent);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    .error-banner {
-      background: rgba(239, 68, 68, 0.12);
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      color: #fca5a5;
-      padding: 12px 16px;
-      border-radius: 10px;
-      margin-bottom: 16px;
-      font-size: 0.88rem;
-    }
   </style>
-    <link rel="stylesheet" href="/viz-assets/site-nav.css">
 </head>
 <body>
-  <div class="loading-overlay" id="loading">
-    <div class="spinner" aria-hidden="true"></div>
-  </div>
+  <div id="cl-nav" data-active="platforms"></div>
 
-  <div class="nav">
-    <a href="/">Home</a>
-    <a href="/visualization">Visualization</a>
-    <a href="/analysis">Analysis</a>
-    <a href="/clusters">Clusters</a>
-    <a href="/stats">Stats</a>
-    <a href="/search">Search</a>
-    <a href="/lifecycle">Lifecycle</a>
-    <a href="/query">Query</a>
-    <a href="/triage">Triage</a>
-    <a href="/case-studies">Case Studies</a>
-    <a href="/tech-landscape" class="tech-landscape-link"><span class="tls-gate--left">Tech</span><span class="tls-gate--mid"> </span><span class="tls-gate--right">Landscape</span></a>
-    <a href="/llm">LLM</a>
-    <a href="/sources">Sources</a>
-    <a href="/audit">Audit</a>
-    <a href="/patterns" class="patterns">Ontology & Graphs</a>
-    <a href="/under-the-hood" class="hood-link">Look Under the Hood</a>
-  </div>
-
-  <div class="shell">
-    <header class="hero">
-      <div>
-        <div class="hero-badge">Phase 2 · Patterns</div>
-        <h1><span class="gold">Platform</span> <span class="red">Harm</span> Dashboard</h1>
-        <p class="hero-sub">
-          Interactive affordance map across the exploitation lifecycle. From distribution and storage through contact, private messaging, and production/coercion surfaces.
-        </p>
-      </div>
-      <div class="stats-strip" id="stats"></div>
+  <div class="cl-page cl-page--wide">
+    <header class="cl-head">
+      <h1 class="cl-title">Platform affordances</h1>
     </header>
 
-    <div id="error-banner" class="error-banner" hidden></div>
+    <div id="status" class="cl-notice pf-status" role="status"><span class="cl-spinner" aria-hidden="true"></span><span id="status-text">Loading platform evidence…</span></div>
 
-    <div class="toolbar">
-      <label for="search">Filter</label>
-      <input type="search" id="search" placeholder="Search platforms…" autocomplete="off" />
-      <div class="tier-group" id="tier-filters" role="group" aria-label="Evidence tier">
-        <button type="button" class="tier-btn active" data-tier="all">All tiers</button>
-        <button type="button" class="tier-btn" data-tier="stated">Stated</button>
-        <button type="button" class="tier-btn" data-tier="inferred">Inferred</button>
-        <button type="button" class="tier-btn" data-tier="named_only">Named only</button>
+    <div class="cl-stats pf-stats" id="stats" hidden></div>
+
+    <div class="cl-toolbar pf-toolbar" id="toolbar" hidden>
+      <input type="search" id="search" class="cl-input pf-search" placeholder="Filter platforms…" autocomplete="off" aria-label="Filter platforms">
+      <div class="cl-seg" id="tier-filters" role="group" aria-label="Evidence tier">
+        <button type="button" class="tier-btn" data-tier="all" aria-pressed="true">All</button>
+        <button type="button" class="tier-btn" data-tier="stated" aria-pressed="false">Stated</button>
+        <button type="button" class="tier-btn" data-tier="inferred" aria-pressed="false">Inferred</button>
+        <button type="button" class="tier-btn" data-tier="named_only" aria-pressed="false">Named only</button>
       </div>
-      <label class="toggle-label">
-        <input type="checkbox" id="analyzed-only" />
-        Manually analyzed platforms only
-      </label>
+      <label class="pf-toggle"><input type="checkbox" id="analyzed-only"> Analysed only</label>
+      <span class="pf-legend pf-count"><span class="cl-dot" aria-hidden="true"></span><span id="shown-count"></span></span>
     </div>
 
-    <div class="dashboard">
-      <section class="lifecycle-board" aria-label="Platform lifecycle map">
-        <div class="board-header">
-          <h2>Exploitation lifecycle · where platforms live</h2>
-          <span class="board-legend">Green dot = manual harm analysis completed</span>
-        </div>
-        <div class="lanes-wrap" id="lanes">
-          <div class="lifecycle-arrow" aria-hidden="true"></div>
-          <span class="arrow-cap" aria-hidden="true">Production · Coercion</span>
-          <span class="arrow-cap bottom" aria-hidden="true">Distribution</span>
-        </div>
-      </section>
+    <div class="pf-layout" id="layout" hidden>
+      <div class="pf-board-wrap"><div class="pf-board-title">Exploitation lifecycle · where platforms live</div>
+      <section class="cl-card pf-board" id="lanes" aria-label="Platforms by lifecycle lane"></section></div>
 
-      <aside class="detail-panel" id="detail-panel">
-        <div class="detail-empty" id="detail-empty">
-          <div class="icon" aria-hidden="true">◎</div>
-          <p>Select a platform on the lifecycle map to explore affordances, misuse surfaces, harm vectors, and case evidence.</p>
-        </div>
+      <aside class="cl-card pf-detail" id="detail-panel" aria-live="polite">
+        <div class="cl-empty" id="detail-empty">Select a platform to see its affordances, misuse surface, harm vectors and case evidence.</div>
         <div id="detail-content" hidden></div>
       </aside>
     </div>
-
-    <p class="framing">
-      <strong>Research framing:</strong> Platforms do not cause exploitation. They alter who can reach whom, at what scale, and with what evidentiary footprint.
-      Harm vectors and affordances are analytical layers grounded in stated-evidence cases.
-      <a href="https://mrinaalr.github.io/website/Affordance%2C%20Misuse%2C%20Harm%2C%20Kill%20Chain.pdf" target="_blank" rel="noopener">Read full affordance paper →</a>
-    </p>
   </div>
 
   <script>
@@ -1052,6 +269,9 @@
 
     const GENERIC_PLATFORMS = new Set(["chat", "social media", "gaming", "internet", "online"]);
 
+    const TIER_LABEL = { stated: "stated", inferred: "inferred", named_only: "named only" };
+    const TIER_CHIP = { stated: "cl-chip--accent", inferred: "cl-chip--warn", named_only: "cl-chip--line" };
+
     const state = {
       evidence: null,
       harm: {},
@@ -1068,6 +288,7 @@
       const n = document.createElement(tag);
       if (attrs) {
         Object.entries(attrs).forEach(([k, v]) => {
+          if (v == null) return;
           if (k === "className") n.className = v;
           else if (k === "textContent") n.textContent = v;
           else if (k === "innerHTML") n.innerHTML = v;
@@ -1081,6 +302,8 @@
       });
       return n;
     }
+
+    function fmt(n) { return (n == null || isNaN(n)) ? "—" : Number(n).toLocaleString("en-US"); }
 
     function harmLines(value) {
       if (Array.isArray(value)) return value.map((s) => String(s).trim()).filter((s) => s && s !== " ");
@@ -1174,46 +397,53 @@
       return m;
     }
 
+    /* ---------- Rendering ---------- */
     function renderStats() {
       const meta = (state.evidence && state.evidence._meta) || {};
       const analyzed = state.platforms.filter((p) => p.researcherAnalyzed).length;
+      const records = (state.evidence && state.evidence.records) || [];
       const strip = document.getElementById("stats");
       strip.innerHTML = "";
       [
-        { val: meta.cases_processed || "—", lbl: "Evidence Cases" },
-        { val: state.platforms.length, lbl: "Platforms named" },
-        { val: analyzed, lbl: "Researcher analyzed" },
+        { val: meta.cases_processed, lbl: "Cases processed" },
+        { val: state.platforms.length, lbl: "Platforms" },
+        { val: analyzed, lbl: "Researcher-analysed platforms" },
+        { val: records.length, lbl: "Case–platform pairs" },
       ].forEach(({ val, lbl }) => {
         strip.appendChild(
-          el("div", { className: "stat-pill" }, [
-            el("div", { className: "val", textContent: String(val) }),
-            el("div", { className: "lbl", textContent: lbl }),
+          el("div", { className: "cl-stat" }, [
+            el("div", { className: "cl-stat__n", textContent: fmt(val) }),
+            el("div", { className: "cl-stat__l", textContent: lbl }),
           ])
         );
       });
+      strip.hidden = false;
     }
 
     function renderLanes() {
       const wrap = document.getElementById("lanes");
-      wrap.querySelectorAll(".lane").forEach((n) => n.remove());
+      wrap.innerHTML = "";
 
       const list = filteredPlatforms();
       const maxCount = maxBarCount(list);
+      const analysed = list.filter((p) => p.researcherAnalyzed).length;
+      document.getElementById("shown-count").textContent =
+        fmt(list.length) + " of " + fmt(state.platforms.length) + " platforms shown · dot = researcher analysis (" + fmt(analysed) + ")";
 
       LIFECYCLE_LANES.forEach((lane) => {
         const lanePlatforms = list.filter((p) => p.lane === lane.id);
-        const laneEl = el("div", { className: "lane", "data-lane": lane.id });
+        const laneEl = el("div", { className: "pf-lane", "data-lane": lane.id });
         laneEl.style.setProperty("--lane-color", lane.color);
 
-        const label = el("div", { className: "lane-label" }, [
-          el("span", { className: "phase", textContent: lane.label }),
-          el("span", { className: "hint", textContent: lane.hint }),
+        const label = el("div", { className: "pf-lane__label" }, [
+          el("span", { className: "pf-lane__name", textContent: lane.label }),
+          el("span", { className: "pf-lane__hint", textContent: lane.hint }),
         ]);
 
-        const body = el("div", { className: "lane-body" });
+        const body = el("div", { className: "pf-lane__body" });
         if (!lanePlatforms.length) {
-          body.appendChild(el("span", { className: "meta", textContent: "—" }));
-                } else {
+          body.appendChild(el("span", { className: "pf-lane__none", textContent: "No platforms match the current filters." }));
+        } else {
           lanePlatforms.forEach((p) => body.appendChild(renderPlatformNode(p, lane, maxCount)));
         }
 
@@ -1227,39 +457,32 @@
       const displayCount =
         state.tier === "all" ? p.tier_counts.stated : countForTier(p, state.tier);
       const pct = Math.max(8, Math.round((displayCount / maxCount) * 100));
+      const tierWord = state.tier === "all" ? "stated" : TIER_LABEL[state.tier] || state.tier;
 
       const btn = el("button", {
         type: "button",
-        className:
-          "platform-node" +
-          (p.researcherAnalyzed ? " analyzed" : "") +
-          (state.selected === p.platform ? " selected" : ""),
+        className: "pf-node" + (p.researcherAnalyzed ? " pf-node--analysed" : ""),
         "data-platform": p.platform,
         "aria-pressed": state.selected === p.platform ? "true" : "false",
-        style: "animation-delay:" + (Math.min(displayCount, 20) * 12) + "ms",
+        title: p.platform + " · " + p.surface + " · " + displayCount + " " + tierWord + (p.researcherAnalyzed ? " · researcher analysis" : ""),
         onClick: () => selectPlatform(p.platform),
       });
+      btn.style.setProperty("--lane-color", lane.color);
 
-      if (p.researcherAnalyzed) {
-        btn.appendChild(el("span", {
-          className: "analyzed-dot",
-          "aria-label": "Researcher analysis completed",
-        }));
-      }
-
-      btn.appendChild(el("span", { className: "name", textContent: p.platform }));
       btn.appendChild(
-        el("span", {
-          className: "meta",
-          textContent: p.surface + " · " + displayCount + " " + (state.tier === "all" ? "stated" : state.tier.replace("_", " ")),
-        })
+        el("span", { className: "pf-node__row" }, [
+          el("span", { className: "pf-node__name", textContent: p.platform }),
+          el("span", { className: "pf-node__n", textContent: String(displayCount) }),
+        ])
       );
-      const bar = el("div", { className: "count-bar" });
-      const fill = el("div", { className: "count-fill" });
+      btn.appendChild(el("span", { className: "pf-node__meta", textContent: p.surface + " · " + tierWord }));
+      const track = el("span", { className: "pf-node__track" });
+      const fill = el("span", { className: "pf-node__fill" });
+      fill.style.display = "block";
       fill.style.width = pct + "%";
-      fill.style.background = lane.color;
-      bar.appendChild(fill);
-      btn.appendChild(bar);
+      track.style.display = "block";
+      track.appendChild(fill);
+      btn.appendChild(track);
 
       return btn;
     }
@@ -1270,11 +493,12 @@
 
     function harmEntry(platform) {
       const raw = state.harm[platform];
-      if (!raw) return { affordances: [], misuse_surface: [], harm_vector: [] };
+      if (!raw) return { affordances: [], misuse_surface: [], harm_vector: [], author: null };
       return {
         affordances: harmLines(raw.affordances),
         misuse_surface: harmLines(raw.misuse_surface),
         harm_vector: harmLines(raw.harm_vector),
+        author: raw.analysis_author || null,
       };
     }
 
@@ -1315,14 +539,20 @@
       renderDetail(p);
     }
 
-    function renderHarmList(items, laneColor) {
+    function renderHarmList(items, laneColor, author) {
+      const wrap = el("div");
       if (!items.length) {
-        return el("p", { className: "pending-note", textContent: "Harm analysis unavailable for this platform." });
+        wrap.appendChild(el("p", { className: "cl-muted cl-small", textContent: "No harm analysis is recorded for this platform. The Evidence tab lists the case passages that name it." }));
+        return wrap;
       }
-      const ul = el("ul", { className: "harm-list" });
+      const ul = el("ul", { className: "pf-harm" });
       ul.style.setProperty("--lane-color", laneColor);
       items.forEach((text) => ul.appendChild(el("li", { textContent: text })));
-      return ul;
+      wrap.appendChild(ul);
+      if (author) {
+        wrap.appendChild(el("p", { className: "cl-muted cl-small pf-author", textContent: "Analysis author: " + author + "." }));
+      }
+      return wrap;
     }
 
     function renderDetail(p) {
@@ -1334,29 +564,34 @@
 
       const lane = LIFECYCLE_LANES.find((l) => l.id === p.lane);
       const harm = harmEntry(p.platform);
+      const laneColor = lane ? lane.color : "var(--accent)";
 
-      const head = el("div", { className: "detail-head" });
-      head.appendChild(el("h2", { className: "platform-title", textContent: p.platform }));
-      head.appendChild(el("div", { className: "platform-type", textContent: p.surface + " · " + p.platform_type }));
-      const chips = el("div", { className: "detail-chips" });
+      const head = el("div", { className: "pf-detail__head" });
+      head.appendChild(el("h2", { className: "pf-detail__title", textContent: p.platform }));
+      head.appendChild(el("div", { className: "pf-detail__type", textContent: p.surface + " · " + p.platform_type }));
+      const chips = el("div", { className: "pf-detail__chips" });
       if (lane) {
-        const chip = el("span", { className: "chip lane", textContent: lane.label });
+        const chip = el("span", { className: "cl-chip pf-chip-lane", textContent: lane.label });
         chip.style.setProperty("--lane-color", lane.color);
         chips.appendChild(chip);
       }
-      if (p.tier_counts.stated) chips.appendChild(el("span", { className: "chip stated", textContent: p.tier_counts.stated + " stated" }));
-      if (p.tier_counts.inferred) chips.appendChild(el("span", { className: "chip inferred", textContent: p.tier_counts.inferred + " inferred" }));
-      if (p.tier_counts.named_only) chips.appendChild(el("span", { className: "chip named", textContent: p.tier_counts.named_only + " named" }));
+      ["stated", "inferred", "named_only"].forEach((t) => {
+        if (p.tier_counts[t]) {
+          chips.appendChild(el("span", { className: "cl-chip " + TIER_CHIP[t], textContent: fmt(p.tier_counts[t]) + " " + TIER_LABEL[t] }));
+        }
+      });
+      if (p.researcherAnalyzed) chips.appendChild(el("span", { className: "cl-chip cl-chip--ok", textContent: "researcher analysis" }));
       head.appendChild(chips);
       content.appendChild(head);
 
-      const tabs = el("div", { className: "detail-tabs", role: "tablist" });
-      const body = el("div", { className: "detail-body" });
+      const tabs = el("div", { className: "pf-tabs", role: "tablist" });
+      const body = el("div", { className: "pf-detail__body" });
+      const evidenceCount = tierFilteredRecords(p).length;
       const sections = [
-        { id: "affordances", label: "Affordances", items: harm.affordances },
-        { id: "misuse", label: "Misuse Surface", items: harm.misuse_surface },
-        { id: "harm", label: "Harm Vectors", items: harm.harm_vector },
-        { id: "evidence", label: "Case Evidence", items: null },
+        { id: "affordances", label: "Affordances", items: harm.affordances, n: harm.affordances.length },
+        { id: "misuse", label: "Misuse surface", items: harm.misuse_surface, n: harm.misuse_surface.length },
+        { id: "harm", label: "Harm vectors", items: harm.harm_vector, n: harm.harm_vector.length },
+        { id: "evidence", label: "Evidence", items: null, n: evidenceCount },
       ];
 
       let activeTab = state.activeTab || "affordances";
@@ -1367,25 +602,29 @@
       sections.forEach((sec) => {
         const tab = el("button", {
           type: "button",
-          className: "detail-tab" + (sec.id === activeTab ? " active" : ""),
+          className: "pf-tab",
           role: "tab",
           "aria-selected": sec.id === activeTab ? "true" : "false",
-          textContent: sec.label,
+          "aria-controls": "section-" + sec.id,
           onClick: () => switchTab(sec.id),
-        });
+        }, [
+          sec.label,
+          el("span", { className: "pf-tab__n", textContent: String(sec.n) }),
+        ]);
         tab.dataset.tab = sec.id;
         tabs.appendChild(tab);
 
         const section = el("div", {
-          className: "detail-section" + (sec.id === activeTab ? " active" : ""),
+          className: "pf-section",
           id: "section-" + sec.id,
           role: "tabpanel",
         });
+        section.hidden = sec.id !== activeTab;
 
         if (sec.id === "evidence") {
           section.appendChild(renderEvidenceSection(p));
-                    } else {
-          section.appendChild(renderHarmList(sec.items, lane ? lane.color : "var(--accent)"));
+        } else {
+          section.appendChild(renderHarmList(sec.items, laneColor, harm.author));
         }
         body.appendChild(section);
       });
@@ -1395,75 +634,72 @@
 
       function switchTab(id) {
         state.activeTab = id;
-        tabs.querySelectorAll(".detail-tab").forEach((t) => {
-          const on = t.dataset.tab === id;
-          t.classList.toggle("active", on);
-          t.setAttribute("aria-selected", on ? "true" : "false");
+        tabs.querySelectorAll(".pf-tab").forEach((t) => {
+          t.setAttribute("aria-selected", t.dataset.tab === id ? "true" : "false");
         });
-        body.querySelectorAll(".detail-section").forEach((s) => {
-          s.classList.toggle("active", s.id === "section-" + id);
-                });
-            }
-        }
-        
+        body.querySelectorAll(".pf-section").forEach((s) => {
+          s.hidden = s.id !== "section-" + id;
+        });
+        body.scrollTop = 0;
+      }
+    }
+
     function renderEvidenceSection(p) {
       const wrap = el("div");
       const recs = tierFilteredRecords(p);
       if (!recs.length) {
         wrap.appendChild(
           el("p", {
-            className: "pending-note",
-            textContent: "No quotable evidence for the current tier filter.",
+            className: "cl-muted cl-small",
+            textContent: state.tier === "all"
+              ? "No quotable passage is stored for this platform."
+              : "No quotable passage for this platform at the “" + (TIER_LABEL[state.tier] || state.tier) + "” tier. Switch the tier control to All to see every passage.",
           })
         );
         return wrap;
       }
 
+      const shown = recs.slice(0, state.evidenceLimit);
       wrap.appendChild(
         el("p", {
-          className: "section-label",
-          textContent: recs.length + " cases with quotes · click to reveal",
+          className: "cl-small cl-muted pf-ev__sum",
+          textContent: fmt(recs.length) + " passages name this platform" + (state.tier !== "all" ? " at the " + (TIER_LABEL[state.tier] || state.tier) + " tier" : "") + ". Showing " + fmt(shown.length) + ".",
         })
       );
 
-      const list = el("ul", { className: "evidence-list" });
-      const shown = recs.slice(0, state.evidenceLimit);
+      const list = el("ul", { className: "pf-ev" });
 
       shown.forEach((rec) => {
         const tier = rec.stated_vs_inferred || "named_only";
-        const details = el("details", { className: "evidence-item" });
-        const summary = el("summary");
-        summary.appendChild(el("span", { className: "case-id", textContent: rec.case_id }));
-        summary.appendChild(el("span", { className: "tier-tag " + tier, textContent: tier.replace("_", " ") }));
-        details.appendChild(summary);
-
-        const block = el("div", { className: "quote-block" });
-        block.appendChild(el("blockquote", { textContent: '"' + rec.evidence_quote.trim() + '"' }));
+        const item = el("li");
+        item.appendChild(el("blockquote", { className: "cl-quote", textContent: rec.evidence_quote.trim() }));
         if (rec.platform_role_in_offense) {
-          block.appendChild(el("div", { className: "role", textContent: "Role: " + rec.platform_role_in_offense }));
+          item.appendChild(el("div", { className: "pf-ev__role", textContent: "Role: " + rec.platform_role_in_offense }));
         }
-        const link = el("a", {
-          href: "/audit?case=" + encodeURIComponent(rec.case_id),
-          textContent: "Open in Audit →",
-        });
-        block.appendChild(link);
-        details.appendChild(block);
-        list.appendChild(details);
+        item.appendChild(
+          el("div", { className: "pf-ev__row" }, [
+            el("a", { className: "cl-id", href: "/patterns?case=" + encodeURIComponent(rec.case_id), textContent: rec.case_id }),
+            el("a", { href: "/explore?case=" + encodeURIComponent(rec.case_id), textContent: "explore" }),
+            el("span", { className: "cl-chip " + (TIER_CHIP[tier] || "cl-chip--line"), textContent: TIER_LABEL[tier] || tier }),
+          ])
+        );
+        list.appendChild(item);
       });
 
       wrap.appendChild(list);
 
       if (recs.length > state.evidenceLimit) {
+        const remaining = recs.length - state.evidenceLimit;
         const btn = el("button", {
           type: "button",
-          className: "load-more",
-          textContent: "Show more (" + (recs.length - state.evidenceLimit) + " remaining)",
+          className: "cl-btn cl-btn--sm pf-ev__more",
+          textContent: "Show " + Math.min(20, remaining) + " more (" + fmt(remaining) + " remaining)",
           onClick: () => {
             state.evidenceLimit += 20;
-            const oldBody = document.querySelector("#detail-content .detail-body");
+            const oldBody = document.querySelector("#detail-content .pf-detail__body");
             const scrollPos = oldBody ? oldBody.scrollTop : 0;
             renderDetail(p);
-            const newBody = document.querySelector("#detail-content .detail-body");
+            const newBody = document.querySelector("#detail-content .pf-detail__body");
             if (newBody) newBody.scrollTop = scrollPos;
           },
         });
@@ -1488,7 +724,7 @@
         const btn = e.target.closest(".tier-btn");
         if (!btn) return;
         state.tier = btn.dataset.tier;
-        document.querySelectorAll(".tier-btn").forEach((b) => b.classList.toggle("active", b === btn));
+        document.querySelectorAll(".tier-btn").forEach((b) => b.setAttribute("aria-pressed", b === btn ? "true" : "false"));
         renderLanes();
         if (state.selected) {
           const p = getPlatform(state.selected);
@@ -1497,8 +733,18 @@
       });
     }
 
+    function setStatus(kind, text) {
+      const box = document.getElementById("status");
+      if (!text) { box.hidden = true; return; }
+      box.hidden = false;
+      box.className = "cl-notice pf-status" + (kind ? " cl-notice--" + kind : "");
+      box.innerHTML = "";
+      if (kind === "loading") box.appendChild(el("span", { className: "cl-spinner", "aria-hidden": "true" }));
+      box.appendChild(el("span", { textContent: text }));
+    }
+
     async function loadData() {
-      const banner = document.getElementById("error-banner");
+      setStatus("loading", "Loading platform evidence…");
       try {
         const [evidenceRes, harmRes] = await Promise.all([
           fetch("/ontology/platform-affordance-evidence/platform_affordance_evidence.json", { cache: "no-store" }),
@@ -1514,7 +760,18 @@
         state.harm = harm;
         state.platforms = buildPlatforms(evidence, harm);
 
+        setStatus(null, "");
+        if (!state.platforms.length) {
+          setStatus("warn", "The evidence file loaded but holds no platform records with a stated, inferred or named-only tier.");
+        }
+        if (!harmRes.ok) {
+          setStatus("warn", "Harm analysis file unavailable (" + harmRes.status + "); showing evidence only. Affordance, misuse-surface and harm-vector tabs will be empty.");
+        }
+
         renderStats();
+        document.getElementById("toolbar").hidden = false;
+        document.getElementById("layout").hidden = false;
+        var framingEl = document.getElementById("framing"); if (framingEl) framingEl.hidden = false;
         renderLanes();
         bindControls();
 
@@ -1526,15 +783,12 @@
           selectPlatform("Snapchat");
         }
       } catch (err) {
-        banner.hidden = false;
-        banner.textContent = "Failed to load platform harm data: " + (err.message || err);
+        setStatus("danger", "Failed to load platform harm data: " + (err.message || err) + ". Reload to try again.");
         console.error(err);
-      } finally {
-        document.getElementById("loading").classList.add("hidden");
       }
     }
 
     loadData();
-    </script>
+  </script>
 </body>
 </html>

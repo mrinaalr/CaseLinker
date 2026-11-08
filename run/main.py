@@ -3689,15 +3689,6 @@ async def serve_analysis():
     else:
         return HTMLResponse(content="<h1>Analysis page not found</h1>", status_code=404)
 
-@app.get("/clusters", response_class=HTMLResponse)
-async def serve_clusters():
-    """Serve the HTML clusters page"""
-    html_path = Path(__file__).parent.parent / "visualization" / "clusters.html"
-    if html_path.exists():
-        return HTMLResponse(content=read_utf8_text_file(html_path))
-    else:
-        return HTMLResponse(content="<h1>Clusters page not found</h1>", status_code=404)
-
 @app.get("/api/location-stats")
 @limiter.limit("60/minute")
 def get_location_stats(request: Request):
@@ -3761,15 +3752,6 @@ def get_location_stats(request: Request):
         return []
 
 
-@app.get("/stats", response_class=HTMLResponse)
-async def serve_stats():
-    """Serve the HTML stats page"""
-    html_path = Path(__file__).parent.parent / "visualization" / "stats.html"
-    if html_path.exists():
-        return HTMLResponse(content=read_utf8_text_file(html_path))
-    else:
-        return HTMLResponse(content="<h1>Stats page not found</h1>", status_code=404)
-
 @app.get("/search", response_class=HTMLResponse)
 async def serve_search():
     """Serve the HTML search page"""
@@ -3780,22 +3762,8 @@ async def serve_search():
         return HTMLResponse(content="<h1>Search page not found</h1>", status_code=404)
 
 
-@app.get("/query", response_class=HTMLResponse)
-async def serve_query():
-    """Custom analysis: browser-side JS snippets calling public APIs only."""
-    html_path = Path(__file__).parent.parent / "visualization" / "query.html"
-    if html_path.exists():
-        return HTMLResponse(content=read_utf8_text_file(html_path))
-    return HTMLResponse(content="<h1>Query page not found</h1>", status_code=404)
 
 
-@app.get("/llm", response_class=HTMLResponse)
-async def serve_llm():
-    """LLM assistant UI (Groq or Gemini + read-only DB via ``nl_llm`` / ``POST /api/llm/chat``)."""
-    html_path = Path(__file__).parent.parent / "visualization" / "LLM.html"
-    if html_path.exists():
-        return HTMLResponse(content=read_utf8_text_file(html_path))
-    return HTMLResponse(content="<h1>LLM page not found</h1>", status_code=404)
 
 
 @app.post("/api/llm/chat")
@@ -4043,13 +4011,6 @@ def get_lifecycle_anchors(request: Request):
     return payload
 
 
-@app.get("/triage", response_class=HTMLResponse)
-async def serve_triage():
-    """Serve the triage ML evaluation page"""
-    html_path = Path(__file__).parent.parent / "visualization" / "triage.html"
-    if html_path.exists():
-        return HTMLResponse(content=read_utf8_text_file(html_path))
-    return HTMLResponse(content="<h1>Triage page not found</h1>", status_code=404)
 
 
 @app.get("/api/triage-eval")
@@ -4238,14 +4199,6 @@ def api_triage_live(body: LiveTriageRequest):
     }
 
 
-@app.get("/case-studies", response_class=HTMLResponse)
-async def serve_case_studies():
-    """Serve the HTML case studies page (gate + reading experience)."""
-    html_path = Path(__file__).parent.parent / "visualization" / "case-studies.html"
-    if html_path.exists():
-        return HTMLResponse(content=read_utf8_text_file(html_path))
-    else:
-        return HTMLResponse(content="<h1>Case Studies page not found</h1>", status_code=404)
 
 
 # ---- Case Studies content + community notes ----------------------------------
@@ -4513,13 +4466,6 @@ def api_case_studies_notes_post(request: Request, case_id: str, body: CaseStudyN
     return note
 
 
-@app.get("/tech-landscape", response_class=HTMLResponse)
-async def serve_tech_landscape():
-    """Serve the Technology page (/tech-landscape); data from GET /api/technology-revolver."""
-    html_path = Path(__file__).parent.parent / "visualization" / "tech-landscape.html"
-    if html_path.exists():
-        return HTMLResponse(content=read_utf8_text_file(html_path))
-    return HTMLResponse(content="<h1>Tech Landscape</h1><p>Page not found</p>", status_code=404)
 
 
 @app.get("/sources", response_class=HTMLResponse)
@@ -4549,6 +4495,15 @@ async def serve_under_the_hood():
         return HTMLResponse(content=read_utf8_text_file(html_path))
     else:
         return HTMLResponse(content="<h1>Under the Hood</h1><p>Page not found</p>", status_code=404)
+
+
+@app.get("/explore", response_class=HTMLResponse)
+async def serve_explore():
+    """Walk a case graph by hand: case id or IRI → nodes → provenance → passages."""
+    html_path = Path(__file__).parent.parent / "visualization" / "explore.html"
+    if html_path.exists():
+        return HTMLResponse(content=read_utf8_text_file(html_path))
+    return HTMLResponse(content="<h1>Explore</h1><p>Page not found</p>", status_code=404)
 
 
 @app.get("/crash-course", response_class=HTMLResponse)

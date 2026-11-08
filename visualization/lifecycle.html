@@ -1,100 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CaseLinker — Exploitation Lifecycles</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,600;9..40,700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css" crossorigin="anonymous" />
-  <link rel="stylesheet" href="/viz-assets/lifecycle.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lifecycle · CaseLinker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/viz-assets/v4.css?v=4.1">
+  <script src="/viz-assets/v4.js?v=4.1" defer></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="/viz-assets/lifecycle.css?v=4.2">
   <script src="https://d3js.org/d3.v7.min.js"></script>
-    <link rel="stylesheet" href="/viz-assets/site-nav.css">
 </head>
 <body class="lifecycle-page">
-  <nav class="nav" aria-label="Main">
-    <a href="/">Home</a>
-    <a href="/visualization">Visualization</a>
-    <a href="/analysis">Analysis</a>
-    <a href="/clusters">Clusters</a>
-    <a href="/stats">Stats</a>
-    <a href="/search">Search</a>
-    <a href="/lifecycle" aria-current="page">Lifecycle</a>
-    <a href="/query">Query</a>
-    <a href="/triage">Triage</a>
-    <a href="/case-studies">Case Studies</a>
-    <a href="/tech-landscape" class="tech-landscape-link"><span class="tls-gate--left">Tech</span><span class="tls-gate--mid"> </span><span class="tls-gate--right">Landscape</span></a>
-    <a href="/llm">LLM</a>
-    <a href="/sources">Sources</a>
-    <a href="/audit">Audit</a>
-    <a href="/patterns" class="patterns">Ontology & Graphs</a>
-    <a href="/under-the-hood" class="hood-link">Look Under the Hood</a>
-  </nav>
+  <div id="cl-nav" data-active="lifecycle"></div>
 
-  <div class="lifecycle-wrap">
-    <header class="lifecycle-header">
-      <p class="lifecycle-eyebrow">PHASE 2 · LIFECYCLE</p>
-      <h1 class="lifecycle-title">Exploitation Lifecycles</h1>
-      <p class="lifecycle-subtitle">
-        Five anchor PACER federal cases modeled as CAC ontology state machines, plus 25 expansion cases
-        from full federal dockets. Fundamental stages (5/5) represent the invariant exploitation stages.
-      </p>
-      <div class="lifecycle-header-row">
-        <div class="stat-pills">
-          <span class="stat-pill"><strong id="stat-cases">5</strong> CASES</span>
-          <span class="stat-pill"><strong>5</strong> OFFENSE TYPES</span>
-          <span class="stat-pill"><strong id="stat-stages">—</strong> ANCHOR STAGES</span>
-          <span class="stat-pill"><strong id="stat-transitions">—</strong> SHARED TRANSITIONS</span>
-        </div>
-        <div class="offense-filter" id="offense-filter">
-          <button
-            type="button"
-            class="offense-filter-trigger"
-            id="offense-filter-trigger"
-            aria-expanded="false"
-            aria-controls="offense-filter-panel"
-            aria-label="Filter by offense type"
-          >
-            <span class="offense-filter-eyebrow">Offense</span>
-            <span class="offense-filter-summary" id="offense-filter-summary"></span>
-          </button>
-          <div class="offense-filter-panel" id="offense-filter-panel" hidden>
-            <div class="offense-filter-options" id="offense-filter-options" role="group" aria-label="Offense types"></div>
-            <button type="button" class="offense-filter-all" id="offense-filter-all">All</button>
-          </div>
-        </div>
-      </div>
+  <div class="cl-page cl-page--wide">
+    <header class="cl-head">
+      <h1 class="cl-title">State machines</h1>
     </header>
 
-    <div class="canvas-scroll">
-      <div id="lifecycle-canvas" role="img" aria-label="Canonical PACER case lifecycle swimlanes"></div>
+    <div class="cl-stats lifecycle-stats">
+      <div class="cl-stat"><div class="cl-stat__n" id="stat-cases">—</div><div class="cl-stat__l">cases</div></div>
+      <div class="cl-stat"><div class="cl-stat__n">5</div><div class="cl-stat__l">offence types</div></div>
     </div>
 
-    <div class="canvas-scroll">
-      <section id="fundamental-section" class="fundamental-section" aria-label="Fundamental stages"></section>
+    <div class="cl-toolbar lifecycle-toolbar offense-filter" id="offense-filter">
+      <span class="cl-label">Offence type</span>
+      <div class="offense-filter-options" id="offense-filter-options" role="group" aria-label="Offence types"></div>
+      <button type="button" class="cl-btn cl-btn--ghost cl-btn--xs offense-filter-all" id="offense-filter-all">All</button>
     </div>
 
-    <section id="expansion-section" class="expansion-section" hidden aria-label="Expansion cases from federal dockets">
-      <header class="expansion-header">
-        <p class="expansion-eyebrow">EXPANSION · PACER DOCKETS</p>
-        <h2 class="expansion-title">Modeled from full federal court records</h2>
-        <p class="expansion-subtitle" id="expansion-subtitle">
+    <section class="lifecycle-section" aria-labelledby="anchor-heading">
+      <header class="lifecycle-section-head">
+        <div class="cl-eyebrow">ANCHOR · 5 PACER CASES</div>
+        <h2 class="lifecycle-h2" id="anchor-heading">One trajectory per offence</h2>
+      </header>
+      <div id="lifecycle-canvas" class="cl-canvas lifecycle-canvas" role="img" aria-label="Canonical PACER case lifecycle swimlanes">
+        <div class="lifecycle-loading">Rendering lifecycle swimlanes…</div>
+      </div>
+      <div id="affordance-legend" class="affordance-legend" aria-label="Affordance legend"></div>
+    </section>
+
+    <section class="lifecycle-section" aria-labelledby="fundamental-heading">
+      <header class="lifecycle-section-head">
+        <div class="cl-eyebrow">STATE MACHINE · 30 PACER CASES</div>
+        <h2 class="lifecycle-h2" id="fundamental-heading">State machine</h2>
+      </header>
+      <section id="fundamental-section" class="fundamental-section cl-card cl-card--pad" aria-label="State machine backbone and equations"></section>
+    </section>
+
+    <section id="expansion-section" class="lifecycle-section expansion-section" hidden aria-label="Expansion cases from federal dockets">
+      <header class="lifecycle-section-head expansion-header">
+        <div class="cl-eyebrow expansion-eyebrow">EXPANSION · PACER DOCKETS</div>
+        <h2 class="lifecycle-h2 expansion-title">Expansion</h2>
+        <p class="lifecycle-sub expansion-subtitle" id="expansion-subtitle">
           Additional cases inferred by most-severe charge and plotted on the same CAC phase grid.
         </p>
       </header>
-      <div class="canvas-scroll">
-        <div id="lifecycle-canvas-expansion" role="img" aria-label="Expansion case lifecycle swimlanes"></div>
-      </div>
+      <div id="lifecycle-canvas-expansion" class="cl-canvas lifecycle-canvas" role="img" aria-label="Expansion case lifecycle swimlanes"></div>
     </section>
   </div>
 
   <div id="detail-backdrop" class="detail-backdrop" aria-hidden="true"></div>
-  <aside id="detail-panel" class="detail-panel" aria-label="Stage detail"></aside>
-
-  <footer id="affordance-legend" class="affordance-legend" aria-label="Affordance legend"></footer>
+  <aside id="detail-panel" class="detail-panel cl-card" aria-label="Stage detail"></aside>
 
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js" crossorigin="anonymous"></script>
-  <script src="/viz-assets/lifecycle.js"></script>
+  <script src="/viz-assets/lifecycle.js?v=4.7"></script>
 </body>
 </html>

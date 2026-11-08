@@ -1,708 +1,224 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CaseLinker - System Architecture</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
-            background: #fafafa;
-            min-height: 100vh;
-            color: #1a1a1a;
-        }
-        .nav {
-            background: white;
-            padding: 15px 24px 15px 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            display: flex;
-            flex-wrap: nowrap;
-            align-items: center;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            white-space: nowrap;
-            overflow-x: auto;
-        }
-        .nav a {
-            white-space: nowrap;
-            flex-shrink: 0;
-            color: #4CAF50;
-            text-decoration: none;
-            margin-right: 16px;
-        }
-        .nav a:hover {
-            text-decoration: underline;
-        }
-        .nav a.patterns {
-            margin-left: 10px;
-            color: #dc2626;
-            font-weight: 700;
-
-            animation: pulseRed 8s ease-in-out infinite;
-        }
-        @keyframes pulseRed {
-            0%, 100% { 
-                opacity: 1;
-            }
-            50% { 
-                opacity: 0.92;
-            }
-        }
-        .hood-link {
-            margin-left: auto;
-            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ff6b35 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: pulseOrange 6s ease-in-out infinite;
-            position: relative;
-            font-weight: 600;
-        }
-        @keyframes pulseOrange {
-            0%, 100% { opacity: 0.75; }
-            50% { opacity: 0.90; }
-        }
-        .tech-landscape-link {
-            display: inline-block;
-            vertical-align: baseline;
-            font-weight: 400;
-            position: relative;
-            text-decoration: none;
-            white-space: nowrap;
-        }
-        .tech-landscape-link .tls-gate--left {
-            display: inline;
-            vertical-align: baseline;
-            background: linear-gradient(135deg, #2e7d32 0%, #43a047 38%, #66bb6a 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            filter: drop-shadow(0 0 5px rgba(76, 175, 80, 0.44)) drop-shadow(0 0 11px rgba(102, 187, 106, 0.28)) drop-shadow(-5px 0 4px rgba(46, 125, 50, 0.24));
-            animation: tlsGatePulse 16s ease-in-out infinite;
-        }
-        .tech-landscape-link .tls-gate--mid {
-            display: inline;
-            vertical-align: baseline;
-            color: #2e7d32;
-            -webkit-text-fill-color: #2e7d32;
-            font-weight: 400;
-            filter: none;
-            opacity: 0.88;
-            padding: 0 5px;
-        }
-        .tech-landscape-link .tls-gate--right {
-            display: inline;
-            vertical-align: baseline;
-            background: linear-gradient(135deg, #43a047 0%, #66bb6a 52%, #2e7d32 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            filter: drop-shadow(0 0 5px rgba(76, 175, 80, 0.44)) drop-shadow(0 0 11px rgba(102, 187, 106, 0.28)) drop-shadow(5px 0 4px rgba(46, 125, 50, 0.24));
-            animation: tlsGatePulse 16s ease-in-out infinite;
-        }
-        @keyframes tlsGatePulse {
-            0%, 100% { opacity: 0.87; }
-            50% { opacity: 0.94; }
-        }
-        .nav a.tech-landscape-link:hover {
-            text-decoration: none;
-        }
-        .nav a.tech-landscape-link::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: -2px;
-            height: 2px;
-            background: rgba(67, 160, 71, 0.62);
-            opacity: 0;
-            transition: opacity 0.12s ease;
-            pointer-events: none;
-        }
-        .nav a.tech-landscape-link:hover::after {
-            opacity: 1;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 80px 20px;
-        }
-        .flow-container {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 40px;
-            padding: 40px 0;
-        }
-        .flow-item {
-            position: relative;
-            width: 100%;
-            max-width: 700px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .pdf-source {
-            width: 200px;
-            height: 260px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.12);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-        }
-        .pdf-source:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.18);
-            border-color: #4CAF50;
-        }
-        .pdf-source.active {
-            border-color: #4CAF50;
-            box-shadow: 0 8px 30px rgba(76, 175, 80, 0.3);
-        }
-        .pdf-icon {
-            width: 80px;
-            height: 100px;
-            background: linear-gradient(135deg, #e53935 0%, #c62828 100%);
-            border-radius: 4px;
-            position: relative;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(229, 57, 53, 0.3);
-        }
-        .pdf-icon::before {
-            content: '';
-            position: absolute;
-            top: 8px;
-            left: 8px;
-            right: 8px;
-            height: 2px;
-            background: rgba(255,255,255,0.3);
-            border-radius: 1px;
-        }
-        .pdf-icon::after {
-            content: '';
-            position: absolute;
-            top: 16px;
-            left: 8px;
-            right: 8px;
-            height: 2px;
-            background: rgba(255,255,255,0.3);
-            border-radius: 1px;
-        }
-        .pdf-label {
-            font-size: 14px;
-            color: #666;
-            font-weight: 500;
-            text-align: center;
-            padding: 0 20px;
-        }
-        .layer-card {
-            background: white;
-            border-radius: 12px;
-            padding: 40px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-            position: relative;
-            width: 100%;
-        }
-        .layer-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
-            border-color: #4CAF50;
-        }
-        .layer-card.active {
-            border-color: #4CAF50;
-            box-shadow: 0 8px 30px rgba(76, 175, 80, 0.25);
-        }
-        .layer-title {
-            font-size: 24px;
-            font-weight: 600;
-            color: #1a1a1a;
-            margin-bottom: 12px;
-            letter-spacing: -0.5px;
-        }
-        .layer-subtitle {
-            font-size: 14px;
-            color: #888;
-            font-weight: 400;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .detail-panel {
-            display: none;
-            margin-top: 20px;
-            padding: 30px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            border-left: 4px solid #4CAF50;
-            animation: slideDown 0.3s ease;
-            width: 100%;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        .detail-panel.active {
-            display: block;
-        }
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        .detail-content {
-            color: #444;
-            line-height: 1.8;
-            font-size: 15px;
-        }
-        .detail-content strong {
-            color: #1a1a1a;
-            font-weight: 600;
-        }
-        .detail-list {
-            margin-top: 20px;
-            list-style: none;
-        }
-        .detail-list li {
-            padding: 8px 0;
-            color: #555;
-            font-size: 14px;
-            border-bottom: 1px solid #e0e0e0;
-        }
-        .detail-list li:last-child {
-            border-bottom: none;
-        }
-        .detail-list li::before {
-            content: '→';
-            color: #4CAF50;
-            font-weight: bold;
-            margin-right: 12px;
-        }
-        .chain-connector {
-            position: relative;
-            width: 4px;
-            height: 50px;
-            margin: 0 auto;
-        }
-        .chain-link {
-            width: 100%;
-            height: 12px;
-            background: linear-gradient(180deg, #4CAF50 0%, #45a049 100%);
-            border-radius: 2px;
-            margin-bottom: 4px;
-            box-shadow: 0 2px 4px rgba(76, 175, 80, 0.2);
-            position: relative;
-        }
-        .chain-link::after {
-            content: '';
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 6px solid transparent;
-            border-right: 6px solid transparent;
-            border-top: 8px solid #4CAF50;
-            top: 100%;
-        }
-        .visual-preview {
-            margin-top: 20px;
-            padding: 20px;
-            background: white;
-            border-radius: 6px;
-            border: 1px solid #e0e0e0;
-        }
-        .code-snippet {
-            background: #1e1e1e;
-            color: #d4d4d4;
-            padding: 20px;
-            border-radius: 6px;
-            font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
-            font-size: 13px;
-            line-height: 1.6;
-            overflow-x: auto;
-            margin-top: 15px;
-        }
-        .code-snippet .keyword {
-            color: #569cd6;
-        }
-        .code-snippet .string {
-            color: #ce9178;
-        }
-        .code-snippet .comment {
-            color: #6a9955;
-        }
-        .schema-visual {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-        .schema-box {
-            background: white;
-            padding: 15px;
-            border-radius: 6px;
-            border: 1px solid #e0e0e0;
-            font-size: 13px;
-        }
-        .schema-box-title {
-            font-weight: 600;
-            color: #4CAF50;
-            margin-bottom: 8px;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .schema-box-content {
-            color: #666;
-            font-size: 12px;
-            line-height: 1.6;
-        }
-    </style>
-    <link rel="stylesheet" href="/viz-assets/site-nav.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Under the hood · CaseLinker</title>
+  <meta name="description" content="How CaseLinker turns public case reports into a provenance-tracked corpus, CASE/UCO/CAC graphs and a SPARQL store, and how that is served to browsers, scripts and agents.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/viz-assets/v4.css?v=4.1">
+  <script src="/viz-assets/caselinker-api.js"></script>
+  <script src="/viz-assets/v4.js?v=4.1" defer></script>
+  <style>
+    .flow { max-width: 760px; margin: 8px auto 0; display: flex; flex-direction: column; align-items: center; }
+    .flow-item { width: 100%; }
+    .layer { width: 100%; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 26px 30px; cursor: pointer; box-shadow: var(--shadow-1); transition: transform .15s var(--ease), box-shadow .15s var(--ease), border-color .15s var(--ease); display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
+    .layer:hover { transform: translateY(-2px); box-shadow: var(--shadow-2); border-color: var(--ink-4); }
+    .layer.is-open { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(29,78,137,.10); }
+    .layer__k { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); }
+    .layer__t { font-size: 22px; font-weight: 600; letter-spacing: -.01em; margin-top: 4px; }
+    .layer__s { font-size: 13px; color: var(--ink-3); margin-top: 2px; }
+    .layer__chev { width: 10px; height: 10px; border-right: 1.5px solid var(--ink-3); border-bottom: 1.5px solid var(--ink-3); transform: rotate(45deg); transition: transform .15s var(--ease); flex: none; align-self: center; }
+    .layer.is-open .layer__chev { transform: rotate(-135deg); }
+    .source { width: 220px; margin: 0 auto; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 24px 18px 18px; text-align: center; cursor: pointer; box-shadow: var(--shadow-1); transition: transform .15s var(--ease), box-shadow .15s var(--ease), border-color .15s var(--ease); }
+    .source:hover { transform: translateY(-2px); box-shadow: var(--shadow-2); border-color: var(--ink-4); }
+    .source.is-open { border-color: var(--accent); }
+    .source__doc { width: 64px; height: 82px; margin: 0 auto 14px; border-radius: 4px; background: var(--danger); position: relative; box-shadow: 0 2px 8px rgba(163,38,31,.25); }
+    .source__doc::before, .source__doc::after { content: ""; position: absolute; left: 10px; right: 10px; height: 2px; background: rgba(255,255,255,.4); border-radius: 1px; }
+    .source__doc::before { top: 12px; } .source__doc::after { top: 20px; }
+    .source__t { font-size: 14px; font-weight: 600; }
+    .source__s { font-size: 12.5px; color: var(--ink-3); margin-top: 2px; }
+    .detail { display: none; margin-top: 14px; padding: 22px 26px; background: var(--surface-2); border-radius: 10px; border-left: 3px solid var(--accent); }
+    .detail.is-open { display: block; animation: hood-down .18s var(--ease); margin-bottom: 22px; }
+    @keyframes hood-down { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+    .detail > strong { display: block; font-size: 15px; font-weight: 600; margin-bottom: 10px; }
+    .detail p { font-size: 14px; color: var(--ink-2); max-width: 66ch; }
+    .code { font-family: var(--mono); font-size: 12.5px; line-height: 1.5; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; margin: 12px 0; white-space: pre-wrap; color: var(--ink); overflow-x: auto; }
+    .code .c { color: var(--ink-3); } .code .k { color: var(--accent); }
+    .detail ul { margin: 14px 0 0; padding: 0; list-style: none; }
+    .detail li { font-size: 13.5px; color: var(--ink-2); padding: 9px 0 9px 16px; position: relative; border-top: 1px solid var(--line); line-height: 1.5; }
+    .detail li:first-child { border-top: 0; }
+    .detail li::before { content: ""; position: absolute; left: 2px; top: 17px; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+    .detail a { font-weight: 500; }
+    .detail .cl-chip { font-family: var(--mono); font-size: 11.5px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .chain { width: 2px; height: 40px; background: var(--line-2); position: relative; margin: 0 auto; }
+    .chain::after { content: ""; position: absolute; left: 50%; bottom: -4px; width: 8px; height: 8px; margin-left: -4px; border-radius: 50%; background: var(--ink-4); }
+    .hood-foot { max-width: 760px; margin: 56px auto 0; padding-top: 22px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 10px 24px; justify-content: center; font-size: 14px; }
+    .hood-foot a { color: var(--ink-2); font-weight: 500; }
+    .hood-foot a:hover { color: var(--accent); }
+    @media (max-width: 640px) { .layer { padding: 20px 18px; } .detail { padding: 16px; } }
+  </style>
 </head>
 <body>
-           <div class="nav">
-        <a href="/">Home</a>
-        <a href="/visualization">Visualization</a>
-        <a href="/analysis">Analysis</a>
-        <a href="/clusters">Clusters</a>
-        <a href="/stats">Stats</a>
-        <a href="/search">Search</a>
-        <a href="/lifecycle">Lifecycle</a>
-        <a href="/query">Query</a>
-        <a href="/triage">Triage</a>
-        <a href="/case-studies">Case Studies</a>
-        <a href="/tech-landscape" class="tech-landscape-link"><span class="tls-gate--left">Tech</span><span class="tls-gate--mid"> </span><span class="tls-gate--right">Landscape</span></a>
-        <a href="/llm">LLM</a>
-        <a href="/sources">Sources</a>
-        <a href="/audit">Audit</a>
-        <a href="/patterns" class="patterns">Ontology & Graphs</a>
-        <a href="/under-the-hood" class="hood-link">Look Under the Hood</a>
+  <div id="cl-nav" data-active="hood"></div>
+
+  <main class="cl-page">
+    <header class="cl-head"><h1 class="cl-title">Under the hood</h1></header>
+
+
+    <div class="flow">
+
+      <div class="flow-item">
+        <div class="source" data-layer="source" role="button" tabindex="0">
+          <div class="source__doc" aria-hidden="true"></div>
+          <div class="source__t">Case reports</div>
+          <div class="source__s">press releases, dockets, PDFs</div>
+        </div>
+        <div class="detail" id="d-source">
+          <strong>Public case reports from 70 agencies and task forces</strong>
+          <p>ICAC task force and police releases, state attorneys general, DOJ and NCMEC reports, and federal court records from PACER. Everything was public before CaseLinker read it.</p>
+          <ul>
+            <li>70 sources. Each listing is fetched, every URL probed, and only public documents are downloaded</li>
+            <li>Each case keeps its source, URL and fetch time, so any value can be traced back to a document</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="chain" aria-hidden="true"></div>
+
+      <div class="flow-item">
+        <div class="layer" data-layer="collect" role="button" tabindex="0">
+          <div><div class="layer__k">Layer 1</div><div class="layer__t">Ingestion</div><div class="layer__s">collected documents become text, one case per release</div></div>
+          <span class="layer__chev" aria-hidden="true"></span>
+        </div>
+        <div class="detail" id="d-collect">
+          <strong>Turns collected documents into cases</strong>
+<div class="code"><span class="c"># PDF and HTML → plain text → normalise → split</span>
+
+text  = extract_text(<span class="k">document</span>)              <span class="c"># pdfplumber for PDFs</span>
+
+cases = case_batching(text, org=<span class="k">"azicac"</span>)   <span class="c"># one case per release</span>
+
+<span class="c"># ids: {source}_{year}_{seq} · nj_ag_2017_001, wy_dci_2023_004</span></div>
+          <ul>
+            <li>PDFs and web releases become one plain-text format, so every later step reads the same thing</li>
+            <li>Boilerplate and links are stripped, then each source's date and heading pattern splits the text into one case per release</li>
+            <li>A content fingerprint stops the same release entering the corpus twice</li>
+            <li>Person names are masked in everything public; only their character offsets are kept</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="chain" aria-hidden="true"></div>
+
+      <div class="flow-item">
+        <div class="layer" data-layer="extract" role="button" tabindex="0">
+          <div><div class="layer__k">Layer 2</div><div class="layer__t">Extraction</div><div class="layer__s">four readers, one decision, a span for every value</div></div>
+          <span class="layer__chev" aria-hidden="true"></span>
+        </div>
+        <div class="detail" id="d-extract">
+          <strong>Reads each case into structured fields, with a span for every value</strong>
+<div class="code"><span class="c"># readers run side by side on the same text</span>
+
+regex · spaCy NER · Stanza NER · LLM residue pass
+
+<span class="c"># each emits (field, value, start, end, confidence)</span>
+
+resolution → one value per field, disagreements go to review</div>
+          <ul>
+            <li>Ages, dates, sentences, platforms, agencies, locations, investigation type and charges are deterministically extracted</li>
+            <li>Agencies resolve to a law-enforcement registry and places to the Census gazetteer, so the same name means the same thing across cases</li>
+            <li>Four readers vote on every field; where they disagree, the case goes to review instead of a guess</li>
+            <li><a href="/audit">Audit</a> shows every value beside the passage it came from</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="chain" aria-hidden="true"></div>
+
+      <div class="flow-item">
+        <div class="layer" data-layer="store" role="button" tabindex="0">
+          <div><div class="layer__k">Layer 3</div><div class="layer__t">Storage</div><div class="layer__s">case table, provenance, graphs on disk, SPARQL store</div></div>
+          <span class="layer__chev" aria-hidden="true"></span>
+        </div>
+        <div class="detail" id="d-store">
+          <strong>Keeps the cases, the evidence and the graphs</strong>
+<div class="code">PostgreSQL (Railway) · SQLite locally      <span class="c"># cases, assertions, resolutions</span>
+
+ontology/graph_output/*.ttl | *.jsonld     <span class="c"># one CAC graph + one provenance graph per case</span>
+
+Oxigraph behind /sparql                    <span class="c"># 10,711 case graphs, 10,711 provenance graphs, PACER</span></div>
+          <ul>
+            <li>Every extractor's answer is stored, not only the winning value, so a resolution can be re-run or audited</li>
+            <li>Redis caches the heavy API responses, so the facet tree and cluster pages answer in milliseconds</li>
+            <li>Every graph passes SHACL validation before it enters the store, so a bad mapping never reaches a query</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="chain" aria-hidden="true"></div>
+
+      <div class="flow-item">
+        <div class="layer" data-layer="graph" role="button" tabindex="0">
+          <div><div class="layer__k">Layer 4</div><div class="layer__t">Knowledge graphs and analysis</div><div class="layer__s">CASE / UCO / CAC, w3id IRIs, state machines</div></div>
+          <span class="layer__chev" aria-hidden="true"></span>
+        </div>
+        <div class="detail" id="d-graph">
+          <strong>Maps each case to CASE/UCO/CAC, with its provenance beside it</strong>
+<div class="code"><span class="c"># deterministic mapping, no custom predicates</span>
+
+features → CAC entities → Turtle + JSON-LD → SHACL → Oxigraph
+
+https://w3id.org/caselinker/resource/case/{id}             <span class="c"># the case graph</span>
+
+https://w3id.org/caselinker/resource/case/{id}/provenance  <span class="c"># oa:Annotation per value</span></div>
+          <ul>
+            <li>Every case, step, agency, platform and location has a persistent w3id IRI, so a result can be cited and dereferenced; <a href="/explore">Explore</a> walks them</li>
+            <li>30 PACER cases are modelled as CAC phase <a href="/lifecycle">state machines</a>, so a court record can be read as phases and the affordance that enabled each step</li>
+            <li>Facet cohorts, clustering and triage run over the case table and come back through the API</li>
+          </ul>
+          <div class="chips"><span class="cl-chip">CAC Ontology</span><span class="cl-chip">UCO</span><span class="cl-chip">CASE</span><span class="cl-chip">Web Annotation</span><span class="cl-chip">PROV</span></div>
+        </div>
+      </div>
+
+      <div class="chain" aria-hidden="true"></div>
+
+      <div class="flow-item">
+        <div class="layer" data-layer="serve" role="button" tabindex="0">
+          <div><div class="layer__k">Layer 5</div><div class="layer__t">Interface</div><div class="layer__s">web app, REST API, SPARQL endpoint, MCP server</div></div>
+          <span class="layer__chev" aria-hidden="true"></span>
+        </div>
+        <div class="detail" id="d-serve">
+          <strong>Serves the same corpus to people, scripts and agents</strong>
+<div class="code">/analysis /patterns /explore /lifecycle /visualization /search /audit /sources
+
+/api/*          <span class="c"># REST, OpenAPI at /docs</span>
+
+/sparql         <span class="c"># GET | POST, read-only</span>
+
+/mcp /mcp-http  <span class="c"># 55 tools for agents: corpus, facets, graphs, SPARQL, triage</span></div>
+          <ul>
+            <li>Production runs on Railway with PostgreSQL; a local clone runs on SQLite against the live SPARQL store</li>
+            <li>Explore in the browser, query the public APIs from a script, or use an agent with the MCP server</li>
+          </ul>
+        </div>
+      </div>
+
     </div>
 
-    <div class="container">
-        <div class="flow-container">
-            <!-- PDF Source -->
-            <div class="flow-item">
-                <div class="pdf-source" id="pdf-source">
-                    <div class="pdf-icon"></div>
-                    <div class="pdf-label">Case Reports</div>
-        </div>
-                <div class="detail-panel" id="pdf-detail">
-                    <div class="detail-content">
-                        <strong>Structured Case Reports / Case Related Data</strong>
-                        <p style="margin-top: 15px; color: #666;">
-                            Input documents containing case narratives, investigation reports, and case-related data as PDFs.
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Chain Connector 1 -->
-            <div class="chain-connector">
-                <div class="chain-link"></div>
-                </div>
-
-            <!-- Ingestion Layer -->
-            <div class="flow-item">
-                <div class="layer-card" id="ingestion-layer">
-                    <div class="layer-subtitle">Layer 1</div>
-                    <div class="layer-title">Ingestion</div>
-                </div>
-                <div class="detail-panel" id="ingestion-detail">
-                    <div class="detail-content">
-                        <strong>Text Extraction & Normalization</strong>
-                        <div class="visual-preview">
-                            <div class="code-snippet">
-<span class="comment"># Extract text from PDF</span><br>
-<span class="keyword">text</span> = extract_pdf_text(<span class="string">"case_report.pdf"</span>)<br>
-<span class="comment"># Normalize format</span><br>
-<span class="keyword">normalized</span> = normalize_text(<span class="keyword">text</span>)<br>
-<span class="comment"># Returns: Clean, structured text ready for processing</span>
-                            </div>
-                        </div>
-                        <ul class="detail-list">
-                            <li>PDF text extraction using pdfplumber</li>
-                            <li>Organization detection from filenames</li>
-                            <li>Batch processing support</li>
-                            <li>Input validation and error handling</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Chain Connector 2 -->
-            <div class="chain-connector">
-                <div class="chain-link"></div>
-                    </div>
-
-            <!-- Processing Layer -->
-            <div class="flow-item">
-                <div class="layer-card" id="processing-layer">
-                    <div class="layer-subtitle">Layer 2</div>
-                    <div class="layer-title">Processing</div>
-                </div>
-                <div class="detail-panel" id="processing-detail">
-                    <div class="detail-content">
-                        <strong>Feature Extraction & Case Schema</strong>
-                        <p style="margin-top: 15px; color: #666; font-size: 14px;">
-                            <strong>How it's done:</strong> Hybrid approach using regex patterns for structured data (demographics, platforms, evidence, prosecution) and pattern-based matching for semantic features (severity indicators, case topics, severity phrases). ML/NER extraction supplements with law enforcement agencies, ages, dates, and locations. Text is cleaned (URL removal, artifact normalization), cases are batched by temporal patterns, and unique case IDs are generated.
-                        </p>
-                        <div class="visual-preview">
-                            <div class="code-snippet">
-<span class="comment"># 1. Clean URLs and artifacts</span><br>
-<span class="keyword">cleaned_text</span> = clean_urls_from_text(<span class="keyword">raw_text</span>)<br><br>
-<span class="comment"># 2. Batch cases by month patterns</span><br>
-<span class="keyword">cases</span> = case_batching(<span class="keyword">cleaned_text</span>, org_name=<span class="string">"azicac"</span>)<br><br>
-<span class="comment"># 3. Extract features (regex + patterns + NER)</span><br>
-<span class="keyword">features</span> = extract_features(<span class="keyword">case</span>)<br>
-<span class="comment"># Regex: Demographics, platforms, evidence, prosecution</span><br>
-<span class="comment"># Patterns: Severity indicators, case topics, phrases</span><br>
-<span class="comment"># NER: Law enforcement agencies, ages, dates, locations</span>
-                </div>
-                        </div>
-                        <div class="schema-visual">
-                            <div class="schema-box">
-                                <div class="schema-box-title">Demographics</div>
-                                <div class="schema-box-content">Victim age, victim_gender, count<br>Perpetrator age, perpetrator_gender, RSO status</div>
-                            </div>
-                            <div class="schema-box">
-                                <div class="schema-box-title">Platforms</div>
-                                <div class="schema-box-content">Social media, online methods, communication channels</div>
-                            </div>
-                            <div class="schema-box">
-                                <div class="schema-box-title">Severity</div>
-                                <div class="schema-box-content">Infant, very young, rape, production indicators</div>
-                            </div>
-                            <div class="schema-box">
-                                <div class="schema-box-title">Topics</div>
-                                <div class="schema-box-content">Hands-on, possession, online-only, family, stranger</div>
-                            </div>
-                            <div class="schema-box">
-                                <div class="schema-box-title">Prosecution</div>
-                                <div class="schema-box-content">Charges, booking status, outcomes</div>
-                            </div>
-                            <div class="schema-box">
-                                <div class="schema-box-title">Evidence</div>
-                                <div class="schema-box-content">Images, videos, storage volume, messages</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Chain Connector 3 -->
-            <div class="chain-connector">
-                <div class="chain-link"></div>
-                    </div>
-
-            <!-- Storage Layer -->
-            <div class="flow-item">
-                <div class="layer-card" id="storage-layer">
-                    <div class="layer-subtitle">Layer 3</div>
-                    <div class="layer-title">Storage</div>
-                </div>
-                <div class="detail-panel" id="storage-detail">
-                    <div class="detail-content">
-                        <strong>Case store, cache, and graph artifacts</strong>
-                        <div class="visual-preview">
-                            <div class="code-snippet">
-<span class="comment"># Cases: PostgreSQL in production (Railway); SQLite locally (caselinker.db)</span><br>
-<span class="keyword">storage</span> = CaseStorage()  <span class="comment"># DATABASE_URL → Postgres, else SQLite</span><br>
-<span class="keyword">storage</span>.store_case(<span class="keyword">case</span>)<br><br>
-<span class="comment"># Optional Redis (REDIS_URL): /api/cases, facet-tree, cluster-groups, automated-analysis</span><br>
-<span class="comment"># Ontology artifacts on disk: ontology/graph_output/*.ttl|.jsonld · ontology/PACER/</span><br>
-<span class="comment"># RDF store: Oxigraph (backend only) behind OXIGRAPH_URL → public GET|POST /sparql</span>
-                            </div>
-                        </div>
-                        <ul class="detail-list">
-                            <li>Deployed on Railway with PostgreSQL; SQLite for local development</li>
-                            <li>Normalized columns plus raw_data / extracted_features JSON</li>
-                            <li>Optional Redis shared cache for quicker API responses</li>
-                            <li>CASE/UCO/CAC graphs on disk; Oxigraph is the SPARQL backend</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Chain Connector 4 -->
-            <div class="chain-connector">
-                <div class="chain-link"></div>
-                    </div>
-
-            <!-- Analysis Layer -->
-            <div class="flow-item">
-                <div class="layer-card" id="analysis-layer">
-                    <div class="layer-subtitle">Layer 4</div>
-                    <div class="layer-title">Analysis</div>
-                </div>
-                <div class="detail-panel" id="analysis-detail">
-                    <div class="detail-content">
-                        <strong>Filtering, facets, clustering, triage, agents, and CASE/UCO/CAC graphs</strong>
-                        <p style="margin-top: 15px; color: #666; font-size: 14px;">
-                            <strong>How it's done:</strong> Deterministic mapping turns CaseLinker features into CAC entities (no custom predicates). Per-case Turtle + JSON-LD land in <code>ontology/graph_output/</code>, pass SHACL, and load into <strong>Oxigraph</strong> (SPARQL backend). The analyst UI is <a href="/patterns" style="color:#4CAF50;font-weight:600;">Ontology &amp; Graphs</a> at <code>/patterns</code>. PACER investigations are separate CASE-UCO SDK graphs under <code>ontology/PACER/</code>.
-                        </p>
-                        <div class="visual-preview">
-                            <div class="code-snippet">
-<span class="comment"># Tag intersection · facet tree · five cluster families + Jaccard</span><br>
-<span class="keyword">cases</span> = return_tagged_cases(<span class="keyword">all_cases</span>, tags)<br>
-<span class="comment"># HTTP: /api/facet-tree, /api/cluster-groups, /api/automated-analysis</span><br><br>
-<span class="keyword">triaged</span> = triage_cases(<span class="keyword">cases</span>)  <span class="comment"># rules + sklearn bundle</span><br>
-<span class="comment"># /api/triage-model-corpus · /api/triage-live (paste-in)</span><br><br>
-<span class="comment"># Agents: MCP at /mcp (SSE) and /mcp-http/ — corpus, facets, triage, case2cac graphs</span><br><br>
-<span class="comment"># features → CAC mapping → RDF (TTL / JSON-LD) → SHACL → Oxigraph</span><br>
-<span class="keyword">python</span> ontology/features_to_cac.py &lt;case_id&gt;<br>
-GET|POST /sparql<br>
-<span class="comment"># Explorer APIs: /api/ontology/cases · /lookup · /pacer · /merged</span><br>
-<span class="comment"># Live store: 10,362 press-release graphs · ~297 PACER KG graphs</span>
-                            </div>
-                        </div>
-                        <ul class="detail-list">
-                            <li>Tag intersection, navigable facet tree, and cohort APIs over the live DB</li>
-                            <li>Clustering + automated analysis; rule-based and ML triage</li>
-                            <li>MCP tool surface for agents (same FastAPI app; SPARQL via /sparql or CASE/UCO SDK)</li>
-                            <li>Vocabulary: CASE / UCO / CAC (Project VIC on the Cyber Domain Ontology stack)</li>
-                            <li>Oxigraph stores RDF; users browse and compare via /patterns + query via /sparql</li>
-                            <li>PACER court-record KGs and Q1–Q3 evidence pages under /patterns/questions/</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Chain Connector 5 -->
-            <div class="chain-connector">
-                <div class="chain-link"></div>
-            </div>
-
-            <!-- Visualization Layer -->
-            <div class="flow-item">
-                <div class="layer-card" id="visualization-layer">
-                    <div class="layer-subtitle">Layer 5</div>
-                    <div class="layer-title">Visualization</div>
-                </div>
-                <div class="detail-panel" id="visualization-detail">
-                    <div class="detail-content">
-                        <strong>Analyst UI: HTML tabs + JSON / SPARQL APIs</strong>
-                        <div class="visual-preview">
-                            <div class="code-snippet">
-<span class="comment"># FastAPI serves visualization/*.html; browser fetches /api/* and /sparql.</span><br><br>
-<span class="comment"># Tabs: Visualization · Analysis · Clusters · Stats · Search · Lifecycle</span><br>
-<span class="comment">#        Query · Triage · Case Studies · Tech Landscape · LLM · Sources</span><br>
-<span class="comment">#        Audit · Ontology &amp; Graphs (/patterns) · Look Under the Hood</span><br><br>
-<span class="comment"># Graph explorer pools: Compare 200 · Universe ~2k · Big Bang · Analysis</span>
-                            </div>
-                        </div>
-                        <ul class="detail-list">
-                            <li>Same nav across pages; Redis-backed caches where they help</li>
-                            <li>Ontology &amp; Graphs: CAC lookup, press-release + PACER corpora, compare/single canvas</li>
-                            <li>Modular: new views sit on the same storage, APIs, and SPARQL store</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- GitHub + crash course -->
-        <div style="text-align: center; margin-top: 80px; padding: 30px 20px; border-top: 1px solid rgba(76, 175, 80, 0.2);">
-            <p style="color: #b0b0b0; font-size: 14px; margin-bottom: 16px;">
-                Open source on GitHub
-            </p>
-            <div style="display: inline-flex; align-items: center; gap: 22px; flex-wrap: wrap; justify-content: center;">
-            <a href="/crash-course"
-               style="display: inline-flex; align-items: center; gap: 8px; color: #4CAF50; text-decoration: none; font-weight: 600; font-size: 16px; transition: color 0.3s ease;"
-               onmouseover="this.style.color='#66BB6A'"
-               onmouseout="this.style.color='#4CAF50'">
-                Crash course
-            </a>
-            <span style="color: #c5c5c5; font-size: 14px;" aria-hidden="true">·</span>
-            <a href="https://github.com/mrinaalr/CaseLinker" target="_blank" rel="noopener noreferrer" 
-               style="display: inline-flex; align-items: center; gap: 8px; color: #4CAF50; text-decoration: none; font-weight: 600; font-size: 16px; transition: color 0.3s ease;"
-               onmouseover="this.style.color='#66BB6A'" 
-               onmouseout="this.style.color='#4CAF50'">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle;">
-                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                </svg>
-                <span>View on GitHub</span>
-            </a>
-            </div>
-        </div>
+    <div class="hood-foot">
+      <a href="https://github.com/mrinaalr/CaseLinker" rel="noopener">GitHub</a>
+      <a href="https://github.com/mrinaalr/CaseLinker/blob/main/ARCHITECTURE.md" rel="noopener">ARCHITECTURE.md</a>
+      <a href="/crash-course">Crash course</a>
     </div>
+  </main>
 
-    <script>
-        // PDF Source interaction
-        const pdfSource = document.getElementById('pdf-source');
-        const pdfDetail = document.getElementById('pdf-detail');
-        
-        pdfSource.addEventListener('click', function() {
-            this.classList.toggle('active');
-            pdfDetail.classList.toggle('active');
-            closeOtherPanels('pdf');
-        });
-
-        // Layer interactions
-        const layers = [
-            { card: 'ingestion-layer', detail: 'ingestion-detail', name: 'ingestion' },
-            { card: 'processing-layer', detail: 'processing-detail', name: 'processing' },
-            { card: 'storage-layer', detail: 'storage-detail', name: 'storage' },
-            { card: 'analysis-layer', detail: 'analysis-detail', name: 'analysis' },
-            { card: 'visualization-layer', detail: 'visualization-detail', name: 'visualization' }
-        ];
-
-        layers.forEach(layer => {
-            const card = document.getElementById(layer.card);
-            const detail = document.getElementById(layer.detail);
-            
-            card.addEventListener('click', function() {
-                this.classList.toggle('active');
-                detail.classList.toggle('active');
-                closeOtherPanels(layer.name);
-            });
-        });
-
-        function closeOtherPanels(activeName) {
-            // Close PDF detail if not active
-            if (activeName !== 'pdf') {
-                pdfSource.classList.remove('active');
-                pdfDetail.classList.remove('active');
-            }
-            
-            // Close other layer details
-            layers.forEach(layer => {
-                if (layer.name !== activeName) {
-                    const card = document.getElementById(layer.card);
-                    const detail = document.getElementById(layer.detail);
-                    card.classList.remove('active');
-                    detail.classList.remove('active');
-                }
-            });
-        }
-
-        // Smooth scroll to expanded panel
-        document.querySelectorAll('.layer-card, .pdf-source').forEach(element => {
-            element.addEventListener('click', function() {
-                setTimeout(() => {
-                    const detail = this.nextElementSibling;
-                    if (detail && detail.classList.contains('active')) {
-                        detail.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                    }
-                }, 100);
-            });
-        });
-    </script>
+<script>
+(function () {
+  var items = Array.prototype.slice.call(document.querySelectorAll('[data-layer]'));
+  function open(el) {
+    var d = document.getElementById('d-' + el.getAttribute('data-layer'));
+    var on = !el.classList.contains('is-open');
+    el.classList.toggle('is-open', on);
+    if (d) { d.classList.toggle('is-open', on); if (on) setTimeout(function () { d.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 60); }
+  }
+  items.forEach(function (el) {
+    el.addEventListener('click', function () { open(el); });
+    el.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(el); } });
+  });
+})();
+</script>
 </body>
 </html>

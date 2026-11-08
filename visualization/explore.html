@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Explore · CaseLinker</title>
+  <meta name="description" content="Walk a case graph by hand: from a case id to its steps, agencies, platforms and locations, then into the provenance graph that points at the source passages.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/viz-assets/v4.css?v=4.1">
+  <script src="/viz-assets/caselinker-api.js"></script>
+  <script src="/viz-assets/v4.js?v=4.1" defer></script>
+  <style>
+    .addr { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 10px; align-items: center; }
+    .addr .cl-input { font-family: var(--mono); font-size: 13.5px; padding: 11px 14px; }
+    .crumbs { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 12px; font-size: 12.5px; color: var(--ink-3); }
+    .crumbs a { font-family: var(--mono); font-size: 12px; color: var(--ink-2); }
+    .crumbs .sep { color: var(--ink-4); }
+    .iri-bar { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; margin: 22px 0 14px; font-size: 12.5px; color: var(--ink-3); }
+    .iri-bar .iri { font-family: var(--mono); font-size: 12.5px; color: var(--ink-2); word-break: break-all; }
+    .focus { margin-bottom: 18px; }
+    .focus h2 { font-size: 22px; font-weight: 600; letter-spacing: -.01em; line-height: 1.2; }
+    .types { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .types a { font-family: var(--mono); font-size: 11.5px; color: var(--ink-2); border: 1px solid var(--line); border-radius: 4px; padding: 2px 7px; background: var(--surface); }
+    .types a:hover { border-color: var(--ink-4); text-decoration: none; color: var(--ink); }
+    .kv { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    .kv th { width: 220px; text-align: left; font-weight: 500; color: var(--ink-2); font-family: var(--mono); font-size: 12px; padding: 8px 12px 8px 0; vertical-align: top; border-top: 1px solid var(--line); }
+    .kv td { padding: 8px 0; border-top: 1px solid var(--line); vertical-align: top; }
+    .kv tr:first-child th, .kv tr:first-child td { border-top: 0; }
+    .obj { display: inline-block; margin: 1px 10px 1px 0; }
+    .obj.lit { color: var(--ink); }
+    .obj.lit .dt { font-family: var(--mono); font-size: 10.5px; color: var(--ink-4); margin-left: 4px; }
+    .obj a { word-break: break-all; }
+    .obj a.local { font-family: var(--mono); font-size: 12.5px; }
+    .obj a.ext { color: var(--ink-2); font-family: var(--mono); font-size: 12px; }
+    .more { font-size: 12px; color: var(--ink-3); cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+    .section { margin-top: 28px; }
+    .section > h3 { font-size: 15px; font-weight: 600; margin-bottom: 4px; display: flex; align-items: baseline; gap: 10px; }
+    .section > h3 .n { font-family: var(--mono); font-size: 11.5px; color: var(--ink-3); }
+    .section > p { font-size: 13px; color: var(--ink-3); margin-bottom: 10px; }
+    .nodes { display: grid; gap: 8px; }
+    .node { border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+    .node > summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 12px; align-items: center; padding: 9px 14px; }
+    .node > summary::-webkit-details-marker { display: none; }
+    .node > summary .lab { font-size: 14px; }
+    .node > summary .path { font-family: var(--mono); font-size: 11.5px; color: var(--ink-3); margin-left: 8px; }
+    .node > summary .ty { font-family: var(--mono); font-size: 11px; color: var(--ink-3); white-space: nowrap; }
+    .node[open] > summary { border-bottom: 1px solid var(--line); }
+    .node .body { padding: 6px 14px 10px; }
+    .node .go { font-size: 12px; margin-top: 8px; display: flex; gap: 12px; }
+    .group-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+    .group-tabs button { border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 4px 11px; font-size: 12.5px; color: var(--ink-2); cursor: pointer; }
+    .group-tabs button[aria-pressed="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }
+    .group-tabs button .n { font-family: var(--mono); font-size: 10.5px; opacity: .7; margin-left: 4px; }
+    .prov-item { display: grid; grid-template-columns: 90px minmax(0,1fr) auto; gap: 14px; padding: 10px 8px; margin: 0 -8px; border-top: 1px solid var(--line); align-items: start; cursor: pointer; border-radius: 6px; }
+    .prov-item:hover { background: var(--surface-2); }
+    .prov-item.is-on { background: var(--accent-soft); }
+    .prov-layout { display: grid; grid-template-columns: minmax(0,1fr) minmax(320px, 44%); gap: 18px; align-items: start; }
+    .prov-layout .cl-narrative { position: sticky; top: calc(var(--nav-h) + 16px); }
+    .prov-layout .cl-narrative__body { max-height: calc(100vh - var(--nav-h) - 100px); }
+    @media (max-width: 1000px) { .prov-layout { grid-template-columns: 1fr; } .prov-layout .cl-narrative { position: static; } }
+    .prov-item:first-child { border-top: 0; }
+    .prov-item .pos { font-family: var(--mono); font-size: 11.5px; color: var(--ink-3); padding-top: 4px; }
+    .prov-item .subj { font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; }
+    .prov-item .cl-quote { font-size: 15.5px; margin-top: 2px; }
+    .prov-item .meta { font-family: var(--mono); font-size: 11.5px; color: var(--ink-3); text-align: right; line-height: 1.6; white-space: nowrap; }
+    .prov-item .meta a { color: var(--ink-2); }
+    .refs { columns: 3; column-gap: 24px; font-family: var(--mono); font-size: 12.5px; }
+    .refs a { display: block; padding: 2px 0; }
+    @media (max-width: 760px) { .kv th { width: 130px; } .refs { columns: 1; } .prov-item { grid-template-columns: 1fr; gap: 6px; } .prov-item .meta { text-align: left; white-space: normal; } }
+    .hint-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 28px; font-size: 13px; color: var(--ink-3); margin-top: 14px; padding-left: 2px; }
+    .hint-row__k { margin-right: -12px; }
+    .hint-row a { font-family: var(--mono); }
+  </style>
+</head>
+<body>
+  <div id="cl-nav" data-active="explore"></div>
+
+  <main class="cl-page" style="max-width: 1040px;">
+    <header class="cl-head">
+      <h1 class="cl-title">Explore</h1>
+    </header>
+
+    <section class="cl-card cl-card--pad" aria-label="Address" style="padding:12px 14px">
+      <div class="addr">
+        <div style="position:relative">
+          <label class="cl-sr" for="addr">Case id or IRI</label>
+          <input id="addr" class="cl-input" placeholder="nj_ag_2017_001  ·  or  https://w3id.org/caselinker/resource/platform/snapchat" autocomplete="off" spellcheck="false">
+        </div>
+        <button class="cl-btn cl-btn--primary" id="go">Open</button>
+      </div>
+      <div class="hint-row"><span class="hint-row__k">Try</span><a href="/explore?case=nj_ag_2017_001">nj_ag_2017_001</a><a href="/explore?case=ncmec_2024_178&view=provenance">ncmec_2024_178 provenance</a><a href="/explore?iri=https://w3id.org/caselinker/resource/platform/snapchat">platform/snapchat</a><a href="/explore?iri=https://w3id.org/caselinker/resource/agency/fbi">agency/fbi</a></div>
+    </section>
+
+    <div id="out"></div>
+  </main>
+
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  var RES = 'https://w3id.org/caselinker/resource/';
+  var NS = [
+    ['https://cacontology.projectvic.org/multi-jurisdiction#', 'cac-multi'], ['https://cacontology.projectvic.org/legal-outcomes#', 'cac-legal'],
+    ['https://cacontology.projectvic.org/platforms#', 'cac-plat'], ['https://cacontology.projectvic.org/grooming#', 'cac-groom'],
+    ['https://cacontology.projectvic.org/sextortion#', 'cac-sext'], ['https://cacontology.projectvic.org/undercover#', 'cac-uc'],
+    ['https://cacontology.projectvic.org/detection#', 'cac-detect'], ['https://cacontology.projectvic.org/custodial#', 'cac-cust'],
+    ['https://cacontology.projectvic.org/taskforce#', 'cac-tf'], ['https://cacontology.projectvic.org/us/ncmec#', 'ncmec'],
+    ['https://cacontology.projectvic.org/core#', 'cac-core'], ['https://cacontology.projectvic.org#', 'cac'],
+    ['https://ontology.unifiedcyberontology.org/uco/core/', 'uco-core'], ['https://ontology.unifiedcyberontology.org/uco/location/', 'uco-loc'],
+    ['https://ontology.caseontology.org/case/investigation/', 'case-inv'],
+    ['http://purl.org/dc/terms/', 'dcterms'], ['http://www.w3.org/2000/01/rdf-schema#', 'rdfs'], ['http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'rdf'],
+    ['http://www.w3.org/2004/02/skos/core#', 'skos'], ['http://www.w3.org/ns/prov#', 'prov'], ['http://www.w3.org/ns/oa#', 'oa'],
+    ['https://w3id.org/caselinker/ns/provenance#', 'clprov'], ['https://w3id.org/caselinker/resource/vocab/', 'clvocab'], ['http://www.w3.org/2001/XMLSchema#', 'xsd']
+  ];
+  function curie(iri) {
+    for (var i = 0; i < NS.length; i++) if (iri.indexOf(NS[i][0]) === 0) return NS[i][1] + ':' + iri.slice(NS[i][0].length);
+    if (iri.indexOf(RES) === 0) return iri.slice(RES.length);
+    return iri;
+  }
+  function isTermLink(iri) { return iri.indexOf('cacontology.projectvic.org') >= 0 || iri.indexOf('unifiedcyberontology.org') >= 0 || iri.indexOf('caseontology.org') >= 0 || iri.indexOf('w3.org/ns/') >= 0 || iri.indexOf('purl.org') >= 0 || iri.indexOf('w3.org/2004') >= 0; }
+
+  var PRED_ORDER = ['http://www.w3.org/1999/02/22-rdf-syntax-ns#type', 'http://www.w3.org/2000/01/rdf-schema#label', 'http://purl.org/dc/terms/identifier', 'http://purl.org/dc/terms/source', 'http://purl.org/dc/terms/provenance', 'https://cacontology.projectvic.org#hasStep', 'https://cacontology.projectvic.org#hasPhase', 'https://cacontology.projectvic.org#currentPhase', 'https://cacontology.projectvic.org/multi-jurisdiction#involvesAgency', 'http://purl.org/dc/terms/spatial'];
+  var LOCAL_KIND = [[/\/case\/[^\/]+\/provenance$/, 'provenance graph'], [/\/case\/[^\/]+$/, 'investigation'], [/\/cybertip/, 'CyberTip'], [/\/event\//, 'event'], [/\/offense-event\//, 'offense'], [/\/legal-step\//, 'legal step'], [/\/legal-proceeding/, 'proceeding'], [/\/phase\//, 'phase'], [/\/operation/, 'operation'], [/\/person\//, 'role'], [/\/admission\//, 'admission'], [/\/facet\//, 'facet'], [/\/assertion\/\d+$/, 'annotation'], [/\/assertion\/\d+\/target$/, 'passage'], [/\/assertion\/\d+\/quote$/, 'quote selector'], [/\/assertion\/\d+\/position$/, 'position selector'], [/\/resolution\//, 'resolution'], [/\/agency_ground\//, 'agency grounding'], [/\/location_ground\//, 'location grounding'], [/\/narrative$/, 'narrative'], [/\/extraction\//, 'extraction run'], [/\/extractor\//, 'extractor'], [/\/agency\//, 'agency'], [/\/platform\//, 'platform'], [/\/location\//, 'location']];
+  function kindOf(iri) { for (var i = 0; i < LOCAL_KIND.length; i++) if (LOCAL_KIND[i][0].test(iri)) return LOCAL_KIND[i][1]; return 'node'; }
+
+  /* ---------- state ---------- */
+  var view = 'case', crumbs = [], graphIndex = {}, pendingSpans = null;
+  function setView(v) { view = v; Array.prototype.forEach.call(document.querySelectorAll('[data-view]'), function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-view') === v)); }); }
+  Array.prototype.forEach.call(document.querySelectorAll('[data-view]'), function (b) { b.addEventListener('click', function () { setView(b.getAttribute('data-view')); if ($('addr').value.trim()) open($('addr').value.trim()); }); });
+
+  function toIri(input) {
+    var s = input.trim();
+    if (/^https?:\/\//.test(s)) return s.replace(/^https?:\/\/[^\/]+\/resource\//, RES);
+    if (/^[a-z]+(?:_[a-z]+)*_\d{4}_\d{3}$/i.test(s)) return RES + 'case/' + s.toLowerCase();
+    return RES + s.replace(/^\/+/, '');
+  }
+  function open(input, push) {
+    var iri = toIri(input);
+    var caseId = CL.caseIdFromIri(iri);
+    if (/\/provenance$/.test(iri)) setView('provenance'); else if (caseId && /\/case\/[^\/]+$/.test(iri)) setView('case');
+    if (push !== false) {
+      var u = caseId && /\/case\/[^\/]+(\/provenance)?$/.test(iri) ? '?case=' + encodeURIComponent(caseId) + (/\/provenance$/.test(iri) ? '&view=provenance' : '') : '?iri=' + encodeURIComponent(iri);
+      history.pushState({ iri: iri }, '', u);
+    }
+    $('addr').value = iri.indexOf(RES + 'case/') === 0 && caseId && /\/case\/[^\/]+$/.test(iri) ? caseId : iri;
+    load(iri);
+  }
+  window.addEventListener('popstate', function () { boot(false); });
+
+  /* ---------- load ---------- */
+  function load(iri) {
+    var out = $('out');
+    out.innerHTML = '<div class="cl-notice"><span class="cl-spinner"></span> Dereferencing ' + CL.esc(curie(iri)) + '…</div>';
+    CL.deref(CL.iriToPath(iri)).catch(function (e) {
+      if (e.status !== 404 || !/\/case\/[^\/]+\/./.test(iri)) throw e;
+      /* a node inside a case or provenance graph: the store only describes whole graphs by IRI, so read the node directly */
+      return CL.sparql('SELECT ?p ?o WHERE { GRAPH ?g { <' + iri + '> ?p ?o } }').then(function (d) {
+        var rows = d.results.bindings || []; if (!rows.length) throw e;
+        var node = { '@id': iri };
+        rows.forEach(function (r) {
+          var k = r.p.value === 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type' ? '@type' : r.p.value;
+          var v = k === '@type' ? r.o.value : (r.o.type === 'uri' ? { '@id': r.o.value } : { '@value': r.o.value, '@type': r.o.datatype, '@language': r.o['xml:lang'] });
+          (node[k] = node[k] || []).push(v);
+        });
+        return [node];
+      });
+    }).then(function (doc) {
+      var nodes = Array.isArray(doc) ? doc : (doc['@graph'] || [doc]);
+      graphIndex = {}; nodes.forEach(function (n) { if (n['@id']) graphIndex[n['@id']] = n; });
+      render(iri, nodes);
+    }).catch(function (e) {
+      out.innerHTML = '<div class="cl-notice cl-notice--danger">' + CL.esc(e.message) + ' <span class="cl-muted">(' + CL.esc(curie(iri)) + ')</span></div>';
+    });
+  }
+
+  /* ---------- rendering ---------- */
+  function label(iri) {
+    var n = graphIndex[iri]; if (!n) return null;
+    var l = n['http://www.w3.org/2000/01/rdf-schema#label'] || n['https://ontology.unifiedcyberontology.org/uco/core/name'];
+    return l && l[0] && l[0]['@value'] != null ? String(l[0]['@value']) : null;
+  }
+  function objHtml(o, hostIri) {
+    if (o['@id'] !== undefined) {
+      var t = o['@id'];
+      if (t.indexOf('_:') === 0) return '<span class="obj cl-muted">' + CL.esc(t) + '</span>';
+      var lab = label(t);
+      if (t.indexOf(RES) === 0) {
+        var inGraph = !!graphIndex[t] && t !== hostIri;
+        return '<span class="obj"><a class="local" href="' + (inGraph ? '#n-' + CL.esc(encodeURIComponent(t)) : '/explore?iri=' + encodeURIComponent(t)) + '" data-iri="' + CL.esc(t) + '" data-in="' + (inGraph ? '1' : '0') + '">' + CL.esc(lab || curie(t)) + '</a>' + (lab ? ' <span class="cl-muted cl-small mono">' + CL.esc(curie(t)) + '</span>' : '') + '</span>';
+      }
+      return '<span class="obj"><a class="ext" href="' + CL.esc(t) + '" rel="noopener" target="_blank">' + CL.esc(curie(t)) + '</a></span>';
+    }
+    var v = o['@value'], dt = o['@type'] ? curie(o['@type']) : (o['@language'] ? '@' + o['@language'] : '');
+    return '<span class="obj lit">' + CL.esc(v) + (dt && dt !== 'xsd:string' ? '<span class="dt">' + CL.esc(dt) + '</span>' : '') + '</span>';
+  }
+  function props(node, hostIri) {
+    var keys = Object.keys(node).filter(function (k) { return k !== '@id'; });
+    keys.sort(function (a, b) { var ia = PRED_ORDER.indexOf(a === '@type' ? PRED_ORDER[0] : a), ib = PRED_ORDER.indexOf(b === '@type' ? PRED_ORDER[0] : b); ia = ia < 0 ? 99 : ia; ib = ib < 0 ? 99 : ib; return ia - ib || a.localeCompare(b); });
+    return '<table class="kv">' + keys.map(function (k) {
+      var vals = node[k]; if (!Array.isArray(vals)) vals = [vals];
+      var isType = k === '@type';
+      var items = vals.map(function (v) { return isType ? objHtml({ '@id': v }, hostIri) : objHtml(v, hostIri); });
+      var html = items.length > 12 ? items.slice(0, 12).join('') + ' <span class="more" data-rest="' + CL.esc(items.slice(12).join('')) + '">+ ' + (items.length - 12) + ' more</span>' : items.join('');
+      var pk = isType ? 'rdf:type' : curie(k);
+      return '<tr><th>' + (isTermLink(k) ? '<a href="' + CL.esc(k) + '" rel="noopener" target="_blank" style="color:inherit">' + CL.esc(pk) + '</a>' : CL.esc(pk)) + '</th><td>' + html + '</td></tr>';
+    }).join('') + '</table>';
+  }
+  function typeChips(node) {
+    var t = node['@type']; if (!t) return ''; if (!Array.isArray(t)) t = [t];
+    return '<div class="types">' + t.map(function (x) { return '<a href="' + CL.esc(x) + '" rel="noopener" target="_blank">' + CL.esc(curie(x)) + '</a>'; }).join('') + '</div>';
+  }
+
+  function render(iri, nodes) {
+    var out = $('out'); var focus = graphIndex[iri];
+    var caseId = CL.caseIdFromIri(iri);
+    var isProv = /\/provenance$/.test(iri);
+    var local = '/resource/' + CL.iriToPath(iri);
+    var html = '<div class="iri-bar"><span class="iri">' + CL.esc(iri) + '</span>' +
+      '<a href="' + CL.esc(local) + '" data-accept="text/turtle" class="dl">Turtle</a><a href="' + CL.esc(local) + '" data-accept="application/ld+json" class="dl">JSON-LD</a><a href="#" id="copy-iri">copy IRI</a>' +
+      (caseId && /\/case\/[^\/]+$/.test(iri) ? '<a href="/explore?case=' + encodeURIComponent(caseId) + '&view=provenance" data-iri="' + CL.esc(iri + '/provenance') + '" data-in="0">provenance</a>' : '') +
+      (isProv && caseId ? '<a href="/explore?case=' + encodeURIComponent(caseId) + '" data-iri="' + CL.esc(RES + 'case/' + caseId) + '" data-in="0">case graph</a>' : '') +
+      '</div>';
+
+    var title = focus ? (label(iri) || curie(iri)) : curie(iri);
+    if (isProv && caseId) title = 'Provenance · ' + caseId;
+    html += '<div class="focus"><h2>' + CL.esc(title) + '</h2>' + (focus ? typeChips(focus) : '') + '</div>';
+    if (focus) html += '<div class="cl-card cl-card--pad">' + props(focus, iri) + '</div>';
+    else if (nodes.length) html += '<div class="cl-notice">This IRI names a graph. Its nodes are listed below.</div>';
+
+    var others = nodes.filter(function (n) { return n['@id'] && n['@id'] !== iri && n['@id'].indexOf('_:') !== 0; });
+    if (isProv) html += renderProvenance(others, caseId);
+    else if (others.length) html += renderNodes(others, iri);
+    out.innerHTML = html;
+    wire(out, iri);
+    if (isProv && caseId && pendingSpans) mountNarrative(out, caseId, pendingSpans);
+    pendingSpans = null;
+    if (!isProv && /\/assertion\/\d+(\/target)?$/.test(iri) && caseId) passageInContext(out, iri, caseId);
+    if (!isProv && /^(agency|platform|location)\/[^\/]+$/.test(CL.iriToPath(iri))) referencing(iri);
+  }
+
+  function renderNodes(others, hostIri) {
+    var groups = {};
+    others.forEach(function (n) { var k = kindOf(n['@id']); (groups[k] = groups[k] || []).push(n); });
+    var order = ['CyberTip', 'event', 'offense', 'operation', 'legal step', 'proceeding', 'phase', 'role', 'admission', 'facet', 'platform', 'agency', 'location', 'node'];
+    var keys = Object.keys(groups).sort(function (a, b) { var ia = order.indexOf(a), ib = order.indexOf(b); return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib); });
+    var first = keys[0];
+    var html = '<section class="section"><h3>Nodes in this graph <span class="n">' + others.length + '</span></h3><p>Each node is a resource with its own IRI. Open one to read its triples; follow a link to leave this graph.</p>' +
+      '<div class="group-tabs">' + keys.map(function (k) { return '<button type="button" data-group="' + CL.esc(k) + '" aria-pressed="' + (k === first) + '">' + CL.esc(k) + '<span class="n">' + groups[k].length + '</span></button>'; }).join('') + '</div>';
+    keys.forEach(function (k) {
+      var list = groups[k].slice().sort(function (a, b) { return (label(a['@id']) || a['@id']).localeCompare(label(b['@id']) || b['@id']); });
+      html += '<div class="nodes" data-group-list="' + CL.esc(k) + '"' + (k === first ? '' : ' hidden') + '>' + list.map(function (n) { return nodeCard(n, hostIri); }).join('') + '</div>';
+    });
+    return html + '</section>';
+  }
+  function nodeCard(n, hostIri) {
+    var id = n['@id'], lab = label(id), t = n['@type']; if (t && !Array.isArray(t)) t = [t];
+    var ty = t ? t.map(curie).filter(function (x) { return !/EnduringEntity|cac-core:Event$|cac-core:Phase$/.test(x); }).slice(0, 2).join(', ') : '';
+    return '<details class="node" id="n-' + CL.esc(encodeURIComponent(id)) + '"><summary><span><span class="lab">' + CL.esc(lab || curie(id).split('/').slice(-2).join('/')) + '</span>' + (lab ? '<span class="path">' + CL.esc(curie(id)) + '</span>' : '') + '</span><span class="ty">' + CL.esc(ty) + '</span></summary>' +
+      '<div class="body">' + props(n, hostIri) + '<div class="go"><a href="/explore?iri=' + encodeURIComponent(id) + '" data-iri="' + CL.esc(id) + '" data-in="0">open as its own page →</a></div></div></details>';
+  }
+
+  function renderProvenance(others, caseId) {
+    var ann = others.filter(function (n) { return /\/assertion\/\d+$/.test(n['@id']); });
+    function one(n, p) { var v = n && n[p]; return v && v[0] ? (v[0]['@value'] != null ? v[0]['@value'] : v[0]['@id']) : null; }
+    var items = ann.map(function (a) {
+      var target = graphIndex[one(a, 'http://www.w3.org/ns/oa#hasTarget')] || {};
+      var sels = (target['http://www.w3.org/ns/oa#hasSelector'] || []).map(function (s) { return graphIndex[s['@id']] || {}; });
+      var quote = null, start = null, end = null;
+      sels.forEach(function (s) { if (one(s, 'http://www.w3.org/ns/oa#exact') != null) quote = one(s, 'http://www.w3.org/ns/oa#exact'); if (one(s, 'http://www.w3.org/ns/oa#start') != null) { start = one(s, 'http://www.w3.org/ns/oa#start'); end = one(s, 'http://www.w3.org/ns/oa#end'); } });
+      return { id: a['@id'], subject: one(a, 'http://purl.org/dc/terms/subject'), value: one(a, 'http://www.w3.org/ns/prov#value'), quote: quote, start: start, end: end,
+        conf: one(a, 'https://cacontology.projectvic.org/core#hasConfidence'), method: one(a, 'https://cacontology.projectvic.org/core#usesMethod'), role: one(a, 'https://w3id.org/caselinker/ns/provenance#assertionRole') };
+    }).sort(function (a, b) { return (+a.start || 0) - (+b.start || 0); });
+    var rest = others.filter(function (n) { return !/\/assertion\//.test(n['@id']); });
+    var html = '<section class="section"><h3>Annotations, in reading order <span class="n">' + items.length + '</span></h3><p>Click an annotation to see its passage in the released text.</p><div class="prov-layout"><div class="cl-card cl-card--pad" id="prov-list">' +
+      (items.length ? items.map(function (it) {
+        var subj = typeof it.subject === 'string' && it.subject.indexOf('http') === 0 ? curie(it.subject) : it.subject;
+        return '<div class="prov-item" data-span="' + CL.esc(it.id.split('/').slice(-2).join('-')) + '"><div class="pos">' + (it.start != null ? CL.esc(it.start + '–' + it.end) : '') + '</div><div><div class="subj">' + CL.esc(subj || '') + (it.role ? ' · ' + CL.esc(it.role) : '') + '</div>' +
+          (it.quote != null ? '<blockquote class="cl-quote">' + CL.esc(it.quote) + '</blockquote>' : '') + '<div class="cl-small cl-muted" style="margin-top:4px">value <code>' + CL.esc(it.value) + '</code></div></div>' +
+          '<div class="meta">' + (it.method ? CL.esc(curie(it.method).replace('extractor/', '')) : '') + (it.conf != null ? ' · ' + CL.esc(it.conf) : '') + '<br><a href="/explore?iri=' + encodeURIComponent(it.id) + '" data-iri="' + CL.esc(it.id) + '" data-in="0">' + CL.esc(curie(it.id).split('/').slice(-2).join('/')) + '</a></div></div>';
+      }).join('') : '<div class="cl-empty">No annotations in this provenance graph.</div>') + '</div><div id="prov-text"></div></div></section>';
+    if (rest.length) html += renderNodes(rest, null).replace('Nodes in this graph', 'Grounding, resolutions and the run');
+    pendingSpans = items.map(function (it) { return { id: it.id.split('/').slice(-2).join('-'), quote: it.quote, start: it.start, end: it.end, label: (typeof it.subject === 'string' ? it.subject.split(/[#/]/).pop() : '') + ' ' + it.value }; });
+    return html;
+  }
+
+  function mountNarrative(root, caseId, spans) {
+    var host = root.querySelector('#prov-text'); if (!host) return;
+    var panel = CL.narrativePanel({ caseId: caseId, spans: spans, title: 'Released text', onReady: function (p) {
+      Array.prototype.forEach.call(p.querySelectorAll('mark.cl-mark'), function (m) { m.addEventListener('click', function () { pick(m.getAttribute('data-span'), true); }); });
+    } });
+    host.appendChild(panel);
+    function pick(sid, fromText) {
+      Array.prototype.forEach.call(root.querySelectorAll('.prov-item.is-on'), function (x) { x.classList.remove('is-on'); });
+      var it = root.querySelector('.prov-item[data-span="' + sid + '"]'); if (it) { it.classList.add('is-on'); if (fromText) it.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+      if (!fromText) panel.jump(sid); else { Array.prototype.forEach.call(panel.querySelectorAll('mark.is-on'), function (x) { x.classList.remove('is-on'); }); var m = panel.querySelector('#mk-' + CSS.escape(sid)); if (m) m.classList.add('is-on'); }
+    }
+    Array.prototype.forEach.call(root.querySelectorAll('.prov-item[data-span]'), function (it) { it.addEventListener('click', function (e) { if (e.target.closest('a')) return; pick(it.getAttribute('data-span'), false); }); });
+  }
+  function passageInContext(root, iri, caseId) {
+    var annIri = iri.replace(/\/target$/, '');
+    var q = 'PREFIX oa: <http://www.w3.org/ns/oa#> PREFIX prov: <http://www.w3.org/ns/prov#> PREFIX dcterms: <http://purl.org/dc/terms/>\n' +
+      'SELECT ?subject ?value ?exact ?start ?end WHERE { GRAPH <' + RES + 'case/' + caseId + '/provenance> { <' + annIri + '> dcterms:subject ?subject ; prov:value ?value ; oa:hasTarget ?t . ?t oa:hasSelector ?q . ?q oa:exact ?exact . ?t oa:hasSelector ?p . ?p oa:start ?start ; oa:end ?end } } LIMIT 1';
+    var sec = CL.el('section', { class: 'section' }, [CL.el('h3', {}, 'Passage in the released text')]);
+    root.appendChild(sec);
+    CL.sparql(q).then(function (d) {
+      var r = (d.results.bindings || [])[0]; if (!r) { sec.appendChild(CL.el('div', { class: 'cl-empty' }, 'No selector stored for this annotation.')); return; }
+      var panel = CL.narrativePanel({ caseId: caseId, spans: [{ id: 'one', quote: r.exact.value, start: +r.start.value, end: +r.end.value, label: r.subject.value + ' ' + r.value.value }], title: 'Released text', onReady: function (p) { p.jump('one'); } });
+      sec.appendChild(panel);
+    }).catch(function (e) { sec.appendChild(CL.el('div', { class: 'cl-notice cl-notice--warn' }, 'Could not read the annotation: ' + e.message)); });
+  }
+  function referencing(iri) {
+    var q = 'SELECT DISTINCT ?g WHERE { GRAPH ?g { ?s ?p <' + iri + '> } FILTER(STRSTARTS(STR(?g), "' + RES + 'case/") && !STRENDS(STR(?g), "/provenance")) } ORDER BY ?g LIMIT 500';
+    var sec = CL.el('section', { class: 'section' }, [CL.el('h3', { html: 'Cases referencing this <span class="n"><span class="cl-spinner"></span></span>' })]);
+    $('out').appendChild(sec);
+    CL.sparql(q).then(function (d) {
+      var ids = (d.results.bindings || []).map(function (r) { return CL.caseIdFromIri(r.g.value); }).filter(Boolean);
+      sec.querySelector('.n').textContent = ids.length + (ids.length === 500 ? '+' : '');
+      sec.appendChild(ids.length ? CL.el('div', { class: 'cl-card cl-card--pad' }, [CL.el('div', { class: 'refs', html: ids.map(function (id) { return '<a href="/explore?case=' + encodeURIComponent(id) + '" data-iri="' + CL.esc(RES + 'case/' + id) + '" data-in="0">' + CL.esc(id) + '</a>'; }).join('') })]) : CL.el('div', { class: 'cl-empty' }, 'No press-release case graphs mention this resource.'));
+      wire(sec, iri);
+    }).catch(function (e) { sec.querySelector('.n').textContent = ''; sec.appendChild(CL.el('div', { class: 'cl-notice cl-notice--warn' }, 'Could not query the store: ' + e.message)); });
+  }
+
+  function wire(root, iri) {
+    Array.prototype.forEach.call(root.querySelectorAll('a[data-iri]'), function (a) {
+      a.addEventListener('click', function (e) {
+        if (e.metaKey || e.ctrlKey) return;
+        e.preventDefault();
+        if (a.getAttribute('data-in') === '1') {
+          var d = document.getElementById('n-' + encodeURIComponent(a.getAttribute('data-iri')));
+          if (d) { var g = d.parentNode.getAttribute('data-group-list'); if (g) showGroup(root, g); d.open = true; d.scrollIntoView({ behavior: 'smooth', block: 'center' }); d.style.borderColor = 'var(--accent)'; setTimeout(function () { d.style.borderColor = ''; }, 1600); return; }
+        }
+        setView(/\/provenance$/.test(a.getAttribute('data-iri')) ? 'provenance' : 'case');
+        open(a.getAttribute('data-iri'));
+      });
+    });
+    Array.prototype.forEach.call(root.querySelectorAll('.more'), function (m) { m.addEventListener('click', function () { m.outerHTML = m.getAttribute('data-rest'); wire(root, iri); }); });
+    Array.prototype.forEach.call(root.querySelectorAll('[data-group]'), function (b) { b.addEventListener('click', function () { showGroup(root, b.getAttribute('data-group')); }); });
+    Array.prototype.forEach.call(root.querySelectorAll('a.dl'), function (a) {
+      a.addEventListener('click', function (e) {
+        e.preventDefault();
+        fetch(a.getAttribute('href'), { headers: { Accept: a.getAttribute('data-accept') } }).then(function (r) { if (r.status === 503 && CL.graphBase === CL.PROD) return fetch(CL.PROD + a.getAttribute('href'), { headers: { Accept: a.getAttribute('data-accept') } }); return r; })
+          .then(function (r) { return r.text(); }).then(function (t) { var w = window.open('', '_blank'); w.document.write('<pre style="font:12.5px/1.5 JetBrains Mono,Menlo,monospace;white-space:pre-wrap;padding:16px">' + CL.esc(t) + '</pre>'); w.document.close(); });
+      });
+    });
+    var c = root.querySelector('#copy-iri'); if (c) c.addEventListener('click', function (e) { e.preventDefault(); CL.copy(iri, 'IRI copied'); });
+  }
+  function showGroup(root, g) {
+    Array.prototype.forEach.call(root.querySelectorAll('[data-group]'), function (x) { x.setAttribute('aria-pressed', String(x.getAttribute('data-group') === g)); });
+    Array.prototype.forEach.call(root.querySelectorAll('[data-group-list]'), function (x) { x.hidden = x.getAttribute('data-group-list') !== g; });
+  }
+
+  /* ---------- boot ---------- */
+  function boot(push) {
+    var c = CL.qs('case'), iri = CL.qs('iri');
+    if (CL.qs('view') === 'provenance') setView('provenance'); else setView('case');
+    if (c) open(c, push); else if (iri) open(iri, push);
+  }
+  $('go').addEventListener('click', function () { if ($('addr').value.trim()) open($('addr').value.trim()); });
+  $('addr').addEventListener('keydown', function (e) { if (e.key === 'Enter' && !e.defaultPrevented) { open($('addr').value.trim()); } });
+  document.addEventListener('DOMContentLoaded', function () {
+    CL.attachSuggest($('addr'), function (id) { open(id); });
+    Array.prototype.forEach.call(document.querySelectorAll('.hint-row a'), function (a) { a.addEventListener('click', function (e) { e.preventDefault(); var u = new URL(a.href); setView(u.searchParams.get('view') === 'provenance' ? 'provenance' : 'case'); open(u.searchParams.get('case') || u.searchParams.get('iri')); }); });
+    boot(false);
+  });
+})();
+</script>
+</body>
+</html>

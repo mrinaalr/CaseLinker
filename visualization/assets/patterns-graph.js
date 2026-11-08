@@ -655,10 +655,7 @@
             '<div class="detail-actions">' +
               '<button type="button" class="btn" id="detail-find-similar" data-type="' +
                 escapeHtml(typeHint) + '">Find similar cases</button>' +
-              (openCaseId
-                ? '<button type="button" class="btn" id="detail-open-case" data-case="' +
-                  escapeHtml(openCaseId) + '">Open case text</button>'
-                : '') +
+
             '</div>';
 
         content.innerHTML =
@@ -725,8 +722,42 @@
         svg.selectAll('*').remove();
         svg.attr('viewBox', [0, 0, width, height]);
 
-        const g = svg.append('g');
-        svg.call(d3.zoom().scaleExtent([0.01, 16]).on('zoom', event => g.attr('transform', event.transform)));
+        /* A slow sway of the whole layout, a few degrees either way, paused while the user touches it. */
+        const sway = svg.append('g').attr('class', 'gx-sway');
+        const g = sway.append('g');
+        const zoom = d3.zoom().scaleExtent([0.01, 16]).on('zoom', event => g.attr('transform', event.transform));
+        (function startSway() {
+            if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            let paused = 0, t0 = performance.now(), raf = 0;
+            const period = 26000, amp = 2.4;
+            function frame(now) {
+                if (!document.body.contains(svg.node())) return;
+                if (!paused) {
+                    const a = amp * Math.sin((now - t0) / period * 2 * Math.PI);
+                    sway.attr('transform', 'rotate(' + a.toFixed(3) + ' ' + (container.clientWidth / 2) + ' ' + (container.clientHeight / 2) + ')');
+                }
+                raf = requestAnimationFrame(frame);
+            }
+            raf = requestAnimationFrame(frame);
+            let pausedAt = 0;
+            svg.on('pointerenter.sway', () => { if (!paused) pausedAt = performance.now(); paused++; })
+               .on('pointerleave.sway', () => { paused = Math.max(0, paused - 1); if (!paused) t0 += performance.now() - pausedAt; });
+        })();
+        svg.call(zoom);
+        let userZoomed = false;
+        svg.on('wheel.userzoom mousedown.userzoom touchstart.userzoom', () => { userZoomed = true; });
+        /* Fit the whole layout in view once the forces settle, unless the user has already taken the wheel. */
+        function fitToView(animate) {
+            if (userZoomed || !nodeData.length) return;
+            let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+            nodeData.forEach(d => { if (d.x < x0) x0 = d.x; if (d.x > x1) x1 = d.x; if (d.y < y0) y0 = d.y; if (d.y > y1) y1 = d.y; });
+            const pad = 60, bw = Math.max(1, x1 - x0 + pad * 2), bh = Math.max(1, y1 - y0 + pad * 2);
+            const w = container.clientWidth, h = container.clientHeight;
+            const k = Math.min(1.25, 0.95 * Math.min(w / bw, h / bh));
+            const tx = w / 2 - k * (x0 + x1) / 2, ty = h / 2 - k * (y0 + y1) / 2;
+            const t = d3.zoomIdentity.translate(tx, ty).scale(k);
+            (animate ? svg.transition().duration(450) : svg).call(zoom.transform, t);
+        }
 
         const linkData = links.map(l => ({ ...l }));
         const nodeData = nodes.map(n => ({ ...n }));
@@ -812,13 +843,15 @@
             .selectAll('g').data(nodeData).enter().append('g')
             .style('cursor', 'pointer')
             .call(d3.drag()
-                .on('start', (event, d) => {
-                    if (!event.active) simulation.alphaTarget(0.3).restart();
-                    d.fx = d.x; d.fy = d.y;
+                .clickDistance(4)
+                /* A click must not move the graph: the simulation is only reheated once the pointer actually drags. */
+                .on('start', (event, d) => { d.fx = d.x; d.fy = d.y; d._dragged = false; })
+                .on('drag', (event, d) => {
+                    if (!d._dragged) { d._dragged = true; if (!event.active) simulation.alphaTarget(0.06).restart(); }
+                    d.fx = event.x; d.fy = event.y;
                 })
-                .on('drag', (event, d) => { d.fx = event.x; d.fy = event.y; })
                 .on('end', (event, d) => {
-                    if (!event.active) simulation.alphaTarget(0);
+                    if (d._dragged && !event.active) simulation.alphaTarget(0);
                     d.fx = null; d.fy = null;
                 }));
 
@@ -901,11 +934,21 @@
             document.getElementById('detail-content').style.display = 'none';
         });
 
-        simulation.on('tick', () => {
+        function paint() {
             linkSel.attr('x1', d => d.source.x).attr('y1', d => d.source.y)
                    .attr('x2', d => d.target.x).attr('y2', d => d.target.y);
             nodeSel.attr('transform', d => 'translate(' + d.x + ',' + d.y + ')');
-        });
+        }
+        /* Settle the layout off-screen, then reveal it in place: no jitter, no re-fitting. */
+        simulation.stop();
+        const settleTicks = Math.min(400, Math.max(120, Math.round(600 - nodeData.length * 0.6)));
+        for (let i = 0; i < settleTicks; i++) simulation.tick();
+        paint();
+        fitToView(false);
+        g.attr('class', 'gx-reveal');
+        requestAnimationFrame(() => requestAnimationFrame(() => g.classed('is-in', true)));
+        simulation.alpha(0.08).alphaTarget(0).velocityDecay(0.6).on('tick', paint);
+        simulation.restart();
 
         window.addEventListener('resize', () => {
             const w = container.clientWidth, h = container.clientHeight;
@@ -938,8 +981,7 @@
         const sharedCount = flatNodes.filter(n => n._isShared).length;
         titleEl.textContent =
             'Knowledge Graph: ' + caseIds.length + ' cases · ' +
-            sharedCount + ' shared node' + (sharedCount === 1 ? '' : 's') +
-            '  (' + caseIds.join(', ') + ')';
+            sharedCount + ' shared node' + (sharedCount === 1 ? '' : 's');
     }
 
     // ---------- Selector rendering ----------
@@ -1038,14 +1080,7 @@
             const idSpan = document.createElement('span');
             idSpan.className = 'chip-id';
             idSpan.textContent = c.case_id;
-            const link = document.createElement('span');
-            link.className = 'chip-link';
-            link.textContent = '\u2197';
-            link.setAttribute('role', 'link');
-            link.setAttribute('aria-label', 'Open ' + c.case_id + ' in Audit');
-            link.title = 'Open ' + c.case_id + ' in Audit';
             btn.appendChild(idSpan);
-            btn.appendChild(link);
             frag.appendChild(btn);
         });
         sel.appendChild(frag);
@@ -1551,7 +1586,42 @@
             'ORDER BY DESC(?cases)',
             'LIMIT 8'
         ].join('\n'),
-        ask: SPARQL_PREFIX + 'ASK { ?s a cac:CACInvestigation }'
+        ask: SPARQL_PREFIX + 'ASK { ?s a cac:CACInvestigation }',
+        cybertip: SPARQL_PREFIX + [
+            'PREFIX ncmec: <https://cacontology.projectvic.org/us/ncmec#>',
+            'SELECT ?label (COUNT(DISTINCT ?case) AS ?cases)',
+            'WHERE {',
+            '  ?case a cac:CACInvestigation ; cac:hasStep ?tip ; cac:hasStep ?ev .',
+            '  ?tip a ncmec:NCMECCybertipReport .',
+            '  ?ev cac:usesChannel ?platform . ?platform rdfs:label ?label .',
+            '}',
+            'GROUP BY ?label',
+            'ORDER BY DESC(?cases)',
+            'LIMIT 12'
+        ].join('\n'),
+        states: SPARQL_PREFIX + [
+            'PREFIX dcterms: <http://purl.org/dc/terms/>',
+            'SELECT ?label (COUNT(DISTINCT ?case) AS ?cases)',
+            'WHERE {',
+            '  ?case a cac:CACInvestigation ; dcterms:spatial ?place .',
+            '  ?place rdfs:label ?label .',
+            '  FILTER(STRSTARTS(STR(?place), "https://w3id.org/caselinker/resource/location/"))',
+            '  FILTER(REGEX(STR(?place), "/location/[a-z-]+-[a-z]{2}-[0-9]{1,2}$"))',
+            '}',
+            'GROUP BY ?label',
+            'ORDER BY DESC(?cases)',
+            'LIMIT 15'
+        ].join('\n'),
+        steps: SPARQL_PREFIX + [
+            'SELECT ?type (COUNT(?step) AS ?steps)',
+            'WHERE {',
+            '  ?case a cac:CACInvestigation ; cac:hasStep ?step . ?step a ?type .',
+            '  FILTER(?type != <https://cacontology.projectvic.org/core#Event>)',
+            '}',
+            'GROUP BY ?type',
+            'ORDER BY DESC(?steps)',
+            'LIMIT 12'
+        ].join('\n')
     };
 
     const SPARQL_LLM_PLACEHOLDER =
@@ -1756,7 +1826,7 @@
         }
 
         loadExample();
-        if (example) example.addEventListener('change', loadExample);
+        if (example) example.addEventListener('change', () => { loadExample(); runSparqlPanelQuery(); });
         ta.addEventListener('input', () => {
             if (isLlmMode()) syncSparqlModeUi();
         });
@@ -2611,6 +2681,105 @@
         }
     }
 
+
+    /** ?sparql=… from Analysis "Open in Graph": run it, list the cases in the rows, load them on the canvas. */
+    const SPARQL_HANDOFF_AUTO_LOAD = 30;
+    function caseIdsFromBindings(payload) {
+        const rows = (payload && payload.results && payload.results.bindings) || [];
+        const seen = new Set();
+        const ids = [];
+        rows.forEach(row => {
+            Object.keys(row).forEach(k => {
+                const v = row[k] && row[k].value != null ? String(row[k].value) : '';
+                let id = null;
+                const m = /\/resource\/case\/([^\/]+)$/.exec(v);
+                if (m) id = m[1];
+                else if (/^[a-z]+(?:_[a-z]+)*_\d{4}_\d{3}$/.test(v)) id = v;
+                if (id && SEARCH_COHORT_ID_RE.test(id) && !seen.has(id)) { seen.add(id); ids.push(id); }
+            });
+        });
+        return ids;
+    }
+
+    /** Rewrite any SELECT so it returns the press-release case graphs its pattern touches. */
+    function casesQueryFromAny(query) {
+        const q = String(query || '');
+        const m = /\bWHERE\s*\{/i.exec(q);
+        if (!m) return null;
+        let depth = 0, start = m.index + m[0].length - 1, end = -1;
+        for (let i = start; i < q.length; i++) {
+            if (q[i] === '{') depth++;
+            else if (q[i] === '}') { depth--; if (depth === 0) { end = i; break; } }
+        }
+        if (end < 0) return null;
+        const body = q.slice(start + 1, end);
+        const prefixes = (q.slice(0, m.index).match(/PREFIX\s+[^\s]+\s+<[^>]+>/gi) || []).join('\n');
+        const caseFilter = 'FILTER(STRSTARTS(STR(?g), "https://w3id.org/caselinker/resource/case/") && !STRENDS(STR(?g), "/provenance"))';
+        if (/\bGRAPH\s+\?g\b/i.test(body)) {
+            return prefixes + '\nSELECT DISTINCT ?g WHERE {' + body + (/STRENDS\(STR\(\?g\)/.test(body) ? '' : '\n  ' + caseFilter) + '\n} LIMIT 500';
+        }
+        if (/\bGRAPH\s+<([^>]+\/resource\/case\/[^>\/]+)>/i.test(body)) {
+            const one = /\bGRAPH\s+<([^>]+\/resource\/case\/[^>\/]+)>/i.exec(body)[1];
+            return 'SELECT ?g WHERE { BIND(<' + one + '> AS ?g) }';
+        }
+        return prefixes + '\nSELECT DISTINCT ?g WHERE {\n  GRAPH ?g {' + body + '\n  }\n  ' + caseFilter + '\n} LIMIT 500';
+    }
+
+    async function applySparqlHandoff() {
+        let query = '';
+        try { query = new URLSearchParams(window.location.search).get('sparql') || ''; } catch (_) { return; }
+        query = query.trim();
+        if (!query) return;
+        const ta = document.getElementById('sparql-query');
+        if (ta) ta.value = query;
+        setSparqlStatus('Running query from Analysis…');
+        setLookupStatus('Running query from Analysis…');
+        let payload;
+        try {
+            payload = await runSparqlSelect(query);
+        } catch (err) {
+            setSparqlStatus(err && err.message ? err.message : String(err), true);
+            setLookupStatus('Query from Analysis failed.');
+            return;
+        }
+        const n = renderSparqlResults(payload);
+        setSparqlStatus(n + ' row' + (n === 1 ? '' : 's') + ' from Analysis');
+        let ids = caseIdsFromBindings(payload).slice(0, MAX_COMPARE_CASES);
+        if (!ids.length) {
+            const derived = casesQueryFromAny(query);
+            if (derived) {
+                setLookupStatus('Finding the cases behind this answer…');
+                try {
+                    const p2 = await runSparqlSelect(derived);
+                    ids = caseIdsFromBindings(p2).slice(0, MAX_COMPARE_CASES);
+                } catch (err) { console.error(err); }
+            }
+        }
+        if (!ids.length) {
+            setLookupStatus('No cases could be derived from this query. Rows are in Lookups.');
+            return;
+        }
+        CORPUS_SOURCE = 'cases';
+        syncCorpusSourceUi();
+        BIG_BANG_MODE = false;
+        UNIVERSE_MODE = false;
+        ANALYSIS_MODE = false;
+        ids.forEach(id => {
+            if (!COMPARE_POOL.some(c => c.case_id === id)) COMPARE_POOL.push(caseEntryFromId(id));
+        });
+        LOOKUP_CASE_IDS = ids;
+        renderLookupResults(LOOKUP_CASE_IDS);
+        if (ids.length === 1 && MODE !== 'single') setMode('single');
+        if (ids.length > 1 && MODE !== 'compare') setMode('compare');
+        if (ids.length <= SPARQL_HANDOFF_AUTO_LOAD) {
+            try { await loadLookupCases(ids); } catch (err) { console.error(err); setLookupStatus(err && err.message ? err.message : String(err)); }
+            setLookupStatus(ids.length + ' case' + (ids.length === 1 ? '' : 's') + ' from Analysis loaded on the graph.');
+        } else {
+            setLookupStatus(ids.length + ' cases from Analysis · showing the first ' + SPARQL_HANDOFF_AUTO_LOAD + ' on the graph · Load on graph for all');
+            try { await loadLookupCases(ids.slice(0, SPARQL_HANDOFF_AUTO_LOAD)); } catch (err) { console.error(err); }
+        }
+    }
+
     async function applySearchCohortHandoff() {
         if (!searchCohortRequested()) return;
         let payload = null;
@@ -2745,6 +2914,30 @@
             }
         }
         await applySearchCohortHandoff();
+        await applySparqlHandoff();
+        await loadShowcase();
+    }
+
+    /* An empty canvas is a dead canvas. With nothing asked for, open one balanced case graph
+       (three hubs, four platforms, provenance on every value) so the page starts with something worth looking at. */
+    const SHOWCASE_CASE_ID = 'south_florida_icac_2023_010';
+    /* ?case=<id> from another page: open that case in Single mode. */
+    async function applyCaseParam() {
+        let id = '';
+        try { id = (new URLSearchParams(window.location.search).get('case') || '').trim(); } catch (_) { return false; }
+        if (!id || !SEARCH_COHORT_ID_RE.test(id)) return false;
+        if (MODE !== 'single') setMode('single');
+        try { await loadLookupCases([id]); } catch (err) { console.error(err); setLookupStatus('Could not open ' + id + '.'); }
+        return true;
+    }
+
+    async function loadShowcase() {
+        if (await applyCaseParam()) return;
+        if (CURRENT_CASE_ID || SESSION_CASES.length || CORPUS_SOURCE !== 'cases') return;
+        try { if (new URLSearchParams(window.location.search).has('sparql')) return; } catch (_) { /* ignore */ }
+        if (MODE !== 'single') setMode('single');
+        try { await loadLookupCases([SHOWCASE_CASE_ID]); } catch (err) { console.error(err); }
+        setLookupStatus('');
     }
 
     boot();

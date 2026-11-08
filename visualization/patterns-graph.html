@@ -2,1121 +2,322 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CaseLinker &mdash; Ontology &amp; Graphs</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Graph · CaseLinker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/viz-assets/v4.css?v=4.1">
+    <script src="/viz-assets/v4.js?v=4.1" defer></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
-        :root {
-            --bg-deep: #1a2332;
-            --bg-panel: #121a26;
-            --bg-elevated: #1c2636;
-            --line: #2a3548;
-            --text: #e5e7eb;
-            --text-dim: #9ca3af;
-            --text-mute: #6b7280;
-            --accent: #34d399;
-            --accent-dim: rgba(52, 211, 153, 0.12);
-            --warn: #f59e0b;
-            --rail-w: 280px;
-            --detail-w: 300px;
-        }
-
-        * { box-sizing: border-box; }
-        html, body {
-            margin: 0;
-            padding: 0;
-            min-height: 100%;
-            background: #f0f2f1;
-            color: #1f2937;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.55;
-        }
-
-        /* Site-standard nav (matches other tabs) */
-        .nav {
-            background: white;
-            padding: 15px 24px 15px 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            display: flex;
-            flex-wrap: nowrap;
-            align-items: center;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            white-space: nowrap;
-            overflow-x: auto;
-        }
-        .nav a {
-            white-space: nowrap;
-            flex-shrink: 0;
-            color: #4CAF50;
-            text-decoration: none;
-            margin-right: 16px;
-        }
-        .nav a:hover { text-decoration: underline; }
-        .nav a.patterns {
-            margin-left: 10px;
-            color: #dc2626;
-            font-weight: 700;
-            animation: pulseRed 8s ease-in-out infinite;
-        }
-        @keyframes pulseRed {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.92; }
-        }
-        .hood-link {
-            margin-left: auto;
-            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ff6b35 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: pulseOrange 6s ease-in-out infinite;
-            position: relative;
-            font-weight: 600;
-        }
-        @keyframes pulseOrange {
-            0%, 100% { opacity: 0.75; }
-            50% { opacity: 0.90; }
-        }
-        .tech-landscape-link {
-            display: inline-block;
-            vertical-align: baseline;
-            font-weight: 400;
-            position: relative;
-            text-decoration: none;
-            white-space: nowrap;
-        }
-        .tech-landscape-link .tls-gate--left {
-            display: inline;
-            vertical-align: baseline;
-            background: linear-gradient(135deg, #2e7d32 0%, #43a047 38%, #66bb6a 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            filter: drop-shadow(0 0 5px rgba(76, 175, 80, 0.44)) drop-shadow(0 0 11px rgba(102, 187, 106, 0.28)) drop-shadow(-5px 0 4px rgba(46, 125, 50, 0.24));
-            animation: tlsGatePulse 16s ease-in-out infinite;
-        }
-        .tech-landscape-link .tls-gate--mid {
-            display: inline;
-            vertical-align: baseline;
-            color: #2e7d32;
-            -webkit-text-fill-color: #2e7d32;
-            font-weight: 400;
-            filter: none;
-            opacity: 0.88;
-            padding: 0 5px;
-        }
-        .tech-landscape-link .tls-gate--right {
-            display: inline;
-            vertical-align: baseline;
-            background: linear-gradient(135deg, #43a047 0%, #66bb6a 52%, #2e7d32 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            filter: drop-shadow(0 0 5px rgba(76, 175, 80, 0.44)) drop-shadow(0 0 11px rgba(102, 187, 106, 0.28)) drop-shadow(5px 0 4px rgba(46, 125, 50, 0.24));
-            animation: tlsGatePulse 16s ease-in-out infinite;
-        }
-        @keyframes tlsGatePulse {
-            0%, 100% { opacity: 0.87; }
-            50% { opacity: 0.94; }
-        }
-        .nav a.tech-landscape-link:hover { text-decoration: none; }
-        .nav a.tech-landscape-link::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: -2px;
-            height: 2px;
-            background: rgba(67, 160, 71, 0.62);
-            opacity: 0;
-            transition: opacity 0.12s ease;
-            pointer-events: none;
-        }
-        .nav a.tech-landscape-link:hover::after { opacity: 1; }
-
-        .app-shell {
+        /* ---------- Workspace layout ---------- */
+        .gx-work {
             display: grid;
-            grid-template-columns: var(--rail-w) minmax(0, 1fr) var(--detail-w);
-            grid-template-rows: auto 1fr;
-            min-height: calc(100vh - 54px);
-            background: var(--bg-deep);
-            color: var(--text);
+            grid-template-columns: 300px minmax(0, 1fr) 340px;
+            gap: 16px;
+            align-items: start; /* the rails never resize the canvas: a longer Node card must not move the graph */
         }
+        .gx-rail, .gx-detail { min-width: 0; }
+        .gx-rail .cl-card__body, .gx-detail .cl-card__body { padding: 14px 16px; }
+        .gx-section + .gx-section { border-top: 1px solid var(--line); margin-top: 14px; padding-top: 14px; }
+        .gx-section h3 { font-size: 11.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 10px; }
+        .gx-section[hidden] { display: none; }
+        .gx-field { display: block; font-size: 12px; font-weight: 600; color: var(--ink-2); margin: 10px 0 5px; }
+        .gx-field:first-of-type { margin-top: 0; }
+        .gx-field[hidden], .sparql-query[hidden] { display: none; }
+        .gx-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+        .gx-row .cl-btn { flex: 1 1 auto; }
+        .gx-check { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ink-2); margin: 10px 0 0; }
+        .gx-check input { accent-color: var(--accent); margin: 0; }
 
-        .top-bar {
-            grid-column: 1 / -1;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            padding: 10px 14px;
-            border-bottom: 1px solid var(--line);
-            background: #121a26;
-        }
-        .top-bar-row {
-            display: flex;
-            flex-wrap: nowrap;
-            align-items: center;
-            gap: 10px 14px;
-        }
-        .brand-block { flex: 1 1 auto; min-width: 0; }
-        .brand-block h1 {
-            margin: 0;
-            font-size: 1rem;
-            font-weight: 600;
-            color: #f3f4f6;
-        }
-        #case-title {
-            margin: 2px 0 0;
-            font-size: 0.8rem;
-            color: var(--text-dim);
-            max-width: min(52vw, 640px);
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            font-family: Consolas, 'Liberation Mono', monospace;
-        }
+        /* Segmented controls: the JS marks the active button with .active / aria-selected. */
+        .cl-seg button.active,
+        .cl-seg button[aria-selected="true"] { background: var(--ink); color: #fff; }
+        .cl-seg.gx-seg--full { display: flex; }
+        .cl-seg.gx-seg--full button { flex: 1; }
 
-        .mode-block {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex: 0 0 auto;
-            margin-left: auto;
-        }
-        .mode-block-label {
-            font-size: 0.7rem;
-            color: var(--text-mute);
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            font-weight: 600;
-        }
+        /* Status lines */
+        .gx-status { font-size: 12.5px; color: var(--ink-3); min-height: 1.3em; margin: 10px 0 0; }
+        .gx-status.error { color: var(--danger); }
+        .gx-status:empty { display: none; }
 
-        /* Vertical chip tray — grows down + scrolls; never shoves mode toggle */
-        .case-selector {
-            display: flex;
-            flex-direction: column;
-            flex-wrap: nowrap;
-            gap: 4px;
-            align-items: stretch;
-            width: 100%;
-            max-height: 112px;
-            overflow-x: hidden;
-            overflow-y: auto;
-            padding-right: 2px;
-        }
-        .case-selector[hidden] { display: none !important; }
-        .case-selector-label {
-            font-size: 0.7rem;
-            color: var(--text-mute);
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            font-weight: 600;
-            line-height: 1.2;
-            flex: 0 0 auto;
-        }
-        .mode-toggle {
-            display: inline-flex;
-            border: 1px solid var(--line);
-            border-radius: 4px;
-            overflow: hidden;
-            background: var(--bg-elevated);
-            font-size: 0.75rem;
-            font-weight: 600;
-            flex-shrink: 0;
-        }
-        .mode-toggle button {
-            font: inherit;
-            border: none;
-            background: transparent;
-            color: var(--text-dim);
-            padding: 5px 10px;
-            cursor: pointer;
-        }
-        .mode-toggle button.active {
-            background: #1b5e20;
-            color: #fff;
-        }
-        .case-chip {
-            font-family: Consolas, 'Liberation Mono', monospace;
-            font-size: 0.72rem;
-            padding: 4px 8px;
-            border-radius: 6px;
-            border: 1px solid var(--line);
-            background: var(--bg-elevated);
-            color: var(--text-dim);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 8px;
-            width: 100%;
-            max-width: 420px;
-            text-align: left;
-        }
-        .case-chip:hover { border-color: #4CAF50; color: #fff; }
-        .case-chip.active {
-            background: #1b5e20;
-            border-color: #2e7d32;
-            color: #fff;
-        }
-        .case-chip .chip-link { opacity: 0.55; }
-        .case-chip .chip-link:hover { opacity: 1; }
-        .case-selector.compare-mode .case-chip {
-            padding-left: 22px;
-            position: relative;
-        }
-        .case-selector.compare-mode .case-chip::before {
-            content: '';
-            position: absolute;
-            left: 7px; top: 50%;
-            width: 9px; height: 9px;
-            transform: translateY(-50%);
-            border: 1.5px solid var(--text-mute);
-            border-radius: 2px;
-        }
-        .case-selector.compare-mode .case-chip.active::before {
-            background: #fff;
-            border-color: #fff;
-        }
-        .shared-badge {
-            display: inline-block;
-            min-width: 14px; height: 14px;
-            line-height: 14px;
-            padding: 0 3px;
-            border-radius: 7px;
-            background: var(--warn);
-            color: #1f2937;
-            font-size: 0.65rem;
-            font-weight: 700;
-        }
-
-        .lookup-rail, .detail-panel {
-            background: var(--bg-panel);
-            border-right: 1px solid var(--line);
-            overflow-y: auto;
-            padding: 12px 12px 20px;
-            font-size: 0.88rem;
-        }
-        .detail-panel {
-            border-right: none;
-            border-left: 1px solid var(--line);
-        }
-        .rail-title {
-            margin: 0 0 12px;
-            font-size: 0.72rem;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: var(--text-mute);
-        }
-        .rail-section { margin-bottom: 16px; }
-        .rail-section h3 {
-            margin: 0 0 8px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #e5e7eb;
-        }
-        .field-label {
-            display: block;
-            font-size: 0.7rem;
-            color: var(--text-mute);
-            margin: 0 0 4px;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-        }
-        .field {
-            width: 100%;
-            background: #0b111a;
-            border: 1px solid var(--line);
-            color: var(--text);
-            border-radius: 4px;
-            padding: 7px 8px;
-            font: inherit;
-            font-size: 0.84rem;
-            margin-bottom: 8px;
-        }
-        .field:focus {
-            outline: none;
-            border-color: #4CAF50;
-        }
-        .case-suggest-wrap {
-            position: relative;
-            margin-bottom: 8px;
-        }
-        .case-suggest-wrap .field {
-            margin-bottom: 0;
-        }
-        .case-suggest {
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: calc(100% + 2px);
-            z-index: 40;
-            max-height: 220px;
-            overflow: auto;
-            margin: 0;
-            padding: 4px 0;
-            list-style: none;
-            background: #0b111a;
-            border: 1px solid var(--line);
-            border-radius: 4px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
-        }
-        .case-suggest[hidden] { display: none; }
-        .case-suggest-option {
-            display: block;
-            width: 100%;
-            text-align: left;
-            border: 0;
-            background: transparent;
-            color: var(--text);
-            font: inherit;
-            font-size: 0.8rem;
-            padding: 6px 10px;
-            cursor: pointer;
-        }
-        .case-suggest-option:hover,
-        .case-suggest-option[aria-selected="true"] {
-            background: var(--accent-dim);
-            color: #a7f3d0;
-        }
-        .case-suggest-hint {
-            padding: 4px 10px 2px;
-            font-size: 0.68rem;
-            color: var(--text-mute);
-        }
-        .chip-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-bottom: 8px;
-        }
-        .facet-chip {
-            font-size: 0.74rem;
-            padding: 4px 8px;
-            border-radius: 4px;
-            border: 1px solid var(--line);
-            background: transparent;
-            color: var(--text-dim);
-            cursor: pointer;
-            font-family: inherit;
-        }
-        .facet-chip:hover, .facet-chip.active {
-            border-color: #4CAF50;
-            color: #a7f3d0;
-            background: var(--accent-dim);
-        }
-        .btn-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
-        .btn {
-            font: inherit;
-            font-size: 0.8rem;
-            font-weight: 600;
-            border-radius: 4px;
-            border: 1px solid var(--line);
-            background: var(--bg-elevated);
-            color: var(--text);
-            padding: 7px 10px;
-            cursor: pointer;
-        }
-        .btn:hover { border-color: #4CAF50; }
-        .btn.primary {
-            background: #1b5e20;
-            border-color: #2e7d32;
-            color: #fff;
-        }
-        .btn:disabled { opacity: 0.55; cursor: wait; }
-        .lookup-status {
-            margin-top: 8px;
-            font-size: 0.75rem;
-            color: var(--text-dim);
-            min-height: 1.1em;
-        }
-        .lookup-results {
-            list-style: none;
-            margin: 8px 0 0;
-            padding: 0;
-            max-height: 160px;
-            overflow: auto;
-            border: 1px solid var(--line);
-            border-radius: 4px;
-        }
+        /* Lookup result list */
+        .lookup-results { list-style: none; margin: 8px 0 0; padding: 0; max-height: 260px; overflow: auto; border: 1px solid var(--line); border-radius: var(--radius-sm); }
         .lookup-results:empty { display: none; }
-        .lookup-results li {
-            display: flex;
-            justify-content: space-between;
-            gap: 8px;
-            padding: 5px 8px;
-            border-bottom: 1px solid var(--line);
-            font-size: 0.74rem;
-            font-family: Consolas, monospace;
-        }
-        .lookup-results li:last-child { border-bottom: none; }
-        .lookup-results button {
-            font: inherit;
-            font-size: 0.72rem;
-            border: none;
-            background: transparent;
-            color: #86efac;
-            cursor: pointer;
-            padding: 0;
-            font-weight: 600;
-        }
-        .lookup-results button.opened {
-            color: #fb923c;
-        }
-        .lookup-results button:hover { text-decoration: underline; }
-        .toggle-row {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.8rem;
-            color: var(--text-dim);
-            margin: 6px 0;
-        }
+        .lookup-results li { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 10px; border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: 12px; color: var(--ink-2); }
+        .lookup-results li:last-child { border-bottom: 0; }
+        .lookup-results li span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .lookup-results button { font: inherit; font-family: var(--sans); font-size: 12px; font-weight: 500; border: 1px solid var(--line-2); background: var(--surface); color: var(--accent); border-radius: 5px; padding: 2px 8px; cursor: pointer; flex: none; }
+        .lookup-results button:hover { background: var(--surface-2); }
+        .lookup-results button.opened { background: var(--ink); color: #fff; border-color: var(--ink); }
 
-        .graph-stage {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            min-width: 0;
-            background: var(--bg-deep);
-        }
-        .legend {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px 14px;
-            padding: 8px 12px;
-            border-bottom: 1px solid var(--line);
-            background: #121a26;
-            font-size: 0.74rem;
-            color: var(--text-dim);
-        }
-        .legend-item { display: flex; align-items: center; gap: 6px; }
-        .legend-swatch {
-            width: 10px; height: 10px;
-            border-radius: 50%;
-            border: 1px solid rgba(255,255,255,0.18);
-            flex-shrink: 0;
-        }
-        #graph-container {
-            position: relative;
-            flex: 1;
-            width: 100%;
-            min-height: 480px;
-            background: #1a2332;
-            cursor: grab;
-        }
+        /* Case-id autocomplete */
+        .case-suggest-wrap { position: relative; }
+        .case-suggest { position: absolute; left: 0; right: 0; top: calc(100% + 4px); z-index: 40; max-height: 220px; overflow: auto; margin: 0; padding: 4px 0; list-style: none; background: var(--surface); border: 1px solid var(--line-2); border-radius: var(--radius-sm); box-shadow: var(--shadow-2); }
+        .case-suggest[hidden] { display: none; }
+        .case-suggest-option { display: block; width: 100%; text-align: left; border: 0; background: transparent; color: var(--ink); font: inherit; font-family: var(--mono); font-size: 12px; padding: 6px 10px; cursor: pointer; }
+        .case-suggest-option strong { font-weight: 600; color: var(--accent); }
+        .case-suggest-option:hover, .case-suggest-option[aria-selected="true"] { background: var(--accent-soft); }
+        .case-suggest-hint { padding: 4px 10px 2px; font-size: 11px; color: var(--ink-3); }
+
+        /* ---------- Graph stage ---------- */
+        .gx-stage { display: flex; flex-direction: column; min-width: 0; overflow: hidden; height: calc(100vh - var(--nav-h) - 120px); min-height: 680px;
+            --canvas: #0e1626; --canvas-2: #142036; --canvas-line: rgba(160,185,230,.12);
+            background: var(--canvas); border-color: #0a1120; }
+        .gx-stage__head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; padding: 12px 16px; border-bottom: 1px solid var(--canvas-line); }
+        .gx-stage__title { min-width: 0; }
+        .gx-stage__title .cl-label { color: var(--canvas-ink-2); }
+        #case-title[hidden] { display: none; }
+        .gx-mark { font-size: 13px; font-weight: 700; letter-spacing: -.02em; color: var(--canvas-ink); opacity: .55; user-select: none; }
+        .gx-mark__l { color: #e0675f; }
+        #graph-svg > g.gx-reveal { opacity: 0; transition: opacity .45s cubic-bezier(.2,.7,.2,1); }
+        #graph-svg > g.gx-reveal.is-in { opacity: 1; }
+        #case-title { margin: 2px 0 0; font-family: var(--serif); font-size: 17px; line-height: 1.25; color: var(--canvas-ink); overflow: hidden; text-overflow: ellipsis; }
+        .gx-mode { display: flex; align-items: center; gap: 10px; }
+        .gx-mode .cl-seg { background: var(--canvas-2); border-color: var(--canvas-line); }
+        .gx-mode .cl-seg button { color: var(--canvas-ink-2); }
+        .gx-mode .cl-seg button + button { border-left-color: var(--canvas-line); }
+        .gx-mode .cl-seg button.active,
+        .gx-mode .cl-seg button[aria-selected="true"] { background: var(--canvas-ink); color: var(--canvas); }
+
+        /* Loaded-case chips (press-release corpus) */
+        .case-selector { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 16px; border-bottom: 1px solid var(--canvas-line); max-height: 112px; overflow: auto; }
+        .case-selector[hidden] { display: none; }
+        .case-chip { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11.5px; padding: 3px 8px; border-radius: 5px; border: 1px solid var(--canvas-line); background: var(--canvas-2); color: var(--canvas-ink-2); cursor: pointer; position: relative; }
+        .case-chip:hover { color: var(--canvas-ink); border-color: rgba(255,255,255,.2); }
+        .case-chip.active { background: var(--canvas-ink); border-color: var(--canvas-ink); color: var(--canvas); }
+        .case-chip .chip-link { opacity: .55; }
+        .case-chip .chip-link:hover { opacity: 1; }
+        .case-selector.compare-mode .case-chip { padding-left: 22px; }
+        .case-selector.compare-mode .case-chip::before { content: ''; position: absolute; left: 7px; top: 50%; width: 9px; height: 9px; transform: translateY(-50%); border: 1.5px solid currentColor; border-radius: 2px; opacity: .7; }
+        .case-selector.compare-mode .case-chip.active::before { background: currentColor; opacity: 1; }
+
+        .gx-canvas-wrap { position: relative; flex: 1 1 auto; display: flex; min-height: 0; }
+        #graph-container { position: relative; flex: 1 1 auto; min-height: 0; width: 100%; background: #1a2332; cursor: grab; }
+        .gx-stage__head, .case-selector, .gx-stage__foot { flex: none; }
         #graph-container:active { cursor: grabbing; }
         #graph-svg { width: 100%; height: 100%; display: block; }
-        .graph-hint {
-            position: absolute;
-            bottom: 10px;
-            left: 12px;
-            font-size: 0.72rem;
-            color: rgba(255,255,255,0.4);
-            pointer-events: none;
-        }
-        .edge-tooltip {
-            position: absolute;
-            pointer-events: none;
-            background: rgba(255,255,255,0.96);
-            color: #1f2937;
-            padding: 5px 9px;
-            border-radius: 4px;
-            font-size: 0.78rem;
-            font-weight: 600;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.25);
-            display: none;
-            z-index: 10;
-            white-space: nowrap;
-        }
-        .stage-footer {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 10px;
-            padding: 8px 12px;
-            border-top: 1px solid var(--line);
-            background: #121a26;
-            font-size: 0.75rem;
-            color: var(--text-dim);
-        }
-        .big-bang-btn {
-            flex-shrink: 0;
-            padding: 6px 12px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-            color: #fff;
-            background: #1b5e20;
-            border: 1px solid #2e7d32;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .big-bang-btn:hover { background: #2e7d32; }
-        .big-bang-btn:disabled { opacity: 0.55; cursor: wait; }
-        .big-bang-btn.active {
-            background: #1d4ed8;
-            border-color: #2563eb;
-        }
+        .legend { position: absolute; top: 10px; left: 12px; right: 12px; display: flex; flex-wrap: wrap; gap: 4px 6px; pointer-events: none; z-index: 2; }
+        .legend-item { display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--canvas-ink); background: rgba(14,22,38,.78); border: 1px solid var(--canvas-line); border-radius: 999px; padding: 2px 9px 2px 6px; }
+        .legend-swatch { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+        .graph-hint { position: absolute; bottom: 10px; left: 12px; font-size: 11.5px; color: var(--canvas-ink-2); pointer-events: none; }
+        .edge-tooltip { position: absolute; pointer-events: none; background: var(--surface); color: var(--ink); padding: 5px 9px; border-radius: 5px; font-size: 12.5px; font-weight: 500; box-shadow: var(--shadow-2); display: none; z-index: 10; white-space: nowrap; }
+        .empty-state { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; text-align: center; padding: 40px 24px; color: var(--canvas-ink-2); font-size: 14px; line-height: 1.7; }
+        .empty-state code { font-family: var(--mono); font-size: .92em; color: var(--canvas-ink); background: rgba(255,255,255,.08); padding: 1px 6px; border-radius: 3px; }
 
-        .detail-panel h3 {
-            font-size: 0.72rem;
-            color: var(--text-mute);
-            margin: 0 0 10px;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-        }
-        .detail-panel .placeholder {
-            font-size: 0.84rem;
-            color: var(--text-mute);
-            font-style: italic;
-            margin: 0;
-        }
-        .detail-panel .node-heading {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--text);
-            margin: 0 0 4px;
-        }
-        .detail-panel .node-type {
-            font-size: 0.78rem;
-            color: var(--text-dim);
-            margin: 0 0 10px;
-            word-break: break-all;
-            font-family: Consolas, monospace;
-        }
-        .detail-panel .spine-badge {
-            display: inline-block;
-            font-size: 0.68rem;
-            font-weight: 600;
-            padding: 2px 8px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            color: white;
-        }
-        .prop-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.78rem;
-        }
-        .prop-table th, .prop-table td {
-            text-align: left;
-            padding: 6px 4px;
-            border-bottom: 1px solid var(--line);
-            vertical-align: top;
-        }
-        .prop-table th {
-            color: var(--text-mute);
-            font-weight: 500;
-            width: 36%;
-        }
-        .prop-table td {
-            color: var(--text);
-            word-break: break-word;
-        }
-        .detail-actions { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px; }
+        .gx-stage__foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; padding: 8px 12px 8px 16px; border-top: 1px solid var(--canvas-line); font-size: 12px; color: var(--canvas-ink-2); }
+        .gx-stage__foot .cl-btn--ghost { color: var(--canvas-ink-2); }
+        .gx-stage__foot .cl-btn--ghost:hover { color: var(--canvas-ink); background: rgba(255,255,255,.06); }
+        .gx-stage__foot .cl-btn--ghost.active { color: var(--canvas); background: var(--canvas-ink); }
+        .gx-stage__foot .cl-btn--ghost:disabled { cursor: wait; }
 
-        .detail-panel {
-            display: flex;
-            flex-direction: column;
-            gap: 0;
-        }
-        .detail-node { flex: 0 0 auto; }
-        .sparql-panel {
-            flex: 1 1 auto;
-            margin-top: 16px;
-            padding-top: 14px;
-            border-top: 1px solid var(--line);
-            min-height: 0;
-        }
-        .sparql-panel .sparql-hint {
-            margin: -4px 0 10px;
-            font-size: 0.72rem;
-            color: var(--text-mute);
-            line-height: 1.4;
-        }
-        .sparql-panel .sparql-hint a {
-            color: #86efac;
-            text-decoration: none;
-        }
-        .sparql-panel .sparql-hint a:hover { text-decoration: underline; }
-        .sparql-query {
-            font-family: Consolas, 'IBM Plex Mono', monospace;
-            font-size: 0.72rem;
-            line-height: 1.45;
-            resize: vertical;
-            min-height: 132px;
-            max-height: 280px;
-            white-space: pre;
-            overflow-x: auto;
-        }
-        .sparql-query.sparql-nl-mode {
-            font-family: inherit;
-            white-space: pre-wrap;
-        }
-        .sparql-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin: 0 0 8px;
-        }
-        .sparql-status {
-            font-size: 0.74rem;
-            color: var(--text-mute);
-            margin: 0 0 8px;
-            min-height: 1.1em;
-        }
-        .sparql-status.error { color: #fca5a5; }
-        .sparql-results {
-            max-height: 240px;
-            overflow: auto;
-            border: 1px solid var(--line);
-            border-radius: 4px;
-            background: #0b111a;
-        }
+        /* ---------- Detail + SPARQL ---------- */
+        .gx-detail { display: flex; flex-direction: column; }
+        #detail-placeholder { margin: 0; color: var(--ink-3); font-size: 13.5px; }
+        .node-heading { font-family: var(--serif); font-size: 18px; line-height: 1.25; margin: 0 0 4px; word-break: break-word; }
+        .node-type { font-family: var(--mono); font-size: 12px; color: var(--ink-3); margin: 0 0 10px; word-break: break-all; }
+        .spine-badge { display: inline-block; font-size: 11.5px; font-weight: 500; padding: 2px 9px; border-radius: 999px; margin-bottom: 10px; color: #fff; }
+        .detail-actions { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 12px; }
+        .prop-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+        .prop-table th, .prop-table td { text-align: left; padding: 6px 4px; border-bottom: 1px solid var(--line); vertical-align: top; }
+        .prop-table tr:last-child th, .prop-table tr:last-child td { border-bottom: 0; }
+        .prop-table th { color: var(--ink-3); font-weight: 500; width: 38%; font-family: var(--mono); font-size: 11.5px; }
+        .prop-table td { color: var(--ink); word-break: break-word; }
+        /* Buttons the JS injects use .btn */
+        .btn { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 6px; border: 1px solid var(--line-2); background: var(--surface); color: var(--ink); font: inherit; font-size: 12.5px; font-weight: 500; cursor: pointer; }
+        .btn:hover { background: var(--surface-2); border-color: var(--ink-4); }
+
+        .sparql-hint { font-size: 12.5px; color: var(--ink-3); margin: 0 0 10px; }
+        #sparql-endpoint-label { font-family: var(--mono); font-size: 11.5px; color: var(--ink-2); }
+        .sparql-query { font-family: var(--mono); font-size: 12.5px; line-height: 1.5; min-height: 150px; resize: vertical; white-space: pre; overflow-wrap: normal; overflow-x: auto; }
+        .sparql-query.sparql-nl-mode { font-family: var(--sans); font-size: 13.5px; white-space: pre-wrap; }
+        .sparql-actions { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 0; }
+        .sparql-results { max-height: 280px; overflow: auto; border: 1px solid var(--line); border-radius: var(--radius-sm); margin-top: 10px; }
         .sparql-results:empty { display: none; }
-        .sparql-results table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.7rem;
-            font-family: Consolas, 'IBM Plex Mono', monospace;
-        }
-        .sparql-results th, .sparql-results td {
-            text-align: left;
-            padding: 5px 6px;
-            border-bottom: 1px solid var(--line);
-            vertical-align: top;
-            word-break: break-word;
-        }
-        .sparql-results th {
-            position: sticky;
-            top: 0;
-            background: #121a26;
-            color: var(--text-mute);
-            font-weight: 600;
-            text-transform: none;
-            letter-spacing: 0;
-            font-size: 0.68rem;
-        }
-        .sparql-results td { color: var(--text-dim); }
-        .sparql-boolean {
-            padding: 10px 8px;
-            font-family: Consolas, monospace;
-            font-size: 0.85rem;
-            color: var(--accent);
-        }
+        .sparql-results table { width: 100%; border-collapse: collapse; font-size: 12px; font-family: var(--mono); }
+        .sparql-results th { position: sticky; top: 0; background: var(--surface-2); text-align: left; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; padding: 7px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+        .sparql-results td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--line); vertical-align: top; word-break: break-word; font-variant-numeric: tabular-nums; }
+        .sparql-results tr:last-child td { border-bottom: 0; }
+        .sparql-results tbody tr:hover td { background: #fbfaf7; }
+        .sparql-boolean { padding: 10px 12px; font-family: var(--mono); font-size: 14px; color: var(--accent); }
 
-        .empty-state {
-            padding: 48px 20px;
-            text-align: center;
-            color: rgba(255,255,255,0.7);
-            font-size: 0.9rem;
-            line-height: 1.7;
-        }
-        .empty-state code {
-            background: rgba(255,255,255,0.08);
-            padding: 2px 6px;
-            border-radius: 3px;
-            color: #fbbf24;
-            font-family: Consolas, monospace;
-        }
+        .gx-about { margin-top: 20px; }
+        .gx-about p { margin: 10px 0 0; font-size: 13.5px; color: var(--ink-2); max-width: 80ch; }
 
-        /* Docs below the fold — light, same voice as the rest of CaseLinker */
-        .research-wrap {
-            background: #f0f2f1;
-            border-top: 1px solid #d1d5db;
-            color: #1f2937;
-        }
-        .research-wrap details {
-            max-width: 880px;
-            margin: 0 auto;
-            padding: 20px 24px 36px;
-        }
-        .research-wrap summary {
-            cursor: pointer;
-            list-style: none;
-            font-weight: 600;
-            color: #1b5e20;
-            font-size: 1.05rem;
-        }
-        .research-wrap summary::-webkit-details-marker { display: none; }
-        .research-wrap summary::before {
-            content: '▸ ';
-            color: #4CAF50;
-        }
-        .research-wrap details[open] summary::before { content: '▾ '; }
-        .research-body {
-            margin-top: 18px;
-            font-size: 0.98rem;
-            line-height: 1.65;
-            color: #374151;
-        }
-        .research-body h2 {
-            color: #1b5e20;
-            font-size: 1.2rem;
-            margin: 28px 0 10px;
-            font-weight: 700;
-        }
-        .research-body h3 {
-            color: #111827;
-            font-size: 1.02rem;
-            margin: 18px 0 8px;
-        }
-        .research-body a { color: #1b5e20; font-weight: 500; }
-        .research-body .intro {
-            margin: 0 0 14px;
-            color: #4b5563;
-        }
-        .rq-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 14px;
-            margin: 12px 0 8px;
-        }
-        .rq-card {
-            background: #fff;
-            border: 1px solid #e5e7eb;
-            border-radius: 6px;
-            padding: 16px 18px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-        }
-        .rq-card h3 { margin: 0 0 4px; font-size: 1rem; }
-        .rq-card h3 a { color: #1b5e20; text-decoration: none; }
-        .rq-card h3 a:hover { text-decoration: underline; }
-        .rq-card .view-findings {
-            display: inline-block;
-            margin: 2px 0 12px;
-            font-size: 0.9rem;
-            color: #1b5e20;
-            text-decoration: none;
-            font-weight: 600;
-        }
-        .rq-card .view-findings:hover { text-decoration: underline; }
-        .rq-card .statement {
-            font-size: 0.94rem;
-            color: #1f2937;
-            margin: 0 0 12px;
-        }
-        .rq-card .label {
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            color: #6b7280;
-            margin: 12px 0 4px;
-        }
-        .rq-card .why {
-            font-size: 0.92rem;
-            color: #4b5563;
-            margin: 0;
-        }
-        .pipeline-list {
-            margin: 8px 0 0;
-            padding-left: 1.3em;
-            color: #374151;
-        }
-        .pipeline-list li { margin-bottom: 8px; }
-        .ext-links {
-            list-style: none;
-            padding: 0;
-            margin: 10px 0 0;
-        }
-        .ext-links li {
-            padding: 6px 0;
-            border-bottom: 1px solid #f3f4f6;
-            font-size: 0.92rem;
-        }
-        .ext-links li:last-child { border-bottom: none; }
-        .status-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.9rem;
-            margin: 10px 0 16px;
-            background: #fff;
-            border: 1px solid #e5e7eb;
-            border-radius: 6px;
-            overflow: hidden;
-        }
-        .status-table th, .status-table td {
-            border-bottom: 1px solid #e5e7eb;
-            padding: 9px 10px;
-            text-align: left;
-        }
-        .status-table th {
-            color: #6b7280;
-            font-weight: 500;
-            width: 40%;
-            background: #f9fafb;
-        }
-        .working-note {
-            margin: 22px 0 0;
-            font-size: 0.9rem;
-            color: #6b7280;
-        }
-        .afh-inline a { font-weight: 600; }
-
-        .site-footer {
-            background: #f0f2f1;
-            padding: 0 20px 28px;
-        }
-        .site-footer .disclaimer {
-            max-width: 880px;
-            margin: 0 auto;
-            background: #fff8e1;
-            border-left: 4px solid #ffc107;
-            padding: 14px 18px;
-            font-size: 0.85rem;
-            color: #5d4037;
-            border-radius: 0 4px 4px 0;
-        }
-        .site-footer .disclaimer a { color: #1b5e20; }
-
+        /* ---------- Responsive ---------- */
         @media (max-width: 1100px) {
-            .app-shell {
-                grid-template-columns: 1fr;
-                grid-template-rows: auto auto minmax(420px, 58vh) auto;
-                min-height: 0;
-            }
-            .lookup-rail, .detail-panel {
-                border: none;
-                border-bottom: 1px solid var(--line);
-                max-height: 280px;
-            }
-            .detail-panel { order: 4; }
-            .graph-stage { order: 3; }
-            #graph-container { min-height: 420px; }
+            .gx-work { grid-template-columns: 1fr; }
+            .gx-stage { height: auto; min-height: 0; }
+            .gx-canvas-wrap, #graph-container { min-height: 480px; }
+        }
+        @media (max-width: 640px) {
+            .gx-canvas-wrap, #graph-container { min-height: 400px; }
+            .sparql-results { max-height: 220px; }
         }
     </style>
-    <link rel="stylesheet" href="/viz-assets/site-nav.css">
 </head>
 <body>
-    <div class="nav">
-        <a href="/">Home</a>
-        <a href="/visualization">Visualization</a>
-        <a href="/analysis">Analysis</a>
-        <a href="/clusters">Clusters</a>
-        <a href="/stats">Stats</a>
-        <a href="/search">Search</a>
-        <a href="/lifecycle">Lifecycle</a>
-        <a href="/query">Query</a>
-        <a href="/triage">Triage</a>
-        <a href="/case-studies">Case Studies</a>
-        <a href="/tech-landscape" class="tech-landscape-link"><span class="tls-gate--left">Tech</span><span class="tls-gate--mid"> </span><span class="tls-gate--right">Landscape</span></a>
-        <a href="/llm">LLM</a>
-        <a href="/sources">Sources</a>
-        <a href="/audit">Audit</a>
-        <a href="/patterns" class="patterns" aria-current="page">Ontology & Graphs</a>
-        <a href="/under-the-hood" class="hood-link">Look Under the Hood</a>
-    </div>
+    <div id="cl-nav" data-active="graph"></div>
 
-    <div class="app-shell">
-        <div class="top-bar">
-            <div class="top-bar-row">
-                <div class="brand-block">
-                    <h1>Ontology &amp; Graphs</h1>
-                    <p id="case-title">Loading cases…</p>
+    <div class="cl-page cl-page--wide">
+        <header class="cl-head">
+            <h1 class="cl-title">Graph</h1>
+        </header>
+
+        <div class="gx-work">
+            <!-- Left: lookup rail -->
+            <aside class="cl-card gx-rail" aria-label="Lookup">
+                <div class="cl-card__head"><span class="cl-card__title">Lookup</span></div>
+                <div class="cl-card__body">
+                    <div class="gx-section">
+                        <h3>Corpus</h3>
+                        <div class="cl-seg gx-seg--full" id="corpus-source-row" role="group" aria-label="Corpus">
+                            <button type="button" class="facet-chip active" data-corpus="cases">Press releases</button>
+                            <button type="button" class="facet-chip" data-corpus="pacer">PACER</button>
+                        </div>
+                    </div>
+
+                    <div class="gx-section" id="lookup-case-section">
+                        <h3>Find cases</h3>
+                        <label class="gx-field" for="lookup-class">CASE/UCO/CAC class</label>
+                        <select id="lookup-class" class="cl-select">
+                            <option value="">Any</option>
+                            <option value="https://cacontology.projectvic.org/legal-outcomes#CSAM_Distribution">CSAM_Distribution</option>
+                            <option value="https://cacontology.projectvic.org/legal-outcomes#SentencingPhase">SentencingPhase</option>
+                            <option value="https://cacontology.projectvic.org#CSAMIncident">CSAMIncident</option>
+                            <option value="https://cacontology.projectvic.org#ChildSexualAbuseEvent">ChildSexualAbuseEvent</option>
+                            <option value="https://cacontology.projectvic.org#ConspiracyToCommitCSA">ConspiracyToCommitCSA</option>
+                            <option value="https://cacontology.projectvic.org#DigitallyGeneratedCSAMIncident">DigitallyGeneratedCSAMIncident</option>
+                            <option value="https://cacontology.projectvic.org#LegalProcessPhase">LegalProcessPhase</option>
+                            <option value="https://cacontology.projectvic.org#InitialPhase">InitialPhase</option>
+                            <option value="https://cacontology.projectvic.org#VictimRole">VictimRole</option>
+                            <option value="https://cacontology.projectvic.org#OffenderRole">OffenderRole</option>
+                        </select>
+
+                        <label class="gx-field" for="lookup-platform">Platform</label>
+                        <input id="lookup-platform" class="cl-input" type="search" placeholder="social media, Discord…" autocomplete="off">
+
+                        <label class="gx-field" for="lookup-agency">Agency</label>
+                        <input id="lookup-agency" class="cl-input" type="search" placeholder="U.S. Marshals…" autocomplete="off">
+
+                        <label class="gx-field" for="lookup-case-q">Case ID / text</label>
+                        <div class="case-suggest-wrap">
+                            <input id="lookup-case-q" class="cl-input" type="search"
+                                placeholder="doj_safe_childhood_2024_216…"
+                                autocomplete="off"
+                                spellcheck="false"
+                                role="combobox"
+                                aria-autocomplete="list"
+                                aria-controls="lookup-case-suggest"
+                                aria-expanded="false">
+                            <ul id="lookup-case-suggest" class="case-suggest" hidden role="listbox" aria-label="Matching case IDs"></ul>
+                        </div>
+
+                        <div class="gx-row">
+                            <button type="button" class="cl-btn cl-btn--primary cl-btn--sm" id="lookup-run">Search</button>
+                            <button type="button" class="cl-btn cl-btn--sm" id="lookup-load">Load on graph</button>
+                        </div>
+                        <div class="gx-status lookup-status" id="lookup-status" aria-live="polite"></div>
+                        <ul class="lookup-results" id="lookup-results"></ul>
+                    </div>
+
+                    <div class="gx-section" id="pacer-section" hidden>
+                        <h3>Find cases</h3>
+                        <label class="gx-field" for="pacer-class">CASE/UCO/CAC class</label>
+                        <select id="pacer-class" class="cl-select">
+                            <option value="">Any</option>
+                        </select>
+
+                        <label class="gx-field" for="pacer-platform">Platform</label>
+                        <input id="pacer-platform" class="cl-input" type="search" placeholder="Discord, Kik, Telegram…" autocomplete="off">
+
+                        <label class="gx-field" for="pacer-agency">Agency</label>
+                        <input id="pacer-agency" class="cl-input" type="search" placeholder="FBI, HSI, Secret Service…" autocomplete="off">
+
+                        <div class="gx-row">
+                            <button type="button" class="cl-btn cl-btn--primary cl-btn--sm" id="pacer-search">Search</button>
+                            <button type="button" class="cl-btn cl-btn--sm" id="pacer-load">Load on graph</button>
+                        </div>
+                        <div class="gx-status lookup-status" id="pacer-status" aria-live="polite"></div>
+                        <ul class="lookup-results" id="pacer-results"></ul>
+                    </div>
                 </div>
-                <div class="mode-block">
-                    <span class="mode-block-label">CASE</span>
-                <div class="mode-toggle" id="mode-toggle" role="tablist" aria-label="Selection mode">
-                        <button type="button" data-mode="single" class="active" role="tab" aria-selected="true">Single</button>
-                        <button type="button" data-mode="compare" role="tab" aria-selected="false">Compare</button>
+            </aside>
+
+            <!-- Centre: graph stage -->
+            <section class="cl-canvas gx-stage" aria-label="Graph canvas">
+                <div class="gx-stage__head">
+                    <div class="gx-stage__title">
+                        <div class="gx-mark" aria-label="CaseLinker"><span>Case</span><span class="gx-mark__l">Linker</span></div>
+                        <p id="case-title" hidden aria-hidden="true">Loading cases…</p>
+                    </div>
+                    <div class="gx-mode">
+                        <span class="cl-label" style="color:var(--canvas-ink-2)">Case</span>
+                        <div class="cl-seg" id="mode-toggle" role="tablist" aria-label="Selection mode">
+                            <button type="button" data-mode="single" class="active" role="tab" aria-selected="true">Single</button>
+                            <button type="button" data-mode="compare" role="tab" aria-selected="false" title="Double-click to select or clear the whole compare pool">Compare</button>
+                        </div>
+                    </div>
                 </div>
-            </div>
+                <div class="case-selector" id="case-selector" hidden></div>
+                <div class="gx-canvas-wrap">
+                    <div class="legend" id="legend"></div>
+                    <div id="graph-container">
+                        <svg id="graph-svg"></svg>
+                        <div class="graph-hint">Scroll to zoom · Drag nodes · Click to inspect</div>
+                        <div class="edge-tooltip" id="edge-tooltip"></div>
+                    </div>
+                </div>
+                <div class="gx-stage__foot">
+                    <span>Amber ring = node shared across loaded cases · dashed = NLP-derived</span>
+                    <button type="button" id="big-bang-btn" class="cl-btn cl-btn--ghost cl-btn--sm" title="Merge the Big Bang half-sample">Big Bang</button>
+                </div>
+            </section>
+
+            <!-- Right: node detail + SPARQL -->
+            <aside class="gx-detail" id="detail-panel" aria-label="Node detail and filters">
+                <div class="cl-card detail-node">
+                    <div class="cl-card__head"><span class="cl-card__title">Node</span></div>
+                    <div class="cl-card__body">
+                        <p id="detail-placeholder">Click a node on the canvas to read its properties.</p>
+                        <div id="detail-content" style="display:none;"></div>
+                    </div>
+                </div>
+                <div class="cl-card" style="margin-top:16px">
+                    <div class="cl-card__head"><span class="cl-card__title">Filter graph</span></div>
+                    <div class="cl-card__body">
+                        <label class="gx-field" for="filter-spine">Spine</label>
+                        <select id="filter-spine" class="cl-select">
+                            <option value="">All</option>
+                            <option value="EnduringEntity">Enduring Entity</option>
+                            <option value="Event">Event</option>
+                            <option value="Role">Role</option>
+                            <option value="Phase">Phase</option>
+                            <option value="Situation">Situation</option>
+                            <option value="AssessmentResult">Assessment</option>
+                            <option value="Unknown">Other</option>
+                        </select>
+                        <label class="gx-field" for="filter-type">Type contains</label>
+                        <input id="filter-type" class="cl-input" type="search" placeholder="Sentencing, Platform…" autocomplete="off">
+                        <label class="gx-check"><input type="checkbox" id="filter-shared"> Shared nodes only</label>
+                        <div class="gx-row">
+                            <button type="button" class="cl-btn cl-btn--sm" id="filter-apply">Apply</button>
+                            <button type="button" class="cl-btn cl-btn--ghost cl-btn--sm" id="filter-clear">Clear</button>
+                        </div>
+                    </div>
+                </div>
+                <div hidden aria-hidden="true">
+                    <select id="sparql-example"><option value="platforms">Top platforms by cases</option></select>
+                    <label id="sparql-query-label" for="sparql-query">Query</label>
+                    <textarea id="sparql-query"></textarea>
+                    <button type="button" id="sparql-run">Run</button>
+                    <p id="sparql-status"></p>
+                    <div id="sparql-results"></div>
+                </div>
+            </aside>
         </div>
-            <div class="case-selector" id="case-selector" hidden></div>
-            </div>
-
-        <aside class="lookup-rail" aria-label="Lookup">
-            <p class="rail-title">Lookup</p>
-
-            <div class="rail-section">
-                <h3>Corpus</h3>
-                <div class="chip-row" id="corpus-source-row">
-                    <button type="button" class="facet-chip active" data-corpus="cases">Press releases</button>
-                    <button type="button" class="facet-chip" data-corpus="pacer">PACER</button>
-    </div>
-        </div>
-
-            <div class="rail-section" id="lookup-case-section">
-                <h3>Find cases</h3>
-                <label class="field-label" for="lookup-class">CASE/UCO/CAC class</label>
-                <select id="lookup-class" class="field">
-                    <option value="">Any</option>
-                    <option value="https://cacontology.projectvic.org/legal-outcomes#CSAM_Distribution">CSAM_Distribution</option>
-                    <option value="https://cacontology.projectvic.org/legal-outcomes#SentencingPhase">SentencingPhase</option>
-                    <option value="https://cacontology.projectvic.org#CSAMIncident">CSAMIncident</option>
-                    <option value="https://cacontology.projectvic.org#ChildSexualAbuseEvent">ChildSexualAbuseEvent</option>
-                    <option value="https://cacontology.projectvic.org#ConspiracyToCommitCSA">ConspiracyToCommitCSA</option>
-                    <option value="https://cacontology.projectvic.org#DigitallyGeneratedCSAMIncident">DigitallyGeneratedCSAMIncident</option>
-                    <option value="https://cacontology.projectvic.org#LegalProcessPhase">LegalProcessPhase</option>
-                    <option value="https://cacontology.projectvic.org#InitialPhase">InitialPhase</option>
-                    <option value="https://cacontology.projectvic.org#VictimRole">VictimRole</option>
-                    <option value="https://cacontology.projectvic.org#OffenderRole">OffenderRole</option>
-                </select>
-
-                <label class="field-label" for="lookup-platform">Platform</label>
-                <input id="lookup-platform" class="field" type="search" placeholder="social media, Discord…" autocomplete="off">
-
-                <label class="field-label" for="lookup-agency">Agency</label>
-                <input id="lookup-agency" class="field" type="search" placeholder="U.S. Marshals…" autocomplete="off">
-
-                <label class="field-label" for="lookup-case-q">Case ID / text</label>
-                <div class="case-suggest-wrap">
-                    <input id="lookup-case-q" class="field" type="search"
-                        placeholder="doj_safe_childhood_2024_216…"
-                        autocomplete="off"
-                        spellcheck="false"
-                        role="combobox"
-                        aria-autocomplete="list"
-                        aria-controls="lookup-case-suggest"
-                        aria-expanded="false">
-                    <ul id="lookup-case-suggest" class="case-suggest" hidden role="listbox" aria-label="Matching case IDs"></ul>
-                </div>
-
-                <div class="btn-row">
-                    <button type="button" class="btn primary" id="lookup-run">Search</button>
-                    <button type="button" class="btn" id="lookup-load">Load on graph</button>
-                </div>
-                <div class="lookup-status" id="lookup-status" aria-live="polite"></div>
-                <ul class="lookup-results" id="lookup-results"></ul>
-            </div>
-
-            <div class="rail-section" id="pacer-section" hidden>
-                <h3>Find cases</h3>
-                <label class="field-label" for="pacer-class">CASE/UCO/CAC class</label>
-                <select id="pacer-class" class="field">
-                    <option value="">Any</option>
-                </select>
-
-                <label class="field-label" for="pacer-platform">Platform</label>
-                <input id="pacer-platform" class="field" type="search" placeholder="Discord, Kik, Telegram…" autocomplete="off">
-
-                <label class="field-label" for="pacer-agency">Agency</label>
-                <input id="pacer-agency" class="field" type="search" placeholder="FBI, HSI, Secret Service…" autocomplete="off">
-
-                <div class="btn-row">
-                    <button type="button" class="btn primary" id="pacer-search">Search</button>
-                    <button type="button" class="btn" id="pacer-load">Load on graph</button>
-                </div>
-                <div class="lookup-status" id="pacer-status" aria-live="polite"></div>
-                <ul class="lookup-results" id="pacer-results"></ul>
-            </div>
-
-            <div class="rail-section">
-                <h3>Filter graph</h3>
-                <label class="field-label" for="filter-spine">Spine</label>
-                <select id="filter-spine" class="field">
-                    <option value="">All</option>
-                    <option value="EnduringEntity">Enduring Entity</option>
-                    <option value="Event">Event</option>
-                    <option value="Role">Role</option>
-                    <option value="Phase">Phase</option>
-                    <option value="Situation">Situation</option>
-                    <option value="AssessmentResult">Assessment</option>
-                    <option value="Unknown">Other</option>
-                </select>
-                <label class="field-label" for="filter-type">Type contains</label>
-                <input id="filter-type" class="field" type="search" placeholder="Sentencing, Platform…" autocomplete="off">
-                <label class="toggle-row"><input type="checkbox" id="filter-shared"> Shared nodes only</label>
-                <div class="btn-row">
-                    <button type="button" class="btn" id="filter-apply">Apply</button>
-                    <button type="button" class="btn" id="filter-clear">Clear</button>
-                </div>
-            </div>
-        </aside>
-
-        <section class="graph-stage">
-            <div class="legend" id="legend"></div>
-            <div id="graph-container">
-                <svg id="graph-svg"></svg>
-                <div class="graph-hint">Scroll to zoom · Drag nodes · Click to inspect</div>
-                <div class="edge-tooltip" id="edge-tooltip"></div>
-            </div>
-            <div class="stage-footer">
-                <button type="button" id="big-bang-btn" class="big-bang-btn" title="Merge the Big Bang half-sample">Big Bang</button>
-                <span>Amber border = shared across cases</span>
-            </div>
-        </section>
-
-        <aside class="detail-panel" id="detail-panel">
-            <div class="detail-node">
-                <h3>Node</h3>
-                <p class="placeholder" id="detail-placeholder">Click a node.</p>
-                <div id="detail-content" style="display:none;"></div>
-            </div>
-            <div class="sparql-panel">
-                <h3>SPARQL</h3>
-                <p class="sparql-hint">
-                    Query-only over the live store
-                    (<span id="sparql-endpoint-label">/sparql</span>).
-                    <a href="https://github.com/mrinaalr/CaseLinker/blob/main/ontology/docs/SPARQL.md" target="_blank" rel="noopener noreferrer">Docs</a>
-                </p>
-                <label class="field-label" for="sparql-example">Example</label>
-                <select id="sparql-example" class="field" aria-label="SPARQL example">
-                    <option value="platforms">Top platforms by case count</option>
-                    <option value="investigations">Count press-release investigations</option>
-                    <option value="agencies">Top agencies</option>
-                    <option value="ask">ASK — any CACInvestigation?</option>
-                    <option value="llm">LLM — natural language → SPARQL</option>
-                </select>
-                <label class="field-label" id="sparql-query-label" for="sparql-query">Query</label>
-                <textarea id="sparql-query" class="field sparql-query" spellcheck="false" aria-label="SPARQL query"></textarea>
-                <div class="sparql-actions">
-                    <button type="button" class="btn primary" id="sparql-run">Run</button>
-                </div>
-                <p class="sparql-status" id="sparql-status" aria-live="polite"></p>
-                <div class="sparql-results" id="sparql-results"></div>
-            </div>
-        </aside>
     </div>
 
-    <div class="research-wrap" id="about-research">
-        <details>
-            <summary>About this research</summary>
-            <div class="research-body">
-                <p class="intro">The ontology helps us explore what patterns sit across CaseLinker data: how platforms are misused, how exploitation and enforcement unfold at scale, and where intervention can close gaps sooner. The CAC graphs on this page are the research foundation on which platform-based and intervention-based analysis is built.</p>
-
-                <h2>The Ontology Pipeline</h2>
-                <p>To answer relational and analytical questions at corpus scale, enforcement narratives cannot stay only in relational tables and regex-derived tags. They must be expressed in a structured, graph-interoperable format so patterns can be queried, validated, and compared across cases. CaseLinker already extracts consistent features from each narrative; the ontology pipeline maps those features into a standard investigation vocabulary and builds a validated knowledge graph as the mechanism for cross-case analysis.</p>
-                <p>The vocabulary is the <strong>CAC Ontology</strong> (Crimes Against Children Ontology), developed by Project VIC International as an interoperable standard for structuring crimes-against-children investigations.</p>
-
-                <h3>What is CAC Ontology</h3>
-                <p>The stack is layered. <strong>gUFO</strong> provides foundational ontology primitives. <strong>UCO</strong> (Unified Cyber Ontology) models cyber investigation objects and relationships. <strong>CASE</strong> (Cyber-investigation Analysis Standard Expression) defines how investigation narratives are expressed as interoperable graphs. <strong>CAC</strong> extends that stack for crimes against children specifically — platforms, victims, offenders, investigations, and outcomes as typed entities rather than free text.</p>
-                <p>CAC is shepherded by <a href="https://www.projectvic.org/" target="_blank" rel="noopener noreferrer">Project VIC International</a>, built on the Linux Foundation's <a href="https://cyberdomainontology.org/" target="_blank" rel="noopener noreferrer">Cyber Domain Ontology</a> stack (UCO and CASE). CaseLinker case data is aligned to this vocabulary so graphs can be shared, validated, and queried with the same tools used in forensic and intelligence workflows.</p>
-                <ul class="ext-links">
-                    <li><a href="https://github.com/Project-VIC-International/CAC-Ontology" target="_blank" rel="noopener noreferrer">CAC Ontology repository</a></li>
-                    <li><a href="https://github.com/vulnmaster/CASE-UCO-SDK" target="_blank" rel="noopener noreferrer">CASE/UCO SDK with CAC bindings</a></li>
-                    <li><a href="https://github.com/casework/CASE" target="_blank" rel="noopener noreferrer">CASE</a></li>
-                    <li><a href="https://github.com/ucoProject/UCO" target="_blank" rel="noopener noreferrer">UCO</a></li>
-                    <li><a href="https://projectvic.org/" target="_blank" rel="noopener noreferrer">Project VIC International</a></li>
-                </ul>
-
-                <h3>The pipeline</h3>
-                <ol class="pipeline-list">
-                    <li><strong>Deterministic case features</strong> — already extracted and stored (platforms, topics, investigation signals, prosecution outcomes, and related structured fields).</li>
-                    <li><strong>Mapping layer</strong> — deterministic translation from CaseLinker fields to CAC Ontology entities and relationships.</li>
-                    <li><strong>RDF emission</strong> — per-case graphs serialized as Turtle and JSON-LD.</li>
-                    <li><strong>SHACL validation</strong> — each graph checked against CAC shape rules so only conformant assertions enter the corpus graph.</li>
-                    <li><strong>SPARQL-queryable corpus</strong> — merged validated graphs become the substrate for cross-case analysis (<code>GET|POST /sparql</code>).</li>
-                </ol>
-
-                <h2>Phase 3 — Noesis</h2>
-                <p>Q1–Q3 and the <em>Affordances for Harm</em> (AfH) framework are grounded in the ICAC/CSEA domain. Phase 3, completed in the forked repo <a href="https://github.com/built-by-mars/CaseNoesis" target="_blank" rel="noopener noreferrer">CaseNoesis</a> (with a <a href="https://casenoesis.up.railway.app/" target="_blank" rel="noopener noreferrer">live</a> deployment), tests the boundary of those observations and extends the framework across a wider range of offense types.</p>
-
-                <p class="working-note">Phase 2 is complete. Preprint: <a href="https://doi.org/10.5281/zenodo.21347781" target="_blank" rel="noopener noreferrer">doi.org/10.5281/zenodo.21347781</a>. Last updated July 15, 2026.</p>
-            </div>
-        </details>
-    </div>
-
-    <footer class="site-footer">
-        <div class="disclaimer">
-            <p>CaseLinker uses cases from publicly available ICAC, NCMEC, DOJ CEOS, and state attorneys general press materials. No PII was processed. This project received a determination from the University of Massachusetts Amherst Human Research Protection Office (HRPO Determination #7668). See the <a href="/sources">Sources</a> page for the full disclaimer and data usage policy.</p>
-        </div>
-    </footer>
-
-    <script src="/viz-assets/patterns-graph.js"></script>
+    <script src="/viz-assets/patterns-graph.js?v=5.1"></script>
 </body>
 </html>

@@ -335,11 +335,11 @@
     const optionsEl = document.getElementById("offense-filter-options");
     const trigger = document.getElementById("offense-filter-trigger");
     const allBtn = document.getElementById("offense-filter-all");
-    if (!optionsEl || !trigger) return;
+    if (!optionsEl) return;
 
     optionsEl.innerHTML = ANCHOR_ROWS.map(
       (row) =>
-        `<button type="button" class="offense-filter-option is-on" data-type="${row.id}" style="--chip-color:${row.color}" aria-pressed="true">${row.short}</button>`
+        `<button type="button" class="offense-filter-option cl-chip is-on" data-type="${row.id}" style="--chip-color:${row.color}" aria-pressed="true" title="${escapeHtml(row.label)}">${escapeHtml(row.label)}</button>`
     ).join("");
 
     optionsEl.querySelectorAll(".offense-filter-option").forEach((btn) => {
@@ -349,10 +349,12 @@
       });
     });
 
-    trigger.addEventListener("click", (e) => {
-      e.stopPropagation();
-      setOffenseFilterOpen(!offenseFilterOpen);
-    });
+    if (trigger) {
+      trigger.addEventListener("click", (e) => {
+        e.stopPropagation();
+        setOffenseFilterOpen(!offenseFilterOpen);
+      });
+    }
 
     if (allBtn) {
       allBtn.addEventListener("click", (e) => {
@@ -390,7 +392,11 @@
 
     panelEl.innerHTML = `
       <h3>${escapeHtml(phase.label || shortType(phase.type))}</h3>
-      <div class="panel-type" title="${escapeHtml(phase.type)}">${escapeHtml(phase.type_display || phase.type)}</div>
+      <div class="panel-type" title="${escapeHtml(phase.type)}">${
+        /^https?:\/\//.test(String(phase.type || ""))
+          ? `<a href="${escapeHtml(phase.type)}" target="_blank" rel="noopener noreferrer">${escapeHtml(phase.type_display || phase.type)}</a>`
+          : escapeHtml(phase.type_display || phase.type)
+      }</div>
       <div class="panel-section">
         <h4>Description</h4>
         <p>${escapeHtml(phase.comment || "—")}</p>
@@ -408,7 +414,7 @@
       <div class="panel-section">
         <h4>Coverage</h4>
         <p>${coverageCount}/${denom} cases: ${offenseTypes.join(", ") || "—"}</p>
-        ${phase.is_fundamental ? "<p><strong>Appears in all 5 anchor offense types</strong> (fundamental)</p>" : ""}
+        ${phase.is_fundamental ? "<p><strong>Appears in all 5 anchor offence types</strong> (fundamental)</p>" : ""}
       </div>
       <div class="panel-section">
         <h4>Transitions in</h4>
@@ -455,20 +461,21 @@
     return caseData.citation || caseData.case_name || caseData.id || "";
   }
 
-  const LSTAR_EQUATION_TEX =
-    String.raw`L^{*}_{g,A} = \operatorname{arg}\ \underset{L \in \mathrm{Seq}(A)}{\operatorname{max}} \ \mathbb{E}[U_g(L)]`;
+  const AFH_PDF = "https://mrinaalr.github.io/website/Affordance%2C%20Misuse%2C%20Harm%2C%20Kill%20Chain.pdf";
+  const SM_EQUATIONS = [
+    { label: "Machine", tex: String.raw`\mathcal{M} = \left( S,\ A,\ T,\ R_G,\ s_0,\ F \right)` },
+    { label: "Affordances", tex: String.raw`A = \{\, \text{Anonymity},\ \text{Ephemerality},\ \text{UnmonitoredCommunication},\ \text{ContactDiscovery},\ \text{DistributionInfrastructure},\ \text{Coordination},\ \text{CoercionLeverage} \,\}` },
+    { label: "Transitions", tex: String.raw`T : S \times A \to \Delta(S)` },
+    { label: "Estimate", tex: String.raw`\hat{T}(s_j \mid s_i, a) = \frac{\left|\{\, c \in C : s_i \xrightarrow{\,a\,} s_j \text{ in } c \,\}\right|}{\left|\{\, c \in C : s_i \xrightarrow{\,a\,} \cdot \text{ in } c \,\}\right|}` },
+  ];
 
   function renderFundamentalEquation() {
-    const host = document.getElementById("fundamental-equation-tex");
-    if (!host || typeof katex === "undefined") return;
-    try {
-      katex.render(LSTAR_EQUATION_TEX, host, {
-        displayMode: false,
-        throwOnError: false,
-      });
-    } catch (_) {
-      /* keep aria-label on parent if KaTeX fails */
-    }
+    if (typeof katex === "undefined") return;
+    document.querySelectorAll(".sm-eq__tex[data-i]").forEach((host) => {
+      try {
+        katex.render(SM_EQUATIONS[+host.dataset.i].tex, host, { displayMode: true, throwOnError: false });
+      } catch (_) { /* aria-label on the row keeps the meaning */ }
+    });
   }
 
   function renderFundamentalSection() {
@@ -479,29 +486,18 @@
       (n) => names.includes(n) || (payload.fundamental || []).some((iri) => iri.endsWith(n))
     );
     el.innerHTML = `
-      <h2>FUNDAMENTAL — shared across all 5 offense types</h2>
-      <p class="fundamental-note">Invariant exploitation structure · L*<sub>g,A</sub> constants · 5/5 offense types</p>
-      <div class="fundamental-flow">
-        ${ordered
-          .map((n, i) => {
-            const arrow = i < ordered.length - 1 ? '<span class="bf-arrow">→</span>' : "";
-            return `<span class="bf-node">${n}</span>${arrow}`;
-          })
-          .join("")}
+      <div class="sm-math">
+        ${SM_EQUATIONS.map((e, i) => `
+          <div class="sm-eq" aria-label="${e.label}">
+            <div class="sm-eq__k">${e.label}</div>
+            <div class="sm-eq__tex" data-i="${i}"></div>
+          </div>`).join("")}
       </div>
-      <div class="fundamental-math">
-        <p class="fundamental-basis-label">Mathematical basis · Section 7.2</p>
-        <div class="fundamental-equation" aria-label="L-star g A equals argmax over L in Seq(A) of expected U_g of L">
-          <span id="fundamental-equation-tex" class="fundamental-equation-tex"></span>
-        </div>
-        <p class="fundamental-basis-text">
-          Five PACER trajectories diverge by goal <i>g</i> and exploitation modality, but their CAC phase types are drawn from the same stage set.
-          The fundamental stages are the build blocks of exploitation pathways in all five cases — stages where an intervention degrades every trajectory simultaneously,
-          not only one offense type. Distinct trajectories; invariant stages.
-        </p>
-        <a class="fundamental-paper-link" href="https://mrinaalr.github.io/website/Affordance%2C%20Misuse%2C%20Harm%2C%20Kill%20Chain.pdf" target="_blank" rel="noopener noreferrer">
-          Affordances for Harm: How Offenders Misuse Platform Capabilities to Exploit Children, and Where to Intervene — Eq.&nbsp;(1) and §6.2 contact-chain regularity
-        </a>
+      <p class="sm-where">
+        <i>S</i> CAC phase types &middot; <i>A</i> affordances &middot; <i>T</i> transitions <i>S</i>&thinsp;&times;&thinsp;<i>A</i> &rarr; &Delta;(<i>S</i>), a distribution over next phases, estimated from the cases that used <i>a</i> at <i>s<sub>i</sub></i> &middot; <i>R<sub>G</sub></i> goal rewards &middot; <i>s</i><sub>0</sub> InitialContactPhase &middot; <i>F</i> terminal phases &middot; <i>C</i> the case graphs (30 PACER cases)
+      </p>
+      <div class="sm-refs">
+        <a class="fundamental-paper-link" href="https://github.com/mrinaalr/CaseLinker/blob/main/state_machines/README.md" target="_blank" rel="noopener noreferrer">State machines README</a>
       </div>
     `;
     renderFundamentalEquation();

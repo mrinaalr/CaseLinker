@@ -2,89 +2,77 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CaseLinker — Search</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-    <link rel="stylesheet" href="/viz-assets/site-nav.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Search · CaseLinker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/viz-assets/v4.css?v=4.1">
     <link rel="stylesheet" href="/viz-assets/search.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="/viz-assets/v4.js?v=4.1" defer></script>
 </head>
-<body class="search-page">
-    <nav class="nav" aria-label="Main">
-        <a href="/">Home</a>
-        <a href="/visualization">Visualization</a>
-        <a href="/analysis">Analysis</a>
-        <a href="/clusters">Clusters</a>
-        <a href="/stats">Stats</a>
-        <a href="/search" aria-current="page">Search</a>
-        <a href="/lifecycle">Lifecycle</a>
-        <a href="/query">Query</a>
-        <a href="/triage">Triage</a>
-        <a href="/case-studies">Case Studies</a>
-        <a href="/tech-landscape" class="tech-landscape-link"><span class="tls-gate--left">Tech</span><span class="tls-gate--mid"> </span><span class="tls-gate--right">Landscape</span></a>
-        <a href="/llm">LLM</a>
-        <a href="/sources">Sources</a>
-        <a href="/audit">Audit</a>
-        <a href="/patterns" class="patterns">Ontology & Graphs</a>
-        <a href="/under-the-hood" class="hood-link">Look Under the Hood</a>
-    </nav>
+<body>
+    <div id="cl-nav" data-active="search"></div>
 
-    <div class="search-shell">
-        <header class="search-header">
-            <div>
-                <p class="search-eyebrow">Corpus · Facet partition</p>
-                <h1>Search</h1>
-                <p class="search-lede">Partition the corpus along the dimensions CaseLinker speaks to isolate a cohort and analyze cases.</p>
+    <div class="cl-page cl-page--wide">
+        <header class="cl-head search-head">
+            <div class="search-head__text">
+                <h1 class="cl-title">Search</h1>
             </div>
             <div class="search-readout" id="facet-meta" aria-live="polite"></div>
         </header>
 
-        <section class="partition" aria-label="Sentence filters">
+        <section class="cl-card sentence-card" aria-label="Sentence filters">
             <p class="tree-sentence-lead">I am interested in cases involving</p>
             <div class="tree-sentence-prune" id="facet-sentence-blanks">
-                <span class="tree-sentence-wrap" data-sentence-slot="case_topics"><span class="slot-index">01</span><span class="slot-name">Topic</span><span class="slot-field"><input type="text" class="tree-sentence-input" data-field="case_topics" id="facet-sent-case_topics" placeholder="any" title="Topic — grey text completes the first matching value" spellcheck="false" autocomplete="off" /><span class="tree-sentence-ghost-suffix" aria-hidden="true"></span></span></span>
-                <span class="tree-sentence-wrap" data-sentence-slot="severity_indicators"><span class="slot-index">02</span><span class="slot-name">Severity</span><span class="slot-field"><input type="text" class="tree-sentence-input" data-field="severity_indicators" id="facet-sent-severity_indicators" placeholder="any" title="Severity" spellcheck="false" autocomplete="off" /><span class="tree-sentence-ghost-suffix" aria-hidden="true"></span></span></span>
-                <span class="tree-sentence-wrap" data-sentence-slot="platforms_used"><span class="slot-index">03</span><span class="slot-name">Platform</span><span class="slot-field"><input type="text" class="tree-sentence-input" data-field="platforms_used" id="facet-sent-platforms_used" placeholder="any" title="Platform" spellcheck="false" autocomplete="off" /><span class="tree-sentence-ghost-suffix" aria-hidden="true"></span></span></span>
-                <span class="tree-sentence-wrap" data-sentence-slot="investigation_type"><span class="slot-index">04</span><span class="slot-name">Investigation</span><span class="slot-field"><input type="text" class="tree-sentence-input" data-field="investigation_type" id="facet-sent-investigation_type" placeholder="any" title="Investigation type" spellcheck="false" autocomplete="off" /><span class="tree-sentence-ghost-suffix" aria-hidden="true"></span></span></span>
-                <span class="tree-sentence-wrap" data-sentence-slot="source"><span class="slot-index">05</span><span class="slot-name">Source</span><span class="slot-field"><input type="text" class="tree-sentence-input" data-field="source" id="facet-sent-source" placeholder="any" title="Source" spellcheck="false" autocomplete="off" /><span class="tree-sentence-ghost-suffix" aria-hidden="true"></span></span></span>
-                <span class="tree-sentence-wrap" data-sentence-slot="agencies_involved"><span class="slot-index">06</span><span class="slot-name">Agency</span><span class="slot-field"><input type="text" class="tree-sentence-input" data-field="agencies_involved" id="facet-sent-agencies_involved" placeholder="any" title="Agency" spellcheck="false" autocomplete="off" /><span class="tree-sentence-ghost-suffix" aria-hidden="true"></span></span></span>
-                <span class="tree-sentence-wrap" data-sentence-slot="prosecution_outcome"><span class="slot-index">07</span><span class="slot-name">Outcome</span><span class="slot-field"><input type="text" class="tree-sentence-input" data-field="prosecution_outcome" id="facet-sent-prosecution_outcome" placeholder="any" title="Prosecution outcome" spellcheck="false" autocomplete="off" /><span class="tree-sentence-ghost-suffix" aria-hidden="true"></span></span></span>
-                <span class="tree-sentence-wrap" data-sentence-slot="locations"><span class="slot-index">08</span><span class="slot-name">Location</span><span class="slot-field"><input type="text" class="tree-sentence-input" data-field="locations" id="facet-sent-locations" placeholder="any" title="Location" spellcheck="false" autocomplete="off" /><span class="tree-sentence-ghost-suffix" aria-hidden="true"></span></span></span>
-                <span class="tree-sentence-wrap" data-sentence-slot="severity_phrases"><span class="slot-index">09</span><span class="slot-name">Phrase</span><span class="slot-field"><input type="text" class="tree-sentence-input" data-field="severity_phrases" id="facet-sent-severity_phrases" placeholder="any" title="Severity phrase" spellcheck="false" autocomplete="off" /><span class="tree-sentence-ghost-suffix" aria-hidden="true"></span></span></span>
-                <span class="tree-sentence-wrap" data-sentence-slot="era_period"><span class="slot-index">10</span><span class="slot-name">Era</span><span class="slot-field"><input type="text" class="tree-sentence-input" data-field="era_period" id="facet-sent-era_period" placeholder="any" title="Date range" spellcheck="false" autocomplete="off" /><span class="tree-sentence-ghost-suffix" aria-hidden="true"></span></span></span>
+                <span class="tree-sentence-wrap" data-sentence-slot="case_topics"><span class="slot-index">01</span><span class="slot-name">topic</span><span class="slot-field"><input type="text" class="tree-sentence-input" data-field="case_topics" id="facet-sent-case_topics" placeholder="any" title="Topic — grey text completes the first matching value" spellcheck="false" autocomplete="off" /><span class="tree-sentence-ghost-suffix" aria-hidden="true"></span></span></span>
+                <span class="tree-sentence-wrap" data-sentence-slot="severity_indicators"><span class="slot-index">02</span><span class="slot-name">severity</span><span class="slot-field"><input type="text" class="tree-sentence-input" data-field="severity_indicators" id="facet-sent-severity_indicators" placeholder="any" title="Severity" spellcheck="false" autocomplete="off" /><span class="tree-sentence-ghost-suffix" aria-hidden="true"></span></span></span>
+                <span class="tree-sentence-wrap" data-sentence-slot="platforms_used"><span class="slot-index">03</span><span class="slot-name">platform</span><span class="slot-field"><input type="text" class="tree-sentence-input" data-field="platforms_used" id="facet-sent-platforms_used" placeholder="any" title="Platform" spellcheck="false" autocomplete="off" /><span class="tree-sentence-ghost-suffix" aria-hidden="true"></span></span></span>
+                <span class="tree-sentence-wrap" data-sentence-slot="investigation_type"><span class="slot-index">04</span><span class="slot-name">investigation</span><span class="slot-field"><input type="text" class="tree-sentence-input" data-field="investigation_type" id="facet-sent-investigation_type" placeholder="any" title="Investigation type" spellcheck="false" autocomplete="off" /><span class="tree-sentence-ghost-suffix" aria-hidden="true"></span></span></span>
+                <span class="tree-sentence-wrap" data-sentence-slot="source"><span class="slot-index">05</span><span class="slot-name">source</span><span class="slot-field"><input type="text" class="tree-sentence-input" data-field="source" id="facet-sent-source" placeholder="any" title="Source" spellcheck="false" autocomplete="off" /><span class="tree-sentence-ghost-suffix" aria-hidden="true"></span></span></span>
+                <span class="tree-sentence-wrap" data-sentence-slot="agencies_involved"><span class="slot-index">06</span><span class="slot-name">agency</span><span class="slot-field"><input type="text" class="tree-sentence-input" data-field="agencies_involved" id="facet-sent-agencies_involved" placeholder="any" title="Agency" spellcheck="false" autocomplete="off" /><span class="tree-sentence-ghost-suffix" aria-hidden="true"></span></span></span>
+                <span class="tree-sentence-wrap" data-sentence-slot="prosecution_outcome"><span class="slot-index">07</span><span class="slot-name">outcome</span><span class="slot-field"><input type="text" class="tree-sentence-input" data-field="prosecution_outcome" id="facet-sent-prosecution_outcome" placeholder="any" title="Prosecution outcome" spellcheck="false" autocomplete="off" /><span class="tree-sentence-ghost-suffix" aria-hidden="true"></span></span></span>
+                <span class="tree-sentence-wrap" data-sentence-slot="locations"><span class="slot-index">08</span><span class="slot-name">location</span><span class="slot-field"><input type="text" class="tree-sentence-input" data-field="locations" id="facet-sent-locations" placeholder="any" title="Location" spellcheck="false" autocomplete="off" /><span class="tree-sentence-ghost-suffix" aria-hidden="true"></span></span></span>
+                <span class="tree-sentence-wrap" data-sentence-slot="severity_phrases"><span class="slot-index">09</span><span class="slot-name">phrase</span><span class="slot-field"><input type="text" class="tree-sentence-input" data-field="severity_phrases" id="facet-sent-severity_phrases" placeholder="any" title="Severity phrase" spellcheck="false" autocomplete="off" /><span class="tree-sentence-ghost-suffix" aria-hidden="true"></span></span></span>
+                <span class="tree-sentence-wrap" data-sentence-slot="era_period"><span class="slot-index">10</span><span class="slot-name">era</span><span class="slot-field"><input type="text" class="tree-sentence-input" data-field="era_period" id="facet-sent-era_period" placeholder="any" title="Date range" spellcheck="false" autocomplete="off" /><span class="tree-sentence-ghost-suffix" aria-hidden="true"></span></span></span>
             </div>
+            <p class="sentence-hint cl-small cl-muted">Type into a blank; grey text completes the first matching value. Tab accepts it, Enter redraws.</p>
         </section>
 
         <div class="search-workspace">
-            <aside class="split-rail" id="facet-prune-panel" aria-label="Split dimensions">
-                <p class="rail-kicker">Dimensions</p>
-                <h2>Split on</h2>
-                <p class="facet-prune-help">Check a dimension to isolate it in the tree. Leave unchecked to use every dimension.</p>
-                <div class="facet-prune-rows" id="facet-prune-rows"></div>
-                <div class="facet-prune-actions">
-                    <button type="button" class="facet-prune-apply" id="facet-prune-apply">Apply</button>
-                    <button type="button" class="facet-prune-clear" id="facet-prune-clear">Clear</button>
-                    <button type="button" class="facet-prune-select-all" id="facet-prune-select-all">Select all</button>
+            <aside class="cl-card split-rail" id="facet-prune-panel" aria-label="Split dimensions">
+                <div class="cl-card__head">
+                    <div>
+                        <div class="cl-label">Dimensions</div>
+                        <h2 class="split-rail__title">Split on</h2>
+                    </div>
                 </div>
-                <p class="facet-prune-status" id="facet-prune-status" aria-live="polite"></p>
+                <div class="cl-card__body">
+                    <p class="facet-prune-help">Check a dimension to isolate it in the tree. Leave unchecked to use every dimension.</p>
+                    <div class="facet-prune-rows" id="facet-prune-rows"></div>
+                    <div class="facet-prune-actions">
+                        <button type="button" class="cl-btn cl-btn--sm cl-btn--primary facet-prune-apply" id="facet-prune-apply">Apply</button>
+                        <button type="button" class="cl-btn cl-btn--sm facet-prune-clear" id="facet-prune-clear">Clear</button>
+                        <button type="button" class="cl-btn cl-btn--sm cl-btn--ghost facet-prune-select-all" id="facet-prune-select-all">Select all</button>
+                    </div>
+                    <p class="facet-prune-status" id="facet-prune-status" aria-live="polite"></p>
+                </div>
             </aside>
 
-            <section class="tree-stage" aria-label="Facet tree">
-                <div class="stage-bar">
-                    <div>
-                        <span class="stage-kicker">Decision tree</span>
+            <section class="cl-card tree-stage" aria-label="Facet tree">
+                <div class="cl-card__head stage-bar">
+                    <div class="stage-bar__text">
+                        <span class="cl-card__title">Decision tree</span>
                         <span class="stage-note">Click a cohort for its case IDs.</span>
                     </div>
-                    <div class="stage-bar-tools">
-                        <div class="facet-zoom-tools" id="facet-zoom-tools" aria-label="Tree zoom controls">
+                    <div class="stage-bar-tools cl-toolbar">
+                        <div class="facet-zoom-tools cl-seg" id="facet-zoom-tools" aria-label="Tree zoom controls">
                             <button type="button" id="facet-zoom-in" title="Zoom in">+</button>
                             <button type="button" id="facet-zoom-out" title="Zoom out">−</button>
                             <button type="button" class="facet-zoom-fit" id="facet-zoom-fit" title="Fit whole tree">Fit</button>
                         </div>
-                        <label class="depth-control" for="facet-depth">Depth
-                            <select id="facet-depth" title="Fewer levels = smaller tree, faster load">
+                        <label class="depth-control" for="facet-depth"><span class="cl-label">Depth</span>
+                            <select id="facet-depth" class="cl-select" title="Fewer levels = smaller tree, faster load">
                                 <option value="">Full</option>
                                 <option value="2">2 levels</option>
                                 <option value="3" selected>3 levels</option>
@@ -97,41 +85,43 @@
                                 <option value="10">10 levels</option>
                             </select>
                         </label>
-                        <button type="button" id="facet-reload">Redraw</button>
+                        <button type="button" class="cl-btn cl-btn--sm" id="facet-reload">Redraw</button>
                     </div>
                 </div>
-                <div class="tree-legend" aria-hidden="true">
-                    <span><i></i>Corpus</span>
-                    <span><i class="swatch-branch"></i>Branch</span>
-                    <span><i class="swatch-leaf"></i>Leaf</span>
+                <div class="cl-card__body tree-stage__body">
+                    <div class="tree-legend" aria-hidden="true">
+                        <span class="cl-chip cl-chip--line"><i class="swatch-root"></i>Corpus</span>
+                        <span class="cl-chip cl-chip--line"><i class="swatch-branch"></i>Branch</span>
+                        <span class="cl-chip cl-chip--line"><i class="swatch-leaf"></i>Leaf</span>
+                    </div>
+                    <div class="facet-tree-host" id="facet-tree-root">
+                        <div class="tree-loading">Building the partition…</div>
+                    </div>
                 </div>
-                <div class="facet-tree-host" id="facet-tree-root">
-                    <div class="tree-loading">Building the partition…</div>
-                </div>
-                <p class="search-footnote">This page partitions extracted labels.</p>
             </section>
         </div>
     </div>
 
     <div id="cohort-modal-backdrop" class="cohort-modal-backdrop" hidden>
-        <div class="cohort-modal" id="cohort-modal-panel" role="dialog" aria-modal="true" aria-labelledby="cohort-modal-title">
-            <button type="button" class="cohort-modal-close" id="cohort-modal-close" aria-label="Close">×</button>
+        <div class="cohort-modal cl-card" id="cohort-modal-panel" role="dialog" aria-modal="true" aria-labelledby="cohort-modal-title">
+            <button type="button" class="cohort-modal-close cl-btn cl-btn--ghost cl-btn--xs" id="cohort-modal-close" aria-label="Close">×</button>
+            <div class="cl-eyebrow">Cohort</div>
             <h3 id="cohort-modal-title">Cohort</h3>
-            <p class="cohort-modal-meta" id="cohort-modal-meta"></p>
-            <p class="cohort-modal-gate" id="cohort-modal-gate" hidden></p>
+            <p class="cohort-modal-meta cl-id" id="cohort-modal-meta"></p>
+            <p class="cohort-modal-gate cl-notice cl-notice--warn" id="cohort-modal-gate" hidden></p>
             <div class="cohort-modal-key-row" id="cohort-modal-key-row" hidden>
-                <label>Access key
-                    <input type="password" id="cohort-modal-key" autocomplete="off" placeholder="Demo key" />
+                <label class="cl-field">Access key
+                    <input type="password" class="cl-input" id="cohort-modal-key" autocomplete="off" placeholder="Demo key" />
                 </label>
-                <button type="button" class="cohort-modal-unlock" id="cohort-modal-unlock">Show case IDs</button>
+                <button type="button" class="cohort-modal-unlock cl-btn cl-btn--primary" id="cohort-modal-unlock">Show case IDs</button>
             </div>
             <div class="cohort-modal-ids-wrap" id="cohort-modal-ids-wrap" hidden>
                 <div id="cohort-modal-id-links" class="cohort-modal-id-links" aria-label="Open case in audit"></div>
-                <p class="cohort-modal-ids-note">Each link opens the case in Audit. SPARQL returns each case with its source, platforms, agencies, phase, steps, charges, and sentences. Graphs opens the same cases.</p>
+                <p class="cohort-modal-ids-note cl-small cl-muted">Each link opens the case in Audit. SPARQL returns each case with its source, platforms, agencies, phase, steps, charges, and sentences. Graphs opens the same cases.</p>
                 <div class="cohort-modal-actions">
-                    <button type="button" class="cohort-modal-copy" id="cohort-modal-copy">Copy IDs</button>
-                    <button type="button" class="cohort-modal-sparql" id="cohort-modal-sparql">Copy SPARQL</button>
-                    <button type="button" class="cohort-modal-patterns" id="cohort-modal-patterns">Open in graphs</button>
+                    <button type="button" class="cohort-modal-copy cl-btn cl-btn--sm" id="cohort-modal-copy">Copy IDs</button>
+                    <button type="button" class="cohort-modal-sparql cl-btn cl-btn--sm" id="cohort-modal-sparql">Copy SPARQL</button>
+                    <button type="button" class="cohort-modal-patterns cl-btn cl-btn--sm cl-btn--accent" id="cohort-modal-patterns">Open in graphs</button>
                 </div>
                 <textarea id="cohort-modal-ids" class="cohort-modal-ids" hidden readonly spellcheck="false" aria-hidden="true"></textarea>
             </div>
@@ -1063,7 +1053,7 @@
                 var key = cut === -1 ? part : part.slice(0, cut);
                 var val = cut === -1 ? '' : part.slice(cut + 1);
                 var label = readoutLabels[key] || key;
-                return '<span class="stat-pill"><span class="readout-k">' + esc(label) + '</span><strong>' + esc(val) + '</strong></span>';
+                return '<span class="cl-chip cl-chip--line stat-pill"><span class="readout-k">' + esc(label) + '</span><strong>' + esc(val) + '</strong></span>';
             }).join('');
             if (!root) {
                 host.innerHTML = '<div class="tree-error">Empty tree.</div>';

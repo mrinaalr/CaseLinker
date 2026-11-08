@@ -11,7 +11,7 @@ import html
 import re
 from pathlib import Path
 from typing import Optional
-from urllib.parse import unquote
+from urllib.parse import quote, unquote
 
 import rdflib
 from rdflib import Graph, URIRef
@@ -36,7 +36,7 @@ def resource_iri(path: str) -> str:
 
 def construct_query(iri: str) -> str:
     """A case or provenance IRI is a named graph. Anything else is a node."""
-    if "/resource/case/" in iri:
+    if re.fullmatch(rf"{re.escape(RESOURCE_BASE)}case/[^/]+(/provenance)?", iri):
         return f"CONSTRUCT {{ ?s ?p ?o }} WHERE {{ GRAPH <{iri}> {{ ?s ?p ?o }} }}"
     return (
         f"CONSTRUCT {{ <{iri}> ?p ?o }} WHERE {{ GRAPH ?g {{ <{iri}> ?p ?o }} }}"
@@ -173,14 +173,17 @@ def render_html(
     if referencing_cases is not None and focus and is_hub_resource(focus):
         blocks.append(_render_referencing_cases(referencing_cases))
     body = "".join(blocks) or "<p>No description is stored for this IRI.</p>"
+    explore_href = "/explore" + (f"?iri={quote(focus, safe='')}" if focus else "")
     return (
         "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"utf-8\">"
         f"<title>{html.escape(title)}</title>"
         "<style>body{font:16px/1.45 Georgia,serif;max-width:46rem;margin:2rem auto;padding:0 1rem;color:#1c1917}"
         "a{color:#1d4e89}table{border-collapse:collapse;width:100%}th,td{text-align:left;vertical-align:top;"
         "border-top:1px solid #e7e5e4;padding:.4rem .6rem}th{width:12rem;font-weight:600}"
-        "ul.refs{padding-left:1.2rem}ul.refs li{margin:.25rem 0}</style>"
-        f"</head><body><h1>{html.escape(title)}</h1>{body}</body></html>"
+        "ul.refs{padding-left:1.2rem}ul.refs li{margin:.25rem 0}p.nav{font:13px/1.4 -apple-system,Helvetica,Arial,sans-serif;color:#78716c}</style>"
+        f"</head><body><p class=\"nav\"><a href=\"/\">CaseLinker</a> &middot; "
+        f"<a href=\"{html.escape(explore_href)}\">open in Explore</a></p>"
+        f"<h1>{html.escape(title)}</h1>{body}</body></html>"
     )
 
 

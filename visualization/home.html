@@ -1,391 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CaseLinker - Case Analysis System</title>
-
-    <meta property="og:type" content="website">
-    <meta property="og:site_name" content="CaseLinker">
-    <meta property="og:title" content="CaseLinker - Case Analysis System">
-    <meta property="og:description" content="Explore Internet Crimes Against Children task force cases: visualization, analysis, clusters, stats, and structured case studies from public records.">
-    <meta property="og:url" content="https://web-production-13a2.up.railway.app/">
-    <meta property="og:image" content="https://web-production-13a2.up.railway.app/viz-assets/cover.png">
-    <meta property="og:image:width" content="2936">
-    <meta property="og:image:height" content="1568">
-    <meta property="og:image:alt" content="CaseLinker - Case analysis and ICAC case studies">
-
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="CaseLinker - Case Analysis System">
-    <meta name="twitter:description" content="Explore Internet Crimes Against Children task force cases: visualization, analysis, clusters, stats, and structured case studies from public records.">
-    <meta name="twitter:image" content="https://web-production-13a2.up.railway.app/viz-assets/cover.png">
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
-            background: #f5f7fa;
-            background-image: 
-                radial-gradient(circle at 20% 50%, rgba(76, 175, 80, 0.03) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(30, 60, 114, 0.03) 0%, transparent 50%),
-                linear-gradient(180deg, #ffffff 0%, #f5f7fa 100%);
-            background-attachment: fixed;
-            min-height: 100vh;
-            color: #2c3e50;
-        }
-        .nav {
-            background: white;
-            padding: 15px 24px 15px 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            display: flex;
-            flex-wrap: nowrap;
-            align-items: center;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            white-space: nowrap;
-            overflow-x: auto;
-        }
-        .nav a {
-            white-space: nowrap;
-            flex-shrink: 0;
-            color: #4CAF50;
-            text-decoration: none;
-            margin-right: 16px;
-        }
-        .nav a:hover {
-            text-decoration: underline;
-        }
-        .nav a.patterns {
-            margin-left: 10px;
-            color: #dc2626;
-            font-weight: 700;
-
-            animation: pulseRed 8s ease-in-out infinite;
-        }
-        @keyframes pulseRed {
-            0%, 100% { 
-                opacity: 1;
-            }
-            50% { 
-                opacity: 0.92;
-            }
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 60px 20px;
-            position: relative;
-        }
-        .hero {
-            text-align: center;
-            color: white;
-            margin-bottom: 60px;
-        }
-        .hero h1 {
-            font-size: 4em;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
-            font-weight: 700;
-        }
-        .hero h1 .case-part {
-            background: linear-gradient(135deg, #d4af37 0%, #f4d03f 50%, #d4af37 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: pulseGold 12s ease-in-out infinite;
-            position: relative;
-        }
-        .hero h1 .linker-part {
-            background: linear-gradient(135deg, #dc2626 0%, #ef4444 50%, #dc2626 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        @keyframes pulseGold {
-            0%, 100% { 
-                opacity: 0.75;
-            }
-            50% { 
-                opacity: 0.90;
-            }
-        }
-        .hood-link {
-            margin-left: auto;
-            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ff6b35 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: pulseOrange 6s ease-in-out infinite;
-            position: relative;
-            font-weight: 600;
-        }
-        @keyframes pulseOrange {
-            0%, 100% { 
-                opacity: 0.75;
-            }
-            50% { 
-                opacity: 0.90;
-            }
-        }
-        .tech-landscape-link {
-            display: inline-block;
-            vertical-align: baseline;
-            font-weight: 400;
-            position: relative;
-            text-decoration: none;
-            white-space: nowrap;
-        }
-        .tech-landscape-link .tls-gate--left {
-            display: inline;
-            vertical-align: baseline;
-            background: linear-gradient(135deg, #2e7d32 0%, #43a047 38%, #66bb6a 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            filter: drop-shadow(0 0 5px rgba(76, 175, 80, 0.44)) drop-shadow(0 0 11px rgba(102, 187, 106, 0.28)) drop-shadow(-5px 0 4px rgba(46, 125, 50, 0.24));
-            animation: tlsGatePulse 16s ease-in-out infinite;
-        }
-        .tech-landscape-link .tls-gate--mid {
-            display: inline;
-            vertical-align: baseline;
-            color: #2e7d32;
-            -webkit-text-fill-color: #2e7d32;
-            font-weight: 400;
-            filter: none;
-            opacity: 0.88;
-            padding: 0 5px;
-        }
-        .tech-landscape-link .tls-gate--right {
-            display: inline;
-            vertical-align: baseline;
-            background: linear-gradient(135deg, #43a047 0%, #66bb6a 52%, #2e7d32 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            filter: drop-shadow(0 0 5px rgba(76, 175, 80, 0.44)) drop-shadow(0 0 11px rgba(102, 187, 106, 0.28)) drop-shadow(5px 0 4px rgba(46, 125, 50, 0.24));
-            animation: tlsGatePulse 16s ease-in-out infinite;
-        }
-        @keyframes tlsGatePulse {
-            0%, 100% { opacity: 0.87; }
-            50% { opacity: 0.94; }
-        }
-        .nav a.tech-landscape-link:hover {
-            text-decoration: none;
-        }
-        .nav a.tech-landscape-link::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: -2px;
-            height: 2px;
-            background: rgba(67, 160, 71, 0.62);
-            opacity: 0;
-            transition: opacity 0.12s ease;
-            pointer-events: none;
-        }
-        .nav a.tech-landscape-link:hover::after {
-            opacity: 1;
-        }
-        .hero p {
-            font-size: 1.4em;
-            opacity: 0.95;
-            max-width: 700px;
-            margin: 0 auto 40px;
-            line-height: 1.6;
-        }
-        .cta-primary {
-            display: inline-block;
-            background: #4CAF50;
-            color: white;
-            padding: 18px 50px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-size: 1.3em;
-            font-weight: 600;
-            transition: all 0.3s;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-            margin-top: 20px;
-        }
-        .cta-primary:hover {
-            background: #45a049;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-        }
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
-        }
-        .feature-card {
-            background: #ffffff;
-            padding: 28px;
-            border: 1px solid #e0e0e0;
-            transition: border-color 0.2s;
-        }
-        .feature-card:hover {
-            border-color: #4CAF50;
-        }
-        .feature-card[style*="cursor: pointer"] {
-            cursor: pointer;
-        }
-        .feature-card h3 {
-            color: #2c3e50;
-            margin-bottom: 12px;
-            font-size: 1.2em;
-            font-weight: 600;
-            letter-spacing: -0.3px;
-        }
-        .feature-card p {
-            color: #546e7a;
-            line-height: 1.6;
-            font-size: 0.9em;
-            font-weight: 400;
-        }
-        .stats-bar {
-            background: #ffffff;
-            padding: 48px 40px;
-            border-radius: 12px;
-            margin-top: 50px;
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            gap: 40px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
-            border: 1px solid rgba(0,0,0,0.04);
-        }
-        .stat-item {
-            text-align: center;
-        }
-        .stat-number {
-            font-size: 3em;
-            font-weight: 700;
-            color: #2e7d32;
-            margin-bottom: 5px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        }
-        .stat-label {
-            color: #546e7a;
-            margin-top: 5px;
-            font-size: 0.9em;
-            text-transform: uppercase;
-            letter-spacing: 1.2px;
-        }
-        .warning {
-            background: linear-gradient(135deg, rgba(255, 193, 7, 0.18) 0%, rgba(255, 235, 59, 0.12) 100%);
-            border: 1px solid rgba(255, 193, 7, 0.5);
-            border-left: 4px solid #ffc107;
-            padding: 20px 25px;
-            margin: 40px 0;
-            border-radius: 10px;
-            color: #e65100;
-            font-size: 1.05em;
-            font-weight: 700;
-            font-style: italic;
-            box-shadow: 0 2px 8px rgba(255, 193, 7, 0.15);
-            line-height: 1.7;
-        }
-        .warning strong {
-            font-size: 1.15em;
-            color: #f57f17;
-            font-weight: 700;
-        }
-    </style>
-    <link rel="stylesheet" href="/viz-assets/site-nav.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CaseLinker</title>
+  <meta name="description" content="CaseLinker: public ICAC case reports as queryable, cited knowledge graphs.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="CaseLinker">
+  <meta property="og:title" content="CaseLinker">
+  <meta property="og:description" content="Public ICAC case reports as queryable, cited knowledge graphs.">
+  <meta property="og:url" content="https://caselinker.up.railway.app/">
+  <meta property="og:image" content="https://caselinker.up.railway.app/viz-assets/cover.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/viz-assets/v4.css?v=4.1">
+  <script src="/viz-assets/caselinker-api.js"></script>
+  <script src="/viz-assets/v4.js?v=4.1" defer></script>
+  <style>
+    .home { max-width: 920px; margin: 0 auto; padding: 56px var(--gutter) 48px; }
+    .ask { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 8px; background: var(--surface); border: 1px solid var(--line-2); border-radius: 10px; padding: 6px 6px 6px 14px; box-shadow: var(--shadow-1); }
+    .ask:focus-within { border-color: var(--accent-2); box-shadow: 0 0 0 3px rgba(46,107,184,.12); }
+    .ask input { border: 0; outline: 0; background: transparent; font-size: 15.5px; color: var(--ink); min-width: 0; padding: 6px 0; }
+    .ask input::placeholder { color: var(--ink-4); }
+    .ask-sub { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 10px; font-size: 12.5px; color: var(--ink-3); }
+    .ask-sub a { color: var(--ink-2); }
+    .tools { margin-top: 36px; display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+    .tool { display: block; background: var(--surface); padding: 14px 16px 13px; color: inherit; text-decoration: none; transition: background .12s var(--ease); }
+    .tool:hover { background: var(--surface-2); text-decoration: none; }
+    /* On hover only: a faint wash of the CaseLinker red rises from the bottom edge and settles. */
+    .tool { position: relative; overflow: hidden; }
+    .tool::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0;
+      background: linear-gradient(180deg, rgba(163,38,31,0) 55%, rgba(163,38,31,.045) 100%);
+      transform: translateY(40%); transition: opacity .9s ease, transform 1.4s cubic-bezier(.22,.8,.3,1); }
+    .tool:hover::after { opacity: 1; transform: translateY(0); }
+    @media (prefers-reduced-motion: reduce) { .tool::after { transition: none; transform: none; } }
+    .tool .t { font-weight: 600; font-size: 14px; }
+    .tool .d { font-size: 12.5px; color: var(--ink-3); margin-top: 2px; }
+    .meta { margin-top: 22px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 22px; font-size: 12.5px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+    .meta b { color: var(--ink-2); font-weight: 500; }
+    .meta a { color: var(--ink-2); }
+    .meta a:hover { color: var(--accent); }
+    .wordmark { font-size: 30px; font-weight: 700; letter-spacing: -.03em; margin-bottom: 18px; }
+    .wordmark .l { color: var(--danger); }
+    .wordmark small { font-size: 13px; font-weight: 500; color: var(--ink-3); letter-spacing: 0; margin-left: 10px; }
+    @media (max-width: 760px) { .tools { grid-template-columns: repeat(2, minmax(0,1fr)); } .home { padding-top: 28px; } }
+    @media (max-width: 480px) { .tools { grid-template-columns: 1fr; } .ask { grid-template-columns: 1fr; } }
+  </style>
 </head>
 <body>
-           <div class="nav">
-        <a href="/">Home</a>
-        <a href="/visualization">Visualization</a>
-        <a href="/analysis">Analysis</a>
-        <a href="/clusters">Clusters</a>
-        <a href="/stats">Stats</a>
-        <a href="/search">Search</a>
-        <a href="/lifecycle">Lifecycle</a>
-        <a href="/query">Query</a>
-        <a href="/triage">Triage</a>
-        <a href="/case-studies">Case Studies</a>
-        <a href="/tech-landscape" class="tech-landscape-link"><span class="tls-gate--left">Tech</span><span class="tls-gate--mid"> </span><span class="tls-gate--right">Landscape</span></a>
-        <a href="/llm">LLM</a>
-        <a href="/sources">Sources</a>
-        <a href="/audit">Audit</a>
-        <a href="/patterns" class="patterns">Ontology & Graphs</a>
-        <a href="/under-the-hood" class="hood-link">Look Under the Hood</a>
+  <div id="cl-nav" data-active=""></div>
+
+  <main class="home">
+    <div class="wordmark">Case<span class="l">Linker</span></div>
+    <form class="ask" action="/analysis" method="get">
+      <label class="cl-sr" for="home-q">Ask the graph</label>
+      <input id="home-q" name="q" placeholder="Ask the graph: which platforms appear in California cases, and which agencies worked them?" autocomplete="off">
+      <button class="cl-btn cl-btn--primary" type="submit">Ask</button>
+    </form>
+    <div class="ask-sub">
+      <a href="/analysis?q=Which%20Florida%20cases%20started%20with%20a%20CyberTip%2C%20and%20what%20platforms%20appear%20in%20them%3F">Florida CyberTip cases</a>
+      <a href="/analysis?q=Which%20agencies%20appear%20most%20often%20in%20Texas%20cases%20involving%20Snapchat%3F">agencies in Texas Snapchat cases</a>
+      <a href="/analysis?q=What%20sentence%20was%20handed%20down%20in%20scag_icac_2025_113%20and%20where%20does%20the%20text%20say%20so%3F">sentence in scag_icac_2025_113</a>
+      <a href="/explore?case=wy_dci_2023_004">walk wy_dci_2023_004</a>
     </div>
-    
-    <div class="container">
-        <div class="hero">
-            <h1><span class="case-part">Case</span><span class="linker-part">Linker</span></h1>
-            <p>Case analysis and visualization system for research and investigation</p>
-            <a href="/patterns" class="cta-primary">Explore Cases →</a>
-        </div>
-        
-        <div class="warning">
-            <strong>⚠️ Important:</strong> This system processes sensitive case data related to child exploitation. Content may be disturbing; please engage responsibly.
-            
-        </div>
-        
-        <div class="features">
-            <div class="feature-card" onclick="window.location.href='/visualization'" style="cursor: pointer;">
-                <h3>Case Visualizations</h3>
-                <p>Interactive visualizations for timeline analysis, severity indicators, prosecution outcomes, and organizational involvement across case data.</p>
-            </div>
-            <div class="feature-card" onclick="window.location.href='/analysis'" style="cursor: pointer;">
-                <h3>Case Analysis</h3>
-                <p>Tag-based filtering and automated analysis for identifying case connections, patterns, and trends through similarity detection and clustering.</p>
-            </div>
-            <div class="feature-card">
-                <h3>PDF Processing</h3>
-                <p>Automated ingestion and case batching from PDF documents with date pattern recognition for multi-file processing.</p>
-            </div>
-            <div class="feature-card">
-                <h3>Feature Extraction</h3>
-                <p>Structured feature extraction from case narratives including demographics, platforms, evidence volumes, and prosecution outcomes.</p>
-            </div>
-            <div class="feature-card">
-                <h3>Data Audit</h3>
-                <p>Interactive verification interface for reviewing extracted features and their source text associations.</p>
-            </div>
-            <div class="feature-card">
-                <h3>Multi-Case Analysis</h3>
-                <p>Comparative analysis across multiple cases to identify common patterns, trends, and relationships.</p>
-            </div>
-        </div>
-        
-        <div class="stats-bar" id="stats-bar">
-            <div class="stat-item">
-                <div class="stat-number" id="total-cases">-</div>
-                <div class="stat-label">Total Cases</div>
-            </div>
-            <div class="stat-item" style="cursor: pointer;" onclick="window.location.href='/audit'">
-                <div class="stat-number" id="unique-features">-</div>
-                <div class="stat-label">Extracted Features</div>
-            </div>
-            <div class="stat-item" style="cursor: pointer;" onclick="window.location.href='/sources'">
-                <div class="stat-number" id="sources">-</div>
-                <div class="stat-label">Data Sources</div>
-            </div>
-        </div>
+
+    <nav class="tools" aria-label="Tools">
+      <a class="tool" href="/analysis"><div class="t">Analysis</div><div class="d">Question → SPARQL → Answers → Evidence</div></a>
+      <a class="tool" href="/patterns"><div class="t">Graph</div><div class="d">Load, compare and query case graphs</div></a>
+      <a class="tool" href="/explore"><div class="t">Explore</div><div class="d">Walk IRIs: case → step → provenance → passage</div></a>
+      <a class="tool" href="/lifecycle"><div class="t">State machines</div><div class="d">CAC phase trajectories from federal dockets</div></a>
+      <a class="tool" href="/visualization"><div class="t">Platform affordances</div><div class="d">Affordance → misuse → harm, with the passages behind each</div></a>
+      <a class="tool" href="/search"><div class="t">Search</div><div class="d">Facet partition into cohorts</div></a>
+      <a class="tool" href="/audit"><div class="t">Audit</div><div class="d">Every extracted value against its span</div></a>
+      <a class="tool" href="/sources"><div class="t">Sources</div><div class="d">70 agencies and task forces the cases come from</div></a>
+      <a class="tool" href="/under-the-hood"><div class="t">Under the hood</div><div class="d">Pipeline, stores, API, MCP</div></a>
+    </nav>
+
+    <div class="meta" id="stats">
+      <span><b data-k="total_cases">10,711</b> cases</span>
+      <span><b data-k="source_count">70</b> sources</span>
+      <span><b data-k="unique_organizations">4,238</b> agencies</span>
+      <span><b data-k="unique_features">131,332</b> extracted features</span>
+      <span><a href="https://caseontology.org" rel="noopener" title="Cyber-investigation Analysis Standard Expression">CASE</a> · <a href="https://unifiedcyberontology.org" rel="noopener" title="Unified Cyber Ontology">UCO</a> · <a href="https://github.com/Project-VIC-International/CAC-Ontology" rel="noopener" title="Crimes Against Children Ontology (Project VIC)">CAC</a></span>
+      <span>HRPO #7668</span>
     </div>
-    
-    <script>
-        // Live API call - responsive, shows real-time case/feature counts
-        fetch('/api/stats')
-            .then(response => response.json())
-            .then(data => {
-                const n = (v) => Number(v) || 0;
-                document.getElementById('total-cases').textContent = n(data.total_cases).toLocaleString('en-US');
-                document.getElementById('unique-features').textContent = n(data.unique_features).toLocaleString('en-US');
-                const src = data.source_count != null ? n(data.source_count) : n(data.sources && data.sources.length);
-                document.getElementById('sources').textContent = src.toLocaleString('en-US');
-            })
-            .catch(error => {
-                console.error('Error loading stats:', error);
-            });
-    </script>
+  </main>
+
+<script>
+  fetch('/api/stats').then(function (r) { return r.ok ? r.json() : null; }).then(function (s) {
+    if (!s) return;
+    document.querySelectorAll('#stats [data-k]').forEach(function (el) { var v = s[el.getAttribute('data-k')]; if (v != null) el.textContent = Number(v).toLocaleString('en-US'); });
+  }).catch(function () {});
+</script>
 </body>
 </html>

@@ -2,299 +2,80 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CaseLinker - Data Sources</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sources · CaseLinker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/viz-assets/v4.css?v=4.1">
     <script src="/viz-assets/caselinker-api.js"></script>
+    <script src="/viz-assets/v4.js?v=4.1" defer></script>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: #f5f5f5;
-        }
-        .nav {
-            background: white;
-            padding: 15px 24px 15px 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            display: flex;
-            flex-wrap: nowrap;
-            align-items: center;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            white-space: nowrap;
-            overflow-x: auto;
-        }
-        .nav a {
-            white-space: nowrap;
-            flex-shrink: 0;
-            color: #4CAF50;
-            text-decoration: none;
-            margin-right: 16px;
-        }
-        .nav a:hover {
-            text-decoration: underline;
-        }
-        .nav a.patterns {
-            margin-left: 10px;
-            color: #dc2626;
-            font-weight: 700;
+        /* Sources page: everything below is page-specific; shared chrome comes from v4.css. */
+        .src-stats { margin: 0 0 20px; }
+        .src-stats .cl-stat__n.is-pending { color: var(--ink-4); }
+        .src-note { margin: -4px 0 14px; }
+        .src-toolbar { margin-bottom: 18px; justify-content: space-between; }
+        .src-toolbar__left { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; flex: 1 1 auto; min-width: 0; }
+        .src-toolbar .cl-input { max-width: 340px; }
+        .src-toolbar .cl-select { width: auto; min-width: 180px; }
+        .src-toolbar__status { font-size: 12.5px; color: var(--ink-3); font-variant-numeric: tabular-nums; white-space: nowrap; }
 
-            animation: pulseRed 8s ease-in-out infinite;
-        }
-        @keyframes pulseRed {
-            0%, 100% { 
-                opacity: 1;
-            }
-            50% { 
-                opacity: 0.92;
-            }
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            margin-top: 20px;
-            margin-bottom: 20px;
-        }
-        h1 {
-            color: #66bb6a;
-            margin-bottom: 10px;
-            font-size: 2.5em;
-            font-weight: 700;
-        }
-        .subtitle {
-            color: #666;
-            margin-bottom: 30px;
-            font-size: 1.1em;
-        }
-        .disclaimer {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 20px;
-            margin-bottom: 30px;
-            border-radius: 4px;
-        }
-        .disclaimer h3 {
-            margin-top: 0;
-            color: #856404;
-            font-size: 1.2em;
-        }
-        .disclaimer p {
-            color: #856404;
-            line-height: 1.6;
-            margin: 0;
-        }
-        .source-list {
-            display: grid;
-            gap: 20px;
-        }
-        .source-card {
-            background: #f9f9f9;
-            padding: 25px;
-            border-radius: 8px;
-            border-left: 4px solid #4CAF50;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .source-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        .source-card h3 {
-            margin-top: 0;
-            color: #333;
-            font-size: 1.4em;
-            font-weight: 600;
-        }
-        .source-card a {
-            color: #4CAF50;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        .source-card a:hover {
-            text-decoration: underline;
-        }
-        .source-meta {
-            color: #666;
-            margin-top: 10px;
-            font-size: 0.95em;
-            line-height: 1.6;
-        }
-        .source-stats {
-            display: flex;
-            gap: 20px;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid #ddd;
-        }
-        .source-stat {
-            text-align: center;
-        }
-        .source-stat .number {
-            font-size: 1.8em;
-            font-weight: bold;
-            color: #4CAF50;
-        }
-        .source-stat .label {
-            font-size: 0.85em;
-            color: #666;
-            text-transform: uppercase;
-            margin-top: 5px;
-        }
-        .year-links {
-            margin-top: 15px;
-        }
-        .year-links strong {
-            color: #333;
-            font-size: 1em;
-        }
-        .year-links a {
-            display: inline-block;
-            padding: 6px 14px;
-            background: #4CAF50;
-            color: white;
-            border-radius: 4px;
-            text-decoration: none;
-            font-size: 0.9em;
-            font-weight: 500;
-            margin: 8px 8px 0 0;
-            transition: all 0.2s;
-        }
-        .year-links a:hover {
-            background: #45a049;
-            transform: translateY(-1px);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-        .hood-link {
-            margin-left: auto;
-            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ff6b35 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: pulseOrange 6s ease-in-out infinite;
-            position: relative;
-            font-weight: 600;
-        }
-        @keyframes pulseOrange {
-            0%, 100% { 
-                opacity: 0.75;
-            }
-            50% { 
-                opacity: 0.90;
-            }
-        }
-        .tech-landscape-link {
-            display: inline-block;
-            vertical-align: baseline;
-            font-weight: 400;
-            position: relative;
-            text-decoration: none;
-            white-space: nowrap;
-        }
-        .tech-landscape-link .tls-gate--left {
-            display: inline;
-            vertical-align: baseline;
-            background: linear-gradient(135deg, #2e7d32 0%, #43a047 38%, #66bb6a 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            filter: drop-shadow(0 0 5px rgba(76, 175, 80, 0.44)) drop-shadow(0 0 11px rgba(102, 187, 106, 0.28)) drop-shadow(-5px 0 4px rgba(46, 125, 50, 0.24));
-            animation: tlsGatePulse 16s ease-in-out infinite;
-        }
-        .tech-landscape-link .tls-gate--mid {
-            display: inline;
-            vertical-align: baseline;
-            color: #2e7d32;
-            -webkit-text-fill-color: #2e7d32;
-            font-weight: 400;
-            filter: none;
-            opacity: 0.88;
-            padding: 0 5px;
-        }
-        .tech-landscape-link .tls-gate--right {
-            display: inline;
-            vertical-align: baseline;
-            background: linear-gradient(135deg, #43a047 0%, #66bb6a 52%, #2e7d32 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            filter: drop-shadow(0 0 5px rgba(76, 175, 80, 0.44)) drop-shadow(0 0 11px rgba(102, 187, 106, 0.28)) drop-shadow(5px 0 4px rgba(46, 125, 50, 0.24));
-            animation: tlsGatePulse 16s ease-in-out infinite;
-        }
-        @keyframes tlsGatePulse {
-            0%, 100% { opacity: 0.87; }
-            50% { opacity: 0.94; }
-        }
-        .nav a.tech-landscape-link:hover {
-            text-decoration: none;
-        }
-        .nav a.tech-landscape-link::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: -2px;
-            height: 2px;
-            background: rgba(67, 160, 71, 0.62);
-            opacity: 0;
-            transition: opacity 0.12s ease;
-            pointer-events: none;
-        }
-        .nav a.tech-landscape-link:hover::after {
-            opacity: 1;
+        .src-card { display: flex; flex-direction: column; min-width: 0; }
+        .src-card__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; padding: 16px 18px 0; }
+        .src-card__name { font-family: var(--serif); font-weight: 400; font-size: 18px; line-height: 1.25; letter-spacing: -.01em; margin: 0; min-width: 0; }
+        .src-card__name a { color: var(--ink); }
+        .src-card__name a:hover { color: var(--accent); }
+        .src-card__count { flex: none; text-align: right; font-family: var(--serif); font-size: 24px; line-height: 1; letter-spacing: -.02em; font-variant-numeric: tabular-nums; color: var(--ink); }
+        .src-card__count small { display: block; font-family: var(--sans); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); margin-top: 4px; }
+        .src-card__count.is-pending { color: var(--ink-4); }
+        .src-card__count.is-zero { color: var(--ink-3); }
+        .src-card__body { padding: 12px 18px 16px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+        .src-card__meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 12.5px; color: var(--ink-3); }
+        .src-card__meta .cl-chip { font-size: 11.5px; padding: 2px 8px; }
+        .src-card__desc { margin: 0; font-size: 13.5px; line-height: 1.5; color: var(--ink-2);
+            display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        .src-card__range { font-size: 12.5px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+        .src-card__range b { font-weight: 500; color: var(--ink-2); }
+        .src-card__years { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 6px; border-top: 1px solid var(--line); }
+        .src-card__years a.cl-chip { color: var(--ink-2); font-variant-numeric: tabular-nums; text-decoration: none; transition: border-color .15s var(--ease), color .15s var(--ease); }
+        .src-card__years a.cl-chip:hover { border-color: var(--accent); color: var(--accent); }
+        .src-card__years a.cl-chip .n { color: var(--ink-3); font-weight: 400; }
+        .src-card__host { font-family: var(--mono); font-size: 11.5px; color: var(--ink-3); word-break: break-all; }
+        .src-card__host a { color: var(--ink-3); }
+        .src-card__host a:hover { color: var(--accent); }
+        @media (max-width: 640px) {
+            .src-toolbar .cl-input { max-width: none; }
+            .src-toolbar .cl-select { width: 100%; }
+            .src-toolbar__status { width: 100%; }
         }
     </style>
-    <link rel="stylesheet" href="/viz-assets/site-nav.css">
 </head>
 <body>
-           <div class="nav">
-        <a href="/">Home</a>
-        <a href="/visualization">Visualization</a>
-        <a href="/analysis">Analysis</a>
-        <a href="/clusters">Clusters</a>
-        <a href="/stats">Stats</a>
-        <a href="/search">Search</a>
-        <a href="/lifecycle">Lifecycle</a>
-        <a href="/query">Query</a>
-        <a href="/triage">Triage</a>
-        <a href="/case-studies">Case Studies</a>
-        <a href="/tech-landscape" class="tech-landscape-link"><span class="tls-gate--left">Tech</span><span class="tls-gate--mid"> </span><span class="tls-gate--right">Landscape</span></a>
-        <a href="/llm">LLM</a>
-        <a href="/sources">Sources</a>
-        <a href="/audit">Audit</a>
-        <a href="/patterns" class="patterns">Ontology & Graphs</a>
-        <a href="/under-the-hood" class="hood-link">Look Under the Hood</a>
-    </div>
-    
-    <div class="container">
-        <h1>Data Sources</h1>
-        <p class="subtitle">Case data sources and references</p>
-        
-        <div class="disclaimer">
-            <h3>⚠️ Disclaimer</h3>
-            <p>
-                <strong>This system is for research and analysis purposes only.</strong> All case data presented in CaseLinker 
-                is publicly available information obtained from Internet Crimes Against Children Task Force (ICAC) 
-                press releases and National Center for Missing & Exploited Children (NCMEC) CyberTipline annual reports. This project is an independent research tool and is not affiliated with, endorsed by, 
-                or associated with NCMEC, ICAC Task Force, or any 
-                law enforcement agency. The data has been processed and analyzed for research purposes to identify patterns and 
-                trends in case data. No sensitive or identifying information beyond what is publicly available has been included. 
-                CaseLinker data and APIs have been made publicly available to support research and analysis in child safety and exploitation prevention.
-            </p>
-        </div>
-        
-        <div class="disclaimer" style="background: #e8f5e9; border-left-color: #4CAF50;">
-            <h3>⚖️ Ethics Review</h3>
-            <p>
-                This project received a determination from the University of Massachusetts Amherst Human Research Protection Office (HRPO Determination #7668); this research does not contain private or identifiable information under federal regulations [45 CFR 46.102(e)(1), (4)]
-            </p>
-        </div>
-        
-        <div class="source-list" id="source-list">
-            <!-- Sources loaded dynamically -->
+    <div id="cl-nav" data-active="sources"></div>
+
+    <div class="cl-page">
+        <header class="cl-head">
+            <h1 class="cl-title">Sources</h1>
+        </header>
+
+        <div class="cl-stats src-stats" id="src-stats" aria-live="polite">
+            <div class="cl-stat"><div class="cl-stat__n" id="stat-sources">—</div><div class="cl-stat__l">Sources</div></div>
+            <div class="cl-stat"><div class="cl-stat__n is-pending" id="stat-cases">…</div><div class="cl-stat__l" id="stat-cases-l">Cases counted</div></div>
+            <div class="cl-stat"><div class="cl-stat__n is-pending" id="stat-span">…</div><div class="cl-stat__l">Date span</div></div>
         </div>
 
+        <p class="src-note cl-small cl-muted">Public records only; independent research tool, not affiliated with NCMEC, any ICAC task force or agency. UMass Amherst HRPO Determination #7668.</p>
+
+        <div class="cl-toolbar src-toolbar">
+            <div class="src-toolbar__left">
+                <input class="cl-input" type="search" id="src-filter" placeholder="Filter by source name…" aria-label="Filter sources by name" autocomplete="off">
+            </div>
+            <div class="src-toolbar__status" id="src-status">Loading case summaries…</div>
+        </div>
+
+        <div class="cl-grid cl-grid--3" id="source-list">
+            <!-- Sources loaded dynamically -->
+        </div>
     </div>
 
     <script>
@@ -1033,26 +814,18 @@
                     ]
                 },
                 {
-                    name: "U.S. DOJ CEOS – Child Exploitation & Obscenity Section News",
+                    name: "U.S. DOJ CEOS – Child Exploitation & Obscenity Section",
                     url: "https://www.justice.gov/criminal/child-exploitation-obscenity-section-news",
-                    description: "Federal CEOS press releases.",
+                    description: "Federal CEOS press releases: the 2002–2008 PDF archive and the news page from 2009 on.",
                     type: "Official website",
                     yearLinks: [
                         {
                             year: "CEOS news",
                             url: "https://www.justice.gov/criminal/child-exploitation-obscenity-section-news",
                             casesUsed: 0
-                        }
-                    ]
-                },
-                {
-                    name: "U.S. DOJ Archives – Child Exploitation and Obscenity Section (2002-2008)",
-                    url: "https://www.justice.gov/archives/criminal/child-exploitation-and-obscenity-section",
-                    description: "DOJ CEOS archive cases.",
-                    type: "Official website",
-                    yearLinks: [
+                        },
                         {
-                            year: "Archive index",
+                            year: "2002–2008 archive (PDF)",
                             url: "https://www.justice.gov/archives/criminal/child-exploitation-and-obscenity-section",
                             casesUsed: 0
                         }
@@ -2081,14 +1854,17 @@
                         });
                         staticSource.cases = ceosCases;
                         const ceosRange = getDateRange(ceosCases);
-                        if (ceosRange) {
-                            staticSource.dateRangeDisplay = ceosRange;
-                            if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                                staticSource.yearLinks[0].year = ceosRange;
-                            }
-                        }
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = ceosCases.length;
+                        if (ceosRange) staticSource.dateRangeDisplay = ceosRange;
+                        const srcCode = c => (c.source || c.raw_data?.source || '').toUpperCase().replace(/_/g, ' ').trim();
+                        const ceosNews = ceosCases.filter(c => srcCode(c) === 'DOJ CEOS');
+                        const ceosArchive = ceosCases.filter(c => srcCode(c) === 'DOJ ARCHIVES');
+                        if (staticSource.yearLinks && staticSource.yearLinks.length > 1) {
+                            const newsRange = getDateRange(ceosNews);
+                            const archRange = getDateRange(ceosArchive);
+                            staticSource.yearLinks[0].year = newsRange ? `News ${newsRange}` : 'CEOS news';
+                            staticSource.yearLinks[0].casesUsed = ceosNews.length;
+                            staticSource.yearLinks[1].year = archRange ? `PDF archive ${archRange}` : '2002–2008 archive (PDF)';
+                            staticSource.yearLinks[1].casesUsed = ceosArchive.length;
                         }
                     } else if (staticSource.name.includes('U.S. Secret Service')) {
                         const usssCases = cases.filter(c => {
@@ -2288,73 +2064,190 @@
                 displaySources(staticSources);
             } catch (error) {
                 console.error('Error loading sources:', error);
-                displaySources(staticSources);
+                displaySources(staticSources, { error: String(error && error.message || error) });
+            }
+        }
+
+        // ---- Presentation (shared shell chrome). Counting logic above is untouched; this only renders it. ----
+        const srcEsc = (s) => String(s == null ? '' : s)
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        const srcFmt = (n) => (typeof n === 'number' && Number.isFinite(n)) ? n.toLocaleString('en-US') : String(n);
+        const srcState = { sources: [], options: {}, typesReady: false };
+
+        function srcHost(url) {
+            try { return new URL(url).hostname.replace(/^www\./, ''); } catch (e) { return url; }
+        }
+
+        function srcInitTypes(sources) {
+            if (srcState.typesReady) return;
+            const sel = document.getElementById('src-type');
+            if (!sel) return;
+            const seen = new Map();
+            sources.forEach(s => {
+                if (!s.type) return;
+                const key = String(s.type).trim().toLowerCase();
+                if (!seen.has(key)) seen.set(key, String(s.type).trim());
+            });
+            [...seen.entries()].sort((a, b) => a[1].localeCompare(b[1])).forEach(([key, label]) => {
+                const opt = document.createElement('option');
+                opt.value = key;
+                opt.textContent = label.charAt(0).toUpperCase() + label.slice(1);
+                sel.appendChild(opt);
+            });
+            srcState.typesReady = true;
+            const rerender = () => renderSourceCards();
+            sel.addEventListener('change', rerender);
+            const filter = document.getElementById('src-filter');
+            if (filter) filter.addEventListener('input', rerender);
+        }
+
+        function srcUpdateStats(sources, pending, totalCasesHint, error) {
+            const set = (id, text, isPending) => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                el.textContent = text;
+                el.classList.toggle('is-pending', !!isPending);
+            };
+            set('stat-sources', srcFmt(sources.length), false);
+            const eyebrow = document.getElementById('src-eyebrow');
+            if (eyebrow) eyebrow.textContent = `SOURCES · ${sources.length} PUBLIC RECORD SETS`;
+            if (pending) {
+                set('stat-cases', totalCasesHint != null ? `…/${srcFmt(totalCasesHint)}` : '…', true);
+                set('stat-agencies', '…', true);
+                set('stat-span', '…', true);
+                return;
+            }
+            const allCases = sources.flatMap(s => s.cases || []);
+            const withCases = sources.filter(s => (s.cases || []).length > 0).length;
+            set('stat-cases', error ? '—' : srcFmt(allCases.length), false);
+            set('stat-agencies', error ? '—' : `${srcFmt(withCases)} / ${srcFmt(sources.length)}`, false);
+            const span = allCases.length ? getDateRange(allCases) : null;
+            set('stat-span', span ? span.replace('-', '–') : '—', false);
+        }
+
+        function srcUpdateStatus(shown, total, pending, totalCasesHint, error) {
+            const el = document.getElementById('src-status');
+            if (!el) return;
+            if (error) {
+                el.textContent = `Counts unavailable: ${error}`;
+            } else if (pending) {
+                el.innerHTML = `<span class="cl-spinner" aria-hidden="true"></span> Loading ${totalCasesHint != null ? srcFmt(totalCasesHint) + ' ' : ''}case summaries…`;
+            } else if (shown === total) {
+                el.textContent = `${srcFmt(total)} sources, sorted by case count`;
+            } else {
+                el.textContent = `${srcFmt(shown)} of ${srcFmt(total)} sources`;
             }
         }
 
         function displaySources(sources, options = {}) {
+            srcState.sources = sources;
+            srcState.options = options;
+            srcInitTypes(sources);
+            const pending = options.pending === true;
+            srcUpdateStats(sources, pending, options.totalCasesHint, options.error);
+            if (options.error) {
+                const notices = document.querySelector('.src-notices');
+                if (notices && !document.getElementById('src-error')) {
+                    const n = document.createElement('div');
+                    n.className = 'cl-notice cl-notice--danger';
+                    n.id = 'src-error';
+                    n.setAttribute('role', 'alert');
+                    n.innerHTML = `<div><strong>Live counts could not be loaded.</strong> The registry below is complete, but per-source case counts and date ranges are unavailable until the store responds (${srcEsc(options.error)}). Reload to retry.</div>`;
+                    notices.appendChild(n);
+                }
+            }
+            renderSourceCards();
+        }
+
+        function renderSourceCards() {
+            const sources = srcState.sources;
+            const options = srcState.options;
             const pending = options.pending === true;
             const totalCasesHint = options.totalCasesHint;
             const container = document.getElementById('source-list');
-            
+
             if (sources.length === 0) {
-                container.innerHTML = '<p>No sources found.</p>';
+                container.innerHTML = '<div class="cl-empty">No sources found.</div>';
+                srcUpdateStatus(0, 0, pending, totalCasesHint, options.error);
                 return;
             }
-            
-            container.innerHTML = sources.map(source => {
+
+            const q = (document.getElementById('src-filter')?.value || '').trim().toLowerCase();
+            const typeKey = (document.getElementById('src-type')?.value || '').trim().toLowerCase();
+
+            // Original registry order while counts are pending; by case count (desc, stable) once they arrive.
+            let ordered = sources.map((s, i) => ({ s, i }));
+            if (!pending) {
+                ordered.sort((a, b) => {
+                    const ca = a.s.cases ? a.s.cases.length : 0;
+                    const cb = b.s.cases ? b.s.cases.length : 0;
+                    return (cb - ca) || (a.i - b.i);
+                });
+            }
+            const visible = ordered.map(o => o.s).filter(source => {
+                if (q && !String(source.name || '').toLowerCase().includes(q)) return false;
+                if (typeKey && String(source.type || '').trim().toLowerCase() !== typeKey) return false;
+                return true;
+            });
+
+            srcUpdateStatus(visible.length, sources.length, pending, totalCasesHint, options.error);
+
+            if (visible.length === 0) {
+                container.innerHTML = `<div class="cl-empty" style="grid-column:1/-1">No sources match “${srcEsc(q)}”${typeKey ? ' in that type' : ''}.</div>`;
+                return;
+            }
+
+            container.innerHTML = visible.map(source => {
                 const caseCount = source.cases ? source.cases.length : 0;
                 const dateRange =
                     source.dateRangeDisplay ||
                     (source.cases ? getDateRange(source.cases) : null);
-                
+
+                let countHtml;
+                if (pending) {
+                    countHtml = `<div class="src-card__count is-pending" title="Counting…">…<small>cases</small></div>`;
+                } else if (options.error) {
+                    countHtml = `<div class="src-card__count is-zero" title="Counts unavailable">—<small>cases</small></div>`;
+                } else {
+                    countHtml = `<div class="src-card__count${caseCount === 0 ? ' is-zero' : ''}">${srcFmt(caseCount)}<small>${caseCount === 1 ? 'case' : 'cases'}</small></div>`;
+                }
+
+                const yearPills = source.yearLinks ? source.yearLinks.map(yl => {
+                    const casesUsed = yl.casesUsed !== undefined ? yl.casesUsed : 0;
+                    const totalAvailable = yl.totalAvailable !== undefined ? yl.totalAvailable : null;
+                    let countText = '';
+                    if (pending) {
+                        countText = totalAvailable !== null
+                            ? ` (…/${totalAvailable})`
+                            : (totalCasesHint != null && !Number.isNaN(totalCasesHint)
+                                ? ` (…/${totalCasesHint})`
+                                : ' (…)');
+                    } else if (totalAvailable !== null) {
+                        countText = ` (${casesUsed}/${totalAvailable})`;
+                    } else if (casesUsed > 0) {
+                        countText = ` (${casesUsed} cases)`;
+                    }
+                    return `<a class="cl-chip cl-chip--line" href="${srcEsc(yl.url)}" target="_blank" rel="noopener noreferrer" title="${srcEsc(yl.year)}${srcEsc(countText)}">${srcEsc(yl.year)}${countText ? `<span class="n">${srcEsc(countText)}</span>` : ''}</a>`;
+                }).join('') : '';
+
                 return `
-                    <div class="source-card">
-                        <h3>${source.name}</h3>
-                        ${source.url ? `<a href="${source.url}" target="_blank" rel="noopener noreferrer">${source.url}</a>` : ''}
-                        ${source.description ? `<p class="source-meta">${source.description}</p>` : ''}
-                        ${source.type ? `<p class="source-meta"><strong>Type:</strong> ${source.type}</p>` : ''}
-                        ${dateRange ? `<p class="source-meta"><strong>Date range:</strong> ${dateRange}</p>` : ''}
-                        ${source.yearLinks ? `
-                            <div class="year-links">
-                                <strong>Year Reports:</strong>
-                                <div style="margin-top: 10px;">
-                                    ${source.yearLinks.map(yl => {
-                                        const casesUsed = yl.casesUsed !== undefined ? yl.casesUsed : 0;
-                                        const totalAvailable = yl.totalAvailable !== undefined ? yl.totalAvailable : null;
-                                        let countText = '';
-                                        if (pending) {
-                                            countText = totalAvailable !== null
-                                                ? ` (…/${totalAvailable})`
-                                                : (totalCasesHint != null && !Number.isNaN(totalCasesHint)
-                                                    ? ` (…/${totalCasesHint})`
-                                                    : ' (…)');
-                                        } else if (totalAvailable !== null) {
-                                            countText = ` (${casesUsed}/${totalAvailable})`;
-                                        } else if (casesUsed > 0) {
-                                            countText = ` (${casesUsed} cases)`;
-                                        }
-                                        return `<a href="${yl.url}" target="_blank" rel="noopener noreferrer" title="${yl.year}${countText}">${yl.year}${countText}</a>`;
-                                    }).join('')}
-                                </div>
+                    <article class="cl-card src-card">
+                        <div class="src-card__head">
+                            <h3 class="src-card__name">${source.url
+                                ? `<a href="${srcEsc(source.url)}" target="_blank" rel="noopener noreferrer">${srcEsc(source.name)}</a>`
+                                : srcEsc(source.name)}</h3>
+                            ${countHtml}
+                        </div>
+                        <div class="src-card__body">
+                            <div class="src-card__meta">
+                                ${source.url ? `<span class="src-card__host"><a href="${srcEsc(source.url)}" target="_blank" rel="noopener noreferrer">${srcEsc(srcHost(source.url))}</a></span>` : ''}
                             </div>
-                        ` : ''}
-                        ${pending ? `
-                            <div class="source-stats">
-                                <div class="source-stat">
-                                    <div class="number" style="opacity:0.65">${totalCasesHint != null ? `…/${totalCasesHint}` : '…'}</div>
-                                    <div class="label">Cases</div>
-                                </div>
-                            </div>
-                        ` : (caseCount > 0 ? `
-                            <div class="source-stats">
-                                <div class="source-stat">
-                                    <div class="number">${caseCount}</div>
-                                    <div class="label">Cases</div>
-                                </div>
-                            </div>
-                        ` : '')}
-                    </div>
+                            ${source.description ? `<p class="src-card__desc" title="${srcEsc(source.description)}">${srcEsc(source.description)}</p>` : ''}
+                            ${dateRange ? `<div class="src-card__range">Date range <b>${srcEsc(String(dateRange).replace('-', '–'))}</b></div>`
+                                : (pending ? `<div class="src-card__range">Date range <b class="cl-muted">…</b></div>` : '')}
+                            ${yearPills ? `<div class="src-card__years">${yearPills}</div>` : ''}
+                        </div>
+                    </article>
                 `;
             }).join('');
         }

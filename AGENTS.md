@@ -280,13 +280,15 @@ After filing, record the number and URL. Don't edit code unless the developer as
 
 ### 6.2 Pull requests
 
-Body sections, in order:
+**Title:** one line that says what changes, with no issue number. The issue goes in the body.
+
+Body sections, in this order. Write the ones the change needs and skip the rest: a docs PR has no root cause,
+and only a PR that changes stored data says how to bring that data up to date (§4).
 
 - **Summary** — what changes and why.
 - **Root cause** — the plain-language explanation from §3 step 2 (or, for a feature, the need).
 - **Fix** — what the code does now, and where.
 - **Test plan** — commands, results, before/after numbers, and proof the new tests fail without the change.
-- **Backfill required** — yes / no, scope, the command, and whether stored data still holds old values.
 - **Residual gaps** — known limits with counts. Anything an agent could be misled by also shows up in the tool
   response.
 - `Closes #N` only when the issue's close-when list is done; otherwise `Refs #N`.

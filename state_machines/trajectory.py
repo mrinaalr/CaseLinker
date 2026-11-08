@@ -1,4 +1,4 @@
-"""L*_{g,A} trajectory computation over CAC-native transition matrices."""
+"""Descriptive path summaries over the observed phase chain P̂."""
 
 from __future__ import annotations
 
@@ -12,9 +12,9 @@ def max_weight_empirical_path(
     n_cases: int = 1,
 ) -> dict:
     """
-    Max-weight path through corpus edge frequencies (max-product / Viterbi-style).
-    Not Bellman-optimal; use state_machines.bellman.bellman_lstar for R_g-based paths.
-    Cycles (CoercionCycle) are single nodes — not unrolled.
+    Most probable simple path from start to terminal under the observed chain
+    P̂ (max-product / Viterbi). Descriptive: the commonest recorded route, not
+    a route anyone optimised. Cycles are not unrolled.
     """
     nodes: set[str] = {start_type, terminal_type}
     for f, t in transition_matrix:
@@ -86,7 +86,7 @@ def path_weight_for_sequence(
     type_sequence: list[str],
     transition_matrix: dict[tuple[str, str], float],
 ) -> tuple[float, dict[tuple[str, str], float]]:
-    """Product of cross-case weights along a case-specific type sequence."""
+    """Probability of a case's type sequence under P̂ (product of step probabilities)."""
     weights: dict[tuple[str, str], float] = {}
     product = 1.0
     for i in range(len(type_sequence) - 1):
@@ -102,7 +102,10 @@ def path_weight_for_sequence(
 def cross_case_comparison(
     sequences: dict[str, list[str]],
 ) -> dict:
-    """Classify phase types: fundamental (all), variant (some), unique (one)."""
+    """Coverage over all given trajectories: fundamental (all), variant (some), unique (one).
+
+    For the backbone over completed trajectories use estimators.backbone.
+    """
     type_cases: dict[str, set[str]] = defaultdict(set)
     for case_id, seq in sequences.items():
         for t in set(seq):
