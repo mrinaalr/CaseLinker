@@ -199,7 +199,8 @@
   function caseText(id) {
     if (textCache[id]) return textCache[id];
     textCache[id] = json('/api/cases/' + encodeURIComponent(id)).then(function (c) {
-      var t = (c.raw_data && c.raw_data.case_text) || c.case_text || '';
+      // Localhost and trusted keys get raw_data.case_text; public callers get case_text_redacted (people masked).
+      var t = (c.raw_data && c.raw_data.case_text) || c.case_text || c.case_text_redacted || '';
       return { id: id, text: String(t), source: c.source || '', url: c.source_url || '' };
     });
     return textCache[id];

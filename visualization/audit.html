@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/viz-assets/v4.css?v=4.1">
     <script src="/viz-assets/caselinker-api.js"></script>
-    <script src="/viz-assets/v4.js?v=4.1" defer></script>
+    <script src="/viz-assets/v4.js?v=4.2" defer></script>
     <style>
         /* ---------- Audit: three-column instrument ---------- */
         .audit-page { padding-bottom: 40px; }
@@ -564,7 +564,7 @@
 
         function auditCaseHasFullNarrative(c) {
             if (!c) return false;
-            const t = (c.raw_data && c.raw_data.case_text) || c.case_text;
+            const t = (c.raw_data && c.raw_data.case_text) || c.case_text || c.case_text_redacted;
             return typeof t === 'string' && t.trim().length > 0;
         }
 
@@ -647,7 +647,7 @@
                     caseData.raw_data?.month_year ||
                     (dateRange.end ? String(dateRange.end).slice(0, 10) : '') ||
                     'Unknown date';
-                const previewSrc = (caseData.raw_data?.case_text || caseData.case_text || '').substring(0, 80);
+                const previewSrc = (caseData.raw_data?.case_text || caseData.case_text || caseData.case_text_redacted || '').substring(0, 80);
                 const preview =
                     previewSrc.length > 0
                         ? `${previewSrc}…`
@@ -1924,7 +1924,8 @@
                 return;
             }
             const rawData = caseData.raw_data || {};
-            const caseText = rawData.case_text || caseData.case_text || '';
+            // Public callers get case_text_redacted (people masked); localhost and trusted keys get raw_data.
+            const caseText = rawData.case_text || caseData.case_text || caseData.case_text_redacted || '';
             if (!caseText) {
                 currentCaseText = '';
                 if (caseData._audit_full_loaded) {
