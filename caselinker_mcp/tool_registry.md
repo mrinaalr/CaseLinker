@@ -1,6 +1,6 @@
 # CaseLinker MCP tool registry
 
-**Local: 54 tools. Railway hosted: 44 tools** (eight collector WRITE tools and two local-disk duplicate tools omitted). Count `@mcp.tool()` decorators in `server.py` (WRITE tools register only when `collector_disk_write_enabled()` is true; `find_ingested_duplicates` and `verify_duplicate_pdf_pages` register only when not on Railway).
+**Local: 55 tools. Railway hosted: 45 tools** (eight collector WRITE tools and two local-disk duplicate tools omitted). Count `@mcp.tool()` decorators in `server.py` (WRITE tools register only when `collector_disk_write_enabled()` is true; `find_ingested_duplicates` and `verify_duplicate_pdf_pages` register only when not on Railway).
 
 Authoritative implementation: `caselinker_mcp/server.py`. This file is the human-readable catalog for docs and agent hosts.
 

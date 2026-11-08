@@ -25,7 +25,7 @@ import gc
 import asyncio
 import httpx
 import requests
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
@@ -1815,6 +1815,80 @@ def cases_summaries_chunk(
         return {"offset": offset, "limit": limit, "count": 0, "summaries": []}
     finally:
         _CASES_SUMMARIES_CHUNK_SEM.release()
+
+
+_SOURCES_STATS_TTL = 3600  # seconds; also versioned by case count, so new cases show at once
+_sources_stats_mem: Optional[Dict[str, Any]] = None
+_sources_stats_mem_count: Optional[int] = None
+_SOURCE_YEAR_RE = re.compile(r"\b(19|20)\d{2}\b")
+_CASE_ID_YEAR_RE = re.compile(r"_((?:19|20)\d{2})_")
+
+
+def _source_key(source: Any) -> str:
+    """Canonical source key: upper case, underscores to spaces, trimmed ('NEWYORK_SP' -> 'NEWYORK SP')."""
+    return str(source or "").upper().replace("_", " ").strip() or "UNKNOWN"
+
+
+def _year_of(date_start: Any) -> Optional[int]:
+    if not date_start or not isinstance(date_start, str):
+        return None
+    m = _SOURCE_YEAR_RE.search(date_start)
+    return int(m.group(0)) if m else None
+
+
+def _build_sources_stats() -> Dict[str, Any]:
+    """Per-source counts, year span and per-year counts from one (id, source, date_start) scan."""
+    rows = storage.get_source_date_rows() or []
+    per: Dict[str, Dict[str, Any]] = {}
+    all_years: List[int] = []
+    for case_id, source, date_start in rows:
+        key = _source_key(source)
+        entry = per.setdefault(key, {"count": 0, "min_year": None, "max_year": None, "years_by_id": {}})
+        entry["count"] += 1
+        year = _year_of(date_start)
+        if year is not None:
+            all_years.append(year)
+            entry["min_year"] = year if entry["min_year"] is None else min(entry["min_year"], year)
+            entry["max_year"] = year if entry["max_year"] is None else max(entry["max_year"], year)
+        m = _CASE_ID_YEAR_RE.search(str(case_id or ""))
+        if m:
+            entry["years_by_id"][m.group(1)] = entry["years_by_id"].get(m.group(1), 0) + 1
+    return {
+        "case_count": len(rows),
+        "min_year": min(all_years) if all_years else None,
+        "max_year": max(all_years) if all_years else None,
+        "sources": per,
+        "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+    }
+
+
+@app.get("/api/sources-stats")
+@limiter.limit("120/minute")
+def sources_stats(request: Request):
+    """
+    Public per-source aggregate for the Sources page and external callers: case count,
+    first/last year and per-year counts (year parsed from the case id) for every stored
+    source key, plus corpus totals. A few KB instead of the full summaries stream.
+    Cached in memory and Redis, keyed by case count so new ingests invalidate it.
+    """
+    global _sources_stats_mem, _sources_stats_mem_count
+    count = get_case_count()
+    headers = {"Cache-Control": "public, max-age=300"}
+    if _sources_stats_mem is not None and _sources_stats_mem_count == count:
+        return JSONResponse(_sources_stats_mem, headers=headers)
+    if REDIS_AVAILABLE:
+        cached = get_cached(get_cache_key("sources-stats", version=count))
+        if isinstance(cached, dict) and cached.get("sources"):
+            _sources_stats_mem, _sources_stats_mem_count = cached, count
+            return JSONResponse(cached, headers=headers)
+    try:
+        payload = _build_sources_stats()
+    except Exception as exc:
+        raise HTTPException(status_code=503, detail=f"sources stats unavailable: {exc}")
+    _sources_stats_mem, _sources_stats_mem_count = payload, count
+    if REDIS_AVAILABLE:
+        set_cached(get_cache_key("sources-stats", version=count), payload, ttl=_SOURCES_STATS_TTL)
+    return JSONResponse(payload, headers=headers)
 
 
 @app.post("/api/cases-summaries-by-ids")

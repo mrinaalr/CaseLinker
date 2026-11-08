@@ -741,6 +741,19 @@ class CaseStorage:
         finally:
             conn.close()
 
+    def get_source_date_rows(self) -> List[Tuple[str, Optional[str], Optional[str]]]:
+        """(id, source, date_start) for every case; feeds /api/sources-stats."""
+        try:
+            conn = get_connection(self.db_path)
+            cursor = conn.cursor()
+            cursor.execute('SELECT id, source, date_start FROM cases')
+            rows = [(r[0], r[1], r[2]) for r in cursor.fetchall()]
+            conn.close()
+            return rows
+        except Exception as e:
+            print(f"Error reading source/date rows: {e}")
+            return []
+
     def get_case_count(self) -> int:
         """
         Get total number of cases in database (fast query).

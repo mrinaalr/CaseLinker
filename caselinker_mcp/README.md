@@ -10,8 +10,8 @@ The CaseLinker MCP (Model Context Protocol) server exposes structured tools to a
 - **8** collector WRITE — **local MCP only** (not registered on Railway)
 - **2** local-disk READ tools (`find_ingested_duplicates`, `verify_duplicate_pdf_pages`) — local MCP only
 
-**Local stdio / local FastAPI mount:** **54 tools** (full READ + WRITE).
-**Railway hosted MCP:** **44 tools** (collector WRITE and local-disk duplicate tools omitted).
+**Local stdio / local FastAPI mount:** **55 tools** (full READ + WRITE).
+**Railway hosted MCP:** **45 tools** (collector WRITE and local-disk duplicate tools omitted).
 
 Corpus and analysis tools are read-only against the database. Collector WRITE tools write local JSON/PDFs only; they do not ingest into sqlite.
 
@@ -62,8 +62,8 @@ Set `CASELINKER_KEY` to a value listed in `CASELINKER_TRUSTED_KEYS` on Railway o
 
 ## Tool tiers
 
-**48 public** + **6 trusted-key sensitive** = **54 tools** on local MCP.
-On Railway hosted MCP the eight collector WRITE tools and the two local-disk duplicate tools are omitted → **38 public** + **6 trusted** = **44 tools**.
+**49 public** + **6 trusted-key sensitive** = **55 tools** on local MCP.
+On Railway hosted MCP the eight collector WRITE tools and the two local-disk duplicate tools are omitted → **39 public** + **6 trusted** = **45 tools**.
 
 ### Public tier
 
@@ -125,7 +125,7 @@ Fill in `CASELINKER_KEY` locally only if you need bulk export, full case narrati
 
 ## Hosted (Railway)
 
-CaseLinker exposes **two HTTP transports** on Railway (pick one in your MCP client config). Hosted MCP is **44 tools**: corpus + READ collector/public-records. Collector **WRITE** tools are not registered here — run local stdio MCP or the `collector/` CLI to write PDFs on your machine.
+CaseLinker exposes **two HTTP transports** on Railway (pick one in your MCP client config). Hosted MCP is **45 tools**: corpus + READ collector/public-records. Collector **WRITE** tools are not registered here — run local stdio MCP or the `collector/` CLI to write PDFs on your machine.
 
 | Transport | Client URL | How messages flow |
 |-----------|------------|-------------------|
@@ -183,7 +183,7 @@ Add `.cursor/mcp.json` to `.gitignore` if it contains secrets.
 
 ## Local corpus
 
-Useful once you are pointing MCP at localhost. The live corpus is **10,711 case reports**, **131,332 extracted features**, and **4,428 distinct law-enforcement agencies** (**70** sources). Per-case graphs under `ontology/graph_output/` are the previous export until the Phase 3 reload.
+Useful once you are pointing MCP at localhost. The live corpus is **10,711 case reports**, **131,332 extracted features**, and **4,238 distinct law-enforcement agencies** (**70** sources). Per-case graphs under `ontology/graph_output/` are the previous export until the Phase 3 reload.
 
 - **Railway:** same deployed snapshot, public rate limits. Set `CASELINKER_API_URL=https://caselinker.up.railway.app`.
 - **Localhost:** set `CASELINKER_API_URL=http://localhost:8000` after `python3 run/main.py`. The local DB starts empty unless you populate it.
@@ -247,7 +247,7 @@ For a standalone SSE process (not via Railway mount), set `MCP_TRANSPORT=sse` an
 
 ## Tools
 
-**54 tools locally / 44 on Railway.** See [`tool_registry.md`](tool_registry.md) for the authoritative list. Summary by tier:
+**55 tools locally / 45 on Railway.** See [`tool_registry.md`](tool_registry.md) for the authoritative list. Summary by tier:
 
 | Tier | Local | Railway | Examples |
 |------|------:|--------:|----------|

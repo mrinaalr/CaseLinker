@@ -44,7 +44,7 @@ CaseLinker follows a modular, layered architecture:
 2. **Processing Layer**: Extracts features, assigns comparison values, and fills case schema
 3. **Storage Layer**: PostgreSQL (production) / SQLite (local development) - Database-agnostic implementation
 4. **Clustering & Analysis Layer**: Case comparison, similarity detection, automated grouping, triage, and insights generation
-5. **Visualization Layer**: Interactive web dashboards (platform harm dashboard, lifecycle state machines, facet tree search, analysis views)
+5. **Visualization Layer**: Tools-first web app (Analysis, Graph, Explore, State machines, Affordances, Search, Audit, Sources)
 
 ## Installation
 
@@ -150,12 +150,12 @@ You can process additional PDFs to add more cases to the database.
 2. **`run/main.py`** - **Main application**
    - Starts the web server that serves the visualization interface and API
    - Run this to access the web interface and visualizations
-   - Uses pre-computes clusters on startup for fast performance
+   - Uses pre-computed clusters on startup for fast performance
    - Provides REST API endpoints for case data, analysis, and statistics
 
 3. **`caselinker_mcp/server.py`** - **MCP server for agents and operators**
-   - **Local stdio:** **54 tools** (corpus + free RECAP/DOJ search + full collector READ/WRITE + local duplicate audit). Collector WRITE writes JSON/PDFs under `collector_output/` on your machine
-   - **Railway hosted MCP:** **44 tools** — same corpus/READ surface; collector **WRITE tools** are not registered (no ephemeral-disk side effects). Use local MCP or the `collector/` CLI to harvest PDFs.
+   - **Local stdio:** **55 tools** (corpus + free RECAP/DOJ search + full collector READ/WRITE + local duplicate audit). Collector WRITE writes JSON/PDFs under `collector_output/` on your machine
+   - **Railway hosted MCP:** **45 tools** — same corpus/READ surface; collector **WRITE tools** are not registered (no ephemeral-disk side effects). Use local MCP or the `collector/` CLI to harvest PDFs.
    - Reach out for private mcp.json keys and review `caselinker_mcp/README.md` and `caselinker_mcp/tool_registry.md` for setup, auth, and the full catalog
 
 **Typical use case:**
@@ -264,21 +264,15 @@ Access the **Platform Harm Dashboard** via the [live demo](https://caselinker.up
 
 Access Search via the [live demo](https://caselinker.up.railway.app/search) or locally at http://localhost:8000/search
 
-Search provides a **facet decision tree** over the stored case corpus: the server builds a deterministic partition tree from structured facets (not a precomputed file on disk). The view uses **D3.js** (SVG) to render cohort nodes and edges. You can limit tree depth, **prune** which partition dimensions apply and optionally filter allowed values per facet (extracted feature), then **click any node** (branch or leaf) to list **case IDs** in that cohort for use elsewhere (e.g. single-case visualization, manual cross-case analysis). Small cohorts (fewer than three cases) have IDs gated behind a demo access key. See `src/Storage Layer/facet_tree.py` and `/api/facet-tree` for the partition order and semantics. How Search relates to SPARQL, Query, LLM, Patterns, and MCP: **[search.md](search.md)**.
+Search provides a **facet decision tree** over the stored case corpus: the server builds a deterministic partition tree from structured facets (not a precomputed file on disk). The view uses **D3.js** (SVG) to render cohort nodes and edges. You can limit tree depth, **prune** which partition dimensions apply and optionally filter allowed values per facet (extracted feature), then **click any node** (branch or leaf) to list **case IDs** in that cohort for use elsewhere (e.g. single-case visualization, manual cross-case analysis). Small cohorts (fewer than three cases) have IDs gated behind a demo access key. See `src/Storage Layer/facet_tree.py` and `/api/facet-tree` for the partition order and semantics. How Search relates to SPARQL, Analysis, Graph, and MCP: **[search.md](search.md)**.
 
 
-## Using Advanced Case Analysis and Triage
+## Using Analysis
 
 Navigate to [analysis](https://caselinker.up.railway.app/analysis) on the live demo, or http://localhost:8000/analysis locally.
 
-**Tag-based analysis** finds every case matching *all* selected tags (Case Topics, Severity Indicators, Platforms & Environments, Investigation Types, Perpetrator Relationships, Perpetrator Status), with per-tag counts and the matching text highlighted in each case.
+**Question → SPARQL over graph store → answers, with the passages behind them.** Pick a question or write one. A template writes the SPARQL; when no template matches, a language model drafts it and CaseLinker confirms it is read-only before it runs. The query runs against the Oxigraph DB and the answer comes back as a table of cases and values. Clicking a case id opens the passages that support each value. The SPARQL is always shown and editable, and **Open in Graph** draws the matching cases in the Graph viewer.
 
-**Automated analysis** runs the full pipeline: similarity-based case groups, priority-ranked cases, corpus insights, detected patterns (repeat offenders, relationships, investigation focus), and top keywords. Click any result to see the case text with its priority indicators highlighted and why it was grouped or ranked.
-
-Priority scores combine weighted signals (severity indicators, victim count, case type, severity phrases, evidence volume, and registered-offender status), normalized to a 5–10 scale.
-
-
-Triage is served through the API (`/api/triage-eval`, `/api/triage-model-corpus`, `/api/triage-live`) and the MCP `triage_text` tool; the standalone page was retired in the tools-first UI. The current implementation uses **rule-based** priority tiers, **ML Classification for triage** (random forest or decision tree trained on features from the database with labels derived from deterministic rules), optionally constrained by the same facet-dimension filtering used in Search, and supports **paste-in live triage** that scores text in memory without writing to the database. For the full triage documentation (rules, bundle paths, APIs, live paste), see **[triage.md](triage.md)**.
 
 ## Ontology & Graphs ([local](http://localhost:8000/patterns) · [live](https://caselinker.up.railway.app/patterns))
 
@@ -347,11 +341,11 @@ Full ontology documentation (vocabulary, pipeline, graph pools, Q1–Q3, PACER, 
 ## Other Features
 
 - **Sources Tab**: View data sources and access original case reports
-- **Clusters Tab**: View pre-computed clusters and analyze case reports
-- **Stats Tab**: Coverage over the dataset and case distributions
-- **Tech Landscape**: Technology revolver (platforms, investigation tech, anonymization, P2P) by era
-- **Lifecycle**: PACER exploitation lifecycles. Five offense types as CAC ontology state machines
-- **Query**: Custom analysis lab (public APIs)
+- **Tag-based analysis**: Cases matching selected tags, with per-tag counts (`/api/return-tagged-cases`)
+- **Triage**: Rule-based tiers plus a supervised classifier; pasted text is scored without being saved ([triage.md](triage.md))
+- **Clusters**: Pre-computed similarity groups (`/api/cluster-groups`)
+- **Stats**: Coverage over the dataset, case distributions and geography (`/api/stats-detailed`, `/api/location-stats`)
+- **Automated analysis**: Similarity groups, priority-ranked cases, corpus insights and patterns (`/api/automated-analysis`)
 - **LLM**: Natural-language queries over case statistics (SQL-backed; rate limited on production)
 - **Case Studies Tab**: Era-organized narrative case studies (`data/case_studies.json`)
 - **Audit Tab**: Review extracted features case-by-case with interactive highlighting to verify extraction accuracy
@@ -394,9 +388,7 @@ CaseLinker/
 │   ├── sources.html                  # /sources
 │   ├── under-the-hood.html           # /under-the-hood
 │   ├── crash-course.html             # /crash-course
-│   ├── questions/                    # /patterns/questions/q01–q03
-│   ├── under-the-hood.html           # /under-the-hood
-│   └── crash-course.html             # /crash-course
+│   └── questions/                    # /patterns/questions/q01–q03
 ├── ontology/
 │   ├── README.md                     # Ontology docs (vocabulary, pipeline, pools, w3id)
 │   ├── docs/SPARQL.md                # Public SPARQL 1.1 API guide
@@ -414,7 +406,7 @@ CaseLinker/
 │   ├── data/lstar_all_cases.json     # Transition matrix + L* trajectories
 │   ├── compute_lstar.py              # Rebuild L* export
 │   └── lifecycle_api.py              # /lifecycle + trusted API payload
-├── caselinker_mcp/                   # MCP server (54 local / 44 Railway; corpus + collector + RECAP)
+├── caselinker_mcp/                   # MCP server (55 local / 45 Railway; corpus + collector + RECAP)
 │   ├── server.py                     # MCPServer (mcp 2.x) entry point
 │   ├── collector_tools.py            # Collector wrappers (WRITE local-only)
 │   ├── public_records.py             # DOJ API + CourtListener/RECAP READ
@@ -475,8 +467,9 @@ How the readers, the gate, and the resolver fit together in **[src/Processing La
 - `GET /api/cases` - Case list export (localhost or `CaseLinker-Key` in `CASELINKER_TRUSTED_KEYS`)
 - `GET /api/cases-summaries-chunk` - Public paginated summaries (`offset`, `limit` ≤ 500); UI loads the full timeline via many small responses, not one bulk JSON
 - `POST /api/cases-summaries-by-ids` - Public batched summaries (max 500 ids per request) for cluster membership and similar flows
-- `GET /api/cases/{case_id}` - Single case (public responses omit `raw_data`; narrative available as `case_text` for UI drill-down)
+- `GET /api/cases/{case_id}` - Single case. Public responses omit `raw_data` and `case_text` and serve the release as `case_text_redacted` with every person masked; localhost and trusted keys get the raw text
 - `GET /api/case-count` - Total case count (public, rate limited)
+- `GET /api/sources-stats` - Per-source case counts, first and last year, and per-year counts for every stored source key, plus corpus totals (public, cached; drives the Sources page)
 - `GET /api/case-ids-by-filter` - Case IDs matching filter query params (public, rate limited)
 - `GET /api/tags` - Distinct tag values across the corpus (public, rate limited)
 - `POST /api/tag-threader` - Tag co-occurrence threading analysis (public, rate limited)
@@ -487,7 +480,7 @@ How the readers, the gate, and the resolver fit together in **[src/Processing La
 - `GET /api/lifecycle/cases` - Lifecycle JSON (trusted `CaseLinker-Key` or localhost; same gate as `GET /api/cases`)
 - `GET /api/lifecycle/lstar` - Full L* output (`state_machines/data/lstar_all_cases.json`; trusted key or localhost)
 - `GET /api/lifecycle/anchors` - Public JSON for the 5 anchor PACER state-machine cases (no key; rate limited; intended for external embeds)
-- `GET /analysis` - Analysis page: question → SPARQL → answers → evidence (templates or Groq; LLM mode over the case table)
+- `GET /analysis` - Analysis page: question → SPARQL over graph store → answers, with the passages behind them (templates, or Groq-written read-only SPARQL when no template matches)
 - `GET /api/facet-tree` - Build facet tree JSON (`max_depth`, optional prune query params)
 - `GET /api/facet-distinct` - Distinct primary-bucket values per facet (for Search prune UI)
 - `POST /api/facet-cohort-members` - Case IDs for a facet path (same prune semantics as tree; small cohorts gated)
@@ -510,7 +503,7 @@ How the readers, the gate, and the resolver fit together in **[src/Processing La
 - `GET /api/triage-eval` - Stratified train/test metrics on live cases (same pipeline as `scripts/verify/test_triage.py`)
 - `GET /api/triage-model-corpus` - Saved bundle predictions over live DB; optional `facet_constraints` JSON query param (rate limited)
 - `POST /api/triage-live` - Classify pasted batch text in memory only; requires bundle; no persistence
-- `GET /sources` - Data sources page
+- `GET /sources` - Sources page: registry of record sets with live per-source counts from `/api/sources-stats`
 - `GET /api/case-studies` - Case study content document (eras, studies, default form URL)
 - `GET /api/case-studies/notes/{case_id}` - Community notes for a study id
 - `POST /api/case-studies/notes/{case_id}` - Append a community note (rate limited)
@@ -546,12 +539,13 @@ How the readers, the gate, and the resolver fit together in **[src/Processing La
   - Semantic concept scoring (grooming, possession, AI-generated CSAM language, and related themes) merged into case topics and severity where thresholds are met
   - **Supervised triage (experimental)**: scikit-learn random forest or decision tree; labels from rule-based priority scores; `joblib` bundle loaded at inference time
 - **Ontology & Graphs**: RDFLib, pySHACL, Oxigraph (SPARQL)
+- **Caching**: in-process memory, optional Redis (`REDIS_URL`) on production
 - **Agents**: MCP server (`mcp` 2.x) over stdio, SSE, and Streamable HTTP
 - **Architecture**: Modular 5-layer design
 
 ## Deployment
 
-CaseLinker can be deployed to cloud platforms for public access. The app includes a `Procfile` for deployment to Railway, Heroku, and similar platforms. The SPARQL proxy reads `OXIGRAPH_URL` (private Oxigraph base URL). After regenerating case graphs, reload the store with `python3 scripts/rebuild_oxigraph.py` (wholesale overwrite, not incremental).
+CaseLinker can be deployed to cloud platforms for public access. The app includes a `Procfile` for deployment to Railway, Heroku, and similar platforms. The SPARQL proxy reads `OXIGRAPH_URL` (private Oxigraph base URL). After regenerating case graphs, reload the store with `python3 scripts/rebuild_oxigraph.py` (wholesale overwrite, not incremental). Optional Redis (`REDIS_URL`) backs the server caches (facet trees, merged graphs, source aggregates); without it the app caches in memory.
 
 
 ## Sources and Ethics

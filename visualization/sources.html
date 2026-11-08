@@ -974,1097 +974,163 @@
                
             ];
             
-            const CASELINKER_COUNT_KEY = 'caselinker_total_case_count_v1';
-            let storedHint = null;
+            // Static source name fragment -> stored source key(s), plus how the aggregate feeds the card.
+            //   keepYear: leave the static year label alone (counts only)
+            //   noCount:  do not write casesUsed (card shows the total only)
+            //   byId:     one pill per year, counted from the case id (_YYYY_)
+            //   split:    two pills, one per key, each with its own span and count
+            const SOURCE_MATCH = [
+                ['Arizona Internet Crimes Against Children', ['AZICAC'], { keepYear: true, noCount: true }],
+                ['National Center for Missing', ['NCMEC'], { keepYear: true, byId: true }],
+                ['Georgia Bureau of Investigation', ['GBI'], { keepYear: true }],
+                ['Idaho Office of Attorney General', ['IDAHO ICAC'], { keepYear: true }],
+                ['Texas Office of the Attorney General', ['TEXAS AG'], { keepYear: true }],
+                ['Michigan State Police', ['MICHIGAN ICAC'], { keepYear: true }],
+                ['Silicon Valley ICAC', ['SVICAC'], { keepYear: true }],
+                ['Tennessee Bureau of Investigation', ['TBI ICAC'], { keepYear: true }],
+                ['South Carolina Attorney General', ['SCAG ICAC'], { keepYear: true }],
+                ['New York State Police', ['NEWYORK SP', 'NEW YORK SP'], { keepYear: true }],
+                ['Illinois Attorney General', ['ILLINOIS AG'], { keepYear: true }],
+                ['New Jersey Office of the Attorney General', ['NJ AG']],
+                ['Vermont Office of the Attorney General', ['VT AG']],
+                ['Rhode Island Office of the Attorney General', ['RI AG']],
+                ['Ohio Attorney General', ['OHIO AG']],
+                ['Delaware Department of Justice', ['DE AG']],
+                ['Sedgwick County Sheriff', ['SEDGWICK SO']],
+                ['Anchorage Police Department', ['ANCHORAGE PD']],
+                ['Mississippi Attorney General', ['MS AG']],
+                ['Montana Department of Justice', ['MT DOJ']],
+                ['New Mexico Attorney General', ['NM AG']],
+                ['New Mexico Department of Justice', ['NM AG']],
+                ['North Carolina State Bureau of Investigation', ['NC SBI']],
+                ['Louisiana Office of the Attorney General', ['LA AG']],
+                ['Utah Attorney General', ['UT AG']],
+                ['Washington State Office of the Attorney General', ['WA AG']],
+                ['Oregon Department of Justice', ['OREGON DOJ']],
+                ['Pennsylvania Office of the Attorney General', ['PA AG']],
+                ['Washoe County Sheriff', ['WCSO']],
+                ['Fresno County Sheriff', ['FRESNO SO']],
+                ['Osceola County Sheriff', ['OSCEOLA SO']],
+                ['Las Vegas Police Department', ['LVMPD']],
+                ['San Jose Police Department', ['SJPD']],
+                ['Los Angeles Police Department', ['LAPD']],
+                ['Colorado Springs Police Department', ['CSPD']],
+                ['Seattle Police Department', ['SPD']],
+                ['San Diego Police Department', ['SDPD']],
+                ['Hawaii Department of the Attorney General', ['HI AG']],
+                ["Cook County State's Attorney", ['CCSAO']],
+                ['South Florida ICAC', ['SOUTH FLORIDA ICAC']],
+                ['Florida Office of the Attorney General', ['FL AG']],
+                ['Wyoming Division of Criminal Investigation', ['WY DCI']],
+                ['Iowa Division of Criminal Investigation', ['IA DCI']],
+                ['South Dakota Office of the Attorney General', ['SD AG']],
+                ['Nebraska State Patrol', ['NE SP']],
+                ['Kentucky State Police', ['KY SP']],
+                ['Arkansas Department of Public Safety', ['ARKANSAS DPS']],
+                ['Army Criminal Investigation Division', ['ARMY CID']],
+                ['Project Safe Childhood', ['DOJ SAFE CHILDHOOD', 'DOJ AI CSAM']],
+                ['U.S. DOJ CEOS', ['DOJ CEOS', 'DOJ ARCHIVES'], {
+                    split: [['DOJ CEOS', 'News', 'CEOS news'], ['DOJ ARCHIVES', 'PDF archive', '2002–2008 archive (PDF)']]
+                }],
+                ['U.S. Secret Service', ['USSS']],
+                ['Air Force Office of Special Investigations', ['AF OSI']],
+                ['Naval Criminal Investigative Service', ['NCIS']],
+                ['Customs and Border Protection', ['CBP']],
+                ['Marshals Service', ['US MARSHALS']],
+                ['Immigration and Customs Enforcement', ['ICE']],
+                ['Alabama Law Enforcement Agency', ['ALEA']],
+                ['Australian Federal Police', ['AFP']],
+                ['Queensland Police', ['QPS']],
+                ['Brazil Federal Police', ['BRAZIL PF']],
+                ['Europol', ['EUROPOL']],
+                ['National Crime Agency', ['NCA']],
+                ['Alberta Law Enforcement Response Teams', ['ALERT ICE']],
+                ['Maryland State Police', ['MDSP']],
+                ['Police Scotland', ['SCOTLAND POLICE']],
+                ['Northern Virginia–DC Internet Crimes Against Children', ['NOVA ICAC']],
+                ['Minnesota Bureau of Criminal Apprehension', ['MN BCA']],
+                ['Philippines National Bureau of Investigation', ['NBI']],
+                ['Garda Síochána', ['GARDA']],
+                ['Wisconsin Department of Justice', ['WI DOJ']],
+                ['Department of Internal Affairs', ['NZ DIA']]
+            ];
+
+            // Combine the aggregate rows for a list of source keys.
+            function sumKeys(stats, keys) {
+                let count = 0, min = null, max = null;
+                keys.forEach(k => {
+                    const e = stats.sources[k];
+                    if (!e) return;
+                    count += e.count || 0;
+                    if (e.min_year != null) min = min == null ? e.min_year : Math.min(min, e.min_year);
+                    if (e.max_year != null) max = max == null ? e.max_year : Math.max(max, e.max_year);
+                });
+                return { count, min, max };
+            }
+
+            // Write counts and spans from the aggregate onto the static registry.
+            function applySourceStats(stats) {
+                staticSources.forEach(s => {
+                    const rule = SOURCE_MATCH.find(([part]) => s.name.includes(part));
+                    if (!rule) return;
+                    const [, keys, opts = {}] = rule;
+                    const agg = sumKeys(stats, keys);
+                    s.caseCount = agg.count;
+                    s.yearMin = agg.min;
+                    s.yearMax = agg.max;
+                    s.dateRangeDisplay = yearSpan(agg.min, agg.max);
+                    const yl = s.yearLinks || [];
+                    if (opts.byId) {
+                        const byId = (stats.sources[keys[0]] || {}).years_by_id || {};
+                        yl.forEach(l => { l.casesUsed = byId[String(l.year)] || 0; });
+                        return;
+                    }
+                    if (opts.split && yl.length > 1) {
+                        opts.split.forEach(([key, label, fallback], i) => {
+                            const one = sumKeys(stats, [key]);
+                            const r = yearSpan(one.min, one.max);
+                            yl[i].year = r ? `${label} ${r}` : fallback;
+                            yl[i].casesUsed = one.count;
+                        });
+                        return;
+                    }
+                    if (!yl.length) return;
+                    if (!opts.keepYear && s.dateRangeDisplay) yl[0].year = s.dateRangeDisplay;
+                    if (!opts.noCount) yl[0].casesUsed = agg.count;
+                });
+            }
+
+            // Last good aggregate, so a revisit paints final numbers in the first frame.
+            const SOURCES_STATS_KEY = 'caselinker_sources_stats_v1';
+            let cachedStats = null;
             try {
-                const s = sessionStorage.getItem(CASELINKER_COUNT_KEY);
-                if (s != null) {
-                    const n = parseInt(s, 10);
-                    if (!Number.isNaN(n) && n >= 0) storedHint = n;
-                }
+                const raw = localStorage.getItem(SOURCES_STATS_KEY);
+                const parsed = raw ? JSON.parse(raw) : null;
+                if (parsed && parsed.sources && typeof parsed.case_count === 'number') cachedStats = parsed;
             } catch (e) { /* ignore */ }
 
-            // Paint cards immediately; hydrate counts after API (large /api/cases payloads are slow)
-            displaySources(staticSources, { pending: true, totalCasesHint: storedHint });
-
-            // Get dynamic sources from API (no raw_data — only need source/id/date for counts & date range)
-            try {
-                const loadCases =
-                    typeof caselinkerLoadAllSummariesSequential === 'function'
-                        ? caselinkerLoadAllSummariesSequential
-                        : async () => {
-                              throw new Error('caselinker-api.js missing: caselinkerLoadAllSummariesSequential');
-                          };
-                const [countData, cases] = await Promise.all([
-                    fetch('/api/case-count').then((r) => r.json()),
-                    loadCases(),
-                ]);
-                try {
-                    const n =
-                        typeof countData.count === 'number' ? countData.count : cases.length;
-                    sessionStorage.setItem(CASELINKER_COUNT_KEY, String(cases.length || n));
-                } catch (e) { /* ignore */ }
-                
-                // Extract unique sources from cases to populate stats
-                const sourceMap = new Map();
-                cases.forEach(c => {
-                    const source = c.source || c.raw_data?.source || 'Unknown';
-                    if (!sourceMap.has(source)) {
-                        sourceMap.set(source, {
-                            name: source,
-                            cases: []
-                        });
-                    }
-                    sourceMap.get(source).cases.push(c);
-                });
-                
-                // Add case counts to static sources
-                staticSources.forEach(staticSource => {
-                    if (staticSource.name.includes('Arizona Internet Crimes Against Children')) {
-                        // Match AZICAC cases
-                        const azicacCases = cases.filter(c => {
-                            const source = c.source || c.raw_data?.source || '';
-                            return source.toUpperCase() === 'AZICAC';
-                        });
-                        staticSource.cases = azicacCases;
-                    } else if (staticSource.name.includes('National Center for Missing')) {
-                        // Match NCMEC cases
-                        const ncmecCases = cases.filter(c => {
-                            const source = c.source || c.raw_data?.source || '';
-                            return source.toUpperCase() === 'NCMEC';
-                        });
-                        staticSource.cases = ncmecCases;
-                        
-                        // Count cases by year for NCMEC
-                        if (staticSource.yearLinks) {
-                            staticSource.yearLinks.forEach(yearLink => {
-                                const year = yearLink.year;
-                                const yearCases = ncmecCases.filter(c => {
-                                    const caseId = c.id || '';
-                                    return caseId.includes(`_${year}_`);
-                                });
-                                yearLink.casesUsed = yearCases.length;
-                            });
-                        }
-                    } else if (staticSource.name.includes('Georgia Bureau of Investigation')) {
-                        const gbiCases = cases.filter(c => {
-                            const source = c.source || c.raw_data?.source || '';
-                            return source.toUpperCase() === 'GBI';
-                        });
-                        staticSource.cases = gbiCases;
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = gbiCases.length;
-                        }
-                    } else if (staticSource.name.includes('Idaho Office of Attorney General')) {
-                        // Match Idaho ICAC cases
-                        const idahoCases = cases.filter(c => {
-                            const source = c.source || c.raw_data?.source || '';
-                            return source.toUpperCase() === 'IDAHO ICAC';
-                        });
-                        staticSource.cases = idahoCases;
-                        
-                        // Single combined entry for 2021–2026 with total count
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = idahoCases.length;
-                        }
-                    } else if (staticSource.name.includes('Texas Office of the Attorney General')) {
-                        // Match Texas AG cases
-                        const texasCases = cases.filter(c => {
-                            const source = c.source || c.raw_data?.source || '';
-                            return source.toUpperCase() === 'TEXAS AG';
-                        });
-                        staticSource.cases = texasCases;
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = texasCases.length;
-                        }
-                    } else if (staticSource.name.includes('Michigan State Police')) {
-                        // Match Michigan ICAC cases
-                        const michiganCases = cases.filter(c => {
-                            const source = c.source || c.raw_data?.source || '';
-                            return source.toUpperCase() === 'MICHIGAN ICAC';
-                        });
-                        staticSource.cases = michiganCases;
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = michiganCases.length;
-                        }
-                    } else if (staticSource.name.includes('Silicon Valley ICAC')) {
-                        const svicacCases = cases.filter(c => {
-                            const source = c.source || c.raw_data?.source || '';
-                            return source.toUpperCase() === 'SVICAC';
-                        });
-                        staticSource.cases = svicacCases;
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = svicacCases.length;
-                        }
-                    } else if (staticSource.name.includes('Tennessee Bureau of Investigation')) {
-                        const tbiCases = cases.filter(c => {
-                            const source = c.source || c.raw_data?.source || '';
-                            return source.toUpperCase() === 'TBI ICAC';
-                        });
-                        staticSource.cases = tbiCases;
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = tbiCases.length;
-                        }
-                    } else if (staticSource.name.includes('South Carolina Attorney General')) {
-                        const scagCases = cases.filter(c => {
-                            const source = c.source || c.raw_data?.source || '';
-                            return source.toUpperCase() === 'SCAG ICAC';
-                        });
-                        staticSource.cases = scagCases;
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = scagCases.length;
-                        }
-                    } else if (staticSource.name.includes('New York State Police')) {
-                        const nyspCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'NEWYORK SP' || s === 'NEW YORK SP';
-                        });
-                        staticSource.cases = nyspCases;
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = nyspCases.length;
-                        }
-                    } else if (staticSource.name.includes('Illinois Attorney General')) {
-                        const illinoisCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'ILLINOIS AG';
-                        });
-                        staticSource.cases = illinoisCases;
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = illinoisCases.length;
-                        }
-                    } else if (staticSource.name.includes('New Jersey Office of the Attorney General')) {
-                        const njCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'NJ AG';
-                        });
-                        staticSource.cases = njCases;
-                        const njRange = getDateRange(njCases);
-                        if (njRange) {
-                            staticSource.dateRangeDisplay = njRange;
-                            if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                                staticSource.yearLinks[0].year = njRange;
-                            }
-                        }
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = njCases.length;
-                        }
-                    } else if (staticSource.name.includes('Vermont Office of the Attorney General')) {
-                        const vtCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'VT AG';
-                        });
-                        staticSource.cases = vtCases;
-                        const vtRange = getDateRange(vtCases);
-                        if (vtRange) {
-                            staticSource.dateRangeDisplay = vtRange;
-                            if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                                staticSource.yearLinks[0].year = vtRange;
-                            }
-                        }
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = vtCases.length;
-                        }
-                    } else if (staticSource.name.includes('Rhode Island Office of the Attorney General')) {
-                        const riCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'RI AG';
-                        });
-                        staticSource.cases = riCases;
-                        const riRange = getDateRange(riCases);
-                        if (riRange) {
-                            staticSource.dateRangeDisplay = riRange;
-                            if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                                staticSource.yearLinks[0].year = riRange;
-                            }
-                        }
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = riCases.length;
-                        }
-                    } else if (staticSource.name.includes('Ohio Attorney General')) {
-                        const ohioCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'OHIO AG';
-                        });
-                        staticSource.cases = ohioCases;
-                        const ohioRange = getDateRange(ohioCases);
-                        if (ohioRange) {
-                            staticSource.dateRangeDisplay = ohioRange;
-                            if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                                staticSource.yearLinks[0].year = ohioRange;
-                            }
-                        }
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = ohioCases.length;
-                        }
-                    } else if (staticSource.name.includes('Delaware Department of Justice')) {
-                        const deCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'DE AG';
-                        });
-                        staticSource.cases = deCases;
-                        const deRange = getDateRange(deCases);
-                        if (deRange) {
-                            staticSource.dateRangeDisplay = deRange;
-                            if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                                staticSource.yearLinks[0].year = deRange;
-                            }
-                        }
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = deCases.length;
-                        }
-                    } else if (staticSource.name.includes("Sedgwick County Sheriff")) {
-                        const sedgwickCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'SEDGWICK SO';
-                        });
-                        staticSource.cases = sedgwickCases;
-                        const sedgwickRange = getDateRange(sedgwickCases);
-                        if (sedgwickRange) {
-                            staticSource.dateRangeDisplay = sedgwickRange;
-                            if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                                staticSource.yearLinks[0].year = sedgwickRange;
-                            }
-                        }
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = sedgwickCases.length;
-                        }
-                    } else if (staticSource.name.includes('Anchorage Police Department')) {
-                        const anchorageCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'ANCHORAGE PD';
-                        });
-                        staticSource.cases = anchorageCases;
-                        const anchorageRange = getDateRange(anchorageCases);
-                        if (anchorageRange) {
-                            staticSource.dateRangeDisplay = anchorageRange;
-                            if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                                staticSource.yearLinks[0].year = anchorageRange;
-                            }
-                        }
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = anchorageCases.length;
-                        }
-                    } else if (staticSource.name.includes('Mississippi Attorney General')) {
-                        const msCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'MS AG';
-                        });
-                        staticSource.cases = msCases;
-                        const msRange = getDateRange(msCases);
-                        if (msRange) {
-                            staticSource.dateRangeDisplay = msRange;
-                            if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                                staticSource.yearLinks[0].year = msRange;
-                            }
-                        }
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = msCases.length;
-                        }
-                    } else if (staticSource.name.includes('Montana Department of Justice')) {
-                        const mtDojCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'MT DOJ';
-                        });
-                        staticSource.cases = mtDojCases;
-                        const mtDojRange = getDateRange(mtDojCases);
-                        if (mtDojRange) {
-                            staticSource.dateRangeDisplay = mtDojRange;
-                            if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                                staticSource.yearLinks[0].year = mtDojRange;
-                            }
-                        }
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = mtDojCases.length;
-                        }
-                    } else if (
-                        staticSource.name.includes('New Mexico Attorney General') ||
-                        staticSource.name.includes('New Mexico Department of Justice')
-                    ) {
-                        const nmCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'NM AG';
-                        });
-                        staticSource.cases = nmCases;
-                        const nmRange = getDateRange(nmCases);
-                        if (nmRange) {
-                            staticSource.dateRangeDisplay = nmRange;
-                            if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                                staticSource.yearLinks[0].year = nmRange;
-                            }
-                        }
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = nmCases.length;
-                        }
-                    } else if (staticSource.name.includes('North Carolina State Bureau of Investigation')) {
-                        const ncSbiCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'NC SBI';
-                        });
-                        staticSource.cases = ncSbiCases;
-                        const ncSbiRange = getDateRange(ncSbiCases);
-                        if (ncSbiRange) {
-                            staticSource.dateRangeDisplay = ncSbiRange;
-                            if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                                staticSource.yearLinks[0].year = ncSbiRange;
-                            }
-                        }
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = ncSbiCases.length;
-                        }
-                    } else if (staticSource.name.includes('Louisiana Office of the Attorney General')) {
-                        const laCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'LA AG';
-                        });
-                        staticSource.cases = laCases;
-                        const laRange = getDateRange(laCases);
-                        if (laRange) {
-                            staticSource.dateRangeDisplay = laRange;
-                            if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                                staticSource.yearLinks[0].year = laRange;
-                            }
-                        }
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = laCases.length;
-                        }
-                    } else if (staticSource.name.includes('Utah Attorney General')) {
-                        const utCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'UT AG';
-                        });
-                        staticSource.cases = utCases;
-                        const utRange = getDateRange(utCases);
-                        if (utRange) {
-                            staticSource.dateRangeDisplay = utRange;
-                            if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                                staticSource.yearLinks[0].year = utRange;
-                            }
-                        }
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = utCases.length;
-                        }
-                    } else if (staticSource.name.includes('Washington State Office of the Attorney General')) {
-                        const waCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'WA AG';
-                        });
-                        staticSource.cases = waCases;
-                        const waRange = getDateRange(waCases);
-                        if (waRange) {
-                            staticSource.dateRangeDisplay = waRange;
-                            if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                                staticSource.yearLinks[0].year = waRange;
-                            }
-                        }
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = waCases.length;
-                        }
-                    } else if (staticSource.name.includes('Oregon Department of Justice')) {
-                        const orDojCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'OREGON DOJ';
-                        });
-                        staticSource.cases = orDojCases;
-                        const orRange = getDateRange(orDojCases);
-                        if (orRange) {
-                            staticSource.dateRangeDisplay = orRange;
-                            if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                                staticSource.yearLinks[0].year = orRange;
-                            }
-                        }
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = orDojCases.length;
-                        }
-                    } else if (staticSource.name.includes('Pennsylvania Office of the Attorney General')) {
-                        const paCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'PA AG';
-                        });
-                        staticSource.cases = paCases;
-                        const paRange = getDateRange(paCases);
-                        if (paRange) {
-                            staticSource.dateRangeDisplay = paRange;
-                            if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                                staticSource.yearLinks[0].year = paRange;
-                            }
-                        }
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = paCases.length;
-                        }
-                    } else if (staticSource.name.includes("Washoe County Sheriff")) {
-                        const wcsoCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'WCSO';
-                        });
-                        staticSource.cases = wcsoCases;
-                        const wcsoRange = getDateRange(wcsoCases);
-                        if (wcsoRange) {
-                            staticSource.dateRangeDisplay = wcsoRange;
-                            if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                                staticSource.yearLinks[0].year = wcsoRange;
-                            }
-                        }
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = wcsoCases.length;
-                        }
-                    } else if (staticSource.name.includes("Fresno County Sheriff")) {
-                        const fresnoCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'FRESNO SO';
-                        });
-                        staticSource.cases = fresnoCases;
-                        const fresnoRange = getDateRange(fresnoCases);
-                        if (fresnoRange) {
-                            staticSource.dateRangeDisplay = fresnoRange;
-                            if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                                staticSource.yearLinks[0].year = fresnoRange;
-                            }
-                        }
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = fresnoCases.length;
-                        }
-                    } else if (staticSource.name.includes("Osceola County Sheriff")) {
-                        const osceolaCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'OSCEOLA SO';
-                        });
-                        staticSource.cases = osceolaCases;
-                        const osceolaRange = getDateRange(osceolaCases);
-                        if (osceolaRange) {
-                            staticSource.dateRangeDisplay = osceolaRange;
-                            if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                                staticSource.yearLinks[0].year = osceolaRange;
-                            }
-                        }
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = osceolaCases.length;
-                        }
-                    } else if (staticSource.name.includes('Las Vegas Police Department')) {
-                        const lvmpdCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'LVMPD';
-                        });
-                        staticSource.cases = lvmpdCases;
-                        const lvmpdRange = getDateRange(lvmpdCases);
-                        if (lvmpdRange) {
-                            staticSource.dateRangeDisplay = lvmpdRange;
-                            if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                                staticSource.yearLinks[0].year = lvmpdRange;
-                            }
-                        }
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = lvmpdCases.length;
-                        }
-                    } else if (staticSource.name.includes('San Jose Police Department')) {
-                        const sjpdCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'SJPD';
-                        });
-                        staticSource.cases = sjpdCases;
-                        const sjpdRange = getDateRange(sjpdCases);
-                        if (sjpdRange) {
-                            staticSource.dateRangeDisplay = sjpdRange;
-                            if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                                staticSource.yearLinks[0].year = sjpdRange;
-                            }
-                        }
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = sjpdCases.length;
-                        }
-                    } else if (staticSource.name.includes('Los Angeles Police Department')) {
-                        const lapdCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'LAPD';
-                        });
-                        staticSource.cases = lapdCases;
-                        const lapdRange = getDateRange(lapdCases);
-                        if (lapdRange) {
-                            staticSource.dateRangeDisplay = lapdRange;
-                            if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                                staticSource.yearLinks[0].year = lapdRange;
-                            }
-                        }
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = lapdCases.length;
-                        }
-                    } else if (staticSource.name.includes('Colorado Springs Police Department')) {
-                        const cspdCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'CSPD';
-                        });
-                        staticSource.cases = cspdCases;
-                        const cspdRange = getDateRange(cspdCases);
-                        if (cspdRange) {
-                            staticSource.dateRangeDisplay = cspdRange;
-                            if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                                staticSource.yearLinks[0].year = cspdRange;
-                            }
-                        }
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = cspdCases.length;
-                        }
-                    } else if (staticSource.name.includes('Seattle Police Department')) {
-                        const spdCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'SPD';
-                        });
-                        staticSource.cases = spdCases;
-                        const spdRange = getDateRange(spdCases);
-                        if (spdRange) {
-                            staticSource.dateRangeDisplay = spdRange;
-                            if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                                staticSource.yearLinks[0].year = spdRange;
-                            }
-                        }
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = spdCases.length;
-                        }
-                    } else if (staticSource.name.includes('San Diego Police Department')) {
-                        const sdpdCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'SDPD';
-                        });
-                        staticSource.cases = sdpdCases;
-                        const sdpdRange = getDateRange(sdpdCases);
-                        if (sdpdRange) {
-                            staticSource.dateRangeDisplay = sdpdRange;
-                            if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                                staticSource.yearLinks[0].year = sdpdRange;
-                            }
-                        }
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = sdpdCases.length;
-                        }
-                    } else if (staticSource.name.includes('Hawaii Department of the Attorney General')) {
-                        const hiCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'HI AG';
-                        });
-                        staticSource.cases = hiCases;
-                        const hiRange = getDateRange(hiCases);
-                        if (hiRange) {
-                            staticSource.dateRangeDisplay = hiRange;
-                            if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                                staticSource.yearLinks[0].year = hiRange;
-                            }
-                        }
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = hiCases.length;
-                        }
-                    } else if (staticSource.name.includes("Cook County State's Attorney")) {
-                        const ccsaoCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'CCSAO';
-                        });
-                        staticSource.cases = ccsaoCases;
-                        const ccsaoRange = getDateRange(ccsaoCases);
-                        if (ccsaoRange) {
-                            staticSource.dateRangeDisplay = ccsaoRange;
-                            if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                                staticSource.yearLinks[0].year = ccsaoRange;
-                            }
-                        }
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = ccsaoCases.length;
-                        }
-                    } else if (staticSource.name.includes('South Florida ICAC')) {
-                        const sfCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'SOUTH FLORIDA ICAC';
-                        });
-                        staticSource.cases = sfCases;
-                        const sfRange = getDateRange(sfCases);
-                        if (sfRange) {
-                            staticSource.dateRangeDisplay = sfRange;
-                            if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                                staticSource.yearLinks[0].year = sfRange;
-                            }
-                        }
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = sfCases.length;
-                        }
-                    } else if (staticSource.name.includes('Florida Office of the Attorney General')) {
-                        const flCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'FL AG';
-                        });
-                        staticSource.cases = flCases;
-                        const flRange = getDateRange(flCases);
-                        if (flRange) {
-                            staticSource.dateRangeDisplay = flRange;
-                            if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                                staticSource.yearLinks[0].year = flRange;
-                            }
-                        }
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = flCases.length;
-                        }
-                    } else if (staticSource.name.includes('Wyoming Division of Criminal Investigation')) {
-                        const wyCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'WY DCI';
-                        });
-                        staticSource.cases = wyCases;
-                        const wyRange = getDateRange(wyCases);
-                        if (wyRange) {
-                            staticSource.dateRangeDisplay = wyRange;
-                            if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                                staticSource.yearLinks[0].year = wyRange;
-                            }
-                        }
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = wyCases.length;
-                        }
-                    } else if (staticSource.name.includes('Iowa Division of Criminal Investigation')) {
-                        const iaDciCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'IA DCI';
-                        });
-                        staticSource.cases = iaDciCases;
-                        const iaDciRange = getDateRange(iaDciCases);
-                        if (iaDciRange) {
-                            staticSource.dateRangeDisplay = iaDciRange;
-                            if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                                staticSource.yearLinks[0].year = iaDciRange;
-                            }
-                        }
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = iaDciCases.length;
-                        }
-                    } else if (staticSource.name.includes('South Dakota Office of the Attorney General')) {
-                        const sdCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'SD AG';
-                        });
-                        staticSource.cases = sdCases;
-                        const sdRange = getDateRange(sdCases);
-                        if (sdRange) {
-                            staticSource.dateRangeDisplay = sdRange;
-                            if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                                staticSource.yearLinks[0].year = sdRange;
-                            }
-                        }
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = sdCases.length;
-                        }
-                    } else if (staticSource.name.includes('Nebraska State Patrol')) {
-                        const neCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'NE SP';
-                        });
-                        staticSource.cases = neCases;
-                        const neRange = getDateRange(neCases);
-                        if (neRange) {
-                            staticSource.dateRangeDisplay = neRange;
-                            if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                                staticSource.yearLinks[0].year = neRange;
-                            }
-                        }
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = neCases.length;
-                        }
-                    } else if (staticSource.name.includes('Kentucky State Police')) {
-                        const kyCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'KY SP';
-                        });
-                        staticSource.cases = kyCases;
-                        const kyRange = getDateRange(kyCases);
-                        if (kyRange) {
-                            staticSource.dateRangeDisplay = kyRange;
-                            if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                                staticSource.yearLinks[0].year = kyRange;
-                            }
-                        }
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = kyCases.length;
-                        }
-                    } else if (staticSource.name.includes('Arkansas Department of Public Safety')) {
-                        const arCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'ARKANSAS DPS';
-                        });
-                        staticSource.cases = arCases;
-                        const arRange = getDateRange(arCases);
-                        if (arRange) {
-                            staticSource.dateRangeDisplay = arRange;
-                            if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                                staticSource.yearLinks[0].year = arRange;
-                            }
-                        }
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = arCases.length;
-                        }
-                    } else if (staticSource.name.includes('Army Criminal Investigation Division')) {
-                        const armyCidCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'ARMY CID';
-                        });
-                        staticSource.cases = armyCidCases;
-                        const armyCidRange = getDateRange(armyCidCases);
-                        if (armyCidRange) {
-                            staticSource.dateRangeDisplay = armyCidRange;
-                            if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                                staticSource.yearLinks[0].year = armyCidRange;
-                            }
-                        }
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = armyCidCases.length;
-                        }
-                    } else if (staticSource.name.includes('Project Safe Childhood')) {
-                        const pscCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'DOJ SAFE CHILDHOOD' || s === 'DOJ AI CSAM';
-                        });
-                        staticSource.cases = pscCases;
-                        const pscRange = getDateRange(pscCases);
-                        if (pscRange) {
-                            staticSource.dateRangeDisplay = pscRange;
-                            if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                                staticSource.yearLinks[0].year = pscRange;
-                            }
-                        }
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = pscCases.length;
-                        }
-                    } else if (staticSource.name.includes('U.S. DOJ CEOS')) {
-                        const ceosCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'DOJ CEOS' || s === 'DOJ ARCHIVES';
-                        });
-                        staticSource.cases = ceosCases;
-                        const ceosRange = getDateRange(ceosCases);
-                        if (ceosRange) staticSource.dateRangeDisplay = ceosRange;
-                        const srcCode = c => (c.source || c.raw_data?.source || '').toUpperCase().replace(/_/g, ' ').trim();
-                        const ceosNews = ceosCases.filter(c => srcCode(c) === 'DOJ CEOS');
-                        const ceosArchive = ceosCases.filter(c => srcCode(c) === 'DOJ ARCHIVES');
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 1) {
-                            const newsRange = getDateRange(ceosNews);
-                            const archRange = getDateRange(ceosArchive);
-                            staticSource.yearLinks[0].year = newsRange ? `News ${newsRange}` : 'CEOS news';
-                            staticSource.yearLinks[0].casesUsed = ceosNews.length;
-                            staticSource.yearLinks[1].year = archRange ? `PDF archive ${archRange}` : '2002–2008 archive (PDF)';
-                            staticSource.yearLinks[1].casesUsed = ceosArchive.length;
-                        }
-                    } else if (staticSource.name.includes('U.S. Secret Service')) {
-                        const usssCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'USSS';
-                        });
-                        staticSource.cases = usssCases;
-                        const usssRange = getDateRange(usssCases);
-                        if (usssRange) {
-                            staticSource.dateRangeDisplay = usssRange;
-                            if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                                staticSource.yearLinks[0].year = usssRange;
-                            }
-                        }
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = usssCases.length;
-                        }
-                    } else if (staticSource.name.includes('Air Force Office of Special Investigations')) {
-                        const afosiCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'AF OSI';
-                        });
-                        staticSource.cases = afosiCases;
-                        const r = getDateRange(afosiCases);
-                        if (r && staticSource.yearLinks?.length) staticSource.yearLinks[0].year = r;
-                        if (staticSource.yearLinks?.length) staticSource.yearLinks[0].casesUsed = afosiCases.length;
-                    } else if (staticSource.name.includes('Naval Criminal Investigative Service')) {
-                        const ncisCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'NCIS';
-                        });
-                        staticSource.cases = ncisCases;
-                        const r = getDateRange(ncisCases);
-                        if (r && staticSource.yearLinks?.length) staticSource.yearLinks[0].year = r;
-                        if (staticSource.yearLinks?.length) staticSource.yearLinks[0].casesUsed = ncisCases.length;
-                    } else if (staticSource.name.includes('Customs and Border Protection')) {
-                        const cbpCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'CBP';
-                        });
-                        staticSource.cases = cbpCases;
-                        const r = getDateRange(cbpCases);
-                        if (r && staticSource.yearLinks?.length) staticSource.yearLinks[0].year = r;
-                        if (staticSource.yearLinks?.length) staticSource.yearLinks[0].casesUsed = cbpCases.length;
-                    } else if (staticSource.name.includes('Marshals Service') && staticSource.name.includes('U.S.')) {
-                        const usmsCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'US MARSHALS';
-                        });
-                        staticSource.cases = usmsCases;
-                        const r = getDateRange(usmsCases);
-                        if (r && staticSource.yearLinks?.length) staticSource.yearLinks[0].year = r;
-                        if (staticSource.yearLinks?.length) staticSource.yearLinks[0].casesUsed = usmsCases.length;
-                    } else if (staticSource.name.includes('Immigration and Customs Enforcement')) {
-                        const iceCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'ICE';
-                        });
-                        staticSource.cases = iceCases;
-                        const iceRange = getDateRange(iceCases);
-                        if (iceRange) {
-                            staticSource.dateRangeDisplay = iceRange;
-                            if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                                staticSource.yearLinks[0].year = iceRange;
-                            }
-                        }
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = iceCases.length;
-                        }
-                    } else if (staticSource.name.includes('Alabama Law Enforcement Agency')) {
-                        const aleaCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'ALEA';
-                        });
-                        staticSource.cases = aleaCases;
-                        const aleaRange = getDateRange(aleaCases);
-                        if (aleaRange) {
-                            staticSource.dateRangeDisplay = aleaRange;
-                            if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                                staticSource.yearLinks[0].year = aleaRange;
-                            }
-                        }
-                        if (staticSource.yearLinks && staticSource.yearLinks.length > 0) {
-                            staticSource.yearLinks[0].casesUsed = aleaCases.length;
-                        }
-                    } else if (staticSource.name.includes('Australian Federal Police')) {
-                        const afpCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'AFP';
-                        });
-                        staticSource.cases = afpCases;
-                        const r = getDateRange(afpCases);
-                        if (r && staticSource.yearLinks?.length) staticSource.yearLinks[0].year = r;
-                        if (staticSource.yearLinks?.length) staticSource.yearLinks[0].casesUsed = afpCases.length;
-                    } else if (staticSource.name.includes('Queensland Police')) {
-                        const qpsCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'QPS';
-                        });
-                        staticSource.cases = qpsCases;
-                        const r = getDateRange(qpsCases);
-                        if (r && staticSource.yearLinks?.length) staticSource.yearLinks[0].year = r;
-                        if (staticSource.yearLinks?.length) staticSource.yearLinks[0].casesUsed = qpsCases.length;
-                    } else if (staticSource.name.includes('Brazil Federal Police')) {
-                        const pfCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'BRAZIL PF';
-                        });
-                        staticSource.cases = pfCases;
-                        const r = getDateRange(pfCases);
-                        if (r && staticSource.yearLinks?.length) staticSource.yearLinks[0].year = r;
-                        if (staticSource.yearLinks?.length) staticSource.yearLinks[0].casesUsed = pfCases.length;
-                    } else if (staticSource.name.includes('Europol')) {
-                        const euCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'EUROPOL';
-                        });
-                        staticSource.cases = euCases;
-                        const r = getDateRange(euCases);
-                        if (r && staticSource.yearLinks?.length) staticSource.yearLinks[0].year = r;
-                        if (staticSource.yearLinks?.length) staticSource.yearLinks[0].casesUsed = euCases.length;
-                    } else if (staticSource.name.includes('National Crime Agency')) {
-                        const ncaCases = cases.filter(c => {
-                            const s = (c.source || c.raw_data?.source || '')
-                                .toUpperCase()
-                                .replace(/_/g, ' ')
-                                .trim();
-                            return s === 'NCA';
-                        });
-                        staticSource.cases = ncaCases;
-                        const r = getDateRange(ncaCases);
-                        if (r && staticSource.yearLinks?.length) staticSource.yearLinks[0].year = r;
-                        if (staticSource.yearLinks?.length) staticSource.yearLinks[0].casesUsed = ncaCases.length;
-                    } else {
-                        const paired = [
-                            ['Alberta Law Enforcement Response Teams', 'ALERT ICE'],
-                            ['Maryland State Police', 'MDSP'],
-                            ['Police Scotland', 'SCOTLAND POLICE'],
-                            ['Northern Virginia–DC Internet Crimes Against Children', 'NOVA ICAC'],
-                            ['Minnesota Bureau of Criminal Apprehension', 'MN BCA'],
-                            ['Philippines National Bureau of Investigation', 'NBI'],
-                            ['Garda Síochána', 'GARDA'],
-                            ['Wisconsin Department of Justice', 'WI DOJ'],
-                            ['Department of Internal Affairs', 'NZ DIA']
-                        ].find(([part]) => staticSource.name.includes(part));
-                        if (paired) {
-                            const code = paired[1];
-                            const rows = cases.filter(c => {
-                                const s = (c.source || c.raw_data?.source || '')
-                                    .toUpperCase()
-                                    .replace(/_/g, ' ')
-                                    .trim();
-                                return s === code;
-                            });
-                            staticSource.cases = rows;
-                            const r = getDateRange(rows);
-                            if (r && staticSource.yearLinks?.length) staticSource.yearLinks[0].year = r;
-                            if (staticSource.yearLinks?.length) staticSource.yearLinks[0].casesUsed = rows.length;
-                        }
-                    }
-                });
-                
-                // Display sources with case counts
+            if (cachedStats) {
+                applySourceStats(cachedStats);
                 displaySources(staticSources);
+            } else {
+                displaySources(staticSources, { pending: true });
+            }
+
+            // Refresh from the aggregate endpoint; repaint only when the numbers changed.
+            try {
+                const r = await fetch('/api/sources-stats');
+                if (!r.ok) throw new Error('sources-stats ' + r.status);
+                const fresh = await r.json();
+                const freshJson = JSON.stringify({ c: fresh.case_count, s: fresh.sources });
+                const cachedJson = cachedStats ? JSON.stringify({ c: cachedStats.case_count, s: cachedStats.sources }) : null;
+                try { localStorage.setItem(SOURCES_STATS_KEY, JSON.stringify(fresh)); } catch (e) { /* ignore */ }
+                if (freshJson !== cachedJson) {
+                    applySourceStats(fresh);
+                    displaySources(staticSources);
+                }
             } catch (error) {
                 console.error('Error loading sources:', error);
-                displaySources(staticSources, { error: String(error && error.message || error) });
+                if (!cachedStats) displaySources(staticSources, { error: String(error && error.message || error) });
             }
         }
 
@@ -2073,6 +1139,7 @@
             .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
         const srcFmt = (n) => (typeof n === 'number' && Number.isFinite(n)) ? n.toLocaleString('en-US') : String(n);
         const srcState = { sources: [], options: {}, typesReady: false };
+        const yearSpan = (min, max) => min == null ? null : (min === max ? `${min}` : `${min}-${max}`);
 
         function srcHost(url) {
             try { return new URL(url).hostname.replace(/^www\./, ''); } catch (e) { return url; }
@@ -2117,11 +1184,13 @@
                 set('stat-span', '…', true);
                 return;
             }
-            const allCases = sources.flatMap(s => s.cases || []);
-            const withCases = sources.filter(s => (s.cases || []).length > 0).length;
-            set('stat-cases', error ? '—' : srcFmt(allCases.length), false);
+            const total = sources.reduce((n, s) => n + (s.caseCount || 0), 0);
+            const withCases = sources.filter(s => (s.caseCount || 0) > 0).length;
+            set('stat-cases', error ? '—' : srcFmt(total), false);
             set('stat-agencies', error ? '—' : `${srcFmt(withCases)} / ${srcFmt(sources.length)}`, false);
-            const span = allCases.length ? getDateRange(allCases) : null;
+            const mins = sources.map(s => s.yearMin).filter(y => y != null);
+            const maxs = sources.map(s => s.yearMax).filter(y => y != null);
+            const span = mins.length ? yearSpan(Math.min(...mins), Math.max(...maxs)) : null;
             set('stat-span', span ? span.replace('-', '–') : '—', false);
         }
 
@@ -2179,8 +1248,8 @@
             let ordered = sources.map((s, i) => ({ s, i }));
             if (!pending) {
                 ordered.sort((a, b) => {
-                    const ca = a.s.cases ? a.s.cases.length : 0;
-                    const cb = b.s.cases ? b.s.cases.length : 0;
+                    const ca = a.s.caseCount || 0;
+                    const cb = b.s.caseCount || 0;
                     return (cb - ca) || (a.i - b.i);
                 });
             }
@@ -2198,10 +1267,8 @@
             }
 
             container.innerHTML = visible.map(source => {
-                const caseCount = source.cases ? source.cases.length : 0;
-                const dateRange =
-                    source.dateRangeDisplay ||
-                    (source.cases ? getDateRange(source.cases) : null);
+                const caseCount = source.caseCount || 0;
+                const dateRange = source.dateRangeDisplay || null;
 
                 let countHtml;
                 if (pending) {
@@ -2252,30 +1319,6 @@
             }).join('');
         }
 
-        function getDateRange(cases) {
-            const dates = cases
-                .map(c => c.date_range?.start || c.date_start || c.raw_data?.month_year)
-                .filter(d => d)
-                .map(d => {
-                    if (typeof d === 'string' && d.match(/^\d{4}-\d{2}-\d{2}$/)) {
-                        return new Date(d);
-                    } else if (typeof d === 'string') {
-                        const yearMatch = d.match(/\b(19|20)\d{2}\b/);
-                        if (yearMatch) {
-                            return new Date(parseInt(yearMatch[0]), 0, 1);
-                        }
-                    }
-                    return null;
-                })
-                .filter(d => d);
-            
-            if (dates.length === 0) return null;
-            
-            const minYear = Math.min(...dates.map(d => d.getFullYear()));
-            const maxYear = Math.max(...dates.map(d => d.getFullYear()));
-            
-            return minYear === maxYear ? `${minYear}` : `${minYear}-${maxYear}`;
-        }
 
         loadSources();
     </script>

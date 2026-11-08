@@ -1,8 +1,8 @@
 # Search and corpus discovery
 
-This document maps how CaseLinker lets researchers, law enforcement, and agents **find, narrow, and query** the corpus. **Search** (the `/search` tab) is one surface: a **facet decision tree**. It is not SPARQL, not the Query lab, and not the LLM chat. Those are sibling discovery tools on different backends.
+This document maps how CaseLinker lets researchers, law enforcement, and agents **find, narrow, and query** the corpus. **Search** (the `/search` tab) is one surface: a **facet decision tree**. It is not SPARQL and not Analysis. Those are sibling discovery tools on different backends.
 
-Live: [Search](https://caselinker.up.railway.app/search) · [Query](https://caselinker.up.railway.app/query) · [LLM](https://caselinker.up.railway.app/llm) · [Patterns / graphs](https://caselinker.up.railway.app/patterns) · [SPARQL](https://caselinker.up.railway.app/sparql) (API). Local: same paths on `http://localhost:8000`.
+Live: [Search](https://caselinker.up.railway.app/search) · [Analysis](https://caselinker.up.railway.app/analysis) · [Graph](https://caselinker.up.railway.app/patterns) · [Explore](https://caselinker.up.railway.app/explore) · [SPARQL](https://caselinker.up.railway.app/sparql) (API). Local: same paths on `http://localhost:8000`.
 
 ---
 
@@ -18,8 +18,8 @@ Live: [Search](https://caselinker.up.railway.app/search) · [Query](https://case
 ### Non-goals (current design)
 
 - Search is **not** free-text full-text search over narratives (no Lucene/Elastic layer today).
-- Search is **not** SPARQL. Graph pattern queries live on Oxigraph via `/sparql` and the Patterns UI.
-- Search is **not** natural-language SQL. That is the LLM tab (`/llm` → `/api/llm/chat`).
+- Search is **not** SPARQL. Graph pattern queries live on Oxigraph via `/sparql`, Analysis and the Graph viewer.
+- Search is **not** natural-language SQL. That is `POST /api/llm/chat` and the MCP `llm_chat` tool; the LLM tab was retired.
 - Search is **not** the collector. Finding new press releases, or a free RECAP filing, is the `collector/` CLI or **local** MCP WRITE tools (see `collector/README.md`). Hosted Railway MCP is READ-only for collection. Paid PACER is CLI-only (`--charge-pacer --max-spend`).
 
 ---
@@ -29,11 +29,12 @@ Live: [Search](https://caselinker.up.railway.app/search) · [Query](https://case
 | Surface | What it answers | Backend | UI / entry |
 |---------|-----------------|---------|------------|
 | **Search** | “Partition the corpus by facets; show cohort sizes and (gated) members” | SQLite / Postgres case store + `facet_tree.py` | `/search` |
-| **Query** | Ad-hoc analysis recipes calling public REST APIs from the browser | Same REST APIs as the app | `/query` |
-| **Tag / analysis** | Intersection of extracted tags; automated grouping | `/api/return-tagged-cases`, analysis pipeline | `/analysis` |
-| **LLM** | Natural-language questions over **stats / SQL-shaped** answers | `/api/llm/chat` (function-calling over DB stats) | `/llm` |
-| **Patterns** | Browse / compare CAC case graphs, Q1–Q3 evidence | RDF under `ontology/graph_output/` + APIs | `/patterns` |
-| **SPARQL** | Formal graph queries (platforms, steps, agencies, PACER kgs, …) | Oxigraph `GET\|POST /sparql` | API + Patterns; guide `ontology/docs/SPARQL.md` |
+| **Analysis** | Question → SPARQL over graph store → answers, with the passages behind them | Oxigraph `/sparql`, templates or Groq-written SPARQL | `/analysis` |
+| **Tag / automated analysis** | Intersection of extracted tags; automated grouping | `/api/return-tagged-cases`, `/api/automated-analysis` | API + MCP |
+| **LLM** | Natural-language questions over **stats / SQL-shaped** answers | `/api/llm/chat` (function-calling over DB stats) | API + MCP `llm_chat` |
+| **Graph** | Browse / compare CAC case graphs, Q1–Q3 evidence | RDF under `ontology/graph_output/` + APIs | `/patterns` |
+| **Explore** | Walk w3id IRIs: case, provenance, passages | `/resource/*` content negotiation | `/explore` |
+| **SPARQL** | Formal graph queries (platforms, steps, agencies, PACER kgs, …) | Oxigraph `GET\|POST /sparql` | API + Analysis + Graph; guide `ontology/docs/SPARQL.md` |
 | **MCP tools** | Agents do the above without the browser | REST wrappers + MCP-only graph helpers + collector | `caselinker_mcp/` |
 
 **Facet vs SPARQL (short):** facets slice the **tabular** case store (extracted features). SPARQL queries the **graph** store (CASE/UCO/CAC + PACER named graphs). Same corpus story, different representation. Use Search for cohort exploration; use SPARQL when the question is relational over ontology edges.
@@ -86,10 +87,11 @@ Catalog: `caselinker_mcp/tool_registry.md`.
 
 ## 4. Related shipped surfaces (not Search, but discovery)
 
-- **Query lab** (`/query`): browser-only recipes over public APIs without requiring an MCP host.
+- **Analysis** (`/analysis`): question → SPARQL → answers with passages; **Open in Graph** draws the matching cases in the Graph viewer.
+- **Explore** (`/explore`): walk w3id IRIs with Turtle, JSON-LD and provenance for each node.
 - **Audit** (`/audit`): case-level feature highlighting for **data accuracy** review (pairs with Search cohorts).
-- **Stats / Clusters / Tech landscape**: aggregate views; not interactive facet drill-down.
-- **Lifecycle** (`/lifecycle`): PACER state machines; see `state_machines/README.md`.
+- **Stats / Clusters / Technology revolver**: aggregate APIs (`/api/stats-detailed`, `/api/cluster-groups`, `/api/technology-revolver`); no page, not facet drill-down.
+- **State machines** (`/lifecycle`): PACER state machines; see `state_machines/README.md`.
 - **Public SPARQL**: rate-limited, query-only; see `ontology/docs/SPARQL.md`. LLM-assisted SPARQL and CASE/UCO SDK `execute_sparql_query` are optional agent paths into the same store.
 
 ---
@@ -102,7 +104,7 @@ Directions worth exploring (not committed product plans):
    Visible cohorts copy a SPARQL query (`POST /api/cohort-sparql`: inline `VALUES` of named graphs `…/resource/case/{id}`, one row per case with source, platforms, agencies, phase, steps, charges, and sentences) or open `/patterns?cohort=search` with the same ids (auto-merge when the set has at most 8 cases; otherwise Find cases + Load on graph). Builder: `ontology/cohort_sparql.py`. Small cohorts stay behind the existing id gate, so this path does not reveal them. The facet path itself is not replayed in SPARQL; those tags live on the case rows.
 
 2. **Guided NL → facet path (not full-text)**  
-   Map short analyst phrases (“Discord + production + 2024”) onto prune constraints or a path, keeping mosaic defaults. Distinct from `/llm` SQL chat and from Elastic-style keyword search.
+   Map short analyst phrases (“Discord + production + 2024”) onto prune constraints or a path, keeping mosaic defaults. Distinct from `/api/llm/chat` SQL chat and from Elastic-style keyword search.
 
 3. **Richer graph search UX**  
    Patterns already browse CAC classes / platforms / agencies. Deeper “search the graph” (path queries, shared-neighbor cohorts) without requiring hand-written SPARQL.
@@ -114,7 +116,7 @@ Directions worth exploring (not committed product plans):
    Compare MCP facet tools (`get_facet_tree`, `tree_traversal`, `get_cohort_members`) against the UI and SPARQL for the same cohort: sizes and membership should agree.
 
 6. **Privacy policy tightening**  
-   Formalize when cohort IDs are public vs key-gated; align Query lab and MCP exports with the same rules as `/search`.
+   Formalize when cohort IDs are public vs key-gated; align Analysis and MCP exports with the same rules as `/search`.
 
 7. **Facet schema evolution**  
    Adding a dimension is an append to `DEFAULT_FACET_ORDER` (see docstring in `facet_tree.py`). Research which new extractors (agencies, modalities, eras) earn a permanent tree level without exploding width.
@@ -133,4 +135,4 @@ Directions worth exploring (not committed product plans):
 | Collect new press / court docs | `collector/README.md` + MCP collector tools (not Search) |
 | Accuracy / CAC gates on PDFs | `scripts/verify/verify_cac.py`, `check_expand_novelty.py` |
 
-Product overview also lives in the root **README** (Using Search, Ontology & Graphs, MCP). This file is the discovery map and research backlog for Search-adjacent work.
+Product overview also lives in the root **README** (Using Search, Using Analysis, Ontology & Graphs, MCP). This file is the discovery map and research backlog for Search-adjacent work.
