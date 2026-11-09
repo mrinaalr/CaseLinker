@@ -1,0 +1,686 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix gufo: <http://purl.org/nemo/gufo#> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-observable: <https://ontology.unifiedcyberontology.org/uco/observable/> .
+@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology-infrastructure: <https://cacontology.projectvic.org/infrastructure#> .
+
+# Ontology Declaration
+<https://cacontology.projectvic.org/infrastructure> rdf:type owl:Ontology ;
+    rdfs:label "CAC Platform Infrastructure Ontology with gUFO Integration"@en ;
+    rdfs:comment "An ontology for representing technical infrastructure supporting child exploitation platforms, including server architecture, content delivery networks, payment processing, and hosting infrastructure. Enhanced with comprehensive gUFO (gentle Unified Foundational Ontology) integration for enhanced semantic precision, temporal modeling, and quality assessment. Based on analysis of large-scale operations like the Kidflix/Europol takedown involving nearly 2 million users."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/infrastructure/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:issued "2025-05-23"^^xsd:date ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/identity/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/observable/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/action/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/location/1.5.0> ,
+                <https://cacontology.projectvic.org/3.1.0> ,
+                <https://cacontology.projectvic.org/core/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> .
+
+# =============================================================================
+# PLATFORM INFRASTRUCTURE CLASSES (extending UCO Observable and gUFO Object)
+# =============================================================================
+
+cacontology-infrastructure:PlatformInfrastructure rdf:type owl:Class ;
+    rdfs:label "Platform Infrastructure"@en ;
+    rdfs:comment "Technical infrastructure supporting child exploitation platforms, including servers, networks, and supporting systems (gUFO Object)."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject ,
+                    cac-core:DigitalSystemEntity .
+
+cacontology-infrastructure:ServerInfrastructure rdf:type owl:Class ;
+    rdfs:label "Server Infrastructure"@en ;
+    rdfs:comment "Server and hosting infrastructure supporting platform operations, including web servers, database servers, and application servers (gUFO FunctionalComplex)."@en ;
+    rdfs:subClassOf cacontology-infrastructure:PlatformInfrastructure ,
+                    gufo:FunctionalComplex .
+
+cacontology-infrastructure:ContentDeliveryNetwork rdf:type owl:Class ;
+    rdfs:label "Content Delivery Network"@en ;
+    rdfs:comment "CDN infrastructure used for distributing illegal content globally with high availability and performance (gUFO FunctionalComplex)."@en ;
+    rdfs:subClassOf cacontology-infrastructure:PlatformInfrastructure ,
+                    gufo:FunctionalComplex .
+
+cacontology-infrastructure:DatabaseInfrastructure rdf:type owl:Class ;
+    rdfs:label "Database Infrastructure"@en ;
+    rdfs:comment "Database systems storing user accounts, content metadata, and platform operational data (gUFO FunctionalComplex)."@en ;
+    rdfs:subClassOf cacontology-infrastructure:PlatformInfrastructure ,
+                    gufo:FunctionalComplex .
+
+cacontology-infrastructure:NetworkInfrastructure rdf:type owl:Class ;
+    rdfs:label "Network Infrastructure"@en ;
+    rdfs:comment "Network topology and routing infrastructure supporting platform connectivity and distribution (gUFO FunctionalComplex)."@en ;
+    rdfs:subClassOf cacontology-infrastructure:PlatformInfrastructure ,
+                    gufo:FunctionalComplex .
+
+# =============================================================================
+# PAYMENT AND MONETIZATION INFRASTRUCTURE (extending UCO Observable and gUFO Object)
+# =============================================================================
+
+cacontology-infrastructure:PaymentProcessing rdf:type owl:Class ;
+    rdfs:label "Payment Processing"@en ;
+    rdfs:comment "Financial processing systems enabling platform monetization through subscription fees, content purchases, or cryptocurrency transactions (gUFO FunctionalComplex)."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject ,
+                    gufo:FunctionalComplex .
+
+cacontology-infrastructure:CryptocurrencyInfrastructure rdf:type owl:Class ;
+    rdfs:label "Cryptocurrency Infrastructure"@en ;
+    rdfs:comment "Cryptocurrency wallets, exchanges, and payment processing systems used for anonymous financial transactions (gUFO FunctionalComplex)."@en ;
+    rdfs:subClassOf cacontology-infrastructure:PaymentProcessing .
+
+cacontology-infrastructure:SubscriptionManagement rdf:type owl:Class ;
+    rdfs:label "Subscription Management"@en ;
+    rdfs:comment "Systems managing user subscriptions, access levels, and recurring payment processing (gUFO FunctionalComplex)."@en ;
+    rdfs:subClassOf cacontology-infrastructure:PaymentProcessing .
+
+cacontology-infrastructure:FinancialObfuscation rdf:type owl:Class ;
+    rdfs:label "Financial Obfuscation"@en ;
+    rdfs:comment "Methods used to obscure financial transactions and payment flows to avoid detection (gUFO Object)."@en ;
+    rdfs:subClassOf cacontology-infrastructure:PaymentProcessing .
+
+# =============================================================================
+# HOSTING AND DOMAIN INFRASTRUCTURE (extending UCO Observable and gUFO Object)
+# =============================================================================
+
+cacontology-infrastructure:HostingProvider rdf:type owl:Class ;
+    rdfs:label "Hosting Provider"@en ;
+    rdfs:comment "Organizations providing server hosting, cloud services, or infrastructure-as-a-service for platforms (gUFO Object)."@en ;
+    rdfs:subClassOf uco-identity:Organization ,
+                    cac-core:EnduringEntity .
+
+cacontology-infrastructure:DomainInfrastructure rdf:type owl:Class ;
+    rdfs:label "Domain Infrastructure"@en ;
+    rdfs:comment "Domain name system infrastructure including domain registration, DNS services, and subdomain management (gUFO FunctionalComplex)."@en ;
+    rdfs:subClassOf cacontology-infrastructure:PlatformInfrastructure ,
+                    gufo:FunctionalComplex .
+
+cacontology-infrastructure:ProxyInfrastructure rdf:type owl:Class ;
+    rdfs:label "Proxy Infrastructure"@en ;
+    rdfs:comment "Proxy servers and reverse proxy systems used to hide platform origins and provide redundancy (gUFO FunctionalComplex)."@en ;
+    rdfs:subClassOf cacontology-infrastructure:PlatformInfrastructure ,
+                    gufo:FunctionalComplex .
+
+cacontology-infrastructure:LoadBalancer rdf:type owl:Class ;
+    rdfs:label "Load Balancer"@en ;
+    rdfs:comment "Load balancing infrastructure distributing traffic across multiple servers for high availability (gUFO FunctionalComplex)."@en ;
+    rdfs:subClassOf cacontology-infrastructure:PlatformInfrastructure ,
+                    gufo:FunctionalComplex .
+
+# =============================================================================
+# SECURITY AND OBFUSCATION INFRASTRUCTURE (extending UCO Observable and gUFO Object)
+# =============================================================================
+
+cacontology-infrastructure:SecurityInfrastructure rdf:type owl:Class ;
+    rdfs:label "Security Infrastructure"@en ;
+    rdfs:comment "Security systems protecting platform infrastructure from detection and takedown efforts (gUFO FunctionalComplex)."@en ;
+    rdfs:subClassOf cacontology-infrastructure:PlatformInfrastructure ,
+                    gufo:FunctionalComplex .
+
+cacontology-infrastructure:EncryptionInfrastructure rdf:type owl:Class ;
+    rdfs:label "Encryption Infrastructure"@en ;
+    rdfs:comment "Encryption systems protecting data transmission, storage, and user communications (gUFO FunctionalComplex)."@en ;
+    rdfs:subClassOf cacontology-infrastructure:SecurityInfrastructure .
+
+cacontology-infrastructure:AnonymityInfrastructure rdf:type owl:Class ;
+    rdfs:label "Anonymity Infrastructure"@en ;
+    rdfs:comment "Systems providing anonymity to users and operators, including Tor integration and VPN services (gUFO FunctionalComplex)."@en ;
+    rdfs:subClassOf cacontology-infrastructure:SecurityInfrastructure .
+
+cacontology-infrastructure:GeographicDistribution rdf:type owl:Class ;
+    rdfs:label "Geographic Distribution"@en ;
+    rdfs:comment "Geographic distribution of infrastructure across multiple countries to complicate law enforcement efforts (gUFO Object)."@en ;
+    rdfs:subClassOf cacontology-infrastructure:PlatformInfrastructure .
+
+# =============================================================================
+# INFRASTRUCTURE TAKEDOWN OPERATIONS (extending UCO Action and gUFO Event)
+# =============================================================================
+
+cacontology-infrastructure:InfrastructureTakedown rdf:type owl:Class ;
+    rdfs:label "Infrastructure Takedown"@en ;
+    rdfs:comment "Coordinated operation to dismantle platform infrastructure including servers, domains, and supporting systems (gUFO Event)."@en ;
+    rdfs:subClassOf cac-core:InvestigativeAction .
+
+cacontology-infrastructure:ServerSeizure rdf:type owl:Class ;
+    rdfs:label "Server Seizure"@en ;
+    rdfs:comment "Physical or virtual seizure of servers hosting platform infrastructure (gUFO Event)."@en ;
+    rdfs:subClassOf cacontology-infrastructure:InfrastructureTakedown .
+
+cacontology-infrastructure:DomainSinkholing rdf:type owl:Class ;
+    rdfs:label "Domain Sinkholing"@en ;
+    rdfs:comment "Redirecting domain traffic to law enforcement controlled servers to gather intelligence (gUFO Event)."@en ;
+    rdfs:subClassOf cacontology-infrastructure:InfrastructureTakedown .
+
+cacontology-infrastructure:AccountFreezing rdf:type owl:Class ;
+    rdfs:label "Account Freezing"@en ;
+    rdfs:comment "Freezing financial accounts and cryptocurrency wallets associated with platform operations (gUFO Event)."@en ;
+    rdfs:subClassOf cacontology-infrastructure:InfrastructureTakedown .
+
+cacontology-infrastructure:DataMirrorCreation rdf:type owl:Class ;
+    rdfs:label "Data Mirror Creation"@en ;
+    rdfs:comment "Creating forensic mirrors of seized infrastructure for analysis and evidence preservation (gUFO Event)."@en ;
+    rdfs:subClassOf cacontology-infrastructure:InfrastructureTakedown .
+
+# =============================================================================
+# INFRASTRUCTURE ANALYSIS (extending UCO Action and gUFO Event)
+# =============================================================================
+
+cacontology-infrastructure:InfrastructureAnalysis rdf:type owl:Class ;
+    rdfs:label "Infrastructure Analysis"@en ;
+    rdfs:comment "Analysis of seized infrastructure to understand platform operations and identify additional targets (gUFO Event)."@en ;
+    rdfs:subClassOf cac-core:InvestigativeAction .
+
+cacontology-infrastructure:NetworkTopologyAnalysis rdf:type owl:Class ;
+    rdfs:label "Network Topology Analysis"@en ;
+    rdfs:comment "Analysis of network architecture and connectivity patterns within platform infrastructure (gUFO Event)."@en ;
+    rdfs:subClassOf cacontology-infrastructure:InfrastructureAnalysis .
+
+cacontology-infrastructure:FinancialFlowAnalysis rdf:type owl:Class ;
+    rdfs:label "Financial Flow Analysis"@en ;
+    rdfs:comment "Analysis of financial transactions and payment flows through platform monetization systems (gUFO Event)."@en ;
+    rdfs:subClassOf cacontology-infrastructure:InfrastructureAnalysis .
+
+cacontology-infrastructure:UserAccessPatternAnalysis rdf:type owl:Class ;
+    rdfs:label "User Access Pattern Analysis"@en ;
+    rdfs:comment "Analysis of user access patterns and geographic distribution based on infrastructure logs (gUFO Event)."@en ;
+    rdfs:subClassOf cacontology-infrastructure:InfrastructureAnalysis .
+
+# =============================================================================
+# INFRASTRUCTURE LIFECYCLE PHASES (gUFO Phase - Anti-Rigid)
+# =============================================================================
+
+cacontology-infrastructure:InfrastructureDeploymentPhase rdf:type owl:Class, gufo:Phase ;
+    rdfs:label "Infrastructure Deployment Phase"@en ;
+    rdfs:comment "Phase during which platform infrastructure is being deployed and configured (gUFO Phase - anti-rigid)."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+cacontology-infrastructure:InfrastructureOperationalPhase rdf:type owl:Class, gufo:Phase ;
+    rdfs:label "Infrastructure Operational Phase"@en ;
+    rdfs:comment "Phase during which platform infrastructure is actively supporting operations (gUFO Phase - anti-rigid)."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+cacontology-infrastructure:InfrastructureMaintenancePhase rdf:type owl:Class, gufo:Phase ;
+    rdfs:label "Infrastructure Maintenance Phase"@en ;
+    rdfs:comment "Phase during which infrastructure undergoes maintenance and updates (gUFO Phase - anti-rigid)."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+cacontology-infrastructure:InfrastructureDecommissionPhase rdf:type owl:Class, gufo:Phase ;
+    rdfs:label "Infrastructure Decommission Phase"@en ;
+    rdfs:comment "Phase during which infrastructure is being decommissioned or shut down (gUFO Phase - anti-rigid)."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+# =============================================================================
+# TECHNICAL ROLES (gUFO Role - Anti-Rigid)
+# =============================================================================
+
+cacontology-infrastructure:SystemAdministratorRole rdf:type owl:Class, gufo:Role ;
+    rdfs:label "System Administrator Role"@en ;
+    rdfs:comment "Role of person responsible for infrastructure system administration (gUFO Role - anti-rigid)."@en ;
+    rdfs:subClassOf cac-core:Role .
+
+cacontology-infrastructure:SecurityOperatorRole rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Security Operator Role"@en ;
+    rdfs:comment "Role of person managing security infrastructure and operations (gUFO Role - anti-rigid)."@en ;
+    rdfs:subClassOf cac-core:Role .
+
+cacontology-infrastructure:AnalystRole rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Analyst Role"@en ;
+    rdfs:comment "Role of person conducting infrastructure analysis (gUFO Role - anti-rigid)."@en ;
+    rdfs:subClassOf cac-core:Role .
+
+cacontology-infrastructure:TakedownOperatorRole rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Takedown Operator Role"@en ;
+    rdfs:comment "Role of law enforcement personnel conducting takedown operations (gUFO Role - anti-rigid)."@en ;
+    rdfs:subClassOf cac-core:Role .
+
+# =============================================================================
+# INFRASTRUCTURE SITUATIONS (gUFO Situation)
+# =============================================================================
+
+cacontology-infrastructure:InfrastructureCompromiseSituation rdf:type owl:Class ;
+    rdfs:label "Infrastructure Compromise Situation"@en ;
+    rdfs:comment "Situation where platform infrastructure has been compromised or breached (gUFO Situation)."@en ;
+    rdfs:subClassOf cac-core:Situation .
+
+cacontology-infrastructure:InfrastructureFailureSituation rdf:type owl:Class ;
+    rdfs:label "Infrastructure Failure Situation"@en ;
+    rdfs:comment "Situation involving infrastructure failure or outage (gUFO Situation)."@en ;
+    rdfs:subClassOf cac-core:Situation .
+
+cacontology-infrastructure:InfrastructureDiscoverySituation rdf:type owl:Class ;
+    rdfs:label "Infrastructure Discovery Situation"@en ;
+    rdfs:comment "Situation involving the discovery of previously unknown infrastructure components (gUFO Situation)."@en ;
+    rdfs:subClassOf cac-core:Situation .
+
+# =============================================================================
+# gUFO TEMPORAL PROPERTIES
+# =============================================================================
+
+# Infrastructure Temporal Properties
+cacontology-infrastructure:hasInfrastructureBeginPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has infrastructure begin point"@en ;
+    rdfs:comment "Temporal begin point for infrastructure lifecycle (gUFO temporal property)."@en ;
+    rdfs:subPropertyOf gufo:hasBeginPointInXSDDateTimeStamp ;
+    rdfs:domain cacontology-infrastructure:PlatformInfrastructure ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-infrastructure:hasInfrastructureEndPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has infrastructure end point"@en ;
+    rdfs:comment "Temporal end point for infrastructure lifecycle (gUFO temporal property)."@en ;
+    rdfs:subPropertyOf gufo:hasEndPointInXSDDateTimeStamp ;
+    rdfs:domain cacontology-infrastructure:PlatformInfrastructure ;
+    rdfs:range xsd:dateTimeStamp .
+
+# Takedown Event Temporal Properties
+cacontology-infrastructure:hasTakedownBeginPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has takedown begin point"@en ;
+    rdfs:comment "Temporal begin point for takedown events (gUFO temporal property)."@en ;
+    rdfs:subPropertyOf gufo:hasBeginPointInXSDDateTimeStamp ;
+    rdfs:domain cacontology-infrastructure:InfrastructureTakedown ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-infrastructure:hasTakedownEndPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has takedown end point"@en ;
+    rdfs:comment "Temporal end point for takedown events (gUFO temporal property)."@en ;
+    rdfs:subPropertyOf gufo:hasEndPointInXSDDateTimeStamp ;
+    rdfs:domain cacontology-infrastructure:InfrastructureTakedown ;
+    rdfs:range xsd:dateTimeStamp .
+
+# Analysis Event Temporal Properties
+cacontology-infrastructure:hasAnalysisBeginPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has analysis begin point"@en ;
+    rdfs:comment "Temporal begin point for analysis events (gUFO temporal property)."@en ;
+    rdfs:subPropertyOf gufo:hasBeginPointInXSDDateTimeStamp ;
+    rdfs:domain cacontology-infrastructure:InfrastructureAnalysis ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-infrastructure:hasAnalysisEndPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has analysis end point"@en ;
+    rdfs:comment "Temporal end point for analysis events (gUFO temporal property)."@en ;
+    rdfs:subPropertyOf gufo:hasEndPointInXSDDateTimeStamp ;
+    rdfs:domain cacontology-infrastructure:InfrastructureAnalysis ;
+    rdfs:range xsd:dateTimeStamp .
+
+# Phase Temporal Properties
+cacontology-infrastructure:hasPhaseBeginPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has phase begin point"@en ;
+    rdfs:comment "Temporal begin point for infrastructure phases (gUFO temporal property)."@en ;
+    rdfs:subPropertyOf gufo:hasBeginPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-infrastructure:hasPhaseEndPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has phase end point"@en ;
+    rdfs:comment "Temporal end point for infrastructure phases (gUFO temporal property)."@en ;
+    rdfs:subPropertyOf gufo:hasEndPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:dateTimeStamp .
+
+# Role Temporal Properties
+cacontology-infrastructure:hasRoleBeginPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has role begin point"@en ;
+    rdfs:comment "Temporal begin point for technical roles (gUFO temporal property)."@en ;
+    rdfs:subPropertyOf gufo:hasBeginPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Role ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-infrastructure:hasRoleEndPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has role end point"@en ;
+    rdfs:comment "Temporal end point for technical roles (gUFO temporal property)."@en ;
+    rdfs:subPropertyOf gufo:hasEndPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Role ;
+    rdfs:range xsd:dateTimeStamp .
+
+# =============================================================================
+# gUFO QUALITY ASPECTS PROPERTIES
+# =============================================================================
+
+# Infrastructure Quality Aspects
+cacontology-infrastructure:hasInfrastructureReliability rdf:type owl:DatatypeProperty ;
+    rdfs:label "has infrastructure reliability"@en ;
+    rdfs:comment "Overall reliability assessment of platform infrastructure (gUFO quality aspect)."@en ;
+    rdfs:domain cacontology-infrastructure:PlatformInfrastructure ;
+    rdfs:range xsd:double .
+
+cacontology-infrastructure:hasInfrastructurePerformance rdf:type owl:DatatypeProperty ;
+    rdfs:label "has infrastructure performance"@en ;
+    rdfs:comment "Performance rating of infrastructure components (gUFO quality aspect)."@en ;
+    rdfs:domain cacontology-infrastructure:PlatformInfrastructure ;
+    rdfs:range xsd:string .
+
+cacontology-infrastructure:hasInfrastructureScalability rdf:type owl:DatatypeProperty ;
+    rdfs:label "has infrastructure scalability"@en ;
+    rdfs:comment "Scalability assessment of infrastructure architecture (gUFO quality aspect)."@en ;
+    rdfs:domain cacontology-infrastructure:PlatformInfrastructure ;
+    rdfs:range xsd:string .
+
+cacontology-infrastructure:hasInfrastructureVulnerability rdf:type owl:DatatypeProperty ;
+    rdfs:label "has infrastructure vulnerability"@en ;
+    rdfs:comment "Vulnerability level of infrastructure to detection and takedown (gUFO quality aspect)."@en ;
+    rdfs:domain cacontology-infrastructure:PlatformInfrastructure ;
+    rdfs:range xsd:string .
+
+# Security Quality Aspects
+cacontology-infrastructure:hasSecurityStrength rdf:type owl:DatatypeProperty ;
+    rdfs:label "has security strength"@en ;
+    rdfs:comment "Overall security strength of protection measures (gUFO quality aspect)."@en ;
+    rdfs:domain cacontology-infrastructure:SecurityInfrastructure ;
+    rdfs:range xsd:string .
+
+cacontology-infrastructure:hasAnonymityEffectiveness rdf:type owl:DatatypeProperty ;
+    rdfs:label "has anonymity effectiveness"@en ;
+    rdfs:comment "Effectiveness rating of anonymity measures (gUFO quality aspect)."@en ;
+    rdfs:domain cacontology-infrastructure:AnonymityInfrastructure ;
+    rdfs:range xsd:double .
+
+cacontology-infrastructure:hasObfuscationComplexity rdf:type owl:DatatypeProperty ;
+    rdfs:label "has obfuscation complexity"@en ;
+    rdfs:comment "Complexity level of obfuscation techniques (gUFO quality aspect)."@en ;
+    rdfs:domain cacontology-infrastructure:SecurityInfrastructure ;
+    rdfs:range xsd:string .
+
+# Takedown Quality Aspects
+cacontology-infrastructure:hasTakedownEffectiveness rdf:type owl:DatatypeProperty ;
+    rdfs:label "has takedown effectiveness"@en ;
+    rdfs:comment "Effectiveness rating of takedown operations (gUFO quality aspect)."@en ;
+    rdfs:domain cacontology-infrastructure:InfrastructureTakedown ;
+    rdfs:range xsd:double .
+
+cacontology-infrastructure:hasTakedownCompleteness rdf:type owl:DatatypeProperty ;
+    rdfs:label "has takedown completeness"@en ;
+    rdfs:comment "Completeness assessment of infrastructure takedown (gUFO quality aspect)."@en ;
+    rdfs:domain cacontology-infrastructure:InfrastructureTakedown ;
+    rdfs:range xsd:double .
+
+cacontology-infrastructure:hasTakedownSpeed rdf:type owl:DatatypeProperty ;
+    rdfs:label "has takedown speed"@en ;
+    rdfs:comment "Speed rating of takedown execution (gUFO quality aspect)."@en ;
+    rdfs:domain cacontology-infrastructure:InfrastructureTakedown ;
+    rdfs:range xsd:string .
+
+# Analysis Quality Aspects
+cacontology-infrastructure:hasAnalysisDepth rdf:type owl:DatatypeProperty ;
+    rdfs:label "has analysis depth"@en ;
+    rdfs:comment "Depth level of infrastructure analysis (gUFO quality aspect)."@en ;
+    rdfs:domain cacontology-infrastructure:InfrastructureAnalysis ;
+    rdfs:range xsd:string .
+
+cacontology-infrastructure:hasAnalysisAccuracy rdf:type owl:DatatypeProperty ;
+    rdfs:label "has analysis accuracy"@en ;
+    rdfs:comment "Accuracy rating of analysis results (gUFO quality aspect)."@en ;
+    rdfs:domain cacontology-infrastructure:InfrastructureAnalysis ;
+    rdfs:range xsd:double .
+
+cacontology-infrastructure:hasAnalysisTimeliness rdf:type owl:DatatypeProperty ;
+    rdfs:label "has analysis timeliness"@en ;
+    rdfs:comment "Timeliness assessment of analysis completion (gUFO quality aspect)."@en ;
+    rdfs:domain cacontology-infrastructure:InfrastructureAnalysis ;
+    rdfs:range xsd:string .
+
+# Financial Quality Aspects
+cacontology-infrastructure:hasFinancialComplexity rdf:type owl:DatatypeProperty ;
+    rdfs:label "has financial complexity"@en ;
+    rdfs:comment "Complexity level of financial processing systems (gUFO quality aspect)."@en ;
+    rdfs:domain cacontology-infrastructure:PaymentProcessing ;
+    rdfs:range xsd:string .
+
+cacontology-infrastructure:hasFinancialTraceability rdf:type owl:DatatypeProperty ;
+    rdfs:label "has financial traceability"@en ;
+    rdfs:comment "Traceability level of financial transactions (gUFO quality aspect)."@en ;
+    rdfs:domain cacontology-infrastructure:PaymentProcessing ;
+    rdfs:range xsd:double .
+
+# =============================================================================
+# INFRASTRUCTURE PROPERTIES
+# =============================================================================
+
+# Infrastructure Characteristics
+cacontology-infrastructure:serverCount rdf:type owl:DatatypeProperty ;
+    rdfs:label "server count"@en ;
+    rdfs:comment "Number of servers comprising the infrastructure."@en ;
+    rdfs:domain cacontology-infrastructure:ServerInfrastructure ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-infrastructure:geographicLocations rdf:type owl:DatatypeProperty ;
+    rdfs:label "geographic locations"@en ;
+    rdfs:comment "Number of geographic locations where infrastructure is distributed."@en ;
+    rdfs:domain cacontology-infrastructure:GeographicDistribution ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-infrastructure:bandwidthCapacity rdf:type owl:DatatypeProperty ;
+    rdfs:label "bandwidth capacity"@en ;
+    rdfs:comment "Total bandwidth capacity in Gbps for content delivery infrastructure."@en ;
+    rdfs:domain cacontology-infrastructure:ContentDeliveryNetwork ;
+    rdfs:range xsd:decimal .
+
+cacontology-infrastructure:storageCapacity rdf:type owl:DatatypeProperty ;
+    rdfs:label "storage capacity"@en ;
+    rdfs:comment "Total storage capacity in terabytes for platform content and data."@en ;
+    rdfs:domain cacontology-infrastructure:DatabaseInfrastructure ;
+    rdfs:range xsd:decimal .
+
+# Security and Obfuscation Properties
+cacontology-infrastructure:encryptionStrength rdf:type owl:DatatypeProperty ;
+    rdfs:label "encryption strength"@en ;
+    rdfs:comment "Encryption strength used (e.g., AES-256, RSA-2048)."@en ;
+    rdfs:domain cacontology-infrastructure:EncryptionInfrastructure ;
+    rdfs:range xsd:string .
+
+cacontology-infrastructure:anonymityLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "anonymity level"@en ;
+    rdfs:comment "Level of anonymity provided (basic, enhanced, military-grade)."@en ;
+    rdfs:domain cacontology-infrastructure:AnonymityInfrastructure ;
+    rdfs:range xsd:string .
+
+cacontology-infrastructure:obfuscationMethods rdf:type owl:DatatypeProperty ;
+    rdfs:label "obfuscation methods"@en ;
+    rdfs:comment "Methods used to obfuscate infrastructure (proxies, VPNs, Tor, domain fronting)."@en ;
+    rdfs:domain cacontology-infrastructure:SecurityInfrastructure ;
+    rdfs:range xsd:string .
+
+# Payment and Monetization Properties
+cacontology-infrastructure:paymentMethods rdf:type owl:DatatypeProperty ;
+    rdfs:label "payment methods"@en ;
+    rdfs:comment "Payment methods supported (credit cards, cryptocurrency, digital wallets)."@en ;
+    rdfs:domain cacontology-infrastructure:PaymentProcessing ;
+    rdfs:range xsd:string .
+
+cacontology-infrastructure:cryptoCurrencyTypes rdf:type owl:DatatypeProperty ;
+    rdfs:label "cryptocurrency types"@en ;
+    rdfs:comment "Types of cryptocurrency accepted (Bitcoin, Monero, Ethereum)."@en ;
+    rdfs:domain cacontology-infrastructure:CryptocurrencyInfrastructure ;
+    rdfs:range xsd:string .
+
+cacontology-infrastructure:subscriptionTiers rdf:type owl:DatatypeProperty ;
+    rdfs:label "subscription tiers"@en ;
+    rdfs:comment "Number of subscription tiers or access levels offered."@en ;
+    rdfs:domain cacontology-infrastructure:SubscriptionManagement ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-infrastructure:monthlyRevenue rdf:type owl:DatatypeProperty ;
+    rdfs:label "monthly revenue"@en ;
+    rdfs:comment "Estimated monthly revenue in USD from platform operations."@en ;
+    rdfs:domain cacontology-infrastructure:PaymentProcessing ;
+    rdfs:range xsd:decimal .
+
+# Hosting and Domain Properties
+cacontology-infrastructure:domainCount rdf:type owl:DatatypeProperty ;
+    rdfs:label "domain count"@en ;
+    rdfs:comment "Number of domains associated with platform infrastructure."@en ;
+    rdfs:domain cacontology-infrastructure:DomainInfrastructure ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-infrastructure:hostingProvider rdf:type owl:DatatypeProperty ;
+    rdfs:label "hosting provider name"@en ;
+    rdfs:comment "Name of organization providing hosting services."@en ;
+    rdfs:domain cacontology-infrastructure:HostingProvider ;
+    rdfs:range xsd:string .
+
+cacontology-infrastructure:cloudPlatform rdf:type owl:DatatypeProperty ;
+    rdfs:label "cloud platform"@en ;
+    rdfs:comment "Cloud platform used for hosting (AWS, Azure, GCP, private cloud)."@en ;
+    rdfs:domain cacontology-infrastructure:ServerInfrastructure ;
+    rdfs:range xsd:string .
+
+# Takedown Operation Properties
+cacontology-infrastructure:serversSeized rdf:type owl:DatatypeProperty ;
+    rdfs:label "servers seized"@en ;
+    rdfs:comment "Number of servers seized during takedown operation."@en ;
+    rdfs:domain cacontology-infrastructure:ServerSeizure ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-infrastructure:domainsSinkholed rdf:type owl:DatatypeProperty ;
+    rdfs:label "domains sinkholed"@en ;
+    rdfs:comment "Number of domains redirected to law enforcement servers."@en ;
+    rdfs:domain cacontology-infrastructure:DomainSinkholing ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-infrastructure:accountsFrozen rdf:type owl:DatatypeProperty ;
+    rdfs:label "accounts frozen"@en ;
+    rdfs:comment "Number of financial accounts frozen during operation."@en ;
+    rdfs:domain cacontology-infrastructure:AccountFreezing ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-infrastructure:dataVolumeMirrored rdf:type owl:DatatypeProperty ;
+    rdfs:label "data volume mirrored"@en ;
+    rdfs:comment "Volume of data mirrored for forensic analysis in terabytes."@en ;
+    rdfs:domain cacontology-infrastructure:DataMirrorCreation ;
+    rdfs:range xsd:decimal .
+
+cacontology-infrastructure:takedownDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "takedown duration"@en ;
+    rdfs:comment "Duration of takedown operation in hours."@en ;
+    rdfs:domain cacontology-infrastructure:InfrastructureTakedown ;
+    rdfs:range xsd:decimal .
+
+# Analysis Properties
+cacontology-infrastructure:networkComplexity rdf:type owl:DatatypeProperty ;
+    rdfs:label "network complexity"@en ;
+    rdfs:comment "Complexity rating of network topology (simple, moderate, complex, highly_complex)."@en ;
+    rdfs:domain cacontology-infrastructure:NetworkTopologyAnalysis ;
+    rdfs:range xsd:string .
+
+cacontology-infrastructure:financialComplexity rdf:type owl:DatatypeProperty ;
+    rdfs:label "financial complexity"@en ;
+    rdfs:comment "Complexity of financial obfuscation methods (basic, intermediate, sophisticated)."@en ;
+    rdfs:domain cacontology-infrastructure:FinancialFlowAnalysis ;
+    rdfs:range xsd:string .
+
+cacontology-infrastructure:userGeographicSpread rdf:type owl:DatatypeProperty ;
+    rdfs:label "user geographic spread"@en ;
+    rdfs:comment "Number of countries with significant user presence."@en ;
+    rdfs:domain cacontology-infrastructure:UserAccessPatternAnalysis ;
+    rdfs:range xsd:nonNegativeInteger .
+
+# =============================================================================
+# INFRASTRUCTURE RELATIONSHIPS
+# =============================================================================
+
+# Infrastructure Component Relationships
+cacontology-infrastructure:hostedBy rdf:type owl:ObjectProperty ;
+    rdfs:label "hosted by"@en ;
+    rdfs:comment "Links infrastructure to hosting provider."@en ;
+    rdfs:domain cacontology-infrastructure:PlatformInfrastructure ;
+    rdfs:range cacontology-infrastructure:HostingProvider .
+
+cacontology-infrastructure:containsComponent rdf:type owl:ObjectProperty ;
+    rdfs:label "contains component"@en ;
+    rdfs:comment "Indicates that one infrastructure component contains another as a functional part (inverse of gUFO component-of relationship)."@en ;
+    rdfs:domain cacontology-infrastructure:PlatformInfrastructure ;
+    rdfs:range cacontology-infrastructure:PlatformInfrastructure ;
+    owl:inverseOf gufo:isComponentOf .
+
+cacontology-infrastructure:usesPaymentSystem rdf:type owl:ObjectProperty ;
+    rdfs:label "uses payment system"@en ;
+    rdfs:comment "Links platform to payment processing infrastructure."@en ;
+    rdfs:domain cacontology-infrastructure:PlatformInfrastructure ;
+    rdfs:range cacontology-infrastructure:PaymentProcessing .
+
+cacontology-infrastructure:protectedBy rdf:type owl:ObjectProperty ;
+    rdfs:label "protected by"@en ;
+    rdfs:comment "Links infrastructure to security systems protecting it."@en ;
+    rdfs:domain cacontology-infrastructure:PlatformInfrastructure ;
+    rdfs:range cacontology-infrastructure:SecurityInfrastructure .
+
+cacontology-infrastructure:distributedAcross rdf:type owl:ObjectProperty ;
+    rdfs:label "distributed across"@en ;
+    rdfs:comment "Links infrastructure to geographic distribution strategy."@en ;
+    rdfs:domain cacontology-infrastructure:PlatformInfrastructure ;
+    rdfs:range cacontology-infrastructure:GeographicDistribution .
+
+# Takedown Operation Relationships
+cacontology-infrastructure:targetsInfrastructure rdf:type owl:ObjectProperty ;
+    rdfs:label "targets infrastructure"@en ;
+    rdfs:comment "Links takedown operation to infrastructure being targeted."@en ;
+    rdfs:domain cacontology-infrastructure:InfrastructureTakedown ;
+    rdfs:range cacontology-infrastructure:PlatformInfrastructure .
+
+cacontology-infrastructure:seizesServers rdf:type owl:ObjectProperty ;
+    rdfs:label "seizes servers"@en ;
+    rdfs:comment "Links server seizure to specific server infrastructure."@en ;
+    rdfs:domain cacontology-infrastructure:ServerSeizure ;
+    rdfs:range cacontology-infrastructure:ServerInfrastructure .
+
+cacontology-infrastructure:sinkholeDomains rdf:type owl:ObjectProperty ;
+    rdfs:label "sinkhole domains"@en ;
+    rdfs:comment "Links sinkholing operation to domain infrastructure."@en ;
+    rdfs:domain cacontology-infrastructure:DomainSinkholing ;
+    rdfs:range cacontology-infrastructure:DomainInfrastructure .
+
+cacontology-infrastructure:freezesAccounts rdf:type owl:ObjectProperty ;
+    rdfs:label "freezes accounts"@en ;
+    rdfs:comment "Links account freezing to payment processing systems."@en ;
+    rdfs:domain cacontology-infrastructure:AccountFreezing ;
+    rdfs:range cacontology-infrastructure:PaymentProcessing .
+
+# Analysis Relationships
+cacontology-infrastructure:analysesInfrastructure rdf:type owl:ObjectProperty ;
+    rdfs:label "analyses infrastructure"@en ;
+    rdfs:comment "Links analysis process to infrastructure being analyzed."@en ;
+    rdfs:domain cacontology-infrastructure:InfrastructureAnalysis ;
+    rdfs:range cacontology-infrastructure:PlatformInfrastructure .
+
+cacontology-infrastructure:revealsTopology rdf:type owl:ObjectProperty ;
+    rdfs:label "reveals topology"@en ;
+    rdfs:comment "Links network analysis to network infrastructure topology."@en ;
+    rdfs:domain cacontology-infrastructure:NetworkTopologyAnalysis ;
+    rdfs:range cacontology-infrastructure:NetworkInfrastructure .
+
+cacontology-infrastructure:tracesPayments rdf:type owl:ObjectProperty ;
+    rdfs:label "traces payments"@en ;
+    rdfs:comment "Links financial analysis to payment processing systems."@en ;
+    rdfs:domain cacontology-infrastructure:FinancialFlowAnalysis ;
+    rdfs:range cacontology-infrastructure:PaymentProcessing .
+
+cacontology-infrastructure:analysesAccess rdf:type owl:ObjectProperty ;
+    rdfs:label "analyses access"@en ;
+    rdfs:comment "Links access pattern analysis to user access infrastructure."@en ;
+    rdfs:domain cacontology-infrastructure:UserAccessPatternAnalysis ;
+    rdfs:range cacontology-infrastructure:PlatformInfrastructure .
+
+# Evidence and Investigation Relationships
+cacontology-infrastructure:providesEvidence rdf:type owl:ObjectProperty ;
+    rdfs:label "provides evidence"@en ;
+    rdfs:comment "Links infrastructure analysis to evidence discovered."@en ;
+    rdfs:domain cacontology-infrastructure:InfrastructureAnalysis ;
+    rdfs:range uco-observable:ObservableObject .
+
+cacontology-infrastructure:leadsToCriminalCharges rdf:type owl:ObjectProperty ;
+    rdfs:label "leads to criminal charges"@en ;
+    rdfs:comment "Links infrastructure takedown to resulting criminal charges."@en ;
+    rdfs:domain cacontology-infrastructure:InfrastructureTakedown ;
+    rdfs:range uco-observable:ObservableObject .
+
+cacontology-infrastructure:resultsInSeizure rdf:type owl:ObjectProperty ;
+    rdfs:label "results in seizure"@en ;
+    rdfs:comment "Links takedown operation to asset seizure actions."@en ;
+    rdfs:domain cacontology-infrastructure:InfrastructureTakedown ;
+    rdfs:range uco-action:Action . 

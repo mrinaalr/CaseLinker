@@ -1,0 +1,494 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
+@prefix uco-observable: <https://ontology.unifiedcyberontology.org/uco/observable/> .
+@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
+@prefix uco-channel: <https://ontology.unifiedcyberontology.org/uco/channel/> .
+@prefix case-investigation: <https://ontology.caseontology.org/case/investigation/> .
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix gufo: <http://purl.org/nemo/gufo#> .
+@prefix cacontology-temporal: <https://cacontology.projectvic.org/temporal#> .
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+
+# Ontology Declaration
+<https://cacontology.projectvic.org> rdf:type owl:Ontology ;
+    rdfs:label "CAC Ontology Core"@en ;
+    rdfs:comment "A core ontology for representing concepts and relationships specific to Crimes Against Children investigations, extending UCO and CASE with gUFO foundational ontology enhancements for improved semantic precision, temporal modeling, and validation capabilities. v3.1.0 introduces the semantic spine for disciplined ontological categorization."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:issued "2024-03-20"^^xsd:date ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> ,
+                <https://ontology.caseontology.org/case/case/1.5.0> ,
+                <https://cacontology.projectvic.org/hotlines/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> ,
+                <https://cacontology.projectvic.org/core/3.1.0> .
+
+# =============================================================================
+# INVESTIGATION CLASSES (extending UCO with gUFO Object and Situation)
+# =============================================================================
+
+# Investigation as gUFO Object with phases
+cacontology:CACInvestigation rdf:type owl:Class ;
+    rdfs:label "CAC Investigation"@en ;
+    rdfs:comment "A child-protection investigation that follows a standard action lifecycle that commonly begins with the discovery of CSAM, the receipt of a cybertip, or a call to a hotline. This class extends the CASE Investigation class to provide CAC-specific investigation capabilities with gUFO Object modeling."@en ;
+    rdfs:subClassOf cac-core:EnduringEntity , case-investigation:Investigation .
+
+# Investigation Phases (gUFO Phase anti-rigid modeling)
+# v3.1.0 BREAKING CHANGE: Phase classes no longer subclass CACInvestigation.
+# Phases are temporal stages OF an investigation, not investigations themselves.
+# Use cacontology:hasPhase to link an investigation to its phases.
+cacontology:InitialPhase rdf:type owl:Class, gufo:Phase ;
+    rdfs:label "Initial Investigation Phase"@en ;
+    rdfs:comment "Initial phase of CAC investigation involving cybertip receipt and preliminary review."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+cacontology:AnalysisPhase rdf:type owl:Class, gufo:Phase ;
+    rdfs:label "Analysis Phase"@en ;
+    rdfs:comment "Phase focused on detailed analysis of evidence and cybertip information."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+cacontology:LegalProcessPhase rdf:type owl:Class, gufo:Phase ;
+    rdfs:label "Legal Process Phase"@en ;
+    rdfs:comment "Phase involving legal processes such as search warrants and subpoenas."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+cacontology:EvidencePhase rdf:type owl:Class, gufo:Phase ;
+    rdfs:label "Evidence Phase"@en ;
+    rdfs:comment "Phase focused on evidence collection, analysis, and curation."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+cacontology:VictimPhase rdf:type owl:Class, gufo:Phase ;
+    rdfs:label "Victim Phase"@en ;
+    rdfs:comment "Phase focused on victim identification, rescue, and support. Deprecated: consider using the more specific VictimIdentificationPhase, VictimRescuePhase, VictimSupportPhase, or VictimRecoveryPhase classes."@en ;
+    rdfs:subClassOf cac-core:Phase ;
+    owl:deprecated true .
+
+cacontology:ConclusionPhase rdf:type owl:Class, gufo:Phase ;
+    rdfs:label "Conclusion Phase"@en ;
+    rdfs:comment "Final phase involving case closure or prosecution referral."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+# Investigation Lifecycle Situation (gUFO Situation)
+cacontology:InvestigationLifecycleSituation rdf:type owl:Class ;
+    rdfs:label "Investigation Lifecycle Situation"@en ;
+    rdfs:comment "Overall situation encompassing the complete CAC investigation lifecycle."@en ;
+    rdfs:subClassOf cac-core:Situation .
+
+# =============================================================================
+# LIFECYCLE ACTION CLASSES (extending UCO Action with gUFO Event)
+# =============================================================================
+
+# Core Lifecycle Actions as gUFO Events
+cacontology:ReceiveCybertipAction rdf:type owl:Class ;
+    rdfs:label "Receive Cybertip Action"@en ;
+    rdfs:comment "The initial action of receiving a cybertip report from a reporting entity (e.g., NCMEC, INHOPE)."@en ;
+    rdfs:subClassOf cac-core:InvestigativeAction .
+
+cacontology:ReviewCybertipAction rdf:type owl:Class ;
+    rdfs:label "Review Cybertip Action"@en ;
+    rdfs:comment "The action of reviewing and analyzing a cybertip report by an analyst."@en ;
+    rdfs:subClassOf cac-core:InvestigativeAction .
+
+cacontology:LegalProcessAction rdf:type owl:Class ;
+    rdfs:label "Legal Process Action"@en ;
+    rdfs:comment "The action of initiating legal processes such as search warrants, subpoenas, or MLAT requests."@en ;
+    rdfs:subClassOf cac-core:InvestigativeAction .
+
+cacontology:EvidenceReviewAction rdf:type owl:Class ;
+    rdfs:label "Evidence Review Action"@en ;
+    rdfs:comment "The action of reviewing and analyzing digital evidence using forensic tools."@en ;
+    rdfs:subClassOf cac-core:InvestigativeAction .
+
+cacontology:CSAMCurationAction rdf:type owl:Class ;
+    rdfs:label "CSAM Curation Action"@en ;
+    rdfs:comment "The action of curating and classifying child sexual abuse material using standard classification systems."@en ;
+    rdfs:subClassOf cac-core:InvestigativeAction .
+
+cacontology:VictimRescueAction rdf:type owl:Class ;
+    rdfs:label "Victim Rescue Action"@en ;
+    rdfs:comment "The action of rescuing and providing support to identified victims."@en ;
+    rdfs:subClassOf cac-core:SupportEvent .
+
+cacontology:UnknownVictimSubmission rdf:type owl:Class ;
+    rdfs:label "Unknown Victim Submission"@en ;
+    rdfs:comment "The action of submitting information about unidentified victims to relevant databases."@en ;
+    rdfs:subClassOf cac-core:InvestigativeAction .
+
+# =============================================================================
+# CRIMINAL EVENT CLASSES (extending UCO Crime with gUFO Event)
+# =============================================================================
+
+# Base Criminal Events as gUFO Events
+cacontology:ChildSexualAbuseEvent rdf:type owl:Class ;
+    rdfs:label "Child Sexual Abuse Event"@en ;
+    rdfs:comment "A class representing any event involving child sexual abuse or exploitation. This is the base class for all CAC incidents modeled as gUFO Event. Victim and offender ages at the time of the event SHOULD be represented using cacontology-temporal:AgeAtTimeSituation instances rather than static age literals to support age-of-consent, Romeo-and-Juliet, and other temporal legal analyses."@en ;
+    rdfs:subClassOf cac-core:ExploitationEvent , uco-action:Crime .
+
+cacontology:CSAMIncident rdf:type owl:Class ;
+    rdfs:label "Child Sexual Abuse Material Incident"@en ;
+    rdfs:comment "Incidents involving possession, manufacture, or distribution of child sexual abuse material. This replaces the deprecated 'ChildPornographyIncident' term."@en ;
+    rdfs:subClassOf cacontology:ChildSexualAbuseEvent .
+
+cacontology:DigitallyGeneratedCSAMIncident rdf:type owl:Class ;
+    rdfs:label "Digitally Generated CSAM Incident"@en ;
+    rdfs:comment "Incidents involving digitally generated or manipulated child sexual abuse material."@en ;
+    rdfs:subClassOf cacontology:CSAMIncident .
+
+cacontology:LiveStreamingCSA rdf:type owl:Class ;
+    rdfs:label "Live Streaming Child Sexual Abuse"@en ;
+    rdfs:comment "Incidents involving live streaming of child sexual abuse."@en ;
+    rdfs:subClassOf cacontology:ChildSexualAbuseEvent .
+
+cacontology:GroomingSolicitation rdf:type owl:Class ;
+    rdfs:label "Grooming and Solicitation"@en ;
+    rdfs:comment "Incidents involving grooming or solicitation of children for sexual purposes."@en ;
+    rdfs:subClassOf cacontology:ChildSexualAbuseEvent .
+
+cacontology:Sextortion rdf:type owl:Class ;
+    rdfs:label "Sextortion"@en ;
+    rdfs:comment "Incidents involving sexual extortion of children."@en ;
+    rdfs:subClassOf cacontology:ChildSexualAbuseEvent .
+
+# =============================================================================
+# ROLE CLASSES (extending UCO Role with gUFO Role anti-rigid)
+# =============================================================================
+
+# CAC Roles as gUFO Roles (anti-rigid)
+cacontology:VictimRole rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Victim Role"@en ;
+    rdfs:comment "Role of a person who is a victim of child sexual abuse or exploitation. Modeled as anti-rigid gUFO Role. When the victim's age is known at the time of a specific event or phase, it SHOULD be captured via one or more cacontology-temporal:AgeAtTimeSituation instances linked to the underlying person."@en ;
+    rdfs:subClassOf cac-core:Role , uco-role:VictimRole .
+
+cacontology:OffenderRole rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Offender Role"@en ;
+    rdfs:comment "Role of a person who commits child sexual abuse or exploitation. Modeled as anti-rigid gUFO Role. When offender age or age-gap reasoning is relevant (e.g., Romeo-and-Juliet scenarios), age SHOULD be represented via cacontology-temporal:AgeAtTimeSituation instances for the corresponding person."@en ;
+    rdfs:subClassOf cac-core:Role , uco-role:OffenderRole .
+
+cacontology:RescuerRole rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Rescuer Role"@en ;
+    rdfs:comment "Role of a person involved in rescuing or protecting victims (e.g., law enforcement, NGO worker). Modeled as anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cac-core:Role .
+
+cacontology:InvestigatorRole rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Investigator Role"@en ;
+    rdfs:comment "Role of law enforcement officer or analyst conducting CAC investigation. Modeled as anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cac-core:Role .
+
+cacontology:AnalystRole rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Analyst Role"@en ;
+    rdfs:comment "Role of professional analyzing cybertips and digital evidence. Modeled as anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cac-core:Role .
+
+# =============================================================================
+# gUFO TEMPORAL PROPERTIES
+# =============================================================================
+
+cacontology:hasPhaseBeginPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has phase begin point"@en ;
+    rdfs:comment "Temporal begin point for investigation phase."@en ;
+    rdfs:subPropertyOf gufo:hasBeginPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology:hasPhaseEndPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has phase end point"@en ;
+    rdfs:comment "Temporal end point for investigation phase."@en ;
+    rdfs:subPropertyOf gufo:hasEndPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology:hasRoleBeginPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has role begin point"@en ;
+    rdfs:comment "Temporal begin point for CAC role."@en ;
+    rdfs:subPropertyOf gufo:hasBeginPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Role ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology:hasRoleEndPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has role end point"@en ;
+    rdfs:comment "Temporal end point for CAC role."@en ;
+    rdfs:subPropertyOf gufo:hasEndPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Role ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology:phaseDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "phase duration"@en ;
+    rdfs:comment "Duration of investigation phase."@en ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:duration .
+
+# =============================================================================
+# INVESTIGATION LIFECYCLE PROPERTIES
+# =============================================================================
+
+cacontology:hasStep rdf:type owl:ObjectProperty ;
+    rdfs:label "has step"@en ;
+    rdfs:comment "Links a CAC investigation to each ordered step in its lifecycle."@en ;
+    rdfs:domain cacontology:CACInvestigation ;
+    rdfs:range uco-action:Action .
+
+cacontology:nextStep rdf:type owl:ObjectProperty ;
+    rdfs:label "next step"@en ;
+    rdfs:comment "Denotes the chronologically next action in the lifecycle."@en ;
+    owl:inverseOf cacontology:previousStep ;
+    owl:propertyChainAxiom (cacontology:hasStep cacontology:nextStep) .
+
+cacontology:previousStep rdf:type owl:ObjectProperty ;
+    rdfs:label "previous step"@en ;
+    rdfs:comment "Denotes the chronologically previous action in the lifecycle."@en ;
+    owl:inverseOf cacontology:nextStep .
+
+cacontology:hasPhase rdf:type owl:ObjectProperty ;
+    rdfs:label "has phase"@en ;
+    rdfs:comment "Links investigation to its current or historical phases."@en ;
+    rdfs:domain cacontology:CACInvestigation ;
+    rdfs:range cac-core:Phase .
+
+cacontology:transitionsTo rdf:type owl:ObjectProperty ;
+    rdfs:label "transitions to"@en ;
+    rdfs:comment "Links one investigation phase to the next phase in sequence."@en ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range cac-core:Phase .
+
+# Action-Specific Properties
+cacontology:targetsService rdf:type owl:ObjectProperty ;
+    rdfs:label "targets service"@en ;
+    rdfs:comment "Links a legal process action to the digital service it targets."@en ;
+    rdfs:domain cacontology:LegalProcessAction ;
+    rdfs:range uco-channel:DigitalService .
+
+cacontology:legalInstrument rdf:type owl:ObjectProperty ;
+    rdfs:label "legal instrument"@en ;
+    rdfs:comment "Links a legal process action to its legal instrument (e.g., search warrant, subpoena)."@en ;
+    rdfs:domain cacontology:LegalProcessAction .
+
+cacontology:usesClassification rdf:type owl:ObjectProperty ;
+    rdfs:label "uses classification"@en ;
+    rdfs:comment "Links a CSAM curation action to the classification system used."@en ;
+    rdfs:domain cacontology:CSAMCurationAction .
+
+cacontology:rescuedVictim rdf:type owl:ObjectProperty ;
+    rdfs:label "rescued victim"@en ;
+    rdfs:comment "Links a victim rescue action to the rescued victim."@en ;
+    rdfs:domain cacontology:VictimRescueAction ;
+    rdfs:range uco-identity:Person .
+
+# =============================================================================
+# AGE-AT-TIME HELPER PROPERTIES (bridging core events/people to temporal age situations)
+# =============================================================================
+
+cacontology:hasAgeSituation rdf:type owl:ObjectProperty ;
+    rdfs:label "has age situation"@en ;
+    rdfs:comment "Links a person to an Age At Time Situation that attributes a concrete age value to them over a time-bounded interval. This is the primary bridge from identity data into the gUFO-based age modeling pattern."@en ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range cacontology-temporal:AgeAtTimeSituation .
+
+cacontology:hasVictimAgeSituation rdf:type owl:ObjectProperty ;
+    rdfs:label "has victim age situation"@en ;
+    rdfs:comment "Convenience link from a child sexual abuse event to an Age At Time Situation describing the victim’s age at or during that event. Implementations MAY infer or materialize this from person-level age situations and event timepoints."@en ;
+    rdfs:domain cacontology:ChildSexualAbuseEvent ;
+    rdfs:range cacontology-temporal:AgeAtTimeSituation .
+
+cacontology:hasOffenderAgeSituation rdf:type owl:ObjectProperty ;
+    rdfs:label "has offender age situation"@en ;
+    rdfs:comment "Convenience link from a child sexual abuse event to an Age At Time Situation describing the offender’s age at or during that event, enabling age-gap and Romeo-and-Juliet style analyses."@en ;
+    rdfs:domain cacontology:ChildSexualAbuseEvent ;
+    rdfs:range cacontology-temporal:AgeAtTimeSituation .
+
+cacontology:submittedTo rdf:type owl:ObjectProperty ;
+    rdfs:label "submitted to"@en ;
+    rdfs:comment "Links an unknown victim submission to the target database."@en ;
+    rdfs:domain cacontology:UnknownVictimSubmission .
+
+# Core Object Properties
+cacontology:involvesVictim rdf:type owl:ObjectProperty ;
+    rdfs:label "involves victim"@en ;
+    rdfs:comment "Links an event to a victim role."@en ;
+    rdfs:domain cacontology:ChildSexualAbuseEvent ;
+    rdfs:range cacontology:VictimRole .
+
+cacontology:involvesOffender rdf:type owl:ObjectProperty ;
+    rdfs:label "involves offender"@en ;
+    rdfs:comment "Links an event to an offender role."@en ;
+    rdfs:domain cacontology:ChildSexualAbuseEvent ;
+    rdfs:range cacontology:OffenderRole .
+
+cacontology:usesChannel rdf:type owl:ObjectProperty ;
+    rdfs:label "uses channel"@en ;
+    rdfs:comment "Links an event to a digital service or communication channel."@en ;
+    rdfs:domain cacontology:ChildSexualAbuseEvent ;
+    rdfs:range uco-channel:DigitalService .
+
+cacontology:producesArtifact rdf:type owl:ObjectProperty ;
+    rdfs:label "produces artifact"@en ;
+    rdfs:comment "Links an event to a digital artifact it produces."@en ;
+    rdfs:domain cacontology:ChildSexualAbuseEvent ;
+    rdfs:range uco-observable:DigitalArtifact .
+
+cacontology:occursDuringPhase rdf:type owl:ObjectProperty ;
+    rdfs:label "occurs during phase"@en ;
+    rdfs:comment "Links an action to the investigation phase during which it occurs."@en ;
+    rdfs:domain uco-action:Action ;
+    rdfs:range cac-core:Phase .
+
+# Core Datatype Properties
+cacontology:severityLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "severity level"@en ;
+    rdfs:comment "The severity level of an incident (0-3, mapping to NorRating/EUROPOL scales)."@en ;
+    rdfs:domain cacontology:ChildSexualAbuseEvent ;
+    rdfs:range xsd:integer .
+
+cacontology:depictsChild rdf:type owl:ObjectProperty ;
+    rdfs:label "depicts child"@en ;
+    rdfs:comment "Links a digital artifact to a child depicted in it."@en ;
+    rdfs:domain uco-observable:DigitalArtifact ;
+    rdfs:range uco-identity:Person .
+
+# Investigation Status Properties
+cacontology:investigationStatus rdf:type owl:DatatypeProperty ;
+    rdfs:label "investigation status"@en ;
+    rdfs:comment "Current status of CAC investigation (active, suspended, closed, referred)."@en ;
+    rdfs:domain cacontology:CACInvestigation ;
+    rdfs:range xsd:string .
+
+cacontology:currentPhase rdf:type owl:ObjectProperty ;
+    rdfs:label "current phase"@en ;
+    rdfs:comment "The current active phase of the investigation."@en ;
+    rdfs:domain cacontology:CACInvestigation ;
+    rdfs:range cac-core:Phase .
+
+cacontology:phaseProgress rdf:type owl:DatatypeProperty ;
+    rdfs:label "phase progress"@en ;
+    rdfs:comment "Progress percentage within current investigation phase (0.0-1.0)."@en ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:decimal .
+
+# =============================================================================
+# CONSPIRACY AND COORDINATED CRIMINAL ENTERPRISE CLASSES (Brooklyn Case Enhancement)
+# =============================================================================
+
+cacontology:ConspiracyToCommitCSA rdf:type owl:Class ;
+    rdfs:label "Conspiracy to Commit Child Sexual Abuse"@en ;
+    rdfs:comment "Criminal conspiracy involving multiple defendants coordinating child sexual abuse or exploitation activities (e.g., 8-defendant Brooklyn trafficking ring)."@en ;
+    rdfs:subClassOf cacontology:ChildSexualAbuseEvent .
+
+cacontology:CriminalEnterprise rdf:type owl:Class ;
+    rdfs:label "Criminal Enterprise"@en ;
+    rdfs:comment "Organized criminal group conducting systematic child exploitation activities with defined roles and structure."@en ;
+    rdfs:subClassOf uco-identity:Organization .
+
+cacontology:CoordinatedOffensePattern rdf:type owl:Class ;
+    rdfs:label "Coordinated Offense Pattern"@en ;
+    rdfs:comment "Pattern of coordinated criminal activities involving multiple perpetrators working together across time and locations."@en ;
+    rdfs:subClassOf uco-action:Action .
+
+cacontology:MultiDefendantIndictment rdf:type owl:Class ;
+    rdfs:label "Multi-Defendant Indictment"@en ;
+    rdfs:comment "Legal indictment involving multiple defendants in coordinated criminal enterprise (e.g., 19-count superseding indictment)."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject .
+
+# Conspiracy Role Classes
+cacontology:ConspiracyRole rdf:type owl:Class ;
+    rdfs:label "Conspiracy Role"@en ;
+    rdfs:comment "Role of individual within criminal conspiracy."@en ;
+    rdfs:subClassOf cac-core:Role , uco-role:OffenderRole .
+
+cacontology:ConspiracyLeaderRole rdf:type owl:Class ;
+    rdfs:label "Conspiracy Leader Role"@en ;
+    rdfs:comment "Leadership role within criminal conspiracy, directing and coordinating activities."@en ;
+    rdfs:subClassOf cacontology:ConspiracyRole .
+
+cacontology:ConspiracyMemberRole rdf:type owl:Class ;
+    rdfs:label "Conspiracy Member Role"@en ;
+    rdfs:comment "Member role within criminal conspiracy, participating in coordinated activities."@en ;
+    rdfs:subClassOf cacontology:ConspiracyRole .
+
+# =============================================================================
+# CONSPIRACY PROPERTIES
+# =============================================================================
+
+cacontology:conspiracyMemberCount rdf:type owl:DatatypeProperty ;
+    rdfs:label "conspiracy member count"@en ;
+    rdfs:comment "Number of individuals involved in criminal conspiracy (e.g., 8 defendants)."@en ;
+    rdfs:domain cacontology:ConspiracyToCommitCSA ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology:indictmentCounts rdf:type owl:DatatypeProperty ;
+    rdfs:label "indictment counts"@en ;
+    rdfs:comment "Number of criminal counts in indictment (e.g., 19 counts in superseding indictment)."@en ;
+    rdfs:domain cacontology:MultiDefendantIndictment ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology:conspiracyDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "conspiracy duration"@en ;
+    rdfs:comment "Duration of criminal conspiracy from start to disruption."@en ;
+    rdfs:domain cacontology:ConspiracyToCommitCSA ;
+    rdfs:range xsd:duration .
+
+# =============================================================================
+# CONSPIRACY RELATIONSHIPS
+# =============================================================================
+
+cacontology:participatesInConspiracy rdf:type owl:ObjectProperty ;
+    rdfs:label "participates in conspiracy"@en ;
+    rdfs:comment "Links individual to conspiracy they participate in."@en ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range cacontology:ConspiracyToCommitCSA .
+
+cacontology:leadsConspiracy rdf:type owl:ObjectProperty ;
+    rdfs:label "leads conspiracy"@en ;
+    rdfs:comment "Links individual to conspiracy they lead or direct."@en ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range cacontology:ConspiracyToCommitCSA .
+
+cacontology:resultsInIndictment rdf:type owl:ObjectProperty ;
+    rdfs:label "results in indictment"@en ;
+    rdfs:comment "Links conspiracy to indictment resulting from investigation."@en ;
+    rdfs:domain cacontology:ConspiracyToCommitCSA ;
+    rdfs:range cacontology:MultiDefendantIndictment .
+
+# =============================================================================
+# CORE CASE-IDENTIFICATION PROPERTIES — Issue #41
+# Declares (or aligns with UCO/CASE) the core-level case-identification terms
+# that CAC graphs already use. Where UCO or CASE already provides the concept,
+# the CAC term inherits it (subproperty / equivalent class) rather than
+# minting an independent term.
+# =============================================================================
+
+cacontology:caseNumber rdf:type owl:DatatypeProperty ;
+    rdfs:label "case number"@en ;
+    rdfs:comment "Court or agency case identifier for an investigation or proceeding (e.g., PACER docket number '3:20-cr-00029-SLG-MMS'). Declared as a subproperty of uco-core:externalIdentifier so consumers inherit UCO identifier semantics; the richer canonical pattern uco-core:externalReference remains available for fully-qualified references."@en ;
+    rdfs:subPropertyOf uco-core:externalIdentifier ;
+    rdfs:range xsd:string .
+
+cacontology:jurisdiction rdf:type owl:DatatypeProperty ;
+    rdfs:label "jurisdiction"@en ;
+    rdfs:comment "Legal authority scope of an investigation, proceeding, agency, or action (e.g., 'federal', 'E.D. Wis.', 'Victoria, Australia'). Declared once at core level to consolidate the per-module string variants; for structured jurisdictional entities use cacontology-multi:Jurisdiction and its subclasses."@en ;
+    rdfs:range xsd:string .
+
+cacontology:located_at rdf:type owl:ObjectProperty ;
+    rdfs:label "located at"@en ;
+    rdfs:comment "Direct edge from an entity to a location. UCO idiom alternatives: uco-core:Relationship with kindOfRelationship 'Located_At', or uco-action:location for Actions; this property supports direct edges where a reified Relationship is unnecessary."@en ;
+    rdfs:range uco-location:Location .
+
+cacontology:participatesInEvent rdf:type owl:ObjectProperty ;
+    rdfs:label "participates in event"@en ;
+    rdfs:comment "Links a participant (person, role, or organization) to an event they take part in. Referenced by cacontology-core-shapes SPARQL constraints; declared here to close the declaration gap (Issue #41)."@en ;
+    rdfs:range cac-core:Event .
+
+# Subject alignment (Issue #41): CASE already defines the investigation-subject
+# role; CAC graphs should use case-investigation:Subject. The equivalence below
+# provides continuity for existing graphs that used cacontology:Subject.
+cacontology:Subject rdf:type owl:Class ;
+    rdfs:label "Subject"@en ;
+    rdfs:comment "Continuity alias for the investigation-subject role. Deprecated in favor of case-investigation:Subject (a uco-role:Role whose conduct is within the scope of an investigation); new graphs should use the CASE class directly."@en ;
+    owl:equivalentClass case-investigation:Subject ;
+    owl:deprecated "true"^^xsd:boolean .

@@ -1,0 +1,446 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-observable: <https://ontology.unifiedcyberontology.org/uco/observable/> .
+@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology-partnerships: <https://cacontology.projectvic.org/partnerships#> .
+@prefix gufo: <http://purl.org/nemo/gufo#> .
+
+# Ontology Declaration
+<https://cacontology.projectvic.org/partnerships> rdf:type owl:Ontology ;
+    rdfs:label "CAC Public-Private Partnerships Ontology"@en ;
+    rdfs:comment "An ontology for representing public-private partnerships, multi-stakeholder coordination, and collaborative frameworks in child protection with gUFO foundational ontology enhancements for improved semantic precision, temporal modeling, and validation capabilities. Based on analysis of Europol's collaborative approaches with technology companies, NGOs, and civil society organizations in initiatives like 'Stop Child Abuse - Trace an Object'."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/partnerships/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:issued "2025-05-23"^^xsd:date ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/identity/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/observable/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/action/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/role/1.5.0> ,
+                <https://cacontology.projectvic.org/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> .
+
+# =============================================================================
+# PARTNERSHIP FRAMEWORK CLASSES (extending UCO Core with gUFO Organization)
+# =============================================================================
+
+# Partnership Organizations (gUFO Organization modeling)
+cacontology-partnerships:PublicPrivatePartnership rdf:type owl:Class ;
+    rdfs:label "Public-Private Partnership"@en ;
+    rdfs:comment "Formal partnership between government/law enforcement agencies and private sector organizations for child protection initiatives. Modeled as gUFO Organization."@en ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:OrganizationLikeEntity .
+
+cacontology-partnerships:MultiStakeholderInitiative rdf:type owl:Class ;
+    rdfs:label "Multi-Stakeholder Initiative"@en ;
+    rdfs:comment "Initiative involving multiple types of organizations including law enforcement, technology companies, NGOs, and civil society groups. Modeled as gUFO Organization."@en ;
+    rdfs:subClassOf cacontology-partnerships:PublicPrivatePartnership .
+
+cacontology-partnerships:TechIndustryCooperation rdf:type owl:Class ;
+    rdfs:label "Tech Industry Cooperation"@en ;
+    rdfs:comment "Cooperation framework between law enforcement and technology companies for content detection, platform monitoring, and data sharing. Modeled as gUFO Organization."@en ;
+    rdfs:subClassOf cacontology-partnerships:PublicPrivatePartnership .
+
+cacontology-partnerships:NGOCoordination rdf:type owl:Class ;
+    rdfs:label "NGO Coordination"@en ;
+    rdfs:comment "Coordination framework with non-governmental organizations specializing in child protection and victim advocacy. Modeled as gUFO Organization."@en ;
+    rdfs:subClassOf cacontology-partnerships:PublicPrivatePartnership .
+
+cacontology-partnerships:CivilSocietyEngagement rdf:type owl:Class ;
+    rdfs:label "Civil Society Engagement"@en ;
+    rdfs:comment "Framework for engaging civil society, volunteers, and public participation in child protection initiatives. Modeled as gUFO Organization."@en ;
+    rdfs:subClassOf cacontology-partnerships:PublicPrivatePartnership .
+
+cacontology-partnerships:AcademicPartnership rdf:type owl:Class ;
+    rdfs:label "Academic Partnership"@en ;
+    rdfs:comment "Partnership with academic institutions for research, training, and technology development in child protection. Modeled as gUFO Organization."@en ;
+    rdfs:subClassOf cacontology-partnerships:PublicPrivatePartnership .
+
+# Partnership Phases (gUFO Phase anti-rigid modeling)
+cacontology-partnerships:PartnershipFormationPhase rdf:type owl:Class ;
+    rdfs:label "Partnership Formation Phase"@en ;
+    rdfs:comment "Phase of partnership formation including agreement negotiation and framework establishment. Modeled as anti-rigid gUFO Phase."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+cacontology-partnerships:ActiveCooperationPhase rdf:type owl:Class ;
+    rdfs:label "Active Cooperation Phase"@en ;
+    rdfs:comment "Phase of active cooperation with joint operations and information sharing. Modeled as anti-rigid gUFO Phase."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+cacontology-partnerships:EvaluationPhase rdf:type owl:Class ;
+    rdfs:label "Evaluation Phase"@en ;
+    rdfs:comment "Phase of partnership evaluation and effectiveness assessment. Modeled as anti-rigid gUFO Phase."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+cacontology-partnerships:RenewalPhase rdf:type owl:Class ;
+    rdfs:label "Renewal Phase"@en ;
+    rdfs:comment "Phase of partnership renewal or renegotiation. Modeled as anti-rigid gUFO Phase."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+# Partnership Situations (gUFO Situation)
+cacontology-partnerships:CollaborativeInvestigationSituation rdf:type owl:Class ;
+    rdfs:label "Collaborative Investigation Situation"@en ;
+    rdfs:comment "Complex situation involving multiple partners working together on investigations. Modeled as gUFO Situation."@en ;
+    rdfs:subClassOf cac-core:Situation .
+
+cacontology-partnerships:InformationSharingSituation rdf:type owl:Class ;
+    rdfs:label "Information Sharing Situation"@en ;
+    rdfs:comment "Situation involving active information sharing between partnership entities. Modeled as gUFO Situation."@en ;
+    rdfs:subClassOf cac-core:Situation .
+
+# =============================================================================
+# CROWDSOURCING AND PUBLIC PARTICIPATION CLASSES (extending UCO Action with gUFO Event)
+# =============================================================================
+
+# Crowdsourcing Investigations as gUFO Events
+cacontology-partnerships:CrowdsourcingInvestigation rdf:type owl:Class ;
+    rdfs:label "Crowdsourcing Investigation"@en ;
+    rdfs:comment "Investigation leveraging public participation for object identification, geolocation, and evidence analysis. Modeled as gUFO Event."@en ;
+    rdfs:subClassOf cac-core:CoordinationEvent .
+
+cacontology-partnerships:ObjectIdentificationRequest rdf:type owl:Class ;
+    rdfs:label "Object Identification Request"@en ;
+    rdfs:comment "Request for public assistance in identifying objects, locations, or other evidence from case materials. Modeled as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-partnerships:CrowdsourcingInvestigation .
+
+cacontology-partnerships:GeolocationRequest rdf:type owl:Class ;
+    rdfs:label "Geolocation Request"@en ;
+    rdfs:comment "Request for public assistance in identifying geographic locations from visual evidence. Modeled as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-partnerships:CrowdsourcingInvestigation .
+
+# Public Tips as gUFO Objects
+cacontology-partnerships:PublicTip rdf:type owl:Class ;
+    rdfs:label "Public Tip"@en ;
+    rdfs:comment "Information provided by members of the public in response to crowdsourcing requests. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject, cac-core:EnduringEntity .
+
+# Community Analysis as gUFO Events
+cacontology-partnerships:CommunityAnalysis rdf:type owl:Class ;
+    rdfs:label "Community Analysis"@en ;
+    rdfs:comment "Analysis performed by volunteer researchers and civil society organizations using open source intelligence methods. Modeled as gUFO Event."@en ;
+    rdfs:subClassOf cac-core:CoordinationEvent .
+
+cacontology-partnerships:OSINTInvestigation rdf:type owl:Class ;
+    rdfs:label "OSINT Investigation"@en ;
+    rdfs:comment "Open source intelligence investigation conducted by skilled volunteers and researchers. Modeled as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-partnerships:CommunityAnalysis .
+
+# =============================================================================
+# INFORMATION SHARING FRAMEWORKS (extending UCO Action with gUFO Object)
+# =============================================================================
+
+# Information Sharing Frameworks as gUFO Objects
+cacontology-partnerships:InformationSharingFramework rdf:type owl:Class ;
+    rdfs:label "Information Sharing Framework"@en ;
+    rdfs:comment "Framework governing how information is shared between public and private partners while protecting privacy and investigation integrity. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:Artifact .
+
+cacontology-partnerships:DataSharingAgreement rdf:type owl:Class ;
+    rdfs:label "Data Sharing Agreement"@en ;
+    rdfs:comment "Legal agreement governing data sharing between partners, including scope, limitations, and privacy protections. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-partnerships:InformationSharingFramework .
+
+cacontology-partnerships:TechnicalIntegration rdf:type owl:Class ;
+    rdfs:label "Technical Integration"@en ;
+    rdfs:comment "Technical integration between partner systems for automated information sharing and analysis. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-partnerships:InformationSharingFramework .
+
+cacontology-partnerships:HashSharingProtocol rdf:type owl:Class ;
+    rdfs:label "Hash Sharing Protocol"@en ;
+    rdfs:comment "Protocol for sharing cryptographic hashes of illegal content between partners for detection and prevention. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-partnerships:TechnicalIntegration .
+
+cacontology-partnerships:IntelligenceSharing rdf:type owl:Class ;
+    rdfs:label "Intelligence Sharing"@en ;
+    rdfs:comment "Sharing of actionable intelligence between partners while maintaining operational security. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-partnerships:InformationSharingFramework .
+
+# =============================================================================
+# TECHNOLOGY COOPERATION CLASSES (extending UCO Action with gUFO Event)
+# =============================================================================
+
+# Technology Cooperation as gUFO Events
+cacontology-partnerships:TechnologyCooperation rdf:type owl:Class ;
+    rdfs:label "Technology Cooperation"@en ;
+    rdfs:comment "Cooperation in developing and deploying technology solutions for child protection. Modeled as gUFO Event."@en ;
+    rdfs:subClassOf cac-core:CoordinationEvent .
+
+cacontology-partnerships:ContentDetectionCooperation rdf:type owl:Class ;
+    rdfs:label "Content Detection Cooperation"@en ;
+    rdfs:comment "Cooperation in developing and improving automated content detection systems. Modeled as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-partnerships:TechnologyCooperation .
+
+cacontology-partnerships:PlatformMonitoring rdf:type owl:Class ;
+    rdfs:label "Platform Monitoring"@en ;
+    rdfs:comment "Cooperative monitoring of platforms and services for illegal content and activities. Modeled as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-partnerships:TechnologyCooperation .
+
+cacontology-partnerships:ToolDevelopment rdf:type owl:Class ;
+    rdfs:label "Tool Development"@en ;
+    rdfs:comment "Joint development of investigative tools and technologies for law enforcement use. Modeled as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-partnerships:TechnologyCooperation .
+
+cacontology-partnerships:AICooperation rdf:type owl:Class ;
+    rdfs:label "AI Cooperation"@en ;
+    rdfs:comment "Cooperation in developing AI-based solutions for detection, analysis, and prevention of child exploitation. Modeled as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-partnerships:TechnologyCooperation .
+
+# =============================================================================
+# COORDINATION MECHANISMS (extending UCO Action with gUFO Event)
+# =============================================================================
+
+# Coordination Mechanisms as gUFO Events
+cacontology-partnerships:CoordinationMechanism rdf:type owl:Class ;
+    rdfs:label "Coordination Mechanism"@en ;
+    rdfs:comment "Mechanism for coordinating activities and sharing information between partners. Modeled as gUFO Event."@en ;
+    rdfs:subClassOf cac-core:CoordinationEvent .
+
+cacontology-partnerships:TaskForceCoordination rdf:type owl:Class ;
+    rdfs:label "Task Force Coordination"@en ;
+    rdfs:comment "Coordination through multi-partner task forces with representatives from different organizations. Modeled as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-partnerships:CoordinationMechanism .
+
+cacontology-partnerships:RegularMeeting rdf:type owl:Class ;
+    rdfs:label "Regular Meeting"@en ;
+    rdfs:comment "Regular meetings between partners for coordination, information sharing, and strategic planning. Modeled as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-partnerships:CoordinationMechanism .
+
+cacontology-partnerships:EmergencyCoordination rdf:type owl:Class ;
+    rdfs:label "Emergency Coordination"@en ;
+    rdfs:comment "Rapid coordination mechanism for urgent situations requiring immediate partner response. Modeled as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-partnerships:CoordinationMechanism .
+
+cacontology-partnerships:JointOperation rdf:type owl:Class ;
+    rdfs:label "Joint Operation"@en ;
+    rdfs:comment "Operation conducted jointly by multiple partners with shared resources and coordination. Modeled as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-partnerships:CoordinationMechanism .
+
+# =============================================================================
+# PARTNER ROLES AND RESPONSIBILITIES (extending UCO Role with gUFO Role)
+# =============================================================================
+
+# Partner Roles as gUFO Roles (anti-rigid)
+cacontology-partnerships:PartnerRole rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Partner Role"@en ;
+    rdfs:comment "Role played by an organization within a public-private partnership framework. Modeled as anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cac-core:Role .
+
+cacontology-partnerships:LawEnforcementPartner rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Law Enforcement Partner"@en ;
+    rdfs:comment "Law enforcement agency participating in partnership with investigative and enforcement responsibilities. Modeled as anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cacontology-partnerships:PartnerRole .
+
+cacontology-partnerships:TechnologyPartner rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Technology Partner"@en ;
+    rdfs:comment "Technology company or provider participating in partnership with technical capabilities and platform access. Modeled as anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cacontology-partnerships:PartnerRole .
+
+cacontology-partnerships:NGOPartner rdf:type owl:Class, gufo:Role ;
+    rdfs:label "NGO Partner"@en ;
+    rdfs:comment "Non-governmental organization participating in partnership with advocacy and support capabilities. Modeled as anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cacontology-partnerships:PartnerRole .
+
+cacontology-partnerships:AcademicPartner rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Academic Partner"@en ;
+    rdfs:comment "Academic institution participating in partnership with research and training capabilities. Modeled as anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cacontology-partnerships:PartnerRole .
+
+cacontology-partnerships:CivilSocietyPartner rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Civil Society Partner"@en ;
+    rdfs:comment "Civil society organization participating in partnership with community engagement capabilities. Modeled as anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cacontology-partnerships:PartnerRole .
+
+# =============================================================================
+# gUFO TEMPORAL PROPERTIES
+# =============================================================================
+
+# Partnership Temporal Properties
+cacontology-partnerships:hasPartnershipBeginPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has partnership begin point"@en ;
+    rdfs:comment "Temporal begin point for partnership."@en ;
+    rdfs:subPropertyOf gufo:hasBeginPointInXSDDateTimeStamp ;
+    rdfs:domain cacontology-partnerships:PublicPrivatePartnership ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-partnerships:hasPartnershipEndPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has partnership end point"@en ;
+    rdfs:comment "Temporal end point for partnership."@en ;
+    rdfs:subPropertyOf gufo:hasEndPointInXSDDateTimeStamp ;
+    rdfs:domain cacontology-partnerships:PublicPrivatePartnership ;
+    rdfs:range xsd:dateTimeStamp .
+
+# Partnership Phase Temporal Properties
+cacontology-partnerships:hasPhaseBeginPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has phase begin point"@en ;
+    rdfs:comment "Temporal begin point for partnership phase."@en ;
+    rdfs:subPropertyOf gufo:hasBeginPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-partnerships:hasPhaseEndPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has phase end point"@en ;
+    rdfs:comment "Temporal end point for partnership phase."@en ;
+    rdfs:subPropertyOf gufo:hasEndPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:dateTimeStamp .
+
+# Cooperation Event Temporal Properties
+cacontology-partnerships:hasCooperationBeginPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has cooperation begin point"@en ;
+    rdfs:comment "Temporal begin point for cooperation event."@en ;
+    rdfs:subPropertyOf gufo:hasBeginPointInXSDDateTimeStamp ;
+    rdfs:domain cacontology-partnerships:TechnologyCooperation ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-partnerships:hasCooperationEndPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has cooperation end point"@en ;
+    rdfs:comment "Temporal end point for cooperation event."@en ;
+    rdfs:subPropertyOf gufo:hasEndPointInXSDDateTimeStamp ;
+    rdfs:domain cacontology-partnerships:TechnologyCooperation ;
+    rdfs:range xsd:dateTimeStamp .
+
+# Partner Role Temporal Properties
+cacontology-partnerships:hasRoleBeginPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has role begin point"@en ;
+    rdfs:comment "Temporal begin point for partner role."@en ;
+    rdfs:subPropertyOf gufo:hasBeginPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Role ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-partnerships:hasRoleEndPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has role end point"@en ;
+    rdfs:comment "Temporal end point for partner role."@en ;
+    rdfs:subPropertyOf gufo:hasEndPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Role ;
+    rdfs:range xsd:dateTimeStamp .
+
+# Duration Properties
+cacontology-partnerships:partnershipDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "partnership duration"@en ;
+    rdfs:comment "Duration of partnership from formation to termination."@en ;
+    rdfs:domain cacontology-partnerships:PublicPrivatePartnership ;
+    rdfs:range xsd:duration .
+
+cacontology-partnerships:phaseDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "phase duration"@en ;
+    rdfs:comment "Duration of partnership phase."@en ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:duration .
+
+cacontology-partnerships:cooperationDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "cooperation duration"@en ;
+    rdfs:comment "Duration of cooperation event."@en ;
+    rdfs:domain cacontology-partnerships:TechnologyCooperation ;
+    rdfs:range xsd:duration .
+
+cacontology-partnerships:roleDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "role duration"@en ;
+    rdfs:comment "Duration of partner role."@en ;
+    rdfs:domain cac-core:Role ;
+    rdfs:range xsd:duration .
+
+# =============================================================================
+# PARTNERSHIP RELATIONSHIPS
+# =============================================================================
+
+# Partnership Structure Relationships
+cacontology-partnerships:includesPartner rdf:type owl:ObjectProperty ;
+    rdfs:label "includes partner"@en ;
+    rdfs:comment "Links partnership to participating organizations."@en ;
+    rdfs:domain cacontology-partnerships:PublicPrivatePartnership ;
+    rdfs:range uco-identity:Organization .
+
+cacontology-partnerships:hasRole rdf:type owl:ObjectProperty ;
+    rdfs:label "has role"@en ;
+    rdfs:comment "Links partner organization to their role in the partnership."@en ;
+    rdfs:domain uco-identity:Organization ;
+    rdfs:range cacontology-partnerships:PartnerRole .
+
+cacontology-partnerships:coordinatedBy rdf:type owl:ObjectProperty ;
+    rdfs:label "coordinated by"@en ;
+    rdfs:comment "Links partnership activities to coordinating organization."@en ;
+    rdfs:domain cacontology-partnerships:PublicPrivatePartnership ;
+    rdfs:range uco-identity:Organization .
+
+# Information Sharing Relationships
+cacontology-partnerships:governedBy rdf:type owl:ObjectProperty ;
+    rdfs:label "governed by"@en ;
+    rdfs:comment "Links partnership to information sharing frameworks governing it."@en ;
+    rdfs:domain cacontology-partnerships:PublicPrivatePartnership ;
+    rdfs:range cacontology-partnerships:InformationSharingFramework .
+
+cacontology-partnerships:enablesSharing rdf:type owl:ObjectProperty ;
+    rdfs:label "enables sharing"@en ;
+    rdfs:comment "Links technical integration to types of information sharing enabled."@en ;
+    rdfs:domain cacontology-partnerships:TechnicalIntegration ;
+    rdfs:range cacontology-partnerships:InformationSharingFramework .
+
+cacontology-partnerships:sharesIntelligence rdf:type owl:ObjectProperty ;
+    rdfs:label "shares intelligence"@en ;
+    rdfs:comment "Links partners to intelligence sharing arrangements."@en ;
+    rdfs:domain uco-identity:Organization ;
+    rdfs:range cacontology-partnerships:IntelligenceSharing .
+
+# Crowdsourcing Relationships
+cacontology-partnerships:solicitsHelp rdf:type owl:ObjectProperty ;
+    rdfs:label "solicits help"@en ;
+    rdfs:comment "Links organization to crowdsourcing investigations they conduct."@en ;
+    rdfs:domain uco-identity:Organization ;
+    rdfs:range cacontology-partnerships:CrowdsourcingInvestigation .
+
+cacontology-partnerships:contributesToAnalysis rdf:type owl:ObjectProperty ;
+    rdfs:label "contributes to analysis"@en ;
+    rdfs:comment "Links civil society partners to community analysis they perform."@en ;
+    rdfs:domain cacontology-partnerships:CivilSocietyPartner ;
+    rdfs:range cacontology-partnerships:CommunityAnalysis .
+
+cacontology-partnerships:generatesRequests rdf:type owl:ObjectProperty ;
+    rdfs:label "generates requests"@en ;
+    rdfs:comment "Links investigation to identification requests generated."@en ;
+    rdfs:domain uco-action:Action ;
+    rdfs:range cacontology-partnerships:ObjectIdentificationRequest .
+
+# Technology Cooperation Relationships
+cacontology-partnerships:participatesInDevelopment rdf:type owl:ObjectProperty ;
+    rdfs:label "participates in development"@en ;
+    rdfs:comment "Links technology partners to development projects they participate in."@en ;
+    rdfs:domain cacontology-partnerships:TechnologyPartner ;
+    rdfs:range cacontology-partnerships:ToolDevelopment .
+
+cacontology-partnerships:providesMonitoring rdf:type owl:ObjectProperty ;
+    rdfs:label "provides monitoring"@en ;
+    rdfs:comment "Links technology partners to platform monitoring they provide."@en ;
+    rdfs:domain cacontology-partnerships:TechnologyPartner ;
+    rdfs:range cacontology-partnerships:PlatformMonitoring .
+
+cacontology-partnerships:cooperatesOn rdf:type owl:ObjectProperty ;
+    rdfs:label "cooperates on"@en ;
+    rdfs:comment "Links partners to technology cooperation initiatives."@en ;
+    rdfs:domain uco-identity:Organization ;
+    rdfs:range cacontology-partnerships:TechnologyCooperation .
+
+# Coordination Relationships
+cacontology-partnerships:coordinatedThrough rdf:type owl:ObjectProperty ;
+    rdfs:label "coordinated through"@en ;
+    rdfs:comment "Links partnership activities to coordination mechanisms used."@en ;
+    rdfs:domain cacontology-partnerships:PublicPrivatePartnership ;
+    rdfs:range cacontology-partnerships:CoordinationMechanism .
+
+cacontology-partnerships:participatesInOperation rdf:type owl:ObjectProperty ;
+    rdfs:label "participates in operation"@en ;
+    rdfs:comment "Links partners to joint operations they participate in."@en ;
+    rdfs:domain uco-identity:Organization ;
+    rdfs:range cacontology-partnerships:JointOperation .
+
+cacontology-partnerships:respondsToEmergency rdf:type owl:ObjectProperty ;
+    rdfs:label "responds to emergency"@en ;
+    rdfs:comment "Links partners to emergency coordination they participate in."@en ;
+    rdfs:domain uco-identity:Organization ;
+    rdfs:range cacontology-partnerships:EmergencyCoordination . 

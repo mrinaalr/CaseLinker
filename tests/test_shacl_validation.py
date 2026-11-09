@@ -25,7 +25,7 @@ pytest.importorskip("pyshacl")
 
 def test_core_shapes_path_defaults_to_pinned_ontology_dir():
     path = get_core_shapes_path()
-    assert path == (ONTOLOGY / "cacontology-core-shapes.ttl").resolve()
+    assert path == (ONTOLOGY / "vendor" / "cac-3.1.0" / "cacontology-core-shapes.ttl").resolve()
     assert path.is_file()
 
 

@@ -1,0 +1,1076 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-observable: <https://ontology.unifiedcyberontology.org/uco/observable/> .
+@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix uco-tool: <https://ontology.unifiedcyberontology.org/uco/tool/> .
+@prefix uco-types: <https://ontology.unifiedcyberontology.org/uco/types/> .
+@prefix cacontology-forensics: <https://cacontology.projectvic.org/forensics#> .
+@prefix gufo: <http://purl.org/nemo/gufo#> .
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+
+# Ontology Declaration
+<https://cacontology.projectvic.org/forensics> rdf:type owl:Ontology ;
+    rdfs:label "CAC Digital Forensics Ontology"@en ;
+    rdfs:comment "An ontology for representing digital forensics concepts specific to Internet Crimes Against Children investigations, extending UCO and CASE with gUFO foundational ontology enhancements. This ontology provides forensic acquisition, chain of custody, evidence handling, and tool provenance capabilities."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/forensics/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:issued "2024-12-19"^^xsd:date ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/observable/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/action/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/tool/1.5.0> ,
+                <https://ontology.caseontology.org/case/case/1.5.0> ,
+                <https://cacontology.projectvic.org/3.1.0> ,
+                <https://cacontology.projectvic.org/core/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> .
+
+# =============================================================================
+# FORENSIC TOOL CLASSES (extending UCO Tool with gUFO Object)
+# =============================================================================
+
+cacontology-forensics:ForensicImagingTool rdf:type owl:Class ;
+    rdfs:label "Forensic Imaging Tool"@en ;
+    rdfs:comment "A tool specialized for creating forensic images of digital media using write-blocking and verification methods (e.g., FTK Imager, dd, Guymager, PALADIN)."@en ;
+    rdfs:subClassOf uco-tool:AnalyticTool, cac-core:DigitalSystemEntity .
+
+cacontology-forensics:MobileForensicTool rdf:type owl:Class ;
+    rdfs:label "Mobile Forensic Tool"@en ;
+    rdfs:comment "A tool specialized for mobile device forensics including logical and physical extraction (e.g., Cellebrite UFED, MSAB XRY, Oxygen Detective Suite)."@en ;
+    rdfs:subClassOf uco-tool:AnalyticTool, cac-core:DigitalSystemEntity .
+
+cacontology-forensics:NetworkForensicTool rdf:type owl:Class ;
+    rdfs:label "Network Forensic Tool"@en ;
+    rdfs:comment "A tool specialized for network traffic analysis and packet capture (e.g., Wireshark, NetworkMiner, Xplico)."@en ;
+    rdfs:subClassOf uco-tool:AnalyticTool, cac-core:DigitalSystemEntity .
+
+cacontology-forensics:MemoryForensicTool rdf:type owl:Class ;
+    rdfs:label "Memory Forensic Tool"@en ;
+    rdfs:comment "A tool specialized for analyzing volatile memory dumps (e.g., Volatility, Rekall, MAGNET RAM Capture)."@en ;
+    rdfs:subClassOf uco-tool:AnalyticTool, cac-core:DigitalSystemEntity .
+
+cacontology-forensics:HashingTool rdf:type owl:Class ;
+    rdfs:label "Hashing Tool"@en ;
+    rdfs:comment "A tool specialized for generating cryptographic hashes for evidence verification (e.g., hashdeep, md5deep, NIST NSRL)."@en ;
+    rdfs:subClassOf uco-tool:AnalyticTool, cac-core:DigitalSystemEntity .
+
+# =============================================================================
+# FORENSIC ACTION CLASSES (extending UCO Action with gUFO Event)
+# =============================================================================
+
+cacontology-forensics:ForensicAcquisitionAction rdf:type owl:Class ;
+    rdfs:label "Forensic Acquisition Action"@en ;
+    rdfs:comment "The action of creating a forensically sound copy of digital evidence using write-blocking and verification procedures."@en ;
+    rdfs:subClassOf cac-core:InvestigativeAction .
+
+cacontology-forensics:ChainOfCustodyAction rdf:type owl:Class ;
+    rdfs:label "Chain of Custody Action"@en ;
+    rdfs:comment "An action that documents evidence handling, transfer, and custody maintaining legal admissibility."@en ;
+    rdfs:subClassOf cac-core:InvestigativeAction .
+
+cacontology-forensics:EvidenceVerificationAction rdf:type owl:Class ;
+    rdfs:label "Evidence Verification Action"@en ;
+    rdfs:comment "The action of verifying evidence integrity using cryptographic hashes and comparison methods."@en ;
+    rdfs:subClassOf cac-core:InvestigativeAction .
+
+cacontology-forensics:TimelineAnalysisAction rdf:type owl:Class ;
+    rdfs:label "Timeline Analysis Action"@en ;
+    rdfs:comment "The action of creating chronological sequences of digital artifacts and events for investigation analysis."@en ;
+    rdfs:subClassOf cac-core:InvestigativeAction .
+
+cacontology-forensics:MetadataExtractionAction rdf:type owl:Class ;
+    rdfs:label "Metadata Extraction Action"@en ;
+    rdfs:comment "The action of extracting metadata from digital artifacts including EXIF, file system timestamps, and application metadata."@en ;
+    rdfs:subClassOf cac-core:InvestigativeAction .
+
+# Victim Identification Actions
+cacontology-forensics:VictimIdentificationProcess rdf:type owl:Class ;
+    rdfs:label "Victim Identification Process"@en ;
+    rdfs:comment "Systematic process for identifying child victims from seized images and videos during long-term investigations."@en ;
+    rdfs:subClassOf cac-core:InvestigativeAction .
+
+cacontology-forensics:ImageAnalysisForVictimID rdf:type owl:Class ;
+    rdfs:label "Image Analysis for Victim Identification"@en ;
+    rdfs:comment "Analysis of seized images to identify and remove child victims from continued exploitation."@en ;
+    rdfs:subClassOf cacontology-forensics:VictimIdentificationProcess .
+
+cacontology-forensics:CrossReferenceAnalysis rdf:type owl:Class ;
+    rdfs:label "Cross Reference Analysis"@en ;
+    rdfs:comment "Cross-referencing of digital evidence across multiple cases and international databases for victim identification."@en ;
+    rdfs:subClassOf cacontology-forensics:VictimIdentificationProcess .
+
+cacontology-forensics:VictimRemovalAction rdf:type owl:Class ;
+    rdfs:label "Victim Removal Action"@en ;
+    rdfs:comment "Action taken to remove identified victims from further harm and exploitation."@en ;
+    rdfs:subClassOf cac-core:InvestigativeAction .
+
+cacontology-forensics:ExtendedInvestigationTimeline rdf:type owl:Class ;
+    rdfs:label "Extended Investigation Timeline"@en ;
+    rdfs:comment "Investigation timeline spanning weeks, months, or years for complex child exploitation cases."@en ;
+    rdfs:subClassOf cacontology-forensics:TimelineAnalysisAction .
+
+# =============================================================================
+# FORENSIC PHASES (gUFO Phase anti-rigid modeling)
+# =============================================================================
+
+cacontology-forensics:AcquisitionPhase rdf:type owl:Class ;
+    rdfs:label "Acquisition Phase"@en ;
+    rdfs:comment "Phase involving forensic acquisition of digital evidence."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+cacontology-forensics:AnalysisPhase rdf:type owl:Class ;
+    rdfs:label "Analysis Phase"@en ;
+    rdfs:comment "Phase involving detailed forensic analysis of acquired evidence."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+cacontology-forensics:ReportingPhase rdf:type owl:Class ;
+    rdfs:label "Reporting Phase"@en ;
+    rdfs:comment "Phase involving preparation of forensic reports and findings."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+cacontology-forensics:TestimonyPhase rdf:type owl:Class ;
+    rdfs:label "Testimony Phase"@en ;
+    rdfs:comment "Phase involving expert testimony and courtroom presentation."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+# =============================================================================
+# FORENSIC ARTIFACT CLASSES (extending UCO Observable with gUFO Object)
+# =============================================================================
+
+cacontology-forensics:ForensicImage rdf:type owl:Class ;
+    rdfs:label "Forensic Image"@en ;
+    rdfs:comment "A bit-for-bit copy of digital media created using forensically sound methods, maintaining evidence integrity."@en ;
+    rdfs:subClassOf uco-observable:Image, cac-core:Artifact .
+
+cacontology-forensics:RecoveredFile rdf:type owl:Class ;
+    rdfs:label "Recovered File"@en ;
+    rdfs:comment "A file recovered from deleted or unallocated space on digital media through forensic analysis techniques."@en ;
+    rdfs:subClassOf uco-observable:File, cac-core:Artifact .
+
+cacontology-forensics:MemoryDump rdf:type owl:Class ;
+    rdfs:label "Memory Dump"@en ;
+    rdfs:comment "A snapshot of volatile system memory captured for forensic analysis."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject, cac-core:Artifact .
+
+cacontology-forensics:NetworkCapture rdf:type owl:Class ;
+    rdfs:label "Network Capture"@en ;
+    rdfs:comment "A capture of network traffic packets for forensic analysis."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject, cac-core:Artifact .
+
+cacontology-forensics:CustodyDocument rdf:type owl:Class ;
+    rdfs:label "Custody Document"@en ;
+    rdfs:comment "Documentation recording the handling and transfer of evidence maintaining chain of custody."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject, cac-core:Artifact .
+
+# =============================================================================
+# FORENSIC PROCESS ROLES (extending UCO Role with gUFO Role)
+# =============================================================================
+
+cacontology-forensics:ForensicExaminerRole rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Forensic Examiner Role"@en ;
+    rdfs:comment "Role of a person conducting digital forensic examination and analysis."@en ;
+    rdfs:subClassOf cac-core:Role .
+
+cacontology-forensics:EvidenceCustodianRole rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Evidence Custodian Role"@en ;
+    rdfs:comment "Role of a person responsible for evidence custody and security."@en ;
+    rdfs:subClassOf cac-core:Role .
+
+cacontology-forensics:VictimIdentificationSpecialist rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Victim Identification Specialist"@en ;
+    rdfs:comment "Role of specialist focused on identifying child victims from digital evidence."@en ;
+    rdfs:subClassOf cac-core:Role .
+
+# =============================================================================
+# gUFO TEMPORAL PROPERTIES
+# =============================================================================
+
+cacontology-forensics:hasForensicPhaseBeginPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has forensic phase begin point"@en ;
+    rdfs:comment "Temporal begin point for forensic phase."@en ;
+    rdfs:subPropertyOf gufo:hasBeginPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-forensics:hasForensicPhaseEndPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has forensic phase end point"@en ;
+    rdfs:comment "Temporal end point for forensic phase."@en ;
+    rdfs:subPropertyOf gufo:hasEndPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-forensics:hasRoleBeginPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has role begin point"@en ;
+    rdfs:comment "Temporal begin point for forensic role."@en ;
+    rdfs:subPropertyOf gufo:hasBeginPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Role ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-forensics:hasRoleEndPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has role end point"@en ;
+    rdfs:comment "Temporal end point for forensic role."@en ;
+    rdfs:subPropertyOf gufo:hasEndPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Role ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-forensics:forensicPhaseDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "forensic phase duration"@en ;
+    rdfs:comment "Duration of forensic phase."@en ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:duration .
+
+# =============================================================================
+# FORENSIC PROPERTIES
+# =============================================================================
+
+# Chain of Custody Properties
+cacontology-forensics:custodyTransferredFrom rdf:type owl:ObjectProperty ;
+    rdfs:label "custody transferred from"@en ;
+    rdfs:comment "Links a chain of custody action to the person or organization transferring custody."@en ;
+    rdfs:domain cacontology-forensics:ChainOfCustodyAction ;
+    rdfs:range uco-identity:Identity .
+
+cacontology-forensics:custodyTransferredTo rdf:type owl:ObjectProperty ;
+    rdfs:label "custody transferred to"@en ;
+    rdfs:comment "Links a chain of custody action to the person or organization receiving custody."@en ;
+    rdfs:domain cacontology-forensics:ChainOfCustodyAction ;
+    rdfs:range uco-identity:Identity .
+
+cacontology-forensics:custodyReason rdf:type owl:DatatypeProperty ;
+    rdfs:label "custody reason"@en ;
+    rdfs:comment "The reason for the custody transfer (e.g., 'forensic analysis', 'court exhibit', 'secure storage')."@en ;
+    rdfs:domain cacontology-forensics:ChainOfCustodyAction ;
+    rdfs:range xsd:string .
+
+# Verification Properties
+cacontology-forensics:verificationHash rdf:type owl:ObjectProperty ;
+    rdfs:label "verification hash"@en ;
+    rdfs:comment "Links a forensic artifact to its verification hash digest for integrity checking."@en ;
+    rdfs:range uco-types:Hash .
+
+cacontology-forensics:sourceHash rdf:type owl:ObjectProperty ;
+    rdfs:label "source hash"@en ;
+    rdfs:comment "Links a forensic image to the hash of its source media for verification."@en ;
+    rdfs:domain cacontology-forensics:ForensicImage ;
+    rdfs:range uco-types:Hash .
+
+cacontology-forensics:writeBlockingUsed rdf:type owl:DatatypeProperty ;
+    rdfs:label "write blocking used"@en ;
+    rdfs:comment "Indicates whether write-blocking hardware or software was used during acquisition."@en ;
+    rdfs:domain cacontology-forensics:ForensicAcquisitionAction ;
+    rdfs:range xsd:boolean .
+
+# Acquisition Properties
+cacontology-forensics:acquisitionMethod rdf:type owl:DatatypeProperty ;
+    rdfs:label "acquisition method"@en ;
+    rdfs:comment "The method used for forensic acquisition (e.g., 'physical', 'logical', 'live', 'chip-off')."@en ;
+    rdfs:domain cacontology-forensics:ForensicAcquisitionAction ;
+    rdfs:range xsd:string .
+
+cacontology-forensics:evidenceSeized rdf:type owl:ObjectProperty ;
+    rdfs:label "evidence seized"@en ;
+    rdfs:comment "Links an acquisition action to the original evidence item that was seized."@en ;
+    rdfs:domain cacontology-forensics:ForensicAcquisitionAction ;
+    rdfs:range uco-observable:ObservableObject .
+
+cacontology-forensics:forensicCopy rdf:type owl:ObjectProperty ;
+    rdfs:label "forensic copy"@en ;
+    rdfs:comment "Links an acquisition action to the forensic copy that was created."@en ;
+    rdfs:domain cacontology-forensics:ForensicAcquisitionAction ;
+    rdfs:range cacontology-forensics:ForensicImage .
+
+# Timeline Properties
+cacontology-forensics:timelineEvent rdf:type owl:ObjectProperty ;
+    rdfs:label "timeline event"@en ;
+    rdfs:comment "Links a timeline analysis to specific events or artifacts in chronological order."@en ;
+    rdfs:domain cacontology-forensics:TimelineAnalysisAction ;
+    rdfs:range uco-core:UcoObject .
+
+# Victim Identification Properties (based on SA JACET statistics)
+cacontology-forensics:victimsIdentifiedCount rdf:type owl:DatatypeProperty ;
+    rdfs:label "victims identified count"@en ;
+    rdfs:comment "Number of child victims identified and removed from harm (e.g., 370+ for SA JACET over 10 years)."@en ;
+    rdfs:domain cacontology-forensics:VictimIdentificationProcess ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-forensics:victimGeographicOrigin rdf:type owl:DatatypeProperty ;
+    rdfs:label "victim geographic origin"@en ;
+    rdfs:comment "Geographic origin of identified victims (e.g., 'Australia', 'UK', 'US', 'Southeast Asia', 'Philippines')."@en ;
+    rdfs:domain cacontology-forensics:VictimIdentificationProcess ;
+    rdfs:range xsd:string .
+
+cacontology-forensics:victimAgeRange rdf:type owl:DatatypeProperty ;
+    rdfs:label "victim age range"@en ;
+    rdfs:comment "Age range of identified victims (e.g., 'toddlers to teenagers')."@en ;
+    rdfs:domain cacontology-forensics:VictimIdentificationProcess ;
+    rdfs:range xsd:string .
+
+cacontology-forensics:investigationDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "investigation duration"@en ;
+    rdfs:comment "Duration of extended investigation (e.g., 'weeks', 'months', 'years')."@en ;
+    rdfs:domain cacontology-forensics:ExtendedInvestigationTimeline ;
+    rdfs:range xsd:string .
+
+cacontology-forensics:referralsReceived rdf:type owl:DatatypeProperty ;
+    rdfs:label "referrals received"@en ;
+    rdfs:comment "Number of referrals received from national and international law enforcement (e.g., 677 for SA JACET)."@en ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-forensics:arrestsResulting rdf:type owl:DatatypeProperty ;
+    rdfs:label "arrests resulting"@en ;
+    rdfs:comment "Number of arrests resulting from forensic investigations (e.g., 654 for SA JACET)."@en ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-forensics:recoveryMethod rdf:type owl:DatatypeProperty ;
+    rdfs:label "recovery method"@en ;
+    rdfs:comment "The method used to recover deleted or hidden files (e.g., 'unallocated space carving', 'file system journal')."@en ;
+    rdfs:domain cacontology-forensics:RecoveredFile ;
+    rdfs:range xsd:string .
+
+# Location Properties
+cacontology-forensics:evidenceLocation rdf:type owl:DatatypeProperty ;
+    rdfs:label "evidence location"@en ;
+    rdfs:comment "The physical or logical location where evidence was found (e.g., 'bedroom computer', 'cloud storage', 'mobile device')."@en ;
+    rdfs:range xsd:string .
+
+# Documentation Properties
+cacontology-forensics:forensicReport rdf:type owl:ObjectProperty ;
+    rdfs:label "forensic report"@en ;
+    rdfs:comment "Links a forensic action to its associated report or documentation."@en ;
+    rdfs:range uco-observable:ObservableObject .
+
+cacontology-forensics:caseExhibitNumber rdf:type owl:DatatypeProperty ;
+    rdfs:label "case exhibit number"@en ;
+    rdfs:comment "The official exhibit number assigned to evidence for legal proceedings."@en ;
+    rdfs:range xsd:string .
+
+# =============================================================================
+# SPECIALIZED DETECTION METHODS (Idaho Case Analysis)
+# =============================================================================
+
+cacontology-forensics:K9AssistedForensics rdf:type owl:Class ;
+    rdfs:label "K9 Assisted Forensics"@en ;
+    rdfs:comment "Forensic process enhanced by K9 detection capabilities for electronic storage devices."@en ;
+    rdfs:subClassOf cacontology-forensics:ForensicAcquisitionAction .
+
+cacontology-forensics:ElectronicStorageDeviceDetection rdf:type owl:Class ;
+    rdfs:label "Electronic Storage Device Detection"@en ;
+    rdfs:comment "Specialized detection of electronic storage devices using K9 or advanced scanning methods."@en ;
+    rdfs:subClassOf uco-action:Action .
+
+cacontology-forensics:HiddenDeviceRecovery rdf:type owl:Class ;
+    rdfs:label "Hidden Device Recovery"@en ;
+    rdfs:comment "Recovery of concealed or hidden electronic storage devices during search operations."@en ;
+    rdfs:subClassOf cacontology-forensics:ForensicAcquisitionAction .
+
+cacontology-forensics:AdvancedSearchTechnique rdf:type owl:Class ;
+    rdfs:label "Advanced Search Technique"@en ;
+    rdfs:comment "Specialized search techniques for locating digital evidence."@en ;
+    rdfs:subClassOf uco-action:Action .
+
+cacontology-forensics:DetectionDogAssist rdf:type owl:Class ;
+    rdfs:label "Detection Dog Assist"@en ;
+    rdfs:comment "Assistance provided by trained detection dogs in forensic searches."@en ;
+    rdfs:subClassOf uco-action:Action .
+
+# Specialized Detection Properties
+cacontology-forensics:k9AssistanceProvided rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-forensics:K9AssistedForensics ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "K9 assistance provided"@en ;
+    rdfs:comment "Whether K9 assistance was provided during forensic acquisition."@en .
+
+cacontology-forensics:detectionMethod rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-forensics:ElectronicStorageDeviceDetection ;
+    rdfs:range xsd:string ;
+    rdfs:label "detection method"@en ;
+    rdfs:comment "Method used for device detection (K9, manual, electronic scanning)."@en .
+
+cacontology-forensics:devicesRecovered rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-forensics:HiddenDeviceRecovery ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "devices recovered"@en ;
+    rdfs:comment "Number of hidden devices recovered during search."@en .
+
+cacontology-forensics:searchWarrantAssisted rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-forensics:DetectionDogAssist ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "search warrant assisted"@en ;
+    rdfs:comment "Whether detection dog assisted in search warrant execution."@en .
+
+cacontology-forensics:detectionAccuracy rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-forensics:ElectronicStorageDeviceDetection ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "detection accuracy"@en ;
+    rdfs:comment "Accuracy rate of detection method (0.0-1.0)."@en .
+
+# =============================================================================
+# LARGE-SCALE FORENSIC ANALYSIS (Kidflix/Europol Framework)
+# =============================================================================
+
+cacontology-forensics:MassDigitalEvidenceProcessing rdf:type owl:Class ;
+    rdfs:label "Mass Digital Evidence Processing"@en ;
+    rdfs:comment "Processing of massive volumes of digital evidence requiring specialized automated tools and distributed processing systems (terabytes of data from platforms with millions of users)."@en ;
+    rdfs:subClassOf uco-action:Action .
+
+cacontology-forensics:AutomatedContentAnalysis rdf:type owl:Class ;
+    rdfs:label "Automated Content Analysis"@en ;
+    rdfs:comment "Automated analysis of large volumes of content using machine learning and AI for rapid classification and triage."@en ;
+    rdfs:subClassOf cacontology-forensics:MassDigitalEvidenceProcessing .
+
+cacontology-forensics:DistributedForensicProcessing rdf:type owl:Class ;
+    rdfs:label "Distributed Forensic Processing"@en ;
+    rdfs:comment "Forensic processing distributed across multiple systems and locations for handling massive evidence volumes."@en ;
+    rdfs:subClassOf cacontology-forensics:MassDigitalEvidenceProcessing .
+
+cacontology-forensics:EvidenceTriageSystem rdf:type owl:Class ;
+    rdfs:label "Evidence Triage System"@en ;
+    rdfs:comment "Automated system for triaging massive evidence volumes to prioritize high-value targets and critical cases."@en ;
+    rdfs:subClassOf cacontology-forensics:AutomatedContentAnalysis .
+
+cacontology-forensics:UserBehaviorForensics rdf:type owl:Class ;
+    rdfs:label "User Behavior Forensics"@en ;
+    rdfs:comment "Forensic analysis of user behavior patterns across massive user databases for investigation prioritization."@en ;
+    rdfs:subClassOf cacontology-forensics:MassDigitalEvidenceProcessing .
+
+cacontology-forensics:ContentCorrelationAnalysis rdf:type owl:Class ;
+    rdfs:label "Content Correlation Analysis"@en ;
+    rdfs:comment "Analysis correlating content across multiple users and platforms for identifying networks and relationships."@en ;
+    rdfs:subClassOf cacontology-forensics:AutomatedContentAnalysis .
+
+cacontology-forensics:ScalableHashAnalysis rdf:type owl:Class ;
+    rdfs:label "Scalable Hash Analysis"@en ;
+    rdfs:comment "Hash analysis systems capable of processing millions of files against large databases of known illegal content."@en ;
+    rdfs:subClassOf cacontology-forensics:AutomatedContentAnalysis .
+
+cacontology-forensics:InternationalEvidenceProcessing rdf:type owl:Class ;
+    rdfs:label "International Evidence Processing"@en ;
+    rdfs:comment "Processing of evidence collected from international operations requiring coordination across multiple forensic labs."@en ;
+    rdfs:subClassOf cacontology-forensics:MassDigitalEvidenceProcessing .
+
+# =============================================================================
+# LARGE-SCALE FORENSIC PROPERTIES
+# =============================================================================
+
+# Volume and Scale Properties
+cacontology-forensics:evidenceVolumeTerabytes rdf:type owl:DatatypeProperty ;
+    rdfs:label "evidence volume terabytes"@en ;
+    rdfs:comment "Total volume of evidence in terabytes requiring processing."@en ;
+    rdfs:domain cacontology-forensics:MassDigitalEvidenceProcessing ;
+    rdfs:range xsd:decimal .
+
+cacontology-forensics:filesProcessedMillions rdf:type owl:DatatypeProperty ;
+    rdfs:label "files processed millions"@en ;
+    rdfs:comment "Number of files processed in millions for large-scale operations."@en ;
+    rdfs:domain cacontology-forensics:MassDigitalEvidenceProcessing ;
+    rdfs:range xsd:decimal .
+
+cacontology-forensics:userAccountsAnalyzed rdf:type owl:DatatypeProperty ;
+    rdfs:label "user accounts analyzed"@en ;
+    rdfs:comment "Number of user accounts analyzed in mass processing (nearly 2 million for Kidflix operation)."@en ;
+    rdfs:domain cacontology-forensics:UserBehaviorForensics ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-forensics:processingTimeframeDays rdf:type owl:DatatypeProperty ;
+    rdfs:label "processing timeframe days"@en ;
+    rdfs:comment "Timeframe required for processing massive evidence volumes in days."@en ;
+    rdfs:domain cacontology-forensics:MassDigitalEvidenceProcessing ;
+    rdfs:range xsd:nonNegativeInteger .
+
+# Automation and Efficiency Properties
+cacontology-forensics:automationPercentage rdf:type owl:DatatypeProperty ;
+    rdfs:label "automation percentage"@en ;
+    rdfs:comment "Percentage of processing performed through automated analysis."@en ;
+    rdfs:domain cacontology-forensics:AutomatedContentAnalysis ;
+    rdfs:range xsd:decimal .
+
+cacontology-forensics:triageAccuracy rdf:type owl:DatatypeProperty ;
+    rdfs:label "triage accuracy"@en ;
+    rdfs:comment "Accuracy rate of automated triage system (0.0-1.0)."@en ;
+    rdfs:domain cacontology-forensics:EvidenceTriageSystem ;
+    rdfs:range xsd:decimal .
+
+cacontology-forensics:priorityClassification rdf:type owl:DatatypeProperty ;
+    rdfs:label "priority classification"@en ;
+    rdfs:comment "Priority classification assigned by triage system (critical, high, medium, low)."@en ;
+    rdfs:domain cacontology-forensics:EvidenceTriageSystem ;
+    rdfs:range xsd:string .
+
+cacontology-forensics:processingSpeed rdf:type owl:DatatypeProperty ;
+    rdfs:label "processing speed"@en ;
+    rdfs:comment "Processing speed in files per hour for automated systems."@en ;
+    rdfs:domain cacontology-forensics:AutomatedContentAnalysis ;
+    rdfs:range xsd:decimal .
+
+# Hash Analysis Properties
+cacontology-forensics:hashDatabaseSize rdf:type owl:DatatypeProperty ;
+    rdfs:label "hash database size"@en ;
+    rdfs:comment "Size of hash database used for comparison in millions of entries."@en ;
+    rdfs:domain cacontology-forensics:ScalableHashAnalysis ;
+    rdfs:range xsd:decimal .
+
+cacontology-forensics:hashMatchesFound rdf:type owl:DatatypeProperty ;
+    rdfs:label "hash matches found"@en ;
+    rdfs:comment "Number of hash matches found against known illegal content databases."@en ;
+    rdfs:domain cacontology-forensics:ScalableHashAnalysis ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-forensics:falsePositiveRate rdf:type owl:DatatypeProperty ;
+    rdfs:label "false positive rate"@en ;
+    rdfs:comment "False positive rate for automated content analysis (0.0-1.0)."@en ;
+    rdfs:domain cacontology-forensics:AutomatedContentAnalysis ;
+    rdfs:range xsd:decimal .
+
+# Distributed Processing Properties
+cacontology-forensics:processingNodes rdf:type owl:DatatypeProperty ;
+    rdfs:label "processing nodes"@en ;
+    rdfs:comment "Number of processing nodes used in distributed forensic processing."@en ;
+    rdfs:domain cacontology-forensics:DistributedForensicProcessing ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-forensics:geographicDistribution rdf:type owl:DatatypeProperty ;
+    rdfs:label "geographic distribution"@en ;
+    rdfs:comment "Geographic distribution of processing nodes (countries involved)."@en ;
+    rdfs:domain cacontology-forensics:DistributedForensicProcessing ;
+    rdfs:range xsd:string .
+
+cacontology-forensics:parallelProcessingEnabled rdf:type owl:DatatypeProperty ;
+    rdfs:label "parallel processing enabled"@en ;
+    rdfs:comment "Whether parallel processing capabilities are enabled."@en ;
+    rdfs:domain cacontology-forensics:DistributedForensicProcessing ;
+    rdfs:range xsd:boolean .
+
+# International Coordination Properties
+cacontology-forensics:forensicLabsInvolved rdf:type owl:DatatypeProperty ;
+    rdfs:label "forensic labs involved"@en ;
+    rdfs:comment "Number of forensic laboratories involved in international evidence processing."@en ;
+    rdfs:domain cacontology-forensics:InternationalEvidenceProcessing ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-forensics:crossBorderDataSharing rdf:type owl:DatatypeProperty ;
+    rdfs:label "cross-border data sharing"@en ;
+    rdfs:comment "Whether cross-border data sharing protocols are enabled."@en ;
+    rdfs:domain cacontology-forensics:InternationalEvidenceProcessing ;
+    rdfs:range xsd:boolean .
+
+cacontology-forensics:standardizedProcessing rdf:type owl:DatatypeProperty ;
+    rdfs:label "standardized processing"@en ;
+    rdfs:comment "Whether standardized international processing protocols are used."@en ;
+    rdfs:domain cacontology-forensics:InternationalEvidenceProcessing ;
+    rdfs:range xsd:boolean .
+
+# User Behavior Analysis Properties
+cacontology-forensics:behaviorPatternsIdentified rdf:type owl:DatatypeProperty ;
+    rdfs:label "behavior patterns identified"@en ;
+    rdfs:comment "Number of distinct behavior patterns identified in user analysis."@en ;
+    rdfs:domain cacontology-forensics:UserBehaviorForensics ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-forensics:riskLevelsAssigned rdf:type owl:DatatypeProperty ;
+    rdfs:label "risk levels assigned"@en ;
+    rdfs:comment "Number of users assigned risk levels through behavioral analysis."@en ;
+    rdfs:domain cacontology-forensics:UserBehaviorForensics ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-forensics:correlationStrength rdf:type owl:DatatypeProperty ;
+    rdfs:label "correlation strength"@en ;
+    rdfs:comment "Strength of content correlation found (weak, moderate, strong, very_strong)."@en ;
+    rdfs:domain cacontology-forensics:ContentCorrelationAnalysis ;
+    rdfs:range xsd:string .
+
+cacontology-forensics:networkConnectionsFound rdf:type owl:DatatypeProperty ;
+    rdfs:label "network connections found"@en ;
+    rdfs:comment "Number of network connections identified through content correlation."@en ;
+    rdfs:domain cacontology-forensics:ContentCorrelationAnalysis ;
+    rdfs:range xsd:nonNegativeInteger .
+
+# =============================================================================
+# LARGE-SCALE FORENSIC RELATIONSHIPS
+# =============================================================================
+
+# Processing Relationships
+cacontology-forensics:processesEvidence rdf:type owl:ObjectProperty ;
+    rdfs:label "processes evidence"@en ;
+    rdfs:comment "Links mass processing system to evidence being processed."@en ;
+    rdfs:domain cacontology-forensics:MassDigitalEvidenceProcessing ;
+    rdfs:range uco-observable:ObservableObject .
+
+cacontology-forensics:utilisesSystem rdf:type owl:ObjectProperty ;
+    rdfs:label "utilises system"@en ;
+    rdfs:comment "Links processing action to automated systems used."@en ;
+    rdfs:domain cacontology-forensics:MassDigitalEvidenceProcessing ;
+    rdfs:range cacontology-forensics:AutomatedContentAnalysis .
+
+cacontology-forensics:distributesProcessing rdf:type owl:ObjectProperty ;
+    rdfs:label "distributes processing"@en ;
+    rdfs:comment "Links mass processing to distributed processing systems."@en ;
+    rdfs:domain cacontology-forensics:MassDigitalEvidenceProcessing ;
+    rdfs:range cacontology-forensics:DistributedForensicProcessing .
+
+cacontology-forensics:triagesEvidence rdf:type owl:ObjectProperty ;
+    rdfs:label "triages evidence"@en ;
+    rdfs:comment "Links automated analysis to evidence triage systems."@en ;
+    rdfs:domain cacontology-forensics:AutomatedContentAnalysis ;
+    rdfs:range cacontology-forensics:EvidenceTriageSystem .
+
+# Analysis Relationships
+cacontology-forensics:analysesUserBehavior rdf:type owl:ObjectProperty ;
+    rdfs:label "analyses user behavior"@en ;
+    rdfs:comment "Links processing to user behavior forensic analysis."@en ;
+    rdfs:domain cacontology-forensics:MassDigitalEvidenceProcessing ;
+    rdfs:range cacontology-forensics:UserBehaviorForensics .
+
+cacontology-forensics:correlatesContent rdf:type owl:ObjectProperty ;
+    rdfs:label "correlates content"@en ;
+    rdfs:comment "Links automated analysis to content correlation analysis."@en ;
+    rdfs:domain cacontology-forensics:AutomatedContentAnalysis ;
+    rdfs:range cacontology-forensics:ContentCorrelationAnalysis .
+
+cacontology-forensics:performsHashAnalysis rdf:type owl:ObjectProperty ;
+    rdfs:label "performs hash analysis"@en ;
+    rdfs:comment "Links automated analysis to scalable hash analysis systems."@en ;
+    rdfs:domain cacontology-forensics:AutomatedContentAnalysis ;
+    rdfs:range cacontology-forensics:ScalableHashAnalysis .
+
+# International Coordination Relationships
+cacontology-forensics:coordinatesInternationalProcessing rdf:type owl:ObjectProperty ;
+    rdfs:label "coordinates international processing"@en ;
+    rdfs:comment "Links mass processing to international evidence processing coordination."@en ;
+    rdfs:domain cacontology-forensics:MassDigitalEvidenceProcessing ;
+    rdfs:range cacontology-forensics:InternationalEvidenceProcessing .
+
+cacontology-forensics:involvesForensicLab rdf:type owl:ObjectProperty ;
+    rdfs:label "involves forensic lab"@en ;
+    rdfs:comment "Links international processing to participating forensic laboratories."@en ;
+    rdfs:domain cacontology-forensics:InternationalEvidenceProcessing ;
+    rdfs:range uco-identity:Organization .
+
+cacontology-forensics:sharesProcessingLoad rdf:type owl:ObjectProperty ;
+    rdfs:label "shares processing load"@en ;
+    rdfs:comment "Links distributed processing to load sharing arrangements."@en ;
+    rdfs:domain cacontology-forensics:DistributedForensicProcessing ;
+    rdfs:range uco-identity:Organization .
+
+# Evidence and Result Relationships
+cacontology-forensics:generatesTriageResults rdf:type owl:ObjectProperty ;
+    rdfs:label "generates triage results"@en ;
+    rdfs:comment "Links triage system to results generated."@en ;
+    rdfs:domain cacontology-forensics:EvidenceTriageSystem ;
+    rdfs:range uco-observable:ObservableObject .
+
+cacontology-forensics:identifiesPatterns rdf:type owl:ObjectProperty ;
+    rdfs:label "identifies patterns"@en ;
+    rdfs:comment "Links user behavior analysis to patterns identified."@en ;
+    rdfs:domain cacontology-forensics:UserBehaviorForensics ;
+    rdfs:range uco-observable:ObservableObject .
+
+cacontology-forensics:discoversNetworks rdf:type owl:ObjectProperty ;
+    rdfs:label "discovers networks"@en ;
+    rdfs:comment "Links content correlation to criminal networks discovered."@en ;
+    rdfs:domain cacontology-forensics:ContentCorrelationAnalysis ;
+    rdfs:range uco-observable:ObservableObject .
+
+cacontology-forensics:producesIntelligence rdf:type owl:ObjectProperty ;
+    rdfs:label "produces intelligence"@en ;
+    rdfs:comment "Links forensic analysis to intelligence products generated."@en ;
+    rdfs:domain cacontology-forensics:MassDigitalEvidenceProcessing ;
+    rdfs:range uco-observable:ObservableObject .
+
+# =============================================================================
+# ADVANCED EVIDENCE CORRELATION CLASSES (extending existing framework)
+# =============================================================================
+
+cacontology-forensics:CrossPlatformCorrelation rdf:type owl:Class ;
+    rdfs:label "Cross-Platform Correlation"@en ;
+    rdfs:comment "Analysis correlating evidence across multiple platforms and services to identify coordinated criminal activities."@en ;
+    rdfs:subClassOf cacontology-forensics:ContentCorrelationAnalysis .
+
+cacontology-forensics:GeospatialCorrelation rdf:type owl:Class ;
+    rdfs:label "Geospatial Correlation"@en ;
+    rdfs:comment "Correlation analysis based on geographic and location data from multiple sources."@en ;
+    rdfs:subClassOf cacontology-forensics:ContentCorrelationAnalysis .
+
+cacontology-forensics:TemporalPatternAnalysis rdf:type owl:Class ;
+    rdfs:label "Temporal Pattern Analysis"@en ;
+    rdfs:comment "Analysis of temporal patterns and timing correlations across different pieces of evidence."@en ;
+    rdfs:subClassOf cacontology-forensics:ContentCorrelationAnalysis .
+
+cacontology-forensics:BehavioralFingerprinting rdf:type owl:Class ;
+    rdfs:label "Behavioral Fingerprinting"@en ;
+    rdfs:comment "Analysis creating unique behavioral fingerprints from user activities to identify individuals across platforms."@en ;
+    rdfs:subClassOf cacontology-forensics:UserBehaviorForensics .
+
+cacontology-forensics:CommunicationPatternAnalysis rdf:type owl:Class ;
+    rdfs:label "Communication Pattern Analysis"@en ;
+    rdfs:comment "Analysis of communication patterns to identify relationships and networks."@en ;
+    rdfs:subClassOf cacontology-forensics:UserBehaviorForensics .
+
+cacontology-forensics:MetadataCorrelation rdf:type owl:Class ;
+    rdfs:label "Metadata Correlation"@en ;
+    rdfs:comment "Correlation analysis of metadata across multiple files and platforms."@en ;
+    rdfs:subClassOf cacontology-forensics:ContentCorrelationAnalysis .
+
+cacontology-forensics:DatabaseIntelligenceIntegration rdf:type owl:Class ;
+    rdfs:label "Database Intelligence Integration"@en ;
+    rdfs:comment "Integration and correlation against multiple international databases and intelligence sources."@en ;
+    rdfs:subClassOf cacontology-forensics:MassDigitalEvidenceProcessing .
+
+cacontology-forensics:NetworkTrafficAnalysis rdf:type owl:Class ;
+    rdfs:label "Network Traffic Analysis"@en ;
+    rdfs:comment "Analysis of network traffic patterns to identify suspicious communications and data transfers."@en ;
+    rdfs:subClassOf cacontology-forensics:UserBehaviorForensics .
+
+cacontology-forensics:MachineLearningCorrelation rdf:type owl:Class ;
+    rdfs:label "Machine Learning Correlation"@en ;
+    rdfs:comment "AI/ML-powered correlation analysis to identify complex patterns not visible through traditional methods."@en ;
+    rdfs:subClassOf cacontology-forensics:ContentCorrelationAnalysis .
+
+cacontology-forensics:RealTimeCorrelation rdf:type owl:Class ;
+    rdfs:label "Real-Time Correlation"@en ;
+    rdfs:comment "Real-time correlation analysis for immediate identification of related evidence and ongoing activities."@en ;
+    rdfs:subClassOf cacontology-forensics:ContentCorrelationAnalysis .
+
+# =============================================================================
+# ADVANCED EVIDENCE CORRELATION PROPERTIES
+# =============================================================================
+
+# Cross-Platform Analysis Properties
+cacontology-forensics:platformsAnalyzed rdf:type owl:DatatypeProperty ;
+    rdfs:label "platforms analyzed"@en ;
+    rdfs:comment "Number of platforms included in cross-platform correlation analysis."@en ;
+    rdfs:domain cacontology-forensics:CrossPlatformCorrelation ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-forensics:crossPlatformMatches rdf:type owl:DatatypeProperty ;
+    rdfs:label "cross-platform matches"@en ;
+    rdfs:comment "Number of matches found across different platforms."@en ;
+    rdfs:domain cacontology-forensics:CrossPlatformCorrelation ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-forensics:platformCorrelationScore rdf:type owl:DatatypeProperty ;
+    rdfs:label "platform correlation score"@en ;
+    rdfs:comment "Correlation score across platforms (0.0-1.0)."@en ;
+    rdfs:domain cacontology-forensics:CrossPlatformCorrelation ;
+    rdfs:range xsd:decimal .
+
+# Geospatial Analysis Properties
+cacontology-forensics:geographicRadius rdf:type owl:DatatypeProperty ;
+    rdfs:label "geographic radius"@en ;
+    rdfs:comment "Geographic radius of correlation analysis in kilometers."@en ;
+    rdfs:domain cacontology-forensics:GeospatialCorrelation ;
+    rdfs:range xsd:decimal .
+
+cacontology-forensics:locationPointsAnalyzed rdf:type owl:DatatypeProperty ;
+    rdfs:label "location points analyzed"@en ;
+    rdfs:comment "Number of location points included in geospatial analysis."@en ;
+    rdfs:domain cacontology-forensics:GeospatialCorrelation ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-forensics:geospatialAccuracy rdf:type owl:DatatypeProperty ;
+    rdfs:label "geospatial accuracy"@en ;
+    rdfs:comment "Accuracy of geospatial correlation analysis in meters."@en ;
+    rdfs:domain cacontology-forensics:GeospatialCorrelation ;
+    rdfs:range xsd:decimal .
+
+# Temporal Analysis Properties
+cacontology-forensics:timeRangeAnalyzed rdf:type owl:DatatypeProperty ;
+    rdfs:label "time range analyzed"@en ;
+    rdfs:comment "Time range covered by temporal pattern analysis in days."@en ;
+    rdfs:domain cacontology-forensics:TemporalPatternAnalysis ;
+    rdfs:range xsd:decimal .
+
+cacontology-forensics:temporalResolution rdf:type owl:DatatypeProperty ;
+    rdfs:label "temporal resolution"@en ;
+    rdfs:comment "Temporal resolution of analysis (seconds, minutes, hours, days)."@en ;
+    rdfs:domain cacontology-forensics:TemporalPatternAnalysis ;
+    rdfs:range xsd:string .
+
+cacontology-forensics:temporalPatternsIdentified rdf:type owl:DatatypeProperty ;
+    rdfs:label "temporal patterns identified"@en ;
+    rdfs:comment "Number of distinct temporal patterns identified."@en ;
+    rdfs:domain cacontology-forensics:TemporalPatternAnalysis ;
+    rdfs:range xsd:nonNegativeInteger .
+
+# Behavioral Analysis Properties
+cacontology-forensics:behavioralFingerprintsCreated rdf:type owl:DatatypeProperty ;
+    rdfs:label "behavioral fingerprints created"@en ;
+    rdfs:comment "Number of unique behavioral fingerprints created from analysis."@en ;
+    rdfs:domain cacontology-forensics:BehavioralFingerprinting ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-forensics:fingerprintAccuracy rdf:type owl:DatatypeProperty ;
+    rdfs:label "fingerprint accuracy"@en ;
+    rdfs:comment "Accuracy of behavioral fingerprint matching (0.0-1.0)."@en ;
+    rdfs:domain cacontology-forensics:BehavioralFingerprinting ;
+    rdfs:range xsd:decimal .
+
+cacontology-forensics:communicationGraphComplexity rdf:type owl:DatatypeProperty ;
+    rdfs:label "communication graph complexity"@en ;
+    rdfs:comment "Complexity measure of communication graph analysis (simple, moderate, complex, highly_complex)."@en ;
+    rdfs:domain cacontology-forensics:CommunicationPatternAnalysis ;
+    rdfs:range xsd:string .
+
+# Machine Learning Properties
+cacontology-forensics:mlModelAccuracy rdf:type owl:DatatypeProperty ;
+    rdfs:label "ML model accuracy"@en ;
+    rdfs:comment "Accuracy of machine learning correlation models (0.0-1.0)."@en ;
+    rdfs:domain cacontology-forensics:MachineLearningCorrelation ;
+    rdfs:range xsd:decimal .
+
+cacontology-forensics:trainingDataSize rdf:type owl:DatatypeProperty ;
+    rdfs:label "training data size"@en ;
+    rdfs:comment "Size of training dataset used for ML correlation in millions of records."@en ;
+    rdfs:domain cacontology-forensics:MachineLearningCorrelation ;
+    rdfs:range xsd:decimal .
+
+cacontology-forensics:featureVectorsUsed rdf:type owl:DatatypeProperty ;
+    rdfs:label "feature vectors used"@en ;
+    rdfs:comment "Number of feature vectors used in machine learning analysis."@en ;
+    rdfs:domain cacontology-forensics:MachineLearningCorrelation ;
+    rdfs:range xsd:nonNegativeInteger .
+
+# Real-Time Analysis Properties
+cacontology-forensics:correlationLatency rdf:type owl:DatatypeProperty ;
+    rdfs:label "correlation latency"@en ;
+    rdfs:comment "Average latency for real-time correlation analysis in milliseconds."@en ;
+    rdfs:domain cacontology-forensics:RealTimeCorrelation ;
+    rdfs:range xsd:decimal .
+
+cacontology-forensics:streamingDataRate rdf:type owl:DatatypeProperty ;
+    rdfs:label "streaming data rate"@en ;
+    rdfs:comment "Rate of streaming data processing in MB per second."@en ;
+    rdfs:domain cacontology-forensics:RealTimeCorrelation ;
+    rdfs:range xsd:decimal .
+
+cacontology-forensics:realTimeAlerts rdf:type owl:DatatypeProperty ;
+    rdfs:label "real-time alerts"@en ;
+    rdfs:comment "Number of real-time alerts generated from correlation analysis."@en ;
+    rdfs:domain cacontology-forensics:RealTimeCorrelation ;
+    rdfs:range xsd:nonNegativeInteger .
+
+# Database Integration Properties
+cacontology-forensics:databasesIntegrated rdf:type owl:DatatypeProperty ;
+    rdfs:label "databases integrated"@en ;
+    rdfs:comment "Number of international databases integrated for intelligence correlation."@en ;
+    rdfs:domain cacontology-forensics:DatabaseIntelligenceIntegration ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-forensics:queryResponseTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "query response time"@en ;
+    rdfs:comment "Average response time for database queries in seconds."@en ;
+    rdfs:domain cacontology-forensics:DatabaseIntelligenceIntegration ;
+    rdfs:range xsd:decimal .
+
+cacontology-forensics:intelligenceHits rdf:type owl:DatatypeProperty ;
+    rdfs:label "intelligence hits"@en ;
+    rdfs:comment "Number of intelligence hits found across integrated databases."@en ;
+    rdfs:domain cacontology-forensics:DatabaseIntelligenceIntegration ;
+    rdfs:range xsd:nonNegativeInteger .
+
+# Network Analysis Properties
+cacontology-forensics:networkSessionsAnalyzed rdf:type owl:DatatypeProperty ;
+    rdfs:label "network sessions analyzed"@en ;
+    rdfs:comment "Number of network sessions included in traffic analysis."@en ;
+    rdfs:domain cacontology-forensics:NetworkTrafficAnalysis ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-forensics:suspiciousConnectionsIdentified rdf:type owl:DatatypeProperty ;
+    rdfs:label "suspicious connections identified"@en ;
+    rdfs:comment "Number of suspicious network connections identified."@en ;
+    rdfs:domain cacontology-forensics:NetworkTrafficAnalysis ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-forensics:dataTransferVolume rdf:type owl:DatatypeProperty ;
+    rdfs:label "data transfer volume"@en ;
+    rdfs:comment "Volume of data transfers analyzed in terabytes."@en ;
+    rdfs:domain cacontology-forensics:NetworkTrafficAnalysis ;
+    rdfs:range xsd:decimal .
+
+# =============================================================================
+# ADVANCED CORRELATION RELATIONSHIPS
+# =============================================================================
+
+# Cross-Platform Relationships
+cacontology-forensics:correlatesAcrossPlatforms rdf:type owl:ObjectProperty ;
+    rdfs:label "correlates across platforms"@en ;
+    rdfs:comment "Links analysis to cross-platform correlation performed."@en ;
+    rdfs:domain cacontology-forensics:ContentCorrelationAnalysis ;
+    rdfs:range cacontology-forensics:CrossPlatformCorrelation .
+
+cacontology-forensics:identifiesCrossPlatformActivity rdf:type owl:ObjectProperty ;
+    rdfs:label "identifies cross-platform activity"@en ;
+    rdfs:comment "Links cross-platform analysis to activities identified."@en ;
+    rdfs:domain cacontology-forensics:CrossPlatformCorrelation ;
+    rdfs:range uco-observable:ObservableObject .
+
+# Geospatial Relationships
+cacontology-forensics:performsGeospatialAnalysis rdf:type owl:ObjectProperty ;
+    rdfs:label "performs geospatial analysis"@en ;
+    rdfs:comment "Links evidence processing to geospatial correlation analysis."@en ;
+    rdfs:domain cacontology-forensics:MassDigitalEvidenceProcessing ;
+    rdfs:range cacontology-forensics:GeospatialCorrelation .
+
+cacontology-forensics:identifiesGeographicClusters rdf:type owl:ObjectProperty ;
+    rdfs:label "identifies geographic clusters"@en ;
+    rdfs:comment "Links geospatial analysis to geographic clusters identified."@en ;
+    rdfs:domain cacontology-forensics:GeospatialCorrelation ;
+    rdfs:range uco-observable:ObservableObject .
+
+# Temporal Relationships
+cacontology-forensics:analyzesTemporalPatterns rdf:type owl:ObjectProperty ;
+    rdfs:label "analyzes temporal patterns"@en ;
+    rdfs:comment "Links content correlation to temporal pattern analysis."@en ;
+    rdfs:domain cacontology-forensics:ContentCorrelationAnalysis ;
+    rdfs:range cacontology-forensics:TemporalPatternAnalysis .
+
+cacontology-forensics:identifiesTemporalClusters rdf:type owl:ObjectProperty ;
+    rdfs:label "identifies temporal clusters"@en ;
+    rdfs:comment "Links temporal analysis to time-based clusters identified."@en ;
+    rdfs:domain cacontology-forensics:TemporalPatternAnalysis ;
+    rdfs:range uco-observable:ObservableObject .
+
+# Behavioral Analysis Relationships
+cacontology-forensics:createsBehavioralFingerprints rdf:type owl:ObjectProperty ;
+    rdfs:label "creates behavioral fingerprints"@en ;
+    rdfs:comment "Links user behavior analysis to fingerprinting performed."@en ;
+    rdfs:domain cacontology-forensics:UserBehaviorForensics ;
+    rdfs:range cacontology-forensics:BehavioralFingerprinting .
+
+cacontology-forensics:analyzesCommunicationPatterns rdf:type owl:ObjectProperty ;
+    rdfs:label "analyzes communication patterns"@en ;
+    rdfs:comment "Links user behavior analysis to communication pattern analysis."@en ;
+    rdfs:domain cacontology-forensics:UserBehaviorForensics ;
+    rdfs:range cacontology-forensics:CommunicationPatternAnalysis .
+
+# Machine Learning Relationships
+cacontology-forensics:utilizesMachineLearning rdf:type owl:ObjectProperty ;
+    rdfs:label "utilizes machine learning"@en ;
+    rdfs:comment "Links correlation analysis to machine learning methods used."@en ;
+    rdfs:domain cacontology-forensics:ContentCorrelationAnalysis ;
+    rdfs:range cacontology-forensics:MachineLearningCorrelation .
+
+cacontology-forensics:trainsCorrelationModel rdf:type owl:ObjectProperty ;
+    rdfs:label "trains correlation model"@en ;
+    rdfs:comment "Links ML correlation to model training performed."@en ;
+    rdfs:domain cacontology-forensics:MachineLearningCorrelation ;
+    rdfs:range uco-observable:ObservableObject .
+
+# Real-Time Analysis Relationships
+cacontology-forensics:enablesRealTimeCorrelation rdf:type owl:ObjectProperty ;
+    rdfs:label "enables real-time correlation"@en ;
+    rdfs:comment "Links automated analysis to real-time correlation capabilities."@en ;
+    rdfs:domain cacontology-forensics:AutomatedContentAnalysis ;
+    rdfs:range cacontology-forensics:RealTimeCorrelation .
+
+cacontology-forensics:generatesRealTimeAlerts rdf:type owl:ObjectProperty ;
+    rdfs:label "generates real-time alerts"@en ;
+    rdfs:comment "Links real-time correlation to alerts generated."@en ;
+    rdfs:domain cacontology-forensics:RealTimeCorrelation ;
+    rdfs:range uco-observable:ObservableObject .
+
+# Database Integration Relationships
+cacontology-forensics:integratesIntelligenceDatabases rdf:type owl:ObjectProperty ;
+    rdfs:label "integrates intelligence databases"@en ;
+    rdfs:comment "Links mass processing to database intelligence integration."@en ;
+    rdfs:domain cacontology-forensics:MassDigitalEvidenceProcessing ;
+    rdfs:range cacontology-forensics:DatabaseIntelligenceIntegration .
+
+cacontology-forensics:queriesIntelligenceDatabase rdf:type owl:ObjectProperty ;
+    rdfs:label "queries intelligence database"@en ;
+    rdfs:comment "Links integration to specific databases queried."@en ;
+    rdfs:domain cacontology-forensics:DatabaseIntelligenceIntegration ;
+    rdfs:range uco-observable:ObservableObject .
+
+# Network Analysis Relationships
+cacontology-forensics:analyzesNetworkTraffic rdf:type owl:ObjectProperty ;
+    rdfs:label "analyzes network traffic"@en ;
+    rdfs:comment "Links user behavior analysis to network traffic analysis."@en ;
+    rdfs:domain cacontology-forensics:UserBehaviorForensics ;
+    rdfs:range cacontology-forensics:NetworkTrafficAnalysis .
+
+cacontology-forensics:identifiesNetworkAnomalies rdf:type owl:ObjectProperty ;
+    rdfs:label "identifies network anomalies"@en ;
+    rdfs:comment "Links network analysis to anomalies identified."@en ;
+    rdfs:domain cacontology-forensics:NetworkTrafficAnalysis ;
+    rdfs:range uco-observable:ObservableObject . 
+
+# =============================================================================
+# ATTRIBUTION AND ACCOUNT-IP CORRELATION EVIDENCE — Issue #35
+# First-class semantics for attribution evidence linking platform accounts,
+# IP addresses, subscriber records, and seized devices — common probable-cause
+# patterns in online CSEA cases — instead of generic uco-core:Relationship
+# edges with ad hoc kindOfRelationship strings.
+# =============================================================================
+
+cacontology-forensics:AttributionAssessment rdf:type owl:Class ;
+    rdfs:label "Attribution Assessment"@en ;
+    rdfs:comment "Analytic conclusion that two or more observables (accounts, IP addresses, devices) are controlled by the same subject, with stated confidence and method. The assessment is an interpretation layered over the correlation evidence supporting it."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject .
+
+cacontology-forensics:CorrelationEvidence rdf:type owl:Class ;
+    rdfs:label "Correlation Evidence"@en ;
+    rdfs:comment "Structured evidence that observables are linked by overlapping usage, records, or artifacts. Superclass for typed correlation evidence supporting attribution assessments."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject .
+
+cacontology-forensics:IPCorrelationEvidence rdf:type owl:Class ;
+    rdfs:label "IP Correlation Evidence"@en ;
+    rdfs:comment "Structured evidence of overlapping IP usage across accounts, sessions, or platforms within a date-time scope (e.g., 13 of 20 platform session IPs matching another platform's access logs for the same subscriber)."@en ;
+    rdfs:subClassOf cacontology-forensics:CorrelationEvidence .
+
+cacontology-forensics:SubscriberRecordCorrelation rdf:type owl:Class ;
+    rdfs:label "Subscriber Record Correlation"@en ;
+    rdfs:comment "Evidence linking a platform account to carrier or ISP subscriber records (e.g., produced under legal process)."@en ;
+    rdfs:subClassOf cacontology-forensics:CorrelationEvidence .
+
+# Attribution and correlation properties (Issue #35)
+cacontology-forensics:correlatesObservable rdf:type owl:ObjectProperty ;
+    rdfs:label "correlates observable"@en ;
+    rdfs:comment "Links an attribution assessment or correlation evidence to the IP address, account, or device observables it correlates."@en ;
+    rdfs:range uco-observable:ObservableObject .
+
+cacontology-forensics:overlappingIPAddress rdf:type owl:ObjectProperty ;
+    rdfs:label "overlapping IP address"@en ;
+    rdfs:comment "An IP address observable used by multiple accounts or sessions within the correlation scope."@en ;
+    rdfs:domain cacontology-forensics:IPCorrelationEvidence ;
+    rdfs:range uco-observable:ObservableObject .
+
+cacontology-forensics:correlationTimeWindowStart rdf:type owl:DatatypeProperty ;
+    rdfs:label "correlation time window start"@en ;
+    rdfs:comment "Start of the temporal bounds of the overlap analysis."@en ;
+    rdfs:domain cacontology-forensics:CorrelationEvidence ;
+    rdfs:range xsd:dateTime .
+
+cacontology-forensics:correlationTimeWindowEnd rdf:type owl:DatatypeProperty ;
+    rdfs:label "correlation time window end"@en ;
+    rdfs:comment "End of the temporal bounds of the overlap analysis."@en ;
+    rdfs:domain cacontology-forensics:CorrelationEvidence ;
+    rdfs:range xsd:dateTime .
+
+cacontology-forensics:correlationMethod rdf:type owl:DatatypeProperty ;
+    rdfs:label "correlation method"@en ;
+    rdfs:comment "Method used to establish the correlation (e.g., 'comparative log review', 'carrier subscriber production', 'court-ordered platform IP logs')."@en ;
+    rdfs:domain cacontology-forensics:CorrelationEvidence ;
+    rdfs:range xsd:string .
+
+cacontology-forensics:attributionConfidence rdf:type owl:DatatypeProperty ;
+    rdfs:label "attribution confidence"@en ;
+    rdfs:comment "Confidence level of the attribution assessment (high, medium, low)."@en ;
+    rdfs:domain cacontology-forensics:AttributionAssessment ;
+    rdfs:range xsd:string .
+
+cacontology-forensics:supportedByCorrelation rdf:type owl:ObjectProperty ;
+    rdfs:label "supported by correlation"@en ;
+    rdfs:comment "Links an attribution assessment to the correlation evidence supporting it."@en ;
+    rdfs:domain cacontology-forensics:AttributionAssessment ;
+    rdfs:range cacontology-forensics:CorrelationEvidence .
+
+cacontology-forensics:supportsAttributionOf rdf:type owl:ObjectProperty ;
+    rdfs:label "supports attribution of"@en ;
+    rdfs:comment "Links an attribution assessment or correlation evidence to the person whose control of the observables it supports."@en ;
+    rdfs:range uco-identity:Person .

@@ -1,0 +1,936 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-observable: <https://ontology.unifiedcyberontology.org/uco/observable/> .
+@prefix cacontology-street: <https://cacontology.projectvic.org/street#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+# Ontology Declaration
+<https://cacontology.projectvic.org/street/shapes> rdf:type owl:Ontology ;
+    rdfs:label "CAC Street-Based Recruitment SHACL Shapes"@en ;
+    rdfs:comment "SHACL validation shapes for the CAC Street-Based Recruitment & Opportunistic Exploitation Ontology, providing validation for street-based trafficking recruitment, opportunistic exploitation, public space predatory behavior, and related patterns."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/street/shapes/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://cacontology.projectvic.org/street/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> .
+
+# =============================================================================
+# STREET-BASED RECRUITMENT CORE CLASS SHAPES
+# =============================================================================
+
+cacontology-street:StreetBasedRecruitmentShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:StreetBasedRecruitment ;
+    rdfs:label "Street Based Recruitment Shape"@en ;
+    rdfs:comment "Validation shape for street-based recruitment instances."@en .
+
+cacontology-street:OpportunisticExploitationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:OpportunisticExploitation ;
+    rdfs:label "Opportunistic Exploitation Shape"@en ;
+    rdfs:comment "Validation shape for opportunistic exploitation instances."@en .
+
+cacontology-street:PublicSpaceTargetingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:PublicSpaceTargeting ;
+    rdfs:label "Public Space Targeting Shape"@en ;
+    rdfs:comment "Validation shape for public space targeting instances."@en .
+
+cacontology-street:NeighborhoodTargetingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:NeighborhoodTargeting ;
+    rdfs:label "Neighborhood Targeting Shape"@en ;
+    rdfs:comment "Validation shape for neighborhood targeting instances."@en .
+
+cacontology-street:DemographicTargetingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:DemographicTargeting ;
+    rdfs:label "Demographic Targeting Shape"@en ;
+    rdfs:comment "Validation shape for demographic targeting instances."@en .
+
+# =============================================================================
+# INITIAL CONTACT AND APPROACH SHAPES
+# =============================================================================
+
+cacontology-street:InitialStreetContactShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:InitialStreetContact ;
+    rdfs:label "Initial Street Contact Shape"@en ;
+    rdfs:comment "Validation shape for initial street contact instances."@en ;
+    sh:property [
+        sh:path cacontology-street:contactDuration ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:message "Contact duration must be a non-negative decimal value in minutes."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-street:approachMethod ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "help_offer" "casual_conversation" "direct_solicitation" ) ;
+        sh:message "Approach method must be help_offer, casual_conversation, or direct_solicitation."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-street:initialContactLocation ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Initial contact location may be specified."@en
+    ] .
+
+cacontology-street:PretextBasedApproachShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:PretextBasedApproach ;
+    rdfs:label "Pretext Based Approach Shape"@en ;
+    rdfs:comment "Validation shape for pretext-based approach instances."@en ;
+    sh:property [
+        sh:path cacontology-street:pretextUsed ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "phone_charging" "food_offer" "transportation" ) ;
+        sh:message "Pretext used must be phone_charging, food_offer, or transportation."@en
+    ] .
+
+cacontology-street:HelpOfferApproachShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:HelpOfferApproach ;
+    rdfs:label "Help Offer Approach Shape"@en ;
+    rdfs:comment "Validation shape for help offer approach instances."@en ;
+    sh:property [
+        sh:path cacontology-street:helpOfferType ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "phone_charging" "food" "ride" "shelter" ) ;
+        sh:message "Help offer type must be phone_charging, food, ride, or shelter."@en
+    ] .
+
+cacontology-street:PhoneChargingOfferShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:PhoneChargingOffer ;
+    rdfs:label "Phone Charging Offer Shape"@en ;
+    rdfs:comment "Validation shape for phone charging offer instances."@en .
+
+cacontology-street:FoodOfferApproachShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:FoodOfferApproach ;
+    rdfs:label "Food Offer Approach Shape"@en ;
+    rdfs:comment "Validation shape for food offer approach instances."@en .
+
+cacontology-street:TransportationOfferApproachShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:TransportationOfferApproach ;
+    rdfs:label "Transportation Offer Approach Shape"@en ;
+    rdfs:comment "Validation shape for transportation offer approach instances."@en .
+
+cacontology-street:CasualConversationApproachShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:CasualConversationApproach ;
+    rdfs:label "Casual Conversation Approach Shape"@en ;
+    rdfs:comment "Validation shape for casual conversation approach instances."@en ;
+    sh:property [
+        sh:path cacontology-street:conversationTopic ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Conversation topic may be specified."@en
+    ] .
+
+cacontology-street:DirectSolicitationApproachShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:DirectSolicitationApproach ;
+    rdfs:label "Direct Solicitation Approach Shape"@en ;
+    rdfs:comment "Validation shape for direct solicitation approach instances."@en .
+
+# =============================================================================
+# VULNERABILITY ASSESSMENT SHAPES
+# =============================================================================
+
+cacontology-street:StreetVulnerabilityAssessmentShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:StreetVulnerabilityAssessment ;
+    rdfs:label "Street Vulnerability Assessment Shape"@en ;
+    rdfs:comment "Validation shape for street vulnerability assessment instances."@en ;
+    sh:property [
+        sh:path cacontology-street:vulnerabilityIndicators ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Vulnerability indicators may be specified."@en
+    ] .
+
+cacontology-street:VulnerabilityIndicatorShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:VulnerabilityIndicator ;
+    rdfs:label "Vulnerability Indicator Shape"@en ;
+    rdfs:comment "Validation shape for vulnerability indicator instances."@en .
+
+cacontology-street:PhysicalVulnerabilityIndicatorShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:PhysicalVulnerabilityIndicator ;
+    rdfs:label "Physical Vulnerability Indicator Shape"@en ;
+    rdfs:comment "Validation shape for physical vulnerability indicator instances."@en .
+
+cacontology-street:BehavioralVulnerabilityIndicatorShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:BehavioralVulnerabilityIndicator ;
+    rdfs:label "Behavioral Vulnerability Indicator Shape"@en ;
+    rdfs:comment "Validation shape for behavioral vulnerability indicator instances."@en ;
+    sh:property [
+        sh:path cacontology-street:distressIndicators ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Distress indicators may be specified."@en
+    ] .
+
+cacontology-street:SocioeconomicVulnerabilityIndicatorShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:SocioeconomicVulnerabilityIndicator ;
+    rdfs:label "Socioeconomic Vulnerability Indicator Shape"@en ;
+    rdfs:comment "Validation shape for socioeconomic vulnerability indicator instances."@en .
+
+cacontology-street:IsolationVulnerabilityIndicatorShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:IsolationVulnerabilityIndicator ;
+    rdfs:label "Isolation Vulnerability Indicator Shape"@en ;
+    rdfs:comment "Validation shape for isolation vulnerability indicator instances."@en ;
+    sh:property [
+        sh:path cacontology-street:isolationLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "alone" "with_friends" "with_family" ) ;
+        sh:message "Isolation level must be alone, with_friends, or with_family."@en
+    ] .
+
+cacontology-street:AgeVulnerabilityIndicatorShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:AgeVulnerabilityIndicator ;
+    rdfs:label "Age Vulnerability Indicator Shape"@en ;
+    rdfs:comment "Validation shape for age vulnerability indicator instances."@en ;
+    sh:property [
+        sh:path cacontology-street:apparentAge ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 18 ;
+        sh:message "Apparent age must be between 0 and 18 years."@en
+    ] .
+
+# =============================================================================
+# RAPID ESCALATION SHAPES
+# =============================================================================
+
+cacontology-street:RapidEscalationRecruitmentShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:RapidEscalationRecruitment ;
+    rdfs:label "Rapid Escalation Recruitment Shape"@en ;
+    rdfs:comment "Validation shape for rapid escalation recruitment instances."@en ;
+    sh:property [
+        sh:path cacontology-street:escalationTimeframe ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:message "Escalation timeframe must be a non-negative decimal value in hours."@en
+    ] .
+
+cacontology-street:SameDayProgressionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:SameDayProgression ;
+    rdfs:label "Same Day Progression Shape"@en ;
+    rdfs:comment "Validation shape for same day progression instances."@en ;
+    sh:property [
+        sh:path cacontology-street:sameDayProgression ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Same day progression flag may be specified."@en
+    ] .
+
+cacontology-street:ImmediateIsolationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:ImmediateIsolation ;
+    rdfs:label "Immediate Isolation Shape"@en ;
+    rdfs:comment "Validation shape for immediate isolation instances."@en .
+
+cacontology-street:LocationTransitionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:LocationTransition ;
+    rdfs:label "Location Transition Shape"@en ;
+    rdfs:comment "Validation shape for location transition instances."@en ;
+    sh:property [
+        sh:path cacontology-street:transportationMethod ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Transportation method may be specified."@en
+    ] .
+
+cacontology-street:VehicleBasedIsolationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:VehicleBasedIsolation ;
+    rdfs:label "Vehicle Based Isolation Shape"@en ;
+    rdfs:comment "Validation shape for vehicle-based isolation instances."@en .
+
+cacontology-street:SecondaryLocationExploitationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:SecondaryLocationExploitation ;
+    rdfs:label "Secondary Location Exploitation Shape"@en ;
+    rdfs:comment "Validation shape for secondary location exploitation instances."@en ;
+    sh:property [
+        sh:path cacontology-street:exploitationLocation ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Exploitation location may be specified."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-street:distanceFromContact ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:message "Distance from contact must be a non-negative decimal value in miles."@en
+    ] .
+
+# =============================================================================
+# TRAFFICKING PROPOSITION SHAPES
+# =============================================================================
+
+cacontology-street:DirectTraffickingPropositionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:DirectTraffickingProposition ;
+    rdfs:label "Direct Trafficking Proposition Shape"@en ;
+    rdfs:comment "Validation shape for direct trafficking proposition instances."@en ;
+    sh:property [
+        sh:path cacontology-street:propositionType ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "stripping" "prostitution" "body_selling" ) ;
+        sh:message "Proposition type must be stripping, prostitution, or body_selling."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-street:explicitnessLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "subtle" "direct" "explicit" ) ;
+        sh:message "Explicitness level must be subtle, direct, or explicit."@en
+    ] .
+
+cacontology-street:ExplicitCommercialOfferShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:ExplicitCommercialOffer ;
+    rdfs:label "Explicit Commercial Offer Shape"@en ;
+    rdfs:comment "Validation shape for explicit commercial offer instances."@en ;
+    sh:property [
+        sh:path cacontology-street:moneyAmountMentioned ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:message "Money amount mentioned must be a non-negative decimal value."@en
+    ] .
+
+cacontology-street:StrippingPropositionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:StrippingProposition ;
+    rdfs:label "Stripping Proposition Shape"@en ;
+    rdfs:comment "Validation shape for stripping proposition instances."@en .
+
+cacontology-street:ProstitutionPropositionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:ProstitutionProposition ;
+    rdfs:label "Prostitution Proposition Shape"@en ;
+    rdfs:comment "Validation shape for prostitution proposition instances."@en .
+
+cacontology-street:BodySellingPropositionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:BodySellingProposition ;
+    rdfs:label "Body Selling Proposition Shape"@en ;
+    rdfs:comment "Validation shape for body selling proposition instances."@en .
+
+cacontology-street:EconomicIncentivePresentationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:EconomicIncentivePresentation ;
+    rdfs:label "Economic Incentive Presentation Shape"@en ;
+    rdfs:comment "Validation shape for economic incentive presentation instances."@en ;
+    sh:property [
+        sh:path cacontology-street:economicIncentive ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Economic incentive may be specified."@en
+    ] .
+
+cacontology-street:ImmediateExploitationAttemptShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:ImmediateExploitationAttempt ;
+    rdfs:label "Immediate Exploitation Attempt Shape"@en ;
+    rdfs:comment "Validation shape for immediate exploitation attempt instances."@en .
+
+# =============================================================================
+# SUBSTANCE-FACILITATED RECRUITMENT SHAPES
+# =============================================================================
+
+cacontology-street:SubstanceFacilitatedRecruitmentShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:SubstanceFacilitatedRecruitment ;
+    rdfs:label "Substance Facilitated Recruitment Shape"@en ;
+    rdfs:comment "Validation shape for substance-facilitated recruitment instances."@en ;
+    sh:property [
+        sh:path cacontology-street:substanceType ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "marijuana" "alcohol" "other" ) ;
+        sh:message "Substance type must be marijuana, alcohol, or other."@en
+    ] .
+
+cacontology-street:DrugFacilitatedVulnerabilityShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:DrugFacilitatedVulnerability ;
+    rdfs:label "Drug Facilitated Vulnerability Shape"@en ;
+    rdfs:comment "Validation shape for drug-facilitated vulnerability instances."@en ;
+    sh:property [
+        sh:path cacontology-street:administrationMethod ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "offered" "forced" "shared" ) ;
+        sh:message "Administration method must be offered, forced, or shared."@en
+    ] .
+
+cacontology-street:MarijuanaFacilitationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:MarijuanaFacilitation ;
+    rdfs:label "Marijuana Facilitation Shape"@en ;
+    rdfs:comment "Validation shape for marijuana facilitation instances."@en .
+
+cacontology-street:AlcoholFacilitationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:AlcoholFacilitation ;
+    rdfs:label "Alcohol Facilitation Shape"@en ;
+    rdfs:comment "Validation shape for alcohol facilitation instances."@en .
+
+cacontology-street:SubstanceBasedControlShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:SubstanceBasedControl ;
+    rdfs:label "Substance Based Control Shape"@en ;
+    rdfs:comment "Validation shape for substance-based control instances."@en .
+
+cacontology-street:ImpairmentExploitationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:ImpairmentExploitation ;
+    rdfs:label "Impairment Exploitation Shape"@en ;
+    rdfs:comment "Validation shape for impairment exploitation instances."@en ;
+    sh:property [
+        sh:path cacontology-street:impairmentLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "mild" "moderate" "severe" ) ;
+        sh:message "Impairment level must be mild, moderate, or severe."@en
+    ] .
+
+# =============================================================================
+# FOLLOW-UP AND REINFORCEMENT SHAPES
+# =============================================================================
+
+cacontology-street:PostContactReinforcementShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:PostContactReinforcement ;
+    rdfs:label "Post Contact Reinforcement Shape"@en ;
+    rdfs:comment "Validation shape for post-contact reinforcement instances."@en ;
+    sh:property [
+        sh:path cacontology-street:followUpDelay ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:message "Follow-up delay must be a non-negative decimal value in hours."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-street:followUpMethod ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "text" "call" "social_media" "in_person" ) ;
+        sh:message "Follow-up method must be text, call, social_media, or in_person."@en
+    ] .
+
+cacontology-street:NextDayFollowUpShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:NextDayFollowUp ;
+    rdfs:label "Next Day Follow Up Shape"@en ;
+    rdfs:comment "Validation shape for next day follow-up instances."@en .
+
+cacontology-street:DigitalFollowUpShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:DigitalFollowUp ;
+    rdfs:label "Digital Follow Up Shape"@en ;
+    rdfs:comment "Validation shape for digital follow-up instances."@en .
+
+cacontology-street:TextMessageFollowUpShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:TextMessageFollowUp ;
+    rdfs:label "Text Message Follow Up Shape"@en ;
+    rdfs:comment "Validation shape for text message follow-up instances."@en .
+
+cacontology-street:TraffickingPropositionReinforcementShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:TraffickingPropositionReinforcement ;
+    rdfs:label "Trafficking Proposition Reinforcement Shape"@en ;
+    rdfs:comment "Validation shape for trafficking proposition reinforcement instances."@en ;
+    sh:property [
+        sh:path cacontology-street:reinforcementAttempts ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0 ;
+        sh:message "Reinforcement attempts must be a non-negative integer."@en
+    ] .
+
+cacontology-street:PersistenceAfterRejectionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:PersistenceAfterRejection ;
+    rdfs:label "Persistence After Rejection Shape"@en ;
+    rdfs:comment "Validation shape for persistence after rejection instances."@en ;
+    sh:property [
+        sh:path cacontology-street:persistenceLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "low" "moderate" "high" "aggressive" ) ;
+        sh:message "Persistence level must be low, moderate, high, or aggressive."@en
+    ] .
+
+cacontology-street:DigitalToPhysicalBridgeShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:DigitalToPhysicalBridge ;
+    rdfs:label "Digital to Physical Bridge Shape"@en ;
+    rdfs:comment "Validation shape for digital to physical bridge instances."@en .
+
+# =============================================================================
+# VICTIM RESPONSE SHAPES
+# =============================================================================
+
+cacontology-street:VictimStreetResponseShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:VictimStreetResponse ;
+    rdfs:label "Victim Street Response Shape"@en ;
+    rdfs:comment "Validation shape for victim street response instances."@en ;
+    sh:property [
+        sh:path cacontology-street:responseType ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "acceptance" "rejection" "resistance" "compliance" ) ;
+        sh:message "Response type must be acceptance, rejection, resistance, or compliance."@en
+    ] .
+
+cacontology-street:TraffickingPropositionRejectionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:TraffickingPropositionRejection ;
+    rdfs:label "Trafficking Proposition Rejection Shape"@en ;
+    rdfs:comment "Validation shape for trafficking proposition rejection instances."@en .
+
+cacontology-street:VictimResistanceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:VictimResistance ;
+    rdfs:label "Victim Resistance Shape"@en ;
+    rdfs:comment "Validation shape for victim resistance instances."@en ;
+    sh:property [
+        sh:path cacontology-street:resistanceLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "none" "passive" "active" "aggressive" ) ;
+        sh:message "Resistance level must be none, passive, active, or aggressive."@en
+    ] .
+
+cacontology-street:EscapeAttemptShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:EscapeAttempt ;
+    rdfs:label "Escape Attempt Shape"@en ;
+    rdfs:comment "Validation shape for escape attempt instances."@en .
+
+cacontology-street:HelpSeekingBehaviorShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:HelpSeekingBehavior ;
+    rdfs:label "Help Seeking Behavior Shape"@en ;
+    rdfs:comment "Validation shape for help seeking behavior instances."@en .
+
+cacontology-street:VictimReportingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:VictimReporting ;
+    rdfs:label "Victim Reporting Shape"@en ;
+    rdfs:comment "Validation shape for victim reporting instances."@en ;
+    sh:property [
+        sh:path cacontology-street:reportingDelay ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:message "Reporting delay must be a non-negative decimal value in hours."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-street:reportingMethod ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "police_call" "in_person" "third_party" ) ;
+        sh:message "Reporting method must be police_call, in_person, or third_party."@en
+    ] .
+
+cacontology-street:DisclosureToAuthoritiesShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:DisclosureToAuthorities ;
+    rdfs:label "Disclosure to Authorities Shape"@en ;
+    rdfs:comment "Validation shape for disclosure to authorities instances."@en .
+
+cacontology-street:DelayedReportingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:DelayedReporting ;
+    rdfs:label "Delayed Reporting Shape"@en ;
+    rdfs:comment "Validation shape for delayed reporting instances."@en .
+
+cacontology-street:ImmediateReportingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:ImmediateReporting ;
+    rdfs:label "Immediate Reporting Shape"@en ;
+    rdfs:comment "Validation shape for immediate reporting instances."@en .
+
+# =============================================================================
+# LOCATION SHAPES
+# =============================================================================
+
+cacontology-street:StreetRecruitmentLocationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:StreetRecruitmentLocation ;
+    rdfs:label "Street Recruitment Location Shape"@en ;
+    rdfs:comment "Validation shape for street recruitment location instances."@en .
+
+cacontology-street:HighTrafficAreaShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:HighTrafficArea ;
+    rdfs:label "High Traffic Area Shape"@en ;
+    rdfs:comment "Validation shape for high traffic area instances."@en .
+
+cacontology-street:TransitAreaShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:TransitArea ;
+    rdfs:label "Transit Area Shape"@en ;
+    rdfs:comment "Validation shape for transit area instances."@en .
+
+cacontology-street:CommercialDistrictShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:CommercialDistrict ;
+    rdfs:label "Commercial District Shape"@en ;
+    rdfs:comment "Validation shape for commercial district instances."@en .
+
+cacontology-street:ResidentialAreaShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:ResidentialArea ;
+    rdfs:label "Residential Area Shape"@en ;
+    rdfs:comment "Validation shape for residential area instances."@en .
+
+cacontology-street:VulnerableNeighborhoodShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:VulnerableNeighborhood ;
+    rdfs:label "Vulnerable Neighborhood Shape"@en ;
+    rdfs:comment "Validation shape for vulnerable neighborhood instances."@en .
+
+cacontology-street:IsolatedLocationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:IsolatedLocation ;
+    rdfs:label "Isolated Location Shape"@en ;
+    rdfs:comment "Validation shape for isolated location instances."@en .
+
+cacontology-street:HighwayLocationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:HighwayLocation ;
+    rdfs:label "Highway Location Shape"@en ;
+    rdfs:comment "Validation shape for highway location instances."@en .
+
+cacontology-street:VehicleLocationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:VehicleLocation ;
+    rdfs:label "Vehicle Location Shape"@en ;
+    rdfs:comment "Validation shape for vehicle location instances."@en .
+
+# =============================================================================
+# OBJECT PROPERTY SHAPES
+# =============================================================================
+
+cacontology-street:InitiatesContactShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-street:initiatesContact ;
+    sh:name "initiates contact" ;
+    sh:description "Links trafficker to initial street contact with victim" ;
+    sh:class cacontology-street:InitialStreetContact ;
+    sh:minCount 0 .
+
+cacontology-street:UsesPretextShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-street:usesPretext ;
+    sh:name "uses pretext" ;
+    sh:description "Links initial contact to pretext used for approach" ;
+    sh:class cacontology-street:PretextBasedApproach ;
+    sh:minCount 0 .
+
+cacontology-street:TargetsVictimShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-street:targetsVictim ;
+    sh:name "targets victim" ;
+    sh:description "Links recruitment activity to victim being targeted" ;
+    sh:class uco-identity:Person ;
+    sh:minCount 0 .
+
+cacontology-street:OccursAtShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-street:occursAt ;
+    sh:name "occurs at" ;
+    sh:description "Links recruitment activity to location where it occurs" ;
+    sh:class cacontology-street:StreetRecruitmentLocation ;
+    sh:minCount 0 .
+
+cacontology-street:AssessesVulnerabilityShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-street:assessesVulnerability ;
+    sh:name "assesses vulnerability" ;
+    sh:description "Links trafficker to vulnerability assessment of potential victim" ;
+    sh:class cacontology-street:StreetVulnerabilityAssessment ;
+    sh:minCount 0 .
+
+cacontology-street:ExhibitsIndicatorShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-street:exhibitsIndicator ;
+    sh:name "exhibits indicator" ;
+    sh:description "Links victim to vulnerability indicator they exhibit" ;
+    sh:class cacontology-street:VulnerabilityIndicator ;
+    sh:minCount 0 .
+
+cacontology-street:ExploitsVulnerabilityShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-street:exploitsVulnerability ;
+    sh:name "exploits vulnerability" ;
+    sh:description "Links recruitment to vulnerability being exploited" ;
+    sh:class cacontology-street:VulnerabilityIndicator ;
+    sh:minCount 0 .
+
+cacontology-street:TransitionsToShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-street:transitionsTo ;
+    sh:name "transitions to" ;
+    sh:description "Links initial contact location to exploitation location" ;
+    sh:class cacontology-street:IsolatedLocation ;
+    sh:minCount 0 .
+
+cacontology-street:FacilitatesTransitionShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-street:facilitatesTransition ;
+    sh:name "facilitates transition" ;
+    sh:description "Links transportation method to location transition" ;
+    sh:class cacontology-street:LocationTransition ;
+    sh:minCount 0 .
+
+cacontology-street:IsolatesAtShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-street:isolatesAt ;
+    sh:name "isolates at" ;
+    sh:description "Links isolation activity to location used for isolation" ;
+    sh:class cacontology-street:IsolatedLocation ;
+    sh:minCount 0 .
+
+cacontology-street:MakesPropositionShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-street:makesProposition ;
+    sh:name "makes proposition" ;
+    sh:description "Links trafficker to trafficking proposition made to victim" ;
+    sh:class cacontology-street:DirectTraffickingProposition ;
+    sh:minCount 0 .
+
+cacontology-street:EscalatesToShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-street:escalatesTo ;
+    sh:name "escalates to" ;
+    sh:description "Links initial contact to trafficking proposition escalation" ;
+    sh:class cacontology-street:DirectTraffickingProposition ;
+    sh:minCount 0 .
+
+cacontology-street:FacilitatesWithSubstanceShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-street:facilitatesWithSubstance ;
+    sh:name "facilitates with substance" ;
+    sh:description "Links recruitment to substance used for facilitation" ;
+    sh:class uco-observable:ObservableObject ;
+    sh:minCount 0 .
+
+cacontology-street:RespondsToShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-street:respondsTo ;
+    sh:name "responds to" ;
+    sh:description "Links victim response to trafficking proposition" ;
+    sh:class cacontology-street:DirectTraffickingProposition ;
+    sh:minCount 0 .
+
+cacontology-street:RejectsShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-street:rejects ;
+    sh:name "rejects" ;
+    sh:description "Links victim to trafficking proposition they reject" ;
+    sh:class cacontology-street:DirectTraffickingProposition ;
+    sh:minCount 0 .
+
+cacontology-street:ReportsToShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-street:reportsTo ;
+    sh:name "reports to" ;
+    sh:description "Links victim reporting to law enforcement agency" ;
+    sh:class uco-identity:Organization ;
+    sh:minCount 0 .
+
+cacontology-street:FollowsUpWithShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-street:followsUpWith ;
+    sh:name "follows up with" ;
+    sh:description "Links trafficker to follow-up contact with victim" ;
+    sh:class cacontology-street:PostContactReinforcement ;
+    sh:minCount 0 .
+
+cacontology-street:ReinforcesShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-street:reinforces ;
+    sh:name "reinforces" ;
+    sh:description "Links follow-up contact to trafficking proposition being reinforced" ;
+    sh:class cacontology-street:DirectTraffickingProposition ;
+    sh:minCount 0 .
+
+cacontology-street:PersistsAfterShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-street:persistsAfter ;
+    sh:name "persists after" ;
+    sh:description "Links persistence to initial rejection being overcome" ;
+    sh:class cacontology-street:TraffickingPropositionRejection ;
+    sh:minCount 0 .
+
+cacontology-street:DocumentsRecruitmentShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-street:documentsRecruitment ;
+    sh:name "documents recruitment" ;
+    sh:description "Links evidence to street recruitment activity it documents" ;
+    sh:class cacontology-street:StreetBasedRecruitment ;
+    sh:minCount 0 .
+
+cacontology-street:SupportsChargeShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-street:supportsCharge ;
+    sh:name "supports charge" ;
+    sh:description "Links street recruitment evidence to criminal charges" ;
+    sh:class uco-observable:ObservableObject ;
+    sh:minCount 0 .
+
+# =============================================================================
+# CROSS-REFERENCE VALIDATION SHAPES
+# =============================================================================
+
+cacontology-street:RecruitmentCrossReferenceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:StreetBasedRecruitment ;
+    rdfs:label "Recruitment Cross Reference Shape"@en ;
+    rdfs:comment "Validates cross-references between recruitment and related entities."@en ;
+    sh:sparql [
+        sh:message "Street-based recruitment should target at least one victim and occur at a location."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-street:StreetBasedRecruitment .
+                FILTER NOT EXISTS {
+                    $this cacontology-street:targetsVictim ?victim ;
+                          cacontology-street:occursAt ?location .
+                }
+            }
+        """
+    ] .
+
+cacontology-street:EscalationTimelineValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:RapidEscalationRecruitment ;
+    rdfs:label "Escalation Timeline Validation Shape"@en ;
+    rdfs:comment "Validates temporal consistency in rapid escalation recruitment."@en ;
+    sh:sparql [
+        sh:message "Rapid escalation recruitment should have escalation timeframe less than 24 hours."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-street:RapidEscalationRecruitment ;
+                      cacontology-street:escalationTimeframe ?timeframe .
+                FILTER (?timeframe >= 24.0)
+            }
+        """
+    ] .
+
+cacontology-street:VulnerabilityAssessmentValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:StreetVulnerabilityAssessment ;
+    rdfs:label "Vulnerability Assessment Validation Shape"@en ;
+    rdfs:comment "Validates vulnerability assessment completeness."@en ;
+    sh:sparql [
+        sh:message "Vulnerability assessment should identify at least one vulnerability indicator."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-street:StreetVulnerabilityAssessment .
+                FILTER NOT EXISTS {
+                    ?person cacontology-street:assessesVulnerability $this .
+                    ?person cacontology-street:exhibitsIndicator ?indicator .
+                }
+            }
+        """
+    ] .
+
+cacontology-street:LocationTransitionValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:LocationTransition ;
+    rdfs:label "Location Transition Validation Shape"@en ;
+    rdfs:comment "Validates location transition consistency."@en ;
+    sh:sparql [
+        sh:message "Location transition should have both source and destination locations."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-street:LocationTransition .
+                FILTER NOT EXISTS {
+                    ?contact cacontology-street:initialContactLocation ?source .
+                    ?exploitation cacontology-street:exploitationLocation ?dest .
+                    ?contact cacontology-street:escalatesTo ?proposition .
+                    ?proposition cacontology-street:respondsTo ?response .
+                }
+            }
+        """
+    ] .
+
+# =============================================================================
+# TEMPORAL VALIDATION SHAPES
+# =============================================================================
+
+cacontology-street:TemporalValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:InitialStreetContact ;
+    rdfs:label "Temporal Validation Shape"@en ;
+    rdfs:comment "Validates temporal consistency in street contacts."@en ;
+    sh:sparql [
+        sh:message "Contact duration should be reasonable (less than 24 hours)."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-street:InitialStreetContact ;
+                      cacontology-street:contactDuration ?duration .
+                FILTER (?duration >= 1440.0)
+            }
+        """
+    ] .
+
+cacontology-street:SameDayProgressionValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:SameDayProgression ;
+    rdfs:label "Same Day Progression Validation Shape"@en ;
+    rdfs:comment "Validates same-day progression logic."@en ;
+    sh:sparql [
+        sh:message "Same day progression should have escalation timeframe less than 24 hours."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-street:SameDayProgression .
+                ?recruitment a cacontology-street:RapidEscalationRecruitment ;
+                             cacontology-street:escalationTimeframe ?timeframe .
+                FILTER (?timeframe >= 24.0)
+            }
+        """
+    ] .
+
+cacontology-street:FollowUpTimingValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:PostContactReinforcement ;
+    rdfs:label "Follow Up Timing Validation Shape"@en ;
+    rdfs:comment "Validates follow-up timing consistency."@en ;
+    sh:sparql [
+        sh:message "Follow-up delay should be reasonable (less than 30 days)."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-street:PostContactReinforcement ;
+                      cacontology-street:followUpDelay ?delay .
+                FILTER (?delay >= 720.0)
+            }
+        """
+    ] .
+
+# =============================================================================
+# DATA QUALITY SHAPES
+# =============================================================================
+
+cacontology-street:DataQualityShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:StreetBasedRecruitment ;
+    rdfs:label "Data Quality Shape"@en ;
+    rdfs:comment "Validates data quality for street-based recruitment."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Label should be between 5 and 200 characters when provided."@en
+    ] ;
+    sh:property [
+        sh:path rdfs:comment ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 10 ;
+        sh:maxLength 1000 ;
+        sh:message "Comment should be between 10 and 1000 characters when provided."@en
+    ] .
+
+cacontology-street:PropertyValueValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-street:DirectTraffickingProposition ;
+    rdfs:label "Property Value Validation Shape"@en ;
+    rdfs:comment "Validates property value ranges and formats."@en ;
+    sh:sparql [
+        sh:message "Explicit commercial offers should mention a money amount when proposition type is specified."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-street:ExplicitCommercialOffer ;
+                      cacontology-street:propositionType ?type .
+                FILTER NOT EXISTS {
+                    $this cacontology-street:moneyAmountMentioned ?amount .
+                }
+            }
+        """
+    ] .
+

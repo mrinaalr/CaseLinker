@@ -1,0 +1,773 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix cacontology-stranger: <https://cacontology.projectvic.org/abduction#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+# Ontology Declaration
+<https://cacontology.projectvic.org/abduction/shapes> rdf:type owl:Ontology ;
+    rdfs:label "CAC Stranger Abduction SHACL Shapes"@en ;
+    rdfs:comment "SHACL validation shapes for the CAC Stranger Abduction Ontology, providing validation for stranger abduction patterns, weapon-based coercion, and opportunistic predation."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/abduction/shapes/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://cacontology.projectvic.org/abduction/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> .
+
+# =============================================================================
+# STRANGER ABDUCTION SHAPES
+# =============================================================================
+
+cacontology-stranger:StrangerAbductionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-stranger:StrangerAbduction ;
+    rdfs:label "Stranger Abduction Shape"@en ;
+    rdfs:comment "Validation shape for stranger abduction instances."@en ;
+    sh:property [
+        sh:path cacontology-stranger:abductionType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "opportunistic" "predatory" "planned" "random" "targeted" "crime_of_opportunity" ) ;
+        sh:message "Stranger abduction must specify abduction type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-stranger:abductionLocation ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "public_space" "school_area" "residential_area" "commercial_area" "transportation_hub" "recreational_area" "remote_location" ) ;
+        sh:message "Stranger abduction must specify abduction location type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-stranger:victimAge ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 17 ;
+        sh:message "Victim age must be between 0 and 17 years."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-stranger:abductionTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Stranger abduction must specify abduction time."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-stranger:reportedTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Stranger abduction must specify reported time."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-stranger:responseTime ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.1 ;
+        sh:maxInclusive 168.0 ;
+        sh:message "Response time must be between 0.1 and 168 hours (1 week)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-stranger:riskLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "critical" "high" "medium" "low" "unknown" ) ;
+        sh:message "Stranger abduction must specify risk level from the allowed list."@en
+    ] .
+
+cacontology-stranger:OpportunisticAbductionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-stranger:OpportunisticAbduction ;
+    rdfs:label "Opportunistic Abduction Shape"@en ;
+    rdfs:comment "Validation shape for opportunistic abduction instances."@en ;
+    sh:property [
+        sh:path cacontology-stranger:opportunityFactor ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "isolated_victim" "lack_of_supervision" "vulnerable_situation" "environmental_factor" "timing_factor" "distraction" ) ;
+        sh:message "Opportunistic abduction must specify opportunity factor from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-stranger:impulsiveNature ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Opportunistic abduction must specify if it was impulsive in nature."@en
+    ] .
+
+cacontology-stranger:PredatoryAbductionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-stranger:PredatoryAbduction ;
+    rdfs:label "Predatory Abduction Shape"@en ;
+    rdfs:comment "Validation shape for predatory abduction instances."@en ;
+    sh:property [
+        sh:path cacontology-stranger:huntingBehavior ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Predatory abduction must specify if hunting behavior was observed."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-stranger:surveillancePeriod ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.1 ;
+        sh:maxInclusive 720.0 ;
+        sh:message "Surveillance period must be between 0.1 and 720 hours (30 days)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-stranger:victimSelection ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "specific_criteria" "random_selection" "convenience" "vulnerability_based" "proximity_based" ) ;
+        sh:message "Predatory abduction must specify victim selection method from the allowed list."@en
+    ] .
+
+# =============================================================================
+# ABDUCTOR PROFILE SHAPES
+# =============================================================================
+
+cacontology-stranger:AbductorProfileShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-stranger:AbductorProfile ;
+    rdfs:label "Abductor Profile Shape"@en ;
+    rdfs:comment "Validation shape for abductor profile instances."@en ;
+    sh:property [
+        sh:path cacontology-stranger:profileType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "behavioral_profile" "demographic_profile" "psychological_profile" "criminal_profile" "composite_profile" ) ;
+        sh:message "Abductor profile must specify profile type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-stranger:ageRange ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "under_18" "18_25" "26_35" "36_45" "46_55" "56_65" "over_65" "unknown" ) ;
+        sh:message "Age range must be from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-stranger:genderProfile ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "male" "female" "unknown" "other" ) ;
+        sh:message "Gender profile must be from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-stranger:criminalHistory ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Abductor profile may specify if criminal history exists."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-stranger:priorOffenses ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 50 ;
+        sh:message "Prior offenses must be between 0 and 50."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-stranger:psychologicalFactors ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "antisocial_personality" "sexual_deviance" "substance_abuse" "mental_illness" "impulse_control" "multiple_factors" ) ;
+        sh:message "Psychological factors must be from the allowed list."@en
+    ] .
+
+cacontology-stranger:BehavioralProfileShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-stranger:BehavioralProfile ;
+    rdfs:label "Behavioral Profile Shape"@en ;
+    rdfs:comment "Validation shape for behavioral profile instances."@en ;
+    sh:property [
+        sh:path cacontology-stranger:approachMethod ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "deception" "force" "enticement" "authority_figure" "assistance_ruse" "direct_approach" ) ;
+        sh:message "Behavioral profile must specify approach method from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-stranger:communicationStyle ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "friendly" "authoritative" "threatening" "manipulative" "silent" "erratic" ) ;
+        sh:message "Communication style must be from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-stranger:organizationLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "highly_organized" "organized" "mixed" "disorganized" "chaotic" ) ;
+        sh:message "Behavioral profile must specify organization level from the allowed list."@en
+    ] .
+
+# =============================================================================
+# ABDUCTION METHOD SHAPES
+# =============================================================================
+
+cacontology-stranger:AbductionMethodShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-stranger:AbductionMethod ;
+    rdfs:label "Abduction Method Shape"@en ;
+    rdfs:comment "Validation shape for abduction method instances."@en ;
+    sh:property [
+        sh:path cacontology-stranger:methodType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "physical_force" "deception" "enticement" "threat" "weapon_use" "vehicle_abduction" "walk_away" ) ;
+        sh:message "Abduction method must specify method type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-stranger:forceLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "none" "minimal" "moderate" "significant" "extreme" "lethal" ) ;
+        sh:message "Force level must be from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-stranger:weaponInvolved ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Abduction method must specify if weapon was involved."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-stranger:vehicleUsed ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Abduction method must specify if vehicle was used."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-stranger:accomplices ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 10 ;
+        sh:message "Number of accomplices must be between 0 and 10."@en
+    ] .
+
+cacontology-stranger:VehicleAbductionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-stranger:VehicleAbduction ;
+    rdfs:label "Vehicle Abduction Shape"@en ;
+    rdfs:comment "Validation shape for vehicle abduction instances."@en ;
+    sh:property [
+        sh:path cacontology-stranger:vehicleType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "sedan" "suv" "truck" "van" "motorcycle" "commercial_vehicle" "unknown" ) ;
+        sh:message "Vehicle abduction must specify vehicle type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-stranger:vehicleColor ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "white" "black" "gray" "silver" "red" "blue" "green" "yellow" "brown" "other" "unknown" ) ;
+        sh:message "Vehicle color must be from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-stranger:licensePlateInfo ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Vehicle abduction must specify if license plate information is available."@en
+    ] .
+
+# =============================================================================
+# SEARCH OPERATION SHAPES
+# =============================================================================
+
+cacontology-stranger:SearchOperationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-stranger:SearchOperation ;
+    rdfs:label "Search Operation Shape"@en ;
+    rdfs:comment "Validation shape for search operation instances."@en ;
+    sh:property [
+        sh:path cacontology-stranger:searchType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "ground_search" "air_search" "water_search" "urban_search" "wilderness_search" "multi_domain_search" ) ;
+        sh:message "Search operation must specify search type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-stranger:searchRadius ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.1 ;
+        sh:maxInclusive 1000.0 ;
+        sh:message "Search radius must be between 0.1 and 1000 kilometers."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-stranger:searchDuration ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1.0 ;
+        sh:maxInclusive 8760.0 ;
+        sh:message "Search duration must be between 1 and 8760 hours (1 year)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-stranger:personnelCount ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 1000 ;
+        sh:message "Search operation must have between 1 and 1000 personnel."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-stranger:resourcesDeployed ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 100 ;
+        sh:message "Search operation must deploy between 1 and 100 resources."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Search operation must specify start time."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:endTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Search operation may specify end time."@en
+    ] .
+
+cacontology-stranger:GroundSearchShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-stranger:GroundSearch ;
+    rdfs:label "Ground Search Shape"@en ;
+    rdfs:comment "Validation shape for ground search instances."@en ;
+    sh:property [
+        sh:path cacontology-stranger:searchPattern ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "grid_search" "line_search" "spiral_search" "zone_search" "hasty_search" "containment_search" ) ;
+        sh:message "Ground search must specify search pattern from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-stranger:terrainType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "urban" "suburban" "rural" "wilderness" "forest" "desert" "mountainous" "coastal" ) ;
+        sh:message "Ground search must specify terrain type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-stranger:canineUnits ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 50 ;
+        sh:message "Number of canine units must be between 0 and 50."@en
+    ] .
+
+# =============================================================================
+# AMBER ALERT SHAPES
+# =============================================================================
+
+cacontology-stranger:AmberAlertShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-stranger:AmberAlert ;
+    rdfs:label "Amber Alert Shape"@en ;
+    rdfs:comment "Validation shape for Amber Alert instances."@en ;
+    sh:property [
+        sh:path cacontology-stranger:alertLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "local" "regional" "statewide" "multi_state" "national" "international" ) ;
+        sh:message "Amber Alert must specify alert level from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-stranger:activationTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Amber Alert must specify activation time."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-stranger:deactivationTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Amber Alert may specify deactivation time."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-stranger:alertDuration ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.1 ;
+        sh:maxInclusive 720.0 ;
+        sh:message "Alert duration must be between 0.1 and 720 hours (30 days)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-stranger:distributionChannels ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 50 ;
+        sh:message "Amber Alert must use between 1 and 50 distribution channels."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-stranger:publicResponse ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 10000 ;
+        sh:message "Public response count must be between 0 and 10000."@en
+    ] .
+
+cacontology-stranger:AlertCriteriaShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-stranger:AlertCriteria ;
+    rdfs:label "Alert Criteria Shape"@en ;
+    rdfs:comment "Validation shape for alert criteria instances."@en ;
+    sh:property [
+        sh:path cacontology-stranger:criteriaType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "age_criteria" "abduction_confirmed" "danger_criteria" "description_available" "time_criteria" "jurisdiction_criteria" ) ;
+        sh:message "Alert criteria must specify criteria type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-stranger:criteriaMet ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Alert criteria must specify if criteria is met."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-stranger:verificationLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "confirmed" "probable" "possible" "unverified" "disputed" ) ;
+        sh:message "Alert criteria must specify verification level from the allowed list."@en
+    ] .
+
+# =============================================================================
+# VICTIM RECOVERY SHAPES
+# =============================================================================
+
+cacontology-stranger:VictimRecoveryShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-stranger:VictimRecovery ;
+    rdfs:label "Victim Recovery Shape"@en ;
+    rdfs:comment "Validation shape for victim recovery instances."@en ;
+    sh:property [
+        sh:path cacontology-stranger:recoveryType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "safe_recovery" "rescue_operation" "self_escape" "release_by_abductor" "discovery_by_public" "law_enforcement_recovery" ) ;
+        sh:message "Victim recovery must specify recovery type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-stranger:recoveryTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Victim recovery must specify recovery time."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-stranger:recoveryLocation ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "original_location" "nearby_location" "distant_location" "different_jurisdiction" "different_state" "different_country" ) ;
+        sh:message "Victim recovery must specify recovery location type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-stranger:victimCondition ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "unharmed" "minor_injuries" "significant_injuries" "critical_condition" "deceased" "unknown" ) ;
+        sh:message "Victim recovery must specify victim condition from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-stranger:medicalAttention ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Victim recovery must specify if medical attention was required."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-stranger:captivityDuration ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.1 ;
+        sh:maxInclusive 8760.0 ;
+        sh:message "Captivity duration must be between 0.1 and 8760 hours (1 year)."@en
+    ] .
+
+cacontology-stranger:RescueOperationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-stranger:RescueOperation ;
+    rdfs:label "Rescue Operation Shape"@en ;
+    rdfs:comment "Validation shape for rescue operation instances."@en ;
+    sh:property [
+        sh:path cacontology-stranger:operationType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "tactical_rescue" "negotiated_release" "stealth_operation" "coordinated_assault" "emergency_response" "planned_operation" ) ;
+        sh:message "Rescue operation must specify operation type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-stranger:riskAssessment ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "low_risk" "moderate_risk" "high_risk" "extreme_risk" "unknown_risk" ) ;
+        sh:message "Rescue operation must specify risk assessment from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-stranger:specializedUnits ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 20 ;
+        sh:message "Number of specialized units must be between 0 and 20."@en
+    ] .
+
+# =============================================================================
+# OBJECT PROPERTY SHAPES
+# =============================================================================
+
+cacontology-stranger:InvolvesAbductorShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-stranger:involvesAbductor ;
+    sh:name "involves abductor" ;
+    sh:description "Links abduction to abductor profile" ;
+    sh:class cacontology-stranger:AbductorProfile ;
+    sh:minCount 1 ;
+    sh:maxCount 1 .
+
+cacontology-stranger:UsesMethodShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-stranger:usesMethod ;
+    sh:name "uses method" ;
+    sh:description "Links abduction to method used" ;
+    sh:class cacontology-stranger:AbductionMethod ;
+    sh:minCount 1 ;
+    sh:maxCount 1 .
+
+cacontology-stranger:TriggersSearchShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-stranger:triggersSearch ;
+    sh:name "triggers search" ;
+    sh:description "Links abduction to search operations" ;
+    sh:class cacontology-stranger:SearchOperation ;
+    sh:minCount 0 .
+
+cacontology-stranger:ActivatesAlertShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-stranger:activatesAlert ;
+    sh:name "activates alert" ;
+    sh:description "Links abduction to Amber Alert" ;
+    sh:class cacontology-stranger:AmberAlert ;
+    sh:minCount 0 ;
+    sh:maxCount 1 .
+
+cacontology-stranger:ResultsInRecoveryShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-stranger:resultsInRecovery ;
+    sh:name "results in recovery" ;
+    sh:description "Links abduction to victim recovery" ;
+    sh:class cacontology-stranger:VictimRecovery ;
+    sh:minCount 0 ;
+    sh:maxCount 1 .
+
+cacontology-stranger:MeetsAlertCriteriaShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-stranger:meetsAlertCriteria ;
+    sh:name "meets alert criteria" ;
+    sh:description "Links Amber Alert to criteria" ;
+    sh:class cacontology-stranger:AlertCriteria ;
+    sh:minCount 1 .
+
+cacontology-stranger:RequiresRescueShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-stranger:requiresRescue ;
+    sh:name "requires rescue" ;
+    sh:description "Links recovery to rescue operation" ;
+    sh:class cacontology-stranger:RescueOperation ;
+    sh:minCount 0 ;
+    sh:maxCount 1 .
+
+# =============================================================================
+# CROSS-REFERENCE VALIDATION SHAPES
+# =============================================================================
+
+cacontology-stranger:AbductionCrossReferenceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-stranger:StrangerAbduction ;
+    rdfs:label "Abduction Cross Reference Shape"@en ;
+    rdfs:comment "Validates cross-references between abduction and related entities."@en ;
+    sh:sparql [
+        sh:message "Stranger abduction must involve abductor and use method."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-stranger:StrangerAbduction .
+                FILTER NOT EXISTS {
+                    $this cacontology-stranger:involvesAbductor ?abductor ;
+                          cacontology-stranger:usesMethod ?method .
+                }
+            }
+        """
+    ] .
+
+cacontology-stranger:AmberAlertValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-stranger:AmberAlert ;
+    rdfs:label "Amber Alert Validation Shape"@en ;
+    rdfs:comment "Validates Amber Alert activation criteria."@en ;
+    sh:sparql [
+        sh:message "Amber Alert must meet all required criteria before activation."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-stranger:AmberAlert ;
+                      cacontology-stranger:meetsAlertCriteria ?criteria .
+                ?criteria cacontology-stranger:criteriaMet false .
+            }
+        """
+    ] .
+
+cacontology-stranger:SearchEffectivenessShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-stranger:SearchOperation ;
+    rdfs:label "Search Effectiveness Shape"@en ;
+    rdfs:comment "Validates search operation resource allocation."@en ;
+    sh:sparql [
+        sh:message "Large search operations should have adequate personnel."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-stranger:searchRadius ?radius ;
+                      cacontology-stranger:personnelCount ?personnel .
+                FILTER (?radius > 50.0 && ?personnel < 20)
+            }
+        """
+    ] .
+
+# =============================================================================
+# TEMPORAL VALIDATION SHAPES
+# =============================================================================
+
+cacontology-stranger:TemporalValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-stranger:StrangerAbduction ;
+    rdfs:label "Temporal Validation Shape"@en ;
+    rdfs:comment "Validates temporal consistency in stranger abductions."@en ;
+    sh:sparql [
+        sh:message "Abduction time must be before or equal to reported time."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-stranger:abductionTime ?abduction ;
+                      cacontology-stranger:reportedTime ?reported .
+                FILTER (?abduction > ?reported)
+            }
+        """
+    ] .
+
+cacontology-stranger:SearchTimingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-stranger:SearchOperation ;
+    rdfs:label "Search Timing Shape"@en ;
+    rdfs:comment "Validates search operation timing."@en ;
+    sh:sparql [
+        sh:message "Search start time must be before end time when both are specified."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this uco-core:startTime ?start ;
+                      uco-core:endTime ?end .
+                FILTER (?start >= ?end)
+            }
+        """
+    ] .
+
+cacontology-stranger:AmberAlertTimingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-stranger:AmberAlert ;
+    rdfs:label "Amber Alert Timing Shape"@en ;
+    rdfs:comment "Validates Amber Alert timing consistency."@en ;
+    sh:sparql [
+        sh:message "Alert activation time must be before deactivation time when both are specified."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-stranger:activationTime ?activation ;
+                      cacontology-stranger:deactivationTime ?deactivation .
+                FILTER (?activation >= ?deactivation)
+            }
+        """
+    ] .
+
+cacontology-stranger:RecoveryTimingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-stranger:VictimRecovery ;
+    rdfs:label "Recovery Timing Shape"@en ;
+    rdfs:comment "Validates victim recovery timing consistency."@en ;
+    sh:sparql [
+        sh:message "Recovery time should be after abduction time."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                ?abduction cacontology-stranger:resultsInRecovery $this ;
+                          cacontology-stranger:abductionTime ?abductionTime .
+                $this cacontology-stranger:recoveryTime ?recoveryTime .
+                FILTER (?recoveryTime <= ?abductionTime)
+            }
+        """
+    ] .
+
+# =============================================================================
+# DATA QUALITY SHAPES
+# =============================================================================
+
+cacontology-stranger:DataQualityShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-stranger:StrangerAbduction ;
+    rdfs:label "Data Quality Shape"@en ;
+    rdfs:comment "Validates data quality for stranger abductions."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Label should be between 5 and 200 characters when provided."@en
+    ] ;
+    sh:property [
+        sh:path rdfs:comment ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 10 ;
+        sh:maxLength 1000 ;
+        sh:message "Comment should be between 10 and 1000 characters when provided."@en
+    ] . 

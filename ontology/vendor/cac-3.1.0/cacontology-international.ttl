@@ -1,0 +1,958 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
+@prefix uco-observable: <https://ontology.unifiedcyberontology.org/uco/observable/> .
+
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-international: <https://cacontology.projectvic.org/international#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+<https://cacontology.projectvic.org/international> rdf:type owl:Ontology ;
+    rdfs:label "CAC International Cooperation Ontology"@en ;
+    rdfs:comment "An ontology for modeling international cooperation, cross-border investigations, diplomatic protocols, and multilateral frameworks in Internet Crimes Against Children cases with gUFO foundational ontology enhancements for improved semantic precision, temporal modeling, and validation capabilities."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/international/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <http://purl.org/nemo/gufo#/1.0.0> ,
+                <https://cacontology.projectvic.org/core/3.1.0> .
+
+# =============================================================================
+# INTERNATIONAL PARTNERSHIP FRAMEWORK
+# =============================================================================
+
+cacontology-international:InternationalPartnership rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "International Partnership"@en ;
+    rdfs:comment "A formal partnership between countries or organizations for child protection cooperation."@en .
+
+cacontology-international:CountryPartnership rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-international:InternationalPartnership ;
+    rdfs:label "Country Partnership"@en ;
+    rdfs:comment "A bilateral or multilateral partnership between specific countries for child protection."@en .
+
+cacontology-international:RegionalCoordination rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-international:InternationalPartnership ;
+    rdfs:label "Regional Coordination"@en ;
+    rdfs:comment "Coordination mechanisms within specific geographic regions."@en .
+
+cacontology-international:GlobalMissingChildrenCenter rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Global Missing Children Center"@en ;
+    rdfs:comment "International coordination center for missing children cases across borders."@en .
+
+cacontology-international:InternationalTaskForce rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "International Task Force"@en ;
+    rdfs:comment "Multi-national task force for coordinating child protection investigations."@en .
+
+# =============================================================================
+# INTERNATIONAL COORDINATION
+# =============================================================================
+
+cacontology-international:InternationalCoordination rdf:type owl:Class ;
+    rdfs:label "International Coordination"@en ;
+    rdfs:comment "Coordination activities between international law enforcement and child protection organizations."@en ;
+    rdfs:subClassOf cac-core:CoordinationEvent .
+
+# =============================================================================
+# CROSS-BORDER OPERATIONS
+# =============================================================================
+
+cacontology-international:CrossBorderOperation rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:CoordinationEvent ;
+    rdfs:label "Cross-Border Operation"@en ;
+    rdfs:comment "Investigation or operation spanning multiple countries."@en .
+
+cacontology-international:CrossBorderInvestigation rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-international:CrossBorderOperation ;
+    rdfs:label "Cross-Border Investigation"@en ;
+    rdfs:comment "Investigation requiring coordination across national boundaries."@en .
+
+cacontology-international:InternationalAlert rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:CoordinationEvent ;
+    rdfs:label "International Alert"@en ;
+    rdfs:comment "Alert system for sharing critical information across borders."@en .
+
+cacontology-international:GlobalCaseTracking rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Global Case Tracking"@en ;
+    rdfs:comment "System for tracking cases across multiple jurisdictions."@en .
+
+cacontology-international:InternationalReferral rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:CoordinationEvent ;    rdfs:label "International Referral"@en ;    rdfs:comment "Referral of cases or information to international partners."@en .# SA JACET-inspired Live Streaming Operations  cacontology-international:LiveStreamingInvestigation rdf:type owl:Class ;    rdfs:subClassOf cacontology-international:CrossBorderInvestigation ;    rdfs:label "Live Streaming Investigation"@en ;    rdfs:comment "Investigation involving live streaming of child abuse across international borders (e.g., Philippines operations)."@en .cacontology-international:DistanceChildAbuse rdf:type owl:Class ;    rdfs:subClassOf cacontology-international:CrossBorderOperation ;    rdfs:label "Distance Child Abuse"@en ;    rdfs:comment "Child abuse ordered and instructed remotely across international borders via online platforms."@en .cacontology-international:InstructedAbuseOperation rdf:type owl:Class ;    rdfs:subClassOf cacontology-international:DistanceChildAbuse ;    rdfs:label "Instructed Abuse Operation"@en ;    rdfs:comment "Investigation of suspects ordering and instructing live child abuse viewed online from another country."@en .cacontology-international:OverseasVictimCoordination rdf:type owl:Class ;    rdfs:subClassOf cacontology-international:InternationalReferral ;    rdfs:label "Overseas Victim Coordination"@en ;    rdfs:comment "Coordination for identifying and assisting child victims located in foreign countries."@en .# NCMEC Integration (based on WA case)cacontology-international:NCMECReporting rdf:type owl:Class ;    rdfs:subClassOf cacontology-international:InternationalReferral ;    rdfs:label "NCMEC Reporting"@en ;    rdfs:comment "Reporting mechanism from US National Center for Missing and Exploited Children to international partners."@en .cacontology-international:USAustraliaCoordination rdf:type owl:Class ;    rdfs:subClassOf cacontology-international:InternationalPartnership ;    rdfs:label "US-Australia Coordination"@en ;    rdfs:comment "Coordination mechanism between United States and Australia for child exploitation investigations."@en .cacontology-international:ACCCEIntegration rdf:type owl:Class ;    rdfs:subClassOf cacontology-international:InternationalReferral ;    rdfs:label "ACCCE Integration"@en ;    rdfs:comment "Integration between international reports and AFP-led Australian Centre to Counter Child Exploitation."@en .
+
+cacontology-international:CrossJurisdictionalInvestigation rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-international:CrossBorderInvestigation ;
+    rdfs:label "Cross Jurisdictional Investigation"@en ;
+    rdfs:comment "Investigation spanning multiple jurisdictions and countries targeting international criminal networks."@en .
+
+cacontology-international:InternationalNetworkDisruption rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-international:CrossJurisdictionalInvestigation ;
+    rdfs:label "International Network Disruption"@en ;
+    rdfs:comment "Coordinated international effort to disrupt criminal networks operating across borders."@en .
+
+# =============================================================================
+# INFORMATION SHARING MECHANISMS
+# =============================================================================
+
+cacontology-international:InformationSharingAgreement rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Information Sharing Agreement"@en ;
+    rdfs:comment "Formal agreement governing information sharing between countries."@en .
+
+cacontology-international:DataExchangeProtocol rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Data Exchange Protocol"@en ;
+    rdfs:comment "Technical protocol for secure data exchange between international partners."@en .
+
+cacontology-international:SecureChannel rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Secure Communication Channel"@en ;
+    rdfs:comment "Secure communication mechanism for international coordination."@en .
+
+cacontology-international:InternationalDatabase rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "International Database"@en ;
+    rdfs:comment "Shared database accessible by multiple countries for child protection."@en .
+
+# =============================================================================
+# GLOBAL HOTLINE NETWORK
+# =============================================================================
+
+cacontology-international:GlobalHotlineNetwork rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Global Hotline Network"@en ;
+    rdfs:comment "Network of interconnected national hotlines for child protection reporting."@en .
+
+cacontology-international:InternationalHotlineCoordination rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-international:GlobalHotlineNetwork ;
+    rdfs:label "International Hotline Coordination"@en ;
+    rdfs:comment "Coordination mechanism between different national hotlines."@en .
+
+cacontology-international:CrossReferralProtocol rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Cross-Referral Protocol"@en ;
+    rdfs:comment "Protocol for referring reports between national hotlines."@en .
+
+cacontology-international:MultilingualSupport rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Multilingual Support"@en ;
+    rdfs:comment "Support for multiple languages in international coordination."@en .
+
+# =============================================================================
+# INTERNATIONAL LEGAL COOPERATION
+# =============================================================================
+
+cacontology-international:MutualLegalAssistance rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Mutual Legal Assistance"@en ;
+    rdfs:comment "Formal legal assistance between countries for investigations and prosecutions."@en .
+
+cacontology-international:MutualLegalAssistanceTreatyOperation rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-international:MutualLegalAssistance ;
+    rdfs:label "Mutual Legal Assistance Treaty Operation"@en ;
+    rdfs:comment "Operational process using Mutual Legal Assistance Treaty (MLAT) for international evidence sharing and cooperation."@en .
+
+cacontology-international:CrossBorderDeviceSeizure rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-international:MutualLegalAssistanceTreatyOperation ;
+    rdfs:label "Cross Border Device Seizure"@en ;
+    rdfs:comment "Seizure of electronic devices across international borders with subsequent evidence sharing through MLAT processes."@en .
+
+cacontology-international:InternationalEvidenceSharing rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-international:MutualLegalAssistanceTreatyOperation ;
+    rdfs:label "International Evidence Sharing"@en ;
+    rdfs:comment "Sharing of evidence between countries through formal legal assistance mechanisms and treaties."@en .
+
+cacontology-international:ExtraditionAgreement rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Extradition Agreement"@en ;
+    rdfs:comment "Agreement for extraditing suspects between countries."@en .
+
+cacontology-international:JurisdictionalCoordination rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Jurisdictional Coordination"@en ;
+    rdfs:comment "Coordination mechanism for resolving jurisdictional conflicts."@en .
+
+cacontology-international:InternationalWarrant rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "International Warrant"@en ;
+    rdfs:comment "Warrant recognized across multiple jurisdictions."@en .
+
+# =============================================================================
+# GLOBAL METRICS AND ASSESSMENT
+# =============================================================================
+
+cacontology-international:GlobalReach rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Global Reach"@en ;
+    rdfs:comment "Measurement of international coverage and impact."@en .
+
+cacontology-international:InternationalImpact rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "International Impact"@en ;
+    rdfs:comment "Assessment of international program effectiveness."@en .
+
+cacontology-international:CrossBorderEffectiveness rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Cross-Border Effectiveness"@en ;
+    rdfs:comment "Effectiveness measurement for cross-border operations."@en .
+
+# =============================================================================
+# INTERNATIONAL ROLES
+# =============================================================================
+
+cacontology-international:InternationalCoordinator rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:Role ;
+    rdfs:label "International Coordinator"@en ;
+    rdfs:comment "Role responsible for international coordination activities."@en .
+
+cacontology-international:LiaisonOfficer rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:Role ;
+    rdfs:label "Liaison Officer"@en ;
+    rdfs:comment "Officer serving as liaison between international partners."@en .
+
+cacontology-international:InternationalAnalyst rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:Role ;
+    rdfs:label "International Analyst"@en ;
+    rdfs:comment "Analyst specializing in cross-border case analysis."@en .
+
+# =============================================================================
+# PROPERTIES FOR INTERNATIONAL COORDINATION
+# =============================================================================
+
+cacontology-international:partnerCountryCount rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-international:InternationalPartnership ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "partner country count"@en ;
+    rdfs:comment "Number of countries participating in the partnership."@en .
+
+cacontology-international:globalCoverage rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-international:GlobalReach ;
+    rdfs:range xsd:string ;
+    rdfs:label "global coverage"@en ;
+    rdfs:comment "Geographic coverage of international operations."@en .
+
+cacontology-international:crossBorderCapability rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-international:CrossBorderOperation ;
+    rdfs:range xsd:string ;
+    rdfs:label "cross-border capability"@en ;
+    rdfs:comment "Level of capability for cross-border operations."@en .
+
+cacontology-international:multilateralAgreement rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-international:InformationSharingAgreement ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "multilateral agreement"@en ;
+    rdfs:comment "Whether the agreement involves multiple parties."@en .
+
+cacontology-international:informationSharingLevel rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-international:InformationSharingAgreement ;
+    rdfs:range xsd:string ;
+    rdfs:label "information sharing level"@en ;
+    rdfs:comment "Level of information sharing permitted (basic, enhanced, full)."@en .
+
+cacontology-international:responseTimeInternational rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-international:InternationalReferral ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "international response time"@en ;
+    rdfs:comment "Response time for international referrals in hours."@en .
+
+# Vermont Case Enhancement Properties for Australian-US Cooperation
+cacontology-international:undercoverCoordination rdf:type owl:DatatypeProperty ;
+    rdfs:label "undercover coordination"@en ;
+    rdfs:comment "Whether operation involved international undercover coordination."@en ;
+    rdfs:domain cacontology-international:InternationalReferral ;
+    rdfs:range xsd:boolean .
+
+cacontology-international:operationContext rdf:type owl:DatatypeProperty ;
+    rdfs:label "operation context"@en ;
+    rdfs:comment "Context of international operation (undercover_investigation, direct_referral, joint_operation)."@en ;
+    rdfs:domain cacontology-international:USAustraliaCoordination ;
+    rdfs:range xsd:string .
+
+cacontology-international:coordinationMethod rdf:type owl:DatatypeProperty ;
+    rdfs:label "coordination method"@en ;
+    rdfs:comment "Method of coordination between partners (formal_request, intelligence_sharing, joint_investigation)."@en ;
+    rdfs:domain cacontology-international:InternationalPartnership ;
+    rdfs:range xsd:string .
+
+cacontology-international:coordinationComplexity rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-international:CrossBorderOperation ;
+    rdfs:range xsd:string ;
+    rdfs:label "coordination complexity"@en ;
+    rdfs:comment "Complexity level of international coordination (low, medium, high, complex)."@en .
+
+cacontology-international:jurisdictionCount rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-international:CrossBorderInvestigation ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "jurisdiction count"@en ;
+    rdfs:comment "Number of jurisdictions involved in the investigation."@en .
+
+cacontology-international:languageSupport rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-international:MultilingualSupport ;
+    rdfs:range xsd:string ;
+    rdfs:label "language support"@en ;
+    rdfs:comment "Languages supported in international coordination."@en .
+
+cacontology-international:treatyBasis rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-international:MutualLegalAssistance ;
+    rdfs:range xsd:string ;
+    rdfs:label "treaty basis"@en ;
+    rdfs:comment "International treaty or agreement basis for legal cooperation."@en .
+
+# Properties for migrated International Coordination classes
+cacontology-international:treatyMechanism rdf:type owl:DatatypeProperty ;
+    rdfs:label "treaty mechanism"@en ;
+    rdfs:comment "Specific treaty mechanism used for international cooperation (MLAT, extradition, informal_cooperation)."@en ;
+    rdfs:domain cacontology-international:MutualLegalAssistanceTreatyOperation ;
+    rdfs:range xsd:string .
+
+cacontology-international:cooperationResponseTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "cooperation response time"@en ;
+    rdfs:comment "Response time for international cooperation requests in days."@en ;
+    rdfs:domain cacontology-international:InternationalEvidenceSharing ;
+    rdfs:range xsd:decimal .
+
+cacontology-international:evidenceSharingVolume rdf:type owl:DatatypeProperty ;
+    rdfs:label "evidence sharing volume"@en ;
+    rdfs:comment "Volume of evidence shared internationally in gigabytes."@en ;
+    rdfs:domain cacontology-international:InternationalEvidenceSharing ;
+    rdfs:range xsd:decimal .
+
+cacontology-international:disruptionEffectiveness rdf:type owl:DatatypeProperty ;
+    rdfs:label "disruption effectiveness"@en ;
+    rdfs:comment "Effectiveness of network disruption efforts (low, moderate, high, complete)."@en ;
+    rdfs:domain cacontology-international:InternationalNetworkDisruption ;
+    rdfs:range xsd:string .
+
+# =============================================================================
+# OBJECT PROPERTIES FOR INTERNATIONAL RELATIONSHIPS
+# =============================================================================
+
+cacontology-international:coordinatesWith rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-international:InternationalPartnership ;
+    rdfs:range uco-identity:Organization ;
+    rdfs:label "coordinates with"@en ;
+    rdfs:comment "Indicates coordination relationship between organizations."@en .
+
+cacontology-international:operatesInCountry rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-international:CrossBorderOperation ;
+    rdfs:range uco-location:Location ;
+    rdfs:label "operates in country"@en ;
+    rdfs:comment "Countries where the operation takes place."@en .
+
+cacontology-international:sharesDataWith rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-international:InformationSharingAgreement ;
+    rdfs:range uco-identity:Organization ;
+    rdfs:label "shares data with"@en ;
+    rdfs:comment "Organizations that share data under the agreement."@en .
+
+# Vermont Case Enhancement - Alerting Partner Property
+cacontology-international:alertingPartner rdf:type owl:ObjectProperty ;
+    rdfs:label "alerting partner"@en ;
+    rdfs:comment "International partner who initiated the alert or referral."@en ;
+    rdfs:domain cacontology-international:InternationalReferral ;
+    rdfs:range uco-identity:Organization .
+
+cacontology-international:coordinatingAgency rdf:type owl:ObjectProperty ;
+    rdfs:label "coordinating agency"@en ;
+    rdfs:comment "Primary agency coordinating the international operation."@en ;
+    rdfs:domain cacontology-international:USAustraliaCoordination ;
+    rdfs:range uco-identity:Organization .
+
+cacontology-international:referredTo rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-international:InternationalReferral ;
+    rdfs:range uco-identity:Organization ;
+    rdfs:label "referred to"@en ;
+    rdfs:comment "Organization or country to which the case is referred."@en .
+
+cacontology-international:managedBy rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-international:GlobalHotlineNetwork ;
+    rdfs:range uco-identity:Organization ;
+    rdfs:label "managed by"@en ;
+    rdfs:comment "Organization managing the global hotline network."@en .
+
+cacontology-international:participatesIn rdf:type owl:ObjectProperty ;
+    rdfs:domain uco-identity:Organization ;
+    rdfs:range cacontology-international:InternationalPartnership ;
+    rdfs:label "participates in"@en ;
+    rdfs:comment "Indicates participation in international partnerships."@en .
+
+cacontology-international:triggersAlert rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology:CACInvestigation ;
+    rdfs:range cacontology-international:InternationalAlert ;
+    rdfs:label "triggers alert"@en ;
+    rdfs:comment "Investigation that triggers an international alert."@en .
+
+cacontology-international:requiresAssistance rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-international:CrossBorderInvestigation ;
+    rdfs:range cacontology-international:MutualLegalAssistance ;
+    rdfs:label "requires assistance"@en ;
+    rdfs:comment "Cross-border investigation requiring legal assistance."@en .
+
+cacontology-international:supportedBy rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-international:CrossBorderOperation ;
+    rdfs:range cacontology-international:InternationalTaskForce ;
+    rdfs:label "supported by"@en ;
+    rdfs:comment "International task force supporting the operation."@en .
+
+cacontology-international:coordinatesHotlines rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-international:InternationalHotlineCoordination ;
+    rdfs:range uco-identity:Organization ;
+    rdfs:label "coordinates hotlines"@en ;
+    rdfs:comment "Hotlines coordinated under international framework."@en .
+
+# Object Properties for migrated International Coordination classes
+cacontology-international:coordinatesInternationalEffort rdf:type owl:ObjectProperty ;
+    rdfs:label "coordinates international effort"@en ;
+    rdfs:comment "Links investigation to international coordination efforts."@en ;
+    rdfs:domain cacontology-international:CrossJurisdictionalInvestigation ;
+    rdfs:range cacontology-international:MutualLegalAssistanceTreatyOperation .
+
+cacontology-international:sharesEvidenceInternationally rdf:type owl:ObjectProperty ;
+    rdfs:label "shares evidence internationally"@en ;
+    rdfs:comment "Links evidence sharing to evidence shared across borders."@en ;
+    rdfs:domain cacontology-international:InternationalEvidenceSharing ;
+    rdfs:range uco-observable:ObservableObject .
+
+cacontology-international:disruptsInternationalNetwork rdf:type owl:ObjectProperty ;
+    rdfs:label "disrupts international network"@en ;
+    rdfs:comment "Links disruption effort to international networks being disrupted."@en ;
+    rdfs:domain cacontology-international:InternationalNetworkDisruption ;
+    rdfs:range uco-identity:Organization .
+
+cacontology-international:resultsInSeizure rdf:type owl:ObjectProperty ;
+    rdfs:label "results in seizure"@en ;
+    rdfs:comment "Links international cooperation to device seizures performed."@en ;
+    rdfs:domain cacontology-international:MutualLegalAssistanceTreatyOperation ;
+    rdfs:range cacontology-international:CrossBorderDeviceSeizure .
+
+# =============================================================================
+# EUROPOL FRAMEWORK (Large-Scale Operations)
+# =============================================================================
+
+cacontology-international:EuropolOperation rdf:type owl:Class ;
+    rdfs:label "Europol Operation"@en ;
+    rdfs:comment "Large-scale international operation coordinated by Europol involving multiple EU member states and international partners."@en ;
+    rdfs:subClassOf cacontology-international:CrossBorderOperation .
+
+cacontology-international:EuropolCoordination rdf:type owl:Class ;
+    rdfs:label "Europol Coordination"@en ;
+    rdfs:comment "Coordination framework provided by Europol for international law enforcement operations."@en ;
+    rdfs:subClassOf cacontology-international:InternationalCoordination .
+
+cacontology-international:MultiCountryTakedown rdf:type owl:Class ;
+    rdfs:label "Multi-Country Takedown"@en ;
+    rdfs:comment "Coordinated takedown operation involving law enforcement from multiple countries (like Kidflix operation involving multiple nations)."@en ;
+    rdfs:subClassOf cacontology-international:CrossBorderOperation .
+
+cacontology-international:InternationalIntelligenceSharing rdf:type owl:Class ;
+    rdfs:label "International Intelligence Sharing"@en ;
+    rdfs:comment "Intelligence sharing framework for large-scale operations requiring coordination across multiple intelligence agencies."@en ;
+    rdfs:subClassOf cacontology-international:InformationSharingAgreement .
+
+cacontology-international:GlobalPlatformTakedown rdf:type owl:Class ;
+    rdfs:label "Global Platform Takedown"@en ;
+    rdfs:comment "Takedown of global platforms with international user bases requiring coordinated action across multiple countries."@en ;
+    rdfs:subClassOf cacontology-international:CrossBorderOperation .
+
+cacontology-international:EuropeanCooperationFramework rdf:type owl:Class ;
+    rdfs:label "European Cooperation Framework"@en ;
+    rdfs:comment "Framework for cooperation among European Union member states in child protection operations."@en ;
+    rdfs:subClassOf cacontology-international:InternationalPartnership .
+
+cacontology-international:InternationalEvidence rdf:type owl:Class ;
+    rdfs:label "International Evidence"@en ;
+    rdfs:comment "Evidence collected from international operations requiring coordination across multiple jurisdictions."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject .
+
+cacontology-international:CrossBorderForensics rdf:type owl:Class ;
+    rdfs:label "Cross-Border Forensics"@en ;
+    rdfs:comment "Forensic analysis requiring coordination across multiple countries for large-scale evidence processing."@en ;
+    rdfs:subClassOf cac-core:CoordinationEvent .
+
+# =============================================================================
+# LARGE-SCALE OPERATION COORDINATION
+# =============================================================================
+
+cacontology-international:MassUserAnalysis rdf:type owl:Class ;
+    rdfs:label "Mass User Analysis"@en ;
+    rdfs:comment "Analysis of massive user databases requiring international coordination for processing users across multiple countries."@en ;
+    rdfs:subClassOf cac-core:CoordinationEvent .
+
+cacontology-international:InternationalProsecution rdf:type owl:Class ;
+    rdfs:label "International Prosecution"@en ;
+    rdfs:comment "Prosecution strategy coordinated across multiple countries for users identified in large-scale operations."@en ;
+    rdfs:subClassOf cac-core:LegalEvent .
+
+cacontology-international:GlobalInvestigativeTeam rdf:type owl:Class ;
+    rdfs:label "Global Investigative Team"@en ;
+    rdfs:comment "Multi-national investigative team for large-scale operations like platform takedowns."@en ;
+    rdfs:subClassOf cacontology-international:InternationalTaskForce .
+
+cacontology-international:InternationalResourceCoordination rdf:type owl:Class ;
+    rdfs:label "International Resource Coordination"@en ;
+    rdfs:comment "Coordination of technical and human resources across countries for large-scale operations."@en ;
+    rdfs:subClassOf cacontology-international:InternationalCoordination .
+
+# =============================================================================
+# EUROPOL FRAMEWORK PROPERTIES
+# =============================================================================
+
+# Operation Scale Properties
+cacontology-international:europeanMemberStatesInvolved rdf:type owl:DatatypeProperty ;
+    rdfs:label "European member states involved"@en ;
+    rdfs:comment "Number of EU member states participating in Europol operation."@en ;
+    rdfs:domain cacontology-international:EuropolOperation ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-international:internationalPartnersInvolved rdf:type owl:DatatypeProperty ;
+    rdfs:label "international partners involved"@en ;
+    rdfs:comment "Number of non-EU countries participating in operation."@en ;
+    rdfs:domain cacontology-international:MultiCountryTakedown ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-international:operationDurationMonths rdf:type owl:DatatypeProperty ;
+    rdfs:label "operation duration months"@en ;
+    rdfs:comment "Duration of international operation in months."@en ;
+    rdfs:domain cacontology-international:EuropolOperation ;
+    rdfs:range xsd:decimal .
+
+cacontology-international:userCountriesAffected rdf:type owl:DatatypeProperty ;
+    rdfs:label "user countries affected"@en ;
+    rdfs:comment "Number of countries with affected users in global platform takedown."@en ;
+    rdfs:domain cacontology-international:GlobalPlatformTakedown ;
+    rdfs:range xsd:nonNegativeInteger .
+
+# Coordination Properties
+cacontology-international:coordinationComplexityLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "coordination complexity level"@en ;
+    rdfs:comment "Complexity level of international coordination (basic, moderate, complex, highly_complex)."@en ;
+    rdfs:domain cacontology-international:EuropolCoordination ;
+    rdfs:range xsd:string .
+
+cacontology-international:simultaneousOperations rdf:type owl:DatatypeProperty ;
+    rdfs:label "simultaneous operations"@en ;
+    rdfs:comment "Number of simultaneous operations coordinated across countries."@en ;
+    rdfs:domain cacontology-international:MultiCountryTakedown ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-international:intelligenceChannels rdf:type owl:DatatypeProperty ;
+    rdfs:label "intelligence channels"@en ;
+    rdfs:comment "Number of intelligence sharing channels activated for operation."@en ;
+    rdfs:domain cacontology-international:InternationalIntelligenceSharing ;
+    rdfs:range xsd:nonNegativeInteger .
+
+# Evidence and Analysis Properties
+cacontology-international:evidenceVolumeInternational rdf:type owl:DatatypeProperty ;
+    rdfs:label "evidence volume international"@en ;
+    rdfs:comment "Total volume of evidence collected across all participating countries in terabytes."@en ;
+    rdfs:domain cacontology-international:InternationalEvidence ;
+    rdfs:range xsd:decimal .
+
+cacontology-international:forensicTeamsDeployed rdf:type owl:DatatypeProperty ;
+    rdfs:label "forensic teams deployed"@en ;
+    rdfs:comment "Number of forensic teams deployed across participating countries."@en ;
+    rdfs:domain cacontology-international:CrossBorderForensics ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-international:usersAnalyzedMillions rdf:type owl:DatatypeProperty ;
+    rdfs:label "users analyzed millions"@en ;
+    rdfs:comment "Number of users analyzed in millions for mass user database operations."@en ;
+    rdfs:domain cacontology-international:MassUserAnalysis ;
+    rdfs:range xsd:decimal .
+
+cacontology-international:prosecutionsCrossCountry rdf:type owl:DatatypeProperty ;
+    rdfs:label "prosecutions cross country"@en ;
+    rdfs:comment "Number of prosecutions initiated across multiple countries."@en ;
+    rdfs:domain cacontology-international:InternationalProsecution ;
+    rdfs:range xsd:nonNegativeInteger .
+
+# Team and Resource Properties
+cacontology-international:investigativeTeamSize rdf:type owl:DatatypeProperty ;
+    rdfs:label "investigative team size"@en ;
+    rdfs:comment "Total size of global investigative team across all countries."@en ;
+    rdfs:domain cacontology-international:GlobalInvestigativeTeam ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-international:resourcesCoordinated rdf:type owl:DatatypeProperty ;
+    rdfs:label "resources coordinated"@en ;
+    rdfs:comment "Types of resources coordinated internationally (personnel, technology, intelligence)."@en ;
+    rdfs:domain cacontology-international:InternationalResourceCoordination ;
+    rdfs:range xsd:string .
+
+cacontology-international:specializedExpertiseAreas rdf:type owl:DatatypeProperty ;
+    rdfs:label "specialized expertise areas"@en ;
+    rdfs:comment "Areas of specialized expertise coordinated for operation (forensics, intelligence, legal)."@en ;
+    rdfs:domain cacontology-international:GlobalInvestigativeTeam ;
+    rdfs:range xsd:string .
+
+# =============================================================================
+# EUROPOL FRAMEWORK RELATIONSHIPS
+# =============================================================================
+
+# Operation Relationships
+cacontology-international:coordinatedByEuropol rdf:type owl:ObjectProperty ;
+    rdfs:label "coordinated by Europol"@en ;
+    rdfs:comment "Links operation to Europol coordination framework."@en ;
+    rdfs:domain cacontology-international:EuropolOperation ;
+    rdfs:range cacontology-international:EuropolCoordination .
+
+cacontology-international:involvesCountries rdf:type owl:ObjectProperty ;
+    rdfs:label "involves countries"@en ;
+    rdfs:comment "Links multi-country operation to participating countries."@en ;
+    rdfs:domain cacontology-international:MultiCountryTakedown ;
+    rdfs:range uco-location:Location .
+
+cacontology-international:sharesIntelligence rdf:type owl:ObjectProperty ;
+    rdfs:label "shares intelligence"@en ;
+    rdfs:comment "Links operation to intelligence sharing framework."@en ;
+    rdfs:domain cacontology-international:EuropolOperation ;
+    rdfs:range cacontology-international:InternationalIntelligenceSharing .
+
+cacontology-international:targetsPlatform rdf:type owl:ObjectProperty ;
+    rdfs:label "targets platform"@en ;
+    rdfs:comment "Links global takedown to platform being targeted."@en ;
+    rdfs:domain cacontology-international:GlobalPlatformTakedown ;
+    rdfs:range uco-observable:ObservableObject .
+
+# Evidence and Analysis Relationships
+cacontology-international:processesEvidence rdf:type owl:ObjectProperty ;
+    rdfs:label "processes evidence"@en ;
+    rdfs:comment "Links cross-border forensics to international evidence."@en ;
+    rdfs:domain cacontology-international:CrossBorderForensics ;
+    rdfs:range cacontology-international:InternationalEvidence .
+
+cacontology-international:analysesUsers rdf:type owl:ObjectProperty ;
+    rdfs:label "analyses users"@en ;
+    rdfs:comment "Links mass user analysis to user databases."@en ;
+    rdfs:domain cacontology-international:MassUserAnalysis ;
+    rdfs:range uco-observable:ObservableObject .
+
+cacontology-international:coordinatesProsecution rdf:type owl:ObjectProperty ;
+    rdfs:label "coordinates prosecution"@en ;
+    rdfs:comment "Links international prosecution to operations."@en ;
+    rdfs:domain cacontology-international:InternationalProsecution ;
+    rdfs:range cacontology-international:EuropolOperation .
+
+# Team and Resource Relationships
+cacontology-international:deploysTeam rdf:type owl:ObjectProperty ;
+    rdfs:label "deploys team"@en ;
+    rdfs:comment "Links operation to global investigative team deployed."@en ;
+    rdfs:domain cacontology-international:EuropolOperation ;
+    rdfs:range cacontology-international:GlobalInvestigativeTeam .
+
+cacontology-international:coordinatesResources rdf:type owl:ObjectProperty ;
+    rdfs:label "coordinates resources"@en ;
+    rdfs:comment "Links operation to resource coordination framework."@en ;
+    rdfs:domain cacontology-international:EuropolOperation ;
+    rdfs:range cacontology-international:InternationalResourceCoordination .
+
+cacontology-international:providesExpertise rdf:type owl:ObjectProperty ;
+    rdfs:label "provides expertise"@en ;
+    rdfs:comment "Links team to specialized expertise provided."@en ;
+    rdfs:domain cacontology-international:GlobalInvestigativeTeam ;
+    rdfs:range uco-identity:Organization .
+
+# =============================================================================
+# REAL-TIME INTELLIGENCE SHARING FRAMEWORK (extending existing capabilities)
+# =============================================================================
+
+cacontology-international:RealTimeIntelligenceSharing rdf:type owl:Class ;
+    rdfs:label "Real-Time Intelligence Sharing"@en ;
+    rdfs:comment "Real-time sharing of intelligence and alerts between international partners for immediate threat response and coordination."@en ;
+    rdfs:subClassOf cacontology-international:InternationalIntelligenceSharing .
+
+cacontology-international:InstantAlertSystem rdf:type owl:Class ;
+    rdfs:label "Instant Alert System"@en ;
+    rdfs:comment "System for instant notification of threats, discoveries, and urgent coordination needs across international partners."@en ;
+    rdfs:subClassOf cacontology-international:RealTimeIntelligenceSharing .
+
+cacontology-international:LiveIntelligenceFeed rdf:type owl:Class ;
+    rdfs:label "Live Intelligence Feed"@en ;
+    rdfs:comment "Continuous feed of intelligence updates shared in real-time between international law enforcement agencies."@en ;
+    rdfs:subClassOf cacontology-international:RealTimeIntelligenceSharing .
+
+cacontology-international:SecureCommunicationChannel rdf:type owl:Class ;
+    rdfs:label "Secure Communication Channel"@en ;
+    rdfs:comment "Encrypted communication channel for secure real-time coordination between international partners."@en ;
+    rdfs:subClassOf cacontology-international:RealTimeIntelligenceSharing .
+
+cacontology-international:EmergencyCoordinationProtocol rdf:type owl:Class ;
+    rdfs:label "Emergency Coordination Protocol"@en ;
+    rdfs:comment "Protocol for emergency coordination when immediate international response is required."@en ;
+    rdfs:subClassOf cacontology-international:RealTimeIntelligenceSharing .
+
+cacontology-international:CrossBorderThreatAlert rdf:type owl:Class ;
+    rdfs:label "Cross-Border Threat Alert"@en ;
+    rdfs:comment "Alert about threats that require immediate action across multiple countries."@en ;
+    rdfs:subClassOf cacontology-international:InstantAlertSystem .
+
+cacontology-international:GlobalTakedownCoordination rdf:type owl:Class ;
+    rdfs:label "Global Takedown Coordination"@en ;
+    rdfs:comment "Real-time coordination for simultaneous takedown operations across multiple countries."@en ;
+    rdfs:subClassOf cacontology-international:RealTimeIntelligenceSharing .
+
+cacontology-international:IntelligenceFusion rdf:type owl:Class ;
+    rdfs:label "Intelligence Fusion"@en ;
+    rdfs:comment "Real-time fusion of intelligence from multiple international sources to create comprehensive threat pictures."@en ;
+    rdfs:subClassOf cacontology-international:RealTimeIntelligenceSharing .
+
+cacontology-international:ThreatAssessmentSharing rdf:type owl:Class ;
+    rdfs:label "Threat Assessment Sharing"@en ;
+    rdfs:comment "Real-time sharing of threat assessments and risk evaluations between international partners."@en ;
+    rdfs:subClassOf cacontology-international:RealTimeIntelligenceSharing .
+
+cacontology-international:OperationalSyncronization rdf:type owl:Class ;
+    rdfs:label "Operational Synchronization"@en ;
+    rdfs:comment "Real-time synchronization of operational activities across multiple countries for coordinated response."@en ;
+    rdfs:subClassOf cacontology-international:RealTimeIntelligenceSharing .
+
+# =============================================================================
+# ENHANCED DATABASE INTEGRATION FRAMEWORK (extending existing capabilities)
+# =============================================================================
+
+cacontology-international:GlobalDatabaseNetwork rdf:type owl:Class ;
+    rdfs:label "Global Database Network"@en ;
+    rdfs:comment "Network of interconnected international databases enabling comprehensive cross-referencing and correlation."@en ;
+    rdfs:subClassOf cacontology-international:InternationalDatabase .
+
+cacontology-international:FederatedDatabaseQuery rdf:type owl:Class ;
+    rdfs:label "Federated Database Query"@en ;
+    rdfs:comment "Query system enabling simultaneous searches across multiple international databases."@en ;
+    rdfs:subClassOf cacontology-international:InternationalDatabase .
+
+cacontology-international:CrossReferenceAnalysis rdf:type owl:Class ;
+    rdfs:label "Cross-Reference Analysis"@en ;
+    rdfs:comment "Analysis correlating data across multiple international databases to identify connections and patterns."@en ;
+    rdfs:subClassOf cac-core:CoordinationEvent .
+
+cacontology-international:IntelligenceDataLake rdf:type owl:Class ;
+    rdfs:label "Intelligence Data Lake"@en ;
+    rdfs:comment "Centralized repository aggregating intelligence from multiple international sources for comprehensive analysis."@en ;
+    rdfs:subClassOf cacontology-international:InternationalDatabase .
+
+cacontology-international:AutomatedCrossMatching rdf:type owl:Class ;
+    rdfs:label "Automated Cross-Matching"@en ;
+    rdfs:comment "Automated system for continuous cross-matching of new data against international databases."@en ;
+    rdfs:subClassOf cacontology-international:CrossReferenceAnalysis .
+
+cacontology-international:DistributedIntelligenceProcessing rdf:type owl:Class ;
+    rdfs:label "Distributed Intelligence Processing"@en ;
+    rdfs:comment "Distributed processing of intelligence across multiple international systems for scalable analysis."@en ;
+    rdfs:subClassOf cac-core:CoordinationEvent .
+
+# =============================================================================
+# REAL-TIME INTELLIGENCE PROPERTIES
+# =============================================================================
+
+# Real-Time Communication Properties
+cacontology-international:communicationLatency rdf:type owl:DatatypeProperty ;
+    rdfs:label "communication latency"@en ;
+    rdfs:comment "Average latency for real-time communications between international partners in milliseconds."@en ;
+    rdfs:domain cacontology-international:RealTimeIntelligenceSharing ;
+    rdfs:range xsd:decimal .
+
+cacontology-international:alertResponseTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "alert response time"@en ;
+    rdfs:comment "Average response time to international alerts in minutes."@en ;
+    rdfs:domain cacontology-international:InstantAlertSystem ;
+    rdfs:range xsd:decimal .
+
+cacontology-international:channelsMonitored rdf:type owl:DatatypeProperty ;
+    rdfs:label "channels monitored"@en ;
+    rdfs:comment "Number of communication channels monitored for real-time intelligence."@en ;
+    rdfs:domain cacontology-international:LiveIntelligenceFeed ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-international:simultaneousCountries rdf:type owl:DatatypeProperty ;
+    rdfs:label "simultaneous countries"@en ;
+    rdfs:comment "Number of countries participating simultaneously in real-time coordination."@en ;
+    rdfs:domain cacontology-international:GlobalTakedownCoordination ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-international:encryptionLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "encryption level"@en ;
+    rdfs:comment "Level of encryption used for secure communications (basic, enhanced, military_grade)."@en ;
+    rdfs:domain cacontology-international:SecureCommunicationChannel ;
+    rdfs:range xsd:string .
+
+# Intelligence Fusion Properties
+cacontology-international:intelligenceSources rdf:type owl:DatatypeProperty ;
+    rdfs:label "intelligence sources"@en ;
+    rdfs:comment "Number of intelligence sources contributing to fusion process."@en ;
+    rdfs:domain cacontology-international:IntelligenceFusion ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-international:fusionAccuracy rdf:type owl:DatatypeProperty ;
+    rdfs:label "fusion accuracy"@en ;
+    rdfs:comment "Accuracy of intelligence fusion process (0.0-1.0)."@en ;
+    rdfs:domain cacontology-international:IntelligenceFusion ;
+    rdfs:range xsd:decimal .
+
+cacontology-international:threatLevelAssessed rdf:type owl:DatatypeProperty ;
+    rdfs:label "threat level assessed"@en ;
+    rdfs:comment "Threat level assessment result (low, moderate, high, critical, extreme)."@en ;
+    rdfs:domain cacontology-international:ThreatAssessmentSharing ;
+    rdfs:range xsd:string .
+
+cacontology-international:emergencyResponseTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "emergency response time"@en ;
+    rdfs:comment "Emergency response time for critical threats in minutes."@en ;
+    rdfs:domain cacontology-international:EmergencyCoordinationProtocol ;
+    rdfs:range xsd:decimal .
+
+# Database Integration Properties
+cacontology-international:databasesIntegrated rdf:type owl:DatatypeProperty ;
+    rdfs:label "databases integrated"@en ;
+    rdfs:comment "Number of international databases integrated in network."@en ;
+    rdfs:domain cacontology-international:GlobalDatabaseNetwork ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-international:queryPerformanceMs rdf:type owl:DatatypeProperty ;
+    rdfs:label "query performance ms"@en ;
+    rdfs:comment "Average query performance across federated databases in milliseconds."@en ;
+    rdfs:domain cacontology-international:FederatedDatabaseQuery ;
+    rdfs:range xsd:decimal .
+
+cacontology-international:crossReferencesFound rdf:type owl:DatatypeProperty ;
+    rdfs:label "cross-references found"@en ;
+    rdfs:comment "Number of cross-references identified across international databases."@en ;
+    rdfs:domain cacontology-international:CrossReferenceAnalysis ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-international:dataLakeSize rdf:type owl:DatatypeProperty ;
+    rdfs:label "data lake size"@en ;
+    rdfs:comment "Size of intelligence data lake in petabytes."@en ;
+    rdfs:domain cacontology-international:IntelligenceDataLake ;
+    rdfs:range xsd:decimal .
+
+cacontology-international:automatedMatchAccuracy rdf:type owl:DatatypeProperty ;
+    rdfs:label "automated match accuracy"@en ;
+    rdfs:comment "Accuracy of automated cross-matching system (0.0-1.0)."@en ;
+    rdfs:domain cacontology-international:AutomatedCrossMatching ;
+    rdfs:range xsd:decimal .
+
+cacontology-international:processingNodeCount rdf:type owl:DatatypeProperty ;
+    rdfs:label "processing node count"@en ;
+    rdfs:comment "Number of processing nodes in distributed intelligence system."@en ;
+    rdfs:domain cacontology-international:DistributedIntelligenceProcessing ;
+    rdfs:range xsd:nonNegativeInteger .
+
+# Operational Synchronization Properties
+cacontology-international:synchronizationAccuracy rdf:type owl:DatatypeProperty ;
+    rdfs:label "synchronization accuracy"@en ;
+    rdfs:comment "Accuracy of operational synchronization across countries (0.0-1.0)."@en ;
+    rdfs:domain cacontology-international:OperationalSyncronization ;
+    rdfs:range xsd:decimal .
+
+cacontology-international:simultaneousOperations rdf:type owl:DatatypeProperty ;
+    rdfs:label "simultaneous operations"@en ;
+    rdfs:comment "Number of operations synchronized simultaneously across countries."@en ;
+    rdfs:domain cacontology-international:OperationalSyncronization ;
+    rdfs:range xsd:nonNegativeInteger .
+
+# =============================================================================
+# REAL-TIME INTELLIGENCE RELATIONSHIPS
+# =============================================================================
+
+# Real-Time Communication Relationships
+cacontology-international:enablesRealTimeSharing rdf:type owl:ObjectProperty ;
+    rdfs:label "enables real-time sharing"@en ;
+    rdfs:comment "Links international cooperation to real-time intelligence sharing capabilities."@en ;
+    rdfs:domain cacontology-international:InternationalPartnership ;
+    rdfs:range cacontology-international:RealTimeIntelligenceSharing .
+
+cacontology-international:transmitsAlert rdf:type owl:ObjectProperty ;
+    rdfs:label "transmits alert"@en ;
+    rdfs:comment "Links alert system to alerts transmitted."@en ;
+    rdfs:domain cacontology-international:InstantAlertSystem ;
+    rdfs:range cacontology-international:CrossBorderThreatAlert .
+
+cacontology-international:receivesIntelligenceFeed rdf:type owl:ObjectProperty ;
+    rdfs:label "receives intelligence feed"@en ;
+    rdfs:comment "Links country to intelligence feeds received."@en ;
+    rdfs:domain uco-identity:Organization ;
+    rdfs:range cacontology-international:LiveIntelligenceFeed .
+
+cacontology-international:utilizesSecureChannel rdf:type owl:ObjectProperty ;
+    rdfs:label "utilizes secure channel"@en ;
+    rdfs:comment "Links real-time sharing to secure communication channels used."@en ;
+    rdfs:domain cacontology-international:RealTimeIntelligenceSharing ;
+    rdfs:range cacontology-international:SecureCommunicationChannel .
+
+# Intelligence Fusion Relationships
+cacontology-international:contributesToFusion rdf:type owl:ObjectProperty ;
+    rdfs:label "contributes to fusion"@en ;
+    rdfs:comment "Links intelligence sources to fusion processes they contribute to."@en ;
+    rdfs:domain uco-identity:Organization ;
+    rdfs:range cacontology-international:IntelligenceFusion .
+
+cacontology-international:generatesThreatAssessment rdf:type owl:ObjectProperty ;
+    rdfs:label "generates threat assessment"@en ;
+    rdfs:comment "Links fusion process to threat assessments generated."@en ;
+    rdfs:domain cacontology-international:IntelligenceFusion ;
+    rdfs:range cacontology-international:ThreatAssessmentSharing .
+
+cacontology-international:triggersEmergencyProtocol rdf:type owl:ObjectProperty ;
+    rdfs:label "triggers emergency protocol"@en ;
+    rdfs:comment "Links threat alerts to emergency protocols triggered."@en ;
+    rdfs:domain cacontology-international:CrossBorderThreatAlert ;
+    rdfs:range cacontology-international:EmergencyCoordinationProtocol .
+
+# Operational Coordination Relationships
+cacontology-international:coordinatesGlobalTakedown rdf:type owl:ObjectProperty ;
+    rdfs:label "coordinates global takedown"@en ;
+    rdfs:comment "Links real-time sharing to global takedown coordination."@en ;
+    rdfs:domain cacontology-international:RealTimeIntelligenceSharing ;
+    rdfs:range cacontology-international:GlobalTakedownCoordination .
+
+cacontology-international:synchronizesOperations rdf:type owl:ObjectProperty ;
+    rdfs:label "synchronizes operations"@en ;
+    rdfs:comment "Links takedown coordination to operational synchronization."@en ;
+    rdfs:domain cacontology-international:GlobalTakedownCoordination ;
+    rdfs:range cacontology-international:OperationalSyncronization .
+
+# Database Integration Relationships
+cacontology-international:integratesToNetwork rdf:type owl:ObjectProperty ;
+    rdfs:label "integrates to network"@en ;
+    rdfs:comment "Links national databases to global database network."@en ;
+    rdfs:domain cacontology-international:InternationalDatabase ;
+    rdfs:range cacontology-international:GlobalDatabaseNetwork .
+
+cacontology-international:executesQuery rdf:type owl:ObjectProperty ;
+    rdfs:label "executes query"@en ;
+    rdfs:comment "Links intelligence analysis to federated database queries executed."@en ;
+    rdfs:domain uco-action:Action ;
+    rdfs:range cacontology-international:FederatedDatabaseQuery .
+
+cacontology-international:performsCrossReference rdf:type owl:ObjectProperty ;
+    rdfs:label "performs cross-reference"@en ;
+    rdfs:comment "Links database integration to cross-reference analysis performed."@en ;
+    rdfs:domain cacontology-international:GlobalDatabaseNetwork ;
+    rdfs:range cacontology-international:CrossReferenceAnalysis .
+
+cacontology-international:feedsDataLake rdf:type owl:ObjectProperty ;
+    rdfs:label "feeds data lake"@en ;
+    rdfs:comment "Links intelligence sources to data lake they feed."@en ;
+    rdfs:domain uco-identity:Organization ;
+    rdfs:range cacontology-international:IntelligenceDataLake .
+
+cacontology-international:processesDistributed rdf:type owl:ObjectProperty ;
+    rdfs:label "processes distributed"@en ;
+    rdfs:comment "Links intelligence processing to distributed processing systems."@en ;
+    rdfs:domain cacontology-international:IntelligenceDataLake ;
+    rdfs:range cacontology-international:DistributedIntelligenceProcessing .
+
+cacontology-international:enablesAutomatedMatching rdf:type owl:ObjectProperty ;
+    rdfs:label "enables automated matching"@en ;
+    rdfs:comment "Links database network to automated cross-matching capabilities."@en ;
+    rdfs:domain cacontology-international:GlobalDatabaseNetwork ;
+    rdfs:range cacontology-international:AutomatedCrossMatching . 

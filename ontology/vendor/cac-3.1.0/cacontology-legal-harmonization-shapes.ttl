@@ -1,0 +1,1132 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix gufo: <http://purl.org/nemo/gufo#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
+@prefix cacontology-legal: <https://cacontology.projectvic.org/legal-harmonization#> .
+@prefix cacontology-legal-shapes: <https://cacontology.projectvic.org/legal-harmonization/shapes#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+
+# =============================================================================
+# CAC LEGAL HARMONIZATION SHACL SHAPES
+# Enhanced with gUFO (gentle Unified Foundational Ontology) integration
+# =============================================================================
+
+<https://cacontology.projectvic.org/legal-harmonization/shapes> rdf:type owl:Ontology ;
+    rdfs:label "CAC Legal Harmonization SHACL Shapes"@en ;
+    rdfs:comment "SHACL shapes for validating CAC legal harmonization ontology instances with comprehensive gUFO integration for enhanced semantic validation, covering international legal frameworks, policy harmonization, and CSAM legislation analysis across 196 countries."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/legal-harmonization/shapes/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://cacontology.projectvic.org/legal-harmonization/3.1.0> ,
+                <https://cacontology.projectvic.org/multi-jurisdiction/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> ,
+                <http://www.w3.org/ns/shacl#> .
+
+# =============================================================================
+# gUFO TYPE CONSISTENCY VALIDATION SHAPES
+# =============================================================================
+
+cacontology-legal-shapes:LegalObjectTypeValidationShape rdf:type sh:NodeShape ;
+    rdfs:label "Legal Object Type Validation Shape"@en ;
+    rdfs:comment "Validates that legal objects are properly classified as gUFO Objects and Kinds."@en ;
+    sh:targetClass cacontology-legal:CSAMModelLaw ;
+    sh:targetClass cacontology-legal:NationalLegislation ;
+    sh:targetClass cacontology-legal:RegionalFramework ;
+    sh:targetClass cacontology-legal:TreatyFramework ;
+    sh:property [
+        sh:path rdf:type ;
+        sh:hasValue gufo:Kind ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:severity sh:Violation ;
+        sh:message "Legal objects must be classified as gUFO Kind"@en
+    ] .
+
+cacontology-legal-shapes:LegalProcessTypeValidationShape rdf:type sh:NodeShape ;
+    rdfs:label "Legal Process Type Validation Shape"@en ;
+    rdfs:comment "Validates that legal processes are properly classified as gUFO Events and EventTypes."@en ;
+    sh:targetClass cacontology-legal:PolicyHarmonization ;
+    sh:targetClass cacontology-legal:LegalReform ;
+    sh:targetClass cacontology-legal:PolicyDevelopment ;
+    sh:targetClass cacontology-legal:InternationalLawEnforcement ;
+    sh:property [
+        sh:path gufo:hasBeginPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:severity sh:Warning ;
+        sh:message "Legal processes should have temporal boundaries"@en
+    ] .
+
+cacontology-legal-shapes:LegalSituationTypeValidationShape rdf:type sh:NodeShape ;
+    rdfs:label "Legal Situation Type Validation Shape"@en ;
+    rdfs:comment "Validates that legal situations are properly classified as gUFO Situations and SituationTypes."@en ;
+    sh:targetClass cacontology-legal:LegalCompliance ;
+    sh:targetClass cacontology-legal:LegalSystemCompatibility .
+
+# =============================================================================
+# gUFO TEMPORAL CONSTRAINTS SHAPES
+# =============================================================================
+
+cacontology-legal-shapes:LegalProcessTemporalShape rdf:type sh:NodeShape ;
+    rdfs:label "Legal Process Temporal Shape"@en ;
+    rdfs:comment "Validates temporal constraints for legal processes according to gUFO framework."@en ;
+    sh:targetClass cacontology-legal:LegalReform ;
+    sh:targetClass cacontology-legal:PolicyDevelopment ;
+    sh:targetClass cacontology-legal:PolicyHarmonization ;
+    sh:property [
+        sh:path gufo:hasBeginPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:severity sh:Info ;
+        sh:message "Legal processes should specify start time"@en
+    ] ;
+    sh:property [
+        sh:path gufo:hasEndPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:severity sh:Info ;
+        sh:message "Legal processes should specify end time"@en
+    ] ;
+    sh:sparql [
+        sh:message "Legal process end time must be after start time"@en ;
+        sh:severity sh:Violation ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "gufo" ;
+                sh:namespace "http://purl.org/nemo/gufo#"^^xsd:anyURI
+            ]
+        ] ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this gufo:hasBeginPointInXSDDateTimeStamp ?start .
+                $this gufo:hasEndPointInXSDDateTimeStamp ?end .
+                FILTER (?end <= ?start)
+            }
+        """
+    ] .
+
+cacontology-legal-shapes:LegalFrameworkTemporalShape rdf:type sh:NodeShape ;
+    rdfs:label "Legal Framework Temporal Shape"@en ;
+    rdfs:comment "Validates temporal aspects of legal framework creation and evolution."@en ;
+    sh:targetClass cacontology-legal:NationalLegislation ;
+    sh:targetClass cacontology-legal:TreatyFramework ;
+    sh:targetClass cacontology-legal:ExtraditionAgreement ;
+    sh:property [
+        sh:path uco-core:createdTime ;
+        sh:datatype xsd:dateTime ;
+        sh:maxCount 1 ;
+        sh:severity sh:Info ;
+        sh:message "Legal frameworks should have creation timestamp"@en
+    ] ;
+    sh:property [
+        sh:path uco-core:modifiedTime ;
+        sh:datatype xsd:dateTime ;
+        sh:maxCount 1 ;
+        sh:severity sh:Info ;
+        sh:message "Legal frameworks may have modification timestamp"@en
+    ] .
+
+cacontology-legal-shapes:AssessmentTemporalShape rdf:type sh:NodeShape ;
+    rdfs:label "Assessment Temporal Shape"@en ;
+    rdfs:comment "Validates temporal constraints for legal assessments and reviews."@en ;
+    sh:targetClass cacontology-legal:GlobalLegalReview ;
+    sh:targetClass cacontology-legal:LegislativeAssessment ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:maxCount 1 ;
+        sh:severity sh:Info ;
+        sh:message "Assessments should specify start time"@en
+    ] ;
+    sh:property [
+        sh:path uco-core:endTime ;
+        sh:datatype xsd:dateTime ;
+        sh:maxCount 1 ;
+        sh:severity sh:Info ;
+        sh:message "Assessments should specify end time"@en
+    ] ;
+    sh:sparql [
+        sh:message "Assessment end time must be after start time"@en ;
+        sh:severity sh:Violation ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "uco-core" ;
+                sh:namespace "https://ontology.unifiedcyberontology.org/uco/core/"^^xsd:anyURI
+            ]
+        ] ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this uco-core:startTime ?start .
+                $this uco-core:endTime ?end .
+                FILTER (?end <= ?start)
+            }
+        """
+    ] .
+
+# =============================================================================
+# ENHANCED DOMAIN-SPECIFIC SHAPES WITH gUFO QUALITY ASPECTS
+# =============================================================================
+
+cacontology-legal-shapes:CSAMModelLawShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal:CSAMModelLaw ;
+    rdfs:label "CSAM Model Law Shape"@en ;
+    rdfs:comment "Enhanced validation shape for CSAM model legislation with gUFO quality aspects."@en ;
+    sh:property [
+        sh:path rdf:type ;
+        sh:hasValue gufo:Kind ;
+        sh:minCount 1 ;
+        sh:severity sh:Violation ;
+        sh:message "Must be classified as gUFO Kind"@en
+    ] ;
+    # gUFO Quality Aspects
+    sh:property [
+        sh:path cacontology-legal:hasLegalEffectiveness ;
+        sh:datatype xsd:string ;
+        sh:in ( "ineffective" "limited" "moderate" "effective" "highly_effective" ) ;
+        sh:maxCount 1 ;
+        sh:severity sh:Warning ;
+        sh:message "Legal effectiveness should be assessed"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal:hasDataQuality ;
+        sh:datatype xsd:string ;
+        sh:in ( "poor" "fair" "good" "excellent" "validated" ) ;
+        sh:maxCount 1 ;
+        sh:severity sh:Info ;
+        sh:message "Data quality should be assessed"@en
+    ] ;
+    # Standard Properties
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        rdfs:comment "Model law must have a descriptive name."@en     ] ;
+    sh:property [
+        sh:path uco-core:description ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:minLength 50 ;
+        sh:maxLength 2000 ;
+        rdfs:comment "Model law must have detailed description."@en     ] ;
+    sh:property [
+        sh:path cacontology-legal:legalSystemType ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:in ("common_law" "civil_law" "religious_law" "mixed" "universal") ;
+        rdfs:comment "Legal system type for model law applicability."@en     ] .
+
+cacontology-legal-shapes:NationalLegislationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal:NationalLegislation ;
+    rdfs:label "National Legislation Shape"@en ;
+    rdfs:comment "Enhanced shape for national legislation with implementation quality and effectiveness assessments."@en ;
+    sh:property [
+        sh:path rdf:type ;
+        sh:hasValue gufo:Kind ;
+        sh:minCount 1 ;
+        sh:severity sh:Violation ;
+        sh:message "Must be classified as gUFO Kind"@en
+    ] ;
+    # gUFO Quality Aspects
+    sh:property [
+        sh:path cacontology-legal:hasImplementationQuality ;
+        sh:datatype xsd:string ;
+        sh:in ( "poor" "fair" "good" "excellent" "exemplary" ) ;
+        sh:maxCount 1 ;
+        sh:severity sh:Warning ;
+        sh:message "Implementation quality should be assessed"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal:hasLegalEffectiveness ;
+        sh:datatype xsd:string ;
+        sh:in ( "ineffective" "limited" "moderate" "effective" "highly_effective" ) ;
+        sh:maxCount 1 ;
+        sh:severity sh:Warning ;
+        sh:message "Legal effectiveness should be assessed"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal:hasLegalRobustness ;
+        sh:datatype xsd:string ;
+        sh:in ( "weak" "moderate" "strong" "very_strong" "comprehensive" ) ;
+        sh:maxCount 1 ;
+        sh:severity sh:Info ;
+        sh:message "Legal robustness should be assessed"@en
+    ] ;
+    # Standard Properties
+    sh:property [
+        sh:path cacontology-legal:implementationStatus ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ("drafted" "enacted" "enforced") ;
+        rdfs:comment "Implementation status must be specified."@en     ] ;
+    sh:property [
+        sh:path cacontology-legal:legalSystemType ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:in ("common_law" "civil_law" "religious_law" "mixed") ;
+        rdfs:comment "Legal system type classification."@en     ] ;
+    sh:property [
+        sh:path cacontology-legal:appliesToCountry ;
+        sh:class uco-location:Location ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        rdfs:comment "National legislation must apply to exactly one country."@en     ] .
+
+cacontology-legal-shapes:PolicyHarmonizationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal:PolicyHarmonization ;
+    rdfs:label "Policy Harmonization Shape"@en ;
+    rdfs:comment "Enhanced shape for policy harmonization with harmonization degree assessment."@en ;
+    # gUFO Quality Aspects
+    sh:property [
+        sh:path cacontology-legal:hasHarmonizationDegree ;
+        sh:datatype xsd:string ;
+        sh:in ( "minimal" "partial" "substantial" "comprehensive" "complete" ) ;
+        sh:maxCount 1 ;
+        sh:severity sh:Warning ;
+        sh:message "Harmonization degree should be assessed"@en
+    ] .
+
+cacontology-legal-shapes:LegalReformShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal:LegalReform ;
+    rdfs:label "Legal Reform Shape"@en ;
+    rdfs:comment "Enhanced shape for legal reform processes with urgency assessment."@en ;
+    # gUFO Quality Aspects
+    sh:property [
+        sh:path cacontology-legal:hasReformUrgency ;
+        sh:datatype xsd:string ;
+        sh:in ( "low" "moderate" "high" "urgent" "critical" ) ;
+        sh:maxCount 1 ;
+        sh:severity sh:Warning ;
+        sh:message "Reform urgency should be assessed"@en
+    ] ;
+    # Standard Properties
+    sh:property [
+        sh:path cacontology-legal:reformPriority ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ("low" "medium" "high" "urgent") ;
+        rdfs:comment "Reform priority must be specified."@en     ] ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:pattern ".*Reform.*" ;
+        rdfs:comment "Reform name must contain 'Reform'."@en     ] .
+
+cacontology-legal-shapes:TreatyFrameworkShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal:TreatyFramework ;
+    rdfs:label "Treaty Framework Shape"@en ;
+    rdfs:comment "Enhanced shape for international treaty frameworks with strength assessment."@en ;
+    sh:property [
+        sh:path rdf:type ;
+        sh:hasValue gufo:Kind ;
+        sh:minCount 1 ;
+        sh:severity sh:Violation ;
+        sh:message "Must be classified as gUFO Kind"@en
+    ] ;
+    # gUFO Quality Aspects
+    sh:property [
+        sh:path cacontology-legal:hasTreatyStrength ;
+        sh:datatype xsd:string ;
+        sh:in ( "weak" "moderate" "strong" "binding" "comprehensive" ) ;
+        sh:maxCount 1 ;
+        sh:severity sh:Warning ;
+        sh:message "Treaty strength should be assessed"@en
+    ] ;
+    # Standard Properties
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 15 ;
+        sh:maxLength 300 ;
+        rdfs:comment "Treaty framework must have comprehensive name."@en     ] ;
+    sh:property [
+        sh:path cacontology-legal:facilitatesCooperation ;
+        sh:class cacontology-legal:InternationalLawEnforcement ;
+        sh:minCount 1 ;
+        rdfs:comment "Treaty must facilitate international cooperation."@en     ] ;
+    sh:property [
+        sh:path cacontology-legal:appliesToCountry ;
+        sh:class uco-location:Location ;
+        sh:minCount 3 ;
+        rdfs:comment "Multilateral treaty must apply to at least three countries."@en     ] .
+
+cacontology-legal-shapes:InternationalLawEnforcementShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal:InternationalLawEnforcement ;
+    rdfs:label "International Law Enforcement Shape"@en ;
+    rdfs:comment "Enhanced shape for international law enforcement with cooperation intensity assessment."@en ;
+    # gUFO Quality Aspects
+    sh:property [
+        sh:path cacontology-legal:hasCooperationIntensity ;
+        sh:datatype xsd:string ;
+        sh:in ( "minimal" "moderate" "substantial" "intensive" "comprehensive" ) ;
+        sh:maxCount 1 ;
+        sh:severity sh:Warning ;
+        sh:message "Cooperation intensity should be assessed"@en
+    ] .
+
+cacontology-legal-shapes:LegalComplianceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal:LegalCompliance ;
+    rdfs:label "Legal Compliance Shape"@en ;
+    rdfs:comment "Enhanced shape for legal compliance situations with compliance level assessment."@en ;
+    # gUFO Quality Aspects
+    sh:property [
+        sh:path cacontology-legal:hasComplianceLevel ;
+        sh:datatype xsd:double ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:maxCount 1 ;
+        sh:severity sh:Warning ;
+        sh:message "Compliance level should be measured (0.0-1.0)"@en
+    ] ;
+    # Standard Properties
+    sh:property [
+        sh:path cacontology-legal:legalAlignmentLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ("none" "partial" "substantial" "full") ;
+        rdfs:comment "Legal alignment level must be specified."@en     ] ;
+    sh:property [
+        sh:path cacontology-legal:measuredBy ;
+        sh:class cacontology-legal:ComplianceMetrics ;
+        sh:minCount 1 ;
+        rdfs:comment "Compliance must be measured by specific metrics."@en     ] .
+
+cacontology-legal-shapes:LegalFrameworkGapShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal:LegalFrameworkGap ;
+    rdfs:label "Legal Framework Gap Shape"@en ;
+    rdfs:comment "Enhanced shape for legal framework gaps with gap severity assessment."@en ;
+    sh:property [
+        sh:path rdf:type ;
+        sh:hasValue gufo:Kind ;
+        sh:minCount 1 ;
+        sh:severity sh:Violation ;
+        sh:message "Must be classified as gUFO Kind"@en
+    ] ;
+    # gUFO Quality Aspects
+    sh:property [
+        sh:path cacontology-legal:hasGapSeverity ;
+        sh:datatype xsd:string ;
+        sh:in ( "minor" "moderate" "major" "critical" "systemic" ) ;
+        sh:maxCount 1 ;
+        sh:severity sh:Warning ;
+        sh:message "Gap severity should be assessed"@en
+    ] ;
+    # Standard Properties
+    sh:property [
+        sh:path cacontology-legal:policyGapSeverity ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ("minor" "moderate" "major" "critical") ;
+        rdfs:comment "Gap severity must be specified."@en     ] ;
+    sh:property [
+        sh:path uco-core:description ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:minLength 20 ;
+        sh:maxLength 1000 ;
+        rdfs:comment "Gap must have detailed description."@en     ] ;
+    sh:property [
+        sh:path cacontology-legal:requiresReform ;
+        sh:class cacontology-legal:LegalReform ;
+        sh:minCount 1 ;
+        rdfs:comment "Gap must require specific legal reform."@en     ] .
+
+cacontology-legal-shapes:LegislativeAssessmentShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal:LegislativeAssessment ;
+    rdfs:label "Legislative Assessment Shape"@en ;
+    rdfs:comment "Enhanced shape for legislative assessments with reliability assessment."@en ;
+    sh:property [
+        sh:path rdf:type ;
+        sh:hasValue gufo:Kind ;
+        sh:minCount 1 ;
+        sh:severity sh:Violation ;
+        sh:message "Must be classified as gUFO Kind"@en
+    ] ;
+    # gUFO Quality Aspects
+    sh:property [
+        sh:path cacontology-legal:hasAssessmentReliability ;
+        sh:datatype xsd:double ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:maxCount 1 ;
+        sh:severity sh:Info ;
+        sh:message "Assessment reliability should be measured"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal:hasDataQuality ;
+        sh:datatype xsd:string ;
+        sh:in ( "poor" "fair" "good" "excellent" "validated" ) ;
+        sh:maxCount 1 ;
+        sh:severity sh:Info ;
+        sh:message "Data quality should be assessed"@en
+    ] ;
+    # Standard Properties
+    sh:property [
+        sh:path cacontology-legal:legislativeCompliance ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        rdfs:comment "Compliance score must be between 0.0 and 1.0."@en     ] ;
+    sh:property [
+        sh:path uco-core:createdTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        rdfs:comment "Assessment must have creation timestamp."@en     ] .
+
+# =============================================================================
+# gUFO PARTICIPATION CONSTRAINT SHAPES
+# =============================================================================
+
+cacontology-legal-shapes:LegalHarmonizationParticipationShape rdf:type sh:NodeShape ;
+    rdfs:label "Legal Harmonization Participation Shape"@en ;
+    rdfs:comment "Validates participation constraints for legal harmonization activities following gUFO participation patterns."@en ;
+    sh:targetClass cacontology-legal:PolicyHarmonization ;
+    sh:property [
+        sh:path [ sh:inversePath cacontology-legal:participatesIn ] ;
+        sh:class uco-location:Location ;
+        sh:minCount 2 ;
+        sh:severity sh:Violation ;
+        sh:message "Policy harmonization must involve at least two countries"@en
+    ] .
+
+cacontology-legal-shapes:InternationalCooperationParticipationShape rdf:type sh:NodeShape ;
+    rdfs:label "International Cooperation Participation Shape"@en ;
+    rdfs:comment "Validates participation constraints for international law enforcement cooperation."@en ;
+    sh:targetClass cacontology-legal:InternationalLawEnforcement ;
+    sh:property [
+        sh:path [ sh:inversePath cacontology-legal:participatesIn ] ;
+        sh:class uco-identity:Organization ;
+        sh:minCount 2 ;
+        sh:severity sh:Warning ;
+        sh:message "International cooperation should involve multiple organizations"@en
+    ] .
+
+cacontology-legal-shapes:TechnicalAssistanceParticipationShape rdf:type sh:NodeShape ;
+    rdfs:label "Technical Assistance Participation Shape"@en ;
+    rdfs:comment "Validates participation of organizations in technical assistance programs."@en ;
+    sh:targetClass cacontology-legal:TechnicalAssistance ;
+    sh:property [
+        sh:path [ sh:inversePath cacontology-legal:participatesIn ] ;
+        sh:class uco-identity:Organization ;
+        sh:minCount 1 ;
+        sh:severity sh:Violation ;
+        sh:message "Technical assistance must involve at least one organization"@en
+    ] .
+
+# =============================================================================
+# gUFO PART-WHOLE RELATIONSHIP SHAPES
+# =============================================================================
+
+cacontology-legal-shapes:LegalFrameworkCompositionShape rdf:type sh:NodeShape ;
+    rdfs:label "Legal Framework Composition Shape"@en ;
+    rdfs:comment "Validates compositional structure of legal frameworks following gUFO part-whole patterns."@en ;
+    sh:targetClass cacontology-legal:RegionalFramework ;
+    sh:property [
+        sh:path [ sh:inversePath cacontology-legal:isComponentOf ] ;
+        sh:class cacontology-legal:NationalLegislation ;
+        sh:minCount 3 ;
+        sh:severity sh:Violation ;
+        sh:message "Regional framework must include legislation from at least three countries"@en
+    ] .
+
+cacontology-legal-shapes:TreatyFrameworkCompositionShape rdf:type sh:NodeShape ;
+    rdfs:label "Treaty Framework Composition Shape"@en ;
+    rdfs:comment "Validates compositional structure of treaty frameworks."@en ;
+    sh:targetClass cacontology-legal:TreatyFramework ;
+    sh:property [
+        sh:path [ sh:inversePath cacontology-legal:isComponentOf ] ;
+        sh:class cacontology-legal:NationalLegislation ;
+        sh:minCount 2 ;
+        sh:severity sh:Warning ;
+        sh:message "Treaty framework should include implementing legislation from member countries"@en
+    ] .
+
+# =============================================================================
+# gUFO QUALIFIED RELATION SHAPES
+# =============================================================================
+
+cacontology-legal-shapes:QualifiedComplianceParticipationShape rdf:type sh:NodeShape ;
+    rdfs:label "Qualified Compliance Participation Shape"@en ;
+    rdfs:comment "Validates qualified participation relationships in legal compliance according to gUFO patterns."@en ;
+    sh:targetClass gufo:ParticipationSituation ;
+    sh:property [
+        sh:path cacontology-legal:concernsLegalFramework ;
+        sh:class cacontology-legal:NationalLegislation ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:severity sh:Violation ;
+        sh:message "Participation situation must concern exactly one legal framework"@en
+    ] .
+
+# =============================================================================
+# ADVANCED gUFO BUSINESS RULES
+# =============================================================================
+
+cacontology-legal-shapes:HighEffectivenessLegislationRule rdf:type sh:NodeShape ;
+    rdfs:label "High Effectiveness Legislation Rule"@en ;
+    rdfs:comment "Highly effective legislation should have excellent implementation quality."@en ;
+    sh:targetClass cacontology-legal:NationalLegislation ;
+    sh:sparql [
+        sh:message "Highly effective legislation should have excellent implementation quality"@en ;
+        sh:severity sh:Warning ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "cacontology-legal" ;
+                sh:namespace "https://cacontology.projectvic.org/legal-harmonization#"^^xsd:anyURI
+            ]
+        ] ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-legal:hasLegalEffectiveness "highly_effective" .
+                OPTIONAL {
+                    $this cacontology-legal:hasImplementationQuality ?quality .
+                    FILTER (?quality IN ("excellent", "exemplary"))
+                }
+                FILTER (!BOUND(?quality))
+            }
+        """
+    ] .
+
+cacontology-legal-shapes:ComprehensiveHarmonizationRule rdf:type sh:NodeShape ;
+    rdfs:label "Comprehensive Harmonization Rule"@en ;
+    rdfs:comment "Comprehensive harmonization should involve strong treaty frameworks."@en ;
+    sh:targetClass cacontology-legal:PolicyHarmonization ;
+    sh:sparql [
+        sh:message "Comprehensive harmonization should involve strong treaty frameworks"@en ;
+        sh:severity sh:Warning ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "cacontology-legal" ;
+                sh:namespace "https://cacontology.projectvic.org/legal-harmonization#"^^xsd:anyURI
+            ]
+        ] ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-legal:hasHarmonizationDegree ?degree .
+                FILTER (?degree IN ("comprehensive", "complete"))
+                OPTIONAL {
+                    ?treaty cacontology-legal:facilitatesCooperation ?cooperation ;
+                    ?cooperation rdf:type cacontology-legal:InternationalLawEnforcement ;
+                    ?treaty cacontology-legal:hasTreatyStrength ?strength .
+                    FILTER (?strength IN ("binding", "comprehensive"))
+                }
+                FILTER (!BOUND(?strength))
+            }
+        """
+    ] .
+
+cacontology-legal-shapes:CriticalGapReformRule rdf:type sh:NodeShape ;
+    rdfs:label "Critical Gap Reform Rule"@en ;
+    rdfs:comment "Critical gaps should require urgent reform."@en ;
+    sh:targetClass cacontology-legal:LegalFrameworkGap ;
+    sh:sparql [
+        sh:message "Critical gaps should require urgent reform"@en ;
+        sh:severity sh:Warning ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "cacontology-legal" ;
+                sh:namespace "https://cacontology.projectvic.org/legal-harmonization#"^^xsd:anyURI
+            ]
+        ] ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-legal:hasGapSeverity ?severity .
+                FILTER (?severity IN ("critical", "systemic"))
+                OPTIONAL {
+                    $this cacontology-legal:requiresReform ?reform ;
+                    ?reform cacontology-legal:hasReformUrgency ?urgency .
+                    FILTER (?urgency IN ("urgent", "critical"))
+                }
+                FILTER (!BOUND(?urgency))
+            }
+        """
+    ] .
+
+cacontology-legal-shapes:FullComplianceAlignmentRule rdf:type sh:NodeShape ;
+    rdfs:label "Full Compliance Alignment Rule"@en ;
+    rdfs:comment "Full legal alignment should have high compliance levels."@en ;
+    sh:targetClass cacontology-legal:LegalCompliance ;
+    sh:sparql [
+        sh:message "Full legal alignment should have high compliance levels"@en ;
+        sh:severity sh:Warning ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "cacontology-legal" ;
+                sh:namespace "https://cacontology.projectvic.org/legal-harmonization#"^^xsd:anyURI
+            ]
+        ] ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-legal:legalAlignmentLevel "full" .
+                OPTIONAL {
+                    $this cacontology-legal:hasComplianceLevel ?level .
+                    FILTER (?level >= 0.8)
+                }
+                FILTER (!BOUND(?level))
+            }
+        """
+    ] .
+
+cacontology-legal-shapes:InternationalCooperationFrameworkRule rdf:type sh:NodeShape ;
+    rdfs:label "International Cooperation Framework Rule"@en ;
+    rdfs:comment "International law enforcement must be supported by proper legal framework."@en ;
+    sh:targetClass cacontology-legal:InternationalLawEnforcement ;
+    sh:sparql [
+        sh:message "International law enforcement must be supported by treaty or extradition framework"@en ;
+        sh:severity sh:Violation ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "cacontology-legal" ;
+                sh:namespace "https://cacontology.projectvic.org/legal-harmonization#"^^xsd:anyURI
+            ]
+        ] ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-legal:InternationalLawEnforcement .
+                FILTER NOT EXISTS {
+                    { ?treaty cacontology-legal:facilitatesCooperation $this . }
+                    UNION
+                    { ?agreement cacontology-legal:enablesExtradition $this . }
+                }
+            }
+        """
+    ] .
+
+# =============================================================================
+# ENHANCED gUFO DATA QUALITY VALIDATION SHAPE
+# =============================================================================
+
+cacontology-legal-shapes:LegalHarmonizationDataQualityShape rdf:type sh:NodeShape ;
+    rdfs:label "Legal Harmonization Data Quality Shape"@en ;
+    rdfs:comment "Comprehensive gUFO quality validation for legal harmonization data."@en ;
+    sh:targetClass cacontology-legal:GlobalLegalReview ;
+    sh:targetClass cacontology-legal:LegislativeAssessment ;
+    sh:targetClass cacontology-legal:ComplianceMetrics ;
+    # gUFO Quality Level Validation
+    sh:property [
+        sh:path cacontology-legal:hasDataQuality ;
+        sh:datatype xsd:string ;
+        sh:in ( "poor" "fair" "good" "excellent" "validated" ) ;
+        sh:maxCount 1 ;
+        sh:severity sh:Warning ;
+        sh:message "Data quality level should be assessed"@en
+    ] ;
+    # Quality consistency rule
+    sh:sparql [
+        sh:message "Excellent data quality should have high assessment reliability"@en ;
+        sh:severity sh:Warning ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "cacontology-legal" ;
+                sh:namespace "https://cacontology.projectvic.org/legal-harmonization#"^^xsd:anyURI
+            ]
+        ] ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-legal:hasDataQuality "excellent" .
+                OPTIONAL {
+                    $this cacontology-legal:hasAssessmentReliability ?reliability .
+                    FILTER (?reliability >= 0.8)
+                }
+                FILTER (!BOUND(?reliability))
+            }
+        """
+    ] .
+
+# =============================================================================
+# ORIGINAL VALIDATION SHAPES (ENHANCED)
+# =============================================================================
+
+cacontology-legal-shapes:GlobalLegalReviewShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal:GlobalLegalReview ;
+    rdfs:label "Global Legal Review Shape"@en ;
+    rdfs:comment "Enhanced validation shape for global legal reviews with gUFO integration."@en ;
+    sh:property [
+        sh:path rdf:type ;
+        sh:hasValue gufo:Kind ;
+        sh:minCount 1 ;
+        sh:severity sh:Violation ;
+        sh:message "Must be classified as gUFO Kind"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal:countriesAnalyzed ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 196 ;
+        rdfs:comment "Number of countries analyzed (1-196)."@en     ] ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:pattern "^Global.*Review.*[0-9]{4}$" ;
+        rdfs:comment "Review name must include 'Global', 'Review', and year."@en     ] .
+
+# =============================================================================
+# RAVEN EXTENSIONS - LEGISLATIVE ROLE SHAPES
+# =============================================================================
+
+cacontology-legal-shapes:LegislativeRoleShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal:LegislativeRole ;
+    rdfs:label "Legislative Role Shape"@en ;
+    rdfs:comment "Validates legislative role classes and instances."@en ;
+    sh:property [
+        sh:path rdfs:subClassOf ;
+        sh:qualifiedValueShape [
+            sh:class cac-core:Role
+        ] ;
+        sh:qualifiedMinCount 1 ;
+        sh:severity sh:Violation ;
+        sh:message "Legislative roles must extend gUFO Role"@en
+    ] .
+
+cacontology-legal-shapes:PersonWithRoleShape rdf:type sh:NodeShape ;
+    sh:targetSubjectsOf cacontology-legal:hasRole ;
+    rdfs:label "Person With Role Shape"@en ;
+    rdfs:comment "Validates persons with legislative roles."@en ;
+    sh:property [
+        sh:path cacontology-legal:hasRole ;
+        sh:class cac-core:Role ;
+        sh:minCount 1 ;
+        sh:severity sh:Warning ;
+        sh:message "Person should have at least one legislative role"@en
+    ] .
+
+# =============================================================================
+# RAVEN EXTENSIONS - LEGISLATIVE PROCESS SHAPES (gUFO EventType validation)
+# =============================================================================
+
+cacontology-legal-shapes:LegislativeProcessShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal:LegislativeProcess ;
+    rdfs:label "Legislative Process Shape"@en ;
+    rdfs:comment "Validates legislative process classes as gUFO EventTypes."@en ;
+    sh:property [
+        sh:path cacontology-legal:processStatus ;
+        sh:datatype xsd:string ;
+        sh:in ( "pending" "in_progress" "completed" "failed" ) ;
+        sh:maxCount 1 ;
+        sh:severity sh:Warning ;
+        sh:message "Process status should be one of: pending, in_progress, completed, failed"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal:processDate ;
+        sh:datatype xsd:date ;
+        sh:maxCount 1 ;
+        sh:severity sh:Info ;
+        sh:message "Process should have a date"@en
+    ] .
+
+cacontology-legal-shapes:BillDraftingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal:BillDrafting ;
+    rdfs:label "Bill Drafting Shape"@en  .
+
+cacontology-legal-shapes:CommitteeReviewShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal:CommitteeReview ;
+    rdfs:label "Committee Review Shape"@en  .
+
+cacontology-legal-shapes:FloorVoteShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal:FloorVote ;
+    rdfs:label "Floor Vote Shape"@en  .
+
+# =============================================================================
+# RAVEN EXTENSIONS - ADVOCACY PROCESS SHAPES
+# =============================================================================
+
+cacontology-legal-shapes:AdvocacyProcessShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal:AdvocacyProcess ;
+    rdfs:label "Advocacy Process Shape"@en ;
+    rdfs:comment "Validates advocacy process classes as gUFO EventTypes."@en  .
+
+cacontology-legal-shapes:TestimonySubmissionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal:TestimonySubmission ;
+    rdfs:label "Testimony Submission Shape"@en  .
+
+cacontology-legal-shapes:CoalitionBuildingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal:CoalitionBuilding ;
+    rdfs:label "Coalition Building Shape"@en  .
+
+# =============================================================================
+# RAVEN EXTENSIONS - COMPLIANCE PROCESS SHAPES
+# =============================================================================
+
+cacontology-legal-shapes:ComplianceProcessShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal:ComplianceProcess ;
+    rdfs:label "Compliance Process Shape"@en ;
+    rdfs:comment "Validates compliance process classes as gUFO EventTypes."@en  .
+
+cacontology-legal-shapes:AuditProcessShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal:AuditProcess ;
+    rdfs:label "Audit Process Shape"@en  .
+
+# =============================================================================
+# RAVEN EXTENSIONS - STATUTE AND LEGAL FRAMEWORK SHAPES
+# =============================================================================
+
+cacontology-legal-shapes:StatuteShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal:Statute ;
+    rdfs:label "Statute Shape"@en ;
+    rdfs:comment "Validates enacted statutes."@en ;
+    sh:property [
+        sh:path rdfs:subClassOf ;
+        sh:qualifiedValueShape [
+            sh:class gufo:Norm
+        ] ;
+        sh:qualifiedMinCount 1 ;
+        sh:severity sh:Violation ;
+        sh:message "Statutes must extend gUFO Norm"@en
+    ] ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:severity sh:Warning ;
+        sh:message "Statute should have a name"@en
+    ] .
+
+cacontology-legal-shapes:LegislativeInstrumentShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal:LegislativeInstrument ;
+    rdfs:label "Legislative Instrument Shape"@en ;
+    rdfs:comment "Validates legislative instruments (bills, resolutions)."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:severity sh:Warning ;
+        sh:message "Legislative instrument should have a name"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal:involvesProcess ;
+        sh:class cacontology-legal:LegislativeProcess ;
+        sh:minCount 1 ;
+        sh:severity sh:Info ;
+        sh:message "Legislative instrument should involve at least one process"@en
+    ] .
+
+cacontology-legal-shapes:CorrespondenceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal:Correspondence ;
+    rdfs:label "Correspondence Shape"@en ;
+    rdfs:comment "Validates correspondence between actors."@en ;
+    sh:property [
+        sh:path cacontology-legal:correspondsAbout ;
+        sh:class cacontology-legal:LegislativeInstrument ;
+        sh:minCount 1 ;
+        sh:severity sh:Info ;
+        sh:message "Correspondence should reference a legislative instrument"@en
+    ] .
+
+# =============================================================================
+# RAVEN EXTENSIONS - CHILD SAFETY LAW TYPE SHAPES
+# =============================================================================
+
+cacontology-legal-shapes:SextortionLawShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal:SextortionLaw ;
+    rdfs:label "Sextortion Law Shape"@en ;
+    sh:property [
+        sh:path rdf:type ;
+        sh:hasValue gufo:Kind ;
+        sh:minCount 1 ;
+        sh:severity sh:Violation ;
+        sh:message "Must be classified as gUFO Kind"@en
+    ] .
+
+cacontology-legal-shapes:AgeVerificationLawShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal:AgeVerificationLaw ;
+    rdfs:label "Age Verification Law Shape"@en ;
+    sh:property [
+        sh:path rdf:type ;
+        sh:hasValue gufo:Kind ;
+        sh:minCount 1 ;
+        sh:severity sh:Violation ;
+        sh:message "Must be classified as gUFO Kind"@en
+    ] .
+
+cacontology-legal-shapes:PlatformAccountabilityLawShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal:PlatformAccountabilityLaw ;
+    rdfs:label "Platform Accountability Law Shape"@en ;
+    sh:property [
+        sh:path rdf:type ;
+        sh:hasValue gufo:Kind ;
+        sh:minCount 1 ;
+        sh:severity sh:Violation ;
+        sh:message "Must be classified as gUFO Kind"@en
+    ] .
+
+cacontology-legal-shapes:OnlineSafetyLawShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal:OnlineSafetyLaw ;
+    rdfs:label "Online Safety Law Shape"@en ;
+    sh:property [
+        sh:path rdf:type ;
+        sh:hasValue gufo:Kind ;
+        sh:minCount 1 ;
+        sh:severity sh:Violation ;
+        sh:message "Must be classified as gUFO Kind"@en
+    ] .
+
+cacontology-legal-shapes:ChildExploitationLawShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal:ChildExploitationLaw ;
+    rdfs:label "Child Exploitation Law Shape"@en ;
+    sh:property [
+        sh:path rdf:type ;
+        sh:hasValue gufo:Kind ;
+        sh:minCount 1 ;
+        sh:severity sh:Violation ;
+        sh:message "Must be classified as gUFO Kind"@en
+    ] .
+
+cacontology-legal-shapes:DataProtectionForMinorsLawShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal:DataProtectionForMinorsLaw ;
+    rdfs:label "Data Protection for Minors Law Shape"@en ;
+    sh:property [
+        sh:path rdf:type ;
+        sh:hasValue gufo:Kind ;
+        sh:minCount 1 ;
+        sh:severity sh:Violation ;
+        sh:message "Must be classified as gUFO Kind"@en
+    ] .
+
+# =============================================================================
+# RAVEN EXTENSIONS - JURISDICTION VALIDATION SHAPES
+# Uses cacontology-multi:Jurisdiction from multi-jurisdiction module
+# =============================================================================
+
+cacontology-legal-shapes:JurisdictionWithStatutesShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-multi:Jurisdiction ;
+    rdfs:label "Jurisdiction With Statutes Shape"@en ;
+    rdfs:comment "Validates jurisdictions with legal harmonization properties."@en ;
+    sh:property [
+        sh:path cacontology-legal:hasHarmonizationLevel ;
+        sh:datatype xsd:string ;
+        sh:in ( "full" "partial" "none" ) ;
+        sh:maxCount 1 ;
+        sh:severity sh:Info ;
+        sh:message "Harmonization level should be one of: full, partial, none"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal:hasComplianceScore ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:maxCount 1 ;
+        sh:severity sh:Info ;
+        sh:message "Compliance score should be between 0.0 and 1.0"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal:jurisdictionType ;
+        sh:datatype xsd:string ;
+        sh:in ( "federal" "state" "territory" "local" "national" "regional" ) ;
+        sh:maxCount 1 ;
+        sh:severity sh:Info ;
+        sh:message "Jurisdiction type should be one of: federal, state, territory, local, national, regional"@en
+    ] .
+
+cacontology-legal-shapes:JurisdictionWithGapsShape rdf:type sh:NodeShape ;
+    sh:targetSubjectsOf cacontology-legal:hasLegalGap ;
+    rdfs:label "Jurisdiction With Gaps Shape"@en ;
+    rdfs:comment "Validates jurisdictions that have identified legal gaps."@en ;
+    sh:property [
+        sh:path cacontology-legal:hasLegalGap ;
+        sh:class cacontology-legal:LegalFrameworkGap ;
+        sh:minCount 1 ;
+        sh:severity sh:Info ;
+        sh:message "Jurisdiction should reference valid legal framework gaps"@en
+    ] .
+
+# =============================================================================
+# COMPLIANCE INTELLIGENCE / SAFE HARBOR SHAPES (GEN 2026-02-10)
+# =============================================================================
+
+cacontology-legal-shapes:ComplianceIntelligenceFrameworkShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal:ComplianceIntelligenceFramework ;
+    rdfs:label "Compliance Intelligence Framework Shape"@en ;
+    rdfs:comment "Validates compliance intelligence framework objects as gUFO Kind."@en ;
+    sh:property [
+        sh:path rdf:type ;
+        sh:hasValue gufo:Kind ;
+        sh:minCount 1 ;
+        sh:severity sh:Violation ;
+        sh:message "Compliance intelligence frameworks must be classified as gUFO Kind"@en
+    ] .
+
+cacontology-legal-shapes:SafeHarborShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal:SafeHarbor ;
+    rdfs:label "Safe Harbor Shape"@en ;
+    rdfs:comment "Validates safe harbor objects and their good-faith criteria."@en ;
+    sh:property [
+        sh:path rdf:type ;
+        sh:hasValue gufo:Kind ;
+        sh:minCount 1 ;
+        sh:severity sh:Violation ;
+        sh:message "Safe harbors must be classified as gUFO Kind"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal:goodFaithCriteria ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:severity sh:Info ;
+        sh:message "Safe harbor may specify good-faith criteria as a string."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal:supportedByFramework ;
+        sh:class cacontology-legal:ComplianceIntelligenceFramework ;
+        sh:minCount 0 ;
+        sh:severity sh:Info ;
+        sh:message "Safe harbor may reference a supporting compliance intelligence framework."@en
+    ] .
+
+cacontology-legal-shapes:ComplianceDocumentationArtifactShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal:ComplianceDocumentationArtifact ;
+    rdfs:label "Compliance Documentation Artifact Shape"@en ;
+    rdfs:comment "Validates compliance documentation artifacts and their verification status."@en ;
+    sh:property [
+        sh:path rdf:type ;
+        sh:hasValue gufo:Kind ;
+        sh:minCount 1 ;
+        sh:severity sh:Violation ;
+        sh:message "Compliance documentation artifacts must be classified as gUFO Kind"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal:verificationStatus ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "verified" "unverified" "contested" "unknown" ) ;
+        sh:severity sh:Info ;
+        sh:message "Verification status must be from allowed list when present."@en
+    ] .
+
+cacontology-legal-shapes:KnowingParadoxShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal:KnowingParadox ;
+    rdfs:label "Knowing Paradox Shape"@en ;
+    rdfs:comment "Validates knowing paradox as a gUFO Situation."@en .

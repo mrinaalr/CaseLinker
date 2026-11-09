@@ -1,0 +1,988 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-observable: <https://ontology.unifiedcyberontology.org/uco/observable/> .
+@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-educational: <https://cacontology.projectvic.org/educational#> .
+@prefix gufo: <http://purl.org/nemo/gufo#> .
+@prefix cacontology-gufo: <https://cacontology.projectvic.org/gufo#> .
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+
+# Ontology Declaration
+<https://cacontology.projectvic.org/educational> rdf:type owl:Ontology ;
+    rdfs:label "CAC Educational Institution Exploitation Ontology with gUFO Integration"@en ;
+    rdfs:comment "Specialized ontology for modeling child exploitation within educational institutions, including educator-perpetrated crimes, institutional vulnerabilities, and educational safeguarding, based on cases like Brooklyn DA v. Winston Nguyen (2025). Enhanced with gUFO foundational ontology for improved semantic precision, anti-rigidity modeling for roles and phases, complex situational modeling, and comprehensive temporal constraint validation."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/educational/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:issued "2025-05-28"^^xsd:date ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> ,
+                <https://ontology.caseontology.org/case/case/1.5.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> ,
+                <https://cacontology.projectvic.org/core/3.1.0> .
+
+# =============================================================================
+# EDUCATIONAL INSTITUTION STRUCTURE (Enhanced with gUFO Organizations)
+# =============================================================================
+
+cacontology-educational:EducationalInstitution rdf:type owl:Class ;
+    rdfs:label "Educational Institution"@en ;
+    rdfs:comment "Educational institution where child exploitation occurs, including schools, colleges, and educational programs. Enhanced as gUFO Organization for comprehensive institutional modeling."@en ;
+    rdfs:subClassOf uco-identity:Organization ,
+                    cac-core:OrganizationLikeEntity ;
+    cacontology-gufo:hasTemporalProperty cacontology-gufo:establishmentTimePoint ,
+                                 cacontology-gufo:accreditationPeriod ;
+    cacontology-gufo:hasValidationConstraint "gUFO Organization validation for educational institutions" .
+
+cacontology-educational:IndependentSchool rdf:type owl:Class ;
+    rdfs:label "Independent School"@en ;
+    rdfs:comment "Private independent school, often with elite status and specialized educational programs. Enhanced as gUFO Organization."@en ;
+    rdfs:subClassOf cacontology-educational:EducationalInstitution ,
+                    cac-core:OrganizationLikeEntity .
+
+cacontology-educational:PublicSchool rdf:type owl:Class ;
+    rdfs:label "Public School"@en ;
+    rdfs:comment "Public educational institution funded by government entities. Enhanced as gUFO Organization."@en ;
+    rdfs:subClassOf cacontology-educational:EducationalInstitution ,
+                    cac-core:OrganizationLikeEntity .
+
+cacontology-educational:PrivateSchool rdf:type owl:Class ;
+    rdfs:label "Private School"@en ;
+    rdfs:comment "Private educational institution with tuition-based funding. Enhanced as gUFO Organization."@en ;
+    rdfs:subClassOf cacontology-educational:EducationalInstitution ,
+                    cac-core:OrganizationLikeEntity .
+
+cacontology-educational:EliteEducationalInstitution rdf:type owl:Class ;
+    rdfs:label "Elite Educational Institution"@en ;
+    rdfs:comment "High-status educational institution with selective admission and affluent student body. Enhanced as gUFO Organization."@en ;
+    rdfs:subClassOf cacontology-educational:EducationalInstitution ,
+                    cac-core:OrganizationLikeEntity .
+
+cacontology-educational:IntermediateSchool rdf:type owl:Class ;
+    rdfs:label "Intermediate School"@en ;
+    rdfs:comment "Intermediate or middle school serving grades 6-8, typically ages 11-14. Enhanced as gUFO Organization."@en ;
+    rdfs:subClassOf cacontology-educational:PublicSchool ,
+                    cac-core:OrganizationLikeEntity .
+
+cacontology-educational:MiddleSchool rdf:type owl:Class ;
+    rdfs:label "Middle School"@en ;
+    rdfs:comment "Middle school serving grades 6-8 or similar intermediate grade levels. Enhanced as gUFO Organization."@en ;
+    rdfs:subClassOf cacontology-educational:PublicSchool ,
+                    cac-core:OrganizationLikeEntity .
+
+# =============================================================================
+# EDUCATOR ROLES AND POSITIONS (Enhanced with gUFO Anti-rigid Roles)
+# =============================================================================
+
+cacontology-educational:EducatorRole rdf:type owl:Class ;
+    rdfs:label "Educator Role"@en ;
+    rdfs:comment "Professional role within educational institution with access to students. Enhanced as anti-rigid gUFO Role for role evolution modeling."@en ;
+    rdfs:subClassOf uco-role:Role ,
+                    cac-core:Role ;
+    cacontology-gufo:hasAntiRigidityConstraint "Role changes based on employment status and institutional context" ;
+    cacontology-gufo:hasTemporalProperty cacontology-gufo:employmentBeginTimePoint ,
+                                 cacontology-gufo:employmentEndTimePoint .
+
+cacontology-educational:TeacherRole rdf:type owl:Class ;
+    rdfs:label "Teacher Role"@en ;
+    rdfs:comment "Teaching role with direct instructional responsibility for students. Enhanced as anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cacontology-educational:EducatorRole ,
+                    cac-core:Role ;
+    cacontology-gufo:hasAntiRigidityConstraint "Role varies based on subject area and grade level" .
+
+cacontology-educational:MathTeacherRole rdf:type owl:Class ;
+    rdfs:label "Math Teacher Role"@en ;
+    rdfs:comment "Mathematics teacher role with specialized subject matter expertise. Enhanced as anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cacontology-educational:TeacherRole ,
+                    cac-core:Role ;
+    cacontology-gufo:hasAntiRigidityConstraint "Role specialization can change over time" .
+
+cacontology-educational:SubstituteTeacherRole rdf:type owl:Class ;
+    rdfs:label "Substitute Teacher Role"@en ;
+    rdfs:comment "Temporary teaching role covering for regular teachers. Enhanced as anti-rigid gUFO Role with temporary status."@en ;
+    rdfs:subClassOf cacontology-educational:TeacherRole ,
+                    cac-core:Role ;
+    cacontology-gufo:hasAntiRigidityConstraint "Temporary role with variable duration and assignment" .
+
+cacontology-educational:AdministratorRole rdf:type owl:Class ;
+    rdfs:label "Administrator Role"@en ;
+    rdfs:comment "Administrative role within educational institution with oversight responsibilities. Enhanced as anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cacontology-educational:EducatorRole ,
+                    cac-core:Role .
+
+cacontology-educational:CounselorRole rdf:type owl:Class ;
+    rdfs:label "Counselor Role"@en ;
+    rdfs:comment "Counseling role providing guidance and support to students. Enhanced as anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cacontology-educational:EducatorRole ,
+                    cac-core:Role .
+
+cacontology-educational:CoachRole rdf:type owl:Class ;
+    rdfs:label "Coach Role"@en ;
+    rdfs:comment "Athletic or activity coaching role with student interaction. Enhanced as anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cacontology-educational:EducatorRole ,
+                    cac-core:Role .
+
+cacontology-educational:GymTeacherRole rdf:type owl:Class ;
+    rdfs:label "Gym Teacher Role"@en ;
+    rdfs:comment "Physical education teacher role with student interaction in athletic contexts. Enhanced as anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cacontology-educational:TeacherRole ,
+                    cac-core:Role .
+
+# =============================================================================
+# EDUCATOR-PERPETRATED EXPLOITATION (Enhanced with gUFO Events)
+# =============================================================================
+
+cacontology-educational:EducatorPerpetratedExploitation rdf:type owl:Class ;
+    rdfs:label "Educator Perpetrated Exploitation"@en ;
+    rdfs:comment "Child sexual exploitation committed by educational institution personnel using their position of trust and authority. Enhanced as gUFO Event for comprehensive temporal and causal modeling."@en ;
+    rdfs:subClassOf cacontology:ChildSexualExploitation ,
+                    cac-core:Event ;
+    cacontology-gufo:hasTemporalProperty cacontology-gufo:beginTimePoint ,
+                                 cacontology-gufo:endTimePoint ,
+                                 cacontology-gufo:duration ;
+    cacontology-gufo:hasValidationConstraint "gUFO Event validation for exploitation incidents" .
+
+cacontology-educational:TeacherStudentExploitation rdf:type owl:Class ;
+    rdfs:label "Teacher Student Exploitation"@en ;
+    rdfs:comment "Sexual exploitation of students by teachers using position of authority and trust. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-educational:EducatorPerpetratedExploitation ,
+                    cac-core:Event .
+
+cacontology-educational:CrossInstitutionalExploitation rdf:type owl:Class ;
+    rdfs:label "Cross Institutional Exploitation"@en ;
+    rdfs:comment "Exploitation targeting students from multiple educational institutions. Enhanced as gUFO Event with multi-institutional coordination."@en ;
+    rdfs:subClassOf cacontology-educational:EducatorPerpetratedExploitation ,
+                    cac-core:Event .
+
+cacontology-educational:PositionOfTrustExploitation rdf:type owl:Class ;
+    rdfs:label "Position of Trust Exploitation"@en ;
+    rdfs:comment "Exploitation leveraging educator's position of trust and authority over students. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-educational:EducatorPerpetratedExploitation ,
+                    cac-core:Event .
+
+cacontology-educational:ClassroomBasedExploitation rdf:type owl:Class ;
+    rdfs:label "Classroom Based Exploitation"@en ;
+    rdfs:comment "Sexual exploitation occurring within classroom setting during academic activities. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-educational:TeacherStudentExploitation ,
+                    cac-core:Event .
+
+cacontology-educational:AcademicActivityExploitation rdf:type owl:Class ;
+    rdfs:label "Academic Activity Exploitation"@en ;
+    rdfs:comment "Exploitation occurring during academic activities such as assignments, tests, or tutoring. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-educational:ClassroomBasedExploitation ,
+                    cac-core:Event .
+
+cacontology-educational:ImmediatePhysicalContactExploitation rdf:type owl:Class ;
+    rdfs:label "Immediate Physical Contact Exploitation"@en ;
+    rdfs:comment "Sexual exploitation involving immediate physical contact without prior grooming or relationship building. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-educational:TeacherStudentExploitation ,
+                    cac-core:Event .
+
+# =============================================================================
+# WRITTEN HARASSMENT AND ACADEMIC EXPLOITATION (Enhanced with gUFO Events)
+# =============================================================================
+
+cacontology-educational:WrittenHarassment rdf:type owl:Class ;
+    rdfs:label "Written Harassment"@en ;
+    rdfs:comment "Harassment through written comments on student work, assignments, or academic materials. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cac-core:ExploitationEvent ;
+    cacontology-gufo:hasTemporalProperty cacontology-gufo:beginTimePoint ,
+                                 cacontology-gufo:endTimePoint .
+
+cacontology-educational:AssignmentHarassment rdf:type owl:Class ;
+    rdfs:label "Assignment Harassment"@en ;
+    rdfs:comment "Harassment through inappropriate comments written on student assignments or homework. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-educational:WrittenHarassment ,
+                    cac-core:Event .
+
+cacontology-educational:DegradingWrittenComments rdf:type owl:Class ;
+    rdfs:label "Degrading Written Comments"@en ;
+    rdfs:comment "Degrading or humiliating written comments designed to undermine student confidence. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-educational:AssignmentHarassment ,
+                    cac-core:Event .
+
+cacontology-educational:AcademicIntimidation rdf:type owl:Class ;
+    rdfs:label "Academic Intimidation"@en ;
+    rdfs:comment "Use of academic authority to intimidate and create vulnerability in students. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-educational:WrittenHarassment ,
+                    cac-core:Event .
+
+# =============================================================================
+# CLASSROOM EXPLOITATION CONTEXTS (Enhanced with gUFO Objects)
+# =============================================================================
+
+cacontology-educational:ClassroomExploitationContext rdf:type owl:Class ;
+    rdfs:label "Classroom Exploitation Context"@en ;
+    rdfs:comment "Specific classroom situations and contexts where exploitation occurs. Enhanced as gUFO Object for context modeling."@en ;
+    rdfs:subClassOf uco-core:UcoObject ,
+                    cac-core:EnduringEntity ;
+    cacontology-gufo:hasTemporalProperty cacontology-gufo:contextTimePoint .
+
+cacontology-educational:AssignmentCompletionExploitation rdf:type owl:Class ;
+    rdfs:label "Assignment Completion Exploitation"@en ;
+    rdfs:comment "Exploitation occurring while student is completing assignments or homework in classroom. Enhanced as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-educational:ClassroomExploitationContext ,
+                    cac-core:EnduringEntity .
+
+cacontology-educational:TestTakingExploitation rdf:type owl:Class ;
+    rdfs:label "Test Taking Exploitation"@en ;
+    rdfs:comment "Exploitation occurring while student is taking tests or examinations. Enhanced as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-educational:ClassroomExploitationContext ,
+                    cac-core:EnduringEntity .
+
+cacontology-educational:OneOnOneAcademicExploitation rdf:type owl:Class ;
+    rdfs:label "One on One Academic Exploitation"@en ;
+    rdfs:comment "Exploitation during individual academic assistance or tutoring sessions. Enhanced as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-educational:ClassroomExploitationContext ,
+                    cac-core:EnduringEntity .
+
+cacontology-educational:AfterHoursClassroomExploitation rdf:type owl:Class ;
+    rdfs:label "After Hours Classroom Exploitation"@en ;
+    rdfs:comment "Exploitation occurring in classroom setting outside normal school hours. Enhanced as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-educational:ClassroomExploitationContext ,
+                    cac-core:EnduringEntity .
+
+# =============================================================================
+# gUFO ENHANCED EDUCATIONAL PHASES (Anti-rigid modeling)
+# =============================================================================
+
+cacontology-educational:AcademicTermPhase rdf:type owl:Class ;
+    rdfs:label "Academic Term Phase"@en ;
+    rdfs:comment "Anti-rigid phase representing academic terms during which exploitation may occur."@en ;
+    rdfs:subClassOf cac-core:Phase ;
+    cacontology-gufo:hasAntiRigidityConstraint "Phase changes with academic calendar" ;
+    cacontology-gufo:hasTemporalProperty cacontology-gufo:beginTimePoint ,
+                                 cacontology-gufo:endTimePoint ,
+                                 cacontology-gufo:duration .
+
+cacontology-educational:EmploymentPhase rdf:type owl:Class ;
+    rdfs:label "Employment Phase"@en ;
+    rdfs:comment "Anti-rigid phase representing educator's employment period during which exploitation occurs."@en ;
+    rdfs:subClassOf cac-core:Phase ;
+    cacontology-gufo:hasAntiRigidityConstraint "Phase varies based on employment status and contract" .
+
+cacontology-educational:ExploitationEscalationPhase rdf:type owl:Class ;
+    rdfs:label "Exploitation Escalation Phase"@en ;
+    rdfs:comment "Anti-rigid phase representing escalation of exploitative behavior over time."@en ;
+    rdfs:subClassOf cac-core:Phase ;
+    cacontology-gufo:hasAntiRigidityConstraint "Phase changes based on exploitation severity and duration" .
+
+cacontology-educational:InvestigationPhase rdf:type owl:Class ;
+    rdfs:label "Investigation Phase"@en ;
+    rdfs:comment "Anti-rigid phase representing institutional or legal investigation of exploitation allegations."@en ;
+    rdfs:subClassOf cac-core:Phase ;
+    cacontology-gufo:hasAntiRigidityConstraint "Phase changes based on investigation progress and findings" .
+
+# =============================================================================
+# gUFO ENHANCED EDUCATIONAL SITUATIONS
+# =============================================================================
+
+cacontology-educational:EducationalExploitationSituation rdf:type owl:Class ;
+    rdfs:label "Educational Exploitation Situation"@en ;
+    rdfs:comment "Complex situation involving educational institutions, educators, students, families, and legal systems in exploitation cases."@en ;
+    rdfs:subClassOf cac-core:Situation ;
+    cacontology-gufo:involvesSituation "Multi-stakeholder educational exploitation coordination" ;
+    cacontology-gufo:hasTemporalProperty cacontology-gufo:situationBeginTimePoint ,
+                                 cacontology-gufo:situationEndTimePoint .
+
+cacontology-educational:InstitutionalResponseSituation rdf:type owl:Class ;
+    rdfs:label "Institutional Response Situation"@en ;
+    rdfs:comment "Situation involving institutional response to exploitation allegations, including investigation, disciplinary action, and prevention measures."@en ;
+    rdfs:subClassOf cacontology-educational:EducationalExploitationSituation ,
+                    cac-core:Situation .
+
+cacontology-educational:MultiVictimExploitationSituation rdf:type owl:Class ;
+    rdfs:label "Multi-Victim Exploitation Situation"@en ;
+    rdfs:comment "Situation involving multiple victims across multiple institutions or time periods."@en ;
+    rdfs:subClassOf cacontology-educational:EducationalExploitationSituation ,
+                    cac-core:Situation .
+
+cacontology-educational:CrossInstitutionalInvestigationSituation rdf:type owl:Class ;
+    rdfs:label "Cross Institutional Investigation Situation"@en ;
+    rdfs:comment "Situation requiring coordination between multiple educational institutions, law enforcement, and regulatory bodies."@en ;
+    rdfs:subClassOf cacontology-educational:EducationalExploitationSituation ,
+                    cac-core:Situation .
+
+# =============================================================================
+# gUFO TEMPORAL PROPERTIES FOR EDUCATIONAL EXPLOITATION
+# =============================================================================
+
+cacontology-gufo:academicYearBeginTimePoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "academic year begin time point"@en ;
+    rdfs:comment "Temporal point when academic year begins using gUFO temporal framework."@en ;
+    rdfs:domain cacontology-educational:EducationalInstitution ;
+    rdfs:range xsd:dateTime ;
+    cacontology-gufo:temporalConstraint "Must precede academic year end timepoint" .
+
+cacontology-gufo:exploitationFirstIncidentTimePoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "exploitation first incident time point"@en ;
+    rdfs:comment "Temporal point when first exploitation incident occurred using gUFO temporal framework."@en ;
+    rdfs:domain cacontology-educational:EducatorPerpetratedExploitation ;
+    rdfs:range xsd:dateTime .
+
+cacontology-gufo:institutionalReportingTimePoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "institutional reporting time point"@en ;
+    rdfs:comment "Temporal point when exploitation was reported to educational institution using gUFO temporal framework."@en ;
+    rdfs:domain cacontology-educational:EducationalExploitationSituation ;
+    rdfs:range xsd:dateTime .
+
+cacontology-gufo:employmentTerminationTimePoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "employment termination time point"@en ;
+    rdfs:comment "Temporal point when educator's employment was terminated using gUFO temporal framework."@en ;
+    rdfs:domain cacontology-educational:EducatorRole ;
+    rdfs:range xsd:dateTime .
+
+cacontology-gufo:exploitationDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "exploitation duration"@en ;
+    rdfs:comment "Duration of exploitation period using gUFO temporal framework."@en ;
+    rdfs:domain cacontology-educational:EducatorPerpetratedExploitation ;
+    rdfs:range xsd:duration .
+
+# =============================================================================
+# EDUCATIONAL EXPLOITATION PROPERTIES
+# =============================================================================
+
+# Institution Properties
+cacontology-educational:institutionType rdf:type owl:DatatypeProperty ;
+    rdfs:label "institution type"@en ;
+    rdfs:comment "Type of educational institution (independent, public, private, elite)."@en ;
+    rdfs:domain cacontology-educational:EducationalInstitution ;
+    rdfs:range xsd:string .
+
+cacontology-educational:institutionLocation rdf:type owl:DatatypeProperty ;
+    rdfs:label "institution location"@en ;
+    rdfs:comment "Geographic location of educational institution."@en ;
+    rdfs:domain cacontology-educational:EducationalInstitution ;
+    rdfs:range xsd:string .
+
+cacontology-educational:studentPopulation rdf:type owl:DatatypeProperty ;
+    rdfs:label "student population"@en ;
+    rdfs:comment "Total number of students enrolled at institution."@en ;
+    rdfs:domain cacontology-educational:EducationalInstitution ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-educational:institutionReputation rdf:type owl:DatatypeProperty ;
+    rdfs:label "institution reputation"@en ;
+    rdfs:comment "Reputation level of institution (elite, prestigious, standard)."@en ;
+    rdfs:domain cacontology-educational:EducationalInstitution ;
+    rdfs:range xsd:string .
+
+cacontology-educational:gradeRange rdf:type owl:DatatypeProperty ;
+    rdfs:label "grade range"@en ;
+    rdfs:comment "Grade range served by institution (e.g., 6-8, K-12)."@en ;
+    rdfs:domain cacontology-educational:EducationalInstitution ;
+    rdfs:range xsd:string .
+
+cacontology-educational:schoolAddress rdf:type owl:DatatypeProperty ;
+    rdfs:label "school address"@en ;
+    rdfs:comment "Physical address of educational institution."@en ;
+    rdfs:domain cacontology-educational:EducationalInstitution ;
+    rdfs:range xsd:string .
+
+# Educator Properties
+cacontology-educational:employmentDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "employment duration"@en ;
+    rdfs:comment "Duration of employment at educational institution in months."@en ;
+    rdfs:domain cacontology-educational:EducatorRole ;
+    rdfs:range xsd:decimal .
+
+cacontology-educational:subjectTaught rdf:type owl:DatatypeProperty ;
+    rdfs:label "subject taught"@en ;
+    rdfs:comment "Academic subject taught by educator."@en ;
+    rdfs:domain cacontology-educational:TeacherRole ;
+    rdfs:range xsd:string .
+
+cacontology-educational:gradeLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "grade level"@en ;
+    rdfs:comment "Grade level taught by educator."@en ;
+    rdfs:domain cacontology-educational:TeacherRole ;
+    rdfs:range xsd:string .
+
+cacontology-educational:accessLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "access level"@en ;
+    rdfs:comment "Level of access to students and institutional resources."@en ;
+    rdfs:domain cacontology-educational:EducatorRole ;
+    rdfs:range xsd:string .
+
+cacontology-educational:educatorAge rdf:type owl:DatatypeProperty ;
+    rdfs:label "educator age"@en ;
+    rdfs:comment "Age of educator at time of exploitation."@en ;
+    rdfs:domain cacontology-educational:EducatorRole ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-educational:yearsOfExperience rdf:type owl:DatatypeProperty ;
+    rdfs:label "years of experience"@en ;
+    rdfs:comment "Years of teaching or educational experience."@en ;
+    rdfs:domain cacontology-educational:EducatorRole ;
+    rdfs:range xsd:decimal .
+
+# Exploitation Properties
+cacontology-educational:exploitationDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "exploitation duration"@en ;
+    rdfs:comment "Duration of exploitation activity in months."@en ;
+    rdfs:domain cacontology-educational:EducatorPerpetratedExploitation ;
+    rdfs:range xsd:decimal .
+
+cacontology-educational:victimCount rdf:type owl:DatatypeProperty ;
+    rdfs:label "victim count"@en ;
+    rdfs:comment "Number of victims involved in exploitation."@en ;
+    rdfs:domain cacontology-educational:EducatorPerpetratedExploitation ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-educational:institutionCount rdf:type owl:DatatypeProperty ;
+    rdfs:label "institution count"@en ;
+    rdfs:comment "Number of educational institutions involved in exploitation."@en ;
+    rdfs:domain cacontology-educational:CrossInstitutionalExploitation ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-educational:exploitationMethod rdf:type owl:DatatypeProperty ;
+    rdfs:label "exploitation method"@en ;
+    rdfs:comment "Primary method used for exploitation (digital, physical, combined)."@en ;
+    rdfs:domain cacontology-educational:EducatorPerpetratedExploitation ;
+    rdfs:range xsd:string .
+
+cacontology-educational:exploitationLocation rdf:type owl:DatatypeProperty ;
+    rdfs:label "exploitation location"@en ;
+    rdfs:comment "Primary location where exploitation occurred."@en ;
+    rdfs:domain cacontology-educational:EducatorPerpetratedExploitation ;
+    rdfs:range xsd:string .
+
+# Written Harassment Properties
+cacontology-educational:harassmentContent rdf:type owl:DatatypeProperty ;
+    rdfs:label "harassment content"@en ;
+    rdfs:comment "Content of written harassment message or comment."@en ;
+    rdfs:domain cacontology-educational:WrittenHarassment ;
+    rdfs:range xsd:string .
+
+cacontology-educational:harassmentMedium rdf:type owl:DatatypeProperty ;
+    rdfs:label "harassment medium"@en ;
+    rdfs:comment "Medium used for written harassment (assignment, test, note)."@en ;
+    rdfs:domain cacontology-educational:WrittenHarassment ;
+    rdfs:range xsd:string .
+
+cacontology-educational:harassmentFrequency rdf:type owl:DatatypeProperty ;
+    rdfs:label "harassment frequency"@en ;
+    rdfs:comment "Frequency of written harassment incidents."@en ;
+    rdfs:domain cacontology-educational:WrittenHarassment ;
+    rdfs:range xsd:string .
+
+cacontology-educational:degradationLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "degradation level"@en ;
+    rdfs:comment "Level of degradation in written comments (mild, moderate, severe)."@en ;
+    rdfs:domain cacontology-educational:DegradingWrittenComments ;
+    rdfs:range xsd:string .
+
+# Classroom Context Properties
+cacontology-educational:classroomNumber rdf:type owl:DatatypeProperty ;
+    rdfs:label "classroom number"@en ;
+    rdfs:comment "Classroom number or identifier where exploitation occurred."@en ;
+    rdfs:domain cacontology-educational:ClassroomExploitationContext ;
+    rdfs:range xsd:string .
+
+cacontology-educational:academicActivity rdf:type owl:DatatypeProperty ;
+    rdfs:label "academic activity"@en ;
+    rdfs:comment "Type of academic activity during which exploitation occurred."@en ;
+    rdfs:domain cacontology-educational:ClassroomExploitationContext ;
+    rdfs:range xsd:string .
+
+cacontology-educational:timeOfDay rdf:type owl:DatatypeProperty ;
+    rdfs:label "time of day"@en ;
+    rdfs:comment "Time of day when exploitation occurred."@en ;
+    rdfs:domain cacontology-educational:ClassroomExploitationContext ;
+    rdfs:range xsd:string .
+
+cacontology-educational:studentsPresent rdf:type owl:DatatypeProperty ;
+    rdfs:label "students present"@en ;
+    rdfs:comment "Number of other students present during exploitation."@en ;
+    rdfs:domain cacontology-educational:ClassroomExploitationContext ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-educational:isolationLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "isolation level"@en ;
+    rdfs:comment "Level of isolation during exploitation (alone, few_students, class_present)."@en ;
+    rdfs:domain cacontology-educational:ClassroomExploitationContext ;
+    rdfs:range xsd:string .
+
+# Physical Contact Properties
+cacontology-educational:contactType rdf:type owl:DatatypeProperty ;
+    rdfs:label "contact type"@en ;
+    rdfs:comment "Type of inappropriate physical contact."@en ;
+    rdfs:domain cacontology-educational:PhysicalContactPattern ;
+    rdfs:range xsd:string .
+
+cacontology-educational:contactDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "contact duration"@en ;
+    rdfs:comment "Duration of physical contact in seconds."@en ;
+    rdfs:domain cacontology-educational:PhysicalContactPattern ;
+    rdfs:range xsd:decimal .
+
+cacontology-educational:contactFrequency rdf:type owl:DatatypeProperty ;
+    rdfs:label "contact frequency"@en ;
+    rdfs:comment "Frequency of inappropriate physical contact incidents."@en ;
+    rdfs:domain cacontology-educational:PhysicalContactPattern ;
+    rdfs:range xsd:string .
+
+cacontology-educational:bodyPartTouched rdf:type owl:DatatypeProperty ;
+    rdfs:label "body part touched"@en ;
+    rdfs:comment "Specific body part inappropriately touched."@en ;
+    rdfs:domain cacontology-educational:OpportunisticTouching ;
+    rdfs:range xsd:string .
+
+cacontology-educational:forceLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "force level"@en ;
+    rdfs:comment "Level of force used in physical contact (minimal, moderate, significant)."@en ;
+    rdfs:domain cacontology-educational:ForcibleTouching ;
+    rdfs:range xsd:string .
+
+# Reporting Properties
+cacontology-educational:reportingDelay rdf:type owl:DatatypeProperty ;
+    rdfs:label "reporting delay"@en ;
+    rdfs:comment "Time delay between incident and reporting in days."@en ;
+    rdfs:domain cacontology-educational:SchoolStaffReporting ;
+    rdfs:range xsd:decimal .
+
+cacontology-educational:reportingStaffRole rdf:type owl:DatatypeProperty ;
+    rdfs:label "reporting staff role"@en ;
+    rdfs:comment "Role of staff member who received initial report."@en ;
+    rdfs:domain cacontology-educational:SchoolStaffReporting ;
+    rdfs:range xsd:string .
+
+cacontology-educational:disclosureMethod rdf:type owl:DatatypeProperty ;
+    rdfs:label "disclosure method"@en ;
+    rdfs:comment "Method used by victim to disclose exploitation."@en ;
+    rdfs:domain cacontology-educational:VictimDisclosureToStaff ;
+    rdfs:range xsd:string .
+
+cacontology-educational:mandatoryReportingTriggered rdf:type owl:DatatypeProperty ;
+    rdfs:label "mandatory reporting triggered"@en ;
+    rdfs:comment "Whether mandatory reporting requirements were triggered."@en ;
+    rdfs:domain cacontology-educational:SchoolStaffReporting ;
+    rdfs:range xsd:boolean .
+
+cacontology-educational:policeResponseTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "police response time"@en ;
+    rdfs:comment "Time from notification to police response in hours."@en ;
+    rdfs:domain cacontology-educational:PoliceNotification ;
+    rdfs:range xsd:decimal .
+
+# Digital Impersonation Properties
+cacontology-educational:fakeAccountCount rdf:type owl:DatatypeProperty ;
+    rdfs:label "fake account count"@en ;
+    rdfs:comment "Number of fake accounts used for impersonation."@en ;
+    rdfs:domain cacontology-educational:MultipleAccountDeception ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-educational:platformUsed rdf:type owl:DatatypeProperty ;
+    rdfs:label "platform used"@en ;
+    rdfs:comment "Digital platform used for impersonation and exploitation."@en ;
+    rdfs:domain cacontology-educational:DigitalImpersonation ;
+    rdfs:range xsd:string .
+
+cacontology-educational:impersonatedAge rdf:type owl:DatatypeProperty ;
+    rdfs:label "impersonated age"@en ;
+    rdfs:comment "Age claimed during impersonation."@en ;
+    rdfs:domain cacontology-educational:AgeDeception ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-educational:actualAge rdf:type owl:DatatypeProperty ;
+    rdfs:label "actual age"@en ;
+    rdfs:comment "Actual age of perpetrator."@en ;
+    rdfs:domain cacontology-educational:AgeDeception ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-educational:deceptionDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "deception duration"@en ;
+    rdfs:comment "Duration of impersonation in months."@en ;
+    rdfs:domain cacontology-educational:DigitalImpersonation ;
+    rdfs:range xsd:decimal .
+
+# Victim Targeting Properties
+cacontology-educational:targetAgeRange rdf:type owl:DatatypeProperty ;
+    rdfs:label "target age range"@en ;
+    rdfs:comment "Age range of targeted victims."@en ;
+    rdfs:domain cacontology-educational:AgeSpecificTargeting ;
+    rdfs:range xsd:string .
+
+cacontology-educational:targetGender rdf:type owl:DatatypeProperty ;
+    rdfs:label "target gender"@en ;
+    rdfs:comment "Gender preference in victim targeting."@en ;
+    rdfs:domain cacontology-educational:StudentVictimTargeting ;
+    rdfs:range xsd:string .
+
+cacontology-educational:vulnerabilityFactor rdf:type owl:DatatypeProperty ;
+    rdfs:label "vulnerability factor"@en ;
+    rdfs:comment "Specific vulnerability factor exploited in targeting."@en ;
+    rdfs:domain cacontology-educational:VulnerableStudentTargeting ;
+    rdfs:range xsd:string .
+
+cacontology-educational:targetingMethod rdf:type owl:DatatypeProperty ;
+    rdfs:label "targeting method"@en ;
+    rdfs:comment "Method used to identify and target victims."@en ;
+    rdfs:domain cacontology-educational:StudentVictimTargeting ;
+    rdfs:range xsd:string .
+
+# Evidence Properties
+cacontology-educational:evidenceType rdf:type owl:DatatypeProperty ;
+    rdfs:label "evidence type"@en ;
+    rdfs:comment "Type of evidence collected."@en ;
+    rdfs:domain uco-observable:ObservableObject ;
+    rdfs:range xsd:string .
+
+cacontology-educational:evidenceLocation rdf:type owl:DatatypeProperty ;
+    rdfs:label "evidence location"@en ;
+    rdfs:comment "Location where evidence was found or collected."@en ;
+    rdfs:domain uco-observable:ObservableObject ;
+    rdfs:range xsd:string .
+
+cacontology-educational:writtenContent rdf:type owl:DatatypeProperty ;
+    rdfs:label "written content"@en ;
+    rdfs:comment "Content of written harassment evidence."@en ;
+    rdfs:domain cacontology-educational:WrittenHarassmentEvidence ;
+    rdfs:range xsd:string .
+
+cacontology-educational:assignmentType rdf:type owl:DatatypeProperty ;
+    rdfs:label "assignment type"@en ;
+    rdfs:comment "Type of assignment on which harassment was written."@en ;
+    rdfs:domain cacontology-educational:WrittenHarassmentEvidence ;
+    rdfs:range xsd:string .
+
+# Legal Charge Properties
+cacontology-educational:chargeCount rdf:type owl:DatatypeProperty ;
+    rdfs:label "charge count"@en ;
+    rdfs:comment "Number of charges filed."@en ;
+    rdfs:domain cacontology:ChildSexualExploitationCharge ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-educational:chargeDegree rdf:type owl:DatatypeProperty ;
+    rdfs:label "charge degree"@en ;
+    rdfs:comment "Degree of criminal charge (first, second, third)."@en ;
+    rdfs:domain cacontology:ChildSexualExploitationCharge ;
+    rdfs:range xsd:string .
+
+cacontology-educational:maximumSentence rdf:type owl:DatatypeProperty ;
+    rdfs:label "maximum sentence"@en ;
+    rdfs:comment "Maximum possible sentence for charge in years."@en ;
+    rdfs:domain cacontology:ChildSexualExploitationCharge ;
+    rdfs:range xsd:decimal .
+
+cacontology-educational:bailAmount rdf:type owl:DatatypeProperty ;
+    rdfs:label "bail amount"@en ;
+    rdfs:comment "Bail amount set for defendant."@en ;
+    rdfs:domain cacontology:ChildSexualExploitationCharge ;
+    rdfs:range xsd:decimal .
+
+cacontology-educational:bondAmount rdf:type owl:DatatypeProperty ;
+    rdfs:label "bond amount"@en ;
+    rdfs:comment "Bond amount alternative to cash bail."@en ;
+    rdfs:domain cacontology:ChildSexualExploitationCharge ;
+    rdfs:range xsd:decimal .
+
+cacontology-educational:sentenceLength rdf:type owl:DatatypeProperty ;
+    rdfs:label "sentence length"@en ;
+    rdfs:comment "Length of prison sentence in years."@en ;
+    rdfs:domain cacontology-educational:UseOfChildInSexualPerformance ;
+    rdfs:range xsd:decimal .
+
+cacontology-educational:PostReleaseSupervision rdf:type owl:Class ;
+    rdfs:label "Post-Release Supervision"@en ;
+    rdfs:comment "Court-ordered supervision period following release from incarceration for educational exploitation offenses."@en ;
+    rdfs:subClassOf cac-core:EnduringEntity .
+
+cacontology-educational:supervisionDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "supervision duration"@en ;
+    rdfs:comment "Duration of post-release supervision in years."@en ;
+    rdfs:domain cacontology-educational:PostReleaseSupervision ;
+    rdfs:range xsd:decimal .
+
+# =============================================================================
+# EDUCATIONAL EXPLOITATION RELATIONSHIPS
+# =============================================================================
+
+# Institution Relationships
+cacontology-educational:employedAt rdf:type owl:ObjectProperty ;
+    rdfs:label "employed at"@en ;
+    rdfs:comment "Links educator to institution where they were employed."@en ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range cacontology-educational:EducationalInstitution .
+
+cacontology-educational:attendsInstitution rdf:type owl:ObjectProperty ;
+    rdfs:label "attends institution"@en ;
+    rdfs:comment "Links student victim to educational institution they attend."@en ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range cacontology-educational:EducationalInstitution .
+
+cacontology-educational:hasVulnerability rdf:type owl:ObjectProperty ;
+    rdfs:label "has vulnerability"@en ;
+    rdfs:comment "Links institution to vulnerability factors present."@en ;
+    rdfs:domain cacontology-educational:EducationalInstitution ;
+    rdfs:range cacontology-educational:InstitutionalVulnerability .
+
+# Exploitation Relationships
+cacontology-educational:exploitsPosition rdf:type owl:ObjectProperty ;
+    rdfs:label "exploits position"@en ;
+    rdfs:comment "Links exploitation to educator position being exploited."@en ;
+    rdfs:domain cacontology-educational:EducatorPerpetratedExploitation ;
+    rdfs:range cacontology-educational:EducatorRole .
+
+cacontology-educational:targetsVictim rdf:type owl:ObjectProperty ;
+    rdfs:label "targets victim"@en ;
+    rdfs:comment "Links exploitation to victim targeting strategy."@en ;
+    rdfs:domain cacontology-educational:EducatorPerpetratedExploitation ;
+    rdfs:range cacontology-educational:StudentVictimTargeting .
+
+cacontology-educational:usesMethod rdf:type owl:ObjectProperty ;
+    rdfs:label "uses method"@en ;
+    rdfs:comment "Links exploitation to specific methods used."@en ;
+    rdfs:domain cacontology-educational:EducatorPerpetratedExploitation ;
+    rdfs:range uco-action:Action .
+
+cacontology-educational:occursInContext rdf:type owl:ObjectProperty ;
+    rdfs:label "occurs in context"@en ;
+    rdfs:comment "Links exploitation to classroom or institutional context."@en ;
+    rdfs:domain cacontology-educational:EducatorPerpetratedExploitation ;
+    rdfs:range cacontology-educational:ClassroomExploitationContext .
+
+# Written Harassment Relationships
+cacontology-educational:involvesWrittenHarassment rdf:type owl:ObjectProperty ;
+    rdfs:label "involves written harassment"@en ;
+    rdfs:comment "Links exploitation to written harassment activities."@en ;
+    rdfs:domain cacontology-educational:EducatorPerpetratedExploitation ;
+    rdfs:range cacontology-educational:WrittenHarassment .
+
+cacontology-educational:writtenOn rdf:type owl:ObjectProperty ;
+    rdfs:label "written on"@en ;
+    rdfs:comment "Links written harassment to academic material it was written on."@en ;
+    rdfs:domain cacontology-educational:WrittenHarassment ;
+    rdfs:range uco-observable:ObservableObject .
+
+cacontology-educational:degradesVictim rdf:type owl:ObjectProperty ;
+    rdfs:label "degrades victim"@en ;
+    rdfs:comment "Links degrading comments to victim being degraded."@en ;
+    rdfs:domain cacontology-educational:DegradingWrittenComments ;
+    rdfs:range uco-identity:Person .
+
+cacontology-educational:intimidatesStudent rdf:type owl:ObjectProperty ;
+    rdfs:label "intimidates student"@en ;
+    rdfs:comment "Links academic intimidation to student being intimidated."@en ;
+    rdfs:domain cacontology-educational:AcademicIntimidation ;
+    rdfs:range uco-identity:Person .
+
+# Classroom Context Relationships
+cacontology-educational:takesPlaceIn rdf:type owl:ObjectProperty ;
+    rdfs:label "takes place in"@en ;
+    rdfs:comment "Links exploitation to specific classroom or location."@en ;
+    rdfs:domain cacontology-educational:ClassroomBasedExploitation ;
+    rdfs:range uco-location:Location .
+
+cacontology-educational:duringActivity rdf:type owl:ObjectProperty ;
+    rdfs:label "during activity"@en ;
+    rdfs:comment "Links exploitation to specific academic activity."@en ;
+    rdfs:domain cacontology-educational:AcademicActivityExploitation ;
+    rdfs:range uco-action:Action .
+
+cacontology-educational:exploitsIsolation rdf:type owl:ObjectProperty ;
+    rdfs:label "exploits isolation"@en ;
+    rdfs:comment "Links exploitation to isolation vulnerability."@en ;
+    rdfs:domain cacontology-educational:ClassroomBasedExploitation ;
+    rdfs:range cacontology-educational:ClassroomIsolationVulnerability .
+
+cacontology-educational:leveragesAcademicPower rdf:type owl:ObjectProperty ;
+    rdfs:label "leverages academic power"@en ;
+    rdfs:comment "Links exploitation to academic power vulnerability."@en ;
+    rdfs:domain cacontology-educational:AcademicActivityExploitation ;
+    rdfs:range cacontology-educational:AcademicPowerVulnerability .
+
+# Physical Contact Relationships
+cacontology-educational:involvesPhysicalContact rdf:type owl:ObjectProperty ;
+    rdfs:label "involves physical contact"@en ;
+    rdfs:comment "Links exploitation to physical contact patterns."@en ;
+    rdfs:domain cacontology-educational:EducatorPerpetratedExploitation ;
+    rdfs:range cacontology-educational:PhysicalContactPattern .
+
+cacontology-educational:touchesVictim rdf:type owl:ObjectProperty ;
+    rdfs:label "touches victim"@en ;
+    rdfs:comment "Links physical contact to victim being touched."@en ;
+    rdfs:domain cacontology-educational:PhysicalContactPattern ;
+    rdfs:range uco-identity:Person .
+
+cacontology-educational:escalatesTo rdf:type owl:ObjectProperty ;
+    rdfs:label "escalates to"@en ;
+    rdfs:comment "Links initial contact to escalated contact patterns."@en ;
+    rdfs:domain cacontology-educational:PhysicalContactPattern ;
+    rdfs:range cacontology-educational:PhysicalContactPattern .
+
+cacontology-educational:forciblyTouches rdf:type owl:ObjectProperty ;
+    rdfs:label "forcibly touches"@en ;
+    rdfs:comment "Links forcible touching to victim."@en ;
+    rdfs:domain cacontology-educational:ForcibleTouching ;
+    rdfs:range uco-identity:Person .
+
+# Reporting Relationships
+cacontology-educational:reportsTo rdf:type owl:ObjectProperty ;
+    rdfs:label "reports to"@en ;
+    rdfs:comment "Links victim to staff member they report to."@en ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range uco-identity:Person .
+
+cacontology-educational:receivesReport rdf:type owl:ObjectProperty ;
+    rdfs:label "receives report"@en ;
+    rdfs:comment "Links staff member to report they receive."@en ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range cacontology-educational:VictimDisclosureToStaff .
+
+cacontology-educational:notifiesPrincipal rdf:type owl:ObjectProperty ;
+    rdfs:label "notifies principal"@en ;
+    rdfs:comment "Links staff reporting to principal notification."@en ;
+    rdfs:domain cacontology-educational:SchoolStaffReporting ;
+    rdfs:range cacontology-educational:PrincipalNotification .
+
+cacontology-educational:triggersPoliceNotification rdf:type owl:ObjectProperty ;
+    rdfs:label "triggers police notification"@en ;
+    rdfs:comment "Links principal notification to police notification."@en ;
+    rdfs:domain cacontology-educational:PrincipalNotification ;
+    rdfs:range cacontology-educational:PoliceNotification .
+
+cacontology-educational:disclosesTo rdf:type owl:ObjectProperty ;
+    rdfs:label "discloses to"@en ;
+    rdfs:comment "Links victim disclosure to staff member receiving disclosure."@en ;
+    rdfs:domain cacontology-educational:VictimDisclosureToStaff ;
+    rdfs:range uco-identity:Person .
+
+cacontology-educational:activatesMandatoryReporting rdf:type owl:ObjectProperty ;
+    rdfs:label "activates mandatory reporting"@en ;
+    rdfs:comment "Links disclosure to mandatory reporting activation."@en ;
+    rdfs:domain cacontology-educational:VictimDisclosureToStaff ;
+    rdfs:range cacontology-educational:SchoolStaffReporting .
+
+# Digital Impersonation Relationships
+cacontology-educational:usesImpersonation rdf:type owl:ObjectProperty ;
+    rdfs:label "uses impersonation"@en ;
+    rdfs:comment "Links exploitation to digital impersonation methods."@en ;
+    rdfs:domain cacontology-educational:EducatorPerpetratedExploitation ;
+    rdfs:range cacontology-educational:DigitalImpersonation .
+
+cacontology-educational:impersonatesAge rdf:type owl:ObjectProperty ;
+    rdfs:label "impersonates age"@en ;
+    rdfs:comment "Links impersonation to age deception."@en ;
+    rdfs:domain cacontology-educational:DigitalImpersonation ;
+    rdfs:range cacontology-educational:AgeDeception .
+
+cacontology-educational:maintainsMultipleAccounts rdf:type owl:ObjectProperty ;
+    rdfs:label "maintains multiple accounts"@en ;
+    rdfs:comment "Links impersonation to multiple account deception."@en ;
+    rdfs:domain cacontology-educational:DigitalImpersonation ;
+    rdfs:range cacontology-educational:MultipleAccountDeception .
+
+cacontology-educational:deceivesVictim rdf:type owl:ObjectProperty ;
+    rdfs:label "deceives victim"@en ;
+    rdfs:comment "Links impersonation to victim being deceived."@en ;
+    rdfs:domain cacontology-educational:DigitalImpersonation ;
+    rdfs:range uco-identity:Person .
+
+# Victim Targeting Relationships
+cacontology-educational:identifiesVulnerability rdf:type owl:ObjectProperty ;
+    rdfs:label "identifies vulnerability"@en ;
+    rdfs:comment "Links targeting to vulnerability identification."@en ;
+    rdfs:domain cacontology-educational:StudentVictimTargeting ;
+    rdfs:range cacontology-educational:InstitutionalVulnerability .
+
+cacontology-educational:selectsVictim rdf:type owl:ObjectProperty ;
+    rdfs:label "selects victim"@en ;
+    rdfs:comment "Links targeting strategy to selected victim."@en ;
+    rdfs:domain cacontology-educational:StudentVictimTargeting ;
+    rdfs:range uco-identity:Person .
+
+cacontology-educational:exploitsVulnerability rdf:type owl:ObjectProperty ;
+    rdfs:label "exploits vulnerability"@en ;
+    rdfs:comment "Links targeting to vulnerability being exploited."@en ;
+    rdfs:domain cacontology-educational:VulnerableStudentTargeting ;
+    rdfs:range cacontology-educational:InstitutionalVulnerability .
+
+cacontology-educational:targetsAgeGroup rdf:type owl:ObjectProperty ;
+    rdfs:label "targets age group"@en ;
+    rdfs:comment "Links age-specific targeting to targeted age group."@en ;
+    rdfs:domain cacontology-educational:AgeSpecificTargeting ;
+    rdfs:range uco-identity:Person .
+
+# Evidence Relationships
+cacontology-educational:providesEvidence rdf:type owl:ObjectProperty ;
+    rdfs:label "provides evidence"@en ;
+    rdfs:comment "Links exploitation to evidence it provides."@en ;
+    rdfs:domain cacontology-educational:EducatorPerpetratedExploitation ;
+    rdfs:range uco-observable:ObservableObject .
+
+cacontology-educational:documentsHarassment rdf:type owl:ObjectProperty ;
+    rdfs:label "documents harassment"@en ;
+    rdfs:comment "Links written harassment evidence to harassment it documents."@en ;
+    rdfs:domain cacontology-educational:WrittenHarassmentEvidence ;
+    rdfs:range cacontology-educational:WrittenHarassment .
+
+cacontology-educational:witnessesExploitation rdf:type owl:ObjectProperty ;
+    rdfs:label "witnesses exploitation"@en ;
+    rdfs:comment "Links witness testimony to exploitation witnessed."@en ;
+    rdfs:domain cacontology-educational:WitnessTestimonyEvidence ;
+    rdfs:range cacontology-educational:EducatorPerpetratedExploitation .
+
+cacontology-educational:corroboratesAccount rdf:type owl:ObjectProperty ;
+    rdfs:label "corroborates account"@en ;
+    rdfs:comment "Links evidence to victim account it corroborates."@en ;
+    rdfs:domain uco-observable:ObservableObject ;
+    rdfs:range cacontology-educational:VictimAccountEvidence .
+
+# Legal Charge Relationships
+cacontology-educational:resultsInCharge rdf:type owl:ObjectProperty ;
+    rdfs:label "results in charge"@en ;
+    rdfs:comment "Links exploitation to criminal charges filed."@en ;
+    rdfs:domain cacontology-educational:EducatorPerpetratedExploitation ;
+    rdfs:range cacontology:ChildSexualExploitationCharge .
+
+cacontology-educational:chargesDefendant rdf:type owl:ObjectProperty ;
+    rdfs:label "charges defendant"@en ;
+    rdfs:comment "Links criminal charge to defendant being charged."@en ;
+    rdfs:domain cacontology:ChildSexualExploitationCharge ;
+    rdfs:range uco-identity:Person .
+
+cacontology-educational:enhancedBy rdf:type owl:ObjectProperty ;
+    rdfs:label "enhanced by"@en ;
+    rdfs:comment "Links charge to enhancement factors."@en ;
+    rdfs:domain cacontology:ChildSexualExploitationCharge ;
+    rdfs:range uco-core:UcoObject .
+
+cacontology-educational:requiresRegistration rdf:type owl:ObjectProperty ;
+    rdfs:label "requires registration"@en ;
+    rdfs:comment "Links conviction to sex offender registration requirement."@en ;
+    rdfs:domain cacontology:ChildSexualExploitationCharge ;
+    rdfs:range cacontology-educational:SexOffenderRegistration .
+
+# Investigation Relationships
+cacontology-educational:investigatesExploitation rdf:type owl:ObjectProperty ;
+    rdfs:label "investigates exploitation"@en ;
+    rdfs:comment "Links investigation to exploitation being investigated."@en ;
+    rdfs:domain cacontology-educational:EducationalInstitutionInvestigation ;
+    rdfs:range cacontology-educational:EducatorPerpetratedExploitation .
+
+cacontology-educational:collectsEvidence rdf:type owl:ObjectProperty ;
+    rdfs:label "collects evidence"@en ;
+    rdfs:comment "Links investigation to evidence collected."@en ;
+    rdfs:domain cacontology-educational:EducationalInstitutionInvestigation ;
+    rdfs:range uco-observable:ObservableObject .
+
+cacontology-educational:interviewsVictim rdf:type owl:ObjectProperty ;
+    rdfs:label "interviews victim"@en ;
+    rdfs:comment "Links investigation to victim interviews."@en ;
+    rdfs:domain cacontology-educational:EducationalInstitutionInvestigation ;
+    rdfs:range uco-identity:Person .
+
+cacontology-educational:coordinatesWith rdf:type owl:ObjectProperty ;
+    rdfs:label "coordinates with"@en ;
+    rdfs:comment "Links investigation to coordinating agencies."@en ;
+    rdfs:domain cacontology-educational:EducationalInstitutionInvestigation ;
+    rdfs:range uco-identity:Organization . 

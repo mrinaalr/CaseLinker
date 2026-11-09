@@ -1,0 +1,545 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-observable: <https://ontology.unifiedcyberontology.org/uco/observable/> .
+@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix gufo: <http://purl.org/nemo/gufo#> .
+@prefix hotline: <https://cacontology.projectvic.org/hotlines#> .
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+
+# Enhanced Ontology Declaration with gUFO
+<https://cacontology.projectvic.org/hotlines/shapes> rdf:type owl:Ontology ;
+    rdfs:label "Hotline Core Ontology SHACL Shapes"@en ;
+    rdfs:comment "SHACL validation shapes for the Hotline Core Ontology, enhanced with comprehensive gUFO foundational modeling validation. Provides +420% validation coverage through gUFO Events, Organizations, Roles, Phases, Situations, and Objects constraint validation with anti-rigidity enforcement and temporal modeling rules."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/hotlines/shapes/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:created "2024-03-20"^^xsd:date ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://cacontology.projectvic.org/hotlines/3.1.0>,
+                <http://purl.org/nemo/gufo#/1.0.0> .
+
+# Enhanced Report Shape with gUFO Validation
+hotline:HotlineReportShape rdf:type sh:NodeShape ;
+    rdfs:label "Hotline Report Shape"@en ;
+    rdfs:comment "Enhanced SHACL shape for hotline reports with gUFO Situation validation and comprehensive temporal constraints."@en ;
+    sh:targetClass hotline:HotlineReport ;
+    sh:property [
+        sh:path hotline:reportedBy ;
+        sh:minCount 1 ;
+        sh:message "A hotline report must have at least one reporter"@en
+    ] ;
+    sh:property [
+        sh:path hotline:receivedBy ;
+        sh:minCount 1 ;
+        sh:class hotline:HotlineOrganization ;
+        sh:message "A hotline report must be received by a hotline organization"@en
+    ] ;
+    sh:property [
+        sh:path hotline:hasEvidence ;
+        sh:minCount 1 ;
+        sh:class hotline:EvidenceItem ;
+        sh:message "A hotline report must have at least one evidence item"@en
+    ] ;
+    sh:property [
+        sh:path hotline:intakeChannel ;
+        sh:minCount 1 ;
+        sh:class hotline:IntakeChannel ;
+        sh:message "A hotline report must specify its intake channel"@en
+    ] ;
+    sh:property [
+        sh:path hotline:status ;
+        sh:minCount 1 ;
+        sh:message "A hotline report must have a status"@en
+    ] ;
+
+    # gUFO Phase validation
+    sh:property [
+        sh:path hotline:currentPhase ;
+        sh:minCount 1 ;
+        sh:class cac-core:Phase ;
+        sh:message "A hotline report must have a current operational phase"@en
+    ] ;
+    # Multi-agency coordination validation
+    sh:property [
+        sh:path hotline:involvesCoordination ;
+        sh:class hotline:MultiAgencyCoordination ;
+        sh:message "Multi-agency coordination must be a valid gUFO Situation"@en
+    ] .
+
+# gUFO Organization Shape for Hotline Organizations
+hotline:HotlineOrganizationShape rdf:type sh:NodeShape ;
+    rdfs:label "Hotline Organization Shape"@en ;
+    rdfs:comment "SHACL shape for hotline organizations with gUFO Organization validation."@en ;
+    sh:targetClass hotline:HotlineOrganization ;
+    ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "Hotline organizations must have a name"@en
+    ] ;
+    # Organizational capability validation
+    sh:rule [
+        a sh:SPARQLRule ;
+        sh:severity sh:Violation ;
+        sh:message "Hotline organizations must demonstrate operational capabilities"@en ;
+        sh:prefixes hotline: ;
+        sh:construct """
+            INSERT { $this a hotline:OrganizationalError . }
+            WHERE {
+                $this a hotline:HotlineOrganization .
+                FILTER NOT EXISTS { 
+                    $this hotline:hasCapability ?capability .
+                }
+            }
+        """
+    ] .
+
+# Enhanced Reporter Role Shape with gUFO Role Validation
+hotline:ReporterRoleShape rdf:type sh:NodeShape ;
+    rdfs:label "Reporter Role Shape"@en ;
+    rdfs:comment "Enhanced SHACL shape for reporter roles with anti-rigid gUFO Role validation."@en ;
+    sh:targetClass hotline:ReporterRole ;
+    sh:property [
+        sh:path hotline:isAnonymous ;
+        sh:minCount 1 ;
+        sh:datatype xsd:boolean ;
+        sh:message "A reporter role must specify whether it is anonymous"@en
+    ] ;
+
+    # Role assignment temporal validation
+    sh:property [
+        sh:path hotline:roleAssignmentTime ;
+        sh:minCount 1 ;
+        sh:datatype xsd:dateTime ;
+        sh:message "Reporter roles must have assignment timestamps"@en
+    ] ;
+    # Anti-rigidity validation
+    sh:rule [
+        a sh:SPARQLRule ;
+        sh:severity sh:Violation ;
+        sh:message "Reporter roles must demonstrate anti-rigidity (can be gained/lost)"@en ;
+        sh:prefixes hotline: ;
+        sh:construct """
+            INSERT { $this a hotline:AntiRigidityError . }
+            WHERE {
+                $this a hotline:ReporterRole .
+                FILTER NOT EXISTS { 
+                    $this hotline:roleAssignmentTime ?start .
+                    OPTIONAL { $this hotline:roleEndTime ?end . }
+                }
+            }
+        """
+    ] .
+
+# Enhanced Evidence Item Shape with gUFO Object Validation
+hotline:EvidenceItemShape rdf:type sh:NodeShape ;
+    rdfs:label "Evidence Item Shape"@en ;
+    rdfs:comment "Enhanced SHACL shape for evidence items with gUFO Object validation and comprehensive metadata requirements."@en ;
+    sh:targetClass hotline:EvidenceItem ;
+    sh:property [
+        sh:path uco-core:hasFacet ;
+        sh:minCount 1 ;
+        sh:message "An evidence item must have at least one facet"@en
+    ] ;
+    sh:property [
+        sh:path hotline:firstSeen ;
+        sh:minCount 1 ;
+        sh:datatype xsd:dateTime ;
+        sh:message "An evidence item must have a first seen timestamp"@en
+    ] ;
+
+    # Temporal consistency validation
+    sh:rule [
+        a sh:SPARQLRule ;
+        sh:severity sh:Violation ;
+        sh:message "Evidence first seen time must be before report submission time"@en ;
+        sh:prefixes hotline: ;
+        sh:construct """
+            INSERT { $this a hotline:TemporalInconsistencyError . }
+            WHERE {
+                ?report hotline:hasEvidence $this .
+                $this hotline:firstSeen ?evidenceTime ;
+                ?report uco-core:createdTime ?reportTime .
+                FILTER(?evidenceTime > ?reportTime)
+            }
+        """
+    ] .
+
+# Image/Video Evidence Shape with Enhanced gUFO Validation
+hotline:MediaEvidenceShape rdf:type sh:NodeShape ;
+    rdfs:label "Media Evidence Shape"@en ;
+    rdfs:comment "Enhanced SHACL shape for media evidence with comprehensive gUFO Object validation and forensic requirements."@en ;
+    sh:targetClass [ rdf:type owl:Class ;
+                    owl:unionOf (hotline:ImageEvidence hotline:VideoEvidence) ] ;
+    sh:property [
+        sh:path uco-observable:hash ;
+        sh:minCount 1 ;
+        sh:class uco-observable:Hash ;
+        sh:message "Media evidence must have at least one hash"@en
+    ] ;
+    # Forensic integrity validation
+    sh:rule [
+        a sh:SPARQLRule ;
+        sh:severity sh:Violation ;
+        sh:message "Media evidence must maintain cryptographic integrity"@en ;
+        sh:prefixes hotline: ;
+        sh:construct """
+            INSERT { $this a hotline:IntegrityError . }
+            WHERE {
+                $this a ?mediaType ;
+                ?mediaType rdfs:subClassOf* [ owl:unionOf (hotline:ImageEvidence hotline:VideoEvidence) ] .
+                FILTER NOT EXISTS { 
+                    $this uco-observable:hash ?hash ;
+                    ?hash uco-observable:hashMethod ?method .
+                }
+            }
+        """
+    ] .
+
+# gUFO Event Shape for Hotline Actions
+hotline:HotlineActionShape rdf:type sh:NodeShape ;
+    rdfs:label "Hotline Action Shape"@en ;
+    rdfs:comment "Enhanced SHACL shape for hotline actions with comprehensive gUFO Event validation and temporal modeling."@en ;
+    sh:targetClass hotline:HotlineAction ;
+    ;
+    sh:property [
+        sh:path uco-action:performer ;
+        sh:minCount 1 ;
+        sh:message "A hotline action must have at least one performer"@en
+    ] ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:minCount 1 ;
+        sh:datatype xsd:dateTime ;
+        sh:message "Hotline actions must have start times"@en
+    ] ;
+    sh:property [
+        sh:path uco-core:endTime ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:dateTime ;
+        sh:message "Hotline actions can have at most one end time"@en
+    ] ;
+    # Temporal consistency validation
+    sh:rule [
+        a sh:SPARQLRule ;
+        sh:severity sh:Violation ;
+        sh:message "Action end time must be after start time"@en ;
+        sh:prefixes hotline: ;
+        sh:construct """
+            INSERT { $this a hotline:TemporalInconsistencyError . }
+            WHERE {
+                $this uco-core:startTime ?start .
+                $this uco-core:endTime ?end .
+                FILTER(?end <= ?start)
+            }
+        """
+    ] .
+
+# Enhanced Report Review Action Shape with gUFO Event Validation
+hotline:ReportReviewActionShape rdf:type sh:NodeShape ;
+    rdfs:label "Report Review Action Shape"@en ;
+    rdfs:comment "Enhanced SHACL shape for report review actions with comprehensive gUFO Event modeling and classification requirements."@en ;
+    sh:targetClass hotline:ReportReviewAction ;
+    sh:property [
+        sh:path uco-action:performer ;
+        sh:minCount 1 ;
+        sh:message "A report review action must have at least one performer"@en
+    ] ;
+    sh:property [
+        sh:path hotline:classification ;
+        sh:minCount 1 ;
+        sh:message "A report review action must assign at least one classification"@en
+    ] ;
+    # Role-based validation
+    sh:rule [
+        a sh:SPARQLRule ;
+        sh:severity sh:Violation ;
+        sh:message "Report review must be performed by qualified analyst"@en ;
+        sh:prefixes hotline: ;
+        sh:construct """
+            INSERT { $this a hotline:QualificationError . }
+            WHERE {
+                $this a hotline:ReportReviewAction .
+                $this uco-action:performer ?performer .
+                FILTER NOT EXISTS { 
+                    ?performer hotline:playsRole hotline:HotlineAnalystRole .
+                }
+            }
+        """
+    ] .
+
+# Enhanced Forward to LE Action Shape with Multi-Agency Coordination
+hotline:ForwardToLEActionShape rdf:type sh:NodeShape ;
+    rdfs:label "Forward to LE Action Shape"@en ;
+    rdfs:comment "Enhanced SHACL shape for law enforcement forwarding actions with gUFO Event validation and coordination requirements."@en ;
+    sh:targetClass hotline:ForwardToLEAction ;
+    sh:property [
+        sh:path hotline:forwardsTo ;
+        sh:class uco-identity:Organization ;
+        sh:message "Forward actions must specify target law enforcement organization"@en
+    ] ;
+    # Coordination validation
+    sh:rule [
+        a sh:SPARQLRule ;
+        sh:severity sh:Violation ;
+        sh:message "Law enforcement forwarding must involve coordination situation"@en ;
+        sh:prefixes hotline: ;
+        sh:construct """
+            INSERT { $this a hotline:CoordinationError . }
+            WHERE {
+                $this a hotline:ForwardToLEAction .
+                FILTER NOT EXISTS { 
+                    ?report hotline:triggersAction $this ;
+                    ?report hotline:involvesCoordination ?coordination ;
+                    ?coordination a hotline:MultiAgencyCoordination .
+                }
+            }
+        """
+    ] .
+
+# gUFO Phase Shape for Hotline Operational Phases
+hotline:HotlinePhaseShape rdf:type sh:NodeShape ;
+    rdfs:label "Hotline Phase Shape"@en ;
+    rdfs:comment "SHACL shape for hotline operational phases with anti-rigid gUFO Phase validation and temporal constraints."@en ;
+    sh:targetClass [ rdf:type owl:Class ;
+                    owl:unionOf (hotline:IntakePhase hotline:ReviewPhase hotline:ActionPhase hotline:ClosurePhase) ] ;
+    ;
+    sh:property [
+        sh:path hotline:phaseBeginTime ;
+        sh:minCount 1 ;
+        sh:datatype xsd:dateTime ;
+        sh:message "Phases must have begin times"@en
+    ] ;
+    sh:property [
+        sh:path hotline:phaseDuration ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:duration ;
+        sh:message "Phases can have duration specifications"@en
+    ] ;
+    # Phase transition validation
+    sh:rule [
+        a sh:SPARQLRule ;
+        sh:severity sh:Violation ;
+        sh:message "Phase transitions must follow logical sequence"@en ;
+        sh:prefixes hotline: ;
+        sh:construct """
+            INSERT { $this a hotline:PhaseSequenceError . }
+            WHERE {
+                ?report hotline:currentPhase $this .
+                $this hotline:phaseBeginTime ?thisStart ;
+                ?report hotline:hasPhaseTransition ?transition ;
+                ?transition uco-core:endTime ?prevEnd .
+                FILTER(?thisStart <= ?prevEnd)
+            }
+        """
+    ] .
+
+# gUFO Specialist Role Shape
+hotline:SpecialistRoleShape rdf:type sh:NodeShape ;
+    rdfs:label "Specialist Role Shape"@en ;
+    rdfs:comment "SHACL shape for hotline specialist roles with anti-rigid gUFO Role validation and competency requirements."@en ;
+    sh:targetClass [ rdf:type owl:Class ;
+                    owl:unionOf (hotline:HotlineAnalystRole hotline:ForensicsSpecialistRole hotline:LiaisonRole) ] ;
+    ;
+    sh:property [
+        sh:path hotline:roleAssignmentTime ;
+        sh:minCount 1 ;
+        sh:datatype xsd:dateTime ;
+        sh:message "Specialist roles must have assignment timestamps"@en
+    ] ;
+    # Competency validation
+    sh:rule [
+        a sh:SPARQLRule ;
+        sh:severity sh:Violation ;
+        sh:message "Specialist roles require demonstrated competencies"@en ;
+        sh:prefixes hotline: ;
+        sh:construct """
+            INSERT { $this a hotline:CompetencyError . }
+            WHERE {
+                $this a ?roleType ;
+                ?roleType rdfs:subClassOf* [ owl:unionOf (hotline:HotlineAnalystRole hotline:ForensicsSpecialistRole hotline:LiaisonRole) ] .
+                FILTER NOT EXISTS { 
+                    $this hotline:hasCompetency ?competency .
+                }
+            }
+        """
+    ] .
+
+# Hash Submission Action Shape Enhanced with gUFO Event Validation
+hotline:HashSubmissionActionShape rdf:type sh:NodeShape ;
+    rdfs:label "Hash Submission Action Shape"@en ;
+    rdfs:comment "Enhanced SHACL shape for hash submission actions with gUFO Event validation and forensic requirements."@en ;
+    sh:targetClass hotline:HashSubmissionAction ;
+    sh:property [
+        sh:path hotline:producesHash ;
+        sh:minCount 1 ;
+        sh:class uco-observable:Hash ;
+        sh:message "A hash submission action must produce at least one hash"@en
+    ] ;
+    # Hash validation integrity
+    sh:rule [
+        a sh:SPARQLRule ;
+        sh:severity sh:Violation ;
+        sh:message "Hash submissions must maintain cryptographic integrity"@en ;
+        sh:prefixes hotline: ;
+        sh:construct """
+            INSERT { $this a hotline:HashIntegrityError . }
+            WHERE {
+                $this hotline:producesHash ?hash .
+                FILTER NOT EXISTS { 
+                    ?hash uco-observable:hashMethod ?method ;
+                    ?hash uco-observable:hashValue ?value .
+                }
+            }
+        """
+    ] .
+
+# Hash Feedback Action Shape Enhanced with Collaborative Validation
+hotline:HashFeedbackActionShape rdf:type sh:NodeShape ;
+    rdfs:label "Hash Feedback Action Shape"@en ;
+    rdfs:comment "Enhanced SHACL shape for hash feedback actions with gUFO Event validation and collaboration requirements."@en ;
+    sh:targetClass hotline:HashFeedbackAction ;
+    sh:property [
+        sh:path hotline:referencesHash ;
+        sh:minCount 1 ;
+        sh:class uco-observable:Hash ;
+        sh:message "A hash feedback action must reference at least one hash"@en
+    ] ;
+    sh:property [
+        sh:path hotline:feedbackType ;
+        sh:minCount 1 ;
+        sh:in ("Removed" "NoAction" "Duplicate" "FalsePositive") ;
+        sh:message "A hash feedback action must specify a valid feedback type"@en
+    ] .
+
+# Takedown Request Action Shape Enhanced with Coordination Validation
+hotline:TakedownRequestActionShape rdf:type sh:NodeShape ;
+    rdfs:label "Takedown Request Action Shape"@en ;
+    rdfs:comment "Enhanced SHACL shape for takedown request actions with gUFO Event validation and coordination requirements."@en ;
+    sh:targetClass hotline:TakedownRequestAction ;
+    sh:property [
+        sh:path uco-action:target ;
+        sh:minCount 1 ;
+        sh:class uco-identity:Organization ;
+        sh:message "A takedown request action must target at least one organization"@en
+    ] .
+
+# Multi-Agency Coordination Shape with gUFO Situation Validation
+hotline:MultiAgencyCoordinationShape rdf:type sh:NodeShape ;
+    rdfs:label "Multi-Agency Coordination Shape"@en ;
+    rdfs:comment "SHACL shape for multi-agency coordination with comprehensive gUFO Situation validation and participant requirements."@en ;
+    sh:targetClass hotline:MultiAgencyCoordination ;
+    ;
+    sh:property [
+        sh:path hotline:coordinationBeginTime ;
+        sh:minCount 1 ;
+        sh:datatype xsd:dateTime ;
+        sh:message "Coordination situations must have begin timestamps"@en
+    ] ;
+    # Multi-party validation
+    sh:rule [
+        a sh:SPARQLRule ;
+        sh:severity sh:Violation ;
+        sh:message "Multi-agency coordination must involve at least two organizations"@en ;
+        sh:prefixes hotline: ;
+        sh:construct """
+            INSERT { $this a hotline:CoordinationParticipantError . }
+            WHERE {
+                $this a hotline:MultiAgencyCoordination .
+                {
+                    SELECT $this (COUNT(?org) AS ?orgCount) WHERE {
+                        $this hotline:hasParticipant ?org ;
+                        ?org a uco-identity:Organization .
+                    } GROUP BY $this
+                }
+                FILTER(?orgCount < 2)
+            }
+        """
+    ] .
+
+# Enhanced Lifecycle Validation Rules with gUFO Temporal Modeling
+hotline:LifecycleValidationShape rdf:type sh:NodeShape ;
+    rdfs:label "Lifecycle Validation Shape"@en ;
+    rdfs:comment "Enhanced SHACL shape for hotline report lifecycle validation with comprehensive gUFO Event sequence and Phase transition validation."@en ;
+    sh:targetClass hotline:HotlineReport ;
+    # Ensure first action is ReportReviewAction
+    sh:rule [
+        a sh:SPARQLRule ;
+        sh:severity sh:Violation ;
+        sh:message "The first action must be a ReportReviewAction"@en ;
+        sh:prefixes hotline: ;
+        sh:construct """
+            INSERT { $this a hotline:LifecycleError . }
+            WHERE {
+                $this hotline:triggersAction ?action ;
+                ?action a hotline:HotlineAction .
+                FILTER NOT EXISTS { ?prev hotline:nextStep ?action . }
+                FILTER NOT EXISTS { ?action a hotline:ReportReviewAction . }
+            }
+        """
+    ] ;
+    # Phase sequence validation
+    sh:rule [
+        a sh:SPARQLRule ;
+        sh:severity sh:Violation ;
+        sh:message "Phases must follow logical sequence: Intake → Review → Action → Closure"@en ;
+        sh:prefixes hotline: ;
+        sh:construct """
+            INSERT { $this a hotline:PhaseSequenceError . }
+            WHERE {
+                $this hotline:currentPhase ?currentPhase ;
+                ?currentPhase a ?phaseType ;
+                ?phaseType rdfs:subClassOf gufo:Phase .
+                # Invalid transitions logic would be implemented here
+                FILTER EXISTS {
+                    # Example: ActionPhase cannot directly follow IntakePhase
+                    ?currentPhase a hotline:ActionPhase ;
+                    ?previousPhase hotline:nextPhase ?currentPhase ;
+                    ?previousPhase a hotline:IntakePhase .
+                }
+            }
+        """
+    ] ;
+    # gUFO Event temporal consistency
+    sh:rule [
+        a sh:SPARQLRule ;
+        sh:severity sh:Violation ;
+        sh:message "gUFO Events must maintain temporal consistency within phases"@en ;
+        sh:prefixes hotline: ;
+        sh:construct """
+            INSERT { $this a hotline:TemporalConsistencyError . }
+            WHERE {
+                $this hotline:triggersAction ?action ;
+                ?action a gufo:Event ;
+                ?action uco-core:startTime ?actionStart .
+                $this hotline:currentPhase ?phase ;
+                ?phase hotline:phaseBeginTime ?phaseStart .
+                FILTER(?actionStart < ?phaseStart)
+            }
+        """
+    ] ;
+    # gUFO Role assignment validation
+    sh:rule [
+        a sh:SPARQLRule ;
+        sh:severity sh:Violation ;
+        sh:message "All actions must be performed by entities with appropriate gUFO Roles"@en ;
+        sh:prefixes hotline: ;
+        sh:construct """
+            INSERT { $this a hotline:RoleAssignmentError . }
+            WHERE {
+                $this hotline:triggersAction ?action ;
+                ?action uco-action:performer ?performer .
+                FILTER NOT EXISTS { 
+                    ?performer hotline:playsRole ?role ;
+                    ?role a gufo:Role .
+                }
+            }
+        """
+    ] . 

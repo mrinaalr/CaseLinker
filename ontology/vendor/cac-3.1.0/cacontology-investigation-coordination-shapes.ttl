@@ -1,0 +1,1111 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix gufo: <http://purl.org/nemo/gufo#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology-coord: <https://cacontology.projectvic.org/investigation-coordination#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+# Ontology Declaration
+<https://cacontology.projectvic.org/investigation-coordination/shapes> rdf:type owl:Ontology ;
+    rdfs:label "CAC Investigation Coordination SHACL Shapes with gUFO Validation"@en ;
+    rdfs:comment "SHACL validation shapes for gUFO-enhanced CAC investigation coordination ontology, including anti-rigidity constraints, temporal validation, and foundational type compliance."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/investigation-coordination/shapes/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://cacontology.projectvic.org/investigation-coordination/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> .
+
+# =============================================================================
+# gUFO TYPE CONSISTENCY VALIDATION FOR INVESTIGATION COORDINATION
+# =============================================================================
+
+# EventType validation for coordination activities (investigation coordination as events)
+cacontology-coord:CoordinationEventTypeValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass gufo:EventType ;
+    sh:message "Every coordination EventType must extend gufo:Event"@en .
+
+# SituationType validation for agreements and protocols (legal/procedural situations)
+cacontology-coord:CoordinationSituationTypeValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass gufo:SituationType ;
+    sh:message "Every coordination SituationType must extend gufo:Situation"@en .
+
+# Role validation for liaison officers (anti-rigid relational)
+cacontology-coord:LiaisonRoleValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cac-core:Role ;
+    sh:not [
+        sh:property [
+            sh:path rdfs:subClassOf ;
+            sh:class gufo:Kind         ]     ] ;
+    sh:message "Liaison roles are anti-rigid and cannot be subclasses of rigid Kinds"@en .
+
+# Object validation for metrics and measurement entities
+cacontology-coord:MetricsObjectValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cac-core:EnduringEntity ;
+    sh:message "Coordination metrics must be properly classified as gUFO Objects"@en .
+
+# =============================================================================
+# gUFO TEMPORAL CONSTRAINTS FOR INVESTIGATION COORDINATION
+# =============================================================================
+
+# Investigation Coordination Temporal Validation
+cacontology-coord:InvestigationCoordinationTemporalShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-coord:InvestigationCoordination ;
+    sh:property [
+        sh:path gufo:hasBeginPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTime ;
+        sh:maxCount 1 ;
+        sh:message "Coordination may have at most one start time (gUFO temporal boundary)"@en     ] ;
+    sh:property [
+        sh:path gufo:hasEndPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTime ;
+        sh:maxCount 1 ;
+        sh:message "Coordination may have at most one end time (gUFO temporal boundary)"@en     ] ;
+    sh:sparql [
+        sh:message "Coordination end time must be after start time when both specified (gUFO temporal ordering)"@en ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "gufo" ;
+                sh:namespace "http://purl.org/nemo/gufo#"^^xsd:anyURI             ]         ] ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this gufo:hasBeginPointInXSDDateTimeStamp ?startTime .
+                $this gufo:hasEndPointInXSDDateTimeStamp ?endTime .
+                FILTER (?endTime <= ?startTime)
+            }
+        """     ] .
+
+# Resource Sharing Temporal Validation
+cacontology-coord:ResourceSharingTemporalShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-coord:ResourceSharing ;
+    sh:property [
+        sh:path gufo:hasBeginPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTime ;
+        sh:maxCount 1 ;
+        sh:message "Resource sharing may have start time (gUFO temporal boundary)"@en     ] ;
+    sh:property [
+        sh:path gufo:hasEndPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTime ;
+        sh:maxCount 1 ;
+        sh:message "Resource sharing may have end time (gUFO temporal boundary)"@en     ] .
+
+# Coordination Agreement Temporal Validation
+cacontology-coord:CoordinationAgreementTemporalShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-coord:CoordinationAgreement ;
+    sh:property [
+        sh:path cacontology-coord:effectiveDate ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Agreement must have effective date (gUFO temporal boundary)"@en     ] ;
+    sh:property [
+        sh:path cacontology-coord:expirationDate ;
+        sh:datatype xsd:dateTime ;
+        sh:maxCount 1 ;
+        sh:message "Agreement may have expiration date (gUFO temporal boundary)"@en     ] ;
+    sh:property [
+        sh:path gufo:hasBeginPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTime ;
+        sh:maxCount 1 ;
+        sh:message "Agreement may have gUFO temporal start boundary"@en     ] ;
+    sh:property [
+        sh:path gufo:hasEndPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTime ;
+        sh:maxCount 1 ;
+        sh:message "Agreement may have gUFO temporal end boundary"@en     ] .
+
+# =============================================================================
+# INVESTIGATION COORDINATION SHAPES
+# =============================================================================
+
+cacontology-coord:InvestigationCoordinationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-coord:InvestigationCoordination ;
+    rdfs:label "Investigation Coordination Shape"@en ;
+    rdfs:comment "Validation shape for investigation coordination instances with gUFO integration."@en ;
+    sh:property [
+        sh:path cacontology-coord:coordinationType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "joint_investigation" "parallel_investigation" "information_sharing" "resource_sharing" "task_force_coordination" "multi_agency_coordination" ) ;
+        sh:message "Investigation coordination must specify coordination type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-coord:coordinationLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "local" "regional" "state" "multi_state" "federal" "international" ) ;
+        sh:message "Investigation coordination must specify coordination level from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-coord:participatingAgencies ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 2 ;
+        sh:maxInclusive 50 ;
+        sh:message "Investigation coordination must have between 2 and 50 participating agencies."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-coord:leadAgency ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 3 ;
+        sh:maxLength 100 ;
+        sh:message "Investigation coordination must specify lead agency (3-100 characters)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-coord:coordinationStatus ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "active" "inactive" "pending" "completed" "suspended" "terminated" ) ;
+        sh:message "Investigation coordination must specify coordination status from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Investigation coordination may have a start time."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:endTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Investigation coordination may have an end time."@en
+    ] ;
+    sh:property [
+        sh:path gufo:hasBeginPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTime ;
+        sh:maxCount 1 ;
+        sh:message "Coordination may have gUFO temporal start boundary"@en     ] ;
+    sh:property [
+        sh:path gufo:hasEndPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTime ;
+        sh:maxCount 1 ;
+        sh:message "Coordination may have gUFO temporal end boundary"@en     ] ;
+    sh:property [
+        sh:path cacontology-coord:hasCoordinationEffectiveness ;
+        sh:datatype xsd:string ;
+        sh:in ( "poor" "fair" "good" "excellent" "outstanding" ) ;
+        sh:maxCount 1 ;
+        sh:message "Coordination effectiveness level must be from allowed list (gUFO quality aspect)"@en     ] ;
+    sh:property [
+        sh:path cacontology-coord:hasComplexityLevel ;
+        sh:datatype xsd:string ;
+        sh:in ( "simple" "moderate" "complex" "highly_complex" "extremely_complex" ) ;
+        sh:maxCount 1 ;
+        sh:message "Coordination complexity level must be from allowed list (gUFO quality aspect)"@en     ] ;
+    sh:property [
+        sh:path cacontology-coord:hasSuccessRate ;
+        sh:datatype xsd:double ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:maxCount 1 ;
+        sh:message "Success rate must be between 0.0 and 1.0 (gUFO quality aspect)"@en     ] .
+
+# =============================================================================
+# MISSING-CHILD RESCUE OPERATION SHAPES (located-count semantics)
+# =============================================================================
+
+cacontology-coord:MissingChildRescueOperationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-coord:MissingChildRescueOperation ;
+    rdfs:label "Missing Child Rescue Operation Shape"@en ;
+    rdfs:comment "Validation shape for missing-child rescue operation instances, including explicit located-count outcomes."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:minCount 1 ;
+        sh:message "Missing child rescue operation must have an rdfs:label."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-coord:childrenLocatedCount ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Missing child rescue operation must specify childrenLocatedCount as a non-negative integer."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-coord:casesInProgressCount ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "casesInProgressCount, when provided, must be a non-negative integer."@en
+    ] .
+
+cacontology-coord:JointInvestigationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-coord:JointInvestigation ;
+    rdfs:label "Joint Investigation Shape"@en ;
+    rdfs:comment "Validation shape for joint investigation instances with gUFO integration."@en ;
+    sh:property [
+        sh:path cacontology-coord:investigationScope ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "single_case" "related_cases" "criminal_network" "organized_crime" "multi_jurisdictional" "international" ) ;
+        sh:message "Joint investigation must specify investigation scope from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-coord:resourcePooling ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Joint investigation must specify if resource pooling is used."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-coord:sharedCommand ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Joint investigation must specify if shared command structure is used."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-coord:unifiedReporting ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Joint investigation must specify if unified reporting is used."@en
+    ] ;
+    sh:property [
+        sh:path gufo:hasBeginPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Joint investigation must have start time (gUFO temporal boundary)"@en     ] ;
+    sh:property [
+        sh:path cacontology-coord:hasCoordinationIntensity ;
+        sh:datatype xsd:string ;
+        sh:in ( "minimal" "moderate" "high" "intensive" "fully_integrated" ) ;
+        sh:maxCount 1 ;
+        sh:message "Coordination intensity level must be from allowed list (gUFO quality aspect)"@en     ] ;
+    sh:property [
+        sh:path cacontology-coord:hasUnificationLevel ;
+        sh:datatype xsd:double ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:maxCount 1 ;
+        sh:message "Unification level must be between 0.0 and 1.0 (gUFO quality aspect)"@en     ] .
+
+# =============================================================================
+# INFORMATION SHARING SHAPES
+# =============================================================================
+
+cacontology-coord:InformationSharingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-coord:InformationSharing ;
+    rdfs:label "Information Sharing Shape"@en ;
+    rdfs:comment "Validation shape for information sharing instances with gUFO integration."@en ;
+    sh:property [
+        sh:path cacontology-coord:sharingType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "intelligence_sharing" "evidence_sharing" "case_information" "suspect_information" "victim_information" "technical_data" ) ;
+        sh:message "Information sharing must specify sharing type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-coord:classificationLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "unclassified" "law_enforcement_sensitive" "confidential" "restricted" "classified" "top_secret" ) ;
+        sh:message "Information sharing must specify classification level from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-coord:sharingMechanism ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "secure_email" "encrypted_portal" "database_access" "formal_request" "liaison_officer" "joint_briefing" ) ;
+        sh:message "Information sharing must specify sharing mechanism from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-coord:reciprocity ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Information sharing must specify if reciprocity is expected."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-coord:sharingAgreement ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Information sharing must specify if formal sharing agreement exists."@en
+    ] ;
+    sh:property [
+        sh:path gufo:hasBeginPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTime ;
+        sh:maxCount 1 ;
+        sh:message "Information sharing may have start time (gUFO temporal boundary)"@en     ] ;
+    sh:property [
+        sh:path cacontology-coord:hasSharingEfficiency ;
+        sh:datatype xsd:string ;
+        sh:in ( "poor" "fair" "good" "excellent" "optimal" ) ;
+        sh:maxCount 1 ;
+        sh:message "Sharing efficiency level must be from allowed list (gUFO quality aspect)"@en     ] ;
+    sh:property [
+        sh:path cacontology-coord:hasSecurityLevel ;
+        sh:datatype xsd:string ;
+        sh:in ( "basic" "standard" "enhanced" "high" "maximum" ) ;
+        sh:maxCount 1 ;
+        sh:message "Security level must be from allowed list (gUFO quality aspect)"@en     ] ;
+    sh:property [
+        sh:path cacontology-coord:hasTimeliness ;
+        sh:datatype xsd:double ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:maxCount 1 ;
+        sh:message "Timeliness score must be between 0.0 and 1.0 (gUFO quality aspect)"@en     ] .
+
+cacontology-coord:IntelligenceSharingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-coord:IntelligenceSharing ;
+    rdfs:label "Intelligence Sharing Shape"@en ;
+    rdfs:comment "Validation shape for intelligence sharing instances with gUFO integration."@en ;
+    sh:property [
+        sh:path cacontology-coord:intelligenceType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "tactical" "strategic" "operational" "technical" "threat_assessment" "pattern_analysis" ) ;
+        sh:message "Intelligence sharing must specify intelligence type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-coord:sourceReliability ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "reliable" "usually_reliable" "fairly_reliable" "not_usually_reliable" "unreliable" "unknown" ) ;
+        sh:message "Intelligence sharing must specify source reliability from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-coord:informationAccuracy ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "confirmed" "probably_true" "possibly_true" "doubtfully_true" "improbable" "cannot_be_judged" ) ;
+        sh:message "Intelligence sharing must specify information accuracy from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-coord:hasIntelligenceValue ;
+        sh:datatype xsd:string ;
+        sh:in ( "low" "moderate" "high" "critical" "exceptional" ) ;
+        sh:maxCount 1 ;
+        sh:message "Intelligence value level must be from allowed list (gUFO quality aspect)"@en     ] ;
+    sh:property [
+        sh:path cacontology-coord:hasActionability ;
+        sh:datatype xsd:double ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:maxCount 1 ;
+        sh:message "Actionability score must be between 0.0 and 1.0 (gUFO quality aspect)"@en     ] .
+
+# =============================================================================
+# RESOURCE SHARING SHAPES
+# =============================================================================
+
+cacontology-coord:ResourceSharingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-coord:ResourceSharing ;
+    rdfs:label "Resource Sharing Shape"@en ;
+    rdfs:comment "Validation shape for resource sharing instances."@en ;
+    sh:property [
+        sh:path cacontology-coord:resourceType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "personnel" "equipment" "facilities" "technology" "expertise" "funding" "vehicles" "specialized_units" ) ;
+        sh:message "Resource sharing must specify resource type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-coord:sharingDuration ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1.0 ;
+        sh:maxInclusive 8760.0 ;
+        sh:message "Resource sharing duration must be between 1 and 8760 hours (1 year)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-coord:costSharing ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Resource sharing must specify if cost sharing is involved."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-coord:reimbursement ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Resource sharing must specify if reimbursement is required."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-coord:availabilityLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "immediate" "short_notice" "scheduled" "on_request" "limited" "emergency_only" ) ;
+        sh:message "Resource sharing must specify availability level from the allowed list."@en
+    ] .
+
+cacontology-coord:PersonnelSharingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-coord:PersonnelSharing ;
+    rdfs:label "Personnel Sharing Shape"@en ;
+    rdfs:comment "Validation shape for personnel sharing instances."@en ;
+    sh:property [
+        sh:path cacontology-coord:personnelCount ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 100 ;
+        sh:message "Personnel sharing must specify personnel count between 1 and 100."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-coord:specialization ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "digital_forensics" "undercover_operations" "surveillance" "analysis" "technical_support" "legal_expertise" ) ;
+        sh:message "Personnel sharing must specify specialization from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-coord:securityClearance ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "none" "public_trust" "confidential" "secret" "top_secret" "sci_access" ) ;
+        sh:message "Security clearance must be from the allowed list."@en
+    ] .
+
+# =============================================================================
+# COMMUNICATION PROTOCOL SHAPES
+# =============================================================================
+
+cacontology-coord:CommunicationProtocolShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-coord:CommunicationProtocol ;
+    rdfs:label "Communication Protocol Shape"@en ;
+    rdfs:comment "Validation shape for communication protocol instances."@en ;
+    sh:property [
+        sh:path cacontology-coord:protocolType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "formal_channels" "informal_channels" "emergency_channels" "secure_channels" "encrypted_channels" "liaison_channels" ) ;
+        sh:message "Communication protocol must specify protocol type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-coord:communicationFrequency ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "real_time" "daily" "weekly" "bi_weekly" "monthly" "as_needed" "emergency_only" ) ;
+        sh:message "Communication protocol must specify communication frequency from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-coord:escalationProcedure ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Communication protocol must specify if escalation procedure exists."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-coord:responseTimeRequirement ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1.0 ;
+        sh:maxInclusive 168.0 ;
+        sh:message "Response time requirement must be between 1 and 168 hours (1 week)."@en
+    ] .
+
+# =============================================================================
+# COORDINATION AGREEMENT SHAPES
+# =============================================================================
+
+cacontology-coord:CoordinationAgreementShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-coord:CoordinationAgreement ;
+    rdfs:label "Coordination Agreement Shape"@en ;
+    rdfs:comment "Validation shape for coordination agreement instances."@en ;
+    sh:property [
+        sh:path cacontology-coord:agreementType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "mou" "moa" "formal_agreement" "informal_agreement" "task_force_charter" "joint_operations_plan" ) ;
+        sh:message "Coordination agreement must specify agreement type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-coord:agreementScope ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "specific_case" "case_category" "ongoing_cooperation" "resource_sharing" "information_sharing" "comprehensive" ) ;
+        sh:message "Coordination agreement must specify agreement scope from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-coord:effectiveDate ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Coordination agreement must specify effective date."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-coord:expirationDate ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Coordination agreement may specify expiration date."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-coord:renewalClause ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Coordination agreement must specify if renewal clause exists."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-coord:terminationClause ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Coordination agreement must specify if termination clause exists."@en
+    ] .
+
+# =============================================================================
+# LIAISON OFFICER SHAPES
+# =============================================================================
+
+cacontology-coord:LiaisonOfficerShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-coord:LiaisonOfficer ;
+    rdfs:label "Liaison Officer Shape"@en ;
+    rdfs:comment "Validation shape for liaison officer instances with gUFO integration."@en ;
+    sh:property [
+        sh:path cacontology-coord:liaisonRole ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "primary_liaison" "secondary_liaison" "technical_liaison" "legal_liaison" "intelligence_liaison" "operational_liaison" ) ;
+        sh:message "Liaison officer must specify liaison role from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-coord:assignmentDuration ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1.0 ;
+        sh:maxInclusive 2190.0 ;
+        sh:message "Liaison assignment duration must be between 1 and 2190 days (6 years)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-coord:clearanceLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "none" "public_trust" "confidential" "secret" "top_secret" "sci_access" ) ;
+        sh:message "Clearance level must be from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-coord:communicationAuthority ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "full_authority" "limited_authority" "information_only" "coordination_only" "advisory_only" ) ;
+        sh:message "Liaison officer must specify communication authority from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path gufo:hasBeginPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTime ;
+        sh:maxCount 1 ;
+        sh:message "Liaison assignment may have start time (gUFO temporal boundary)"@en     ] ;
+    sh:property [
+        sh:path gufo:hasEndPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTime ;
+        sh:maxCount 1 ;
+        sh:message "Liaison assignment may have end time (gUFO temporal boundary)"@en     ] ;
+    sh:property [
+        sh:path cacontology-coord:hasLiaisonEffectiveness ;
+        sh:datatype xsd:string ;
+        sh:in ( "poor" "adequate" "good" "excellent" "exceptional" ) ;
+        sh:maxCount 1 ;
+        sh:message "Liaison effectiveness level must be from allowed list (gUFO quality aspect)"@en     ] ;
+    sh:property [
+        sh:path cacontology-coord:hasTrustLevel ;
+        sh:datatype xsd:double ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:maxCount 1 ;
+        sh:message "Trust level must be between 0.0 and 1.0 (gUFO quality aspect)"@en     ] ;
+    sh:property [
+        sh:path cacontology-coord:hasResponsiveness ;
+        sh:datatype xsd:string ;
+        sh:in ( "slow" "moderate" "good" "rapid" "immediate" ) ;
+        sh:maxCount 1 ;
+        sh:message "Responsiveness level must be from allowed list (gUFO quality aspect)"@en     ] .
+
+# =============================================================================
+# COORDINATION METRICS SHAPES
+# =============================================================================
+
+cacontology-coord:CoordinationMetricsShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-coord:CoordinationMetrics ;
+    rdfs:label "Coordination Metrics Shape"@en ;
+    rdfs:comment "Validation shape for coordination metrics instances with gUFO integration."@en ;
+    sh:property [
+        sh:path cacontology-coord:metricType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "response_time" "information_sharing_rate" "resource_utilization" "case_resolution_time" "coordination_effectiveness" "cost_efficiency" ) ;
+        sh:message "Coordination metrics must specify metric type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-coord:metricValue ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 100.0 ;
+        sh:message "Metric value must be between 0.0 and 100.0."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-coord:measurementPeriod ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "daily" "weekly" "monthly" "quarterly" "annually" "case_based" ) ;
+        sh:message "Coordination metrics must specify measurement period from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-coord:benchmarkComparison ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "above_benchmark" "meets_benchmark" "below_benchmark" "no_benchmark" "exceeds_target" ) ;
+        sh:message "Benchmark comparison must be from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path gufo:hasBeginPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTime ;
+        sh:maxCount 1 ;
+        sh:message "Metrics measurement may have start time (gUFO temporal boundary)"@en     ] ;
+    sh:property [
+        sh:path cacontology-coord:hasReliability ;
+        sh:datatype xsd:double ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:maxCount 1 ;
+        sh:message "Metrics reliability must be between 0.0 and 1.0 (gUFO quality aspect)"@en     ] ;
+    sh:property [
+        sh:path cacontology-coord:hasAccuracy ;
+        sh:datatype xsd:double ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:maxCount 1 ;
+        sh:message "Metrics accuracy must be between 0.0 and 1.0 (gUFO quality aspect)"@en     ] .
+
+# =============================================================================
+# OBJECT PROPERTY SHAPES
+# =============================================================================
+
+cacontology-coord:InvolvesAgencyShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-coord:involvesAgency ;
+    sh:name "involves agency" ;
+    sh:description "Links coordination to participating agencies" ;
+    sh:class uco-identity:Organization ;
+    sh:minCount 2 .
+
+cacontology-coord:UsesProtocolShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-coord:usesProtocol ;
+    sh:name "uses protocol" ;
+    sh:description "Links coordination to communication protocols" ;
+    sh:class cacontology-coord:CommunicationProtocol ;
+    sh:minCount 1 .
+
+cacontology-coord:GovernsAgreementShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-coord:governsAgreement ;
+    sh:name "governs agreement" ;
+    sh:description "Links coordination to governing agreements" ;
+    sh:class cacontology-coord:CoordinationAgreement ;
+    sh:minCount 0 .
+
+cacontology-coord:AssignsLiaisonShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-coord:assignsLiaison ;
+    sh:name "assigns liaison" ;
+    sh:description "Links coordination to liaison officers" ;
+    sh:class cacontology-coord:LiaisonOfficer ;
+    sh:minCount 0 .
+
+cacontology-coord:SharesInformationShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-coord:sharesInformation ;
+    sh:name "shares information" ;
+    sh:description "Links coordination to information sharing" ;
+    sh:class cacontology-coord:InformationSharing ;
+    sh:minCount 0 .
+
+cacontology-coord:SharesResourcesShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-coord:sharesResources ;
+    sh:name "shares resources" ;
+    sh:description "Links coordination to resource sharing" ;
+    sh:class cacontology-coord:ResourceSharing ;
+    sh:minCount 0 .
+
+cacontology-coord:MeasuresPerformanceShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-coord:measuresPerformance ;
+    sh:name "measures performance" ;
+    sh:description "Links coordination to performance metrics" ;
+    sh:class cacontology-coord:CoordinationMetrics ;
+    sh:minCount 0 .
+
+# =============================================================================
+# CROSS-REFERENCE VALIDATION SHAPES
+# =============================================================================
+
+cacontology-coord:CoordinationCrossReferenceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-coord:InvestigationCoordination ;
+    rdfs:label "Coordination Cross Reference Shape"@en ;
+    rdfs:comment "Validates cross-references between coordination and related entities."@en ;
+    sh:sparql [
+        sh:message "Investigation coordination must involve at least two agencies and use communication protocols."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-coord:InvestigationCoordination .
+                FILTER NOT EXISTS {
+                    $this cacontology-coord:involvesAgency ?agency1, ?agency2 ;
+                          cacontology-coord:usesProtocol ?protocol .
+                    FILTER (?agency1 != ?agency2)
+                }
+            }
+        """
+    ] .
+
+cacontology-coord:AgreementValidityShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-coord:CoordinationAgreement ;
+    rdfs:label "Agreement Validity Shape"@en ;
+    rdfs:comment "Validates coordination agreement validity."@en ;
+    sh:sparql [
+        sh:message "Coordination agreement effective date must be before expiration date when both are specified."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-coord:effectiveDate ?effective ;
+                      cacontology-coord:expirationDate ?expiration .
+                FILTER (?effective >= ?expiration)
+            }
+        """
+    ] .
+
+cacontology-coord:LiaisonAssignmentShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-coord:LiaisonOfficer ;
+    rdfs:label "Liaison Assignment Shape"@en ;
+    rdfs:comment "Validates liaison officer assignment consistency."@en ;
+    sh:sparql [
+        sh:message "Primary liaison officers should have full or limited communication authority."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-coord:liaisonRole "primary_liaison" ;
+                      cacontology-coord:communicationAuthority ?authority .
+                FILTER (?authority NOT IN ("full_authority", "limited_authority"))
+            }
+        """
+    ] .
+
+# =============================================================================
+# TEMPORAL VALIDATION SHAPES
+# =============================================================================
+
+cacontology-coord:TemporalValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-coord:InvestigationCoordination ;
+    rdfs:label "Temporal Validation Shape"@en ;
+    rdfs:comment "Validates temporal consistency in investigation coordination."@en ;
+    sh:sparql [
+        sh:message "Start time must be before end time when both are specified."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this uco-core:startTime ?start ;
+                      uco-core:endTime ?end .
+                FILTER (?start >= ?end)
+            }
+        """
+    ] .
+
+cacontology-coord:ResourceSharingDurationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-coord:ResourceSharing ;
+    rdfs:label "Resource Sharing Duration Shape"@en ;
+    rdfs:comment "Validates resource sharing duration reasonableness."@en ;
+    sh:sparql [
+        sh:message "Long-term resource sharing should have formal agreements."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-coord:sharingDuration ?duration .
+                FILTER (?duration > 720)
+                FILTER NOT EXISTS {
+                    ?coordination cacontology-coord:sharesResources $this ;
+                                  cacontology-coord:governsAgreement ?agreement .
+                }
+            }
+        """
+    ] .
+
+# =============================================================================
+# DATA QUALITY SHAPES
+# =============================================================================
+
+cacontology-coord:DataQualityShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-coord:InvestigationCoordination ,
+                   cacontology-coord:InformationSharing ,
+                   cacontology-coord:ResourceSharing ,
+                   cacontology-coord:CoordinationAgreement ,
+                   cacontology-coord:LiaisonOfficer ;
+    rdfs:label "Data Quality Shape"@en ;
+    rdfs:comment "Validates data quality for investigation coordination entities with gUFO quality aspects."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Label should be between 5 and 200 characters when provided."@en
+    ] ;
+    sh:property [
+        sh:path rdfs:comment ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 10 ;
+        sh:maxLength 1000 ;
+        sh:message "Comment should be between 10 and 1000 characters when provided."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:createdTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Creation time should be specified when available."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:modifiedTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Modification time should be specified when available."@en
+    ] ;
+    sh:property [
+        sh:path gufo:hasBeginPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTime ;
+        sh:maxCount 1 ;
+        sh:message "Entity may have temporal beginning (gUFO temporal boundary)"@en     ] ;
+    sh:property [
+        sh:path gufo:hasEndPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTime ;
+        sh:maxCount 1 ;
+        sh:message "Entity may have temporal ending (gUFO temporal boundary)"@en     ] ;
+    sh:property [
+        sh:path cacontology-coord:hasDataQuality ;
+        sh:datatype xsd:string ;
+        sh:in ( "poor" "fair" "good" "excellent" "validated" ) ;
+        sh:maxCount 1 ;
+        sh:message "Data quality level must be from allowed list (gUFO quality aspect)"@en     ] ;
+    sh:property [
+        sh:path cacontology-coord:hasDataCompleteness ;
+        sh:datatype xsd:double ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:maxCount 1 ;
+        sh:message "Data completeness must be between 0.0 and 1.0 (gUFO quality aspect)"@en     ] ;
+    sh:property [
+        sh:path cacontology-coord:hasDataConsistency ;
+        sh:datatype xsd:double ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:maxCount 1 ;
+        sh:message "Data consistency must be between 0.0 and 1.0 (gUFO quality aspect)"@en     ] ;
+    sh:property [
+        sh:path cacontology-coord:hasValidationLevel ;
+        sh:datatype xsd:string ;
+        sh:in ( "none" "basic" "standard" "comprehensive" "full_verification" ) ;
+        sh:maxCount 1 ;
+        sh:message "Validation level must be from allowed list (gUFO quality aspect)"@en     ] .
+
+# =============================================================================
+# gUFO PARTICIPATION CONSTRAINTS FOR INVESTIGATION COORDINATION
+# =============================================================================
+
+# Investigation Coordination Participation Validation
+cacontology-coord:InvestigationCoordinationParticipationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-coord:InvestigationCoordination ;
+    sh:property [
+        sh:path [ sh:alternativePath ( 
+            gufo:participatedIn 
+            cacontology-coord:involvesAgency 
+            cacontology-coord:assignsLiaison 
+        ) ] ;
+        sh:minCount 2 ;
+        sh:message "Every investigation coordination must have at least two participating entities (gUFO participation)"@en     ] .
+
+# Information Sharing Participation Validation
+cacontology-coord:InformationSharingParticipationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-coord:InformationSharing ;
+    sh:property [
+        sh:path [ sh:alternativePath ( 
+            cacontology-coord:sharesWithAgency 
+            cacontology-coord:sharesFromAgency 
+        ) ] ;
+        sh:minCount 2 ;
+        sh:message "Information sharing must involve at least two organizations (gUFO participation)"@en     ] .
+
+# Resource Sharing Participation Validation
+cacontology-coord:ResourceSharingParticipationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-coord:ResourceSharing ;
+    sh:property [
+        sh:path [ sh:alternativePath ( 
+            cacontology-coord:providesResource 
+            cacontology-coord:receivesResource 
+        ) ] ;
+        sh:minCount 2 ;
+        sh:message "Resource sharing must involve at least provider and receiver organizations (gUFO participation)"@en     ] .
+
+# =============================================================================
+# gUFO PART-WHOLE RELATIONSHIP VALIDATION FOR INVESTIGATION COORDINATION
+# =============================================================================
+
+# Task Force Composition Validation
+cacontology-coord:TaskForceCompositionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-coord:TaskForceCoordination ;
+    sh:property [
+        sh:path [ sh:inversePath gufo:isProperPartOf ] ;
+        sh:minCount 2 ;
+        sh:message "Task force must be composed of at least two component agencies (gUFO part-whole)"@en     ] .
+
+# Multi-Agency Coordination Composition Validation
+cacontology-coord:MultiAgencyCompositionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-coord:MultiAgencyCoordination ;
+    sh:property [
+        sh:path [ sh:inversePath gufo:isProperPartOf ] ;
+        sh:minCount 3 ;
+        sh:message "Multi-agency coordination must include at least three agency components (gUFO part-whole)"@en     ] .
+
+# Joint Investigation Composition Validation
+cacontology-coord:JointInvestigationCompositionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-coord:JointInvestigation ;
+    sh:property [
+        sh:path [ sh:inversePath gufo:isProperPartOf ] ;
+        sh:minCount 2 ;
+        sh:message "Joint investigation must include at least two investigation components (gUFO part-whole)"@en     ] .
+
+# =============================================================================
+# gUFO BUSINESS RULES FOR INVESTIGATION COORDINATION
+# =============================================================================
+
+# Multi-Agency Coordination Complexity Business Rule
+cacontology-coord:MultiAgencyCoordinationComplexityBusinessRule rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-coord:MultiAgencyCoordination ;
+    sh:sparql [
+        sh:message "Complex multi-agency coordination must have adequate liaison support and high effectiveness"@en ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "cacontology-coord" ;
+                sh:namespace "https://cacontology.projectvic.org/investigation-coordination#"^^xsd:anyURI             ]         ] ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-coord:hasComplexityLevel ?complexity ;
+                      cacontology-coord:participatingAgencies ?agencies .
+                FILTER (?complexity IN ("highly_complex", "extremely_complex") && ?agencies > 10)
+                FILTER NOT EXISTS {
+                    $this cacontology-coord:assignsLiaison ?liaison .
+                    ?liaison cacontology-coord:hasLiaisonEffectiveness ?effectiveness .
+                    FILTER (?effectiveness IN ("good", "excellent", "exceptional"))
+                }
+            }
+        """     ] .
+
+# Joint Investigation Resource Integration Business Rule
+cacontology-coord:JointInvestigationResourceIntegrationBusinessRule rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-coord:JointInvestigation ;
+    sh:sparql [
+        sh:message "High-integration joint investigations require resource pooling and shared command"@en ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "cacontology-coord" ;
+                sh:namespace "https://cacontology.projectvic.org/investigation-coordination#"^^xsd:anyURI             ]         ] ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-coord:hasCoordinationIntensity ?intensity ;
+                      cacontology-coord:resourcePooling ?pooling ;
+                      cacontology-coord:sharedCommand ?command .
+                FILTER (?intensity IN ("intensive", "fully_integrated") && 
+                        (?pooling = false || ?command = false))
+            }
+        """     ] .
+
+# Information Sharing Security Business Rule
+cacontology-coord:InformationSharingSecurityBusinessRule rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-coord:InformationSharing ;
+    sh:sparql [
+        sh:message "High classification information requires enhanced security and formal agreements"@en ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "cacontology-coord" ;
+                sh:namespace "https://cacontology.projectvic.org/investigation-coordination#"^^xsd:anyURI             ]         ] ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-coord:classificationLevel ?classification ;
+                      cacontology-coord:sharingAgreement ?agreement .
+                FILTER (?classification IN ("classified", "top_secret") && ?agreement = false)
+            }
+        """     ] .
+
+# Liaison Authority Alignment Business Rule
+cacontology-coord:LiaisonAuthorityAlignmentBusinessRule rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-coord:LiaisonOfficer ;
+    sh:sparql [
+        sh:message "Primary liaisons should have full or limited authority aligned with their clearance level"@en ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "cacontology-coord" ;
+                sh:namespace "https://cacontology.projectvic.org/investigation-coordination#"^^xsd:anyURI             ]         ] ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-coord:liaisonRole "primary_liaison" ;
+                      cacontology-coord:communicationAuthority ?authority ;
+                      cacontology-coord:clearanceLevel ?clearance .
+                FILTER (?clearance IN ("secret", "top_secret", "sci_access") && 
+                        ?authority IN ("information_only", "advisory_only"))
+            }
+        """     ] .
+
+# Coordination Effectiveness Success Business Rule
+cacontology-coord:CoordinationEffectivenessSuccessBusinessRule rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-coord:InvestigationCoordination ;
+    sh:sparql [
+        sh:message "High-effectiveness coordination should demonstrate high success rates"@en ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "cacontology-coord" ;
+                sh:namespace "https://cacontology.projectvic.org/investigation-coordination#"^^xsd:anyURI             ]         ] ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-coord:hasCoordinationEffectiveness ?effectiveness ;
+                      cacontology-coord:hasSuccessRate ?successRate .
+                FILTER (?effectiveness IN ("excellent", "outstanding") && ?successRate < 0.7)
+            }
+        """     ] . 

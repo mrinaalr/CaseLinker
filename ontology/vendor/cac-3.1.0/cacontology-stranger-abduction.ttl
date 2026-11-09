@@ -1,0 +1,719 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-observable: <https://ontology.unifiedcyberontology.org/uco/observable/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
+@prefix case-investigation: <https://ontology.caseontology.org/case/investigation/> .
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-abduction: <https://cacontology.projectvic.org/abduction#> .
+@prefix cacontology-physical: <https://cacontology.projectvic.org/physical#> .
+
+# Ontology Declaration
+<https://cacontology.projectvic.org/abduction> rdf:type owl:Ontology ;
+    rdfs:label "CAC Stranger Abduction & Weapon-Based Coercion Ontology"@en ;
+    rdfs:comment "Specialized ontology for modeling stranger abduction patterns, weapon-based coercion, disguise use, and opportunistic predation in child sexual exploitation cases, based on cases like Brooklyn DA v. Christopher Fiesco (2024)."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/abduction/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:issued "2025-01-28"^^xsd:date ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> ,
+                <https://ontology.caseontology.org/case/case/1.5.0> ,
+                <https://cacontology.projectvic.org/core/3.1.0> .
+
+# =============================================================================
+# STRANGER ABDUCTION CORE CLASSES
+# =============================================================================
+
+cacontology-abduction:StrangerAbduction rdf:type owl:Class ;
+    rdfs:label "Stranger Abduction"@en ;
+    rdfs:comment "Abduction of child by unknown perpetrator without prior relationship or contact."@en ;
+    rdfs:subClassOf cacontology:ChildSexualAbuseEvent .
+
+cacontology-abduction:OpportunisticPredation rdf:type owl:Class ;
+    rdfs:label "Opportunistic Predation"@en ;
+    rdfs:comment "Spontaneous targeting and exploitation of vulnerable children encountered by chance."@en ;
+    rdfs:subClassOf cacontology-abduction:StrangerAbduction .
+
+cacontology-abduction:RandomVictimSelection rdf:type owl:Class ;
+    rdfs:label "Random Victim Selection"@en ;
+    rdfs:comment "Selection of victim based on opportunity rather than specific targeting or grooming."@en ;
+    rdfs:subClassOf cacontology-abduction:OpportunisticPredation .
+
+cacontology-abduction:StreetLevelAbduction rdf:type owl:Class ;
+    rdfs:label "Street Level Abduction"@en ;
+    rdfs:comment "Abduction occurring on public streets or sidewalks during victim's routine activities."@en ;
+    rdfs:subClassOf cacontology-abduction:StrangerAbduction .
+
+cacontology-abduction:SchoolRouteAbduction rdf:type owl:Class ;
+    rdfs:label "School Route Abduction"@en ;
+    rdfs:comment "Abduction of child while traveling to or from school or educational activities."@en ;
+    rdfs:subClassOf cacontology-abduction:StreetLevelAbduction .
+
+cacontology-abduction:PublicSpaceAbduction rdf:type owl:Class ;
+    rdfs:label "Public Space Abduction"@en ;
+    rdfs:comment "Abduction occurring in public spaces such as parks, playgrounds, or commercial areas."@en ;
+    rdfs:subClassOf cacontology-abduction:StrangerAbduction .
+
+# =============================================================================
+# WEAPON-BASED COERCION CLASSES
+# =============================================================================
+
+cacontology-abduction:WeaponBasedCoercion rdf:type owl:Class ;
+    rdfs:label "Weapon Based Coercion"@en ;
+    rdfs:comment "Use of weapons to threaten, intimidate, and control victims during abduction and exploitation."@en ;
+    rdfs:subClassOf cac-core:ExploitationEvent .
+
+cacontology-abduction:KnifeThreats rdf:type owl:Class ;
+    rdfs:label "Knife Threats"@en ;
+    rdfs:comment "Use of knife or bladed weapon to threaten and control victim."@en ;
+    rdfs:subClassOf cacontology-abduction:WeaponBasedCoercion .
+
+cacontology-abduction:FirearmThreats rdf:type owl:Class ;
+    rdfs:label "Firearm Threats"@en ;
+    rdfs:comment "Use of firearm to threaten and control victim during abduction."@en ;
+    rdfs:subClassOf cacontology-abduction:WeaponBasedCoercion .
+
+cacontology-abduction:BluntObjectThreats rdf:type owl:Class ;
+    rdfs:label "Blunt Object Threats"@en ;
+    rdfs:comment "Use of blunt objects as weapons to threaten and control victim."@en ;
+    rdfs:subClassOf cacontology-abduction:WeaponBasedCoercion .
+
+cacontology-abduction:ImpliedWeaponThreats rdf:type owl:Class ;
+    rdfs:label "Implied Weapon Threats"@en ;
+    rdfs:comment "Threats suggesting weapon possession without displaying actual weapon."@en ;
+    rdfs:subClassOf cacontology-abduction:WeaponBasedCoercion .
+
+cacontology-abduction:WeaponDisplayIntimidation rdf:type owl:Class ;
+    rdfs:label "Weapon Display Intimidation"@en ;
+    rdfs:comment "Display of weapon to intimidate victim into compliance without direct threats."@en ;
+    rdfs:subClassOf cacontology-abduction:WeaponBasedCoercion .
+
+cacontology-abduction:PhysicalForceWithWeapon rdf:type owl:Class ;
+    rdfs:label "Physical Force with Weapon"@en ;
+    rdfs:comment "Combination of physical force and weapon use to control victim."@en ;
+    rdfs:subClassOf cacontology-abduction:WeaponBasedCoercion .
+
+# =============================================================================
+# DISGUISE AND CONCEALMENT CLASSES
+# =============================================================================
+
+cacontology-abduction:DisguiseBasedConcealment rdf:type owl:Class ;
+    rdfs:label "Disguise Based Concealment"@en ;
+    rdfs:comment "Use of disguises or concealment methods to hide identity during approach and abduction."@en ;
+    rdfs:subClassOf cac-core:ExploitationEvent .
+
+cacontology-abduction:FacialConcealment rdf:type owl:Class ;
+    rdfs:label "Facial Concealment"@en ;
+    rdfs:comment "Concealment of facial features to prevent identification."@en ;
+    rdfs:subClassOf cacontology-abduction:DisguiseBasedConcealment .
+
+cacontology-abduction:SkiMaskConcealment rdf:type owl:Class ;
+    rdfs:label "Ski Mask Concealment"@en ;
+    rdfs:comment "Use of ski mask or balaclava to conceal identity during approach."@en ;
+    rdfs:subClassOf cacontology-abduction:FacialConcealment .
+
+cacontology-abduction:HoodedConcealment rdf:type owl:Class ;
+    rdfs:label "Hooded Concealment"@en ;
+    rdfs:comment "Use of hooded clothing to partially conceal identity."@en ;
+    rdfs:subClassOf cacontology-abduction:FacialConcealment .
+
+cacontology-abduction:MaskConcealment rdf:type owl:Class ;
+    rdfs:label "Mask Concealment"@en ;
+    rdfs:comment "Use of masks or face coverings to hide identity."@en ;
+    rdfs:subClassOf cacontology-abduction:FacialConcealment .
+
+cacontology-abduction:ClothingDisguise rdf:type owl:Class ;
+    rdfs:label "Clothing Disguise"@en ;
+    rdfs:comment "Use of specific clothing to alter appearance or blend into environment."@en ;
+    rdfs:subClassOf cacontology-abduction:DisguiseBasedConcealment .
+
+cacontology-abduction:VehicleConcealment rdf:type owl:Class ;
+    rdfs:label "Vehicle Concealment"@en ;
+    rdfs:comment "Use of vehicles to conceal approach or provide mobile concealment."@en ;
+    rdfs:subClassOf cacontology-abduction:DisguiseBasedConcealment .
+
+# =============================================================================
+# FORCED ENTRY AND LOCATION CONTROL CLASSES
+# =============================================================================
+
+cacontology-abduction:ForcedLocationEntry rdf:type owl:Class ;
+    rdfs:label "Forced Location Entry"@en ;
+    rdfs:comment "Forcing victim to enter buildings, apartments, or other locations for exploitation."@en ;
+    rdfs:subClassOf cac-core:ExploitationEvent .
+
+cacontology-abduction:FireEscapeEntry rdf:type owl:Class ;
+    rdfs:label "Fire Escape Entry"@en ;
+    rdfs:comment "Forcing victim to climb fire escapes to enter buildings through windows."@en ;
+    rdfs:subClassOf cacontology-abduction:ForcedLocationEntry .
+
+cacontology-abduction:WindowEntry rdf:type owl:Class ;
+    rdfs:label "Window Entry"@en ;
+    rdfs:comment "Forcing victim to enter location through windows rather than doors."@en ;
+    rdfs:subClassOf cacontology-abduction:ForcedLocationEntry .
+
+cacontology-abduction:UnconventionalEntry rdf:type owl:Class ;
+    rdfs:label "Unconventional Entry"@en ;
+    rdfs:comment "Use of non-standard entry methods to avoid detection or surveillance."@en ;
+    rdfs:subClassOf cacontology-abduction:ForcedLocationEntry .
+
+cacontology-abduction:LocationIsolation rdf:type owl:Class ;
+    rdfs:label "Location Isolation"@en ;
+    rdfs:comment "Use of isolated or secluded locations to prevent victim escape or discovery."@en ;
+    rdfs:subClassOf cac-core:ExploitationEvent .
+
+cacontology-abduction:ApartmentIsolation rdf:type owl:Class ;
+    rdfs:label "Apartment Isolation"@en ;
+    rdfs:comment "Use of apartment or residential unit for victim isolation and exploitation."@en ;
+    rdfs:subClassOf cacontology-abduction:LocationIsolation .
+
+cacontology-abduction:SecondaryLocationControl rdf:type owl:Class ;
+    rdfs:label "Secondary Location Control"@en ;
+    rdfs:comment "Movement of victim to secondary location for enhanced control and exploitation."@en ;
+    rdfs:subClassOf cacontology-abduction:LocationIsolation .
+
+# =============================================================================
+# VICTIM TARGETING AND VULNERABILITY CLASSES
+# =============================================================================
+
+cacontology-abduction:VictimTargetingPattern rdf:type owl:Class ;
+    rdfs:label "Victim Targeting Pattern"@en ;
+    rdfs:comment "Patterns of victim selection and targeting in stranger abduction cases."@en ;
+    rdfs:subClassOf uco-core:UcoObject .
+
+cacontology-abduction:SchoolRouteTargeting rdf:type owl:Class ;
+    rdfs:label "School Route Targeting"@en ;
+    rdfs:comment "Targeting children on routes to or from school when they are alone and vulnerable."@en ;
+    rdfs:subClassOf cacontology-abduction:VictimTargetingPattern .
+
+cacontology-abduction:IsolatedChildTargeting rdf:type owl:Class ;
+    rdfs:label "Isolated Child Targeting"@en ;
+    rdfs:comment "Targeting children who are alone without adult supervision or companions."@en ;
+    rdfs:subClassOf cacontology-abduction:VictimTargetingPattern .
+
+cacontology-abduction:RoutineActivityTargeting rdf:type owl:Class ;
+    rdfs:label "Routine Activity Targeting"@en ;
+    rdfs:comment "Targeting children during predictable routine activities (school, recreation, errands)."@en ;
+    rdfs:subClassOf cacontology-abduction:VictimTargetingPattern .
+
+cacontology-abduction:OpportunityBasedTargeting rdf:type owl:Class ;
+    rdfs:label "Opportunity Based Targeting"@en ;
+    rdfs:comment "Targeting based on immediate opportunity rather than planned surveillance."@en ;
+    rdfs:subClassOf cacontology-abduction:VictimTargetingPattern .
+
+cacontology-abduction:VulnerabilityExploitation rdf:type owl:Class ;
+    rdfs:label "Vulnerability Exploitation"@en ;
+    rdfs:comment "Exploitation of specific victim vulnerabilities during stranger abduction."@en ;
+    rdfs:subClassOf cac-core:ExploitationEvent .
+
+cacontology-abduction:AgeBasedVulnerability rdf:type owl:Class ;
+    rdfs:label "Age Based Vulnerability"@en ;
+    rdfs:comment "Exploitation of victim's young age and limited ability to resist or escape."@en ;
+    rdfs:subClassOf cacontology-abduction:VulnerabilityExploitation .
+
+cacontology-abduction:SizeBasedVulnerability rdf:type owl:Class ;
+    rdfs:label "Size Based Vulnerability"@en ;
+    rdfs:comment "Exploitation of victim's small physical size relative to perpetrator."@en ;
+    rdfs:subClassOf cacontology-abduction:VulnerabilityExploitation .
+
+cacontology-abduction:IsolationVulnerability rdf:type owl:Class ;
+    rdfs:label "Isolation Vulnerability"@en ;
+    rdfs:comment "Exploitation of victim being alone without potential helpers or witnesses."@en ;
+    rdfs:subClassOf cacontology-abduction:VulnerabilityExploitation .
+
+# =============================================================================
+# VICTIM CONTROL AND COMPLIANCE CLASSES
+# =============================================================================
+
+cacontology-abduction:VictimControlMechanism rdf:type owl:Class ;
+    rdfs:label "Victim Control Mechanism"@en ;
+    rdfs:comment "Methods used to maintain control over victim during abduction and exploitation."@en ;
+    rdfs:subClassOf cac-core:ExploitationEvent .
+
+cacontology-abduction:ThreatBasedControl rdf:type owl:Class ;
+    rdfs:label "Threat Based Control"@en ;
+    rdfs:comment "Use of threats to maintain victim compliance and prevent resistance."@en ;
+    rdfs:subClassOf cacontology-abduction:VictimControlMechanism .
+
+cacontology-abduction:PhysicalIntimidation rdf:type owl:Class ;
+    rdfs:label "Physical Intimidation"@en ;
+    rdfs:comment "Use of physical presence and intimidation to control victim behavior."@en ;
+    rdfs:subClassOf cacontology-abduction:VictimControlMechanism .
+
+cacontology-abduction:VerbalThreats rdf:type owl:Class ;
+    rdfs:label "Verbal Threats"@en ;
+    rdfs:comment "Use of verbal threats to maintain victim compliance."@en ;
+    rdfs:subClassOf cacontology-abduction:ThreatBasedControl .
+
+cacontology-abduction:SilenceEnforcement rdf:type owl:Class ;
+    rdfs:label "Silence Enforcement"@en ;
+    rdfs:comment "Specific threats or actions to prevent victim from calling for help."@en ;
+    rdfs:subClassOf cacontology-abduction:ThreatBasedControl .
+
+cacontology-abduction:MovementRestriction rdf:type owl:Class ;
+    rdfs:label "Movement Restriction"@en ;
+    rdfs:comment "Physical or psychological restriction of victim movement and escape attempts."@en ;
+    rdfs:subClassOf cacontology-abduction:VictimControlMechanism .
+
+cacontology-abduction:ComplianceEnforcement rdf:type owl:Class ;
+    rdfs:label "Compliance Enforcement"@en ;
+    rdfs:comment "Methods used to enforce victim compliance with perpetrator demands."@en ;
+    rdfs:subClassOf cacontology-abduction:VictimControlMechanism .
+
+# =============================================================================
+# EXPLOITATION PATTERNS CLASSES
+# =============================================================================
+
+cacontology-abduction:AbductionExploitationPattern rdf:type owl:Class ;
+    rdfs:label "Abduction Exploitation Pattern"@en ;
+    rdfs:comment "Patterns of sexual exploitation following stranger abduction."@en ;
+    rdfs:subClassOf cacontology:ChildSexualAbuseEvent .
+
+cacontology-abduction:ImmediateExploitation rdf:type owl:Class ;
+    rdfs:label "Immediate Exploitation"@en ;
+    rdfs:comment "Sexual exploitation occurring immediately following abduction without delay."@en ;
+    rdfs:subClassOf cacontology-abduction:AbductionExploitationPattern .
+
+cacontology-abduction:LocationBasedExploitation rdf:type owl:Class ;
+    rdfs:label "Location Based Exploitation"@en ;
+    rdfs:comment "Exploitation occurring at specific location following victim transportation."@en ;
+    rdfs:subClassOf cacontology-abduction:AbductionExploitationPattern .
+
+cacontology-abduction:ControlledEnvironmentExploitation rdf:type owl:Class ;
+    rdfs:label "Controlled Environment Exploitation"@en ;
+    rdfs:comment "Exploitation in environment controlled by perpetrator to prevent escape or discovery."@en ;
+    rdfs:subClassOf cacontology-abduction:LocationBasedExploitation .
+
+cacontology-abduction:RitualizedExploitation rdf:type owl:Class ;
+    rdfs:label "Ritualized Exploitation"@en ;
+    rdfs:comment "Exploitation following specific ritualized patterns (forced showering, specific commands)."@en ;
+    rdfs:subClassOf cacontology-abduction:AbductionExploitationPattern .
+
+cacontology-abduction:HumiliationBasedExploitation rdf:type owl:Class ;
+    rdfs:label "Humiliation Based Exploitation"@en ;
+    rdfs:comment "Exploitation designed to humiliate and degrade victim beyond sexual assault."@en ;
+    rdfs:subClassOf cacontology-abduction:AbductionExploitationPattern .
+
+# =============================================================================
+# VICTIM RESPONSE AND RESISTANCE CLASSES
+# =============================================================================
+
+cacontology-abduction:VictimAbductionResponse rdf:type owl:Class ;
+    rdfs:label "Victim Abduction Response"@en ;
+    rdfs:comment "Victim's response to stranger abduction and exploitation attempts."@en ;
+    rdfs:subClassOf cac-core:Event .
+
+cacontology-abduction:InitialResistance rdf:type owl:Class ;
+    rdfs:label "Initial Resistance"@en ;
+    rdfs:comment "Victim's initial attempts to resist abduction or escape."@en ;
+    rdfs:subClassOf cacontology-abduction:VictimAbductionResponse .
+
+cacontology-abduction:ComplianceUnderThreat rdf:type owl:Class ;
+    rdfs:label "Compliance Under Threat"@en ;
+    rdfs:comment "Victim compliance due to weapon threats or intimidation."@en ;
+    rdfs:subClassOf cacontology-abduction:VictimAbductionResponse .
+
+cacontology-abduction:SurvivalBehavior rdf:type owl:Class ;
+    rdfs:label "Survival Behavior"@en ;
+    rdfs:comment "Victim behavior focused on survival and minimizing harm."@en ;
+    rdfs:subClassOf cacontology-abduction:VictimAbductionResponse .
+
+cacontology-abduction:EscapeAttempt rdf:type owl:Class ;
+    rdfs:label "Escape Attempt"@en ;
+    rdfs:comment "Victim's attempts to escape during or after abduction."@en ;
+    rdfs:subClassOf cacontology-abduction:VictimAbductionResponse .
+
+cacontology-abduction:PostAbductionReporting rdf:type owl:Class ;
+    rdfs:label "Post Abduction Reporting"@en ;
+    rdfs:comment "Victim's reporting of abduction and exploitation to authorities or family."@en ;
+    rdfs:subClassOf cacontology-abduction:VictimAbductionResponse .
+
+cacontology-abduction:ImmediateDisclosure rdf:type owl:Class ;
+    rdfs:label "Immediate Disclosure"@en ;
+    rdfs:comment "Immediate disclosure of abduction and assault upon release or escape."@en ;
+    rdfs:subClassOf cacontology-abduction:PostAbductionReporting .
+
+cacontology-abduction:DelayedDisclosure rdf:type owl:Class ;
+    rdfs:label "Delayed Disclosure"@en ;
+    rdfs:comment "Delayed disclosure due to trauma, threats, or other factors."@en ;
+    rdfs:subClassOf cacontology-abduction:PostAbductionReporting .
+
+# =============================================================================
+# INVESTIGATION AND EVIDENCE CLASSES
+# =============================================================================
+
+cacontology-abduction:StrangerAbductionInvestigation rdf:type owl:Class ;
+    rdfs:label "Stranger Abduction Investigation"@en ;
+    rdfs:comment "Specialized investigation of stranger abduction and sexual exploitation cases."@en ;
+    rdfs:subClassOf case-investigation:Investigation .
+
+cacontology-abduction:AbductionSceneEvidence rdf:type owl:Class ;
+    rdfs:label "Abduction Scene Evidence"@en ;
+    rdfs:comment "Physical evidence collected from abduction scene."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject .
+
+cacontology-abduction:ExploitationSceneEvidence rdf:type owl:Class ;
+    rdfs:label "Exploitation Scene Evidence"@en ;
+    rdfs:comment "Physical evidence collected from exploitation location."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject .
+
+cacontology-abduction:WeaponEvidence rdf:type owl:Class ;
+    rdfs:label "Weapon Evidence"@en ;
+    rdfs:comment "Weapons used in abduction and coercion recovered as evidence."@en ;
+    rdfs:subClassOf cacontology-physical:PhysicalEvidence .
+
+cacontology-abduction:DisguiseEvidence rdf:type owl:Class ;
+    rdfs:label "Disguise Evidence"@en ;
+    rdfs:comment "Disguise items or concealment materials recovered as evidence."@en ;
+    rdfs:subClassOf cacontology-physical:DisguiseItem .
+
+cacontology-abduction:WitnessEvidence rdf:type owl:Class ;
+    rdfs:label "Witness Evidence"@en ;
+    rdfs:comment "Witness testimony regarding abduction or suspicious activity."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject .
+
+cacontology-abduction:SurveillanceEvidence rdf:type owl:Class ;
+    rdfs:label "Surveillance Evidence"@en ;
+    rdfs:comment "Video or photographic surveillance evidence of abduction or related activity."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject .
+
+# =============================================================================
+# STRANGER ABDUCTION PROPERTIES
+# =============================================================================
+
+# Abduction Characteristics Properties
+cacontology-abduction:abductionDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "abduction duration"@en ;
+    rdfs:comment "Duration of abduction from initial contact to victim release in hours."@en ;
+    rdfs:domain cacontology-abduction:StrangerAbduction ;
+    rdfs:range xsd:decimal .
+
+cacontology-abduction:abductionLocation rdf:type owl:DatatypeProperty ;
+    rdfs:label "abduction location"@en ;
+    rdfs:comment "Specific location where abduction occurred."@en ;
+    rdfs:domain cacontology-abduction:StrangerAbduction ;
+    rdfs:range xsd:string .
+
+cacontology-abduction:victimActivity rdf:type owl:DatatypeProperty ;
+    rdfs:label "victim activity"@en ;
+    rdfs:comment "Activity victim was engaged in when abducted (walking_to_school, playing, shopping)."@en ;
+    rdfs:domain cacontology-abduction:StrangerAbduction ;
+    rdfs:range xsd:string .
+
+cacontology-abduction:timeOfDay rdf:type owl:DatatypeProperty ;
+    rdfs:label "time of day"@en ;
+    rdfs:comment "Time of day when abduction occurred (morning, afternoon, evening, night)."@en ;
+    rdfs:domain cacontology-abduction:StrangerAbduction ;
+    rdfs:range xsd:string .
+
+cacontology-abduction:approachMethod rdf:type owl:DatatypeProperty ;
+    rdfs:label "approach method"@en ;
+    rdfs:comment "Method used to approach victim (direct_confrontation, deception, force)."@en ;
+    rdfs:domain cacontology-abduction:StrangerAbduction ;
+    rdfs:range xsd:string .
+
+# Weapon Properties
+cacontology-abduction:weaponType rdf:type owl:DatatypeProperty ;
+    rdfs:label "weapon type"@en ;
+    rdfs:comment "Type of weapon used for coercion (knife, firearm, blunt_object, implied)."@en ;
+    rdfs:domain cacontology-abduction:WeaponBasedCoercion ;
+    rdfs:range xsd:string .
+
+cacontology-abduction:weaponDisplayed rdf:type owl:DatatypeProperty ;
+    rdfs:label "weapon displayed"@en ;
+    rdfs:comment "Whether weapon was visibly displayed to victim."@en ;
+    rdfs:domain cacontology-abduction:WeaponBasedCoercion ;
+    rdfs:range xsd:boolean .
+
+cacontology-abduction:threatSpecificity rdf:type owl:DatatypeProperty ;
+    rdfs:label "threat specificity"@en ;
+    rdfs:comment "Specificity of threats made (vague, specific, detailed, graphic)."@en ;
+    rdfs:domain cacontology-abduction:WeaponBasedCoercion ;
+    rdfs:range xsd:string .
+
+cacontology-abduction:threatEffectiveness rdf:type owl:DatatypeProperty ;
+    rdfs:label "threat effectiveness"@en ;
+    rdfs:comment "Effectiveness of threats in controlling victim behavior."@en ;
+    rdfs:domain cacontology-abduction:WeaponBasedCoercion ;
+    rdfs:range xsd:string .
+
+# Disguise Properties
+cacontology-abduction:disguiseType rdf:type owl:DatatypeProperty ;
+    rdfs:label "disguise type"@en ;
+    rdfs:comment "Type of disguise used (ski_mask, hood, mask, clothing, vehicle)."@en ;
+    rdfs:domain cacontology-abduction:DisguiseBasedConcealment ;
+    rdfs:range xsd:string .
+
+cacontology-abduction:concealmentLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "concealment level"@en ;
+    rdfs:comment "Level of identity concealment (partial, full, complete)."@en ;
+    rdfs:domain cacontology-abduction:DisguiseBasedConcealment ;
+    rdfs:range xsd:string .
+
+cacontology-abduction:disguiseEffectiveness rdf:type owl:DatatypeProperty ;
+    rdfs:label "disguise effectiveness"@en ;
+    rdfs:comment "Effectiveness of disguise in preventing identification."@en ;
+    rdfs:domain cacontology-abduction:DisguiseBasedConcealment ;
+    rdfs:range xsd:string .
+
+# Location Properties
+cacontology-abduction:entryMethod rdf:type owl:DatatypeProperty ;
+    rdfs:label "entry method"@en ;
+    rdfs:comment "Method used to enter exploitation location (fire_escape, window, door, roof)."@en ;
+    rdfs:domain cacontology-abduction:ForcedLocationEntry ;
+    rdfs:range xsd:string .
+
+cacontology-abduction:locationIsolationLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "location isolation level"@en ;
+    rdfs:comment "Level of isolation of exploitation location (high, moderate, low)."@en ;
+    rdfs:domain cacontology-abduction:LocationIsolation ;
+    rdfs:range xsd:string .
+
+cacontology-abduction:accessDifficulty rdf:type owl:DatatypeProperty ;
+    rdfs:label "access difficulty"@en ;
+    rdfs:comment "Difficulty of accessing exploitation location (easy, moderate, difficult)."@en ;
+    rdfs:domain cacontology-abduction:ForcedLocationEntry ;
+    rdfs:range xsd:string .
+
+cacontology-abduction:escapeRoutes rdf:type owl:DatatypeProperty ;
+    rdfs:label "escape routes"@en ;
+    rdfs:comment "Number and accessibility of potential escape routes from location."@en ;
+    rdfs:domain cacontology-abduction:LocationIsolation ;
+    rdfs:range xsd:string .
+
+# Victim Response Properties
+cacontology-abduction:resistanceLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "resistance level"@en ;
+    rdfs:comment "Level of victim resistance (none, minimal, moderate, strong)."@en ;
+    rdfs:domain cacontology-abduction:VictimAbductionResponse ;
+    rdfs:range xsd:string .
+
+cacontology-abduction:complianceReason rdf:type owl:DatatypeProperty ;
+    rdfs:label "compliance reason"@en ;
+    rdfs:comment "Primary reason for victim compliance (fear, weapon_threat, physical_force)."@en ;
+    rdfs:domain cacontology-abduction:ComplianceUnderThreat ;
+    rdfs:range xsd:string .
+
+cacontology-abduction:reportingDelay rdf:type owl:DatatypeProperty ;
+    rdfs:label "reporting delay"@en ;
+    rdfs:comment "Time delay between incident and reporting in hours."@en ;
+    rdfs:domain cacontology-abduction:PostAbductionReporting ;
+    rdfs:range xsd:decimal .
+
+cacontology-abduction:disclosureMethod rdf:type owl:DatatypeProperty ;
+    rdfs:label "disclosure method"@en ;
+    rdfs:comment "Method of disclosure (family, police, school, medical)."@en ;
+    rdfs:domain cacontology-abduction:PostAbductionReporting ;
+    rdfs:range xsd:string .
+
+# Targeting Properties
+cacontology-abduction:targetingCriteria rdf:type owl:DatatypeProperty ;
+    rdfs:label "targeting criteria"@en ;
+    rdfs:comment "Criteria used for victim selection (age, size, isolation, opportunity)."@en ;
+    rdfs:domain cacontology-abduction:VictimTargetingPattern ;
+    rdfs:range xsd:string .
+
+cacontology-abduction:surveillanceDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "surveillance duration"@en ;
+    rdfs:comment "Duration of pre-abduction surveillance if any, in days."@en ;
+    rdfs:domain cacontology-abduction:VictimTargetingPattern ;
+    rdfs:range xsd:decimal .
+
+cacontology-abduction:opportunityWindow rdf:type owl:DatatypeProperty ;
+    rdfs:label "opportunity window"@en ;
+    rdfs:comment "Duration of opportunity window for abduction in minutes."@en ;
+    rdfs:domain cacontology-abduction:OpportunityBasedTargeting ;
+    rdfs:range xsd:decimal .
+
+# Investigation Properties
+cacontology-abduction:evidenceRecoveryRate rdf:type owl:DatatypeProperty ;
+    rdfs:label "evidence recovery rate"@en ;
+    rdfs:comment "Percentage of expected evidence successfully recovered."@en ;
+    rdfs:domain cacontology-abduction:StrangerAbductionInvestigation ;
+    rdfs:range xsd:decimal .
+
+cacontology-abduction:witnessCount rdf:type owl:DatatypeProperty ;
+    rdfs:label "witness count"@en ;
+    rdfs:comment "Number of witnesses identified during investigation."@en ;
+    rdfs:domain cacontology-abduction:StrangerAbductionInvestigation ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-abduction:investigationDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "investigation duration"@en ;
+    rdfs:comment "Duration of investigation from report to resolution in days."@en ;
+    rdfs:domain cacontology-abduction:StrangerAbductionInvestigation ;
+    rdfs:range xsd:decimal .
+
+# =============================================================================
+# STRANGER ABDUCTION RELATIONSHIPS
+# =============================================================================
+
+# Abduction Relationships
+cacontology-abduction:perpetratesAbduction rdf:type owl:ObjectProperty ;
+    rdfs:label "perpetrates abduction"@en ;
+    rdfs:comment "Links perpetrator to stranger abduction they commit."@en ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range cacontology-abduction:StrangerAbduction .
+
+cacontology-abduction:victimsOf rdf:type owl:ObjectProperty ;
+    rdfs:label "victims of"@en ;
+    rdfs:comment "Links victim to stranger abduction they experience."@en ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range cacontology-abduction:StrangerAbduction .
+
+cacontology-abduction:occursAt rdf:type owl:ObjectProperty ;
+    rdfs:label "occurs at"@en ;
+    rdfs:comment "Links abduction to location where it occurs."@en ;
+    rdfs:domain cacontology-abduction:StrangerAbduction ;
+    rdfs:range uco-location:Location .
+
+# Weapon and Coercion Relationships
+cacontology-abduction:usesWeapon rdf:type owl:ObjectProperty ;
+    rdfs:label "uses weapon"@en ;
+    rdfs:comment "Links abduction to weapon used for coercion."@en ;
+    rdfs:domain cacontology-abduction:StrangerAbduction ;
+    rdfs:range cacontology-abduction:WeaponEvidence .
+
+cacontology-abduction:employsCoercion rdf:type owl:ObjectProperty ;
+    rdfs:label "employs coercion"@en ;
+    rdfs:comment "Links abduction to coercion methods employed."@en ;
+    rdfs:domain cacontology-abduction:StrangerAbduction ;
+    rdfs:range cacontology-abduction:WeaponBasedCoercion .
+
+cacontology-abduction:threatensWith rdf:type owl:ObjectProperty ;
+    rdfs:label "threatens with"@en ;
+    rdfs:comment "Links perpetrator to weapon used for threats."@en ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range cacontology-abduction:WeaponEvidence .
+
+# Disguise and Concealment Relationships
+cacontology-abduction:usesDisguise rdf:type owl:ObjectProperty ;
+    rdfs:label "uses disguise"@en ;
+    rdfs:comment "Links abduction to disguise methods used."@en ;
+    rdfs:domain cacontology-abduction:StrangerAbduction ;
+    rdfs:range cacontology-abduction:DisguiseBasedConcealment .
+
+cacontology-abduction:concealsIdentityWith rdf:type owl:ObjectProperty ;
+    rdfs:label "conceals identity with"@en ;
+    rdfs:comment "Links perpetrator to disguise items used for concealment."@en ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range cacontology-abduction:DisguiseEvidence .
+
+# Location and Entry Relationships
+cacontology-abduction:forcesEntryTo rdf:type owl:ObjectProperty ;
+    rdfs:label "forces entry to"@en ;
+    rdfs:comment "Links abduction to forced entry into exploitation location."@en ;
+    rdfs:domain cacontology-abduction:StrangerAbduction ;
+    rdfs:range cacontology-abduction:ForcedLocationEntry .
+
+cacontology-abduction:isolatesAt rdf:type owl:ObjectProperty ;
+    rdfs:label "isolates at"@en ;
+    rdfs:comment "Links abduction to location used for victim isolation."@en ;
+    rdfs:domain cacontology-abduction:StrangerAbduction ;
+    rdfs:range cacontology-abduction:LocationIsolation .
+
+cacontology-abduction:transitionsTo rdf:type owl:ObjectProperty ;
+    rdfs:label "transitions to"@en ;
+    rdfs:comment "Links abduction location to exploitation location."@en ;
+    rdfs:domain uco-location:Location ;
+    rdfs:range uco-location:Location .
+
+# Targeting and Vulnerability Relationships
+cacontology-abduction:targetsVictim rdf:type owl:ObjectProperty ;
+    rdfs:label "targets victim"@en ;
+    rdfs:comment "Links targeting pattern to victim being targeted."@en ;
+    rdfs:domain cacontology-abduction:VictimTargetingPattern ;
+    rdfs:range uco-identity:Person .
+
+cacontology-abduction:exploitsVulnerability rdf:type owl:ObjectProperty ;
+    rdfs:label "exploits vulnerability"@en ;
+    rdfs:comment "Links abduction to victim vulnerability being exploited."@en ;
+    rdfs:domain cacontology-abduction:StrangerAbduction ;
+    rdfs:range cacontology-abduction:VulnerabilityExploitation .
+
+cacontology-abduction:exhibitsVulnerability rdf:type owl:ObjectProperty ;
+    rdfs:label "exhibits vulnerability"@en ;
+    rdfs:comment "Links victim to vulnerability they exhibit."@en ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range cacontology-abduction:VulnerabilityExploitation .
+
+# Control and Response Relationships
+cacontology-abduction:exercisesControl rdf:type owl:ObjectProperty ;
+    rdfs:label "exercises control"@en ;
+    rdfs:comment "Links perpetrator to control mechanisms they employ."@en ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range cacontology-abduction:VictimControlMechanism .
+
+cacontology-abduction:respondsTo rdf:type owl:ObjectProperty ;
+    rdfs:label "responds to"@en ;
+    rdfs:comment "Links victim response to abduction they are responding to."@en ;
+    rdfs:domain cacontology-abduction:VictimAbductionResponse ;
+    rdfs:range cacontology-abduction:StrangerAbduction .
+
+cacontology-abduction:resistsAbduction rdf:type owl:ObjectProperty ;
+    rdfs:label "resists abduction"@en ;
+    rdfs:comment "Links victim to resistance efforts against abduction."@en ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range cacontology-abduction:InitialResistance .
+
+# Exploitation Relationships
+cacontology-abduction:escalatesTo rdf:type owl:ObjectProperty ;
+    rdfs:label "escalates to"@en ;
+    rdfs:comment "Links abduction to exploitation pattern that follows."@en ;
+    rdfs:domain cacontology-abduction:StrangerAbduction ;
+    rdfs:range cacontology-abduction:AbductionExploitationPattern .
+
+cacontology-abduction:facilitatesExploitation rdf:type owl:ObjectProperty ;
+    rdfs:label "facilitates exploitation"@en ;
+    rdfs:comment "Links abduction methods to exploitation they facilitate."@en ;
+    rdfs:domain cacontology-abduction:StrangerAbduction ;
+    rdfs:range cacontology-abduction:AbductionExploitationPattern .
+
+# Investigation and Evidence Relationships
+cacontology-abduction:investigatesAbduction rdf:type owl:ObjectProperty ;
+    rdfs:label "investigates abduction"@en ;
+    rdfs:comment "Links investigation to abduction being investigated."@en ;
+    rdfs:domain cacontology-abduction:StrangerAbductionInvestigation ;
+    rdfs:range cacontology-abduction:StrangerAbduction .
+
+cacontology-abduction:documentsAbduction rdf:type owl:ObjectProperty ;
+    rdfs:label "documents abduction"@en ;
+    rdfs:comment "Links evidence to abduction it documents."@en ;
+    rdfs:domain uco-observable:ObservableObject ;
+    rdfs:range cacontology-abduction:StrangerAbduction .
+
+cacontology-abduction:supportsCharge rdf:type owl:ObjectProperty ;
+    rdfs:label "supports charge"@en ;
+    rdfs:comment "Links abduction evidence to criminal charges it supports."@en ;
+    rdfs:domain cacontology-abduction:AbductionSceneEvidence ;
+    rdfs:range uco-observable:ObservableObject .
+
+cacontology-abduction:recoveredFrom rdf:type owl:ObjectProperty ;
+    rdfs:label "recovered from"@en ;
+    rdfs:comment "Links evidence to location where it was recovered."@en ;
+    rdfs:domain uco-observable:ObservableObject ;
+    rdfs:range uco-location:Location .
+
+# Reporting and Disclosure Relationships
+cacontology-abduction:reportsAbduction rdf:type owl:ObjectProperty ;
+    rdfs:label "reports abduction"@en ;
+    rdfs:comment "Links victim to abduction reporting they make."@en ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range cacontology-abduction:PostAbductionReporting .
+
+cacontology-abduction:disclosesTo rdf:type owl:ObjectProperty ;
+    rdfs:label "discloses to"@en ;
+    rdfs:comment "Links disclosure to person or agency receiving disclosure."@en ;
+    rdfs:domain cacontology-abduction:PostAbductionReporting ;
+    rdfs:range uco-identity:Person .
+
+cacontology-abduction:triggersInvestigation rdf:type owl:ObjectProperty ;
+    rdfs:label "triggers investigation"@en ;
+    rdfs:comment "Links victim reporting to investigation it triggers."@en ;
+    rdfs:domain cacontology-abduction:PostAbductionReporting ;
+    rdfs:range cacontology-abduction:StrangerAbductionInvestigation . 

@@ -63,6 +63,7 @@ _REPO_ROOT = _THIS_DIR.parent
 _OUTPUT_DIR = _THIS_DIR / "output"
 _TEST_OUTPUT_DIR = _THIS_DIR / "graph_output"
 _SHACL_NS = Namespace("http://www.w3.org/ns/shacl#")
+_VENDOR_DIR = _THIS_DIR / "vendor"
 _CORE_SHAPES_FILENAME = "cacontology-core-shapes.ttl"
 
 
@@ -71,14 +72,14 @@ def get_cac_ontology_dir() -> Path:
 
     Precedence:
       1. ``CAC_ONTOLOGY_DIR`` environment variable (absolute or ``~`` path)
-      2. Pinned copies shipped in this ``ontology/`` package directory
+      2. The pinned copy in ``ontology/vendor/cac-3.1.0``
 
-    See ``CAC_ONTOLOGY_VERSION`` for the upstream commit of the pinned files.
+    See ``CAC_ONTOLOGY_VERSION`` for the upstream commit of every vendored file.
     """
     env = os.environ.get("CAC_ONTOLOGY_DIR", "").strip()
     if env:
         return Path(env).expanduser().resolve()
-    return _THIS_DIR.resolve()
+    return (_VENDOR_DIR / "cac-3.1.0").resolve()
 
 
 def get_core_shapes_path() -> Path:
@@ -100,7 +101,7 @@ def load_core_shapes_graph() -> Tuple[Graph, int]:
         raise FileNotFoundError(
             f"SHACL shapes file not found at {shapes_path}. "
             f"Set CAC_ONTOLOGY_DIR to a CAC Ontology ontology/ directory, "
-            f"or ensure pinned copies exist under {_THIS_DIR}."
+            f"or ensure pinned copies exist under {_VENDOR_DIR}."
         )
 
     shapes_graph = Graph()

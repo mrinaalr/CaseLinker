@@ -1,0 +1,1217 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-observable: <https://ontology.unifiedcyberontology.org/uco/observable/> .
+@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
+@prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix gufo: <http://purl.org/nemo/gufo#> .
+
+# Ontology Declaration
+<https://cacontology.projectvic.org/multi-jurisdiction> rdf:type owl:Ontology ;
+    rdfs:label "CAC Multi-Jurisdictional Operations Ontology"@en ;
+    rdfs:comment "An ontology for representing multi-jurisdictional investigations, inter-agency coordination, resource sharing, and jurisdictional challenges in Internet Crimes Against Children cases, extending UCO and CASE with gUFO foundational ontology enhancements."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/multi-jurisdiction/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:issued "2024-12-19"^^xsd:date ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/identity/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/observable/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/action/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/location/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/role/1.5.0> ,
+                <https://cacontology.projectvic.org/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> .
+
+# =============================================================================
+# MULTI-JURISDICTIONAL INVESTIGATION CLASSES (extending UCO Action with gUFO Event)
+# =============================================================================
+
+cacontology-multi:MultiJurisdictionalInvestigation rdf:type owl:Class ;
+    rdfs:label "Multi-Jurisdictional Investigation"@en ;
+    rdfs:comment "Investigation spanning multiple legal jurisdictions requiring coordination between agencies."@en ;
+    rdfs:subClassOf cac-core:CoordinationEvent .
+
+cacontology-multi:TaskForceOperation rdf:type owl:Class ;
+    rdfs:label "Task Force Operation"@en ;
+    rdfs:comment "Coordinated operation conducted by multi-agency task force."@en ;
+    rdfs:subClassOf cacontology-multi:MultiJurisdictionalInvestigation .
+
+cacontology-multi:JointInvestigation rdf:type owl:Class ;
+    rdfs:label "Joint Investigation"@en ;
+    rdfs:comment "Investigation conducted jointly by multiple law enforcement agencies."@en ;
+    rdfs:subClassOf cacontology-multi:MultiJurisdictionalInvestigation .
+
+cacontology-multi:InformationSharing rdf:type owl:Class ;
+    rdfs:label "Information Sharing"@en ;
+    rdfs:comment "Formal sharing of intelligence or evidence between jurisdictions."@en ;
+    rdfs:subClassOf cac-core:CoordinationEvent .
+
+cacontology-multi:ResourceSharing rdf:type owl:Class ;
+    rdfs:label "Resource Sharing"@en ;
+    rdfs:comment "Sharing of personnel, equipment, or expertise between agencies."@en ;
+    rdfs:subClassOf cac-core:CoordinationEvent .
+
+cacontology-multi:CrossBorderOperation rdf:type owl:Class ;
+    rdfs:label "Cross Border Operation"@en ;
+    rdfs:comment "Law enforcement operation that crosses state or national borders."@en ;
+    rdfs:subClassOf cacontology-multi:MultiJurisdictionalInvestigation .
+
+# =============================================================================
+# MULTI-JURISDICTIONAL PHASES (gUFO Phase anti-rigid modeling)
+# =============================================================================
+
+cacontology-multi:InitialCoordinationPhase rdf:type owl:Class ;
+    rdfs:label "Initial Coordination Phase"@en ;
+    rdfs:comment "Phase involving initial contact and coordination between jurisdictions."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+cacontology-multi:JurisdictionalNegotiationPhase rdf:type owl:Class ;
+    rdfs:label "Jurisdictional Negotiation Phase"@en ;
+    rdfs:comment "Phase involving determination of lead agency and jurisdictional authority."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+cacontology-multi:JointExecutionPhase rdf:type owl:Class ;
+    rdfs:label "Joint Execution Phase"@en ;
+    rdfs:comment "Phase involving coordinated execution of multi-jurisdictional operations."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+cacontology-multi:InformationSynthesisPhase rdf:type owl:Class ;
+    rdfs:label "Information Synthesis Phase"@en ;
+    rdfs:comment "Phase involving compilation and analysis of multi-jurisdictional evidence."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+# =============================================================================
+# AGENCY AND ORGANIZATION CLASSES (extending UCO Identity with gUFO Object)
+# =============================================================================
+
+cacontology-multi:LawEnforcementAgency rdf:type owl:Class ;
+    rdfs:label "Law Enforcement Agency"@en ;
+    rdfs:comment "Government organization responsible for law enforcement within a jurisdiction."@en ;
+    rdfs:subClassOf uco-identity:Organization, cac-core:OrganizationLikeEntity .
+
+cacontology-multi:FederalAgency rdf:type owl:Class ;
+    rdfs:label "Federal Agency"@en ;
+    rdfs:comment "Law enforcement agency with federal jurisdiction."@en ;
+    rdfs:subClassOf cacontology-multi:LawEnforcementAgency .
+
+cacontology-multi:StateAgency rdf:type owl:Class ;
+    rdfs:label "State Agency"@en ;
+    rdfs:comment "Law enforcement agency with state-level jurisdiction."@en ;
+    rdfs:subClassOf cacontology-multi:LawEnforcementAgency .
+
+cacontology-multi:LocalAgency rdf:type owl:Class ;
+    rdfs:label "Local Agency"@en ;
+    rdfs:comment "Law enforcement agency with local jurisdiction (city, county, municipal)."@en ;
+    rdfs:subClassOf cacontology-multi:LawEnforcementAgency .
+
+cacontology-multi:TaskForce rdf:type owl:Class ;
+    rdfs:label "Task Force"@en ;
+    rdfs:comment "Temporary multi-agency organization formed for specific operations."@en ;
+    rdfs:subClassOf uco-identity:Organization, cac-core:OrganizationLikeEntity .
+
+cacontology-multi:InternationalAgency rdf:type owl:Class ;
+    rdfs:label "International Agency"@en ;
+    rdfs:comment "Law enforcement agency from foreign jurisdiction."@en ;
+    rdfs:subClassOf cacontology-multi:LawEnforcementAgency .
+
+# =============================================================================
+# JURISDICTION AND AUTHORITY CLASSES (extending UCO Core with gUFO Object)
+# =============================================================================
+
+cacontology-multi:Jurisdiction rdf:type owl:Class ;
+    rdfs:label "Jurisdiction"@en ;
+    rdfs:comment "Legal authority and geographic area where an agency has enforcement power."@en ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:PlaceLikeEntity .
+
+cacontology-multi:FederalJurisdiction rdf:type owl:Class ;
+    rdfs:label "Federal Jurisdiction"@en ;
+    rdfs:comment "Legal authority under federal law and courts."@en ;
+    rdfs:subClassOf cacontology-multi:Jurisdiction .
+
+cacontology-multi:StateJurisdiction rdf:type owl:Class ;
+    rdfs:label "State Jurisdiction"@en ;
+    rdfs:comment "Legal authority under state law and courts."@en ;
+    rdfs:subClassOf cacontology-multi:Jurisdiction .
+
+cacontology-multi:LocalJurisdiction rdf:type owl:Class ;
+    rdfs:label "Local Jurisdiction"@en ;
+    rdfs:comment "Legal authority at local level (city, county, municipal)."@en ;
+    rdfs:subClassOf cacontology-multi:Jurisdiction .
+
+cacontology-multi:InternationalJurisdiction rdf:type owl:Class ;
+    rdfs:label "International Jurisdiction"@en ;
+    rdfs:comment "Legal authority in foreign countries."@en ;
+    rdfs:subClassOf cacontology-multi:Jurisdiction .
+
+# =============================================================================
+# COORDINATION ROLE CLASSES (extending UCO Role with gUFO Role)
+# =============================================================================
+
+cacontology-multi:LeadAgency rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Lead Agency"@en ;
+    rdfs:comment "Primary agency responsible for coordinating multi-jurisdictional investigation."@en ;
+    rdfs:subClassOf cac-core:Role .
+
+cacontology-multi:ParticipatingAgency rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Participating Agency"@en ;
+    rdfs:comment "Agency providing support or resources to multi-jurisdictional investigation."@en ;
+    rdfs:subClassOf cac-core:Role .
+
+cacontology-multi:TaskForceLeader rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Task Force Leader"@en ;
+    rdfs:comment "Officer responsible for leading multi-agency task force operations."@en ;
+    rdfs:subClassOf cac-core:Role .
+
+cacontology-multi:LiaisonOfficer rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Liaison Officer"@en ;
+    rdfs:comment "Officer responsible for communication between agencies."@en ;
+    rdfs:subClassOf cac-core:Role .
+
+cacontology-multi:CoordinatingAgent rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Coordinating Agent"@en ;
+    rdfs:comment "Personnel responsible for coordinating multi-jurisdictional activities."@en ;
+    rdfs:subClassOf cac-core:Role .
+
+# =============================================================================
+# LEGAL AND PROCEDURAL CLASSES (extending UCO Observable with gUFO Object)
+# =============================================================================
+
+cacontology-multi:InteragencyAgreement rdf:type owl:Class ;
+    rdfs:label "Interagency Agreement"@en ;
+    rdfs:comment "Formal agreement between agencies for cooperation and resource sharing."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject, cac-core:Artifact .
+
+cacontology-multi:MutualAidRequest rdf:type owl:Class ;
+    rdfs:label "Mutual Aid Request"@en ;
+    rdfs:comment "Formal request for assistance from another jurisdiction."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject, cac-core:Artifact .
+
+cacontology-multi:JurisdictionalWarrant rdf:type owl:Class ;
+    rdfs:label "Jurisdictional Warrant"@en ;
+    rdfs:comment "Legal authorization that specifies jurisdictional authority."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject, cac-core:Artifact .
+
+cacontology-multi:ExtraditionRequest rdf:type owl:Class ;
+    rdfs:label "Extradition Request"@en ;
+    rdfs:comment "Legal request to transfer suspect between jurisdictions."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject, cac-core:Artifact .
+
+cacontology-multi:InformationSharingAgreement rdf:type owl:Class ;
+    rdfs:label "Information Sharing Agreement"@en ;
+    rdfs:comment "Agreement governing sharing of sensitive information between agencies."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject, cac-core:Artifact .
+
+# =============================================================================
+# COORDINATION SITUATIONS (gUFO Situation modeling)
+# =============================================================================
+
+cacontology-multi:MultiJurisdictionalSituation rdf:type owl:Class ;
+    rdfs:label "Multi-Jurisdictional Situation"@en ;
+    rdfs:comment "Complex situation requiring coordination across multiple jurisdictions."@en ;
+    rdfs:subClassOf cac-core:Situation .
+
+cacontology-multi:JurisdictionalConflictSituation rdf:type owl:Class ;
+    rdfs:label "Jurisdictional Conflict Situation"@en ;
+    rdfs:comment "Situation involving disputes over jurisdictional authority."@en ;
+    rdfs:subClassOf cac-core:Situation .
+
+cacontology-multi:InteragencyCooperationSituation rdf:type owl:Class ;
+    rdfs:label "Inter-agency Cooperation Situation"@en ;
+    rdfs:comment "Situation involving successful coordination between agencies."@en ;
+    rdfs:subClassOf cac-core:Situation .
+
+# =============================================================================
+# gUFO TEMPORAL PROPERTIES
+# =============================================================================
+
+cacontology-multi:hasCoordinationPhaseBeginPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has coordination phase begin point"@en ;
+    rdfs:comment "Temporal begin point for coordination phase."@en ;
+    rdfs:subPropertyOf gufo:hasBeginPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-multi:hasCoordinationPhaseEndPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has coordination phase end point"@en ;
+    rdfs:comment "Temporal end point for coordination phase."@en ;
+    rdfs:subPropertyOf gufo:hasEndPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-multi:hasRoleBeginPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has role begin point"@en ;
+    rdfs:comment "Temporal begin point for coordination role."@en ;
+    rdfs:subPropertyOf gufo:hasBeginPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Role ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-multi:hasRoleEndPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has role end point"@en ;
+    rdfs:comment "Temporal end point for coordination role."@en ;
+    rdfs:subPropertyOf gufo:hasEndPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Role ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-multi:coordinationPhaseDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "coordination phase duration"@en ;
+    rdfs:comment "Duration of coordination phase."@en ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:duration .
+
+# =============================================================================
+# INTERSTATE TRANSPORTATION FRAMEWORK (Buffalo/Vermont Case Enhancement)
+# =============================================================================
+
+cacontology-multi:InterstateTransportationOffense rdf:type owl:Class ;
+    rdfs:label "Interstate Transportation Offense"@en ;
+    rdfs:comment "Criminal offense involving transportation of victim across state lines."@en ;
+    rdfs:subClassOf cac-core:ExploitationEvent .
+
+cacontology-multi:TransportationForIllegalPurpose rdf:type owl:Class ;
+    rdfs:label "Transportation for Illegal Purpose"@en ;
+    rdfs:comment "Transportation with intent to engage in criminal sexual activity."@en ;
+    rdfs:subClassOf cacontology-multi:InterstateTransportationOffense .
+
+cacontology-multi:StateLineCrossing rdf:type owl:Class ;
+    rdfs:label "State Line Crossing"@en ;
+    rdfs:comment "Documented crossing of state boundaries during offense."@en ;
+    rdfs:subClassOf uco-action:Action .
+
+cacontology-multi:InterstateVictimTransport rdf:type owl:Class ;
+    rdfs:label "Interstate Victim Transport"@en ;
+    rdfs:comment "Transportation of minor victim across state lines."@en ;
+    rdfs:subClassOf cacontology-multi:StateLineCrossing .
+
+cacontology-multi:FederalJurisdictionTrigger rdf:type owl:Class ;
+    rdfs:label "Federal Jurisdiction Trigger"@en ;
+    rdfs:comment "Interstate activity that triggers federal jurisdiction."@en ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:EnduringEntity .
+
+cacontology-multi:InterstateFlightFromProsecution rdf:type owl:Class ;
+    rdfs:label "Interstate Flight from Prosecution"@en ;
+    rdfs:comment "Crossing state lines to avoid prosecution or arrest."@en ;
+    rdfs:subClassOf cacontology-multi:StateLineCrossing .
+
+cacontology-multi:JurisdictionalHandoff rdf:type owl:Class ;
+    rdfs:label "Jurisdictional Handoff"@en ;
+    rdfs:comment "Transfer of investigative authority between state and federal agencies."@en ;
+    rdfs:subClassOf uco-action:Action .
+
+cacontology-multi:InterstateCoordination rdf:type owl:Class ;
+    rdfs:label "Interstate Coordination"@en ;
+    rdfs:comment "Coordination between law enforcement agencies across state lines."@en ;
+    rdfs:subClassOf cacontology-multi:InformationSharing .
+
+# =============================================================================
+# COORDINATION PROPERTIES
+# =============================================================================
+
+# Investigation Coordination Properties
+cacontology-multi:involvesAgency rdf:type owl:ObjectProperty ;
+    rdfs:label "involves agency"@en ;
+    rdfs:comment "Links investigation to participating law enforcement agency."@en ;
+    rdfs:domain cacontology-multi:MultiJurisdictionalInvestigation ;
+    rdfs:range cacontology-multi:LawEnforcementAgency .
+
+cacontology-multi:leadBy rdf:type owl:ObjectProperty ;
+    rdfs:label "lead by"@en ;
+    rdfs:comment "Identifies the lead agency for the investigation."@en ;
+    rdfs:domain cacontology-multi:MultiJurisdictionalInvestigation ;
+    rdfs:range cacontology-multi:LeadAgency .
+
+cacontology-multi:coordinatedBy rdf:type owl:ObjectProperty ;
+    rdfs:label "coordinated by"@en ;
+    rdfs:comment "Links investigation to coordinating agent or officer."@en ;
+    rdfs:domain cacontology-multi:MultiJurisdictionalInvestigation ;
+    rdfs:range cacontology-multi:CoordinatingAgent .
+
+cacontology-multi:operatesInJurisdiction rdf:type owl:ObjectProperty ;
+    rdfs:label "operates in jurisdiction"@en ;
+    rdfs:comment "Links agency to the jurisdiction where it has authority."@en ;
+    rdfs:domain cacontology-multi:LawEnforcementAgency ;
+    rdfs:range cacontology-multi:Jurisdiction .
+
+# Resource and Information Sharing Properties
+cacontology-multi:sharesResourcesWith rdf:type owl:ObjectProperty ;
+    rdfs:label "shares resources with"@en ;
+    rdfs:comment "Links agency to another agency with which it shares resources."@en ;
+    rdfs:domain cacontology-multi:LawEnforcementAgency ;
+    rdfs:range cacontology-multi:LawEnforcementAgency .
+
+cacontology-multi:sharesInformationWith rdf:type owl:ObjectProperty ;
+    rdfs:label "shares information with"@en ;
+    rdfs:comment "Links agency to another agency with which it shares information."@en ;
+    rdfs:domain cacontology-multi:LawEnforcementAgency ;
+    rdfs:range cacontology-multi:LawEnforcementAgency .
+
+cacontology-multi:requestsAssistanceFrom rdf:type owl:ObjectProperty ;
+    rdfs:label "requests assistance from"@en ;
+    rdfs:comment "Links agency requesting assistance to providing agency."@en ;
+    rdfs:domain cacontology-multi:LawEnforcementAgency ;
+    rdfs:range cacontology-multi:LawEnforcementAgency .
+
+cacontology-multi:providesAssistanceTo rdf:type owl:ObjectProperty ;
+    rdfs:label "provides assistance to"@en ;
+    rdfs:comment "Links agency providing assistance to requesting agency."@en ;
+    rdfs:domain cacontology-multi:LawEnforcementAgency ;
+    rdfs:range cacontology-multi:LawEnforcementAgency .
+
+# Investigation Scope Properties
+cacontology-multi:investigationScope rdf:type owl:DatatypeProperty ;
+    rdfs:label "investigation scope"@en ;
+    rdfs:comment "Geographic or jurisdictional scope of investigation (local, state, national, international)."@en ;
+    rdfs:domain cacontology-multi:MultiJurisdictionalInvestigation ;
+    rdfs:range xsd:string .
+
+cacontology-multi:jurisdictionCount rdf:type owl:DatatypeProperty ;
+    rdfs:label "jurisdiction count"@en ;
+    rdfs:comment "Number of jurisdictions involved in the investigation."@en ;
+    rdfs:domain cacontology-multi:MultiJurisdictionalInvestigation ;
+    rdfs:range xsd:integer .
+
+cacontology-multi:agencyCount rdf:type owl:DatatypeProperty ;
+    rdfs:label "agency count"@en ;
+    rdfs:comment "Number of agencies participating in the investigation."@en ;
+    rdfs:domain cacontology-multi:MultiJurisdictionalInvestigation ;
+    rdfs:range xsd:integer .
+
+cacontology-multi:crossesBorders rdf:type owl:DatatypeProperty ;
+    rdfs:label "crosses borders"@en ;
+    rdfs:comment "Whether investigation crosses state or national borders."@en ;
+    rdfs:domain cacontology-multi:MultiJurisdictionalInvestigation ;
+    rdfs:range xsd:boolean .
+
+# Coordination Properties
+cacontology-multi:coordinationMechanism rdf:type owl:DatatypeProperty ;
+    rdfs:label "coordination mechanism"@en ;
+    rdfs:comment "Method used for inter-agency coordination (task_force, liaison, joint_operation, mou)."@en ;
+    rdfs:domain cacontology-multi:MultiJurisdictionalInvestigation ;
+    rdfs:range xsd:string .
+
+cacontology-multi:communicationProtocol rdf:type owl:DatatypeProperty ;
+    rdfs:label "communication protocol"@en ;
+    rdfs:comment "Established protocol for inter-agency communication."@en ;
+    rdfs:domain cacontology-multi:MultiJurisdictionalInvestigation ;
+    rdfs:range xsd:string .
+
+cacontology-multi:meetingFrequency rdf:type owl:DatatypeProperty ;
+    rdfs:label "meeting frequency"@en ;
+    rdfs:comment "How often coordination meetings are held (daily, weekly, monthly, as_needed)."@en ;
+    rdfs:domain cacontology-multi:MultiJurisdictionalInvestigation ;
+    rdfs:range xsd:string .
+
+cacontology-multi:informationSharingLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "information sharing level"@en ;
+    rdfs:comment "Level of information sharing between agencies (full, limited, restricted)."@en ;
+    rdfs:domain cacontology-multi:MultiJurisdictionalInvestigation ;
+    rdfs:range xsd:string .
+
+# Legal and Authority Properties
+cacontology-multi:primaryJurisdiction rdf:type owl:ObjectProperty ;
+    rdfs:label "primary jurisdiction"@en ;
+    rdfs:comment "Primary legal jurisdiction for the investigation."@en ;
+    rdfs:domain cacontology-multi:MultiJurisdictionalInvestigation ;
+    rdfs:range cacontology-multi:Jurisdiction .
+
+cacontology-multi:authorizedBy rdf:type owl:ObjectProperty ;
+    rdfs:label "authorized by"@en ;
+    rdfs:comment "Legal authorization enabling multi-jurisdictional operation."@en ;
+    rdfs:domain cacontology-multi:MultiJurisdictionalInvestigation ;
+    rdfs:range cacontology-multi:JurisdictionalWarrant .
+
+cacontology-multi:governedByAgreement rdf:type owl:ObjectProperty ;
+    rdfs:label "governed by agreement"@en ;
+    rdfs:comment "Interagency agreement governing the cooperation."@en ;
+    rdfs:domain cacontology-multi:MultiJurisdictionalInvestigation ;
+    rdfs:range cacontology-multi:InteragencyAgreement .
+
+cacontology-multi:legalComplexity rdf:type owl:DatatypeProperty ;
+    rdfs:label "legal complexity"@en ;
+    rdfs:comment "Assessment of legal complexity (low, medium, high, extreme)."@en ;
+    rdfs:domain cacontology-multi:MultiJurisdictionalInvestigation ;
+    rdfs:range xsd:string .
+
+# Task Force Properties
+cacontology-multi:taskForceType rdf:type owl:DatatypeProperty ;
+    rdfs:label "task force type"@en ;
+    rdfs:comment "Type of task force (permanent, temporary, ad_hoc, specialized)."@en ;
+    rdfs:domain cacontology-multi:TaskForce ;
+    rdfs:range xsd:string .
+
+cacontology-multi:taskForceDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "task force duration"@en ;
+    rdfs:comment "Expected duration of task force operation (in months)."@en ;
+    rdfs:domain cacontology-multi:TaskForce ;
+    rdfs:range xsd:integer .
+
+cacontology-multi:memberAgencyCount rdf:type owl:DatatypeProperty ;
+    rdfs:label "member agency count"@en ;
+    rdfs:comment "Number of agencies participating in task force."@en ;
+    rdfs:domain cacontology-multi:TaskForce ;
+    rdfs:range xsd:integer .
+
+cacontology-multi:personnelAssigned rdf:type owl:DatatypeProperty ;
+    rdfs:label "personnel assigned"@en ;
+    rdfs:comment "Number of personnel assigned to task force."@en ;
+    rdfs:domain cacontology-multi:TaskForce ;
+    rdfs:range xsd:integer .
+
+# Resource Sharing Properties
+cacontology-multi:resourceType rdf:type owl:DatatypeProperty ;
+    rdfs:label "resource type"@en ;
+    rdfs:comment "Type of resource being shared (personnel, equipment, expertise, funding)."@en ;
+    rdfs:domain cacontology-multi:ResourceSharing ;
+    rdfs:range xsd:string .
+
+cacontology-multi:resourceValue rdf:type owl:DatatypeProperty ;
+    rdfs:label "resource value"@en ;
+    rdfs:comment "Monetary value of shared resources in USD."@en ;
+    rdfs:domain cacontology-multi:ResourceSharing ;
+    rdfs:range xsd:decimal .
+
+cacontology-multi:sharingDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "sharing duration"@en ;
+    rdfs:comment "Duration of resource sharing arrangement (in days)."@en ;
+    rdfs:domain cacontology-multi:ResourceSharing ;
+    rdfs:range xsd:integer .
+
+cacontology-multi:costSharingArrangement rdf:type owl:DatatypeProperty ;
+    rdfs:label "cost sharing arrangement"@en ;
+    rdfs:comment "How costs are shared between agencies."@en ;
+    rdfs:domain cacontology-multi:ResourceSharing ;
+    rdfs:range xsd:string .
+
+# Challenges and Issues Properties
+cacontology-multi:coordinationChallenges rdf:type owl:DatatypeProperty ;
+    rdfs:label "coordination challenges"@en ;
+    rdfs:comment "Challenges encountered in multi-jurisdictional coordination."@en ;
+    rdfs:domain cacontology-multi:MultiJurisdictionalInvestigation ;
+    rdfs:range xsd:string .
+
+cacontology-multi:jurisdictionalConflicts rdf:type owl:DatatypeProperty ;
+    rdfs:label "jurisdictional conflicts"@en ;
+    rdfs:comment "Conflicts between jurisdictional authorities or procedures."@en ;
+    rdfs:domain cacontology-multi:MultiJurisdictionalInvestigation ;
+    rdfs:range xsd:string .
+
+cacontology-multi:communicationBarriers rdf:type owl:DatatypeProperty ;
+    rdfs:label "communication barriers"@en ;
+    rdfs:comment "Barriers to effective inter-agency communication."@en ;
+    rdfs:domain cacontology-multi:MultiJurisdictionalInvestigation ;
+    rdfs:range xsd:string .
+
+cacontology-multi:successMetrics rdf:type owl:DatatypeProperty ;
+    rdfs:label "success metrics"@en ;
+    rdfs:comment "Metrics used to measure success of multi-jurisdictional cooperation."@en ;
+    rdfs:domain cacontology-multi:MultiJurisdictionalInvestigation ;
+    rdfs:range xsd:string .
+
+# International Cooperation Properties
+cacontology-multi:diplomaticChannels rdf:type owl:DatatypeProperty ;
+    rdfs:label "diplomatic channels"@en ;
+    rdfs:comment "Whether diplomatic channels were required for cooperation."@en ;
+    rdfs:domain cacontology-multi:CrossBorderOperation ;
+    rdfs:range xsd:boolean .
+
+cacontology-multi:treatyBasis rdf:type owl:DatatypeProperty ;
+    rdfs:label "treaty basis"@en ;
+    rdfs:comment "International treaty or agreement enabling cooperation."@en ;
+    rdfs:domain cacontology-multi:CrossBorderOperation ;
+    rdfs:range xsd:string .
+
+cacontology-multi:languageBarriers rdf:type owl:DatatypeProperty ;
+    rdfs:label "language barriers"@en ;
+    rdfs:comment "Language barriers encountered in international cooperation."@en ;
+    rdfs:domain cacontology-multi:CrossBorderOperation ;
+    rdfs:range xsd:string .
+
+cacontology-multi:timeZoneChallenges rdf:type owl:DatatypeProperty ;
+    rdfs:label "time zone challenges"@en ;
+    rdfs:comment "Challenges posed by different time zones in coordination."@en ;
+    rdfs:domain cacontology-multi:CrossBorderOperation ;
+    rdfs:range xsd:string .
+
+# =============================================================================
+# ENHANCED OPERATION COORDINATION (Idaho Case Analysis)
+# =============================================================================
+
+cacontology-multi:NamedMultiJurisdictionalOperation rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-multi:MultiJurisdictionalInvestigation ;
+    rdfs:label "Named Multi-Jurisdictional Operation"@en ;
+    rdfs:comment "Formally named multi-phase operation coordinated across jurisdictions."@en .
+
+cacontology-multi:NationalCoordinatedOperation rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-multi:NamedMultiJurisdictionalOperation ;
+    rdfs:label "National Coordinated Operation"@en ;
+    rdfs:comment "Operation coordinated across multiple CAC task forces nationally."@en .
+
+cacontology-multi:OperationSafeOnlineSummerType rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-multi:NationalCoordinatedOperation ;
+    rdfs:label "Operation Safe Online Summer Type"@en ;
+    rdfs:comment "Type of national operation coordinated across 61+ CAC Task Forces."@en .
+
+cacontology-multi:CoordinatedArrestWave rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-multi:MultiJurisdictionalInvestigation ;
+    rdfs:label "Coordinated Arrest Wave"@en ;
+    rdfs:comment "Coordinated arrests conducted as part of larger operation."@en .
+
+cacontology-multi:OperationMetricsTracking rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:AssessmentResult ;
+    rdfs:label "Operation Metrics Tracking"@en ;
+    rdfs:comment "Comprehensive tracking of operation outcomes and effectiveness."@en .
+
+# Enhanced Operation Properties
+cacontology-multi:operationName rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-multi:NamedMultiJurisdictionalOperation ;
+    rdfs:range xsd:string ;
+    rdfs:label "operation name"@en ;
+    rdfs:comment "Official name of the multi-jurisdictional operation."@en .
+
+cacontology-multi:operationPhase rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-multi:NamedMultiJurisdictionalOperation ;
+    rdfs:range xsd:string ;
+    rdfs:label "operation phase"@en ;
+    rdfs:comment "Current phase of the operation (planning, execution, follow-up)."@en .
+
+cacontology-multi:taskForcesInvolved rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-multi:NationalCoordinatedOperation ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "task forces involved"@en ;
+    rdfs:comment "Number of CAC task forces participating in operation."@en .
+
+cacontology-multi:totalArrests rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-multi:OperationMetricsTracking ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "total arrests"@en ;
+    rdfs:comment "Total number of arrests made during operation."@en .
+
+cacontology-multi:specializedUnitsDeployed rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-multi:NamedMultiJurisdictionalOperation ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "specialized units deployed"@en ;
+    rdfs:comment "Number of specialized units deployed in operation."@en .
+
+cacontology-multi:operationDuration rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-multi:NamedMultiJurisdictionalOperation ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "operation duration"@en ;
+    rdfs:comment "Duration of operation in days."@en .
+
+cacontology-multi:coordinationCenterLocation rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-multi:NationalCoordinatedOperation ;
+    rdfs:range xsd:string ;
+    rdfs:label "coordination center location"@en ;
+    rdfs:comment "Location of operation coordination center."@en .
+
+# =============================================================================
+# SEX OFFENDER COMPLIANCE MONITORING (Arkansas Case Analysis)
+# =============================================================================
+
+cacontology-multi:ComplianceMonitoringOperation rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-multi:MultiJurisdictionalInvestigation ;
+    rdfs:label "Compliance Monitoring Operation"@en ;
+    rdfs:comment "Large-scale operation monitoring sex offender compliance and registration requirements."@en .
+
+cacontology-multi:SexOffenderComplianceCheck rdf:type owl:Class ;
+    rdfs:subClassOf uco-action:Action ;
+    rdfs:label "Sex Offender Compliance Check"@en ;
+    rdfs:comment "Individual compliance check visit to registered sex offender."@en .
+
+cacontology-multi:RegistrationComplianceViolation rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:EnduringEntity ;
+    rdfs:label "Registration Compliance Violation"@en ;
+    rdfs:comment "Violation of sex offender registration requirements."@en .
+
+cacontology-multi:ComplianceVisitCoordination rdf:type owl:Class ;
+    rdfs:subClassOf uco-action:Action ;
+    rdfs:label "Compliance Visit Coordination"@en ;
+    rdfs:comment "Coordination of multiple compliance visits across jurisdictions."@en .
+
+cacontology-multi:StatewideSweep rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-multi:ComplianceMonitoringOperation ;
+    rdfs:label "Statewide Sweep"@en ;
+    rdfs:comment "Statewide operation conducting compliance checks across all jurisdictions."@en .
+
+# =============================================================================
+# MULTI-STATE TRAFFICKING INVESTIGATIONS (Arkansas Case Analysis)
+# =============================================================================
+
+cacontology-multi:MultiStateTraffickingInvestigation rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-multi:CrossBorderOperation ;
+    rdfs:label "Multi-State Trafficking Investigation"@en ;
+    rdfs:comment "Child sex trafficking investigation spanning multiple states."@en .
+
+cacontology-multi:TraffickingCoordinationCenter rdf:type owl:Class ;
+    rdfs:subClassOf uco-identity:Organization ;
+    rdfs:label "Trafficking Coordination Center"@en ;
+    rdfs:comment "Center coordinating multi-state trafficking investigations."@en .
+
+cacontology-multi:InterstateTraffickingNetwork rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:OrganizationLikeEntity ;
+    rdfs:label "Interstate Trafficking Network"@en ;
+    rdfs:comment "Criminal network operating across state boundaries for trafficking."@en .
+
+cacontology-multi:TraffickingInvestigationTask rdf:type owl:Class ;
+    rdfs:subClassOf uco-action:Action ;
+    rdfs:label "Trafficking Investigation Task"@en ;
+    rdfs:comment "Specific investigation task in multi-state trafficking case."@en .
+
+cacontology-multi:CrossStateEvidence rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:Artifact ;
+    rdfs:label "Cross-State Evidence"@en ;
+    rdfs:comment "Evidence collected across multiple states in trafficking investigation."@en .
+
+# =============================================================================
+# ENHANCED OPERATIONAL SCALE (Arkansas Analysis)
+# =============================================================================
+
+cacontology-multi:LargeScaleOperation rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-multi:NamedMultiJurisdictionalOperation ;
+    rdfs:label "Large Scale Operation"@en ;
+    rdfs:comment "Operation involving 100+ law enforcement actions or extensive coordination."@en .
+
+cacontology-multi:ProactiveInvestigationCampaign rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-multi:MultiJurisdictionalInvestigation ;
+    rdfs:label "Proactive Investigation Campaign"@en ;
+    rdfs:comment "Campaign focused on proactive investigation rather than reactive response."@en .
+
+cacontology-multi:HandsOnOffenseInvestigation rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-multi:MultiJurisdictionalInvestigation ;
+    rdfs:label "Hands-On Offense Investigation"@en ;
+    rdfs:comment "Investigation specifically targeting hands-on sexual offenses against children."@en .
+
+cacontology-multi:ChildRescueCoordination rdf:type owl:Class ;
+    rdfs:subClassOf uco-action:Action ;
+    rdfs:label "Child Rescue Coordination"@en ;
+    rdfs:comment "Coordination of child rescue operations across jurisdictions."@en .
+
+cacontology-multi:VictimIdentificationTask rdf:type owl:Class ;
+    rdfs:subClassOf uco-action:Action ;
+    rdfs:label "Victim Identification Task"@en ;
+    rdfs:comment "Task focused on identifying new child victims."@en .
+
+# =============================================================================
+# ENHANCED OPERATIONAL PROPERTIES (Arkansas Scale)
+# =============================================================================
+
+cacontology-multi:complianceVisitsCount rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-multi:ComplianceMonitoringOperation ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "compliance visits count"@en ;
+    rdfs:comment "Number of compliance visits conducted during operation."@en .
+
+cacontology-multi:statesInvolved rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-multi:MultiStateTraffickingInvestigation ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "states involved"@en ;
+    rdfs:comment "Number of states involved in trafficking investigation."@en .
+
+cacontology-multi:searchWarrantsExecuted rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-multi:LargeScaleOperation ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "search warrants executed"@en ;
+    rdfs:comment "Number of search warrants executed during operation."@en .
+
+cacontology-multi:handsOnArrestsCount rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-multi:HandsOnOffenseInvestigation ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "hands-on arrests count"@en ;
+    rdfs:comment "Number of arrests for hands-on offenses."@en .
+
+cacontology-multi:childrenRescued rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-multi:ChildRescueCoordination ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "children rescued"@en ;
+    rdfs:comment "Number of children rescued from ongoing abuse."@en .
+
+cacontology-multi:newVictimsIdentified rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-multi:VictimIdentificationTask ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "new victims identified"@en ;
+    rdfs:comment "Number of new child victims identified."@en .
+
+cacontology-multi:investigationsInitiated rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-multi:ProactiveInvestigationCampaign ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "investigations initiated"@en ;
+    rdfs:comment "Number of new investigations initiated during campaign."@en .
+
+cacontology-multi:casesSubmittedForProsecution rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-multi:LargeScaleOperation ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "cases submitted for prosecution"@en ;
+    rdfs:comment "Number of cases submitted for prosecution."@en .
+
+cacontology-multi:grandJuryAcceptances rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-multi:LargeScaleOperation ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "grand jury acceptances"@en ;
+    rdfs:comment "Number of cases accepted for grand jury indictment."@en .
+
+cacontology-multi:traffickingCasesIdentified rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-multi:MultiStateTraffickingInvestigation ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "trafficking cases identified"@en ;
+    rdfs:comment "Number of trafficking cases identified."@en .
+
+cacontology-multi:complianceViolationsFound rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-multi:ComplianceMonitoringOperation ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "compliance violations found"@en ;
+    rdfs:comment "Number of registration compliance violations discovered."@en .
+
+cacontology-multi:operationSuccessRating rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-multi:LargeScaleOperation ;
+    rdfs:range xsd:string ;
+    rdfs:label "operation success rating"@en ;
+    rdfs:comment "Success rating of operation (most_successful, highly_successful, successful, limited)."@en .
+
+# Enhanced Object Properties for Arkansas Framework
+cacontology-multi:involvesTraffickingInvestigation rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-multi:LargeScaleOperation ;
+    rdfs:range cacontology-multi:MultiStateTraffickingInvestigation ;
+    rdfs:label "involves trafficking investigation"@en ;
+    rdfs:comment "Operation involves multi-state trafficking investigation."@en .
+
+cacontology-multi:coordinatesComplianceChecks rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-multi:ComplianceMonitoringOperation ;
+    rdfs:range cacontology-multi:SexOffenderComplianceCheck ;
+    rdfs:label "coordinates compliance checks"@en ;
+    rdfs:comment "Operation coordinates individual compliance checks."@en .
+
+cacontology-multi:facilitatesChildRescue rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-multi:LargeScaleOperation ;
+    rdfs:range cacontology-multi:ChildRescueCoordination ;
+    rdfs:label "facilitates child rescue"@en ;
+    rdfs:comment "Operation facilitates child rescue coordination."@en .
+
+cacontology-multi:identifiesVictims rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-multi:ProactiveInvestigationCampaign ;
+    rdfs:range cacontology-multi:VictimIdentificationTask ;
+    rdfs:label "identifies victims"@en ;
+    rdfs:comment "Campaign includes victim identification tasks."@en .
+
+cacontology-multi:uncoversCrossStateEvidence rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-multi:MultiStateTraffickingInvestigation ;
+    rdfs:range cacontology-multi:CrossStateEvidence ;
+    rdfs:label "uncovers cross-state evidence"@en ;
+    rdfs:comment "Investigation uncovers evidence across multiple states."@en .
+
+# =============================================================================
+# INTERSTATE TRANSPORTATION PROPERTIES (Buffalo/Vermont Case Enhancement)
+# =============================================================================
+
+# Transportation Offense Properties
+cacontology-multi:transportationIntent rdf:type owl:DatatypeProperty ;
+    rdfs:label "transportation intent"@en ;
+    rdfs:comment "Intent for transportation (sexual_activity, sexual_conduct, avoiding_prosecution)."@en ;
+    rdfs:domain cacontology-multi:TransportationForIllegalPurpose ;
+    rdfs:range xsd:string .
+
+cacontology-multi:statesCrossed rdf:type owl:DatatypeProperty ;
+    rdfs:label "states crossed"@en ;
+    rdfs:comment "Number of state boundaries crossed during transportation."@en ;
+    rdfs:domain cacontology-multi:StateLineCrossing ;
+    rdfs:range xsd:integer .
+
+cacontology-multi:crossingDocumentation rdf:type owl:DatatypeProperty ;
+    rdfs:label "crossing documentation"@en ;
+    rdfs:comment "Type of documentation evidencing state line crossing (gps, toll_records, surveillance, witness)."@en ;
+    rdfs:domain cacontology-multi:StateLineCrossing ;
+    rdfs:range xsd:string .
+
+cacontology-multi:transportationMethod rdf:type owl:DatatypeProperty ;
+    rdfs:label "transportation method"@en ;
+    rdfs:comment "Method of transportation (vehicle, bus, train, plane, other)."@en ;
+    rdfs:domain cacontology-multi:InterstateVictimTransport ;
+    rdfs:range xsd:string .
+
+cacontology-multi:jurisdictionTriggerType rdf:type owl:DatatypeProperty ;
+    rdfs:label "jurisdiction trigger type"@en ;
+    rdfs:comment "Type of federal jurisdiction trigger (interstate_transport, wire_communication, federal_property)."@en ;
+    rdfs:domain cacontology-multi:FederalJurisdictionTrigger ;
+    rdfs:range xsd:string .
+
+cacontology-multi:prosecutionAvoidanceBehavior rdf:type owl:DatatypeProperty ;
+    rdfs:label "prosecution avoidance behavior"@en ;
+    rdfs:comment "Behavior indicating attempt to avoid prosecution through flight."@en ;
+    rdfs:domain cacontology-multi:InterstateFlightFromProsecution ;
+    rdfs:range xsd:string .
+
+# Coordination Properties
+cacontology-multi:handoffType rdf:type owl:DatatypeProperty ;
+    rdfs:label "handoff type"@en ;
+    rdfs:comment "Type of jurisdictional handoff (state_to_federal, federal_to_state, state_to_state)."@en ;
+    rdfs:domain cacontology-multi:JurisdictionalHandoff ;
+    rdfs:range xsd:string .
+
+cacontology-multi:coordinationComplexity rdf:type owl:DatatypeProperty ;
+    rdfs:label "coordination complexity"@en ;
+    rdfs:comment "Complexity level of interstate coordination (simple, moderate, complex, highly_complex)."@en ;
+    rdfs:domain cacontology-multi:InterstateCoordination ;
+    rdfs:range xsd:string .
+
+cacontology-multi:crossStateCommunication rdf:type owl:DatatypeProperty ;
+    rdfs:label "cross state communication"@en ;
+    rdfs:comment "Communication methods used for cross-state coordination."@en ;
+    rdfs:domain cacontology-multi:InterstateCoordination ;
+    rdfs:range xsd:string .
+
+# Interstate Transportation Object Properties
+cacontology-multi:involvesStateLineCrossing rdf:type owl:ObjectProperty ;
+    rdfs:label "involves state line crossing"@en ;
+    rdfs:comment "Links transportation offense to state line crossing events."@en ;
+    rdfs:domain cacontology-multi:InterstateTransportationOffense ;
+    rdfs:range cacontology-multi:StateLineCrossing .
+
+cacontology-multi:triggersJurisdiction rdf:type owl:ObjectProperty ;
+    rdfs:label "triggers jurisdiction"@en ;
+    rdfs:comment "Links transportation offense to federal jurisdiction trigger."@en ;
+    rdfs:domain cacontology-multi:InterstateTransportationOffense ;
+    rdfs:range cacontology-multi:FederalJurisdictionTrigger .
+
+cacontology-multi:requiresHandoff rdf:type owl:ObjectProperty ;
+    rdfs:label "requires handoff"@en ;
+    rdfs:comment "Links interstate offense to required jurisdictional handoff."@en ;
+    rdfs:domain cacontology-multi:InterstateTransportationOffense ;
+    rdfs:range cacontology-multi:JurisdictionalHandoff .
+
+cacontology-multi:facilitatedByCoordination rdf:type owl:ObjectProperty ;
+    rdfs:label "facilitated by coordination"@en ;
+    rdfs:comment "Links interstate investigation to coordination mechanism used."@en ;
+    rdfs:domain cacontology-multi:InterstateTransportationOffense ;
+    rdfs:range cacontology-multi:InterstateCoordination .
+
+cacontology-multi:originatingState rdf:type owl:ObjectProperty ;
+    rdfs:label "originating state"@en ;
+    rdfs:comment "State where transportation originated."@en ;
+    rdfs:domain cacontology-multi:StateLineCrossing ;
+    rdfs:range uco-location:Location .
+
+cacontology-multi:destinationState rdf:type owl:ObjectProperty ;
+    rdfs:label "destination state"@en ;
+    rdfs:comment "State where transportation terminated."@en ;
+    rdfs:domain cacontology-multi:StateLineCrossing ;
+    rdfs:range uco-location:Location .
+
+# =============================================================================
+# MASS PROSECUTION FRAMEWORK (Kidflix/Europol Large-Scale Operations)
+# =============================================================================
+
+cacontology-multi:MassProsecutionCoordination rdf:type owl:Class ;
+    rdfs:label "Mass Prosecution Coordination"@en ;
+    rdfs:comment "Coordination of prosecutions for massive user bases from large-scale platform takedowns requiring simultaneous action across multiple jurisdictions (nearly 2 million users for Kidflix operation)."@en ;
+    rdfs:subClassOf cacontology-multi:NamedMultiJurisdictionalOperation .
+
+cacontology-multi:InternationalProsecutionFramework rdf:type owl:Class ;
+    rdfs:label "International Prosecution Framework"@en ;
+    rdfs:comment "Framework for coordinating prosecutions across multiple countries for global platform takedowns."@en ;
+    rdfs:subClassOf cacontology-multi:CrossBorderOperation .
+
+cacontology-multi:UserTriageProsecution rdf:type owl:Class ;
+    rdfs:label "User Triage Prosecution"@en ;
+    rdfs:comment "Prosecution strategy based on automated triage of user risk levels and evidence strength for massive user databases."@en ;
+    rdfs:subClassOf uco-action:Action .
+
+cacontology-multi:PriorityProsecutionTrack rdf:type owl:Class ;
+    rdfs:label "Priority Prosecution Track"@en ;
+    rdfs:comment "High-priority prosecution track for most serious offenders identified in mass user analysis."@en ;
+    rdfs:subClassOf cacontology-multi:UserTriageProsecution .
+
+cacontology-multi:DistributedProsecutionTeam rdf:type owl:Class ;
+    rdfs:label "Distributed Prosecution Team"@en ;
+    rdfs:comment "Prosecution team distributed across multiple jurisdictions for handling massive caseloads."@en ;
+    rdfs:subClassOf uco-identity:Organization .
+
+cacontology-multi:AutomatedEvidenceDistribution rdf:type owl:Class ;
+    rdfs:label "Automated Evidence Distribution"@en ;
+    rdfs:comment "Automated system for distributing evidence packages to appropriate jurisdictions based on user location and evidence strength."@en ;
+    rdfs:subClassOf uco-action:Action .
+
+cacontology-multi:MassUserJurisdictionMapping rdf:type owl:Class ;
+    rdfs:label "Mass User Jurisdiction Mapping"@en ;
+    rdfs:comment "Mapping of massive user bases to appropriate jurisdictions for prosecution based on location and legal frameworks."@en ;
+    rdfs:subClassOf uco-action:Action .
+
+cacontology-multi:ProsecutionCapacityAnalysis rdf:type owl:Class ;
+    rdfs:label "Prosecution Capacity Analysis"@en ;
+    rdfs:comment "Analysis of prosecution capacity across jurisdictions to optimize case distribution for massive operations."@en ;
+    rdfs:subClassOf uco-action:Action .
+
+cacontology-multi:CoordinatedCharging rdf:type owl:Class ;
+    rdfs:label "Coordinated Charging"@en ;
+    rdfs:comment "Coordinated charging decisions across multiple jurisdictions to ensure consistent prosecution approach."@en ;
+    rdfs:subClassOf uco-action:Action .
+
+cacontology-multi:InternationalLegalHarmonization rdf:type owl:Class ;
+    rdfs:label "International Legal Harmonization"@en ;
+    rdfs:comment "Harmonization of legal approaches across countries for consistent prosecution of global platform users."@en ;
+    rdfs:subClassOf cacontology-multi:InternationalProsecutionFramework .
+
+# =============================================================================
+# MASS PROSECUTION PROPERTIES
+# =============================================================================
+
+# Scale and Volume Properties
+cacontology-multi:usersForProsecutionMillions rdf:type owl:DatatypeProperty ;
+    rdfs:label "users for prosecution millions"@en ;
+    rdfs:comment "Number of users targeted for prosecution in millions."@en ;
+    rdfs:domain cacontology-multi:MassProsecutionCoordination ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-multi:operationDurationDays rdf:type owl:DatatypeProperty ;
+    rdfs:label "operation duration days"@en ;
+    rdfs:comment "Duration of operation in days (e.g., 4 days for Operation Hive Strike)."@en ;
+    rdfs:domain cacontology-multi:MassProsecutionCoordination ;
+    rdfs:range xsd:decimal .
+
+# Agency Coordination Properties
+cacontology-multi:agencyParticipantCount rdf:type owl:DatatypeProperty ;
+    rdfs:label "agency participant count"@en ;
+    rdfs:comment "Number of agencies participating in operation (e.g., 31 agencies in Operation Hive Strike)."@en ;
+    rdfs:domain cacontology-multi:MassProsecutionCoordination ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-multi:agentParticipantCount rdf:type owl:DatatypeProperty ;
+    rdfs:label "agent participant count"@en ;
+    rdfs:comment "Number of individual agents deployed in operation (e.g., 80+ agents in Operation Hive Strike)."@en ;
+    rdfs:domain cacontology-multi:DistributedProsecutionTeam ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-multi:agencyLevelsMixed rdf:type owl:DatatypeProperty ;
+    rdfs:label "agency levels mixed"@en ;
+    rdfs:comment "Whether operation includes federal, state, and local agencies (true/false)."@en ;
+    rdfs:domain cacontology-multi:MassProsecutionCoordination ;
+    rdfs:range xsd:boolean .
+
+# Geographic Scope Properties
+cacontology-multi:countiesInvolved rdf:type owl:DatatypeProperty ;
+    rdfs:label "counties involved"@en ;
+    rdfs:comment "Number of counties involved in statewide operation (e.g., 5 counties in Operation Hive Strike)."@en ;
+    rdfs:domain cacontology-multi:MassProsecutionCoordination ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-multi:statewideCoverage rdf:type owl:DatatypeProperty ;
+    rdfs:label "statewide coverage"@en ;
+    rdfs:comment "Whether operation covers entire state (true) or limited geographic area (false)."@en ;
+    rdfs:domain cacontology-multi:MassProsecutionCoordination ;
+    rdfs:range xsd:boolean .
+
+# Target and Strategy Properties
+cacontology-multi:targetTypeCount rdf:type owl:DatatypeProperty ;
+    rdfs:label "target type count"@en ;
+    rdfs:comment "Number of different offender types targeted simultaneously (e.g., 2 for predators and distributors)."@en ;
+    rdfs:domain cacontology-multi:MassProsecutionCoordination ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-multi:targetStrategy rdf:type owl:DatatypeProperty ;
+    rdfs:label "target strategy"@en ;
+    rdfs:comment "Strategy for targeting multiple offender types (simultaneous, sequential, integrated)."@en ;
+    rdfs:domain cacontology-multi:MassProsecutionCoordination ;
+    rdfs:range xsd:string .
+
+# Results and Metrics Properties
+cacontology-multi:chargeTypesDiversity rdf:type owl:DatatypeProperty ;
+    rdfs:label "charge types diversity"@en ;
+    rdfs:comment "Number of different charge types resulting from operation."@en ;
+    rdfs:domain cacontology-multi:MassProsecutionCoordination ;
+    rdfs:range xsd:nonNegativeInteger .
+
+# =============================================================================
+# NAMED OPERATION RELATIONSHIPS
+# =============================================================================
+
+# Operation Organization Relationships
+cacontology-multi:hostedBy rdf:type owl:ObjectProperty ;
+    rdfs:label "hosted by"@en ;
+    rdfs:comment "Links operation to hosting task force or agency."@en ;
+    rdfs:domain cacontology-multi:NamedMultiJurisdictionalOperation ;
+    rdfs:range uco-identity:Organization .
+
+cacontology-multi:coordinatesAgencies rdf:type owl:ObjectProperty ;
+    rdfs:label "coordinates agencies"@en ;
+    rdfs:comment "Links coordination mechanism to participating agencies."@en ;
+    rdfs:domain cacontology-multi:MassProsecutionCoordination ;
+    rdfs:range uco-identity:Organization .
+
+cacontology-multi:deploysAgents rdf:type owl:ObjectProperty ;
+    rdfs:label "deploys agents"@en ;
+    rdfs:comment "Links agent deployment coordination to individual agents or agent groups."@en ;
+    rdfs:domain cacontology-multi:DistributedProsecutionTeam ;
+    rdfs:range uco-role:Role .
+
+# Geographic Relationships
+cacontology-multi:spansCounties rdf:type owl:ObjectProperty ;
+    rdfs:label "spans counties"@en ;
+    rdfs:comment "Links multi-county operation to specific counties involved."@en ;
+    rdfs:domain cacontology-multi:MassProsecutionCoordination ;
+    rdfs:range uco-location:Location .
+
+cacontology-multi:coversState rdf:type owl:ObjectProperty ;
+    rdfs:label "covers state"@en ;
+    rdfs:comment "Links statewide operation to state jurisdiction covered."@en ;
+    rdfs:domain cacontology-multi:MassProsecutionCoordination ;
+    rdfs:range uco-location:Location .
+
+# Target and Strategy Relationships
+cacontology-multi:targetsOffenderType rdf:type owl:ObjectProperty ;
+    rdfs:label "targets offender type"@en ;
+    rdfs:comment "Links multi-jurisdictional operation to specific offender types targeted."@en ;
+    rdfs:domain cacontology-multi:MassProsecutionCoordination ;
+    rdfs:range uco-role:Role .
+
+cacontology-multi:utilizesCoordination rdf:type owl:ObjectProperty ;
+    rdfs:label "utilizes coordination"@en ;
+    rdfs:comment "Links named operation to coordination mechanisms used."@en ;
+    rdfs:domain cacontology-multi:MassProsecutionCoordination ;
+    rdfs:range cacontology-multi:MassProsecutionCoordination .
+
+# =============================================================================
+# NATIONWIDE COORDINATION FRAMEWORK (Operation Restore Justice Enhancement)
+# =============================================================================
+
+cacontology-multi:NationwideOperation rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-multi:NamedMultiJurisdictionalOperation ;
+    rdfs:label "Nationwide Operation"@en ;
+    rdfs:comment "Law enforcement operation coordinated across entire country involving all FBI field offices."@en .
+
+cacontology-multi:AllFBIFieldOfficesOperation rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-multi:NationwideOperation ;
+    rdfs:label "All FBI Field Offices Operation"@en ;
+    rdfs:comment "Operation involving all 55 FBI field offices in coordinated enforcement effort."@en .
+
+cacontology-multi:CEOSCoordinatedOperation rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-multi:NationwideOperation ;
+    rdfs:label "CEOS Coordinated Operation"@en ;
+    rdfs:comment "Operation coordinated by Child Exploitation and Obscenity Section (CEOS)."@en .
+
+cacontology-multi:USAttorneyOfficeParticipation rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-multi:MassProsecutionCoordination ;
+    rdfs:label "US Attorney Office Participation"@en ;
+    rdfs:comment "Participation of US Attorney's Offices around the country in coordinated operation."@en .
+
+cacontology-multi:ProjectSafeChildhoodOperation rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-multi:NationwideOperation ;
+    rdfs:label "Project Safe Childhood Operation"@en ;
+    rdfs:comment "Operation conducted under Project Safe Childhood initiative framework."@en .
+
+# =============================================================================
+# LARGE-SCALE CHILD RESCUE COORDINATION
+# =============================================================================
+
+cacontology-multi:MassChildRescueOperation rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-multi:ChildRescueCoordination ;
+    rdfs:label "Mass Child Rescue Operation"@en ;
+    rdfs:comment "Large-scale operation resulting in rescue of 100+ children."@en .
+
+cacontology-multi:SimultaneousChildRescue rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-multi:MassChildRescueOperation ;
+    rdfs:label "Simultaneous Child Rescue"@en ;
+    rdfs:comment "Rescue of multiple children across different locations simultaneously."@en .
+
+cacontology-multi:NationwideChildRescueCoordination rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-multi:MassChildRescueOperation ;
+    rdfs:label "Nationwide Child Rescue Coordination"@en ;
+    rdfs:comment "Coordination of child rescue operations across entire country."@en .
+
+# =============================================================================
+# RAPID RESPONSE AND COMMUNITY OUTREACH INTEGRATION
+# =============================================================================
+
+cacontology-multi:RapidResponseCoordination rdf:type owl:Class ;
+    rdfs:subClassOf uco-action:Action ;
+    rdfs:label "Rapid Response Coordination"@en ;
+    rdfs:comment "Coordination enabling rapid response from victim disclosure to arrest."@en .
+
+cacontology-multi:CommunityOutreachTriggeredInvestigation rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-multi:MultiJurisdictionalInvestigation ;
+    rdfs:label "Community Outreach Triggered Investigation"@en ;
+    rdfs:comment "Investigation triggered by victim disclosure following community outreach presentation."@en .
+
+cacontology-multi:SchoolPresentationDisclosureWorkflow rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-multi:RapidResponseCoordination ;
+    rdfs:label "School Presentation Disclosure Workflow"@en ;
+    rdfs:comment "Workflow from school safety presentation to victim disclosure to rapid arrest."@en .
+
+# =============================================================================
+# ENHANCED OPERATIONAL SCALE PROPERTIES (Operation Restore Justice)
+# =============================================================================
+
+cacontology-multi:fbiFieldOfficesInvolved rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-multi:AllFBIFieldOfficesOperation ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "FBI field offices involved"@en ;
+    rdfs:comment "Number of FBI field offices participating in operation."@en .
+
+cacontology-multi:childrenRescuedCount rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-multi:MassChildRescueOperation ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "children rescued count"@en ;
+    rdfs:comment "Total number of children rescued during operation."@en .
+
+cacontology-multi:arrestsNationwide rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-multi:NationwideOperation ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "arrests nationwide"@en ;
+    rdfs:comment "Total number of arrests made across all participating jurisdictions."@en .
+
+cacontology-multi:disclosureToArrestHours rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-multi:RapidResponseCoordination ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "disclosure to arrest hours"@en ;
+    rdfs:comment "Time in hours from victim disclosure to suspect arrest."@en .
+
+cacontology-multi:usAttorneyOfficesInvolved rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-multi:USAttorneyOfficeParticipation ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "US Attorney offices involved"@en ;
+    rdfs:comment "Number of US Attorney's Offices participating in operation."@en .
+
+cacontology-multi:communityOutreachEffectiveness rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-multi:CommunityOutreachTriggeredInvestigation ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "community outreach effectiveness"@en ;
+    rdfs:comment "Effectiveness rating of community outreach in generating disclosures (0.0-1.0)."@en .
+
+# =============================================================================
+# ENHANCED RELATIONSHIPS (Operation Restore Justice)
+# =============================================================================
+
+cacontology-multi:coordinatesNationwide rdf:type owl:ObjectProperty ;
+    rdfs:label "coordinates nationwide"@en ;
+    rdfs:comment "Links agency to nationwide coordination role."@en ;
+    rdfs:domain uco-identity:Organization ;
+    rdfs:range cacontology-multi:NationwideOperation .
+
+cacontology-multi:rescuesChildren rdf:type owl:ObjectProperty ;
+    rdfs:label "rescues children"@en ;
+    rdfs:comment "Links operation to child rescue activities."@en ;
+    rdfs:domain cacontology-multi:MassChildRescueOperation ;
+    rdfs:range uco-identity:Person .
+
+cacontology-multi:triggeredByOutreach rdf:type owl:ObjectProperty ;
+    rdfs:label "triggered by outreach"@en ;
+    rdfs:comment "Links investigation to community outreach that triggered it."@en ;
+    rdfs:domain cacontology-multi:CommunityOutreachTriggeredInvestigation ;
+    rdfs:range uco-action:Action .
+
+cacontology-multi:enablesRapidResponse rdf:type owl:ObjectProperty ;
+    rdfs:label "enables rapid response"@en ;
+    rdfs:comment "Links coordination mechanism to rapid response capability."@en ;
+    rdfs:domain cacontology-multi:RapidResponseCoordination ;
+    rdfs:range uco-action:Action .
+
+cacontology-multi:involvesFBIFieldOffice rdf:type owl:ObjectProperty ;
+    rdfs:label "involves FBI field office"@en ;
+    rdfs:comment "Links operation to participating FBI field office."@en ;
+    rdfs:domain cacontology-multi:AllFBIFieldOfficesOperation ;
+    rdfs:range uco-identity:Organization . 

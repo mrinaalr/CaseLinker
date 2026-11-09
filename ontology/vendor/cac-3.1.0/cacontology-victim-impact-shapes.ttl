@@ -1,0 +1,692 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix cacontology-impact: <https://cacontology.projectvic.org/victim-impact#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+# Ontology Declaration
+<https://cacontology.projectvic.org/victim-impact/shapes> rdf:type owl:Ontology ;
+    rdfs:label "CAC Victim Impact SHACL Shapes"@en ;
+    rdfs:comment "SHACL validation shapes for the CAC Victim Impact Assessment Ontology, providing validation for victim impact assessments, psychological harm, trauma indicators, and recovery processes."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/victim-impact/shapes/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://cacontology.projectvic.org/victim-impact/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> .
+
+# =============================================================================
+# VICTIM IMPACT ASSESSMENT SHAPES
+# =============================================================================
+
+cacontology-impact:VictimImpactAssessmentShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-impact:VictimImpactAssessment ;
+    rdfs:label "Victim Impact Assessment Shape"@en ;
+    rdfs:comment "Validation shape for victim impact assessment instances."@en ;
+    sh:property [
+        sh:path cacontology-impact:assessmentType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "initial" "comprehensive" "follow_up" "specialized" "court_ordered" "therapeutic" "forensic" ) ;
+        sh:message "Victim impact assessment must specify assessment type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-impact:severityLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "minimal" "mild" "moderate" "severe" "extreme" "catastrophic" ) ;
+        sh:message "Victim impact assessment must specify severity level from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-impact:assessmentDate ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Victim impact assessment must specify assessment date."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-impact:assessorCredentials ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "licensed_psychologist" "licensed_social_worker" "psychiatrist" "trauma_specialist" "forensic_interviewer" "victim_advocate" "clinical_therapist" ) ;
+        sh:message "Victim impact assessment must specify assessor credentials from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-impact:assessmentDuration ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.5 ;
+        sh:maxInclusive 8.0 ;
+        sh:message "Assessment duration must be between 0.5 and 8 hours."@en
+    ] .
+
+cacontology-impact:ComprehensiveImpactAssessmentShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-impact:ComprehensiveImpactAssessment ;
+    rdfs:label "Comprehensive Impact Assessment Shape"@en ;
+    rdfs:comment "Validation shape for comprehensive impact assessment instances."@en ;
+    sh:property [
+        sh:path cacontology-impact:assessmentDomains ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 3 ;
+        sh:maxInclusive 10 ;
+        sh:message "Comprehensive assessment must cover between 3 and 10 assessment domains."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-impact:standardizedInstruments ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Comprehensive assessment must specify if standardized instruments are used."@en
+    ] .
+
+# =============================================================================
+# PSYCHOLOGICAL HARM SHAPES
+# =============================================================================
+
+cacontology-impact:PsychologicalHarmShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-impact:PsychologicalHarm ;
+    rdfs:label "Psychological Harm Shape"@en ;
+    rdfs:comment "Validation shape for psychological harm instances."@en ;
+    sh:property [
+        sh:path cacontology-impact:harmType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "trauma" "anxiety" "depression" "ptsd" "complex_trauma" "behavioral_changes" "emotional_dysregulation" "attachment_disruption" ) ;
+        sh:message "Psychological harm must specify harm type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-impact:severity ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "mild" "moderate" "severe" "extreme" "debilitating" "life_threatening" ) ;
+        sh:message "Psychological harm must specify severity from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-impact:onsetTiming ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "immediate" "delayed" "gradual" "episodic" "chronic" "progressive" ) ;
+        sh:message "Onset timing must be from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-impact:duration ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 20.0 ;
+        sh:message "Harm duration must be between 0 and 20 years."@en
+    ] .
+
+cacontology-impact:TraumaIndicatorShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-impact:TraumaIndicator ;
+    rdfs:label "Trauma Indicator Shape"@en ;
+    rdfs:comment "Validation shape for trauma indicator instances."@en ;
+    sh:property [
+        sh:path cacontology-impact:indicatorType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "behavioral" "emotional" "cognitive" "physical" "social" "developmental" "academic" "relational" ) ;
+        sh:message "Trauma indicator must specify indicator type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-impact:indicatorSeverity ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "mild" "moderate" "severe" "extreme" "critical" ) ;
+        sh:message "Trauma indicator must specify severity from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-impact:frequency ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "rare" "occasional" "frequent" "daily" "constant" "episodic" ) ;
+        sh:message "Indicator frequency must be from the allowed list."@en
+    ] .
+
+cacontology-impact:ComplexTraumaShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-impact:ComplexTrauma ;
+    rdfs:label "Complex Trauma Shape"@en ;
+    rdfs:comment "Validation shape for complex trauma instances."@en ;
+    sh:property [
+        sh:path cacontology-impact:traumaType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "complex" "developmental" "relational" "attachment" "chronic" "repeated" ) ;
+        sh:message "Complex trauma must specify trauma type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-impact:developmentalImpact ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Complex trauma must specify if there is developmental impact."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-impact:attachmentDisruption ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Complex trauma may specify attachment disruption."@en
+    ] .
+
+# =============================================================================
+# THERAPEUTIC INTERVENTION SHAPES
+# =============================================================================
+
+cacontology-impact:TherapeuticInterventionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-impact:TherapeuticIntervention ;
+    rdfs:label "Therapeutic Intervention Shape"@en ;
+    rdfs:comment "Validation shape for therapeutic intervention instances."@en ;
+    sh:property [
+        sh:path cacontology-impact:interventionType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "individual_therapy" "group_therapy" "family_therapy" "trauma_therapy" "cognitive_behavioral" "play_therapy" "art_therapy" "emdr" ) ;
+        sh:message "Therapeutic intervention must specify intervention type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-impact:treatmentModality ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "CBT" "TF_CBT" "EMDR" "DBT" "play_therapy" "narrative_therapy" "somatic_therapy" "psychodynamic" ) ;
+        sh:message "Therapeutic intervention must specify treatment modality from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-impact:sessionCount ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 200 ;
+        sh:message "Session count must be between 1 and 200 when specified."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-impact:treatmentDuration ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1.0 ;
+        sh:maxInclusive 104.0 ;
+        sh:message "Treatment duration must be between 1 and 104 weeks."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Therapeutic intervention may have a start time."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:endTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Therapeutic intervention may have an end time."@en
+    ] .
+
+cacontology-impact:TraumaTherapyShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-impact:TraumaTherapy ;
+    rdfs:label "Trauma Therapy Shape"@en ;
+    rdfs:comment "Validation shape for trauma therapy instances."@en ;
+    sh:property [
+        sh:path cacontology-impact:traumaFocused ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:hasValue true ;
+        sh:message "Trauma therapy must be trauma-focused."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-impact:evidenceBased ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Trauma therapy must specify if it is evidence-based."@en
+    ] .
+
+cacontology-impact:SupportServiceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-impact:SupportService ;
+    rdfs:label "Support Service Shape"@en ;
+    rdfs:comment "Validation shape for support service instances."@en ;
+    sh:property [
+        sh:path cacontology-impact:serviceType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "victim_advocacy" "case_management" "crisis_intervention" "legal_support" "educational_support" "peer_support" "family_support" "financial_assistance" ) ;
+        sh:message "Support service must specify service type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-impact:serviceProvider ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "victim_services" "nonprofit_organization" "government_agency" "healthcare_system" "educational_institution" "faith_based" "community_organization" ) ;
+        sh:message "Support service must specify service provider from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-impact:serviceIntensity ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "minimal" "low" "moderate" "intensive" "crisis_level" "ongoing" ) ;
+        sh:message "Service intensity must be from the allowed list."@en
+    ] .
+
+cacontology-impact:VictimSupportShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-impact:VictimSupport ;
+    rdfs:label "Victim Support Shape"@en ;
+    rdfs:comment "Validation shape for victim support instances, including caregiver and peer support."@en ;
+    sh:property [
+        sh:path cacontology-impact:serviceType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "victim_advocacy" "safety_planning" "educational_support" "legal_support" "family_support" "peer_support" ) ;
+        sh:message "Victim support must specify a supported service type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-impact:serviceProvider ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Victim support may specify the service provider."@en
+    ] .
+
+# =============================================================================
+# RECOVERY PROCESS SHAPES
+# =============================================================================
+
+cacontology-impact:RecoveryProcessShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-impact:RecoveryProcess ;
+    rdfs:label "Recovery Process Shape"@en ;
+    rdfs:comment "Validation shape for recovery process instances."@en ;
+    sh:property [
+        sh:path cacontology-impact:recoveryStage ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "crisis" "stabilization" "processing" "integration" "growth" "maintenance" "relapse_prevention" ) ;
+        sh:message "Recovery process must specify recovery stage from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-impact:recoveryProgress ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "declining" "stable" "slow_progress" "steady_progress" "rapid_progress" "complete_recovery" ) ;
+        sh:message "Recovery process must specify recovery progress from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-impact:timeInRecovery ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 10.0 ;
+        sh:message "Time in recovery must be between 0 and 10 years."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-impact:recoveryMilestones ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 20 ;
+        sh:message "Recovery milestones must be between 0 and 20."@en
+    ] .
+
+cacontology-impact:ResilienceFactorShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-impact:ResilienceFactor ;
+    rdfs:label "Resilience Factor Shape"@en ;
+    rdfs:comment "Validation shape for resilience factor instances."@en ;
+    sh:property [
+        sh:path cacontology-impact:factorType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "individual" "family" "social" "community" "cultural" "spiritual" "environmental" "protective" ) ;
+        sh:message "Resilience factor must specify factor type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-impact:factorStrength ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "weak" "moderate" "strong" "very_strong" "exceptional" ) ;
+        sh:message "Resilience factor must specify factor strength from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-impact:protectiveValue ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:message "Protective value must be between 0.0 and 1.0."@en
+    ] .
+
+# =============================================================================
+# LONG-TERM EFFECTS SHAPES
+# =============================================================================
+
+cacontology-impact:LongTermEffectShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-impact:LongTermEffect ;
+    rdfs:label "Long Term Effect Shape"@en ;
+    rdfs:comment "Validation shape for long-term effect instances."@en ;
+    sh:property [
+        sh:path cacontology-impact:effectType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "psychological" "behavioral" "social" "academic" "occupational" "relational" "physical" "developmental" ) ;
+        sh:message "Long-term effect must specify effect type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-impact:effectSeverity ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "minimal" "mild" "moderate" "severe" "extreme" "life_altering" ) ;
+        sh:message "Long-term effect must specify severity from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-impact:effectDuration ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1.0 ;
+        sh:maxInclusive 50.0 ;
+        sh:message "Effect duration must be between 1 and 50 years."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-impact:functionalImpairment ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Long-term effect may specify functional impairment."@en
+    ] .
+
+cacontology-impact:DevelopmentalImpactShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-impact:DevelopmentalImpact ;
+    rdfs:label "Developmental Impact Shape"@en ;
+    rdfs:comment "Validation shape for developmental impact instances."@en ;
+    sh:property [
+        sh:path cacontology-impact:developmentalDomain ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "cognitive" "emotional" "social" "physical" "language" "motor" "adaptive" "academic" ) ;
+        sh:message "Developmental impact must specify developmental domain from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-impact:ageAtImpact ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 18 ;
+        sh:message "Age at impact must be between 0 and 18 years."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-impact:developmentalDelay ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Developmental impact may specify developmental delay."@en
+    ] .
+
+# =============================================================================
+# TREATMENT OUTCOME SHAPES
+# =============================================================================
+
+cacontology-impact:TreatmentOutcomeShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-impact:TreatmentOutcome ;
+    rdfs:label "Treatment Outcome Shape"@en ;
+    rdfs:comment "Validation shape for treatment outcome instances."@en ;
+    sh:property [
+        sh:path cacontology-impact:outcomeType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "symptom_reduction" "functional_improvement" "behavioral_change" "emotional_regulation" "social_functioning" "academic_improvement" "relational_healing" ) ;
+        sh:message "Treatment outcome must specify outcome type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-impact:outcomeLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "no_improvement" "minimal_improvement" "moderate_improvement" "significant_improvement" "substantial_improvement" "complete_resolution" ) ;
+        sh:message "Treatment outcome must specify outcome level from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-impact:measurementMethod ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "clinical_assessment" "standardized_instrument" "behavioral_observation" "self_report" "caregiver_report" "functional_assessment" ) ;
+        sh:message "Measurement method must be from the allowed list."@en
+    ] .
+
+# =============================================================================
+# OBJECT PROPERTY SHAPES
+# =============================================================================
+
+cacontology-impact:AssessesVictimShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-impact:assessesVictim ;
+    sh:name "assesses victim" ;
+    sh:description "Links assessment to victim being assessed" ;
+    sh:class uco-identity:Person ;
+    sh:minCount 1 ;
+    sh:maxCount 1 .
+
+cacontology-impact:IdentifiesHarmShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-impact:identifiesHarm ;
+    sh:name "identifies harm" ;
+    sh:description "Links assessment to psychological harm identified" ;
+    sh:class cacontology-impact:PsychologicalHarm ;
+    sh:minCount 0 .
+
+cacontology-impact:AddressesHarmShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-impact:addressesHarm ;
+    sh:name "addresses harm" ;
+    sh:description "Links intervention to harm being addressed" ;
+    sh:class cacontology-impact:PsychologicalHarm ;
+    sh:minCount 0 .
+
+cacontology-impact:SupportsRecoveryShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-impact:supportsRecovery ;
+    sh:name "supports recovery" ;
+    sh:description "Links intervention to recovery process supported" ;
+    sh:class cacontology-impact:RecoveryProcess ;
+    sh:minCount 0 .
+
+cacontology-impact:ManifestsAsShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-impact:manifestsAs ;
+    sh:name "manifests as" ;
+    sh:description "Links harm to trauma indicators" ;
+    sh:class cacontology-impact:TraumaIndicator ;
+    sh:minCount 0 .
+
+cacontology-impact:UtilizesResilienceShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-impact:utilizesResilience ;
+    sh:name "utilizes resilience" ;
+    sh:description "Links recovery to resilience factors utilized" ;
+    sh:class cacontology-impact:ResilienceFactor ;
+    sh:minCount 0 .
+
+cacontology-impact:ResultsInOutcomeShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-impact:resultsInOutcome ;
+    sh:name "results in outcome" ;
+    sh:description "Links intervention to treatment outcome" ;
+    sh:class cacontology-impact:TreatmentOutcome ;
+    sh:minCount 0 .
+
+# =============================================================================
+# CROSS-REFERENCE VALIDATION SHAPES
+# =============================================================================
+
+cacontology-impact:ImpactCrossReferenceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-impact:VictimImpactAssessment ;
+    rdfs:label "Impact Cross Reference Shape"@en ;
+    rdfs:comment "Validates cross-references between impact assessment and related entities."@en ;
+    sh:sparql [
+        sh:message "Victim impact assessment must assess at least one victim."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-impact:VictimImpactAssessment .
+                FILTER NOT EXISTS {
+                    $this cacontology-impact:assessesVictim ?victim .
+                }
+            }
+        """
+    ] .
+
+cacontology-impact:InterventionHarmAlignmentShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-impact:TherapeuticIntervention ;
+    rdfs:label "Intervention Harm Alignment Shape"@en ;
+    rdfs:comment "Validates alignment between intervention and harm addressed."@en ;
+    sh:sparql [
+        sh:message "Trauma therapy should address trauma-related harm."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-impact:TraumaTherapy ;
+                      cacontology-impact:addressesHarm ?harm .
+                ?harm cacontology-impact:harmType ?type .
+                FILTER (?type NOT IN ("trauma", "ptsd", "complex_trauma"))
+            }
+        """
+    ] .
+
+cacontology-impact:RecoveryProgressValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-impact:RecoveryProcess ;
+    rdfs:label "Recovery Progress Validation Shape"@en ;
+    rdfs:comment "Validates recovery progress consistency."@en ;
+    sh:sparql [
+        sh:message "Complete recovery should have significant time in recovery."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-impact:recoveryProgress "complete_recovery" ;
+                      cacontology-impact:timeInRecovery ?time .
+                FILTER (?time < 1.0)
+            }
+        """
+    ] .
+
+# =============================================================================
+# TEMPORAL VALIDATION SHAPES
+# =============================================================================
+
+cacontology-impact:TemporalValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-impact:TherapeuticIntervention ;
+    rdfs:label "Temporal Validation Shape"@en ;
+    rdfs:comment "Validates temporal consistency in therapeutic interventions."@en ;
+    sh:sparql [
+        sh:message "Start time must be before end time when both are specified."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this uco-core:startTime ?start ;
+                      uco-core:endTime ?end .
+                FILTER (?start >= ?end)
+            }
+        """
+    ] .
+
+cacontology-impact:AssessmentDateValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-impact:VictimImpactAssessment ;
+    rdfs:label "Assessment Date Validation Shape"@en ;
+    rdfs:comment "Validates assessment date consistency."@en ;
+    sh:sparql [
+        sh:message "Assessment date should not be in the future."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-impact:assessmentDate ?date .
+                FILTER (?date > NOW())
+            }
+        """
+    ] .
+
+# =============================================================================
+# DATA QUALITY SHAPES
+# =============================================================================
+
+cacontology-impact:DataQualityShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-impact:VictimImpactAssessment ;
+    rdfs:label "Data Quality Shape"@en ;
+    rdfs:comment "Validates data quality for victim impact assessments."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Label should be between 5 and 200 characters when provided."@en
+    ] ;
+    sh:property [
+        sh:path rdfs:comment ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 10 ;
+        sh:maxLength 1000 ;
+        sh:message "Comment should be between 10 and 1000 characters when provided."@en
+    ] .
+
+# =============================================================================
+# VULNERABILITY CONTEXT SHAPES — Issue #32
+# =============================================================================
+
+cacontology-impact:VulnerabilityContextShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-impact:VulnerabilityContext ;
+    rdfs:label "Vulnerability Context Shape"@en ;
+    rdfs:comment "Validates vulnerability contexts as observed circumstances, not identity labels."@en ;
+    sh:property [
+        sh:path cacontology-impact:associatedWithFamilyRejection ;
+        sh:datatype xsd:boolean ;
+        sh:maxCount 1 ;
+        sh:message "associatedWithFamilyRejection must be boolean when specified."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-impact:associatedWithHousingInstability ;
+        sh:datatype xsd:boolean ;
+        sh:maxCount 1 ;
+        sh:message "associatedWithHousingInstability must be boolean when specified."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-impact:mitigatedByProtectiveSupport ;
+        sh:nodeKind sh:IRI ;
+        sh:message "mitigatedByProtectiveSupport must reference protective support nodes."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-impact:informsPreventionIntervention ;
+        sh:nodeKind sh:IRI ;
+        sh:message "informsPreventionIntervention must reference prevention/outreach action nodes."@en
+    ] .

@@ -1,0 +1,388 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+
+@prefix cacontology-specialized: <https://cacontology.projectvic.org/specialized-units#> .
+@prefix gufo: <http://purl.org/nemo/gufo#> .
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+<https://cacontology.projectvic.org/specialized-units> rdf:type owl:Ontology ;
+    rdfs:label "CAC Specialized Units Ontology"@en ;
+    rdfs:comment "An ontology for modeling specialized units including K9 detection programs, officer wellness support, advanced investigative capabilities, seasonal operations, and affiliate management in CAC operations with gUFO foundational ontology enhancements for improved semantic precision, temporal modeling, and validation capabilities."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/specialized-units/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <http://purl.org/nemo/gufo#/1.0.0> ,
+                <https://cacontology.projectvic.org/core/3.1.0> .
+
+# =============================================================================
+# K9 DETECTION PROGRAMS (gUFO Organization and Event modeling)
+# =============================================================================
+
+# K9 Programs as gUFO Organizations
+cacontology-specialized:K9DetectionProgram rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:OrganizationLikeEntity ;
+    rdfs:label "K9 Detection Program"@en ;
+    rdfs:comment "Program utilizing trained detection dogs for CAC investigations. Modeled as gUFO Organization."@en .
+
+cacontology-specialized:ElectronicStorageDeviceK9 rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-specialized:K9DetectionProgram ;
+    rdfs:label "Electronic Storage Device K9"@en ;
+    rdfs:comment "K9 trained to detect electronic storage devices during search operations. Modeled as gUFO Organization."@en .
+
+# K9 Roles as gUFO Roles (anti-rigid)
+cacontology-specialized:K9Officer rdf:type owl:Class, gufo:Role ;
+    rdfs:subClassOf cac-core:Role ;
+    rdfs:label "K9 Officer"@en ;
+    rdfs:comment "Law enforcement officer handling and working with detection dogs. Modeled as anti-rigid gUFO Role."@en .
+
+# Detection Dogs as gUFO Objects
+cacontology-specialized:DetectionDog rdf:type owl:Class ;
+    rdfs:subClassOf uco-identity:Identity, cac-core:EnduringEntity ;
+    rdfs:label "Detection Dog"@en ;
+    rdfs:comment "Trained dog used for detection operations in CAC investigations. Modeled as gUFO Object."@en .
+
+# K9 Operations as gUFO Events
+cacontology-specialized:K9SearchOperation rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:InvestigativeAction ;
+    rdfs:label "K9 Search Operation"@en ;
+    rdfs:comment "Search operation utilizing K9 detection capabilities. Modeled as gUFO Event."@en .
+
+cacontology-specialized:DeviceDetection rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:InvestigativeAction ;
+    rdfs:label "Device Detection"@en ;
+    rdfs:comment "Detection of electronic storage devices during search operations. Modeled as gUFO Event."@en .
+
+# K9 Training as gUFO Organizations
+cacontology-specialized:K9TrainingProgram rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:OrganizationLikeEntity ;
+    rdfs:label "K9 Training Program"@en ;
+    rdfs:comment "Training program for K9 units and handlers. Modeled as gUFO Organization."@en .
+
+cacontology-specialized:CommunityEngagementK9 rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-specialized:K9DetectionProgram ;
+    rdfs:label "Community Engagement K9"@en ;
+    rdfs:comment "K9 utilized for community outreach and educational programs. Modeled as gUFO Organization."@en .
+
+# =============================================================================
+# OFFICER WELLNESS AND SUPPORT (gUFO Organization and Event modeling)
+# =============================================================================
+
+# Wellness Programs as gUFO Organizations
+cacontology-specialized:OfficerWellnessProgram rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:OrganizationLikeEntity ;
+    rdfs:label "Officer Wellness Program"@en ;
+    rdfs:comment "Program providing mental health and wellness support to CAC officers. Modeled as gUFO Organization."@en .
+
+cacontology-specialized:MentalHealthSupport rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-specialized:OfficerWellnessProgram ;
+    rdfs:label "Mental Health Support"@en ;
+    rdfs:comment "Mental health services and support for officers dealing with traumatic content. Modeled as gUFO Organization."@en .
+
+# Therapy Dogs as gUFO Objects
+cacontology-specialized:TherapyDog rdf:type owl:Class ;
+    rdfs:subClassOf uco-identity:Identity, cac-core:EnduringEntity ;
+    rdfs:label "Therapy Dog"@en ;
+    rdfs:comment "Trained therapy dog providing emotional support to officers. Modeled as gUFO Object."@en .
+
+cacontology-specialized:StressManagement rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-specialized:OfficerWellnessProgram ;
+    rdfs:label "Stress Management"@en ;
+    rdfs:comment "Programs and techniques for managing work-related stress. Modeled as gUFO Organization."@en .
+
+cacontology-specialized:PeerSupport rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-specialized:OfficerWellnessProgram ;
+    rdfs:label "Peer Support"@en ;
+    rdfs:comment "Peer-to-peer support programs for CAC personnel. Modeled as gUFO Organization."@en .
+
+# Wellness Activities as gUFO Events
+cacontology-specialized:CriticalIncidentDebriefing rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:SupportEvent ;
+    rdfs:label "Critical Incident Debriefing"@en ;
+    rdfs:comment "Structured debriefing process following traumatic incidents. Modeled as gUFO Event."@en .
+
+cacontology-specialized:WellnessCheck rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:SupportEvent ;
+    rdfs:label "Wellness Check"@en ;
+    rdfs:comment "Regular check on officer mental health and wellbeing. Modeled as gUFO Event."@en .
+
+# =============================================================================
+# SPECIALIZED INVESTIGATIVE UNITS (gUFO Organization modeling)
+# =============================================================================
+
+# Specialized Units as gUFO Organizations
+cacontology-specialized:SpecializedInvestigativeUnit rdf:type owl:Class ;
+    rdfs:subClassOf uco-identity:Organization, cac-core:OrganizationLikeEntity ;
+    rdfs:label "Specialized Investigative Unit"@en ;
+    rdfs:comment "Specialized unit with unique capabilities for CAC investigations. Modeled as gUFO Organization."@en .
+
+cacontology-specialized:CyberCrimeUnit rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-specialized:SpecializedInvestigativeUnit ;
+    rdfs:label "Cyber Crime Unit"@en ;
+    rdfs:comment "Unit specialized in cyber crime investigations. Modeled as gUFO Organization."@en .
+
+# =============================================================================
+# STATE POLICE COMPUTER CRIMES UNITS (Maryland Case Enhancement - gUFO Organization)
+# =============================================================================
+
+cacontology-specialized:StatePoliceComputerCrimesUnit rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-specialized:CyberCrimeUnit ;
+    rdfs:label "State Police Computer Crimes Unit"@en ;
+    rdfs:comment "State police unit specialized in computer crimes and digital investigations involving child exploitation. Modeled as gUFO Organization."@en .
+
+cacontology-specialized:MarylandStatePoliceComputerCrimesUnit rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-specialized:StatePoliceComputerCrimesUnit ;
+    rdfs:label "Maryland State Police Computer Crimes Unit"@en ;
+    rdfs:comment "Maryland State Police unit coordinating the Maryland Internet Crimes Against Children Task Force. Modeled as gUFO Organization."@en .
+
+cacontology-specialized:StatePoliceBarrack rdf:type owl:Class ;
+    rdfs:subClassOf uco-identity:Organization, cac-core:OrganizationLikeEntity ;
+    rdfs:label "State Police Barrack"@en ;
+    rdfs:comment "Regional state police barrack providing local law enforcement support and coordination. Modeled as gUFO Organization."@en .
+
+cacontology-specialized:CollegeParkBarrack rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-specialized:StatePoliceBarrack ;
+    rdfs:label "College Park Barrack"@en ;
+    rdfs:comment "Maryland State Police College Park Barrack supporting computer crimes investigations. Modeled as gUFO Organization."@en .
+
+cacontology-specialized:CountyPoliceSupport rdf:type owl:Class ;
+    rdfs:subClassOf uco-identity:Organization, cac-core:OrganizationLikeEntity ;
+    rdfs:label "County Police Support"@en ;
+    rdfs:comment "County-level police department providing support to state computer crimes investigations. Modeled as gUFO Organization."@en .
+
+cacontology-specialized:PrinceGeorgesCountyPolice rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-specialized:CountyPoliceSupport ;
+    rdfs:label "Prince George's County Police"@en ;
+    rdfs:comment "Prince George's County Police Department supporting Maryland State Police computer crimes investigations. Modeled as gUFO Organization."@en .
+
+cacontology-specialized:DigitalForensicsUnit rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-specialized:SpecializedInvestigativeUnit ;
+    rdfs:label "Digital Forensics Unit"@en ;
+    rdfs:comment "Unit specialized in digital forensics analysis. Modeled as gUFO Organization."@en .
+
+cacontology-specialized:UndercoverUnit rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-specialized:SpecializedInvestigativeUnit ;
+    rdfs:label "Undercover Unit"@en ;
+    rdfs:comment "Unit conducting undercover operations. Modeled as gUFO Organization."@en .
+
+cacontology-specialized:TacticalUnit rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-specialized:SpecializedInvestigativeUnit ;
+    rdfs:label "Tactical Unit"@en ;
+    rdfs:comment "Unit handling high-risk tactical operations. Modeled as gUFO Organization."@en .
+
+cacontology-specialized:VictimServicesUnit rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-specialized:SpecializedInvestigativeUnit ;
+    rdfs:label "Victim Services Unit"@en ;
+    rdfs:comment "Unit providing specialized victim services and support. Modeled as gUFO Organization."@en .
+
+# =============================================================================
+# ENHANCED OPERATION COORDINATION (gUFO Event modeling)
+# =============================================================================
+
+# Named Operations as gUFO Events
+cacontology-specialized:NamedOperation rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:InvestigativeAction ;
+    rdfs:label "Named Operation"@en ;
+    rdfs:comment "Formally named multi-phase operation with specific objectives. Modeled as gUFO Event."@en .
+
+cacontology-specialized:OperationUnhinged rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-specialized:NamedOperation ;
+    rdfs:label "Operation Unhinged"@en ;
+    rdfs:comment "Specific operation conducted by Idaho CAC resulting in 12 arrests. Modeled as gUFO Event."@en .
+
+cacontology-specialized:OperationSafeOnlineSummer rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-specialized:NamedOperation ;
+    rdfs:label "Operation Safe Online Summer"@en ;
+    rdfs:comment "National operation across 61 CAC Task Forces during summer months. Modeled as gUFO Event."@en .
+
+cacontology-specialized:MultiJurisdictionalOperation rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-specialized:NamedOperation ;
+    rdfs:label "Multi-Jurisdictional Operation"@en ;
+    rdfs:comment "Operation involving multiple jurisdictions and agencies. Modeled as gUFO Event."@en .
+
+cacontology-specialized:CoordinatedArrest rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:InvestigativeAction ;
+    rdfs:label "Coordinated Arrest"@en ;
+    rdfs:comment "Arrest coordinated as part of larger operation. Modeled as gUFO Event."@en .
+
+# Operation Metrics as gUFO Objects
+cacontology-specialized:OperationMetrics rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:AssessmentResult ;
+    rdfs:label "Operation Metrics"@en ;
+    rdfs:comment "Metrics and performance data for specialized operations. Modeled as gUFO Object."@en .
+
+# =============================================================================
+# SPECIALIZED UNIT PHASES (gUFO Phase anti-rigid modeling)
+# =============================================================================
+
+# Unit Operational Phases (gUFO Phase anti-rigid modeling)
+cacontology-specialized:UnitDeploymentPhase rdf:type owl:Class ;
+    rdfs:label "Unit Deployment Phase"@en ;
+    rdfs:comment "Phase when specialized unit is deployed for operations. Modeled as anti-rigid gUFO Phase."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+cacontology-specialized:UnitTrainingPhase rdf:type owl:Class ;
+    rdfs:label "Unit Training Phase"@en ;
+    rdfs:comment "Phase focused on specialized unit training and preparation. Modeled as anti-rigid gUFO Phase."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+cacontology-specialized:UnitMaintenancePhase rdf:type owl:Class ;
+    rdfs:label "Unit Maintenance Phase"@en ;
+    rdfs:comment "Phase for equipment maintenance and unit readiness. Modeled as anti-rigid gUFO Phase."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+# Operation Phases (gUFO Phase anti-rigid modeling)
+cacontology-specialized:OperationPlanningPhase rdf:type owl:Class ;
+    rdfs:label "Operation Planning Phase"@en ;
+    rdfs:comment "Phase of operation planning and preparation. Modeled as anti-rigid gUFO Phase."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+cacontology-specialized:OperationExecutionPhase rdf:type owl:Class ;
+    rdfs:label "Operation Execution Phase"@en ;
+    rdfs:comment "Phase of active operation execution. Modeled as anti-rigid gUFO Phase."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+cacontology-specialized:OperationEvaluationPhase rdf:type owl:Class ;
+    rdfs:label "Operation Evaluation Phase"@en ;
+    rdfs:comment "Phase of post-operation analysis and evaluation. Modeled as anti-rigid gUFO Phase."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+# =============================================================================
+# SPECIALIZED UNIT SITUATIONS (gUFO Situation modeling)
+# =============================================================================
+
+# Multi-Unit Coordination Situations (gUFO Situation)
+cacontology-specialized:MultiUnitCoordinationSituation rdf:type owl:Class ;
+    rdfs:label "Multi-Unit Coordination Situation"@en ;
+    rdfs:comment "Complex situation involving coordination between multiple specialized units. Modeled as gUFO Situation."@en ;
+    rdfs:subClassOf cac-core:Situation .
+
+cacontology-specialized:InteragencyOperationSituation rdf:type owl:Class ;
+    rdfs:label "Interagency Operation Situation"@en ;
+    rdfs:comment "Situation involving operations across multiple agencies and jurisdictions. Modeled as gUFO Situation."@en ;
+    rdfs:subClassOf cac-core:Situation .
+
+cacontology-specialized:SpecializedCapabilitySituation rdf:type owl:Class ;
+    rdfs:label "Specialized Capability Situation"@en ;
+    rdfs:comment "Situation requiring deployment of specialized unit capabilities. Modeled as gUFO Situation."@en ;
+    rdfs:subClassOf cac-core:Situation .
+
+# =============================================================================
+# SPECIALIZED UNIT ROLES (gUFO Role anti-rigid modeling)
+# =============================================================================
+
+# Specialized Unit Roles as gUFO Roles (anti-rigid)
+cacontology-specialized:UnitCommanderRole rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Unit Commander Role"@en ;
+    rdfs:comment "Role of commanding officer for specialized unit. Modeled as anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cac-core:Role .
+
+cacontology-specialized:SpecializedOperatorRole rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Specialized Operator Role"@en ;
+    rdfs:comment "Role of specialized operator within unit. Modeled as anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cac-core:Role .
+
+cacontology-specialized:TechnicalSpecialistRole rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Technical Specialist Role"@en ;
+    rdfs:comment "Role of technical specialist providing specialized capabilities. Modeled as anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cac-core:Role .
+
+cacontology-specialized:AnalystRole rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Analyst Role"@en ;
+    rdfs:comment "Role of analyst supporting specialized unit operations. Modeled as anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cac-core:Role .
+
+# =============================================================================
+# gUFO TEMPORAL PROPERTIES
+# =============================================================================
+
+# Specialized Unit Temporal Properties
+cacontology-specialized:hasUnitBeginPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has unit begin point"@en ;
+    rdfs:comment "Temporal begin point for specialized unit operation."@en ;
+    rdfs:subPropertyOf gufo:hasBeginPointInXSDDateTimeStamp ;
+    rdfs:domain cacontology-specialized:SpecializedInvestigativeUnit ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-specialized:hasUnitEndPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has unit end point"@en ;
+    rdfs:comment "Temporal end point for specialized unit operation."@en ;
+    rdfs:subPropertyOf gufo:hasEndPointInXSDDateTimeStamp ;
+    rdfs:domain cacontology-specialized:SpecializedInvestigativeUnit ;
+    rdfs:range xsd:dateTimeStamp .
+
+# Operation Temporal Properties
+cacontology-specialized:hasOperationBeginPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has operation begin point"@en ;
+    rdfs:comment "Temporal begin point for named operation."@en ;
+    rdfs:subPropertyOf gufo:hasBeginPointInXSDDateTimeStamp ;
+    rdfs:domain cacontology-specialized:NamedOperation ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-specialized:hasOperationEndPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has operation end point"@en ;
+    rdfs:comment "Temporal end point for named operation."@en ;
+    rdfs:subPropertyOf gufo:hasEndPointInXSDDateTimeStamp ;
+    rdfs:domain cacontology-specialized:NamedOperation ;
+    rdfs:range xsd:dateTimeStamp .
+
+# Phase Temporal Properties
+cacontology-specialized:hasPhaseBeginPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has phase begin point"@en ;
+    rdfs:comment "Temporal begin point for operational phase."@en ;
+    rdfs:subPropertyOf gufo:hasBeginPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-specialized:hasPhaseEndPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has phase end point"@en ;
+    rdfs:comment "Temporal end point for operational phase."@en ;
+    rdfs:subPropertyOf gufo:hasEndPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:dateTimeStamp .
+
+# Role Temporal Properties
+cacontology-specialized:hasRoleBeginPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has role begin point"@en ;
+    rdfs:comment "Temporal begin point for specialized role."@en ;
+    rdfs:subPropertyOf gufo:hasBeginPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Role ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-specialized:hasRoleEndPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has role end point"@en ;
+    rdfs:comment "Temporal end point for specialized role."@en ;
+    rdfs:subPropertyOf gufo:hasEndPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Role ;
+    rdfs:range xsd:dateTimeStamp .
+
+# Duration Properties
+cacontology-specialized:unitDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "unit duration"@en ;
+    rdfs:comment "Duration of specialized unit operation."@en ;
+    rdfs:domain cacontology-specialized:SpecializedInvestigativeUnit ;
+    rdfs:range xsd:duration .
+
+cacontology-specialized:operationDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "operation duration"@en ;
+    rdfs:comment "Duration of named operation."@en ;
+    rdfs:domain cacontology-specialized:NamedOperation ;
+    rdfs:range xsd:duration .
+
+cacontology-specialized:phaseDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "phase duration"@en ;
+    rdfs:comment "Duration of operational phase."@en ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:duration .
+
+cacontology-specialized:roleDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "role duration"@en ;
+    rdfs:comment "Duration of specialized role."@en ;
+    rdfs:domain cac-core:Role ;
+    rdfs:range xsd:duration . 

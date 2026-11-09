@@ -1,0 +1,73 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix gufo: <http://purl.org/nemo/gufo#> .
+
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology-soe: <https://cacontology.projectvic.org/soe#> .
+
+# Ontology Declaration
+<https://cacontology.projectvic.org/soe> rdf:type owl:Ontology ;
+    rdfs:label "CAC Sadistic Online Exploitation (SOE) Ontology"@en ;
+    rdfs:comment "An ontology for representing Sadistic Online Exploitation (SOE) networks and SOE-specific ritualized/coordinated coercion event patterns, aligned to DHS/Know2Protect definitional framing. This module is intentionally narrow and is designed to reuse extremist-enterprises concepts (e.g., cross-platform coordination, platform migration, self-harm coercion) when an extremist-enterprise modeling frame is evidenced."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/soe/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:issued "2026-02-11"^^xsd:date ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/identity/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/action/1.5.0> ,
+                <https://cacontology.projectvic.org/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> ,
+                <https://cacontology.projectvic.org/core/3.1.0> .
+
+# =============================================================================
+# SOE NETWORK TAXONOMY (narrow definitional layer)
+# =============================================================================
+
+cacontology-soe:SadisticOnlineExploitationNetwork rdf:type owl:Class ;
+    rdfs:label "Sadistic Online Exploitation Network"@en ;
+    rdfs:comment "A DHS/Know2Protect-defined online group (network/community) engaged in sadistic coercion and exploitation of minors, including coordination across platforms and the use of threats, manipulation, intimidation, and extortion to compel harmful acts and content generation. This class is definitional and does not imply an extremist ideological framework by itself."@en ;
+    rdfs:subClassOf uco-identity:Organization , gufo:FunctionalComplex ;
+    dcterms:source "Know2Protect brochure (K2P SOE Information.pdf), normalized.txt lines 5-9."@en ;
+    rdfs:seeAlso <https://know2protect.gov> .
+
+cacontology-soe:communitySlangTerm rdf:type owl:DatatypeProperty ;
+    rdfs:label "community slang term"@en ;
+    rdfs:comment "A slang term used by participants to refer to SOE networks/communities (e.g., \"the com\")."@en ;
+    rdfs:domain cacontology-soe:SadisticOnlineExploitationNetwork ;
+    rdfs:range xsd:string ;
+    dcterms:source "Know2Protect brochure (K2P SOE Information.pdf), normalized.txt line 8."@en ;
+    rdfs:seeAlso <https://know2protect.gov> .
+
+# =============================================================================
+# SOE-SPECIFIC LIVESTREAMED COERCION RITUALS
+# =============================================================================
+
+cacontology-soe:LivestreamedCoercionShow rdf:type owl:Class ;
+    rdfs:label "Livestreamed Coercion Show"@en ;
+    rdfs:comment "A coordinated livestreamed coercion event (ritualized 'show') in which participants celebrate, witness, or pressure harmful acts (e.g., \"watch party\", \"cut show\"). This is modeled as an event/action pattern; it is distinct from content artifacts (which should be modeled with production/observable modules as appropriate)."@en ;
+    rdfs:subClassOf cac-core:ExploitationEvent ;
+    dcterms:source "Know2Protect brochure (K2P SOE Information.pdf), normalized.txt line 32."@en ;
+    rdfs:seeAlso <https://know2protect.gov> .
+
+cacontology-soe:coercionShowType rdf:type owl:DatatypeProperty ;
+    rdfs:label "coercion show type"@en ;
+    rdfs:comment "Type of livestreamed coercion show (e.g., watch_party, cut_show, cut_stage, stage)."@en ;
+    rdfs:domain cacontology-soe:LivestreamedCoercionShow ;
+    rdfs:range xsd:string ;
+    dcterms:source "Know2Protect brochure (K2P SOE Information.pdf), normalized.txt line 32."@en ;
+    rdfs:seeAlso <https://know2protect.gov> .
+
+cacontology-soe:hostsCoercionShow rdf:type owl:ObjectProperty ;
+    rdfs:label "hosts coercion show"@en ;
+    rdfs:comment "Links an SOE network/community to a livestreamed coercion show it hosts/coordinates."@en ;
+    rdfs:domain cacontology-soe:SadisticOnlineExploitationNetwork ;
+    rdfs:range cacontology-soe:LivestreamedCoercionShow ;
+    dcterms:source "Know2Protect brochure (K2P SOE Information.pdf), normalized.txt line 32."@en ;
+    rdfs:seeAlso <https://know2protect.gov> .

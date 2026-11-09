@@ -1,0 +1,502 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix cacontology-recruitment: <https://cacontology.projectvic.org/recruitment-networks#> .
+@prefix cacontology-recruitment-shapes: <https://cacontology.projectvic.org/recruitment-networks/shapes#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+# Ontology Declaration
+<https://cacontology.projectvic.org/recruitment-networks/shapes> rdf:type owl:Ontology ;
+    rdfs:label "CAC Recruitment Networks SHACL Shapes"@en ;
+    rdfs:comment "SHACL validation shapes for the CAC Recruitment Networks Ontology, providing validation for peer recruitment networks, classmate-mediated trafficking, and social recruitment patterns."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/recruitment-networks/shapes/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://cacontology.projectvic.org/recruitment-networks/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> .
+
+# =============================================================================
+# PEER RECRUITMENT NETWORK SHAPES
+# =============================================================================
+
+cacontology-recruitment-shapes:PeerRecruitmentNetworkShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-recruitment:PeerRecruitmentNetwork ;
+    rdfs:label "Peer Recruitment Network Shape"@en ;
+    rdfs:comment "Validation shape for peer recruitment network instances."@en ;
+    sh:property [
+        sh:path cacontology-recruitment:networkSize ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 2 ;
+        sh:maxInclusive 50 ;
+        sh:message "Peer recruitment network must have 2-50 participants."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-recruitment:victimRecruitersCount ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 20 ;
+        sh:message "Network must have 1-20 victim recruiters."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-recruitment:includesRecruitingVictim ;
+        sh:class uco-identity:Person ;
+        sh:minCount 1 ;
+        sh:message "Recruitment network must include at least one recruiting victim."@en
+    ] .
+
+cacontology-recruitment-shapes:ClassmateRecruitmentNetworkShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-recruitment:ClassmateRecruitmentNetwork ;
+    rdfs:label "Classmate Recruitment Network Shape"@en ;
+    rdfs:comment "Validation shape for classmate recruitment network instances."@en ;
+    sh:property [
+        sh:path cacontology-recruitment:schoolsInvolved ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 10 ;
+        sh:message "Classmate recruitment network must involve 1-10 schools."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-recruitment:targetsSchool ;
+        sh:class cacontology-recruitment:EducationalInstitution ;
+        sh:minCount 1 ;
+        sh:message "Classmate recruitment network must target at least one school."@en
+    ] .
+
+# =============================================================================
+# VICTIM-MEDIATED RECRUITMENT SHAPES
+# =============================================================================
+
+cacontology-recruitment-shapes:VictimMediatedRecruitmentShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-recruitment:VictimMediatedRecruitment ;
+    rdfs:label "Victim Mediated Recruitment Shape"@en ;
+    rdfs:comment "Validation shape for victim-mediated recruitment instances."@en ;
+    sh:property [
+        sh:path cacontology-recruitment:successfulRecruitments ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 20 ;
+        sh:message "Successful recruitments must be 0-20."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-recruitment:recruitmentAttempts ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 100 ;
+        sh:message "Recruitment attempts must be 1-100."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-recruitment:facilitatedBy ;
+        sh:class uco-identity:Person ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Victim-mediated recruitment must specify facilitating victim."@en
+    ] .
+
+cacontology-recruitment-shapes:ClassmateIntroductionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-recruitment:ClassmateIntroduction ;
+    rdfs:label "Classmate Introduction Shape"@en ;
+    rdfs:comment "Validation shape for classmate introduction instances."@en ;
+    sh:property [
+        sh:path cacontology-recruitment:averageRecruitmentTime ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.1 ;
+        sh:maxInclusive 365.0 ;
+        sh:message "Average recruitment time must be 0.1-365 days."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-recruitment:introducesTo ;
+        sh:class uco-identity:Person ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Classmate introduction must specify who victim is introduced to."@en
+    ] .
+
+# =============================================================================
+# SCHOOL-BASED RECRUITMENT SHAPES
+# =============================================================================
+
+cacontology-recruitment-shapes:SchoolBasedRecruitmentShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-recruitment:SchoolBasedRecruitment ;
+    rdfs:label "School Based Recruitment Shape"@en ;
+    rdfs:comment "Validation shape for school-based recruitment instances."@en ;
+    sh:property [
+        sh:path cacontology-recruitment:gradeLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ("elementary" "middle" "high" "mixed" "alternative") ;
+        sh:message "Grade level must be elementary, middle, high, mixed, or alternative."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "School-based recruitment may have start time."@en
+    ] .
+
+# =============================================================================
+# EDUCATIONAL INSTITUTION SHAPES
+# =============================================================================
+
+cacontology-recruitment-shapes:EducationalInstitutionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-recruitment:EducationalInstitution ;
+    rdfs:label "Educational Institution Shape"@en ;
+    rdfs:comment "Validation shape for educational institution instances."@en ;
+    sh:property [
+        sh:path cacontology-recruitment:schoolType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ("public" "private" "charter" "alternative" "homeschool" "online") ;
+        sh:message "School type must be public, private, charter, alternative, homeschool, or online."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-recruitment:studentPopulation ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 10 ;
+        sh:maxInclusive 5000 ;
+        sh:message "Student population must be 10-5000."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-recruitment:socioeconomicLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ("low" "middle" "high" "mixed") ;
+        sh:message "Socioeconomic level must be low, middle, high, or mixed."@en
+    ] ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 3 ;
+        sh:maxLength 200 ;
+        sh:message "Educational institution must have label 3-200 characters."@en
+    ] .
+
+# =============================================================================
+# SCHOOL STAFF SHAPES
+# =============================================================================
+
+cacontology-recruitment-shapes:SchoolStaffMemberShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-recruitment:SchoolStaffMember ;
+    rdfs:label "School Staff Member Shape"@en ;
+    rdfs:comment "Validation shape for school staff member instances."@en ;
+    sh:property [
+        sh:path cacontology-recruitment:employedAt ;
+        sh:class cacontology-recruitment:EducationalInstitution ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "School staff member must be employed at one institution."@en
+    ] .
+
+cacontology-recruitment-shapes:SchoolSocialWorkerShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-recruitment:SchoolSocialWorker ;
+    rdfs:label "School Social Worker Shape"@en ;
+    rdfs:comment "Validation shape for school social worker instances."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 3 ;
+        sh:maxLength 100 ;
+        sh:message "School social worker must have label 3-100 characters."@en
+    ] .
+
+# =============================================================================
+# SCHOOL-BASED REPORTING SHAPES
+# =============================================================================
+
+cacontology-recruitment-shapes:SchoolBasedReportingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-recruitment:SchoolBasedReporting ;
+    rdfs:label "School Based Reporting Shape"@en ;
+    rdfs:comment "Validation shape for school-based reporting instances."@en ;
+    sh:property [
+        sh:path cacontology-recruitment:reportingDelay ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 365.0 ;
+        sh:message "Reporting delay must be 0-365 days."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-recruitment:reportingStaffRole ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ("social_worker" "counselor" "teacher" "administrator" "nurse" "resource_officer") ;
+        sh:message "Reporting staff role must be from allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-recruitment:mandatoryReportingTrigger ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Must specify if mandatory reporting was triggered."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "School-based reporting must have start time."@en
+    ] .
+
+cacontology-recruitment-shapes:SocialWorkerReportShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-recruitment:SocialWorkerReport ;
+    rdfs:label "Social Worker Report Shape"@en ;
+    rdfs:comment "Validation shape for social worker report instances."@en ;
+    sh:property [
+        sh:path cacontology-recruitment:contactsLawEnforcement ;
+        sh:class cacontology-recruitment:SchoolPoliceContact ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Social worker report must include law enforcement contact."@en
+    ] .
+
+cacontology-recruitment-shapes:VictimSchoolDisclosureShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-recruitment:VictimSchoolDisclosure ;
+    rdfs:label "Victim School Disclosure Shape"@en ;
+    rdfs:comment "Validation shape for victim school disclosure instances."@en ;
+    sh:property [
+        sh:path cacontology-recruitment:receivesReport ;
+        sh:class cacontology-recruitment:SchoolStaffMember ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "School disclosure must specify receiving staff member."@en
+    ] .
+
+# =============================================================================
+# VULNERABILITY FACTOR SHAPES
+# =============================================================================
+
+cacontology-recruitment-shapes:SchoolVulnerabilityFactorShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-recruitment:SchoolVulnerabilityFactor ;
+    rdfs:label "School Vulnerability Factor Shape"@en ;
+    rdfs:comment "Validation shape for school vulnerability factor instances."@en ;
+    sh:property [
+        sh:path cacontology-recruitment:vulnerabilityScore ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:message "Vulnerability score must be 0.0-1.0."@en
+    ] ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 150 ;
+        sh:message "Vulnerability factor must have label 5-150 characters."@en
+    ] .
+
+cacontology-recruitment-shapes:AttendanceProblemsShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-recruitment:AttendanceProblems ;
+    rdfs:label "Attendance Problems Shape"@en ;
+    rdfs:comment "Validation shape for attendance problems instances."@en ;
+    sh:property [
+        sh:path cacontology-recruitment:attendanceRate ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:message "Attendance rate must be 0.0-1.0 (percentage)."@en
+    ] .
+
+cacontology-recruitment-shapes:AcademicStrugglesShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-recruitment:AcademicStruggles ;
+    rdfs:label "Academic Struggles Shape"@en ;
+    rdfs:comment "Validation shape for academic struggles instances."@en ;
+    sh:property [
+        sh:path cacontology-recruitment:academicPerformanceLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ("failing" "below_average" "average" "above_average" "excellent") ;
+        sh:message "Academic performance level must be from allowed list."@en
+    ] .
+
+# =============================================================================
+# RECRUITMENT TIMING SHAPES
+# =============================================================================
+
+cacontology-recruitment-shapes:RecruitmentTimingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-recruitment:RecruitmentTiming ;
+    rdfs:label "Recruitment Timing Shape"@en ;
+    rdfs:comment "Validation shape for recruitment timing instances."@en ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Recruitment timing may have start time."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:endTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Recruitment timing may have end time."@en
+    ] .
+
+# =============================================================================
+# COERCED RECRUITMENT SHAPES
+# =============================================================================
+
+cacontology-recruitment-shapes:CoercedPeerRecruitmentShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-recruitment:CoercedPeerRecruitment ;
+    rdfs:label "Coerced Peer Recruitment Shape"@en ;
+    rdfs:comment "Validation shape for coerced peer recruitment instances."@en ;
+    sh:property [
+        sh:path uco-core:description ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 10 ;
+        sh:maxLength 500 ;
+        sh:message "Coerced recruitment must have description 10-500 characters."@en
+    ] .
+
+cacontology-recruitment-shapes:RecruitmentQuotaShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-recruitment:RecruitmentQuota ;
+    rdfs:label "Recruitment Quota Shape"@en ;
+    rdfs:comment "Validation shape for recruitment quota instances."@en ;
+    sh:property [
+        sh:path cacontology-recruitment:successfulRecruitments ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 10 ;
+        sh:message "Recruitment quota must specify 1-10 required recruitments."@en
+    ] .
+
+# =============================================================================
+# CROSS-VALIDATION SHAPES (SPARQL-based)
+# =============================================================================
+
+cacontology-recruitment-shapes:RecruitmentConsistencyShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-recruitment:VictimMediatedRecruitment ;
+    rdfs:label "Recruitment Consistency Shape"@en ;
+    rdfs:comment "Validates consistency between recruitment attempts and successes."@en ;
+    sh:sparql [
+        sh:message "Successful recruitments cannot exceed total recruitment attempts."@en ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "cacontology-recruitment" ;
+                sh:namespace "https://cacontology.projectvic.org/recruitment-networks#"^^xsd:anyURI
+            ]
+        ] ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-recruitment:successfulRecruitments ?successful ;
+                      cacontology-recruitment:recruitmentAttempts ?attempts .
+                FILTER (?successful > ?attempts)
+            }
+        """
+    ] .
+
+cacontology-recruitment-shapes:SchoolReportingTimelinessShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-recruitment:SchoolBasedReporting ;
+    rdfs:label "School Reporting Timeliness Shape"@en ;
+    rdfs:comment "Validates reasonable reporting timelines for school-based reports."@en ;
+    sh:sparql [
+        sh:message "Mandatory reporting should occur within 24 hours when triggered."@en ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "cacontology-recruitment" ;
+                sh:namespace "https://cacontology.projectvic.org/recruitment-networks#"^^xsd:anyURI
+            ]
+        ] ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-recruitment:mandatoryReportingTrigger true ;
+                      cacontology-recruitment:reportingDelay ?delay .
+                FILTER (?delay > 1.0)
+            }
+        """
+    ] .
+
+cacontology-recruitment-shapes:NetworkSizeConsistencyShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-recruitment:PeerRecruitmentNetwork ;
+    rdfs:label "Network Size Consistency Shape"@en ;
+    rdfs:comment "Validates consistency between network size and victim recruiter count."@en ;
+    sh:sparql [
+        sh:message "Victim recruiter count cannot exceed total network size."@en ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "cacontology-recruitment" ;
+                sh:namespace "https://cacontology.projectvic.org/recruitment-networks#"^^xsd:anyURI
+            ]
+        ] ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-recruitment:networkSize ?size ;
+                      cacontology-recruitment:victimRecruitersCount ?recruiters .
+                FILTER (?recruiters > ?size)
+            }
+        """
+    ] .
+
+# =============================================================================
+# DATA QUALITY SHAPES
+# =============================================================================
+
+cacontology-recruitment-shapes:DataQualityShape rdf:type sh:NodeShape ;
+    sh:targetNode cacontology-recruitment: ;
+    rdfs:label "Recruitment Networks Data Quality Shape"@en ;
+    rdfs:comment "General data quality constraints for recruitment networks module."@en ;
+    sh:property [
+        sh:path [ sh:alternativePath ( rdfs:label rdfs:comment uco-core:description ) ] ;
+        sh:datatype xsd:string ;
+        sh:minLength 1 ;
+        sh:message "All recruitment network entities must have non-empty labels, comments, or descriptions."@en
+    ] .
+
+cacontology-recruitment-shapes:EducationalReportingDataQualityShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-recruitment:SchoolBasedReporting ;
+    rdfs:label "Educational Reporting Data Quality Shape"@en ;
+    rdfs:comment "Data quality constraints for educational reporting instances."@en ;
+    sh:property [
+        sh:path cacontology-recruitment:reportingStaffRole ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:message "School-based reporting must specify staff role making report."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:message "School-based reporting must have reporting timestamp."@en
+    ] . 

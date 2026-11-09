@@ -1,0 +1,1011 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-observable: <https://ontology.unifiedcyberontology.org/uco/observable/> .
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix cacontology-registry: <https://cacontology.projectvic.org/sex-offender-registry#> .
+@prefix gufo: <http://purl.org/nemo/gufo#> .
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+
+# Ontology Declaration
+<https://cacontology.projectvic.org/legal-outcomes> rdf:type owl:Ontology ;
+    rdfs:label "CAC Legal Outcomes & Sentencing Ontology"@en ;
+    rdfs:comment "An ontology for representing legal outcomes, federal sentences, judicial proceedings, and punishment guidelines in Internet Crimes Against Children cases with gUFO foundational ontology enhancements for improved semantic precision, temporal modeling, and validation capabilities, extending UCO and CASE."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/legal-outcomes/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:issued "2024-12-19"^^xsd:date ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/identity/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/observable/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/action/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/location/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/role/1.5.0> ,
+                <https://cacontology.projectvic.org/sex-offender-registry/3.1.0> ,
+                <https://cacontology.projectvic.org/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> .
+
+# =============================================================================
+# LEGAL PROCEEDING CLASSES (extending UCO Action with gUFO Event)
+# =============================================================================
+
+# Legal Proceedings as gUFO Events
+cacontology-legal-outcomes:LegalProceeding rdf:type owl:Class ;
+    rdfs:label "Legal Proceeding"@en ;
+    rdfs:comment "Formal judicial process for prosecuting cacontology-related crimes. Modeled as gUFO Event."@en ;
+    rdfs:subClassOf cac-core:LegalEvent .
+
+cacontology-legal-outcomes:ArraignmentProceeding rdf:type owl:Class ;
+    rdfs:label "Arraignment Proceeding"@en ;
+    rdfs:comment "Initial court appearance where charges are formally read and plea is entered. Modeled as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:LegalProceeding .
+
+cacontology-legal-outcomes:PleaBargaining rdf:type owl:Class ;
+    rdfs:label "Plea Bargaining"@en ;
+    rdfs:comment "Negotiation process between prosecution and defense for plea agreement. Modeled as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:LegalProceeding .
+
+cacontology-legal-outcomes:TrialProceeding rdf:type owl:Class ;
+    rdfs:label "Trial Proceeding"@en ;
+    rdfs:comment "Formal trial process with jury or judge determining guilt or innocence. Modeled as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:LegalProceeding .
+
+cacontology-legal-outcomes:SentencingHearing rdf:type owl:Class ;
+    rdfs:label "Sentencing Hearing"@en ;
+    rdfs:comment "Court proceeding where sentence is determined and imposed. Modeled as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:LegalProceeding .
+
+cacontology-legal-outcomes:AppealProcess rdf:type owl:Class ;
+    rdfs:label "Appeal Process"@en ;
+    rdfs:comment "Legal process to challenge conviction or sentence in higher court. Modeled as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:LegalProceeding .
+
+# =============================================================================
+# APPELLATE REVIEW CONCEPTS (gUFO Object)
+# Based on United States v. McCormack (9th Cir. 2017) opinion
+# Source: https://www.courtlistener.com/opinion/8700418/united-states-v-mccormack/
+# =============================================================================
+
+cacontology-legal-outcomes:AppellateIssue rdf:type owl:Class ;
+    rdfs:label "Appellate Issue"@en ;
+    rdfs:comment "Issue raised on appeal to challenge a conviction or sentence (e.g., evidentiary admission, sufficiency of evidence, sentencing reasonableness). Modeled as gUFO Object."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject, cac-core:Artifact ;
+    dcterms:source "United States v. McCormack (9th Cir. 2017) opinion (CourtListener)."@en ;
+    rdfs:seeAlso <https://www.courtlistener.com/opinion/8700418/united-states-v-mccormack/> .
+
+cacontology-legal-outcomes:EvidentiaryRuling rdf:type owl:Class ;
+    rdfs:label "Evidentiary Ruling (Issue)"@en ;
+    rdfs:comment "Appellate issue concerning a trial court evidentiary ruling, including admission/exclusion decisions and related prejudice analysis (e.g., under Federal Rules of Evidence). Modeled as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:AppellateIssue ;
+    dcterms:source "United States v. McCormack (9th Cir. 2017) opinion (CourtListener)."@en ;
+    rdfs:seeAlso <https://www.courtlistener.com/opinion/8700418/united-states-v-mccormack/> .
+
+cacontology-legal-outcomes:EvidenceRule rdf:type owl:Class ;
+    rdfs:label "Evidence Rule"@en ;
+    rdfs:comment "A rule of evidence cited in an appellate issue or opinion (e.g., Federal Rule of Evidence 403, 404(b), 414). Modeled as gUFO Object."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject, cac-core:Artifact ;
+    dcterms:source "United States v. McCormack (9th Cir. 2017) opinion (CourtListener)."@en ;
+    rdfs:seeAlso <https://www.courtlistener.com/opinion/8700418/united-states-v-mccormack/> .
+
+cacontology-legal-outcomes:StandardOfReview rdf:type owl:Class ;
+    rdfs:label "Standard of Review"@en ;
+    rdfs:comment "Appellate standard of review applied to an appellate issue (e.g., de novo, abuse of discretion, plain error). Modeled as gUFO Object."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject, cac-core:Artifact ;
+    dcterms:source "United States v. McCormack (9th Cir. 2017) opinion (CourtListener)."@en ;
+    rdfs:seeAlso <https://www.courtlistener.com/opinion/8700418/united-states-v-mccormack/> .
+
+cacontology-legal-outcomes:SufficiencyOfEvidenceIssue rdf:type owl:Class ;
+    rdfs:label "Sufficiency of Evidence Issue"@en ;
+    rdfs:comment "Appellate issue challenging whether the evidence was sufficient to sustain a conviction under the applicable legal standard. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:AppellateIssue ;
+    dcterms:source "United States v. McCormack (9th Cir. 2017) opinion (CourtListener)."@en ;
+    rdfs:seeAlso <https://www.courtlistener.com/opinion/8700418/united-states-v-mccormack/> .
+
+cacontology-legal-outcomes:SentencingReasonablenessIssue rdf:type owl:Class ;
+    rdfs:label "Sentencing Reasonableness Issue"@en ;
+    rdfs:comment "Appellate issue challenging the procedural and/or substantive reasonableness of a sentence (e.g., under 18 U.S.C. § 3553(a)). Modeled as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:AppellateIssue ;
+    dcterms:source "United States v. McCormack (9th Cir. 2017) opinion (CourtListener)."@en ;
+    rdfs:seeAlso <https://www.courtlistener.com/opinion/8700418/united-states-v-mccormack/> .
+
+cacontology-legal-outcomes:AppellateDisposition rdf:type owl:Class ;
+    rdfs:label "Appellate Disposition"@en ;
+    rdfs:comment "Outcome of an appellate issue or appeal (e.g., affirmed, reversed, vacated, remanded). Modeled as gUFO Object."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject, cac-core:Artifact ;
+    dcterms:source "United States v. McCormack (9th Cir. 2017) opinion (CourtListener)."@en ;
+    rdfs:seeAlso <https://www.courtlistener.com/opinion/8700418/united-states-v-mccormack/> .
+
+# Legal Proceeding Phases (gUFO Phase anti-rigid modeling)
+cacontology-legal-outcomes:PreTrialPhase rdf:type owl:Class ;
+    rdfs:label "Pre-Trial Phase"@en ;
+    rdfs:comment "Phase before trial including arraignment and plea bargaining. Modeled as anti-rigid gUFO Phase."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+cacontology-legal-outcomes:TrialPhase rdf:type owl:Class ;
+    rdfs:label "Trial Phase"@en ;
+    rdfs:comment "Active trial phase with proceedings and evidence presentation. Modeled as anti-rigid gUFO Phase."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+cacontology-legal-outcomes:SentencingPhase rdf:type owl:Class ;
+    rdfs:label "Sentencing Phase"@en ;
+    rdfs:comment "Phase focused on sentencing determination and imposition. Modeled as anti-rigid gUFO Phase."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+cacontology-legal-outcomes:PostConvictionPhase rdf:type owl:Class ;
+    rdfs:label "Post-Conviction Phase"@en ;
+    rdfs:comment "Phase after conviction including appeals and compliance. Modeled as anti-rigid gUFO Phase."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+# Legal System Situations (gUFO Situation)
+cacontology-legal-outcomes:LegalCaseSituation rdf:type owl:Class ;
+    rdfs:label "Legal Case Situation"@en ;
+    rdfs:comment "Complex situation encompassing the entire legal case from charges to resolution. Modeled as gUFO Situation."@en ;
+    rdfs:subClassOf cac-core:Situation .
+
+cacontology-legal-outcomes:JudicialSystemSituation rdf:type owl:Class ;
+    rdfs:label "Judicial System Situation"@en ;
+    rdfs:comment "Broader situation involving judicial system processing of CAC cases. Modeled as gUFO Situation."@en ;
+    rdfs:subClassOf cac-core:Situation .
+
+# =============================================================================
+# CRIMINAL CHARGE CLASSES (extending UCO Observable with gUFO Object)
+# =============================================================================
+
+# Criminal Charges as gUFO Objects
+cacontology-legal-outcomes:CriminalCharge rdf:type owl:Class ;
+    rdfs:label "Criminal Charge"@en ;
+    rdfs:comment "Formal accusation of criminal activity in CAC cases. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject, cac-core:Artifact .
+
+# =============================================================================
+# CONVICTION RECORD (gUFO Object) — Issue #36
+# Shape: ConvictionRecordShape in cacontology-legal-outcomes-shapes.ttl
+# =============================================================================
+
+cacontology-legal-outcomes:ConvictionRecord rdf:type owl:Class ;
+    rdfs:label "Conviction Record"@en ;
+    rdfs:comment "A durable record that a person was convicted of one or more criminal charges (e.g., by jury verdict, bench trial, or plea agreement). Used for current-case dispositions and for limited prior-conviction history relevant to charging or sentencing. Trauma-informed modeling: store only structured legal facts needed for interoperability; do not encode graphic offense narrative in this class. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject, cac-core:Artifact ;
+    dcterms:source "Federal Rules of Criminal Procedure; AO 245B Judgment in a Criminal Case (U.S. Courts)."@en ;
+    rdfs:seeAlso <https://www.uscourts.gov/forms/criminal-judgment-forms/judgment-criminal-case-0> .
+
+cacontology-legal-outcomes:FederalCharge rdf:type owl:Class ;
+    rdfs:label "Federal Charge"@en ;
+    rdfs:comment "Criminal charge under federal law and jurisdiction. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:CriminalCharge .
+
+cacontology-legal-outcomes:StateCharge rdf:type owl:Class ;
+    rdfs:label "State Charge"@en ;
+    rdfs:comment "Criminal charge under state law and jurisdiction. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:CriminalCharge .
+
+# =============================================================================
+# CHARGING INSTRUMENTS (gUFO Object) — Issue #34
+# Distinguishes magistrate criminal complaints (probable-cause charging
+# instruments sworn by law enforcement) from grand-jury indictments and
+# criminal informations, so complaint-stage vs indictment-stage posture is
+# queryable without misusing enterprise/indictment classes.
+# =============================================================================
+
+cacontology-legal-outcomes:ChargingInstrument rdf:type owl:Class ;
+    rdfs:label "Charging Instrument"@en ;
+    rdfs:comment "Abstract superclass for formal charging documents: criminal complaint, indictment, criminal information, and superseding instruments. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject, cac-core:Artifact ;
+    dcterms:source "Federal Rules of Criminal Procedure, Rules 3, 6, 7."@en ;
+    rdfs:seeAlso <https://www.law.cornell.edu/rules/frcrmp> .
+
+cacontology-legal-outcomes:CriminalComplaint rdf:type owl:Class ;
+    rdfs:label "Criminal Complaint"@en ;
+    rdfs:comment "A written statement of the essential facts constituting the offense charged, made under oath before a magistrate judge (or clerk where authorized) prior to indictment. Fed. R. Crim. P. 3. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:ChargingInstrument .
+
+cacontology-legal-outcomes:MagistrateComplaint rdf:type owl:Class ;
+    rdfs:label "Magistrate Complaint"@en ;
+    rdfs:comment "A criminal complaint sworn before a federal magistrate judge, typically supported by a law-enforcement agent affidavit or statement of facts. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:CriminalComplaint .
+
+cacontology-legal-outcomes:Indictment rdf:type owl:Class ;
+    rdfs:label "Indictment"@en ;
+    rdfs:comment "A grand-jury charging instrument. Fed. R. Crim. P. 6, 7. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:ChargingInstrument .
+
+cacontology-legal-outcomes:SupersedingIndictment rdf:type owl:Class ;
+    rdfs:label "Superseding Indictment"@en ;
+    rdfs:comment "An indictment that replaces an earlier charging instrument in the same case, typically adding, modifying, or dropping counts or defendants. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:Indictment .
+
+cacontology-legal-outcomes:CriminalInformation rdf:type owl:Class ;
+    rdfs:label "Criminal Information"@en ;
+    rdfs:comment "A charging instrument filed by the prosecutor without grand-jury action, typically after the defendant waives indictment. Fed. R. Crim. P. 7(b). Modeled as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:ChargingInstrument .
+
+# Taxonomy alignment: the pre-existing core enterprise indictment class is an Indictment.
+cacontology:MultiDefendantIndictment rdfs:subClassOf cacontology-legal-outcomes:Indictment .
+
+# Charging instrument properties (Issue #34)
+cacontology-legal-outcomes:chargingInstrumentCounts rdf:type owl:DatatypeProperty ;
+    rdfs:label "charging instrument counts"@en ;
+    rdfs:comment "Total number of counts charged in a charging instrument. Generalizes indictment-specific count properties to complaints and informations."@en ;
+    rdfs:domain cacontology-legal-outcomes:ChargingInstrument ;
+    rdfs:range xsd:integer .
+
+cacontology-legal-outcomes:filedDate rdf:type owl:DatatypeProperty ;
+    rdfs:label "filed date"@en ;
+    rdfs:comment "Date the charging instrument was filed with the court."@en ;
+    rdfs:domain cacontology-legal-outcomes:ChargingInstrument ;
+    rdfs:range xsd:date .
+
+cacontology-legal-outcomes:swornBy rdf:type owl:ObjectProperty ;
+    rdfs:label "sworn by"@en ;
+    rdfs:comment "Links a complaint to the law-enforcement affiant (person or identity) who swore to the supporting statement of facts."@en ;
+    rdfs:domain cacontology-legal-outcomes:CriminalComplaint ;
+    rdfs:range uco-identity:Identity .
+
+cacontology-legal-outcomes:incorporatesStatementOfFacts rdf:type owl:ObjectProperty ;
+    rdfs:label "incorporates statement of facts"@en ;
+    rdfs:comment "Links a charging instrument to an incorporated affidavit or statement of facts document."@en ;
+    rdfs:domain cacontology-legal-outcomes:ChargingInstrument ;
+    rdfs:range uco-observable:ObservableObject .
+
+cacontology-legal-outcomes:supersededBy rdf:type owl:ObjectProperty ;
+    rdfs:label "superseded by"@en ;
+    rdfs:comment "Links a charging instrument to the later instrument that replaces it in the same case."@en ;
+    rdfs:domain cacontology-legal-outcomes:ChargingInstrument ;
+    rdfs:range cacontology-legal-outcomes:ChargingInstrument .
+
+cacontology-legal-outcomes:supersedes rdf:type owl:ObjectProperty ;
+    rdfs:label "supersedes"@en ;
+    rdfs:comment "Links a charging instrument to the earlier instrument it replaces."@en ;
+    owl:inverseOf cacontology-legal-outcomes:supersededBy ;
+    rdfs:domain cacontology-legal-outcomes:ChargingInstrument ;
+    rdfs:range cacontology-legal-outcomes:ChargingInstrument .
+
+# CSAM Charges as gUFO Objects
+cacontology-legal-outcomes:CSAM_Possession rdf:type owl:Class ;
+    rdfs:label "CSAM Possession"@en ;
+    rdfs:comment "Charge for possession of child sexual abuse material. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:FederalCharge .
+
+cacontology-legal-outcomes:CSAM_Distribution rdf:type owl:Class ;
+    rdfs:label "CSAM Distribution"@en ;
+    rdfs:comment "Charge for distribution of child sexual abuse material. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:FederalCharge .
+
+cacontology-legal-outcomes:CSAM_Production rdf:type owl:Class ;
+    rdfs:label "CSAM Production"@en ;
+    rdfs:comment "Charge for production of child sexual abuse material, typically carrying severe mandatory minimum sentences. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:FederalCharge .
+
+# =============================================================================
+# MARYLAND CASE ENHANCEMENT - CAUSING PRODUCTION CHARGES (gUFO Object)
+# =============================================================================
+
+cacontology-legal-outcomes:CSAM_CausingProduction rdf:type owl:Class ;
+    rdfs:label "CSAM Causing Production"@en ;
+    rdfs:comment "Charge for causing or facilitating the production of child sexual abuse material, distinct from direct production. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:CSAM_Production .
+
+cacontology-legal-outcomes:CSAM_AccessingAndViewing rdf:type owl:Class ;
+    rdfs:label "CSAM Accessing and Viewing"@en ;
+    rdfs:comment "Charge for intentionally accessing and viewing child sexual abuse material. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:CSAM_Possession .
+
+cacontology-legal-outcomes:CSAM_ReceivingOnCellularDevice rdf:type owl:Class ;
+    rdfs:label "CSAM Receiving on Cellular Device"@en ;
+    rdfs:comment "Charge for receiving child sexual abuse material on cellular phone or mobile device. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:CSAM_Possession .
+
+# SA JACET-inspired Mandatory Sentencing Classes (gUFO Object)
+cacontology-legal-outcomes:MandatoryMinimumSentencing rdf:type owl:Class ;
+    rdfs:label "Mandatory Minimum Sentencing"@en ;
+    rdfs:comment "Sentencing under mandatory minimum provisions for Commonwealth child sexual abuse offenses. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:PrisonSentence .
+
+cacontology-legal-outcomes:CommonwealthChildAbuseOffense rdf:type owl:Class ;
+    rdfs:label "Commonwealth Child Abuse Offense"@en ;
+    rdfs:comment "Child abuse offense under Commonwealth law subject to mandatory minimum sentencing provisions. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:FederalCharge .
+
+cacontology-legal-outcomes:LiveStreamingOffense rdf:type owl:Class ;
+    rdfs:label "Live Streaming Offense"@en ;
+    rdfs:comment "Offense involving live streaming of child abuse, often carrying severe sentences. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:CommonwealthChildAbuseOffense .
+
+cacontology-legal-outcomes:SolicitingExplicitMaterial rdf:type owl:Class ;
+    rdfs:label "Soliciting Explicit Material"@en ;
+    rdfs:comment "Offense of soliciting sexually explicit material from children (e.g., from 10 foreign children via social media). Modeled as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:CommonwealthChildAbuseOffense .
+
+# WA Sextortion Case Specific Charges (gUFO Object)
+cacontology-legal-outcomes:CarriageServiceCSAMTransmission rdf:type owl:Class ;
+    rdfs:label "Carriage Service CSAM Transmission"@en ;
+    rdfs:comment "Use of carriage service to cause child abuse material to be transmitted to self, contrary to section 474.22(1)(a)(ii) Criminal Code (Cth). Maximum penalty 15 years imprisonment. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:FederalCharge .
+
+cacontology-legal-outcomes:CarriageServiceIndecentCommunication rdf:type owl:Class ;
+    rdfs:label "Carriage Service Indecent Communication"@en ;
+    rdfs:comment "Use of carriage service to transmit indecent communication to person under 16 years, contrary to section 474.27A Criminal Code (Cth). Maximum penalty 10 years imprisonment. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:FederalCharge .
+
+cacontology-legal-outcomes:SextortionCharge rdf:type owl:Class ;
+    rdfs:label "Sextortion Charge"@en ;
+    rdfs:comment "Criminal charge specifically related to sextortion involving sexual extortion of children through online blackmail. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:FederalCharge .
+
+cacontology-legal-outcomes:OnlineEnticement rdf:type owl:Class ;
+    rdfs:label "Online Enticement"@en ;
+    rdfs:comment "Charge for online enticement of minors for illegal sexual activity. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:FederalCharge .
+
+cacontology-legal-outcomes:SexTrafficking rdf:type owl:Class ;
+    rdfs:label "Sex Trafficking"@en ;
+    rdfs:comment "Charge for sex trafficking of minors. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:FederalCharge .
+
+# =============================================================================
+# FLORIDA STATE CHARGES (gUFO Object)
+# Based on Miami CAC undercover operation press release
+# =============================================================================
+
+cacontology-legal-outcomes:FloridaStateCharge rdf:type owl:Class ;
+    rdfs:label "Florida State Charge"@en ;
+    rdfs:comment "Criminal charge under Florida state law and jurisdiction for ICAC-related offenses. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:StateCharge .
+
+cacontology-legal-outcomes:TravelingToMeetAfterComputerLure rdf:type owl:Class ;
+    rdfs:label "Traveling To Meet After Computer Lure"@en ;
+    rdfs:comment "Florida state charge for traveling to meet after using a computer to lure a child. Applies when defendant uses electronic communication to lure a child and then travels to meet them. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:FloridaStateCharge ;
+    skos:altLabel "Traveling to Meet a Minor"@en ;
+    skos:definition "F.S. 847.0135(4) - Traveling to meet a minor after using computer services or devices."@en .
+
+cacontology-legal-outcomes:DirectPromotionOfSexualPerformance rdf:type owl:Class ;
+    rdfs:label "Direct Promotion of Sexual Performance by a Child"@en ;
+    rdfs:comment "Florida state charge for direct promotion of a sexual performance by a child. Applies when defendant promotes, directs, or produces sexual conduct involving a minor. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:FloridaStateCharge ;
+    skos:definition "F.S. 827.071(4) - Promoting sexual performance by a child."@en .
+
+cacontology-legal-outcomes:ComputerSeduceSolicitLure rdf:type owl:Class ;
+    rdfs:label "Using Computer to Seduce Solicit or Lure Child"@en ;
+    rdfs:comment "Florida state charge for using a computer to seduce, solicit, or lure a child to engage in sexual conduct. Covers electronic communication with minors for sexual purposes. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:FloridaStateCharge ;
+    skos:altLabel "Computer Solicitation of a Minor"@en ;
+    skos:definition "F.S. 847.0135(3) - Use of computer services to solicit, lure, or entice a child."@en .
+
+cacontology-legal-outcomes:ContributingToDelinquency rdf:type owl:Class ;
+    rdfs:label "Contributing to Delinquency or Dependency of Child"@en ;
+    rdfs:comment "Florida state charge for contributing to the delinquency or dependency of a child. Applies when adult actions contribute to a child becoming delinquent or dependent. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:FloridaStateCharge ;
+    skos:definition "F.S. 827.04 - Contributing to the delinquency or dependency of a child."@en .
+
+# =============================================================================
+# GEORGIA STATE CHARGES (gUFO Object)
+# Based on Georgia Attorney General press release (Hart County trafficking case)
+# =============================================================================
+
+cacontology-legal-outcomes:GeorgiaStateCharge rdf:type owl:Class ;
+    rdfs:label "Georgia State Charge"@en ;
+    rdfs:comment "Criminal charge under Georgia state law and jurisdiction for CAC-related offenses. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:StateCharge ;
+    dcterms:source "Georgia Office of the Attorney General press release, 2026-02-14."@en ;
+    rdfs:seeAlso <https://law.georgia.gov/press-releases/2026-02-14/carr-hart-county-man-convicted-trafficking-teen-targeting-victim-snapchat> .
+
+cacontology-legal-outcomes:TraffickingOfPersonsForSexualServitudeCharge rdf:type owl:Class ;
+    rdfs:label "Trafficking of Persons for Sexual Servitude (GA)"@en ;
+    rdfs:comment "Georgia state charge for trafficking of persons for sexual servitude, as reported in a Georgia Attorney General press release. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:GeorgiaStateCharge ;
+    skos:altLabel "Trafficking for Sexual Servitude"@en ;
+    dcterms:source "Georgia Office of the Attorney General press release, 2026-02-14."@en ;
+    rdfs:seeAlso <https://law.georgia.gov/press-releases/2026-02-14/carr-hart-county-man-convicted-trafficking-teen-targeting-victim-snapchat> .
+
+cacontology-legal-outcomes:SexualExploitationOfMinorCharge rdf:type owl:Class ;
+    rdfs:label "Sexual Exploitation of a Minor (GA)"@en ;
+    rdfs:comment "Georgia state charge for sexual exploitation of a minor, as reported in a Georgia Attorney General press release. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:GeorgiaStateCharge ;
+    skos:altLabel "Sexual Exploitation of a Minor"@en ;
+    dcterms:source "Georgia Office of the Attorney General press release, 2026-02-14."@en ;
+    rdfs:seeAlso <https://law.georgia.gov/press-releases/2026-02-14/carr-hart-county-man-convicted-trafficking-teen-targeting-victim-snapchat> .
+
+# =============================================================================
+# PLEA / SENTENCING CONDITIONS (gUFO Object)
+# =============================================================================
+
+cacontology-legal-outcomes:ProfessionalLicenseSurrenderCondition rdf:type owl:Class ;
+    rdfs:label "Professional License Surrender Condition"@en ;
+    rdfs:comment "Condition associated with a plea agreement or sentencing outcome requiring the defendant to surrender a professional license (e.g., a nursing license)."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject, cac-core:Artifact ;
+    dcterms:source "Georgia Office of the Attorney General press release, 2026-02-14."@en ;
+    rdfs:seeAlso <https://law.georgia.gov/press-releases/2026-02-14/carr-hart-county-man-convicted-trafficking-teen-targeting-victim-snapchat> .
+
+# =============================================================================
+# SENTENCE CLASSES (extending UCO Observable with gUFO Object)
+# =============================================================================
+
+# Criminal Sentences as gUFO Objects
+cacontology-legal-outcomes:CriminalSentence rdf:type owl:Class ;
+    rdfs:label "Criminal Sentence"@en ;
+    rdfs:comment "Punishment imposed by court for criminal conviction. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject, cac-core:AssessmentResult .
+
+cacontology-legal-outcomes:PrisonSentence rdf:type owl:Class ;
+    rdfs:label "Prison Sentence"@en ;
+    rdfs:comment "Sentence involving incarceration in federal or state prison. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:CriminalSentence .
+
+cacontology-legal-outcomes:LifeImprisonmentSentence rdf:type owl:Class ;
+    rdfs:label "Life Imprisonment Sentence"@en ;
+    rdfs:comment "Prison sentence of life imprisonment (typically without a fixed term duration). Modeled as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:PrisonSentence ;
+    dcterms:source "United States v. McCormack (9th Cir. 2017) opinion (CourtListener)."@en ;
+    rdfs:seeAlso <https://www.courtlistener.com/opinion/8700418/united-states-v-mccormack/> .
+
+cacontology-legal-outcomes:ProbationSentence rdf:type owl:Class ;
+    rdfs:label "Probation Sentence"@en ;
+    rdfs:comment "Supervised release with conditions instead of or after incarceration. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:CriminalSentence .
+
+cacontology-legal-outcomes:SupervisedRelease rdf:type owl:Class ;
+    rdfs:label "Supervised Release"@en ;
+    rdfs:comment "Period of supervision following completion of prison sentence. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:CriminalSentence .
+
+cacontology-legal-outcomes:MonetaryPenalty rdf:type owl:Class ;
+    rdfs:label "Monetary Penalty"@en ;
+    rdfs:comment "Financial penalty including fines, restitution, or forfeiture. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:CriminalSentence .
+
+cacontology-legal-outcomes:CommunityService rdf:type owl:Class ;
+    rdfs:label "Community Service"@en ;
+    rdfs:comment "Sentence requiring unpaid work for community benefit. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:CriminalSentence .
+
+# =============================================================================
+# SUPERVISED-RELEASE SPECIAL CONDITIONS (gUFO Object) — Issue #37
+# Typed classes for the special conditions federal courts impose on CAC
+# offenders (AO 245B judgments), so post-plea judgment graphs are queryable
+# instead of generic UcoObject nodes with ad hoc tags.
+# =============================================================================
+
+cacontology-legal-outcomes:SupervisedReleaseCondition rdf:type owl:Class ;
+    rdfs:label "Supervised Release Condition"@en ;
+    rdfs:comment "A special condition of supervised release or probation imposed in a criminal judgment. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject, cac-core:Artifact ;
+    dcterms:source "AO 245B Judgment in a Criminal Case (U.S. Courts), Special Conditions of Supervision."@en ;
+    rdfs:seeAlso <https://www.uscourts.gov/forms/criminal-judgment-forms/judgment-criminal-case-0> .
+
+cacontology-legal-outcomes:SORNAComplianceCondition rdf:type owl:Class ;
+    rdfs:label "SORNA Compliance Condition"@en ;
+    rdfs:comment "Condition requiring compliance with the Sex Offender Registration and Notification Act (34 U.S.C. § 20901 et seq.) as directed by the probation officer or registration authority."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:SupervisedReleaseCondition .
+
+cacontology-legal-outcomes:SexOffenderTreatmentCondition rdf:type owl:Class ;
+    rdfs:label "Sex Offender Treatment Condition"@en ;
+    rdfs:comment "Condition requiring participation in a sex-offense-specific treatment program, commonly including polygraph examination, confidentiality waiver, and cost provisions."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:SupervisedReleaseCondition .
+
+cacontology-legal-outcomes:MinorContactRestrictionCondition rdf:type owl:Class ;
+    rdfs:label "Minor Contact Restriction Condition"@en ;
+    rdfs:comment "Condition restricting contact with persons under a specified age, typically requiring written probation approval and/or presence of a responsible adult aware of the offense history."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:SupervisedReleaseCondition .
+
+cacontology-legal-outcomes:ComputerInternetMonitoringCondition rdf:type owl:Class ;
+    rdfs:label "Computer/Internet Monitoring Condition"@en ;
+    rdfs:comment "Condition requiring participation in a computer and internet monitoring program, commonly including device inventory, disclosure of accounts and credentials, consent to unannounced examination, and prohibitions on encryption or data-erasure tools."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:SupervisedReleaseCondition .
+
+cacontology-legal-outcomes:ProbationSearchCondition rdf:type owl:Class ;
+    rdfs:label "Probation Search Condition"@en ;
+    rdfs:comment "Condition authorizing probation-officer searches of person, property, residence, vehicle, or devices, typically on reasonable suspicion and at a reasonable time and manner."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:SupervisedReleaseCondition .
+
+cacontology-legal-outcomes:SubstanceAbuseTreatmentCondition rdf:type owl:Class ;
+    rdfs:label "Substance Abuse Treatment Condition"@en ;
+    rdfs:comment "Condition requiring substance-abuse testing and/or treatment (residential or outpatient), commonly with urinalysis limits, abstinence requirements, and cost provisions."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:SupervisedReleaseCondition .
+
+# Supervised-release condition properties (Issue #37)
+cacontology-legal-outcomes:hasSpecialCondition rdf:type owl:ObjectProperty ;
+    rdfs:label "has special condition"@en ;
+    rdfs:comment "Links a supervised release (or probation sentence) to a typed special condition imposed in the judgment."@en ;
+    rdfs:domain cacontology-legal-outcomes:CriminalSentence ;
+    rdfs:range cacontology-legal-outcomes:SupervisedReleaseCondition .
+
+cacontology-legal-outcomes:governingStatute rdf:type owl:DatatypeProperty ;
+    rdfs:label "governing statute"@en ;
+    rdfs:comment "Statutory citation governing a condition or penalty (e.g., '34 U.S.C. § 20901 et seq.')."@en ;
+    rdfs:range xsd:string .
+
+cacontology-legal-outcomes:conditionText rdf:type owl:DatatypeProperty ;
+    rdfs:label "condition text"@en ;
+    rdfs:comment "Verbatim or summarized text of the condition as imposed in the judgment."@en ;
+    rdfs:domain cacontology-legal-outcomes:SupervisedReleaseCondition ;
+    rdfs:range xsd:string .
+
+cacontology-legal-outcomes:defendantPaysCost rdf:type owl:DatatypeProperty ;
+    rdfs:label "defendant pays cost"@en ;
+    rdfs:comment "Whether the defendant bears the cost of the required program or monitoring."@en ;
+    rdfs:domain cacontology-legal-outcomes:SupervisedReleaseCondition ;
+    rdfs:range xsd:boolean .
+
+cacontology-legal-outcomes:requiresProbationApproval rdf:type owl:DatatypeProperty ;
+    rdfs:label "requires probation approval"@en ;
+    rdfs:comment "Whether the restricted activity is allowed only with prior written approval of the probation officer."@en ;
+    rdfs:domain cacontology-legal-outcomes:SupervisedReleaseCondition ;
+    rdfs:range xsd:boolean .
+
+# =============================================================================
+# PAYMENT SCHEDULES AND ASSESSMENTS (gUFO Object) — Issue #37
+# =============================================================================
+
+cacontology-legal-outcomes:PaymentSchedule rdf:type owl:Class ;
+    rdfs:label "Payment Schedule"@en ;
+    rdfs:comment "Schedule of criminal monetary payments imposed in a judgment (AO 245B Schedule of Payments). Modeled as gUFO Object."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject, cac-core:Artifact .
+
+cacontology-legal-outcomes:LumpSumPaymentSchedule rdf:type owl:Class ;
+    rdfs:label "Lump Sum Payment Schedule"@en ;
+    rdfs:comment "Payment schedule requiring a lump-sum payment (e.g., due immediately, on a date, or after release)."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:PaymentSchedule .
+
+cacontology-legal-outcomes:InstallmentPaymentSchedule rdf:type owl:Class ;
+    rdfs:label "Installment Payment Schedule"@en ;
+    rdfs:comment "Payment schedule requiring periodic installments, typically with a monthly minimum and a commencement trigger."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:PaymentSchedule .
+
+cacontology-legal-outcomes:SpecialAssessment rdf:type owl:Class ;
+    rdfs:label "Special Assessment"@en ;
+    rdfs:comment "Mandatory special assessment imposed per count of conviction (18 U.S.C. § 3013), or a statute-specific additional assessment. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:MonetaryPenalty .
+
+cacontology-legal-outcomes:AVAAAssessment rdf:type owl:Class ;
+    rdfs:label "AVAA Assessment"@en ;
+    rdfs:comment "Assessment under the Amy, Vicky, and Andy Child Pornography Victim Assistance Act of 2018 (18 U.S.C. § 2259A)."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:SpecialAssessment .
+
+cacontology-legal-outcomes:JVTAAssessment rdf:type owl:Class ;
+    rdfs:label "JVTA Assessment"@en ;
+    rdfs:comment "Assessment under the Justice for Victims of Trafficking Act of 2015 (18 U.S.C. § 3014)."@en ;
+    rdfs:subClassOf cacontology-legal-outcomes:SpecialAssessment .
+
+# Payment schedule properties (Issue #37)
+cacontology-legal-outcomes:hasPaymentSchedule rdf:type owl:ObjectProperty ;
+    rdfs:label "has payment schedule"@en ;
+    rdfs:comment "Links a judgment, prosecution outcome, or monetary penalty grouping to its schedule of payments."@en ;
+    rdfs:range cacontology-legal-outcomes:PaymentSchedule .
+
+cacontology-legal-outcomes:includesPenalty rdf:type owl:ObjectProperty ;
+    rdfs:label "includes penalty"@en ;
+    rdfs:comment "Links a payment schedule to the monetary penalties it covers."@en ;
+    rdfs:domain cacontology-legal-outcomes:PaymentSchedule ;
+    rdfs:range cacontology-legal-outcomes:MonetaryPenalty .
+
+cacontology-legal-outcomes:totalAmountUSD rdf:type owl:DatatypeProperty ;
+    rdfs:label "total amount USD"@en ;
+    rdfs:comment "Total amount of the payment schedule in U.S. dollars."@en ;
+    rdfs:domain cacontology-legal-outcomes:PaymentSchedule ;
+    rdfs:range xsd:decimal .
+
+cacontology-legal-outcomes:dueTiming rdf:type owl:DatatypeProperty ;
+    rdfs:label "due timing"@en ;
+    rdfs:comment "When payment is due (e.g., 'immediately', 'on_date', 'after_release', 'monthly_installments')."@en ;
+    rdfs:domain cacontology-legal-outcomes:PaymentSchedule ;
+    rdfs:range xsd:string .
+
+cacontology-legal-outcomes:publicLawCitation rdf:type owl:DatatypeProperty ;
+    rdfs:label "public law citation"@en ;
+    rdfs:comment "Public law or statutory citation authorizing an assessment or penalty (e.g., '18 U.S.C. § 2259A')."@en ;
+    rdfs:domain cacontology-legal-outcomes:MonetaryPenalty ;
+    rdfs:range xsd:string .
+
+# =============================================================================
+# LEGAL ROLES (gUFO Role anti-rigid modeling)
+# =============================================================================
+
+# Legal System Roles as gUFO Roles (anti-rigid)
+cacontology-legal-outcomes:JudgeRole rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Judge Role"@en ;
+    rdfs:comment "Role of judge presiding over CAC legal proceedings. Modeled as anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cac-core:Role .
+
+cacontology-legal-outcomes:ProsecutorRole rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Prosecutor Role"@en ;
+    rdfs:comment "Role of prosecutor handling CAC criminal charges. Modeled as anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cac-core:Role .
+
+cacontology-legal-outcomes:DefenseAttorneyRole rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Defense Attorney Role"@en ;
+    rdfs:comment "Role of defense attorney representing CAC defendants. Modeled as anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cac-core:Role .
+
+cacontology-legal-outcomes:DefendantRole rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Defendant Role"@en ;
+    rdfs:comment "Role of individual charged with CAC crimes. Modeled as anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cac-core:Role .
+
+cacontology-legal-outcomes:VictimRole rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Victim Role"@en ;
+    rdfs:comment "Role of victim in CAC legal proceedings. Modeled as anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cac-core:Role .
+
+cacontology-legal-outcomes:JuryRole rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Jury Role"@en ;
+    rdfs:comment "Role of jury members in CAC trial proceedings. Modeled as anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cac-core:Role .
+
+cacontology-legal-outcomes:ProbationOfficerRole rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Probation Officer Role"@en ;
+    rdfs:comment "Role of probation officer supervising CAC offenders. Modeled as anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cac-core:Role .
+
+# =============================================================================
+# gUFO TEMPORAL PROPERTIES
+# =============================================================================
+
+# Legal Proceeding Temporal Properties
+cacontology-legal-outcomes:hasProceedingBeginPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has proceeding begin point"@en ;
+    rdfs:comment "Temporal begin point for legal proceeding."@en ;
+    rdfs:subPropertyOf gufo:hasBeginPointInXSDDateTimeStamp ;
+    rdfs:domain cacontology-legal-outcomes:LegalProceeding ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-legal-outcomes:hasProceedingEndPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has proceeding end point"@en ;
+    rdfs:comment "Temporal end point for legal proceeding."@en ;
+    rdfs:subPropertyOf gufo:hasEndPointInXSDDateTimeStamp ;
+    rdfs:domain cacontology-legal-outcomes:LegalProceeding ;
+    rdfs:range xsd:dateTimeStamp .
+
+# Legal Phase Temporal Properties
+cacontology-legal-outcomes:hasPhaseBeginPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has phase begin point"@en ;
+    rdfs:comment "Temporal begin point for legal phase."@en ;
+    rdfs:subPropertyOf gufo:hasBeginPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-legal-outcomes:hasPhaseEndPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has phase end point"@en ;
+    rdfs:comment "Temporal end point for legal phase."@en ;
+    rdfs:subPropertyOf gufo:hasEndPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:dateTimeStamp .
+
+# Sentence Temporal Properties
+cacontology-legal-outcomes:hasSentenceBeginPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has sentence begin point"@en ;
+    rdfs:comment "Temporal begin point for sentence implementation."@en ;
+    rdfs:subPropertyOf gufo:hasBeginPointInXSDDateTimeStamp ;
+    rdfs:domain cacontology-legal-outcomes:CriminalSentence ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-legal-outcomes:hasSentenceEndPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has sentence end point"@en ;
+    rdfs:comment "Temporal end point for sentence completion."@en ;
+    rdfs:subPropertyOf gufo:hasEndPointInXSDDateTimeStamp ;
+    rdfs:domain cacontology-legal-outcomes:CriminalSentence ;
+    rdfs:range xsd:dateTimeStamp .
+
+# Legal Role Temporal Properties
+cacontology-legal-outcomes:hasRoleBeginPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has role begin point"@en ;
+    rdfs:comment "Temporal begin point for legal role."@en ;
+    rdfs:subPropertyOf gufo:hasBeginPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Role ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-legal-outcomes:hasRoleEndPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has role end point"@en ;
+    rdfs:comment "Temporal end point for legal role."@en ;
+    rdfs:subPropertyOf gufo:hasEndPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Role ;
+    rdfs:range xsd:dateTimeStamp .
+
+# Duration Properties
+cacontology-legal-outcomes:proceedingDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "proceeding duration"@en ;
+    rdfs:comment "Duration of legal proceeding from start to completion."@en ;
+    rdfs:domain cacontology-legal-outcomes:LegalProceeding ;
+    rdfs:range xsd:duration .
+
+cacontology-legal-outcomes:phaseDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "phase duration"@en ;
+    rdfs:comment "Duration of legal phase."@en ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:duration .
+
+cacontology-legal-outcomes:sentenceDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "sentence duration"@en ;
+    rdfs:comment "Duration of criminal sentence."@en ;
+    rdfs:domain cacontology-legal-outcomes:CriminalSentence ;
+    rdfs:range xsd:duration .
+
+cacontology-legal-outcomes:sentenceDurationMonths rdf:type owl:DatatypeProperty ;
+    rdfs:label "sentence duration in months"@en ;
+    rdfs:comment "Duration of a criminal sentence expressed as a whole number of months, as stated on the judgment (e.g. AO 245B, https://www.uscourts.gov/forms/criminal-judgment-forms/judgment-criminal-case-0). Convenience companion to sentenceDuration (xsd:duration) for direct numeric comparison in analytics (e.g. sentences over 120 months)."@en ;
+    rdfs:domain cacontology-legal-outcomes:CriminalSentence ;
+    rdfs:range xsd:integer ;
+    dcterms:source "AO 245B Judgment in a Criminal Case (U.S. Courts)."@en ;
+    rdfs:seeAlso <https://www.uscourts.gov/forms/criminal-judgment-forms/judgment-criminal-case-0> .
+
+cacontology-legal-outcomes:roleDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "role duration"@en ;
+    rdfs:comment "Duration of individual's legal role."@en ;
+    rdfs:domain cac-core:Role ;
+    rdfs:range xsd:duration .
+
+# =============================================================================
+# LEGAL SYSTEM PROPERTIES
+# =============================================================================
+
+# Legal Proceeding Structure Properties
+cacontology-legal-outcomes:hasLegalPhase rdf:type owl:ObjectProperty ;
+    rdfs:label "has legal phase"@en ;
+    rdfs:comment "Links legal proceeding to its phases."@en ;
+    rdfs:domain cacontology-legal-outcomes:LegalProceeding ;
+    rdfs:range cac-core:Phase .
+
+cacontology-legal-outcomes:transitionsToPhase rdf:type owl:ObjectProperty ;
+    rdfs:label "transitions to phase"@en ;
+    rdfs:comment "Links one legal phase to the next phase in sequence."@en ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range cac-core:Phase .
+
+cacontology-legal-outcomes:currentPhase rdf:type owl:ObjectProperty ;
+    rdfs:label "current phase"@en ;
+    rdfs:comment "The current active phase of the legal proceeding."@en ;
+    rdfs:domain cacontology-legal-outcomes:LegalProceeding ;
+    rdfs:range cac-core:Phase .
+
+# Charge and Sentence Properties
+cacontology-legal-outcomes:hasCharge rdf:type owl:ObjectProperty ;
+    rdfs:label "has charge"@en ;
+    rdfs:comment "Links legal proceeding to criminal charges involved."@en ;
+    rdfs:domain cacontology-legal-outcomes:LegalProceeding ;
+    rdfs:range cacontology-legal-outcomes:CriminalCharge .
+
+# -----------------------------------------------------------------------------
+# Charging / sentencing properties (Issue #40) + ConvictionRecord props (#36)
+# -----------------------------------------------------------------------------
+
+cacontology-legal-outcomes:chargedWith rdf:type owl:ObjectProperty ;
+    rdfs:label "charged with"@en ;
+    rdfs:comment "Links a person (or investigation subject role continuity via Person) to a criminal charge filed against them. A person may face multiple charges; in multi-defendant instruments each defendant links only to the counts naming them. Complements the existing hasCharge property, which links a LegalProceeding to its charges. See Fed. R. Crim. P. 7 (https://www.law.cornell.edu/rules/frcrmp/rule_7)."@en ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range cacontology-legal-outcomes:CriminalCharge ;
+    dcterms:source "Fed. R. Crim. P. 7."@en ;
+    rdfs:seeAlso <https://www.law.cornell.edu/rules/frcrmp/rule_7> .
+
+cacontology-legal-outcomes:statuteCitation rdf:type owl:DatatypeProperty ;
+    rdfs:label "statute citation"@en ;
+    rdfs:comment "The statutory citation for a criminal charge, e.g. '18 U.S.C. §§ 2251(a), (e)'. United States Code citations follow the conventions of the Office of the Law Revision Counsel (https://uscode.house.gov/)."@en ;
+    rdfs:domain cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:range xsd:string ;
+    dcterms:source "Office of the Law Revision Counsel, United States Code."@en ;
+    rdfs:seeAlso <https://uscode.house.gov/> .
+
+cacontology-legal-outcomes:chargeCount rdf:type owl:DatatypeProperty ;
+    rdfs:label "charge count"@en ;
+    rdfs:comment "The total number of criminal charges associated with a ConvictionRecord or LegalProceeding (aggregate total, not the ordinal of a single count). Constrained on ConvictionRecord by ConvictionRecordShape (minInclusive 1, maxInclusive 100). Distinct from countNumber, which is the ordinal count number within a charging instrument. NOTE: some existing example graphs historically used chargeCount on individual CriminalCharge nodes as an ordinal; that usage SHOULD migrate to countNumber in a follow-up (this declaration does not rewrite those examples)."@en ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-legal-outcomes:countNumber rdf:type owl:DatatypeProperty ;
+    rdfs:label "count number"@en ;
+    rdfs:comment "The ordinal count number a charge holds within its charging instrument (e.g. Count 3 of an indictment). Distinct from chargeCount, which is the total number of charges on a ConvictionRecord or LegalProceeding. See Fed. R. Crim. P. 7(c)."@en ;
+    rdfs:domain cacontology-legal-outcomes:CriminalCharge ;
+    rdfs:range xsd:nonNegativeInteger ;
+    dcterms:source "Fed. R. Crim. P. 7(c)."@en ;
+    rdfs:seeAlso <https://www.law.cornell.edu/rules/frcrmp/rule_7> .
+
+cacontology-legal-outcomes:convictionDate rdf:type owl:DatatypeProperty ;
+    rdfs:label "conviction date"@en ;
+    rdfs:comment "Date and time when the conviction was entered (verdict, acceptance of plea, or equivalent disposition). Required by ConvictionRecordShape as xsd:dateTime."@en ;
+    rdfs:domain cacontology-legal-outcomes:ConvictionRecord ;
+    rdfs:range xsd:dateTime .
+
+cacontology-legal-outcomes:convictionType rdf:type owl:DatatypeProperty ;
+    rdfs:label "conviction type"@en ;
+    rdfs:comment "How the conviction was obtained. Allowed values (ConvictionRecordShape): jury_verdict, bench_trial, plea_agreement, default_judgment, summary_conviction."@en ;
+    rdfs:domain cacontology-legal-outcomes:ConvictionRecord ;
+    rdfs:range xsd:string .
+
+cacontology-legal-outcomes:priorConvictions rdf:type owl:DatatypeProperty ;
+    rdfs:label "prior convictions"@en ;
+    rdfs:comment "Number of prior criminal convictions associated with the subject of this ConvictionRecord (aggregate count for history context; 0–50 per ConvictionRecordShape). Use non-graphic, structured counts only."@en ;
+    rdfs:domain cacontology-legal-outcomes:ConvictionRecord ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-legal-outcomes:phaseStatus rdf:type owl:DatatypeProperty ;
+    rdfs:label "phase status"@en ;
+    rdfs:comment "Status of a legal or operational phase (e.g., 'active', 'completed', 'pending'). Canonical declaration for cac-core:Phase-scoped use across legal proceedings and related workflows. The former module-local copy cacontology-asset-forfeiture:phaseStatus is deprecated in favor of this property."@en ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:string .
+
+# FederalProsecution namespace alignment (Issue #40 decision):
+# Canonical class IRI is cacontology-usa-federal:FederalProsecution in
+# ontology/cacontology-usa-federal-law.ttl. Graphs MUST use that IRI.
+# No legal-outcomes alias or owl:equivalentClass is introduced here; examples
+# that previously implied a legal-outcomes:FederalProsecution term should
+# migrate to the usa-federal namespace (SDK exemplars already prefer usa-federal).
+
+cacontology-legal-outcomes:resultsSentence rdf:type owl:ObjectProperty ;
+    rdfs:label "results sentence"@en ;
+    rdfs:comment "Links legal proceeding to resulting criminal sentence."@en ;
+    rdfs:domain cacontology-legal-outcomes:LegalProceeding ;
+    rdfs:range cacontology-legal-outcomes:CriminalSentence .
+
+# Appellate review properties
+cacontology-legal-outcomes:raisesIssue rdf:type owl:ObjectProperty ;
+    rdfs:label "raises issue"@en ;
+    rdfs:comment "Links an appeal process to an appellate issue raised for review."@en ;
+    rdfs:domain cacontology-legal-outcomes:AppealProcess ;
+    rdfs:range cacontology-legal-outcomes:AppellateIssue .
+
+cacontology-legal-outcomes:issueDisposition rdf:type owl:ObjectProperty ;
+    rdfs:label "issue disposition"@en ;
+    rdfs:comment "Links an appellate issue to its disposition."@en ;
+    rdfs:domain cacontology-legal-outcomes:AppellateIssue ;
+    rdfs:range cacontology-legal-outcomes:AppellateDisposition .
+
+cacontology-legal-outcomes:citesEvidenceRule rdf:type owl:ObjectProperty ;
+    rdfs:label "cites evidence rule"@en ;
+    rdfs:comment "Links an appellate issue to an evidence rule cited or applied in the issue analysis."@en ;
+    rdfs:domain cacontology-legal-outcomes:AppellateIssue ;
+    rdfs:range cacontology-legal-outcomes:EvidenceRule .
+
+cacontology-legal-outcomes:appliesStandardOfReview rdf:type owl:ObjectProperty ;
+    rdfs:label "applies standard of review"@en ;
+    rdfs:comment "Links an appellate issue to the standard of review applied by the appellate court."@en ;
+    rdfs:domain cacontology-legal-outcomes:AppellateIssue ;
+    rdfs:range cacontology-legal-outcomes:StandardOfReview .
+
+cacontology-legal-outcomes:appliesTo rdf:type owl:ObjectProperty ;
+    rdfs:label "applies to"@en ;
+    rdfs:comment "Links criminal sentence to the charge it addresses."@en ;
+    rdfs:domain cacontology-legal-outcomes:CriminalSentence ;
+    rdfs:range cacontology-legal-outcomes:CriminalCharge .
+
+# Role Participation Properties
+cacontology-legal-outcomes:participatesInProceeding rdf:type owl:ObjectProperty ;
+    rdfs:label "participates in proceeding"@en ;
+    rdfs:comment "Links role to legal proceeding participated in."@en ;
+    rdfs:domain cac-core:Role ;
+    rdfs:range cacontology-legal-outcomes:LegalProceeding .
+
+cacontology-legal-outcomes:hasRole rdf:type owl:ObjectProperty ;
+    rdfs:label "has role"@en ;
+    rdfs:comment "Links individual to their role in legal proceeding."@en ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range cac-core:Role .
+
+# Situation Properties
+cacontology-legal-outcomes:situationComplexity rdf:type owl:DatatypeProperty ;
+    rdfs:label "situation complexity"@en ;
+    rdfs:comment "Complexity level of legal situation (1-5 scale)."@en ;
+    rdfs:domain cac-core:Situation ;
+    rdfs:range xsd:integer .
+
+cacontology-legal-outcomes:involvesChargeCount rdf:type owl:DatatypeProperty ;
+    rdfs:label "involves charge count"@en ;
+    rdfs:comment "Number of charges involved in legal situation."@en ;
+    rdfs:domain cacontology-legal-outcomes:LegalCaseSituation ;
+    rdfs:range xsd:integer .
+
+cacontology-legal-outcomes:involvesParticipantCount rdf:type owl:DatatypeProperty ;
+    rdfs:label "involves participant count"@en ;
+    rdfs:comment "Number of participants involved in legal situation."@en ;
+    rdfs:domain cac-core:Situation ;
+    rdfs:range xsd:integer . 
+
+# Appellate review datatype properties
+cacontology-legal-outcomes:standardOfReviewType rdf:type owl:DatatypeProperty ;
+    rdfs:label "standard of review type"@en ;
+    rdfs:comment "Categorical standard-of-review identifier (e.g., de_novo, abuse_of_discretion, plain_error)."@en ;
+    rdfs:domain cacontology-legal-outcomes:StandardOfReview ;
+    rdfs:range xsd:string .
+
+cacontology-legal-outcomes:dispositionType rdf:type owl:DatatypeProperty ;
+    rdfs:label "disposition type"@en ;
+    rdfs:comment "Categorical appellate disposition identifier (e.g., affirmed, reversed, vacated, remanded)."@en ;
+    rdfs:domain cacontology-legal-outcomes:AppellateDisposition ;
+    rdfs:range xsd:string .
+
+cacontology-legal-outcomes:ruleCitation rdf:type owl:DatatypeProperty ;
+    rdfs:label "rule citation"@en ;
+    rdfs:comment "Citation string for an evidence rule (e.g., 'Fed. R. Evid. 403')."@en ;
+    rdfs:domain cacontology-legal-outcomes:EvidenceRule ;
+    rdfs:range xsd:string .
+
+# Bail and Pretrial Status Properties
+cacontology-legal-outcomes:bailStatus rdf:type owl:DatatypeProperty ;
+    rdfs:label "bail status"@en ;
+    rdfs:comment "Status of the defendant's pretrial release for a legal proceeding (e.g., released_on_bail, held_without_bail, released_on_own_recognizance)."@en ;
+    rdfs:domain cacontology-legal-outcomes:LegalProceeding ;
+    rdfs:range xsd:string .
+
+# Sentence Concurrency Properties
+cacontology-legal-outcomes:sentenceConcurrency rdf:type owl:DatatypeProperty ;
+    rdfs:label "sentence concurrency"@en ;
+    rdfs:comment "Indicates whether a criminal sentence is concurrent, consecutive, or mixed with respect to other sentences (values: concurrent, consecutive, mixed)."@en ;
+    rdfs:domain cacontology-legal-outcomes:CriminalSentence ;
+    rdfs:range xsd:string .
+
+cacontology-legal-outcomes:concurrentWith rdf:type owl:ObjectProperty ;
+    rdfs:label "concurrent with"@en ;
+    rdfs:comment "Links one criminal sentence to another sentence that is ordered to run concurrently."@en ;
+    rdfs:domain cacontology-legal-outcomes:CriminalSentence ;
+    rdfs:range cacontology-legal-outcomes:CriminalSentence .
+
+# =============================================================================
+# FLORIDA STATE CHARGE PROPERTIES
+# =============================================================================
+
+cacontology-legal-outcomes:floridaStatute rdf:type owl:DatatypeProperty ;
+    rdfs:label "florida statute"@en ;
+    rdfs:comment "Reference to Florida Statute section for the charge (e.g., 'F.S. 847.0135')."@en ;
+    rdfs:domain cacontology-legal-outcomes:FloridaStateCharge ;
+    rdfs:range xsd:string .
+
+cacontology-legal-outcomes:chargeClassification rdf:type owl:DatatypeProperty ;
+    rdfs:label "charge classification"@en ;
+    rdfs:comment "Florida charge classification (capital_felony, life_felony, first_degree_felony, etc.)."@en ;
+    rdfs:domain cacontology-legal-outcomes:FloridaStateCharge ;
+    rdfs:range xsd:string .
+
+cacontology-legal-outcomes:travelOccurred rdf:type owl:DatatypeProperty ;
+    rdfs:label "travel occurred"@en ;
+    rdfs:comment "Indicates whether actual travel occurred in traveling to meet charges."@en ;
+    rdfs:domain cacontology-legal-outcomes:TravelingToMeetAfterComputerLure ;
+    rdfs:range xsd:boolean .
+
+cacontology-legal-outcomes:electronicCommunicationUsed rdf:type owl:DatatypeProperty ;
+    rdfs:label "electronic communication used"@en ;
+    rdfs:comment "Indicates whether electronic communication was used in the offense."@en ;
+    rdfs:domain cacontology-legal-outcomes:FloridaStateCharge ;
+    rdfs:range xsd:boolean .
+
+cacontology-legal-outcomes:solicitationType rdf:type owl:DatatypeProperty ;
+    rdfs:label "solicitation type"@en ;
+    rdfs:comment "Type of solicitation in computer solicitation charges (seduce, solicit, lure, entice, multiple)."@en ;
+    rdfs:domain cacontology-legal-outcomes:ComputerSeduceSolicitLure ;
+    rdfs:range xsd:string .
+
+cacontology-legal-outcomes:communicationPlatform rdf:type owl:DatatypeProperty ;
+    rdfs:label "communication platform"@en ;
+    rdfs:comment "Platform used for electronic communication in the offense."@en ;
+    rdfs:domain cacontology-legal-outcomes:FloridaStateCharge ;
+    rdfs:range xsd:string .
+
+cacontology-legal-outcomes:promotionType rdf:type owl:DatatypeProperty ;
+    rdfs:label "promotion type"@en ;
+    rdfs:comment "Type of promotion in sexual performance charges (direct_promotion, directing, producing, facilitating)."@en ;
+    rdfs:domain cacontology-legal-outcomes:DirectPromotionOfSexualPerformance ;
+    rdfs:range xsd:string .
+
+cacontology-legal-outcomes:contributionType rdf:type owl:DatatypeProperty ;
+    rdfs:label "contribution type"@en ;
+    rdfs:comment "Type of contribution in delinquency charges (delinquency, dependency, both)."@en ;
+    rdfs:domain cacontology-legal-outcomes:ContributingToDelinquency ;
+    rdfs:range xsd:string .
+
+# =============================================================================
+# PLEA / SENTENCING CONDITION PROPERTIES
+# =============================================================================
+
+cacontology-legal-outcomes:requiresLicenseSurrender rdf:type owl:ObjectProperty ;
+    rdfs:label "requires license surrender"@en ;
+    rdfs:comment "Links a professional license surrender condition to the professional license that must be surrendered."@en ;
+    rdfs:domain cacontology-legal-outcomes:ProfessionalLicenseSurrenderCondition ;
+    rdfs:range cacontology-registry:ProfessionalLicense .
+
+cacontology-legal-outcomes:conditionAppliesToPerson rdf:type owl:ObjectProperty ;
+    rdfs:label "condition applies to person"@en ;
+    rdfs:comment "Links a plea/sentencing condition to the person it applies to (typically the defendant)."@en ;
+    rdfs:domain cacontology-legal-outcomes:ProfessionalLicenseSurrenderCondition ;
+    rdfs:range uco-identity:Person .

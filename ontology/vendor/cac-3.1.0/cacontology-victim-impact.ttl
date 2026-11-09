@@ -1,0 +1,1030 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-observable: <https://ontology.unifiedcyberontology.org/uco/observable/> .
+@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
+@prefix cacontology-impact: <https://cacontology.projectvic.org/victim-impact#> .
+@prefix gufo: <http://purl.org/nemo/gufo#> .
+@prefix cacontology-temporal: <https://cacontology.projectvic.org/temporal#> .
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+
+# Ontology Declaration
+<https://cacontology.projectvic.org/victim-impact> rdf:type owl:Ontology ;
+    rdfs:label "CAC Victim Impact Assessment Ontology"@en ;
+    rdfs:comment "An ontology for representing victim impact assessments, psychological harm, trauma indicators, therapeutic interventions, and recovery processes in Internet Crimes Against Children investigations, extending UCO and CASE with gUFO foundational ontology enhancements."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/victim-impact/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:issued "2024-12-19"^^xsd:date ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/identity/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/observable/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/action/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/role/1.5.0> ,
+                <https://cacontology.projectvic.org/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> .
+
+# =============================================================================
+# VICTIM IMPACT ASSESSMENT CLASSES (extending UCO Observable with gUFO Situation)
+# =============================================================================
+
+cacontology-impact:VictimImpactAssessment rdf:type owl:Class ;
+    rdfs:label "Victim Impact Assessment"@en ;
+    rdfs:comment "Comprehensive assessment of the impact of criminal activity on child victims."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject, cac-core:AssessmentResult .
+
+cacontology-impact:InitialImpactAssessment rdf:type owl:Class ;
+    rdfs:label "Initial Impact Assessment"@en ;
+    rdfs:comment "Initial evaluation of victim impact conducted early in investigation."@en ;
+    rdfs:subClassOf cacontology-impact:VictimImpactAssessment .
+
+cacontology-impact:ComprehensiveImpactAssessment rdf:type owl:Class ;
+    rdfs:label "Comprehensive Impact Assessment"@en ;
+    rdfs:comment "Detailed evaluation of victim impact for legal proceedings and treatment planning."@en ;
+    rdfs:subClassOf cacontology-impact:VictimImpactAssessment .
+
+cacontology-impact:OngoingImpactMonitoring rdf:type owl:Class ;
+    rdfs:label "Ongoing Impact Monitoring"@en ;
+    rdfs:comment "Continuous monitoring of victim impact during investigation and recovery."@en ;
+    rdfs:subClassOf cacontology-impact:VictimImpactAssessment .
+
+# =============================================================================
+# VICTIM IMPACT PHASES (gUFO Phase anti-rigid modeling)
+# =============================================================================
+
+cacontology-impact:AcuteImpactPhase rdf:type owl:Class ;
+    rdfs:label "Acute Impact Phase"@en ;
+    rdfs:comment "Immediate phase following victimization with acute psychological impact."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+cacontology-impact:RecoveryPhase rdf:type owl:Class ;
+    rdfs:label "Recovery Phase"@en ;
+    rdfs:comment "Phase focused on healing and therapeutic intervention."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+cacontology-impact:ReintegrationPhase rdf:type owl:Class ;
+    rdfs:label "Reintegration Phase"@en ;
+    rdfs:comment "Phase involving return to normal activities and social reintegration."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+cacontology-impact:LongTermMonitoringPhase rdf:type owl:Class ;
+    rdfs:label "Long Term Monitoring Phase"@en ;
+    rdfs:comment "Extended phase monitoring long-term effects and continued support needs."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+# =============================================================================
+# PSYCHOLOGICAL HARM CLASSES (extending UCO Observable with gUFO IntrinsicMoment)
+# =============================================================================
+
+cacontology-impact:PsychologicalHarm rdf:type owl:Class ;
+    rdfs:label "Psychological Harm"@en ;
+    rdfs:comment "Mental or emotional harm experienced by child victims."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject, gufo:IntrinsicMoment .
+
+cacontology-impact:AcuteTrauma rdf:type owl:Class ;
+    rdfs:label "Acute Trauma"@en ;
+    rdfs:comment "Immediate psychological trauma following victimization."@en ;
+    rdfs:subClassOf cacontology-impact:PsychologicalHarm .
+
+cacontology-impact:ChronicTrauma rdf:type owl:Class ;
+    rdfs:label "Chronic Trauma"@en ;
+    rdfs:comment "Long-term psychological trauma from prolonged or repeated victimization."@en ;
+    rdfs:subClassOf cacontology-impact:PsychologicalHarm .
+
+cacontology-impact:ComplexTrauma rdf:type owl:Class ;
+    rdfs:label "Complex Trauma"@en ;
+    rdfs:comment "Complex trauma resulting from multiple types of victimization or prolonged abuse."@en ;
+    rdfs:subClassOf cacontology-impact:PsychologicalHarm .
+
+cacontology-impact:DevelopmentalImpact rdf:type owl:Class ;
+    rdfs:label "Developmental Impact"@en ;
+    rdfs:comment "Impact on normal child development due to victimization."@en ;
+    rdfs:subClassOf cacontology-impact:PsychologicalHarm .
+
+# =============================================================================
+# TRAUMA INDICATOR CLASSES (extending UCO Observable with gUFO Object)
+# =============================================================================
+
+cacontology-impact:TraumaIndicator rdf:type owl:Class ;
+    rdfs:label "Trauma Indicator"@en ;
+    rdfs:comment "Observable signs or symptoms indicating psychological trauma."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject, cac-core:AssessmentResult .
+
+cacontology-impact:BehavioralIndicator rdf:type owl:Class ;
+    rdfs:label "Behavioral Indicator"@en ;
+    rdfs:comment "Changes in behavior that indicate trauma or distress."@en ;
+    rdfs:subClassOf cacontology-impact:TraumaIndicator .
+
+cacontology-impact:EmotionalIndicator rdf:type owl:Class ;
+    rdfs:label "Emotional Indicator"@en ;
+    rdfs:comment "Emotional symptoms or reactions indicating trauma."@en ;
+    rdfs:subClassOf cacontology-impact:TraumaIndicator .
+
+cacontology-impact:PhysicalIndicator rdf:type owl:Class ;
+    rdfs:label "Physical Indicator"@en ;
+    rdfs:comment "Physical symptoms or manifestations of psychological trauma."@en ;
+    rdfs:subClassOf cacontology-impact:TraumaIndicator .
+
+cacontology-impact:CognitiveIndicator rdf:type owl:Class ;
+    rdfs:label "Cognitive Indicator"@en ;
+    rdfs:comment "Changes in thinking, memory, or learning ability due to trauma."@en ;
+    rdfs:subClassOf cacontology-impact:TraumaIndicator .
+
+cacontology-impact:SocialIndicator rdf:type owl:Class ;
+    rdfs:label "Social Indicator"@en ;
+    rdfs:comment "Changes in social behavior or relationships due to trauma."@en ;
+    rdfs:subClassOf cacontology-impact:TraumaIndicator .
+
+# =============================================================================
+# THERAPEUTIC INTERVENTION CLASSES (extending UCO Action with gUFO Event)
+# =============================================================================
+
+cacontology-impact:TherapeuticIntervention rdf:type owl:Class ;
+    rdfs:label "Therapeutic Intervention"@en ;
+    rdfs:comment "Professional therapeutic treatment or intervention for victim recovery."@en ;
+    rdfs:subClassOf cac-core:SupportEvent .
+
+cacontology-impact:CrisisIntervention rdf:type owl:Class ;
+    rdfs:label "Crisis Intervention"@en ;
+    rdfs:comment "Immediate therapeutic intervention for acute crisis situations."@en ;
+    rdfs:subClassOf cacontology-impact:TherapeuticIntervention .
+
+cacontology-impact:TraumaTherapy rdf:type owl:Class ;
+    rdfs:label "Trauma Therapy"@en ;
+    rdfs:comment "Specialized therapy for treating trauma and its effects."@en ;
+    rdfs:subClassOf cacontology-impact:TherapeuticIntervention .
+
+cacontology-impact:FamilyTherapy rdf:type owl:Class ;
+    rdfs:label "Family Therapy"@en ;
+    rdfs:comment "Therapeutic intervention involving the victim's family."@en ;
+    rdfs:subClassOf cacontology-impact:TherapeuticIntervention .
+
+cacontology-impact:GroupTherapy rdf:type owl:Class ;
+    rdfs:label "Group Therapy"@en ;
+    rdfs:comment "Therapeutic intervention conducted in group settings with other victims."@en ;
+    rdfs:subClassOf cacontology-impact:TherapeuticIntervention .
+
+cacontology-impact:CognitiveBehavioralTherapy rdf:type owl:Class ;
+    rdfs:label "Cognitive Behavioral Therapy"@en ;
+    rdfs:comment "CBT-based therapeutic intervention for trauma and behavioral issues."@en ;
+    rdfs:subClassOf cacontology-impact:TherapeuticIntervention .
+
+# =============================================================================
+# SUPPORT SERVICE CLASSES (extending UCO Action with gUFO Event)
+# =============================================================================
+
+cacontology-impact:VictimSupport rdf:type owl:Class ;
+    rdfs:label "Victim Support"@en ;
+    rdfs:comment "Support services provided to child victims and their families."@en ;
+    rdfs:subClassOf cac-core:SupportEvent .
+
+cacontology-impact:VictimAdvocacy rdf:type owl:Class ;
+    rdfs:label "Victim Advocacy"@en ;
+    rdfs:comment "Advocacy services to protect victim rights and interests."@en ;
+    rdfs:subClassOf cacontology-impact:VictimSupport .
+
+cacontology-impact:SafetyPlanning rdf:type owl:Class ;
+    rdfs:label "Safety Planning"@en ;
+    rdfs:comment "Development of safety plans to protect victims from further harm."@en ;
+    rdfs:subClassOf cacontology-impact:VictimSupport .
+
+cacontology-impact:EducationalSupport rdf:type owl:Class ;
+    rdfs:label "Educational Support"@en ;
+    rdfs:comment "Educational accommodations and support for victim's schooling."@en ;
+    rdfs:subClassOf cacontology-impact:VictimSupport .
+
+cacontology-impact:LegalSupport rdf:type owl:Class ;
+    rdfs:label "Legal Support"@en ;
+    rdfs:comment "Legal assistance and representation for victims in proceedings."@en ;
+    rdfs:subClassOf cacontology-impact:VictimSupport .
+
+cacontology-impact:NonOffendingCaregiverSupport rdf:type owl:Class ;
+    rdfs:label "Non-Offending Caregiver Support"@en ;
+    rdfs:comment "Support services directed to the non-offending caregiver to stabilize the child-support system after disclosure and reduce pressure toward recantation."@en ;
+    rdfs:subClassOf cacontology-impact:VictimSupport ;
+    dcterms:source "Robert Peters, 'Winning Without Words: Prosecuting Cases with Recanting or Nonverbal Victims' (Coursing Justice presentation, 2026)."@en ;
+    rdfs:seeAlso <https://www.coursingjustice.com/> .
+
+cacontology-impact:PeerSupportService rdf:type owl:Class ;
+    rdfs:label "Peer Support Service"@en ;
+    rdfs:comment "Support rooted in peer connection, mutuality, and survivor- or youth-informed encouragement."@en ;
+    rdfs:subClassOf cacontology-impact:VictimSupport ;
+    dcterms:source "Robert Peters, 'Winning Without Words: Prosecuting Cases with Recanting or Nonverbal Victims' (Coursing Justice presentation, 2026)."@en ;
+    rdfs:seeAlso <https://www.coursingjustice.com/> .
+
+# =============================================================================
+# RECOVERY AND OUTCOME CLASSES (extending UCO Observable with gUFO Situation)
+# =============================================================================
+
+cacontology-impact:RecoveryProcess rdf:type owl:Class ;
+    rdfs:label "Recovery Process"@en ;
+    rdfs:comment "Process of healing and recovery from victimization."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject, cac-core:Situation .
+
+cacontology-impact:RecoveryMilestone rdf:type owl:Class ;
+    rdfs:label "Recovery Milestone"@en ;
+    rdfs:comment "Significant achievement or progress point in victim recovery."@en ;
+    rdfs:subClassOf cac-core:SupportEvent .
+
+cacontology-impact:LongTermEffect rdf:type owl:Class ;
+    rdfs:label "Long Term Effect"@en ;
+    rdfs:comment "Long-term consequences of victimization on the child's life."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject, cac-core:Situation .
+
+cacontology-impact:ResilienceFactors rdf:type owl:Class ;
+    rdfs:label "Resilience Factors"@en ;
+    rdfs:comment "Protective factors that promote victim resilience and recovery."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject, gufo:IntrinsicMoment .
+
+# =============================================================================
+# VICTIM ROLES (gUFO Role anti-rigid modeling)
+# =============================================================================
+
+cacontology-impact:TraumatizedVictim rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Traumatized Victim"@en ;
+    rdfs:comment "Role of a child victim experiencing psychological trauma. Where age at time of victimization or at time of assessment is analytically relevant, that age SHOULD be expressed via cacontology-temporal:AgeAtTimeSituation rather than ad-hoc age literals."@en ;
+    rdfs:subClassOf uco-role:VictimRole , cac-core:Role .
+
+cacontology-impact:VictimInRecovery rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Victim in Recovery"@en ;
+    rdfs:comment "Role of a victim actively engaged in recovery process."@en ;
+    rdfs:subClassOf uco-role:VictimRole , cac-core:Role .
+
+cacontology-impact:TherapyParticipant rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Therapy Participant"@en ;
+    rdfs:comment "Role of victim participating in therapeutic interventions."@en ;
+    rdfs:subClassOf cac-core:Role .
+
+cacontology-impact:VictimAdvocateRole rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Victim Advocate Role"@en ;
+    rdfs:comment "Role of professional providing advocacy support to victims."@en ;
+    rdfs:subClassOf cac-core:Role .
+
+cacontology-impact:TherapistRole rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Therapist Role"@en ;
+    rdfs:comment "Role of mental health professional providing therapeutic services."@en ;
+    rdfs:subClassOf cac-core:Role .
+
+# =============================================================================
+# gUFO TEMPORAL PROPERTIES
+# =============================================================================
+
+cacontology-impact:hasImpactPhaseBeginPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has impact phase begin point"@en ;
+    rdfs:comment "Temporal begin point for impact phase."@en ;
+    rdfs:subPropertyOf gufo:hasBeginPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-impact:hasImpactPhaseEndPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has impact phase end point"@en ;
+    rdfs:comment "Temporal end point for impact phase."@en ;
+    rdfs:subPropertyOf gufo:hasEndPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-impact:hasRoleBeginPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has role begin point"@en ;
+    rdfs:comment "Temporal begin point for victim support role."@en ;
+    rdfs:subPropertyOf gufo:hasBeginPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Role ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-impact:hasRoleEndPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has role end point"@en ;
+    rdfs:comment "Temporal end point for victim support role."@en ;
+    rdfs:subPropertyOf gufo:hasEndPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Role ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-impact:impactPhaseDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "impact phase duration"@en ;
+    rdfs:comment "Duration of impact phase."@en ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:duration .
+
+cacontology-impact:recoveryTimeframe rdf:type owl:DatatypeProperty ;
+    rdfs:label "recovery timeframe"@en ;
+    rdfs:comment "Expected or actual timeframe for recovery process."@en ;
+    rdfs:domain cacontology-impact:RecoveryProcess ;
+    rdfs:range xsd:duration .
+
+# =============================================================================
+# IMPACT ASSESSMENT PROPERTIES
+# =============================================================================
+
+# Assessment Properties
+cacontology-impact:assessmentDate rdf:type owl:DatatypeProperty ;
+    rdfs:label "assessment date"@en ;
+    rdfs:comment "Date when victim impact assessment was conducted."@en ;
+    rdfs:domain cacontology-impact:VictimImpactAssessment ;
+    rdfs:range xsd:dateTime .
+
+cacontology-impact:assessmentType rdf:type owl:DatatypeProperty ;
+    rdfs:label "assessment type"@en ;
+    rdfs:comment "Type of impact assessment (clinical, forensic, educational, legal)."@en ;
+    rdfs:domain cacontology-impact:VictimImpactAssessment ;
+    rdfs:range xsd:string .
+
+cacontology-impact:severityLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "severity level"@en ;
+    rdfs:comment "Overall severity of victim impact (minimal, mild, moderate, severe, extreme)."@en ;
+    rdfs:domain cacontology-impact:VictimImpactAssessment ;
+    rdfs:range xsd:string .
+
+cacontology-impact:functioningLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "functioning level"@en ;
+    rdfs:comment "Victim's current level of functioning (high, moderate, low, impaired)."@en ;
+    rdfs:domain cacontology-impact:VictimImpactAssessment ;
+    rdfs:range xsd:string .
+
+# Psychological Harm Properties
+cacontology-impact:traumaType rdf:type owl:DatatypeProperty ;
+    rdfs:label "trauma type"@en ;
+    rdfs:comment "Type of trauma experienced (acute, chronic, complex, developmental)."@en ;
+    rdfs:domain cacontology-impact:PsychologicalHarm ;
+    rdfs:range xsd:string .
+
+cacontology-impact:onsetDate rdf:type owl:DatatypeProperty ;
+    rdfs:label "onset date"@en ;
+    rdfs:comment "Date when trauma symptoms first appeared."@en ;
+    rdfs:domain cacontology-impact:PsychologicalHarm ;
+    rdfs:range xsd:dateTime .
+
+cacontology-impact:duration rdf:type owl:DatatypeProperty ;
+    rdfs:label "duration"@en ;
+    rdfs:comment "Duration of psychological harm in months."@en ;
+    rdfs:domain cacontology-impact:PsychologicalHarm ;
+    rdfs:range xsd:integer .
+
+cacontology-impact:severity rdf:type owl:DatatypeProperty ;
+    rdfs:label "severity"@en ;
+    rdfs:comment "Severity of psychological harm (mild, moderate, severe, extreme)."@en ;
+    rdfs:domain cacontology-impact:PsychologicalHarm ;
+    rdfs:range xsd:string .
+
+# Trauma Indicator Properties
+cacontology-impact:indicatorType rdf:type owl:DatatypeProperty ;
+    rdfs:label "indicator type"@en ;
+    rdfs:comment "Type of trauma indicator (behavioral, emotional, physical, cognitive, social)."@en ;
+    rdfs:domain cacontology-impact:TraumaIndicator ;
+    rdfs:range xsd:string .
+
+cacontology-impact:frequency rdf:type owl:DatatypeProperty ;
+    rdfs:label "frequency"@en ;
+    rdfs:comment "Frequency of indicator occurrence (constant, frequent, occasional, rare)."@en ;
+    rdfs:domain cacontology-impact:TraumaIndicator ;
+    rdfs:range xsd:string .
+
+cacontology-impact:intensity rdf:type owl:DatatypeProperty ;
+    rdfs:label "intensity"@en ;
+    rdfs:comment "Intensity of trauma indicator (mild, moderate, severe)."@en ;
+    rdfs:domain cacontology-impact:TraumaIndicator ;
+    rdfs:range xsd:string .
+
+cacontology-impact:progressionPattern rdf:type owl:DatatypeProperty ;
+    rdfs:label "progression pattern"@en ;
+    rdfs:comment "Pattern of indicator progression (improving, stable, worsening, fluctuating)."@en ;
+    rdfs:domain cacontology-impact:TraumaIndicator ;
+    rdfs:range xsd:string .
+
+# Therapeutic Intervention Properties
+cacontology-impact:interventionType rdf:type owl:DatatypeProperty ;
+    rdfs:label "intervention type"@en ;
+    rdfs:comment "Type of therapeutic intervention (individual, family, group, crisis)."@en ;
+    rdfs:domain cacontology-impact:TherapeuticIntervention ;
+    rdfs:range xsd:string .
+
+cacontology-impact:treatmentModality rdf:type owl:DatatypeProperty ;
+    rdfs:label "treatment modality"@en ;
+    rdfs:comment "Therapeutic modality used (CBT, EMDR, play_therapy, art_therapy)."@en ;
+    rdfs:domain cacontology-impact:TherapeuticIntervention ;
+    rdfs:range xsd:string .
+
+cacontology-impact:sessionCount rdf:type owl:DatatypeProperty ;
+    rdfs:label "session count"@en ;
+    rdfs:comment "Number of therapy sessions completed."@en ;
+    rdfs:domain cacontology-impact:TherapeuticIntervention ;
+    rdfs:range xsd:integer .
+
+cacontology-impact:treatmentDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "treatment duration"@en ;
+    rdfs:comment "Duration of treatment in months."@en ;
+    rdfs:domain cacontology-impact:TherapeuticIntervention ;
+    rdfs:range xsd:integer .
+
+cacontology-impact:treatmentOutcome rdf:type owl:DatatypeProperty ;
+    rdfs:label "treatment outcome"@en ;
+    rdfs:comment "Outcome of therapeutic intervention (successful, partially_successful, no_improvement, discontinued)."@en ;
+    rdfs:domain cacontology-impact:TherapeuticIntervention ;
+    rdfs:range xsd:string .
+
+# Recovery Properties
+cacontology-impact:recoveryStage rdf:type owl:DatatypeProperty ;
+    rdfs:label "recovery stage"@en ;
+    rdfs:comment "Current stage of recovery (initial, progress, maintenance, relapse)."@en ;
+    rdfs:domain cacontology-impact:RecoveryProcess ;
+    rdfs:range xsd:string .
+
+cacontology-impact:prognosis rdf:type owl:DatatypeProperty ;
+    rdfs:label "prognosis"@en ;
+    rdfs:comment "Long-term prognosis for recovery (excellent, good, fair, poor, guarded)."@en ;
+    rdfs:domain cacontology-impact:RecoveryProcess ;
+    rdfs:range xsd:string .
+
+cacontology-impact:milestoneDate rdf:type owl:DatatypeProperty ;
+    rdfs:label "milestone date"@en ;
+    rdfs:comment "Date when recovery milestone was achieved."@en ;
+    rdfs:domain cacontology-impact:RecoveryMilestone ;
+    rdfs:range xsd:dateTime .
+
+cacontology-impact:milestoneDescription rdf:type owl:DatatypeProperty ;
+    rdfs:label "milestone description"@en ;
+    rdfs:comment "Description of recovery milestone achieved."@en ;
+    rdfs:domain cacontology-impact:RecoveryMilestone ;
+    rdfs:range xsd:string .
+
+# Support Service Properties
+cacontology-impact:serviceType rdf:type owl:DatatypeProperty ;
+    rdfs:label "service type"@en ;
+    rdfs:comment "Type of support service (advocacy, safety, educational, legal, financial)."@en ;
+    rdfs:domain cacontology-impact:VictimSupport ;
+    rdfs:range xsd:string .
+
+cacontology-impact:serviceProvider rdf:type owl:DatatypeProperty ;
+    rdfs:label "service provider"@en ;
+    rdfs:comment "Organization or entity providing support services."@en ;
+    rdfs:domain cacontology-impact:VictimSupport ;
+    rdfs:range xsd:string .
+
+cacontology-impact:serviceDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "service duration"@en ;
+    rdfs:comment "Duration of support services in months."@en ;
+    rdfs:domain cacontology-impact:VictimSupport ;
+    rdfs:range xsd:integer .
+
+# Long-term Impact Properties
+cacontology-impact:impactArea rdf:type owl:DatatypeProperty ;
+    rdfs:label "impact area"@en ;
+    rdfs:comment "Area of life affected (education, relationships, mental_health, physical_health, social)."@en ;
+    rdfs:domain cacontology-impact:LongTermEffect ;
+    rdfs:range xsd:string .
+
+cacontology-impact:impactSeverity rdf:type owl:DatatypeProperty ;
+    rdfs:label "impact severity"@en ;
+    rdfs:comment "Severity of long-term impact (minimal, moderate, significant, severe)."@en ;
+    rdfs:domain cacontology-impact:LongTermEffect ;
+    rdfs:range xsd:string .
+
+cacontology-impact:lifeAreaAffected rdf:type owl:DatatypeProperty ;
+    rdfs:label "life area affected"@en ;
+    rdfs:comment "Specific life area affected by victimization."@en ;
+    rdfs:domain cacontology-impact:LongTermEffect ;
+    rdfs:range xsd:string .
+
+# =============================================================================
+# VICTIM IMPACT RELATIONSHIPS
+# =============================================================================
+
+# Assessment Relationships
+cacontology-impact:assessesVictim rdf:type owl:ObjectProperty ;
+    rdfs:label "assesses victim"@en ;
+    rdfs:comment "Links impact assessment to the victim being assessed."@en ;
+    rdfs:domain cacontology-impact:VictimImpactAssessment ;
+    rdfs:range uco-identity:Person .
+
+cacontology-impact:identifiesHarm rdf:type owl:ObjectProperty ;
+    rdfs:label "identifies harm"@en ;
+    rdfs:comment "Links assessment to psychological harm identified."@en ;
+    rdfs:domain cacontology-impact:VictimImpactAssessment ;
+    rdfs:range cacontology-impact:PsychologicalHarm .
+
+cacontology-impact:documentedBy rdf:type owl:ObjectProperty ;
+    rdfs:label "documented by"@en ;
+    rdfs:comment "Links assessment to professional who documented it."@en ;
+    rdfs:domain cacontology-impact:VictimImpactAssessment ;
+    rdfs:range cacontology-impact:MentalHealthProfessional .
+
+# Harm and Indicator Relationships
+cacontology-impact:manifestsAs rdf:type owl:ObjectProperty ;
+    rdfs:label "manifests as"@en ;
+    rdfs:comment "Links psychological harm to trauma indicators it manifests as."@en ;
+    rdfs:domain cacontology-impact:PsychologicalHarm ;
+    rdfs:range cacontology-impact:TraumaIndicator .
+
+cacontology-impact:resultedFrom rdf:type owl:ObjectProperty ;
+    rdfs:label "resulted from"@en ;
+    rdfs:comment "Links psychological harm to the criminal action that caused it."@en ;
+    rdfs:domain cacontology-impact:PsychologicalHarm ;
+    rdfs:range uco-action:Crime .
+
+# Treatment Relationships
+cacontology-impact:addressesHarm rdf:type owl:ObjectProperty ;
+    rdfs:label "addresses harm"@en ;
+    rdfs:comment "Links therapeutic intervention to psychological harm it addresses."@en ;
+    rdfs:domain cacontology-impact:TherapeuticIntervention ;
+    rdfs:range cacontology-impact:PsychologicalHarm .
+
+cacontology-impact:providedBy rdf:type owl:ObjectProperty ;
+    rdfs:label "provided by"@en ;
+    rdfs:comment "Links intervention to professional who provided it."@en ;
+    rdfs:domain cacontology-impact:TherapeuticIntervention ;
+    rdfs:range cacontology-impact:MentalHealthProfessional .
+
+cacontology-impact:receivedTreatment rdf:type owl:ObjectProperty ;
+    rdfs:label "received treatment"@en ;
+    rdfs:comment "Links victim to therapeutic intervention received."@en ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range cacontology-impact:TherapeuticIntervention .
+
+# Recovery Relationships
+cacontology-impact:partOfRecovery rdf:type owl:ObjectProperty ;
+    rdfs:label "part of recovery"@en ;
+    rdfs:comment "Links recovery milestone to overall recovery process."@en ;
+    rdfs:domain cacontology-impact:RecoveryMilestone ;
+    rdfs:range cacontology-impact:RecoveryProcess .
+
+cacontology-impact:facilitatedBy rdf:type owl:ObjectProperty ;
+    rdfs:label "facilitated by"@en ;
+    rdfs:comment "Links recovery to support services that facilitated it."@en ;
+    rdfs:domain cacontology-impact:RecoveryProcess ;
+    rdfs:range cacontology-impact:VictimSupport .
+
+cacontology-impact:impededBy rdf:type owl:ObjectProperty ;
+    rdfs:label "impeded by"@en ;
+    rdfs:comment "Links recovery to barriers that impede progress."@en ;
+    rdfs:domain cacontology-impact:RecoveryProcess ;
+    rdfs:range cacontology-impact:RecoveryBarriers .
+
+# Legal Relationships
+cacontology-impact:relevantToSentencing rdf:type owl:ObjectProperty ;
+    rdfs:label "relevant to sentencing"@en ;
+    rdfs:comment "Links victim impact to legal proceedings for sentencing."@en ;
+    rdfs:domain cacontology-impact:VictimImpactAssessment ;
+    rdfs:range uco-action:Action .
+
+cacontology-impact:informsRestitution rdf:type owl:ObjectProperty ;
+    rdfs:label "informs restitution"@en ;
+    rdfs:comment "Links victim impact to restitution calculations."@en ;
+    rdfs:domain cacontology-impact:VictimImpactAssessment ;
+    rdfs:range uco-observable:ObservableObject .
+
+# =============================================================================
+# EMERGENCY RESPONSE AND HELP-SEEKING BEHAVIOR (Brooklyn Case Enhancement)
+# =============================================================================
+
+cacontology-impact:EmergencyHelpSeeking rdf:type owl:Class ;
+    rdfs:label "Emergency Help Seeking"@en ;
+    rdfs:comment "Victim's attempt to seek emergency help during trafficking or exploitation, such as calling 911 (e.g., Wilmington, NC call)."@en ;
+    rdfs:subClassOf cacontology-impact:VictimBehavior .
+
+cacontology-impact:NineOneOneCall rdf:type owl:Class ;
+    rdfs:label "911 Call"@en ;
+    rdfs:comment "Emergency call to 911 by trafficking victim seeking help and reporting forced prostitution."@en ;
+    rdfs:subClassOf cacontology-impact:EmergencyHelpSeeking .
+
+cacontology-impact:VictimSelfReporting rdf:type owl:Class ;
+    rdfs:label "Victim Self Reporting"@en ;
+    rdfs:comment "Victim's direct reporting of their trafficking or exploitation situation to authorities."@en ;
+    rdfs:subClassOf cacontology-impact:EmergencyHelpSeeking .
+
+cacontology-impact:EmergencyResponse rdf:type owl:Class ;
+    rdfs:label "Emergency Response"@en ;
+    rdfs:comment "Immediate response to victim emergency help requests, including law enforcement and victim services coordination."@en ;
+    rdfs:subClassOf uco-action:Action .
+
+cacontology-impact:VictimExtraction rdf:type owl:Class ;
+    rdfs:label "Victim Extraction"@en ;
+    rdfs:comment "Immediate removal of victim from dangerous trafficking situation following emergency call."@en ;
+    rdfs:subClassOf cacontology-impact:EmergencyResponse .
+
+cacontology-impact:OngoingDangerAssessment rdf:type owl:Class ;
+    rdfs:label "Ongoing Danger Assessment"@en ;
+    rdfs:comment "Assessment of victim's ongoing danger from trafficking network and need for protection."@en ;
+    rdfs:subClassOf cacontology-impact:VictimImpactAssessment .
+
+cacontology-impact:VictimSafetyPlanning rdf:type owl:Class ;
+    rdfs:label "Victim Safety Planning"@en ;
+    rdfs:comment "Development of safety plan for trafficking victim to prevent re-victimization."@en ;
+    rdfs:subClassOf cacontology-impact:VictimSupport .
+
+# Help-Seeking Barriers and Facilitators
+cacontology-impact:HelpSeekingBarrier rdf:type owl:Class ;
+    rdfs:label "Help Seeking Barrier"@en ;
+    rdfs:comment "Factor that prevents or impedes victim from seeking help (fear, control, isolation, trauma bonding)."@en ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:EnduringEntity .
+
+cacontology-impact:TraffickerControlBarrier rdf:type owl:Class ;
+    rdfs:label "Trafficker Control Barrier"@en ;
+    rdfs:comment "Control mechanisms used by traffickers that prevent victims from seeking help."@en ;
+    rdfs:subClassOf cacontology-impact:HelpSeekingBarrier .
+
+cacontology-impact:HelpSeekingFacilitator rdf:type owl:Class ;
+    rdfs:label "Help Seeking Facilitator"@en ;
+    rdfs:comment "Factor that enables or encourages victim to seek help (opportunity, trust, desperation, external support)."@en ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:EnduringEntity .
+
+# =============================================================================
+# EMERGENCY RESPONSE PROPERTIES
+# =============================================================================
+
+cacontology-impact:emergencyCallLocation rdf:type owl:DatatypeProperty ;
+    rdfs:label "emergency call location"@en ;
+    rdfs:comment "Location from which emergency call was made (e.g., Wilmington, North Carolina)."@en ;
+    rdfs:domain cacontology-impact:NineOneOneCall ;
+    rdfs:range xsd:string .
+
+cacontology-impact:reportedSituation rdf:type owl:DatatypeProperty ;
+    rdfs:label "reported situation"@en ;
+    rdfs:comment "Situation reported by victim in emergency call (e.g., 'forced to engage in prostitution')."@en ;
+    rdfs:domain cacontology-impact:VictimSelfReporting ;
+    rdfs:range xsd:string .
+
+cacontology-impact:responseTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "response time"@en ;
+    rdfs:comment "Time from emergency call to first responder arrival in minutes."@en ;
+    rdfs:domain cacontology-impact:EmergencyResponse ;
+    rdfs:range xsd:decimal .
+
+cacontology-impact:extractionComplexity rdf:type owl:DatatypeProperty ;
+    rdfs:label "extraction complexity"@en ;
+    rdfs:comment "Complexity level of victim extraction (simple, moderate, complex, high_risk)."@en ;
+    rdfs:domain cacontology-impact:VictimExtraction ;
+    rdfs:range xsd:string .
+
+cacontology-impact:ongoingDangerLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "ongoing danger level"@en ;
+    rdfs:comment "Assessment of ongoing danger to victim (low, moderate, high, extreme)."@en ;
+    rdfs:domain cacontology-impact:OngoingDangerAssessment ;
+    rdfs:range xsd:string .
+
+cacontology-impact:safetyPlanType rdf:type owl:DatatypeProperty ;
+    rdfs:label "safety plan type"@en ;
+    rdfs:comment "Type of safety plan implemented (immediate, short_term, long_term, comprehensive)."@en ;
+    rdfs:domain cacontology-impact:VictimSafetyPlanning ;
+    rdfs:range xsd:string .
+
+# =============================================================================
+# EMERGENCY RESPONSE RELATIONSHIPS
+# =============================================================================
+
+cacontology-impact:triggersResponse rdf:type owl:ObjectProperty ;
+    rdfs:label "triggers response"@en ;
+    rdfs:comment "Links emergency help seeking to response it triggers."@en ;
+    rdfs:domain cacontology-impact:EmergencyHelpSeeking ;
+    rdfs:range cacontology-impact:EmergencyResponse .
+
+cacontology-impact:resultsInExtraction rdf:type owl:ObjectProperty ;
+    rdfs:label "results in extraction"@en ;
+    rdfs:comment "Links emergency response to victim extraction performed."@en ;
+    rdfs:domain cacontology-impact:EmergencyResponse ;
+    rdfs:range cacontology-impact:VictimExtraction .
+
+cacontology-impact:necessitatesAssessment rdf:type owl:ObjectProperty ;
+    rdfs:label "necessitates assessment"@en ;
+    rdfs:comment "Links victim extraction to ongoing danger assessment required."@en ;
+    rdfs:domain cacontology-impact:VictimExtraction ;
+    rdfs:range cacontology-impact:OngoingDangerAssessment .
+
+cacontology-impact:informsSafetyPlanning rdf:type owl:ObjectProperty ;
+    rdfs:label "informs safety planning"@en ;
+    rdfs:comment "Links danger assessment to safety planning based on assessment results."@en ;
+    rdfs:domain cacontology-impact:OngoingDangerAssessment ;
+    rdfs:range cacontology-impact:VictimSafetyPlanning .
+
+cacontology-impact:impededByBarrier rdf:type owl:ObjectProperty ;
+    rdfs:label "impeded by barrier"@en ;
+    rdfs:comment "Links help seeking to barriers that impede it."@en ;
+    rdfs:domain cacontology-impact:EmergencyHelpSeeking ;
+    rdfs:range cacontology-impact:HelpSeekingBarrier .
+
+cacontology-impact:facilitatedByFactor rdf:type owl:ObjectProperty ;
+    rdfs:label "facilitated by factor"@en ;
+    rdfs:comment "Links help seeking to factors that facilitate it."@en ;
+    rdfs:domain cacontology-impact:EmergencyHelpSeeking ;
+    rdfs:range cacontology-impact:HelpSeekingFacilitator .
+
+# =============================================================================
+# HOSPITAL-BASED INTERVENTIONS (April 2025 Brooklyn Case Enhancement)
+# =============================================================================
+
+cacontology-impact:HospitalIntervention rdf:type owl:Class ;
+    rdfs:label "Hospital Intervention"@en ;
+    rdfs:comment "Medical intervention and assessment of trafficking victim at hospital following emergency call."@en ;
+    rdfs:subClassOf cacontology-impact:EmergencyResponse .
+
+cacontology-impact:SuicidalIdeationResponse rdf:type owl:Class ;
+    rdfs:label "Suicidal Ideation Response"@en ;
+    rdfs:comment "Emergency response to trafficking victim reporting suicidal thoughts or intentions."@en ;
+    rdfs:subClassOf cacontology-impact:EmergencyResponse .
+
+cacontology-impact:MedicalTraumaAssessment rdf:type owl:Class ;
+    rdfs:label "Medical Trauma Assessment"@en ;
+    rdfs:comment "Medical assessment of physical and psychological trauma in trafficking victims."@en ;
+    rdfs:subClassOf cacontology-impact:VictimImpactAssessment .
+
+cacontology-impact:HospitalDischarge rdf:type owl:Class ;
+    rdfs:label "Hospital Discharge"@en ;
+    rdfs:comment "Discharge of trafficking victim from hospital with safety planning and transportation arrangements."@en ;
+    rdfs:subClassOf uco-action:Action .
+
+cacontology-impact:VictimTransportationAssistance rdf:type owl:Class ;
+    rdfs:label "Victim Transportation Assistance"@en ;
+    rdfs:comment "Provision of transportation assistance to trafficking victims (bus tickets, safe transport)."@en ;
+    rdfs:subClassOf cacontology-impact:VictimSupport .
+
+# =============================================================================
+# MULTI-AGENCY VICTIM ASSISTANCE
+# =============================================================================
+
+cacontology-impact:MultiAgencyVictimResponse rdf:type owl:Class ;
+    rdfs:label "Multi-Agency Victim Response"@en ;
+    rdfs:comment "Coordinated victim assistance involving multiple agencies across jurisdictions."@en ;
+    rdfs:subClassOf cacontology-impact:VictimSupport .
+
+cacontology-impact:InterstateVictimServices rdf:type owl:Class ;
+    rdfs:label "Interstate Victim Services"@en ;
+    rdfs:comment "Victim services coordination across state lines for trafficking cases."@en ;
+    rdfs:subClassOf cacontology-impact:MultiAgencyVictimResponse .
+
+cacontology-impact:VictimServiceCoordination rdf:type owl:Class ;
+    rdfs:label "Victim Service Coordination"@en ;
+    rdfs:comment "Coordination of victim services between multiple agencies and organizations."@en ;
+    rdfs:subClassOf uco-action:Action .
+
+cacontology-impact:FearlessHudsonValleySupport rdf:type owl:Class ;
+    rdfs:label "Fearless Hudson Valley Support"@en ;
+    rdfs:comment "Support services provided by Fearless! Hudson Valley organization for trafficking victims."@en ;
+    rdfs:subClassOf cacontology-impact:VictimSupport .
+
+# =============================================================================
+# SPECIALIZED LAW ENFORCEMENT UNITS
+# =============================================================================
+
+cacontology-impact:PortAuthorityYouthServices rdf:type owl:Class ;
+    rdfs:label "Port Authority Youth Services"@en ;
+    rdfs:comment "Specialized youth services unit within Port Authority Police Department."@en ;
+    rdfs:subClassOf uco-identity:Organization .
+
+cacontology-impact:HumanTraffickingSquad rdf:type owl:Class ;
+    rdfs:label "Human Trafficking Squad"@en ;
+    rdfs:comment "Specialized law enforcement unit focused on human trafficking investigations."@en ;
+    rdfs:subClassOf uco-identity:Organization .
+
+cacontology-impact:ChildExploitationTaskForce rdf:type owl:Class ;
+    rdfs:label "Child Exploitation Task Force"@en ;
+    rdfs:comment "Joint task force between FBI and local law enforcement for child exploitation cases."@en ;
+    rdfs:subClassOf uco-identity:Organization .
+
+# =============================================================================
+# VICTIM RECOVERY AND REINTEGRATION
+# =============================================================================
+
+cacontology-impact:VictimReintegration rdf:type owl:Class ;
+    rdfs:label "Victim Reintegration"@en ;
+    rdfs:comment "Process of reintegrating trafficking victims back into their communities and families."@en ;
+    rdfs:subClassOf cacontology-impact:RecoveryProcess .
+
+cacontology-impact:FamilyReunification rdf:type owl:Class ;
+    rdfs:label "Family Reunification"@en ;
+    rdfs:comment "Process of reuniting trafficking victims with their families."@en ;
+    rdfs:subClassOf cacontology-impact:VictimReintegration .
+
+cacontology-impact:HometownReturn rdf:type owl:Class ;
+    rdfs:label "Hometown Return"@en ;
+    rdfs:comment "Return of trafficking victim to their hometown or place of origin."@en ;
+    rdfs:subClassOf cacontology-impact:VictimReintegration .
+
+cacontology-impact:CommunitySupport rdf:type owl:Class ;
+    rdfs:label "Community Support"@en ;
+    rdfs:comment "Community-based support services for trafficking victims during reintegration."@en ;
+    rdfs:subClassOf cacontology-impact:VictimSupport .
+
+# =============================================================================
+# HOSPITAL INTERVENTION PROPERTIES
+# =============================================================================
+
+cacontology-impact:hospitalName rdf:type owl:DatatypeProperty ;
+    rdfs:label "hospital name"@en ;
+    rdfs:comment "Name of hospital where victim received treatment."@en ;
+    rdfs:domain cacontology-impact:HospitalIntervention ;
+    rdfs:range xsd:string .
+
+cacontology-impact:admissionReason rdf:type owl:DatatypeProperty ;
+    rdfs:label "admission reason"@en ;
+    rdfs:comment "Primary reason for hospital admission (suicidal_ideation, medical_emergency, trauma)."@en ;
+    rdfs:domain cacontology-impact:HospitalIntervention ;
+    rdfs:range xsd:string .
+
+cacontology-impact:hospitalStayDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "hospital stay duration"@en ;
+    rdfs:comment "Duration of hospital stay in days."@en ;
+    rdfs:domain cacontology-impact:HospitalIntervention ;
+    rdfs:range xsd:decimal .
+
+cacontology-impact:dischargeDate rdf:type owl:DatatypeProperty ;
+    rdfs:label "discharge date"@en ;
+    rdfs:comment "Date when victim was discharged from hospital."@en ;
+    rdfs:domain cacontology-impact:HospitalDischarge ;
+    rdfs:range xsd:dateTime .
+
+cacontology-impact:dischargeCondition rdf:type owl:DatatypeProperty ;
+    rdfs:label "discharge condition"@en ;
+    rdfs:comment "Condition of victim at discharge (stable, improved, requires_followup)."@en ;
+    rdfs:domain cacontology-impact:HospitalDischarge ;
+    rdfs:range xsd:string .
+
+# Transportation Assistance Properties
+cacontology-impact:transportationType rdf:type owl:DatatypeProperty ;
+    rdfs:label "transportation type"@en ;
+    rdfs:comment "Type of transportation provided (bus_ticket, train_ticket, safe_transport, flight)."@en ;
+    rdfs:domain cacontology-impact:VictimTransportationAssistance ;
+    rdfs:range xsd:string .
+
+cacontology-impact:transportationDestination rdf:type owl:DatatypeProperty ;
+    rdfs:label "transportation destination"@en ;
+    rdfs:comment "Destination for victim transportation assistance."@en ;
+    rdfs:domain cacontology-impact:VictimTransportationAssistance ;
+    rdfs:range xsd:string .
+
+cacontology-impact:transportationCost rdf:type owl:DatatypeProperty ;
+    rdfs:label "transportation cost"@en ;
+    rdfs:comment "Cost of transportation assistance provided in USD."@en ;
+    rdfs:domain cacontology-impact:VictimTransportationAssistance ;
+    rdfs:range xsd:decimal .
+
+# Multi-Agency Response Properties
+cacontology-impact:agencyCount rdf:type owl:DatatypeProperty ;
+    rdfs:label "agency count"@en ;
+    rdfs:comment "Number of agencies involved in victim response."@en ;
+    rdfs:domain cacontology-impact:MultiAgencyVictimResponse ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-impact:coordinationComplexity rdf:type owl:DatatypeProperty ;
+    rdfs:label "coordination complexity"@en ;
+    rdfs:comment "Complexity level of multi-agency coordination (simple, moderate, complex, highly_complex)."@en ;
+    rdfs:domain cacontology-impact:VictimServiceCoordination ;
+    rdfs:range xsd:string .
+
+cacontology-impact:jurisdictionsInvolved rdf:type owl:DatatypeProperty ;
+    rdfs:label "jurisdictions involved"@en ;
+    rdfs:comment "Number of jurisdictions involved in victim services coordination."@en ;
+    rdfs:domain cacontology-impact:InterstateVictimServices ;
+    rdfs:range xsd:nonNegativeInteger .
+
+# Reintegration Properties
+cacontology-impact:reintegrationDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "reintegration duration"@en ;
+    rdfs:comment "Expected duration of reintegration process in months."@en ;
+    rdfs:domain cacontology-impact:VictimReintegration ;
+    rdfs:range xsd:decimal .
+
+cacontology-impact:familyContactEstablished rdf:type owl:DatatypeProperty ;
+    rdfs:label "family contact established"@en ;
+    rdfs:comment "Whether contact with victim's family has been established."@en ;
+    rdfs:domain cacontology-impact:FamilyReunification ;
+    rdfs:range xsd:boolean .
+
+cacontology-impact:hometownLocation rdf:type owl:DatatypeProperty ;
+    rdfs:label "hometown location"@en ;
+    rdfs:comment "Location of victim's hometown for return planning."@en ;
+    rdfs:domain cacontology-impact:HometownReturn ;
+    rdfs:range xsd:string .
+
+# =============================================================================
+# HOSPITAL INTERVENTION RELATIONSHIPS
+# =============================================================================
+
+cacontology-impact:treatedAt rdf:type owl:ObjectProperty ;
+    rdfs:label "treated at"@en ;
+    rdfs:comment "Links victim to hospital where they received treatment."@en ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range uco-location:Location .
+
+cacontology-impact:resultsInHospitalization rdf:type owl:ObjectProperty ;
+    rdfs:label "results in hospitalization"@en ;
+    rdfs:comment "Links emergency response to hospitalization that resulted."@en ;
+    rdfs:domain cacontology-impact:EmergencyResponse ;
+    rdfs:range cacontology-impact:HospitalIntervention .
+
+cacontology-impact:followedByDischarge rdf:type owl:ObjectProperty ;
+    rdfs:label "followed by discharge"@en ;
+    rdfs:comment "Links hospital intervention to discharge process."@en ;
+    rdfs:domain cacontology-impact:HospitalIntervention ;
+    rdfs:range cacontology-impact:HospitalDischarge .
+
+cacontology-impact:includesTransportation rdf:type owl:ObjectProperty ;
+    rdfs:label "includes transportation"@en ;
+    rdfs:comment "Links hospital discharge to transportation assistance provided."@en ;
+    rdfs:domain cacontology-impact:HospitalDischarge ;
+    rdfs:range cacontology-impact:VictimTransportationAssistance .
+
+# Multi-Agency Relationships
+cacontology-impact:coordinatedBy rdf:type owl:ObjectProperty ;
+    rdfs:label "coordinated by"@en ;
+    rdfs:comment "Links victim response to agency that coordinated it."@en ;
+    rdfs:domain cacontology-impact:MultiAgencyVictimResponse ;
+    rdfs:range uco-identity:Organization .
+
+cacontology-impact:participatesInResponse rdf:type owl:ObjectProperty ;
+    rdfs:label "participates in response"@en ;
+    rdfs:comment "Links agency to victim response they participated in."@en ;
+    rdfs:domain uco-identity:Organization ;
+    rdfs:range cacontology-impact:MultiAgencyVictimResponse .
+
+cacontology-impact:providesSpecializedSupport rdf:type owl:ObjectProperty ;
+    rdfs:label "provides specialized support"@en ;
+    rdfs:comment "Links organization to specialized support services they provide."@en ;
+    rdfs:domain uco-identity:Organization ;
+    rdfs:range cacontology-impact:VictimSupport .
+
+# Reintegration Relationships
+cacontology-impact:facilitatesReintegration rdf:type owl:ObjectProperty ;
+    rdfs:label "facilitates reintegration"@en ;
+    rdfs:comment "Links support services to reintegration process they facilitate."@en ;
+    rdfs:domain cacontology-impact:VictimSupport ;
+    rdfs:range cacontology-impact:VictimReintegration .
+
+cacontology-impact:returnsTo rdf:type owl:ObjectProperty ;
+    rdfs:label "returns to"@en ;
+    rdfs:comment "Links victim to location they return to during reintegration."@en ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range uco-location:Location .
+
+cacontology-impact:reunitesWith rdf:type owl:ObjectProperty ;
+    rdfs:label "reunites with"@en ;
+    rdfs:comment "Links victim to family members they reunite with."@en ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range uco-identity:Person .
+
+# =============================================================================
+# VICTIM VULNERABILITY CONTEXT AND PROTECTIVE SUPPORTS — Issue #32
+# Contextual risk and protective factors relevant to exploitation and
+# trafficking vulnerability. MODELING CAUTION: these classes represent
+# observed circumstances and service needs, NOT inherent risk labels attached
+# to identity. Use trauma-informed, anti-stigmatizing representation; model
+# what was observed and what supports are needed, and avoid unsupported
+# inferences about a person.
+# =============================================================================
+
+cacontology-impact:VulnerabilityContext rdf:type owl:Class ;
+    rdfs:label "Vulnerability Context"@en ;
+    rdfs:comment "A contextual circumstance that may increase a minor's risk of exploitation or trafficking (e.g., family rejection, housing instability, coercive dependency, barriers to reporting). A context describes observed circumstances, never an inherent attribute of identity."@en ;
+    rdfs:subClassOf uco-core:UcoObject .
+
+cacontology-impact:SOGIVulnerabilityContext rdf:type owl:Class ;
+    rdfs:label "SOGI Vulnerability Context"@en ;
+    rdfs:comment "A vulnerability context related to sexual orientation, gender identity, or expression — typically arising from family rejection, housing instability, lack of trusted adults, coercive dependency, or barriers to reporting or accessing services. The elevated risk arises from marginalization circumstances, not from the minor's identity itself."@en ;
+    rdfs:subClassOf cacontology-impact:VulnerabilityContext .
+
+cacontology-impact:FamilyRejectionVulnerability rdf:type owl:Class ;
+    rdfs:label "Family Rejection Vulnerability"@en ;
+    rdfs:comment "A vulnerability factor where rejection by caregivers or family contributes to isolation, homelessness, dependency, or reduced reporting options."@en ;
+    rdfs:subClassOf cacontology-impact:VulnerabilityContext .
+
+cacontology-impact:HousingInstabilityVulnerability rdf:type owl:Class ;
+    rdfs:label "Housing Instability Vulnerability"@en ;
+    rdfs:comment "A vulnerability factor where unstable housing (homelessness, runaway status, couch-surfing) increases susceptibility to grooming, coercion, trafficking, or survival-based exploitation."@en ;
+    rdfs:subClassOf cacontology-impact:VulnerabilityContext .
+
+cacontology-impact:ProtectiveAffirmingSupport rdf:type owl:Class ;
+    rdfs:label "Protective Affirming Support"@en ;
+    rdfs:comment "A protective factor representing access to affirming adults, services, shelters, school personnel, advocates, or community resources that mitigate vulnerability."@en ;
+    rdfs:subClassOf uco-core:UcoObject .
+
+# Vulnerability context properties (Issue #32)
+cacontology-impact:hasVulnerabilityContext rdf:type owl:ObjectProperty ;
+    rdfs:label "has vulnerability context"@en ;
+    rdfs:comment "Links a victim context, prevention assessment, or trafficking-risk assessment to an observed vulnerability context."@en ;
+    rdfs:range cacontology-impact:VulnerabilityContext .
+
+cacontology-impact:associatedWithFamilyRejection rdf:type owl:DatatypeProperty ;
+    rdfs:label "associated with family rejection"@en ;
+    rdfs:comment "Whether the vulnerability context includes rejection by caregivers or family."@en ;
+    rdfs:domain cacontology-impact:VulnerabilityContext ;
+    rdfs:range xsd:boolean .
+
+cacontology-impact:associatedWithHousingInstability rdf:type owl:DatatypeProperty ;
+    rdfs:label "associated with housing instability"@en ;
+    rdfs:comment "Whether the vulnerability context includes homelessness, runaway status, couch-surfing, or unstable housing."@en ;
+    rdfs:domain cacontology-impact:VulnerabilityContext ;
+    rdfs:range xsd:boolean .
+
+cacontology-impact:mitigatedByProtectiveSupport rdf:type owl:ObjectProperty ;
+    rdfs:label "mitigated by protective support"@en ;
+    rdfs:comment "Links a vulnerability context to a protective or affirming support resource that mitigates it."@en ;
+    rdfs:domain cacontology-impact:VulnerabilityContext ;
+    rdfs:range cacontology-impact:ProtectiveAffirmingSupport .
+
+cacontology-impact:informsPreventionIntervention rdf:type owl:ObjectProperty ;
+    rdfs:label "informs prevention intervention"@en ;
+    rdfs:comment "Links a vulnerability context to prevention, outreach, safeguarding, or service-referral actions it informs."@en ;
+    rdfs:domain cacontology-impact:VulnerabilityContext ;
+    rdfs:range uco-core:UcoObject .

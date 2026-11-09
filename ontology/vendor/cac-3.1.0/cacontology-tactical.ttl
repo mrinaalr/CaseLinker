@@ -1,0 +1,543 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-observable: <https://ontology.unifiedcyberontology.org/uco/observable/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
+@prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
+@prefix investigation: <https://ontology.caseontology.org/case/investigation/> .
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology-tactical: <https://cacontology.projectvic.org/tactical#> .
+
+# Ontology Declaration
+<https://cacontology.projectvic.org/tactical> rdf:type owl:Ontology ;
+    rdfs:label "CAC Tactical Law Enforcement Operations Ontology"@en ;
+    rdfs:comment "An ontology for representing tactical law enforcement operations including SWAT operations, high-risk arrests, and specialized tactical procedures in Internet Crimes Against Children investigations, extending UCO and CASE with CASE Investigation ontology integration."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/tactical/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:issued "2024-12-19"^^xsd:date ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/identity/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/observable/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/action/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/location/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/role/1.5.0> ,
+                <https://ontology.caseontology.org/case/investigation/1.5.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> ,
+                <https://cacontology.projectvic.org/3.1.0> ,
+                <https://cacontology.projectvic.org/core/3.1.0> .
+
+# =============================================================================
+# TACTICAL OPERATION CLASSES (extending UCO Action)
+# =============================================================================
+
+cacontology-tactical:TacticalOperation rdf:type owl:Class ;
+    rdfs:label "Tactical Operation"@en ;
+    rdfs:comment "Specialized law enforcement operation requiring tactical teams and advanced planning."@en ;
+    rdfs:subClassOf cac-core:InvestigativeAction .
+
+cacontology-tactical:SWATOperation rdf:type owl:Class ;
+    rdfs:label "SWAT Operation"@en ;
+    rdfs:comment "Special Weapons and Tactics team operation for high-risk situations."@en ;
+    rdfs:subClassOf cacontology-tactical:TacticalOperation .
+
+cacontology-tactical:HighRiskArrest rdf:type owl:Class ;
+    rdfs:label "High Risk Arrest"@en ;
+    rdfs:comment "Arrest operation involving suspects who pose significant threat or flight risk."@en ;
+    rdfs:subClassOf cacontology-tactical:TacticalOperation .
+
+cacontology-tactical:BarricadeSituation rdf:type owl:Class ;
+    rdfs:label "Barricade Situation"@en ;
+    rdfs:comment "Situation where suspect has barricaded themselves and refuses to surrender. A state/context, not an operation; TacticalOperation may occurInSituation a BarricadeSituation."@en ;
+    rdfs:subClassOf cac-core:Situation .
+
+cacontology-tactical:DynamicEntry rdf:type owl:Class ;
+    rdfs:label "Dynamic Entry"@en ;
+    rdfs:comment "Rapid forced entry into a location to apprehend suspects and secure evidence."@en ;
+    rdfs:subClassOf cacontology-tactical:TacticalOperation .
+
+cacontology-tactical:SurrenderNegotiation rdf:type owl:Class ;
+    rdfs:label "Surrender Negotiation"@en ;
+    rdfs:comment "Attempt to negotiate peaceful surrender of barricaded or resistant suspects."@en ;
+    rdfs:subClassOf cacontology-tactical:TacticalOperation .
+
+# =============================================================================
+# ARREST AND BOOKING CLASSES (extending CASE Investigation)
+# Based on Miami CAC undercover operation press release
+# =============================================================================
+
+cacontology-tactical:ArrestOperation rdf:type owl:Class ;
+    rdfs:label "Arrest Operation"@en ;
+    rdfs:comment "Law enforcement operation to apprehend and take suspect into custody. Extends investigation:InvestigativeAction for proper CASE ontology integration."@en ;
+    rdfs:subClassOf cac-core:InvestigativeAction .
+
+cacontology-tactical:TrafficStop rdf:type owl:Class ;
+    rdfs:label "Traffic Stop"@en ;
+    rdfs:comment "Investigative traffic stop used as part of undercover operation or to apprehend suspect. Extends investigation:InvestigativeAction."@en ;
+    rdfs:subClassOf cac-core:InvestigativeAction .
+
+cacontology-tactical:BookingAction rdf:type owl:Class ;
+    rdfs:label "Booking Action"@en ;
+    rdfs:comment "Process of booking a suspect into a correctional facility including fingerprinting, photography, and data entry. Extends investigation:InvestigativeAction for CASE ontology integration."@en ;
+    rdfs:subClassOf cac-core:InvestigativeAction .
+
+cacontology-tactical:InterviewWithoutCounsel rdf:type owl:Class ;
+    rdfs:label "Interview Without Counsel"@en ;
+    rdfs:comment "Suspect interview conducted after suspect waives right to legal counsel. Extends investigation:InvestigativeAction."@en ;
+    rdfs:subClassOf cac-core:InvestigativeAction .
+
+cacontology-tactical:ArrestReport rdf:type owl:Class ;
+    rdfs:label "Arrest Report"@en ;
+    rdfs:comment "Formal arrest report documenting the arrest including charges, evidence, and suspect information. Extends investigation:ProvenanceRecord for evidence tracking."@en ;
+    rdfs:subClassOf investigation:ProvenanceRecord, cac-core:Artifact .
+
+cacontology-tactical:CorrectionalFacility rdf:type owl:Class ;
+    rdfs:label "Correctional Facility"@en ;
+    rdfs:comment "Physical correctional facility where suspects are booked and held. Examples include county jails and correctional centers. Extends uco-core:UcoObject as physical location (NOT digital observable)."@en ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:PlaceLikeEntity .
+
+cacontology-tactical:ImmigrationHold rdf:type owl:Class ;
+    rdfs:label "Immigration Hold"@en ;
+    rdfs:comment "Immigration detainer placed on suspect due to immigration status. Links booking to immigration enforcement coordination."@en ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:Artifact .
+
+# =============================================================================
+# ARREST AND BOOKING PROPERTIES
+# =============================================================================
+
+cacontology-tactical:arrestType rdf:type owl:DatatypeProperty ;
+    rdfs:label "arrest type"@en ;
+    rdfs:comment "Type of arrest (warrant_arrest, probable_cause_arrest, consensual_arrest, traffic_stop_arrest, field_arrest, coordinated_arrest)."@en ;
+    rdfs:domain cacontology-tactical:ArrestOperation ;
+    rdfs:range xsd:string .
+
+cacontology-tactical:targetCount rdf:type owl:DatatypeProperty ;
+    rdfs:label "target count"@en ;
+    rdfs:comment "Number of individuals targeted for arrest."@en ;
+    rdfs:domain cacontology-tactical:ArrestOperation ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-tactical:resistanceExpected rdf:type owl:DatatypeProperty ;
+    rdfs:label "resistance expected"@en ;
+    rdfs:comment "Whether resistance was expected during arrest."@en ;
+    rdfs:domain cacontology-tactical:ArrestOperation ;
+    rdfs:range xsd:boolean .
+
+cacontology-tactical:weaponsExpected rdf:type owl:DatatypeProperty ;
+    rdfs:label "weapons expected"@en ;
+    rdfs:comment "Whether weapons were expected during arrest."@en ;
+    rdfs:domain cacontology-tactical:ArrestOperation ;
+    rdfs:range xsd:boolean .
+
+cacontology-tactical:facilityName rdf:type owl:DatatypeProperty ;
+    rdfs:label "facility name"@en ;
+    rdfs:comment "Name of the correctional facility (e.g., 'Turner Guilford Knight Correctional Center')."@en ;
+    rdfs:domain cacontology-tactical:CorrectionalFacility ;
+    rdfs:range xsd:string .
+
+cacontology-tactical:facilityType rdf:type owl:DatatypeProperty ;
+    rdfs:label "facility type"@en ;
+    rdfs:comment "Type of correctional facility (county_jail, state_prison, federal_prison, detention_center, holding_facility)."@en ;
+    rdfs:domain cacontology-tactical:CorrectionalFacility ;
+    rdfs:range xsd:string .
+
+cacontology-tactical:bookingNumber rdf:type owl:DatatypeProperty ;
+    rdfs:label "booking number"@en ;
+    rdfs:comment "Unique booking identifier assigned during intake."@en ;
+    rdfs:domain cacontology-tactical:BookingAction ;
+    rdfs:range xsd:string .
+
+cacontology-tactical:bookingTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "booking time"@en ;
+    rdfs:comment "Date and time of booking into facility."@en ;
+    rdfs:domain cacontology-tactical:BookingAction ;
+    rdfs:range xsd:dateTime .
+
+cacontology-tactical:counselWaived rdf:type owl:DatatypeProperty ;
+    rdfs:label "counsel waived"@en ;
+    rdfs:comment "Whether suspect waived right to legal counsel."@en ;
+    rdfs:domain cacontology-tactical:InterviewWithoutCounsel ;
+    rdfs:range xsd:boolean .
+
+cacontology-tactical:mirandaGiven rdf:type owl:DatatypeProperty ;
+    rdfs:label "miranda given"@en ;
+    rdfs:comment "Whether Miranda rights were read to suspect."@en ;
+    rdfs:domain cacontology-tactical:InterviewWithoutCounsel ;
+    rdfs:range xsd:boolean .
+
+cacontology-tactical:immigrationStatus rdf:type owl:DatatypeProperty ;
+    rdfs:label "immigration status"@en ;
+    rdfs:comment "Immigration status of the suspect."@en ;
+    rdfs:domain cacontology-tactical:ImmigrationHold ;
+    rdfs:range xsd:string .
+
+cacontology-tactical:holdingAgency rdf:type owl:DatatypeProperty ;
+    rdfs:label "holding agency"@en ;
+    rdfs:comment "Agency requesting the immigration hold (e.g., ICE)."@en ;
+    rdfs:domain cacontology-tactical:ImmigrationHold ;
+    rdfs:range xsd:string .
+
+cacontology-tactical:nationality rdf:type owl:DatatypeProperty ;
+    rdfs:label "nationality"@en ;
+    rdfs:comment "Nationality of the suspect subject to immigration hold."@en ;
+    rdfs:domain cacontology-tactical:ImmigrationHold ;
+    rdfs:range xsd:string .
+
+# Arrest and Booking Relationships
+cacontology-tactical:resultsInBooking rdf:type owl:ObjectProperty ;
+    rdfs:label "results in booking"@en ;
+    rdfs:comment "Links arrest operation to the booking action."@en ;
+    rdfs:domain cacontology-tactical:ArrestOperation ;
+    rdfs:range cacontology-tactical:BookingAction .
+
+cacontology-tactical:bookedAt rdf:type owl:ObjectProperty ;
+    rdfs:label "booked at"@en ;
+    rdfs:comment "Links booking action to correctional facility."@en ;
+    rdfs:domain cacontology-tactical:BookingAction ;
+    rdfs:range cacontology-tactical:CorrectionalFacility .
+
+cacontology-tactical:hasArrestReport rdf:type owl:ObjectProperty ;
+    rdfs:label "has arrest report"@en ;
+    rdfs:comment "Links arrest operation to its formal arrest report."@en ;
+    rdfs:domain cacontology-tactical:ArrestOperation ;
+    rdfs:range cacontology-tactical:ArrestReport .
+
+cacontology-tactical:hasImmigrationHold rdf:type owl:ObjectProperty ;
+    rdfs:label "has immigration hold"@en ;
+    rdfs:comment "Links booking to immigration hold status."@en ;
+    rdfs:domain cacontology-tactical:BookingAction ;
+    rdfs:range cacontology-tactical:ImmigrationHold .
+
+cacontology-tactical:informedByTrafficStop rdf:type owl:ObjectProperty ;
+    rdfs:label "informed by traffic stop"@en ;
+    rdfs:comment "Links arrest to prior traffic stop that provided suspect identification. Uses CASE investigation:wasInformedBy pattern."@en ;
+    rdfs:subPropertyOf investigation:wasInformedBy ;
+    rdfs:domain cacontology-tactical:ArrestOperation ;
+    rdfs:range cacontology-tactical:TrafficStop .
+
+# =============================================================================
+# TACTICAL TEAM ROLES (extending UCO Role)
+# =============================================================================
+
+cacontology-tactical:TacticalTeamMember rdf:type owl:Class ;
+    rdfs:label "Tactical Team Member"@en ;
+    rdfs:comment "Law enforcement officer specialized in tactical operations."@en ;
+    rdfs:subClassOf uco-role:Role .
+
+cacontology-tactical:TeamLeader rdf:type owl:Class ;
+    rdfs:label "Team Leader"@en ;
+    rdfs:comment "Officer responsible for commanding tactical team operations."@en ;
+    rdfs:subClassOf cacontology-tactical:TacticalTeamMember .
+
+cacontology-tactical:Breacher rdf:type owl:Class ;
+    rdfs:label "Breacher"@en ;
+    rdfs:comment "Specialist responsible for gaining entry through doors, walls, or barriers."@en ;
+    rdfs:subClassOf cacontology-tactical:TacticalTeamMember .
+
+cacontology-tactical:Marksman rdf:type owl:Class ;
+    rdfs:label "Marksman"@en ;
+    rdfs:comment "Precision shooter providing overwatch and threat elimination capability."@en ;
+    rdfs:subClassOf cacontology-tactical:TacticalTeamMember .
+
+cacontology-tactical:Negotiator rdf:type owl:Class ;
+    rdfs:label "Negotiator"@en ;
+    rdfs:comment "Specialist trained in crisis negotiation and de-escalation."@en ;
+    rdfs:subClassOf uco-role:Role .
+
+cacontology-tactical:TacticalCommander rdf:type owl:Class ;
+    rdfs:label "Tactical Commander"@en ;
+    rdfs:comment "Senior officer responsible for overall tactical operation command."@en ;
+    rdfs:subClassOf uco-role:Role .
+
+# =============================================================================
+# TACTICAL EQUIPMENT CLASSES (extending UCO Observable)
+# =============================================================================
+
+cacontology-tactical:TacticalEquipment rdf:type owl:Class ;
+    rdfs:label "Tactical Equipment"@en ;
+    rdfs:comment "Specialized equipment used in tactical operations."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject .
+
+cacontology-tactical:BreachingTool rdf:type owl:Class ;
+    rdfs:label "Breaching Tool"@en ;
+    rdfs:comment "Tool used to gain entry through doors, walls, or barriers."@en ;
+    rdfs:subClassOf cacontology-tactical:TacticalEquipment .
+
+cacontology-tactical:ProtectiveGear rdf:type owl:Class ;
+    rdfs:label "Protective Gear"@en ;
+    rdfs:comment "Armor and protective equipment for tactical team members."@en ;
+    rdfs:subClassOf cacontology-tactical:TacticalEquipment .
+
+cacontology-tactical:CommunicationEquipment rdf:type owl:Class ;
+    rdfs:label "Communication Equipment"@en ;
+    rdfs:comment "Specialized communication devices for tactical operations."@en ;
+    rdfs:subClassOf cacontology-tactical:TacticalEquipment .
+
+cacontology-tactical:SurveillanceEquipment rdf:type owl:Class ;
+    rdfs:label "Surveillance Equipment"@en ;
+    rdfs:comment "Equipment for monitoring and observing tactical situations."@en ;
+    rdfs:subClassOf cacontology-tactical:TacticalEquipment .
+
+cacontology-tactical:LessLethalWeapon rdf:type owl:Class ;
+    rdfs:label "Less Lethal Weapon"@en ;
+    rdfs:comment "Non-lethal weapons for suspect control and compliance."@en ;
+    rdfs:subClassOf cacontology-tactical:TacticalEquipment .
+
+# =============================================================================
+# SITUATION ASSESSMENT CLASSES (extending UCO Core)
+# =============================================================================
+
+cacontology-tactical:ThreatAssessment rdf:type owl:Class ;
+    rdfs:label "Threat Assessment"@en ;
+    rdfs:comment "Evaluation of potential threats and risks in tactical situation."@en ;
+    rdfs:subClassOf uco-core:UcoObject .
+
+cacontology-tactical:LocationIntelligence rdf:type owl:Class ;
+    rdfs:label "Location Intelligence"@en ;
+    rdfs:comment "Information about the physical location of tactical operation."@en ;
+    rdfs:subClassOf uco-core:UcoObject .
+
+cacontology-tactical:SuspectProfile rdf:type owl:Class ;
+    rdfs:label "Suspect Profile"@en ;
+    rdfs:comment "Assessment of suspect behavior, capabilities, and threat level."@en ;
+    rdfs:subClassOf uco-core:UcoObject .
+
+# =============================================================================
+# TACTICAL OPERATION PROPERTIES
+# =============================================================================
+
+# Operation Planning Properties
+cacontology-tactical:operationType rdf:type owl:DatatypeProperty ;
+    rdfs:label "operation type"@en ;
+    rdfs:comment "Type of tactical operation (raid, arrest, rescue, standoff_resolution)."@en ;
+    rdfs:domain cacontology-tactical:TacticalOperation ;
+    rdfs:range xsd:string .
+
+cacontology-tactical:planningDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "planning duration"@en ;
+    rdfs:comment "Time spent planning the tactical operation (in hours)."@en ;
+    rdfs:domain cacontology-tactical:TacticalOperation ;
+    rdfs:range xsd:decimal .
+
+cacontology-tactical:briefingConducted rdf:type owl:DatatypeProperty ;
+    rdfs:label "briefing conducted"@en ;
+    rdfs:comment "Whether pre-operation briefing was conducted."@en ;
+    rdfs:domain cacontology-tactical:TacticalOperation ;
+    rdfs:range xsd:boolean .
+
+cacontology-tactical:riskLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "risk level"@en ;
+    rdfs:comment "Assessed risk level of the operation (low, medium, high, extreme)."@en ;
+    rdfs:domain cacontology-tactical:TacticalOperation ;
+    rdfs:range xsd:string .
+
+# Team Composition Properties
+cacontology-tactical:teamSize rdf:type owl:DatatypeProperty ;
+    rdfs:label "team size"@en ;
+    rdfs:comment "Number of tactical team members deployed."@en ;
+    rdfs:domain cacontology-tactical:TacticalOperation ;
+    rdfs:range xsd:integer .
+
+cacontology-tactical:commandedBy rdf:type owl:ObjectProperty ;
+    rdfs:label "commanded by"@en ;
+    rdfs:comment "Links tactical operation to its commanding officer."@en ;
+    rdfs:domain cacontology-tactical:TacticalOperation ;
+    rdfs:range cacontology-tactical:TacticalCommander .
+
+cacontology-tactical:participatingMember rdf:type owl:ObjectProperty ;
+    rdfs:label "participating member"@en ;
+    rdfs:comment "Links operation to participating tactical team members."@en ;
+    rdfs:domain cacontology-tactical:TacticalOperation ;
+    rdfs:range cacontology-tactical:TacticalTeamMember .
+
+cacontology-tactical:backupTeamAvailable rdf:type owl:DatatypeProperty ;
+    rdfs:label "backup team available"@en ;
+    rdfs:comment "Whether backup tactical team was on standby."@en ;
+    rdfs:domain cacontology-tactical:TacticalOperation ;
+    rdfs:range xsd:boolean .
+
+# Location and Timing Properties
+cacontology-tactical:operationLocation rdf:type owl:ObjectProperty ;
+    rdfs:label "operation location"@en ;
+    rdfs:comment "Physical location where tactical operation takes place."@en ;
+    rdfs:domain cacontology-tactical:TacticalOperation ;
+    rdfs:range uco-location:Location .
+
+cacontology-tactical:perimeterEstablished rdf:type owl:DatatypeProperty ;
+    rdfs:label "perimeter established"@en ;
+    rdfs:comment "Whether security perimeter was established around operation area."@en ;
+    rdfs:domain cacontology-tactical:TacticalOperation ;
+    rdfs:range xsd:boolean .
+
+cacontology-tactical:evacuationRequired rdf:type owl:DatatypeProperty ;
+    rdfs:label "evacuation required"@en ;
+    rdfs:comment "Whether civilian evacuation was necessary."@en ;
+    rdfs:domain cacontology-tactical:TacticalOperation ;
+    rdfs:range xsd:boolean .
+
+cacontology-tactical:operationDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "operation duration"@en ;
+    rdfs:comment "Total duration of tactical operation (in hours)."@en ;
+    rdfs:domain cacontology-tactical:TacticalOperation ;
+    rdfs:range xsd:decimal .
+
+# Execution Properties
+cacontology-tactical:entryMethod rdf:type owl:DatatypeProperty ;
+    rdfs:label "entry method"@en ;
+    rdfs:comment "Method used to gain entry (dynamic, deliberate, negotiated, stealth)."@en ;
+    rdfs:domain cacontology-tactical:TacticalOperation ;
+    rdfs:range xsd:string .
+
+cacontology-tactical:forceUsed rdf:type owl:DatatypeProperty ;
+    rdfs:label "force used"@en ;
+    rdfs:comment "Level of force employed (none, minimal, moderate, significant)."@en ;
+    rdfs:domain cacontology-tactical:TacticalOperation ;
+    rdfs:range xsd:string .
+
+cacontology-tactical:weaponsDeployed rdf:type owl:DatatypeProperty ;
+    rdfs:label "weapons deployed"@en ;
+    rdfs:comment "Types of weapons deployed during operation."@en ;
+    rdfs:domain cacontology-tactical:TacticalOperation ;
+    rdfs:range xsd:string .
+
+cacontology-tactical:resistanceEncountered rdf:type owl:DatatypeProperty ;
+    rdfs:label "resistance encountered"@en ;
+    rdfs:comment "Level of suspect resistance (none, passive, active, violent)."@en ;
+    rdfs:domain cacontology-tactical:TacticalOperation ;
+    rdfs:range xsd:string .
+
+# Outcome Properties
+cacontology-tactical:operationOutcome rdf:type owl:DatatypeProperty ;
+    rdfs:label "operation outcome"@en ;
+    rdfs:comment "Result of tactical operation (successful, partial, failed, aborted)."@en ;
+    rdfs:domain cacontology-tactical:TacticalOperation ;
+    rdfs:range xsd:string .
+
+cacontology-tactical:suspectsArrested rdf:type owl:DatatypeProperty ;
+    rdfs:label "suspects arrested"@en ;
+    rdfs:comment "Number of suspects arrested during operation."@en ;
+    rdfs:domain cacontology-tactical:TacticalOperation ;
+    rdfs:range xsd:integer .
+
+cacontology-tactical:injuriesOccurred rdf:type owl:DatatypeProperty ;
+    rdfs:label "injuries occurred"@en ;
+    rdfs:comment "Whether any injuries occurred during operation."@en ;
+    rdfs:domain cacontology-tactical:TacticalOperation ;
+    rdfs:range xsd:boolean .
+
+cacontology-tactical:propertyDamage rdf:type owl:DatatypeProperty ;
+    rdfs:label "property damage"@en ;
+    rdfs:comment "Whether property damage occurred during operation."@en ;
+    rdfs:domain cacontology-tactical:TacticalOperation ;
+    rdfs:range xsd:boolean .
+
+# Threat Assessment Properties
+cacontology-tactical:threatLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "threat level"@en ;
+    rdfs:comment "Assessed threat level (low, moderate, high, extreme)."@en ;
+    rdfs:domain cacontology-tactical:ThreatAssessment ;
+    rdfs:range xsd:string .
+
+cacontology-tactical:weaponsPossible rdf:type owl:DatatypeProperty ;
+    rdfs:label "weapons possible"@en ;
+    rdfs:comment "Whether suspect may possess weapons."@en ;
+    rdfs:domain cacontology-tactical:ThreatAssessment ;
+    rdfs:range xsd:boolean .
+
+cacontology-tactical:suicidalRisk rdf:type owl:DatatypeProperty ;
+    rdfs:label "suicidal risk"@en ;
+    rdfs:comment "Assessment of suspect's suicide risk."@en ;
+    rdfs:domain cacontology-tactical:ThreatAssessment ;
+    rdfs:range xsd:string .
+
+cacontology-tactical:flightRisk rdf:type owl:DatatypeProperty ;
+    rdfs:label "flight risk"@en ;
+    rdfs:comment "Assessment of suspect's likelihood to flee."@en ;
+    rdfs:domain cacontology-tactical:ThreatAssessment ;
+    rdfs:range xsd:string .
+
+# Equipment Properties
+cacontology-tactical:equipmentType rdf:type owl:DatatypeProperty ;
+    rdfs:label "equipment type"@en ;
+    rdfs:comment "Category of tactical equipment."@en ;
+    rdfs:domain cacontology-tactical:TacticalEquipment ;
+    rdfs:range xsd:string .
+
+cacontology-tactical:deployedDuring rdf:type owl:ObjectProperty ;
+    rdfs:label "deployed during"@en ;
+    rdfs:comment "Links equipment to the operation where it was used."@en ;
+    rdfs:domain cacontology-tactical:TacticalEquipment ;
+    rdfs:range cacontology-tactical:TacticalOperation .
+
+cacontology-tactical:operatedBy rdf:type owl:ObjectProperty ;
+    rdfs:label "operated by"@en ;
+    rdfs:comment "Links equipment to the team member who operated it."@en ;
+    rdfs:domain cacontology-tactical:TacticalEquipment ;
+    rdfs:range cacontology-tactical:TacticalTeamMember .
+
+# Special Situation Properties
+cacontology-tactical:standoffDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "standoff duration"@en ;
+    rdfs:comment "Duration of barricade standoff situation (in hours)."@en ;
+    rdfs:domain cacontology-tactical:BarricadeSituation ;
+    rdfs:range xsd:decimal .
+
+cacontology-tactical:negotiationAttempted rdf:type owl:DatatypeProperty ;
+    rdfs:label "negotiation attempted"@en ;
+    rdfs:comment "Whether negotiation was attempted during standoff."@en ;
+    rdfs:domain cacontology-tactical:BarricadeSituation ;
+    rdfs:range xsd:boolean .
+
+cacontology-tactical:negotiationDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "negotiation duration"@en ;
+    rdfs:comment "Duration of negotiation attempts (in hours)."@en ;
+    rdfs:domain cacontology-tactical:SurrenderNegotiation ;
+    rdfs:range xsd:decimal .
+
+cacontology-tactical:negotiationOutcome rdf:type owl:DatatypeProperty ;
+    rdfs:label "negotiation outcome"@en ;
+    rdfs:comment "Result of negotiation (successful_surrender, failed, partial_compliance)."@en ;
+    rdfs:domain cacontology-tactical:SurrenderNegotiation ;
+    rdfs:range xsd:string .
+
+# Authorization and Legal Properties
+cacontology-tactical:operationAuthorization rdf:type owl:ObjectProperty ;
+    rdfs:label "operation authorization"@en ;
+    rdfs:comment "Legal authorization for tactical operation."@en ;
+    rdfs:domain cacontology-tactical:TacticalOperation ;
+    rdfs:range uco-observable:ObservableObject .
+
+cacontology-tactical:specialApprovalRequired rdf:type owl:DatatypeProperty ;
+    rdfs:label "special approval required"@en ;
+    rdfs:comment "Whether special authorization was required for operation."@en ;
+    rdfs:domain cacontology-tactical:TacticalOperation ;
+    rdfs:range xsd:boolean .
+
+cacontology-tactical:useOfForceJustified rdf:type owl:DatatypeProperty ;
+    rdfs:label "use of force justified"@en ;
+    rdfs:comment "Assessment of whether force used was justified."@en ;
+    rdfs:domain cacontology-tactical:TacticalOperation ;
+    rdfs:range xsd:boolean .
+
+# Media and Public Relations Properties
+cacontology-tactical:mediaPresent rdf:type owl:DatatypeProperty ;
+    rdfs:label "media present"@en ;
+    rdfs:comment "Whether media was present during operation."@en ;
+    rdfs:domain cacontology-tactical:TacticalOperation ;
+    rdfs:range xsd:boolean .
+
+cacontology-tactical:publicSafetyThreat rdf:type owl:DatatypeProperty ;
+    rdfs:label "public safety threat"@en ;
+    rdfs:comment "Whether operation posed threat to public safety."@en ;
+    rdfs:domain cacontology-tactical:TacticalOperation ;
+    rdfs:range xsd:boolean .
+
+cacontology-tactical:afterActionReport rdf:type owl:DatatypeProperty ;
+    rdfs:label "after action report"@en ;
+    rdfs:comment "Whether formal after-action report was completed."@en ;
+    rdfs:domain cacontology-tactical:TacticalOperation ;
+    rdfs:range xsd:boolean . 

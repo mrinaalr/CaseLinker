@@ -1,0 +1,442 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-temporal: <https://cacontology.projectvic.org/temporal#> .
+@prefix gufo: <http://purl.org/nemo/gufo#> .
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+
+# =============================================================================
+# ONTOLOGY DECLARATION
+# =============================================================================
+
+<https://cacontology.projectvic.org/temporal> rdf:type owl:Ontology ;
+    rdfs:label "CAC Temporal Framework with gUFO Integration - Phase 2"@en ;
+    rdfs:comment "Phase 2 gUFO integration for CAC ontology family, focusing on temporal enhancement and investigation lifecycle modeling patterns. Extends gUFO temporal framework for law enforcement applications, including age-at-time modeling patterns for victims and offenders."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/temporal/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:issued "2025-01-03"^^xsd:date ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    dcterms:description "Phase 2 temporal enhancement framework integrating gUFO temporal concepts with UCO action modeling and CAC investigation lifecycle patterns."@en ;
+    owl:imports <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> ,
+                <https://ontology.caseontology.org/case/case/1.5.0> ,
+                <https://cacontology.projectvic.org/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> .
+
+# =============================================================================
+# AGE AS QUALITY AND AGE-AT-TIME SITUATIONS (gUFO QualityValueAttribution)
+# =============================================================================
+
+# Age as gUFO Quality for legal and analytical reasoning
+cacontology-temporal:Age rdf:type owl:Class ;
+    rdfs:label "Age Quality"@en ;
+    rdfs:comment "Age of a person modeled as a gUFO Quality whose concrete value is attributed in time-bounded situations. Intended for age-of-consent, Romeo-and-Juliet, and other age-dependent legal reasoning."@en ;
+    rdfs:subClassOf gufo:Quality .
+
+# Situation that attributes a concrete age value to a person at a particular time interval
+cacontology-temporal:AgeAtTimeSituation rdf:type owl:Class ;
+    rdfs:label "Age At Time Situation"@en ;
+    rdfs:comment "gUFO QualityValueAttributionSituation specializing in attribution of an Age quality value to a specific person over a time-bounded interval (e.g., the victim was 13 years old during a 2025 grooming event)."@en ;
+    rdfs:subClassOf gufo:QualityValueAttributionSituation, cac-core:Situation .
+
+# Person whose age is being asserted in this situation
+cacontology-temporal:ageSubject rdf:type owl:ObjectProperty ;
+    rdfs:label "age subject"@en ;
+    rdfs:comment "Links an Age At Time Situation to the person whose age is being asserted in that situation."@en ;
+    rdfs:domain cacontology-temporal:AgeAtTimeSituation ;
+    rdfs:range uco-identity:Person .
+
+# Concrete numeric age value (in years) being attributed in the situation
+cacontology-temporal:hasAgeInYears rdf:type owl:DatatypeProperty ;
+    rdfs:label "has age in years"@en ;
+    rdfs:comment "Numeric age in years attributed to a person in an Age At Time Situation (non-negative, may be fractional for finer-grained analytics)."@en ;
+    rdfs:subPropertyOf gufo:concernsQualityValue ;
+    rdfs:domain cacontology-temporal:AgeAtTimeSituation ;
+    rdfs:range xsd:decimal .
+
+# Optional explicit typing of the quality type for age situations
+cacontology-temporal:concernsAgeQuality rdf:type owl:ObjectProperty ;
+    rdfs:label "concerns age quality"@en ;
+    rdfs:comment "Specialization of gufo:concernsQualityType making explicit that an Age At Time Situation attributes a value for the Age quality type."@en ;
+    rdfs:subPropertyOf gufo:concernsQualityType ;
+    rdfs:domain cacontology-temporal:AgeAtTimeSituation ;
+    rdfs:range cacontology-temporal:Age .
+
+# =============================================================================
+# EXTENDED INVESTIGATION PHASES (lifecycle-specific, complement core phases)
+# =============================================================================
+
+cacontology-temporal:ResolutionPhase rdf:type owl:Class, gufo:Phase ;
+    rdfs:label "Resolution Phase"@en ;
+    rdfs:comment "Phase focused on resolution of investigation outcomes such as plea agreements, sentencing, and restitution orders."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+cacontology-temporal:CompletedPhase rdf:type owl:Class, gufo:Phase ;
+    rdfs:label "Completed Phase"@en ;
+    rdfs:comment "Terminal phase indicating investigation has been fully concluded with all actions finalized."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+# =============================================================================
+# PHASE 2: INVESTIGATION LIFECYCLE TEMPORAL MODELING
+# =============================================================================
+
+# Investigation Lifecycle as Structured Process (Kind with temporal phases)
+cacontology-temporal:InvestigationLifecycle rdf:type owl:Class, gufo:Kind ;
+    rdfs:label "Investigation Lifecycle"@en ;
+    rdfs:comment "Complete temporal structure of CAC investigation from initiation to closure. Modeled as gUFO Kind with definite phase sequence and temporal constraints."@en ;
+    rdfs:subClassOf gufo:Process .
+
+# Lifecycle State Transitions (Events connecting phases)
+cacontology-temporal:PhaseTransitionEvent rdf:type owl:Class ;
+    rdfs:label "Phase Transition Event"@en ;
+    rdfs:comment "Event marking transition between investigation phases. Modeled as gUFO Event with temporal boundaries and phase change effects."@en ;
+    rdfs:subClassOf cac-core:Event .
+
+cacontology-temporal:InitiationEvent rdf:type owl:Class ;
+    rdfs:label "Investigation Initiation Event"@en ;
+    rdfs:comment "Event transitioning investigation from non-existence to Initial Phase."@en ;
+    rdfs:subClassOf cacontology-temporal:PhaseTransitionEvent .
+
+cacontology-temporal:AnalysisTransitionEvent rdf:type owl:Class ;
+    rdfs:label "Analysis Transition Event"@en ;
+    rdfs:comment "Event transitioning investigation from Initial to Analysis Phase."@en ;
+    rdfs:subClassOf cacontology-temporal:PhaseTransitionEvent .
+
+cacontology-temporal:LegalProcessTransitionEvent rdf:type owl:Class ;
+    rdfs:label "Legal Process Transition Event"@en ;
+    rdfs:comment "Event transitioning investigation from Analysis to Legal Process Phase."@en ;
+    rdfs:subClassOf cacontology-temporal:PhaseTransitionEvent .
+
+cacontology-temporal:EvidenceTransitionEvent rdf:type owl:Class ;
+    rdfs:label "Evidence Transition Event"@en ;
+    rdfs:comment "Event transitioning investigation from Legal Process to Evidence Phase."@en ;
+    rdfs:subClassOf cacontology-temporal:PhaseTransitionEvent .
+
+cacontology-temporal:ResolutionTransitionEvent rdf:type owl:Class ;
+    rdfs:label "Resolution Transition Event"@en ;
+    rdfs:comment "Event transitioning investigation from Evidence to Resolution Phase."@en ;
+    rdfs:subClassOf cacontology-temporal:PhaseTransitionEvent .
+
+cacontology-temporal:ClosureEvent rdf:type owl:Class ;
+    rdfs:label "Investigation Closure Event"@en ;
+    rdfs:comment "Event transitioning investigation from Resolution to Completed Phase."@en ;
+    rdfs:subClassOf cacontology-temporal:PhaseTransitionEvent .
+
+# =============================================================================
+# PHASE 2: COMPLEX TEMPORAL PATTERNS
+# =============================================================================
+
+# Concurrent Investigation Patterns
+cacontology-temporal:ConcurrentInvestigationSituation rdf:type owl:Class ;
+    rdfs:label "Concurrent Investigation Situation"@en ;
+    rdfs:comment "Situation where multiple investigations run simultaneously, potentially sharing resources or evidence. Modeled as gUFO Situation with temporal overlap constraints."@en ;
+    rdfs:subClassOf cac-core:Situation .
+
+# Investigation Suspension/Resumption Patterns
+cacontology-temporal:SuspensionEvent rdf:type owl:Class ;
+    rdfs:label "Investigation Suspension Event"@en ;
+    rdfs:comment "Event causing investigation to enter suspended state. Modeled as gUFO Event creating suspension situation."@en ;
+    rdfs:subClassOf cac-core:Event .
+
+cacontology-temporal:ResumptionEvent rdf:type owl:Class ;
+    rdfs:label "Investigation Resumption Event"@en ;
+    rdfs:comment "Event causing investigation to exit suspended state and resume active phase. Modeled as gUFO Event terminating suspension situation."@en ;
+    rdfs:subClassOf cac-core:Event .
+
+cacontology-temporal:SuspendedSituation rdf:type owl:Class ;
+    rdfs:label "Investigation Suspended Situation"@en ;
+    rdfs:comment "Situation where investigation is temporarily suspended pending resources, legal decisions, or external factors. Modeled as gUFO Situation with temporal duration."@en ;
+    rdfs:subClassOf cac-core:Situation .
+
+# Multi-Phase Overlap Patterns (phases that can overlap)
+cacontology-temporal:ParallelEvidenceCollectionSituation rdf:type owl:Class ;
+    rdfs:label "Parallel Evidence Collection Situation"@en ;
+    rdfs:comment "Situation where multiple evidence collection activities occur simultaneously across different phases. Modeled as gUFO Situation allowing phase overlap."@en ;
+    rdfs:subClassOf cac-core:Situation .
+
+# =============================================================================
+# PHASE 2: TEMPORAL CONSTRAINTS AND VALIDATION
+# =============================================================================
+
+# Phase Duration Constraints (using gUFO temporal framework)
+cacontology-temporal:hasMinimumDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "has minimum duration"@en ;
+    rdfs:comment "Minimum required duration for investigation phase based on legal or procedural requirements."@en ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:duration .
+
+cacontology-temporal:hasMaximumDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "has maximum duration"@en ;
+    rdfs:comment "Maximum allowable duration for investigation phase based on legal or policy constraints."@en ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:duration .
+
+cacontology-temporal:hasTypicalDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "has typical duration"@en ;
+    rdfs:comment "Typical expected duration for investigation phase based on historical patterns."@en ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:duration .
+
+# Deadline and Urgency Properties
+cacontology-temporal:hasLegalDeadline rdf:type owl:DatatypeProperty ;
+    rdfs:label "has legal deadline"@en ;
+    rdfs:comment "Legal deadline by which investigation phase must be completed (e.g., statute of limitations, warrant expiration)."@en ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-temporal:urgencyLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "urgency level"@en ;
+    rdfs:comment "Urgency level of investigation phase (1-5 scale, 5=critical/immediate)."@en ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:integer .
+
+# =============================================================================
+# PHASE 2: TEMPORAL EVENT PATTERNS
+# =============================================================================
+
+# Temporal Event Sequences
+cacontology-temporal:EventSequence rdf:type owl:Class ;
+    rdfs:label "Investigation Event Sequence"@en ;
+    rdfs:comment "Ordered sequence of investigation events with temporal dependencies. Modeled as gUFO structured event pattern."@en ;
+    rdfs:subClassOf cac-core:Event .
+
+cacontology-temporal:ParallelEventCluster rdf:type owl:Class ;
+    rdfs:label "Parallel Event Cluster"@en ;
+    rdfs:comment "Set of investigation events occurring simultaneously or with temporal overlap. Modeled as gUFO composite event pattern."@en ;
+    rdfs:subClassOf cac-core:Event .
+
+# Temporal Event Dependencies
+cacontology-temporal:hasPrerequisiteEvent rdf:type owl:ObjectProperty ;
+    rdfs:label "has prerequisite event"@en ;
+    rdfs:comment "Links investigation event to prerequisite event that must complete before it can begin."@en ;
+    rdfs:domain cac-core:Event ;
+    rdfs:range cac-core:Event .
+
+cacontology-temporal:hasConsequentEvent rdf:type owl:ObjectProperty ;
+    rdfs:label "has consequent event"@en ;
+    rdfs:comment "Links investigation event to consequent event that must follow its completion."@en ;
+    rdfs:domain cac-core:Event ;
+    rdfs:range cac-core:Event .
+
+cacontology-temporal:hasParallelEvent rdf:type owl:ObjectProperty ;
+    rdfs:label "has parallel event"@en ;
+    rdfs:comment "Links investigation event to other events that can occur simultaneously."@en ;
+    rdfs:domain cac-core:Event ;
+    rdfs:range cac-core:Event .
+
+# =============================================================================
+# PHASE 2: ROLE TEMPORAL DYNAMICS
+# =============================================================================
+
+# Role Evolution Patterns
+cacontology-temporal:RoleTransition rdf:type owl:Class ;
+    rdfs:label "Role Transition"@en ;
+    rdfs:comment "Event representing change in person's role within investigation. Modeled as gUFO Event with role change effects."@en ;
+    rdfs:subClassOf cac-core:Event .
+
+cacontology-temporal:RoleEscalation rdf:type owl:Class ;
+    rdfs:label "Role Escalation"@en ;
+    rdfs:comment "Role transition involving increased responsibility or authority (e.g., analyst to lead investigator)."@en ;
+    rdfs:subClassOf cacontology-temporal:RoleTransition .
+
+cacontology-temporal:RoleReassignment rdf:type owl:Class ;
+    rdfs:label "Role Reassignment"@en ;
+    rdfs:comment "Role transition involving change in assignment without authority change (e.g., different investigator)."@en ;
+    rdfs:subClassOf cacontology-temporal:RoleTransition .
+
+# Multiple Role Patterns
+cacontology-temporal:SimultaneousRoleSituation rdf:type owl:Class ;
+    rdfs:label "Simultaneous Role Situation"@en ;
+    rdfs:comment "Situation where person plays multiple roles simultaneously in investigation context. Modeled as gUFO Situation with role overlap."@en ;
+    rdfs:subClassOf cac-core:Situation .
+
+cacontology-temporal:RoleConflictSituation rdf:type owl:Class ;
+    rdfs:label "Role Conflict Situation"@en ;
+    rdfs:comment "Situation where person's multiple roles create potential conflict of interest. Modeled as gUFO Situation requiring resolution."@en ;
+    rdfs:subClassOf cac-core:Situation .
+
+# =============================================================================
+# PHASE 2: TEMPORAL AGGREGATION PATTERNS
+# =============================================================================
+
+# Investigation Time Metrics
+cacontology-temporal:hasTimeToFirstAction rdf:type owl:DatatypeProperty ;
+    rdfs:label "has time to first action"@en ;
+    rdfs:comment "Duration from investigation initiation to first investigative action."@en ;
+    rdfs:domain cacontology:CACInvestigation ;
+    rdfs:range xsd:duration .
+
+cacontology-temporal:hasTimeToResolution rdf:type owl:DatatypeProperty ;
+    rdfs:label "has time to resolution"@en ;
+    rdfs:comment "Total duration from investigation initiation to resolution."@en ;
+    rdfs:domain cacontology:CACInvestigation ;
+    rdfs:range xsd:duration .
+
+cacontology-temporal:hasActiveDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "has active duration"@en ;
+    rdfs:comment "Total duration investigation was in active state (excluding suspended periods)."@en ;
+    rdfs:domain cacontology:CACInvestigation ;
+    rdfs:range xsd:duration .
+
+cacontology-temporal:hasSuspendedDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "has suspended duration"@en ;
+    rdfs:comment "Total duration investigation was in suspended state."@en ;
+    rdfs:domain cacontology:CACInvestigation ;
+    rdfs:range xsd:duration .
+
+# Phase Performance Metrics
+cacontology-temporal:phaseEfficiency rdf:type owl:DatatypeProperty ;
+    rdfs:label "phase efficiency"@en ;
+    rdfs:comment "Efficiency ratio of phase (actual duration / typical duration)."@en ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:decimal .
+
+cacontology-temporal:phaseCompletionRate rdf:type owl:DatatypeProperty ;
+    rdfs:label "phase completion rate"@en ;
+    rdfs:comment "Percentage of phase objectives completed within time period (0.0-1.0)."@en ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:decimal .
+
+# =============================================================================
+# PHASE 2: TEMPORAL RELATIONSHIP PATTERNS
+# =============================================================================
+
+# Investigation Temporal Relationships
+cacontology-temporal:temporallyPrecedes rdf:type owl:ObjectProperty ;
+    rdfs:label "temporally precedes"@en ;
+    rdfs:comment "Links investigation event/phase to temporally subsequent event/phase."@en ;
+    rdfs:subPropertyOf gufo:precedes ;
+    rdfs:domain [ owl:unionOf ( cac-core:Event cac-core:Phase ) ] ;
+    rdfs:range [ owl:unionOf ( cac-core:Event cac-core:Phase ) ] .
+
+cacontology-temporal:temporallyOverlapsWith rdf:type owl:ObjectProperty ;
+    rdfs:label "temporally overlaps with"@en ;
+    rdfs:comment "Links investigation event/phase to temporally overlapping event/phase."@en ;
+    rdfs:domain [ owl:unionOf ( cac-core:Event cac-core:Phase ) ] ;
+    rdfs:range [ owl:unionOf ( cac-core:Event cac-core:Phase ) ] .
+
+cacontology-temporal:temporallyContains rdf:type owl:ObjectProperty ;
+    rdfs:label "temporally contains"@en ;
+    rdfs:comment "Links investigation event/phase to temporally contained event/phase."@en ;
+    rdfs:domain [ owl:unionOf ( cac-core:Event cac-core:Phase ) ] ;
+    rdfs:range [ owl:unionOf ( cac-core:Event cac-core:Phase ) ] .
+
+# Phase Transition Relationships
+cacontology-temporal:triggersTransition rdf:type owl:ObjectProperty ;
+    rdfs:label "triggers transition"@en ;
+    rdfs:comment "Links investigation event to phase transition it triggers."@en ;
+    rdfs:domain cac-core:Event ;
+    rdfs:range cacontology-temporal:PhaseTransitionEvent .
+
+cacontology-temporal:transitionsFrom rdf:type owl:ObjectProperty ;
+    rdfs:label "transitions from"@en ;
+    rdfs:comment "Links phase transition event to source phase."@en ;
+    rdfs:domain cacontology-temporal:PhaseTransitionEvent ;
+    rdfs:range cac-core:Phase .
+
+cacontology-temporal:transitionsTo rdf:type owl:ObjectProperty ;
+    rdfs:label "transitions to"@en ;
+    rdfs:comment "Links phase transition event to target phase."@en ;
+    rdfs:domain cacontology-temporal:PhaseTransitionEvent ;
+    rdfs:range cac-core:Phase .
+
+# Suspension/Resumption Relationships
+cacontology-temporal:suspends rdf:type owl:ObjectProperty ;
+    rdfs:label "suspends"@en ;
+    rdfs:comment "Links suspension event to investigation it suspends."@en ;
+    rdfs:domain cacontology-temporal:SuspensionEvent ;
+    rdfs:range cacontology:CACInvestigation .
+
+cacontology-temporal:resumes rdf:type owl:ObjectProperty ;
+    rdfs:label "resumes"@en ;
+    rdfs:comment "Links resumption event to investigation it resumes."@en ;
+    rdfs:domain cacontology-temporal:ResumptionEvent ;
+    rdfs:range cacontology:CACInvestigation .
+
+cacontology-temporal:createsSuspension rdf:type owl:ObjectProperty ;
+    rdfs:label "creates suspension"@en ;
+    rdfs:comment "Links suspension event to suspended situation it creates."@en ;
+    rdfs:domain cacontology-temporal:SuspensionEvent ;
+    rdfs:range cacontology-temporal:SuspendedSituation .
+
+cacontology-temporal:terminatesSuspension rdf:type owl:ObjectProperty ;
+    rdfs:label "terminates suspension"@en ;
+    rdfs:comment "Links resumption event to suspended situation it terminates."@en ;
+    rdfs:domain cacontology-temporal:ResumptionEvent ;
+    rdfs:range cacontology-temporal:SuspendedSituation .
+
+# =============================================================================
+# PHASE 2: TEMPORAL VALIDATION CONSTRAINTS
+# =============================================================================
+
+# Phase ordering constraints
+[] rdf:type owl:AllDifferent ;
+   owl:distinctMembers ( cacontology:InitialPhase 
+                        cacontology:AnalysisPhase 
+                        cacontology:LegalProcessPhase 
+                        cacontology:EvidencePhase 
+                        cacontology-temporal:ResolutionPhase 
+                        cacontology-temporal:CompletedPhase ) .
+
+# Phase transition must have source and target
+cacontology-temporal:PhaseTransitionEvent rdfs:subClassOf [
+    rdf:type owl:Restriction ;
+    owl:onProperty cacontology-temporal:transitionsFrom ;
+    owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+    owl:onClass cac-core:Phase
+] .
+
+cacontology-temporal:PhaseTransitionEvent rdfs:subClassOf [
+    rdf:type owl:Restriction ;
+    owl:onProperty cacontology-temporal:transitionsTo ;
+    owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+    owl:onClass cac-core:Phase
+] .
+
+# Investigation must have lifecycle
+cacontology:CACInvestigation rdfs:subClassOf [
+    rdf:type owl:Restriction ;
+    owl:onProperty gufo:participatesIn ;
+    owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+    owl:onClass cacontology-temporal:InvestigationLifecycle
+] .
+
+# =============================================================================
+# PHASE 2: TEMPORAL PATTERNS FOR SPECIFIC CAC SCENARIOS
+# =============================================================================
+
+# Urgent Child Rescue Patterns
+cacontology-temporal:UrgentRescueLifecycle rdf:type owl:Class ;
+    rdfs:label "Urgent Child Rescue Lifecycle"@en ;
+    rdfs:comment "Accelerated investigation lifecycle for urgent child rescue situations. Compressed phase durations with parallel processing."@en ;
+    rdfs:subClassOf cacontology-temporal:InvestigationLifecycle .
+
+# Multi-Jurisdiction Coordination Patterns
+cacontology-temporal:MultiJurisdictionCoordinationSituation rdf:type owl:Class ;
+    rdfs:label "Multi-Jurisdiction Coordination Situation"@en ;
+    rdfs:comment "Situation where investigation requires coordination across multiple jurisdictions with timing synchronization. Modeled as gUFO Situation with coordination constraints."@en ;
+    rdfs:subClassOf cac-core:Situation .
+
+# Evidence Preservation Temporal Constraints
+cacontology-temporal:evidencePreservationDeadline rdf:type owl:DatatypeProperty ;
+    rdfs:label "evidence preservation deadline"@en ;
+    rdfs:comment "Deadline by which digital evidence must be preserved to maintain legal admissibility."@en ;
+    rdfs:domain cacontology:EvidencePhase ;
+    rdfs:range xsd:dateTimeStamp .
+
+# Legal Process Timing Requirements
+cacontology-temporal:warrantExpirationDate rdf:type owl:DatatypeProperty ;
+    rdfs:label "warrant expiration date"@en ;
+    rdfs:comment "Date when search warrant expires and execution must be completed."@en ;
+    rdfs:domain cacontology:LegalProcessPhase ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-temporal:statuteOfLimitationsDeadline rdf:type owl:DatatypeProperty ;
+    rdfs:label "statute of limitations deadline"@en ;
+    rdfs:comment "Legal deadline by which charges must be filed or case becomes time-barred."@en ;
+    rdfs:domain cacontology:CACInvestigation ;
+    rdfs:range xsd:dateTimeStamp . 

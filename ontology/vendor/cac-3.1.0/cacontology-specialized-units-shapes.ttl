@@ -1,0 +1,734 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix cacontology-specialized: <https://cacontology.projectvic.org/specialized-units#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+# Ontology Declaration
+<https://cacontology.projectvic.org/specialized-units/shapes> rdf:type owl:Ontology ;
+    rdfs:label "CAC Specialized Units SHACL Shapes"@en ;
+    rdfs:comment "SHACL validation shapes for the CAC Specialized Units Ontology, providing validation for K9 detection programs, officer wellness support, and specialized investigative capabilities."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/specialized-units/shapes/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://cacontology.projectvic.org/specialized-units/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> .
+
+# =============================================================================
+# K9 DETECTION PROGRAM SHAPES
+# =============================================================================
+
+cacontology-specialized:K9DetectionProgramShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-specialized:K9DetectionProgram ;
+    rdfs:label "K9 Detection Program Shape"@en ;
+    rdfs:comment "Validation shape for K9 detection program instances."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 100 ;
+        sh:message "K9 detection program must have a label (5-100 characters)."@en
+    ] ;
+    sh:property [
+        sh:path rdfs:comment ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 10 ;
+        sh:maxLength 500 ;
+        sh:message "K9 detection program comment should be 10-500 characters when provided."@en
+    ] .
+
+cacontology-specialized:DetectionDogShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-specialized:DetectionDog ;
+    rdfs:label "Detection Dog Shape"@en ;
+    rdfs:comment "Validation shape for detection dog instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 2 ;
+        sh:maxLength 50 ;
+        sh:message "Detection dog must have a name (2-50 characters)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-specialized:hasCapability ;
+        sh:class cacontology-specialized:TripleThreatCapability ;
+        sh:minCount 0 ;
+        sh:message "Detection dog capabilities must be valid TripleThreatCapability instances."@en
+    ] .
+
+cacontology-specialized:K9SearchOperationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-specialized:K9SearchOperation ;
+    rdfs:label "K9 Search Operation Shape"@en ;
+    rdfs:comment "Validation shape for K9 search operation instances."@en ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "K9 search operation must specify start time."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:endTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "K9 search operation may specify end time."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-specialized:searchWarrantsExecuted ;
+        sh:datatype xsd:integer ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 100 ;
+        sh:message "Search warrants executed must be between 0 and 100."@en
+    ] .
+
+# =============================================================================
+# OFFICER WELLNESS PROGRAM SHAPES
+# =============================================================================
+
+cacontology-specialized:OfficerWellnessProgramShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-specialized:OfficerWellnessProgram ;
+    rdfs:label "Officer Wellness Program Shape"@en ;
+    rdfs:comment "Validation shape for officer wellness program instances."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 100 ;
+        sh:message "Officer wellness program must have a label (5-100 characters)."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:description ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 10 ;
+        sh:maxLength 1000 ;
+        sh:message "Program description should be 10-1000 characters when provided."@en
+    ] .
+
+cacontology-specialized:TherapyDogShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-specialized:TherapyDog ;
+    rdfs:label "Therapy Dog Shape"@en ;
+    rdfs:comment "Validation shape for therapy dog instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 2 ;
+        sh:maxLength 50 ;
+        sh:message "Therapy dog must have a name (2-50 characters)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-specialized:providesWellnessSupport ;
+        sh:class uco-identity:Person ;
+        sh:minCount 1 ;
+        sh:message "Therapy dog must provide wellness support to at least one person."@en
+    ] .
+
+cacontology-specialized:WellnessCheckShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-specialized:WellnessCheck ;
+    rdfs:label "Wellness Check Shape"@en ;
+    rdfs:comment "Validation shape for wellness check instances."@en ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Wellness check must specify when it was conducted."@en
+    ] ;
+    sh:property [
+        sh:path uco-action:performer ;
+        sh:class uco-identity:Person ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Wellness check must specify who performed it."@en
+    ] .
+
+# =============================================================================
+# SPECIALIZED INVESTIGATIVE UNIT SHAPES
+# =============================================================================
+
+cacontology-specialized:SpecializedInvestigativeUnitShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-specialized:SpecializedInvestigativeUnit ;
+    rdfs:label "Specialized Investigative Unit Shape"@en ;
+    rdfs:comment "Validation shape for specialized investigative unit instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 100 ;
+        sh:message "Specialized unit must have a name (5-100 characters)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-specialized:operationalCapacity ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 1000 ;
+        sh:message "Operational capacity must be between 1 and 1000 when specified."@en
+    ] .
+
+cacontology-specialized:NamedOperationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-specialized:NamedOperation ;
+    rdfs:label "Named Operation Shape"@en ;
+    rdfs:comment "Validation shape for named operation instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 100 ;
+        sh:message "Named operation must have a name (5-100 characters)."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Named operation must specify start time."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:endTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Named operation may specify end time."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-specialized:arrestCount ;
+        sh:datatype xsd:integer ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 10000 ;
+        sh:message "Arrest count must be between 0 and 10000."@en
+    ] .
+
+# =============================================================================
+# COMMUNITY OUTREACH SHAPES
+# =============================================================================
+
+cacontology-specialized:CommunityOutreachProgramShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-specialized:CommunityOutreachProgram ;
+    rdfs:label "Community Outreach Program Shape"@en ;
+    rdfs:comment "Validation shape for community outreach program instances."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 100 ;
+        sh:message "Community outreach program must have a label (5-100 characters)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-specialized:eventCount ;
+        sh:datatype xsd:integer ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 1000 ;
+        sh:message "Event count must be between 0 and 1000."@en
+    ] .
+
+cacontology-specialized:SafetyEducationEventShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-specialized:SafetyEducationEvent ;
+    rdfs:label "Safety Education Event Shape"@en ;
+    rdfs:comment "Validation shape for safety education event instances."@en ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Safety education event must specify start time."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-specialized:attendeeCount ;
+        sh:datatype xsd:integer ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 10000 ;
+        sh:message "Attendee count must be between 1 and 10000 when specified."@en
+    ] .
+
+cacontology-specialized:ProfessionalTrainingEventShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-specialized:ProfessionalTrainingEvent ;
+    rdfs:label "Professional Training Event Shape"@en ;
+    rdfs:comment "Validation shape for professional training event instances."@en ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Professional training event must specify start time."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-specialized:professionalsTrained ;
+        sh:datatype xsd:integer ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 1000 ;
+        sh:message "Professionals trained must be between 1 and 1000 when specified."@en
+    ] .
+
+# =============================================================================
+# SEASONAL OPERATIONS SHAPES
+# =============================================================================
+
+cacontology-specialized:SeasonalOperationsUnitShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-specialized:SeasonalOperationsUnit ;
+    rdfs:label "Seasonal Operations Unit Shape"@en ;
+    rdfs:comment "Validation shape for seasonal operations unit instances."@en ;
+    sh:property [
+        sh:path cacontology-specialized:operationSeason ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "spring_break" "summer" "school_year_end" "winter_break" "back_to_school" ) ;
+        sh:message "Operation season must be from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-specialized:operationMonths ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:pattern "^[A-Za-z]+-[A-Za-z]+$" ;
+        sh:message "Operation months must be in format 'Month-Month' (e.g., 'March-May')."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-specialized:seasonalEffectiveness ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:message "Seasonal effectiveness must be between 0.0 and 1.0."@en
+    ] .
+
+cacontology-specialized:SeasonalCyberTipPatternShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-specialized:SeasonalCyberTipPattern ;
+    rdfs:label "Seasonal Cyber Tip Pattern Shape"@en ;
+    rdfs:comment "Validation shape for seasonal cyber tip pattern instances."@en ;
+    sh:property [
+        sh:path cacontology-specialized:cyberTipPatternType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "increased_activity" "school_break" "vacation_period" "holiday_season" "exam_period" ) ;
+        sh:message "Cyber tip pattern type must be from the allowed list."@en
+    ] .
+
+# =============================================================================
+# CHILD RESCUE OPERATIONS SHAPES
+# =============================================================================
+
+cacontology-specialized:ChildRescueUnitShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-specialized:ChildRescueUnit ;
+    rdfs:label "Child Rescue Unit Shape"@en ;
+    rdfs:comment "Validation shape for child rescue unit instances."@en ;
+    sh:property [
+        sh:path cacontology-specialized:rescueOperationsCount ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 10000 ;
+        sh:message "Rescue operations count must be between 0 and 10000."@en
+    ] .
+
+cacontology-specialized:OngoingAbuseInvestigationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-specialized:OngoingAbuseInvestigation ;
+    rdfs:label "Ongoing Abuse Investigation Shape"@en ;
+    rdfs:comment "Validation shape for ongoing abuse investigation instances."@en ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Ongoing abuse investigation must specify start time."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-specialized:childrenInOngoingAbuse ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 1000 ;
+        sh:message "Children in ongoing abuse must be between 0 and 1000."@en
+    ] .
+
+cacontology-specialized:EmergencyResponseCoordinationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-specialized:EmergencyResponseCoordination ;
+    rdfs:label "Emergency Response Coordination Shape"@en ;
+    rdfs:comment "Validation shape for emergency response coordination instances."@en ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Emergency response coordination must specify start time."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-specialized:emergencyResponseTime ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1.0 ;
+        sh:maxInclusive 1440.0 ;
+        sh:message "Emergency response time must be between 1 and 1440 minutes (24 hours)."@en
+    ] .
+
+# =============================================================================
+# HIGH VOLUME OPERATIONS SHAPES
+# =============================================================================
+
+cacontology-specialized:HighVolumeOperationsUnitShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-specialized:HighVolumeOperationsUnit ;
+    rdfs:label "High Volume Operations Unit Shape"@en ;
+    rdfs:comment "Validation shape for high volume operations unit instances."@en ;
+    sh:property [
+        sh:path cacontology-specialized:operationalCapacity ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 100 ;
+        sh:maxInclusive 10000 ;
+        sh:message "High volume unit operational capacity must be between 100 and 10000."@en
+    ] .
+
+cacontology-specialized:RapidResponseTeamShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-specialized:RapidResponseTeam ;
+    rdfs:label "Rapid Response Team Shape"@en ;
+    rdfs:comment "Validation shape for rapid response team instances."@en ;
+    sh:property [
+        sh:path cacontology-specialized:rapidResponseTime ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.25 ;
+        sh:maxInclusive 24.0 ;
+        sh:message "Rapid response time must be between 0.25 and 24 hours."@en
+    ] .
+
+# =============================================================================
+# AFFILIATE MANAGEMENT SHAPES
+# =============================================================================
+
+cacontology-specialized:ICACAffiliateOrganizationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-specialized:ICACAffiliateOrganization ;
+    rdfs:label "CAC Affiliate Organization Shape"@en ;
+    rdfs:comment "Validation shape for CAC affiliate organization instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Affiliate organization must have a name (5-200 characters)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-specialized:affiliationLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "primary" "secondary" "associate" "partner" ) ;
+        sh:message "Affiliation level must be from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-specialized:affiliationStatus ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "active" "inactive" "pending" "suspended" ) ;
+        sh:message "Affiliation status must be from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-specialized:resourceContributionLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "high" "medium" "low" "recipient-only" ) ;
+        sh:message "Resource contribution level must be from the allowed list."@en
+    ] .
+
+cacontology-specialized:AffiliateResourceLibraryShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-specialized:AffiliateResourceLibrary ;
+    rdfs:label "Affiliate Resource Library Shape"@en ;
+    rdfs:comment "Validation shape for affiliate resource library instances."@en ;
+    sh:property [
+        sh:path cacontology-specialized:resourceLibrarySize ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 100000 ;
+        sh:message "Resource library size must be between 0 and 100000."@en
+    ] .
+
+cacontology-specialized:InterAffiliateResourceSharingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-specialized:InterAffiliateResourceSharing ;
+    rdfs:label "Inter-Affiliate Resource Sharing Shape"@en ;
+    rdfs:comment "Validation shape for inter-affiliate resource sharing instances."@en ;
+    sh:property [
+        sh:path cacontology-specialized:resourceSharingFrequency ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "daily" "weekly" "monthly" "quarterly" "annual" "as_needed" ) ;
+        sh:message "Resource sharing frequency must be from the allowed list."@en
+    ] .
+
+cacontology-specialized:AffiliateResourceAllocationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-specialized:AffiliateResourceAllocation ;
+    rdfs:label "Affiliate Resource Allocation Shape"@en ;
+    rdfs:comment "Validation shape for affiliate resource allocation instances."@en ;
+    sh:property [
+        sh:path cacontology-specialized:resourceAllocationResponseTime ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1.0 ;
+        sh:maxInclusive 720.0 ;
+        sh:message "Resource allocation response time must be between 1 and 720 hours (30 days)."@en
+    ] .
+
+cacontology-specialized:AffiliateNetworkCoordinationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-specialized:AffiliateNetworkCoordination ;
+    rdfs:label "Affiliate Network Coordination Shape"@en ;
+    rdfs:comment "Validation shape for affiliate network coordination instances."@en ;
+    sh:property [
+        sh:path cacontology-specialized:coordinationMeetingFrequency ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "weekly" "monthly" "quarterly" "semi-annual" "annual" ) ;
+        sh:message "Coordination meeting frequency must be from the allowed list."@en
+    ] .
+
+# =============================================================================
+# METRICS AND PERFORMANCE SHAPES
+# =============================================================================
+
+cacontology-specialized:AffiliateEngagementMetricsShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-specialized:AffiliateEngagementMetrics ;
+    rdfs:label "Affiliate Engagement Metrics Shape"@en ;
+    rdfs:comment "Validation shape for affiliate engagement metrics instances."@en ;
+    sh:property [
+        sh:path cacontology-specialized:affiliateEngagementScore ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:message "Affiliate engagement score must be between 0.0 and 1.0."@en
+    ] .
+
+cacontology-specialized:AffiliatePerformanceAssessmentShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-specialized:AffiliatePerformanceAssessment ;
+    rdfs:label "Affiliate Performance Assessment Shape"@en ;
+    rdfs:comment "Validation shape for affiliate performance assessment instances."@en ;
+    sh:property [
+        sh:path cacontology-specialized:performanceScore ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:message "Performance score must be between 0.0 and 1.0."@en
+    ] .
+
+cacontology-specialized:AffiliateJointOperationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-specialized:AffiliateJointOperation ;
+    rdfs:label "Affiliate Joint Operation Shape"@en ;
+    rdfs:comment "Validation shape for affiliate joint operation instances."@en ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Affiliate joint operation must specify start time."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-specialized:jointOperationCount ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 1000 ;
+        sh:message "Joint operation count must be between 1 and 1000 when specified."@en
+    ] .
+
+# =============================================================================
+# CROSS-REFERENCE VALIDATION SHAPES
+# =============================================================================
+
+cacontology-specialized:K9OperationCrossReferenceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-specialized:K9SearchOperation ;
+    rdfs:label "K9 Operation Cross Reference Shape"@en ;
+    rdfs:comment "Validates cross-references between K9 operations and related entities."@en ;
+    sh:sparql [
+        sh:message "K9 search operation should have an associated detection dog."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-specialized:K9SearchOperation .
+                FILTER NOT EXISTS {
+                    ?dog cacontology-specialized:assistsInSearch $this .
+                }
+            }
+        """
+    ] .
+
+cacontology-specialized:WellnessProgramCrossReferenceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-specialized:OfficerWellnessProgram ;
+    rdfs:label "Wellness Program Cross Reference Shape"@en ;
+    rdfs:comment "Validates cross-references for officer wellness programs."@en ;
+    sh:sparql [
+        sh:message "Officer wellness program should have associated wellness checks or support activities."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-specialized:OfficerWellnessProgram .
+                FILTER NOT EXISTS {
+                    { ?check a cacontology-specialized:WellnessCheck } UNION
+                    { ?support a cacontology-specialized:MentalHealthSupport } UNION
+                    { ?therapy a cacontology-specialized:TherapyDog }
+                }
+            }
+        """
+    ] .
+
+cacontology-specialized:SpecializedUnitOperationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-specialized:SpecializedInvestigativeUnit ;
+    rdfs:label "Specialized Unit Operation Shape"@en ;
+    rdfs:comment "Validates that specialized units participate in operations."@en ;
+    sh:sparql [
+        sh:message "Specialized investigative unit should participate in at least one operation."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-specialized:SpecializedInvestigativeUnit .
+                FILTER NOT EXISTS {
+                    $this cacontology-specialized:participatesInOperation ?operation .
+                }
+            }
+        """
+    ] .
+
+cacontology-specialized:AffiliateOrganizationValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-specialized:ICACAffiliateOrganization ;
+    rdfs:label "Affiliate Organization Validation Shape"@en ;
+    rdfs:comment "Validates affiliate organization relationships and status."@en ;
+    sh:sparql [
+        sh:message "Active affiliate organizations should have resource sharing or support relationships."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-specialized:ICACAffiliateOrganization ;
+                      cacontology-specialized:affiliationStatus "active" .
+                FILTER NOT EXISTS {
+                    { $this cacontology-specialized:receivesResourceFrom ?sharing } UNION
+                    { $this cacontology-specialized:receivesSupportFrom ?support } UNION
+                    { $this cacontology-specialized:participatesInJointOperation ?operation }
+                }
+            }
+        """
+    ] .
+
+# =============================================================================
+# TEMPORAL VALIDATION SHAPES
+# =============================================================================
+
+cacontology-specialized:TemporalValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-specialized:K9SearchOperation ,
+                   cacontology-specialized:NamedOperation ,
+                   cacontology-specialized:SafetyEducationEvent ,
+                   cacontology-specialized:ProfessionalTrainingEvent ,
+                   cacontology-specialized:OngoingAbuseInvestigation ,
+                   cacontology-specialized:EmergencyResponseCoordination ,
+                   cacontology-specialized:AffiliateJointOperation ;
+    rdfs:label "Temporal Validation Shape"@en ;
+    rdfs:comment "Validates temporal consistency for operations and events."@en ;
+    sh:sparql [
+        sh:message "Start time must be before end time when both are specified."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this uco-core:startTime ?start ;
+                      uco-core:endTime ?end .
+                FILTER (?start >= ?end)
+            }
+        """
+    ] .
+
+cacontology-specialized:SeasonalTimingValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-specialized:SeasonalOperationsUnit ;
+    rdfs:label "Seasonal Timing Validation Shape"@en ;
+    rdfs:comment "Validates seasonal operation timing consistency."@en ;
+    sh:sparql [
+        sh:message "Seasonal operations should have consistent season and month specifications."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-specialized:operationSeason "spring_break" ;
+                      cacontology-specialized:operationMonths ?months .
+                FILTER (!REGEX(?months, "March|April|May", "i"))
+            }
+        """
+    ] .
+
+# =============================================================================
+# DATA QUALITY SHAPES
+# =============================================================================
+
+cacontology-specialized:DataQualityShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-specialized:K9DetectionProgram ,
+                   cacontology-specialized:OfficerWellnessProgram ,
+                   cacontology-specialized:SpecializedInvestigativeUnit ,
+                   cacontology-specialized:CommunityOutreachProgram ,
+                   cacontology-specialized:ICACAffiliateOrganization ;
+    rdfs:label "Data Quality Shape"@en ;
+    rdfs:comment "Validates data quality for specialized units entities."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Label should be between 5 and 200 characters when provided."@en
+    ] ;
+    sh:property [
+        sh:path rdfs:comment ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 10 ;
+        sh:maxLength 1000 ;
+        sh:message "Comment should be between 10 and 1000 characters when provided."@en
+    ] . 

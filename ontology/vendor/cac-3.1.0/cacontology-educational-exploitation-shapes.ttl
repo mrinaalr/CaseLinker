@@ -1,0 +1,700 @@
+# CAC Educational Exploitation SHACL Shapes with gUFO Integration
+# This file contains comprehensive SHACL validation shapes for the gUFO-enhanced CAC educational exploitation ontology
+
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-observable: <https://ontology.unifiedcyberontology.org/uco/observable/> .
+@prefix cacontology-educational: <https://cacontology.projectvic.org/educational#> .
+@prefix cacontology-educational-shapes: <https://cacontology.projectvic.org/educational/shapes#> .
+
+# gUFO Integration
+@prefix gufo: <http://purl.org/nemo/gufo#> .
+@prefix cacontology-gufo: <https://cacontology.projectvic.org/gufo#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+
+# Enhanced Ontology Declaration with gUFO Validation
+<https://cacontology.projectvic.org/educational/shapes> rdf:type owl:Ontology ;
+    rdfs:label "CAC Educational Exploitation SHACL Shapes with gUFO Validation"@en ;
+    rdfs:comment "Comprehensive SHACL validation shapes for gUFO-enhanced CAC educational exploitation ontology, including foundational type validation, anti-rigidity constraints for educator roles and educational phases, temporal consistency validation, educational exploitation workflow validation, and advanced cross-reference validation for educational safeguarding systems."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/educational/shapes/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://cacontology.projectvic.org/educational/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> .
+
+# =============================================================================
+# gUFO EDUCATIONAL INSTITUTION VALIDATION (Objects/Organizations)
+# =============================================================================
+
+# Educational Institution gUFO Object Validation
+cacontology-educational-shapes:EducationalInstitutionGUFOShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-educational:EducationalInstitution ;
+    rdfs:label "gUFO Educational Institution Shape"@en ;
+    rdfs:comment "Validates educational institution instances with gUFO foundational constraints as Organizations."@en ;
+    sh:property [
+        sh:path cacontology-gufo:establishmentTimePoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Educational institution can have at most one establishment time point"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-educational:institutionName ;
+        sh:datatype xsd:string ;
+        sh:minLength 2 ;
+        sh:maxLength 200 ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Institution name must be between 2 and 200 characters"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-educational:studentPopulation ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minInclusive 10 ;
+        sh:maxInclusive 50000 ;
+        sh:message "Student population must be between 10 and 50,000"@en
+    ] .
+
+# Intermediate School Shape with enhanced gUFO validation
+cacontology-educational-shapes:IntermediateSchoolGUFOShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-educational:IntermediateSchool ;
+    rdfs:label "gUFO Intermediate School Shape"@en ;
+    rdfs:comment "Validation shape for intermediate school institutions with gUFO Organization constraints."@en ;
+    sh:property [
+        sh:path cacontology-educational:gradeRange ;
+        sh:datatype xsd:string ;
+        sh:pattern "^[6-8](-[6-8])?$" ;
+        sh:message "Grade range must be valid intermediate school range (6-8)"@en     ] ;
+    sh:property [
+        sh:path cacontology-educational:studentPopulation ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minInclusive 50 ;
+        sh:maxInclusive 2000 ;
+        sh:message "Student population must be between 50 and 2000 for intermediate schools"@en     ] .
+
+# Elite Educational Institution Shape with gUFO validation
+cacontology-educational-shapes:EliteEducationalInstitutionGUFOShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-educational:EliteEducationalInstitution ;
+    rdfs:label "gUFO Elite Educational Institution Shape"@en ;
+    rdfs:comment "Validation shape for elite educational institutions with enhanced reputation and selectivity requirements."@en ;
+    sh:property [
+        sh:path cacontology-educational:institutionReputation ;
+        sh:datatype xsd:string ;
+        sh:in ("excellent" "high" "prestigious" "elite") ;
+        sh:message "Elite institution must have high reputation status"@en     ] ;
+    sh:property [
+        sh:path cacontology-educational:selectivityRating ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0.8 ;
+        sh:maxInclusive 1.0 ;
+        sh:message "Elite institution must have selectivity rating between 0.8 and 1.0"@en     ] .
+
+# =============================================================================
+# gUFO EDUCATOR ROLE VALIDATION (Anti-Rigid Roles)
+# =============================================================================
+
+# Educator Role gUFO Anti-Rigid Role Validation
+cacontology-educational-shapes:EducatorRoleGUFOShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-educational:EducatorRole ;
+    rdfs:label "gUFO Educator Role Shape"@en ;
+    rdfs:comment "Validates educator role instances with gUFO anti-rigidity constraints and temporal employment constraints."@en ;
+    sh:property [
+        sh:path cacontology-gufo:employmentBeginTimePoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Educator role can have at most one employment begin point"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-gufo:employmentEndTimePoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Educator role can have at most one employment end point"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-educational:educatorAge ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minInclusive 18 ;
+        sh:maxInclusive 85 ;
+        sh:message "Educator age must be between 18 and 85"@en     ] ;
+    sh:property [
+        sh:path cacontology-educational:yearsOfExperience ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 60 ;
+        sh:message "Years of experience must be between 0 and 60"@en     ] ;
+    # Temporal consistency: employment begin must precede end
+    sh:sparql [
+        sh:message "Employment begin point must precede end point"@en ;
+        sh:select """
+            SELECT ?this
+            WHERE {
+                ?this cacontology-gufo:employmentBeginTimePoint ?begin ;
+                      cacontology-gufo:employmentEndTimePoint ?end .
+                FILTER (?begin >= ?end)
+            }
+        """
+    ] .
+
+# Math Teacher Role Shape with enhanced gUFO validation
+cacontology-educational-shapes:MathTeacherRoleGUFOShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-educational:MathTeacherRole ;
+    rdfs:label "gUFO Math Teacher Role Shape"@en ;
+    rdfs:comment "Validation shape for math teacher roles with gUFO anti-rigidity and role specialization constraints."@en ;
+    sh:property [
+        sh:path cacontology-educational:subjectTaught ;
+        sh:datatype xsd:string ;
+        sh:in ("Mathematics" "Math" "Algebra" "Geometry" "Calculus" "Statistics") ;
+        sh:message "Subject taught must be a valid mathematics subject"@en     ] ;
+    sh:property [
+        sh:path cacontology-educational:teachingCertification ;
+        sh:datatype xsd:string ;
+        sh:minLength 1 ;
+        sh:message "Math teacher must have valid teaching certification"@en     ] .
+
+# =============================================================================
+# gUFO EDUCATIONAL PHASE VALIDATION (Anti-Rigid Phases)
+# =============================================================================
+
+# Academic Term Phase gUFO Anti-Rigid Phase Validation
+cacontology-educational-shapes:AcademicTermPhaseGUFOShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-educational:AcademicTermPhase ;
+    rdfs:label "gUFO Academic Term Phase Shape"@en ;
+    rdfs:comment "Validates academic term phase instances with gUFO anti-rigidity constraints and academic calendar alignment."@en ;
+    sh:property [
+        sh:path cacontology-gufo:beginTimePoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Academic term phase can have at most one begin point"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-gufo:endTimePoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Academic term phase can have at most one end point"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-educational:termType ;
+        sh:datatype xsd:string ;
+        sh:in ("fall" "spring" "summer" "winter" "semester" "quarter" "trimester") ;
+        sh:message "Term type must be a valid academic term"@en     ] ;
+    # Temporal consistency for academic term
+    sh:sparql [
+        sh:message "Academic term begin point must precede end point"@en ;
+        sh:select """
+            SELECT ?this
+            WHERE {
+                ?this cacontology-gufo:beginTimePoint ?begin ;
+                      cacontology-gufo:endTimePoint ?end .
+                FILTER (?begin >= ?end)
+            }
+        """
+    ] .
+
+# Employment Phase gUFO Anti-Rigid Phase Validation
+cacontology-educational-shapes:EmploymentPhaseGUFOShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-educational:EmploymentPhase ;
+    rdfs:label "gUFO Employment Phase Shape"@en ;
+    rdfs:comment "Validates employment phase instances with gUFO anti-rigidity constraints and employment lifecycle modeling."@en ;
+    sh:property [
+        sh:path cacontology-educational:employmentStatus ;
+        sh:datatype xsd:string ;
+        sh:in ("active" "probationary" "suspended" "terminated" "resigned" "retired") ;
+        sh:message "Employment status must be from valid status list"@en     ] ;
+    sh:property [
+        sh:path cacontology-educational:employmentType ;
+        sh:datatype xsd:string ;
+        sh:in ("full_time" "part_time" "substitute" "contract" "temporary" "volunteer") ;
+        sh:message "Employment type must be from valid type list"@en     ] .
+
+# =============================================================================
+# gUFO EXPLOITATION EVENT VALIDATION (Events)
+# =============================================================================
+
+# Educator Perpetrated Exploitation gUFO Event Validation
+cacontology-educational-shapes:EducatorPerpetratedExploitationGUFOShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-educational:EducatorPerpetratedExploitation ;
+    rdfs:label "gUFO Educator Perpetrated Exploitation Shape"@en ;
+    rdfs:comment "Validates educator exploitation instances with gUFO Event constraints and temporal boundaries."@en ;
+    sh:property [
+        sh:path cacontology-gufo:beginTimePoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Exploitation event can have at most one begin point"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-gufo:endTimePoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Exploitation event can have at most one end point"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-educational:exploitationFirstIncidentTimePoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Exploitation can have at most one first incident time point"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-educational:exploitationDuration ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0.1 ;
+        sh:maxInclusive 10000 ;
+        sh:message "Exploitation duration must be between 0.1 hours and 10,000 hours"@en     ] ;
+    # Temporal consistency: first incident should align with begin point
+    sh:sparql [
+        sh:message "First incident time point should not precede overall begin point"@en ;
+        sh:select """
+            SELECT ?this
+            WHERE {
+                ?this cacontology-educational:exploitationFirstIncidentTimePoint ?first ;
+                      cacontology-gufo:beginTimePoint ?begin .
+                FILTER (?first < ?begin)
+            }
+        """
+    ] .
+
+# Written Harassment gUFO Event Validation
+cacontology-educational-shapes:WrittenHarassmentGUFOShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-educational:WrittenHarassment ;
+    rdfs:label "gUFO Written Harassment Shape"@en ;
+    rdfs:comment "Validation shape for written harassment activities with gUFO Event temporal tracking."@en ;
+    sh:property [
+        sh:path cacontology-educational:harassmentContent ;
+        sh:datatype xsd:string ;
+        sh:minLength 1 ;
+        sh:maxLength 500 ;
+        sh:message "Harassment content must be between 1 and 500 characters"@en     ] ;
+    sh:property [
+        sh:path cacontology-educational:harassmentMedium ;
+        sh:datatype xsd:string ;
+        sh:in ("assignment" "test" "homework" "note" "report_card" "feedback") ;
+        sh:message "Harassment medium must be a valid academic medium"@en     ] ;
+    sh:property [
+        sh:path cacontology-educational:harassmentFrequency ;
+        sh:datatype xsd:string ;
+        sh:in ("single_incident" "occasional" "frequent" "systematic") ;
+        sh:message "Harassment frequency must be a valid frequency level"@en     ] .
+
+# Assignment Harassment gUFO Event Validation
+cacontology-educational-shapes:AssignmentHarassmentGUFOShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-educational:AssignmentHarassment ;
+    rdfs:label "gUFO Assignment Harassment Shape"@en ;
+    rdfs:comment "Validation shape for harassment on student assignments with gUFO Event constraints."@en ;
+    sh:property [
+        sh:path cacontology-educational:harassmentMedium ;
+        sh:datatype xsd:string ;
+        sh:hasValue "assignment" ;
+        sh:message "Assignment harassment must have medium of 'assignment'"@en     ] ;
+    sh:property [
+        sh:path cacontology-educational:writtenOn ;
+        sh:class uco-observable:ObservableObject ;
+        sh:minCount 1 ;
+        sh:message "Assignment harassment must specify what it was written on"@en     ] .
+
+# Academic Intimidation gUFO Event Validation
+cacontology-educational-shapes:AcademicIntimidationGUFOShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-educational:AcademicIntimidation ;
+    rdfs:label "gUFO Academic Intimidation Shape"@en ;
+    rdfs:comment "Validation shape for academic intimidation events with gUFO temporal modeling."@en ;
+    sh:property [
+        sh:path cacontology-educational:intimidationMethod ;
+        sh:datatype xsd:string ;
+        sh:in ("grade_threats" "academic_punishment" "public_humiliation" "isolation" "academic_discrimination") ;
+        sh:message "Intimidation method must be from valid academic intimidation methods"@en     ] .
+
+# =============================================================================
+# gUFO EDUCATIONAL SITUATION VALIDATION
+# =============================================================================
+
+# Educational Exploitation Situation gUFO Situation Validation
+cacontology-educational-shapes:EducationalExploitationSituationGUFOShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-educational:EducationalExploitationSituation ;
+    rdfs:label "gUFO Educational Exploitation Situation Shape"@en ;
+    rdfs:comment "Validates educational exploitation situation instances as gUFO Situations for complex state relationships."@en ;
+    sh:property [
+        sh:path cacontology-gufo:situationBeginTimePoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Situation can have at most one begin point"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-gufo:situationEndTimePoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Situation can have at most one end point"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-educational:involvedInstitutions ;
+        sh:minCount 1 ;
+        sh:class cacontology-educational:EducationalInstitution ;
+        sh:message "Situation must involve at least one educational institution"@en     ] ;
+    sh:property [
+        sh:path cacontology-educational:involvedEducators ;
+        sh:minCount 1 ;
+        sh:class uco-identity:Person ;
+        sh:message "Situation must involve at least one educator"@en     ] ;
+    sh:property [
+        sh:path cacontology-educational:involvedStudents ;
+        sh:minCount 1 ;
+        sh:class uco-identity:Person ;
+        sh:message "Situation must involve at least one student"@en     ] .
+
+# Institutional Response Situation gUFO Validation
+cacontology-educational-shapes:InstitutionalResponseSituationGUFOShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-educational:InstitutionalResponseSituation ;
+    rdfs:label "gUFO Institutional Response Situation Shape"@en ;
+    rdfs:comment "Validates institutional response situation instances with gUFO Situation constraints for organizational response coordination."@en ;
+    sh:property [
+        sh:path cacontology-educational:responseType ;
+        sh:datatype xsd:string ;
+        sh:in ("investigation" "suspension" "termination" "reporting" "counseling" "policy_change") ;
+        sh:message "Response type must be from valid institutional response types"@en     ] ;
+    sh:property [
+        sh:path cacontology-educational:responseTimeline ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0.1 ;
+        sh:maxInclusive 365 ;
+        sh:message "Response timeline must be between 0.1 and 365 days"@en     ] .
+
+# Multi-Victim Exploitation Situation gUFO Validation
+cacontology-educational-shapes:MultiVictimExploitationSituationGUFOShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-educational:MultiVictimExploitationSituation ;
+    rdfs:label "gUFO Multi-Victim Exploitation Situation Shape"@en ;
+    rdfs:comment "Validates multi-victim exploitation situation instances with specialized coordination requirements."@en ;
+    sh:property [
+        sh:path cacontology-educational:victimCount ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minInclusive 2 ;
+        sh:maxInclusive 100 ;
+        sh:message "Multi-victim situation must have between 2 and 100 victims"@en     ] ;
+    sh:property [
+        sh:path cacontology-educational:involvedStudents ;
+        sh:minCount 2 ;
+        sh:class uco-identity:Person ;
+        sh:message "Multi-victim situation must involve at least two students"@en     ] .
+
+# =============================================================================
+# gUFO CLASSROOM CONTEXT VALIDATION (Objects)
+# =============================================================================
+
+# Classroom Exploitation Context gUFO Object Validation
+cacontology-educational-shapes:ClassroomExploitationContextGUFOShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-educational:ClassroomExploitationContext ;
+    rdfs:label "gUFO Classroom Exploitation Context Shape"@en ;
+    rdfs:comment "Validation shape for classroom exploitation contexts as gUFO Objects with spatial and temporal constraints."@en ;
+    sh:property [
+        sh:path cacontology-gufo:contextTimePoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Context can have at most one time point"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-educational:classroomNumber ;
+        sh:datatype xsd:string ;
+        sh:pattern "^[A-Z]?[0-9]{1,4}[A-Z]?$" ;
+        sh:message "Classroom number must be valid format (e.g., 101, A205, 12B)"@en     ] ;
+    sh:property [
+        sh:path cacontology-educational:timeOfDay ;
+        sh:datatype xsd:string ;
+        sh:in ("morning" "afternoon" "evening" "after_hours") ;
+        sh:message "Time of day must be a valid time period"@en     ] ;
+    sh:property [
+        sh:path cacontology-educational:studentsPresent ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:maxInclusive 35 ;
+        sh:message "Students present cannot exceed 35"@en     ] ;
+    sh:property [
+        sh:path cacontology-educational:isolationLevel ;
+        sh:datatype xsd:string ;
+        sh:in ("alone" "few_students" "class_present") ;
+        sh:message "Isolation level must be alone, few_students, or class_present"@en     ] .
+
+# =============================================================================
+# gUFO INVESTIGATION AND EVIDENCE VALIDATION (Objects/Events)
+# =============================================================================
+
+# Educational Investigation gUFO Event Validation
+cacontology-educational-shapes:EducationalInvestigationGUFOShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-educational:EducationalInvestigation ;
+    rdfs:label "gUFO Educational Investigation Shape"@en ;
+    rdfs:comment "Validates educational investigation instances as gUFO Events with temporal boundaries and exploitation documentation."@en ;
+    sh:property [
+        sh:path cacontology-gufo:beginTimePoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Investigation can have at most one begin point"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-gufo:endTimePoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Investigation can have at most one end point"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-educational:investigationScope ;
+        sh:datatype xsd:string ;
+        sh:in ("single_incident" "pattern_behavior" "institutional_review" "multi_victim" "cross_institutional") ;
+        sh:message "Investigation scope must be from valid scope types"@en     ] .
+
+# Evidence Objects gUFO Object Validation
+cacontology-educational-shapes:EvidenceObjectGUFOShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-educational:IPAddressEvidence, cacontology-educational:DigitalCommunicationEvidence, cacontology-educational:VictimAccountEvidence ;
+    rdfs:label "gUFO Evidence Object Shape"@en ;
+    rdfs:comment "Validates evidence object instances as gUFO Objects with documentation relationships."@en ;
+    sh:property [
+        sh:path cacontology-educational:evidenceType ;
+        sh:datatype xsd:string ;
+        sh:minLength 1 ;
+        sh:message "Evidence must specify type"@en     ] ;
+    sh:property [
+        sh:path cacontology-educational:documentationDate ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Evidence can have at most one documentation date"@en     ] .
+
+# =============================================================================
+# ADVANCED gUFO VALIDATION FRAMEWORK
+# =============================================================================
+
+# Temporal Consistency Validation
+cacontology-educational-shapes:TemporalConsistencyValidationShape rdf:type sh:NodeShape ;
+    sh:targetNode cac-core:Event, cac-core:Phase, cac-core:Situation ;
+    rdfs:label "Temporal Consistency Validation Shape"@en ;
+    rdfs:comment "Validates temporal consistency across Events, Phases, and Situations in educational context."@en ;
+    # Employment-Exploitation Temporal Alignment
+    sh:sparql [
+        sh:message "Exploitation events must occur during educator employment period"@en ;
+        sh:select """
+            SELECT ?this
+            WHERE {
+                ?this rdf:type cacontology-educational:EducatorPerpetratedExploitation ;
+                      cacontology-educational:perpetratedBy ?educator ;
+                      cacontology-gufo:beginTimePoint ?exploitBegin .
+                ?educator cacontology-gufo:employmentBeginTimePoint ?empBegin ;
+                          cacontology-gufo:employmentEndTimePoint ?empEnd .
+                FILTER (?exploitBegin < ?empBegin || ?exploitBegin > ?empEnd)
+            }
+        """
+    ] ;
+    # Investigation Timeline Validation
+    sh:sparql [
+        sh:message "Investigation must begin after or during exploitation period"@en ;
+        sh:select """
+            SELECT ?this
+            WHERE {
+                ?this rdf:type cacontology-educational:EducationalInvestigation ;
+                      cacontology-educational:investigates ?exploitation ;
+                      cacontology-gufo:beginTimePoint ?invBegin .
+                ?exploitation cacontology-gufo:beginTimePoint ?exploitBegin .
+                FILTER (?invBegin < ?exploitBegin)
+            }
+        """
+    ] ;
+    # Phase Transition Consistency
+    sh:sparql [
+        sh:message "Academic phases must have logical temporal sequence"@en ;
+        sh:select """
+            SELECT ?this
+            WHERE {
+                ?this rdf:type cacontology-educational:AcademicTermPhase ;
+                      cacontology-gufo:beginTimePoint ?begin ;
+                      cacontology-gufo:endTimePoint ?end .
+                FILTER (?begin >= ?end)
+            }
+        """
+    ] .
+
+# Cross-Reference Validation
+cacontology-educational-shapes:CrossReferenceValidationShape rdf:type sh:NodeShape ;
+    sh:targetNode cac-core:Role, cac-core:Event, cac-core:Situation ;
+    rdfs:label "Cross-Reference Validation Shape"@en ;
+    rdfs:comment "Validates cross-reference consistency for roles, events, and situations in educational domain."@en ;
+    # Role-Exploitation Relationship Validation
+    sh:sparql [
+        sh:message "Educator roles must be consistent with exploitation type"@en ;
+        sh:select """
+            SELECT ?this
+            WHERE {
+                ?this rdf:type cacontology-educational:MathTeacherRole ;
+                      cacontology-educational:perpetrates ?exploitation .
+                ?exploitation rdf:type cacontology-educational:TeacherStudentExploitation ;
+                              cacontology-educational:subjectContext ?subject .
+                FILTER (?subject != "Mathematics" && ?subject != "Math")
+            }
+        """
+    ] ;
+    # Institution Count Consistency
+    sh:sparql [
+        sh:message "Cross-institutional exploitation must involve multiple institutions"@en ;
+        sh:select """
+            SELECT ?this
+            WHERE {
+                ?this rdf:type cacontology-educational:CrossInstitutionalExploitation ;
+                      cacontology-educational:involvedInstitutions ?inst .
+                {
+                    SELECT ?this (COUNT(DISTINCT ?inst) AS ?instCount)
+                    WHERE {
+                        ?this cacontology-educational:involvedInstitutions ?inst .
+                    }
+                    GROUP BY ?this
+                }
+                FILTER (?instCount < 2)
+            }
+        """
+    ] ;
+    # Evidence Documentation Validation
+    sh:sparql [
+        sh:message "Evidence objects must be properly documented and linked to incidents"@en ;
+        sh:select """
+            SELECT ?this
+            WHERE {
+                ?this rdf:type cacontology-educational:WrittenHarassmentEvidence ;
+                      cacontology-educational:documentsHarassment ?harassment .
+                FILTER (NOT EXISTS { ?harassment rdf:type cacontology-educational:WrittenHarassment })
+            }
+        """
+    ] .
+
+# gUFO Foundational Type Compliance Validation
+cacontology-educational-shapes:FoundationalTypeComplianceShape rdf:type sh:NodeShape ;
+    sh:targetNode gufo:Kind, cac-core:Role, cac-core:Phase, cac-core:Event, cac-core:EnduringEntity, cac-core:Situation ;
+    rdfs:label "Foundational Type Compliance Shape"@en ;
+    rdfs:comment "Ensures foundational typing compliance across educational domain entities."@en ;
+    # Kind Validation
+    sh:sparql [
+        sh:message "All educational institutions must be properly typed as gUFO Kinds"@en ;
+        sh:select """
+            SELECT ?this
+            WHERE {
+                ?this rdf:type cacontology-educational:EducationalInstitution .
+                FILTER (NOT EXISTS { ?this rdf:type gufo:Kind })
+            }
+        """
+    ] ;
+    # Anti-Rigidity Validation for Roles
+    sh:sparql [
+        sh:message "All educator roles must be properly typed as anti-rigid gUFO Roles"@en ;
+        sh:select """
+            SELECT ?this
+            WHERE {
+                ?this rdf:type cacontology-educational:EducatorRole .
+                FILTER (NOT EXISTS { ?this rdf:type gufo:Role })
+            }
+        """
+    ] ;
+    # Anti-Rigidity Validation for Phases
+    sh:sparql [
+        sh:message "All educational phases must be properly typed as anti-rigid gUFO Phases"@en ;
+        sh:select """
+            SELECT ?this
+            WHERE {
+                ?this rdf:type cacontology-educational:AcademicTermPhase .
+                FILTER (NOT EXISTS { ?this rdf:type gufo:Phase })
+            }
+        """
+    ] ;
+    # Event Validation
+    sh:sparql [
+        sh:message "All exploitation events must be properly typed as gUFO Events"@en ;
+        sh:select """
+            SELECT ?this
+            WHERE {
+                ?this rdf:type cacontology-educational:EducatorPerpetratedExploitation .
+                FILTER (NOT EXISTS { ?this rdf:type gufo:Event })
+            }
+        """
+    ] ;
+    # Situation Validation
+    sh:sparql [
+        sh:message "All educational situations must be properly typed as gUFO Situations"@en ;
+        sh:select """
+            SELECT ?this
+            WHERE {
+                ?this rdf:type cacontology-educational:EducationalExploitationSituation .
+                FILTER (NOT EXISTS { ?this rdf:type gufo:Situation })
+            }
+        """
+    ] .
+
+# Role Participation Validation
+cacontology-educational-shapes:RoleParticipationValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cac-core:Role ;
+    rdfs:label "gUFO Role Participation Validation Shape"@en ;
+    rdfs:comment "Validates role participation consistency and completeness for educational domain."@en ;
+    # Employment-Role-Institution Consistency
+    sh:sparql [
+        sh:message "Educator roles must be consistently employed at associated institutions"@en ;
+        sh:select """
+            SELECT ?this
+            WHERE {
+                ?this rdf:type cacontology-educational:EducatorRole ;
+                      cacontology-educational:employedAt ?institution ;
+                      cacontology-educational:hasEmploymentPhase ?phase .
+                ?phase cacontology-educational:employmentStatus "terminated" ;
+                       cacontology-gufo:endTimePoint ?endTime .
+                ?exploitation cacontology-educational:perpetratedBy ?this ;
+                              cacontology-gufo:beginTimePoint ?exploitTime .
+                FILTER (?exploitTime > ?endTime)
+            }
+        """
+    ] ;
+    # Participation Completeness Validation
+    sh:sparql [
+        sh:message "All role participants must have complete participation information"@en ;
+        sh:select """
+            SELECT ?this
+            WHERE {
+                ?this rdf:type cacontology-educational:EducatorRole .
+                FILTER (NOT EXISTS { ?this cacontology-educational:employedAt ?institution } ||
+                        NOT EXISTS { ?this cacontology-educational:hasEducatorAge ?age } ||
+                        NOT EXISTS { ?this cacontology-educational:yearsOfExperience ?exp })
+            }
+        """
+    ] .
+
+# Data Quality Validation
+cacontology-educational-shapes:DataQualityValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-educational:EducationalInstitution, cacontology-educational:EducatorRole, cacontology-educational:EducatorPerpetratedExploitation ;
+    rdfs:label "Enhanced Data Quality Validation Shape"@en ;
+    rdfs:comment "Validates enhanced data quality constraints with gUFO-enhanced educational domain validation."@en ;
+    # Enhanced Name/Description Constraints
+    sh:sparql [
+        sh:message "Educational institution names must be unique within geographic area"@en ;
+        sh:select """
+            SELECT ?this
+            WHERE {
+                ?this rdf:type cacontology-educational:EducationalInstitution ;
+                      cacontology-educational:institutionName ?name ;
+                      cacontology-educational:geographicArea ?area .
+                ?other rdf:type cacontology-educational:EducationalInstitution ;
+                       cacontology-educational:institutionName ?name ;
+                       cacontology-educational:geographicArea ?area .
+                FILTER (?this != ?other)
+            }
+        """
+    ] ;
+    # Victim Age Consistency Validation
+    sh:sparql [
+        sh:message "Victim age must be consistent with grade level and institutional type"@en ;
+        sh:select """
+            SELECT ?this
+            WHERE {
+                ?this cacontology-educational:involvesVictim ?victim ;
+                      cacontology-educational:atInstitution ?institution .
+                ?victim cacontology-educational:victimAge ?age ;
+                ?institution rdf:type cacontology-educational:IntermediateSchool .
+                FILTER (?age < 11 || ?age > 14)
+            }
+        """
+    ] .
+
+# =============================================================================
+# LEGACY SHAPE COMPATIBILITY (Basic Validation)
+# =============================================================================
+
+# ... existing code ... 
