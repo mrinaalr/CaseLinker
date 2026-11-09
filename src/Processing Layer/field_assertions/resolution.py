@@ -601,6 +601,31 @@ def resolve_investigation_type(assertions: List[Dict]) -> Dict:
     return _result("investigation_type", "resolved", [], "boilerplate_only_cybertip", (), disagreement)
 
 
+def resolve_cybertip_reporter(assertions: List[Dict], tip: Dict) -> Dict:
+    """Who sent the case's CyberTip (#20). Only a case-scoped tip has a reporter.
+
+    Named ESPs win over a provider category, which wins over a member of the
+    public. A resolved tip with no reporter stated is ``kind: unstated``, so
+    "not stated" is an answer rather than a missing field.
+    """
+    field = "cybertip_reporter"
+    if (tip or {}).get("final_value") != ["cybertip"]:
+        return _result(field, "empty", None, "no_case_scoped_tip")
+    hits = [a for a in assertions if a.get("field") == field and a.get("span_ok")]
+    named = [a for a in hits if a.get("role") == "named_esp"]
+    if named:
+        esps = sorted({str(a["value"]) for a in named})
+        return _result(field, "resolved", {"kind": "esp", "esps": esps, "category": None}, "named_esp", named)
+    category = [a for a in hits if a.get("role") == "category"]
+    if category:
+        value = sorted(str(a["value"]) for a in category)[0]
+        return _result(field, "resolved", {"kind": "esp", "esps": [], "category": value}, "esp_category", category[:1])
+    public = [a for a in hits if a.get("role") == "public"]
+    if public:
+        return _result(field, "resolved", {"kind": "public", "esps": [], "category": None}, "public_report", public[:1])
+    return _result(field, "resolved", {"kind": "unstated", "esps": [], "category": None}, "reporter_not_stated")
+
+
 # ---------------------------------------------------------------------------
 # Dates (informational; legacy date_range stays batch-derived)
 # ---------------------------------------------------------------------------
@@ -630,10 +655,12 @@ def resolve_case(
     text: Optional[str] = None,
 ) -> Dict[str, Dict]:
     """Resolve every field. ``text`` drives narrative-aware age collapse."""
+    tip = resolve_investigation_type(assertions)
     return {
         "age": resolve_age(assertions, text),
         "sentence": resolve_sentence(assertions),
-        "investigation_type": resolve_investigation_type(assertions),
+        "investigation_type": tip,
+        "cybertip_reporter": resolve_cybertip_reporter(assertions, tip),
         "date": resolve_date(assertions, batch_date),
     }
 

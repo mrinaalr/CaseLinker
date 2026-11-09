@@ -94,6 +94,7 @@ def _rederive_legacy(storage, case: dict, assertions: list, resolutions: dict) -
     merger._apply_resolved_ages(rebuilt, resolutions.get("age") or {})
     merger._apply_resolved_sentences(rebuilt, resolutions.get("sentence") or {})
     merger._apply_resolved_cybertip(rebuilt, resolutions.get("investigation_type") or {})
+    merger._apply_resolved_cybertip_reporter(rebuilt, resolutions.get("cybertip_reporter") or {})
     merger._apply_resolved_dates(rebuilt, resolutions.get("date") or {})
     storage.store_case(processing.assign_comparison_values(rebuilt))
 

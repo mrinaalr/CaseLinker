@@ -106,6 +106,9 @@ def gate_assertion(text: str, a: Dict) -> Dict:
             reason = "tip_token" if ok else "no_tip_token"
         elif field == "date":
             ok, reason = bool(text[s:e].strip()), "date_mention"
+        elif field == "cybertip_reporter":
+            ok = patterns.reporter_span_supports(text[s:e], a.get("role"), a.get("value"))
+            reason = "reporter_named_in_span" if ok else "span_does_not_name_reporter"
 
     extras["gate_reason"] = reason
     out["extras"] = extras
@@ -191,6 +194,10 @@ def _press_cybertip(ctx: detectors.DetectorContext) -> List[Dict]:
     return patterns.cybertip_assertions(ctx.text)
 
 
+def _press_cybertip_reporter(ctx: detectors.DetectorContext) -> List[Dict]:
+    return patterns.cybertip_reporter_assertions(ctx.text)
+
+
 def _press_statute(ctx: detectors.DetectorContext) -> List[Dict]:
     gated = [gate_assertion(ctx.text, a) for a in ctx.sentence_raw if a.get("role") != "custody"]
     durations = [a for a in gated if a["span_ok"]]
@@ -245,6 +252,7 @@ def _register_builtin_detectors() -> None:
     detectors.register_detector("press_victim_gate", press, _press_gate, order=20)
     detectors.register_detector("press_sentences", press, _press_sentences, order=30)
     detectors.register_detector("press_cybertip", press, _press_cybertip, order=40)
+    detectors.register_detector("press_cybertip_reporter", press, _press_cybertip_reporter, order=41)
     detectors.register_detector("press_statute", press, _press_statute, order=50)
     detectors.register_detector("press_temporal", press, _press_temporal, order=60)
     detectors.register_detector("press_spacy", press, _press_spacy, order=70)
