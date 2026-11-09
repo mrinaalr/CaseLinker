@@ -227,6 +227,11 @@ _RANGE_SECOND_BEFORE = re.compile(
     re.IGNORECASE,
 )
 _CAP_NAME_COMMA_BEFORE = re.compile(r"[A-Z][\w'\-.]*(?:\s+[A-Z][\w'\-.]*){0,4}\s*,\s*$")
+# "a girl, 14, under his supervision": a child noun in apposition, the way a name is (#58).
+_CHILD_NOUN_COMMA_BEFORE = re.compile(
+    r"\b(?:girl|boy|victim|child|minor|juvenile|teen|teenager|daughter|son|step-?daughter|step-?son|niece|nephew)\s*,\s*$",
+    re.IGNORECASE,
+)
 _CAP_NAME_PAREN_BEFORE = re.compile(r"[A-Z][\w'\-]+(?:\s+[A-Z][\w'\-]+){0,4}\s*\(\s*$")
 
 # A bare child noun ("the 11-year-old sisters") identifies a child, not a victim. A victim
@@ -318,6 +323,8 @@ def is_age_shaped(text: str, start: int, end: int) -> Tuple[bool, str]:
         if re.match(r"^\s+of\s+the\b", right, re.I):
             return False, "one_of_idiom"
         return True, "name_comma"
+    if _CHILD_NOUN_COMMA_BEFORE.search(left) and re.match(r"^\s*(?:[,.;)]|$|\s+(?:who|whom|was|and)\b)", right):
+        return True, "noun_comma"
     # "John Smith (32), of Leeds" / "Thomas Meyer (42, Riverview)"; not "Trafficking in Persons (4)"
     if _CAP_NAME_PAREN_BEFORE.search(left) and (
         re.match(r"^\s*,\s*[A-Z][\w.\- ]{1,40}\)", right)
@@ -532,6 +539,27 @@ _NOT_SENTENCE_AFTER = re.compile(
     r"|^\s*(?:of|in)\s+(?:age|the\s+(?:investigation|relationship|abuse))\b",
     re.IGNORECASE,
 )
+# "a nine-month, multi-agency investigation" / "an 18-month undercover operation" / "a two-day
+# trial" is how long the work took, not a term (#58). Read from the text after the span: the
+# clause can end at the comma.
+_ACTIVITY_NOUNS = r"(?:investigations?|operations?|initiatives?|probes?|sweeps?|stings?|inquir(?:y|ies)|crackdowns?|(?:jury\s+|bench\s+)?trials?)"
+_ACTIVITY_AFTER_HYPHENATED = re.compile(
+    r"^(?:-?long)?[\s,]+(?:(?!(?:sentence|term|prison|jail|after|following|for|in|of|and|to|the|an?|by|from|with|was|were)\b)"
+    rf"[\w-]+[\s,]+){{0,4}}?{_ACTIVITY_NOUNS}\b",
+    re.IGNORECASE,
+)
+_ACTIVITY_AFTER_BARE = re.compile(rf"^(?:-?long)?\s+{_ACTIVITY_NOUNS}\b", re.IGNORECASE)
+_HYPHENATED_UNIT = re.compile(r"-\s*(?:years?|yrs?|months?|weeks?|days?)$", re.IGNORECASE)
+
+
+def _is_activity_duration(text: str, start: int, end: int) -> bool:
+    after = normalize_surface(text[end : end + 90])
+    token = normalize_surface(text[start:end])
+    if _HYPHENATED_UNIT.search(token):
+        return bool(_ACTIVITY_AFTER_HYPHENATED.match(after))
+    return bool(_ACTIVITY_AFTER_BARE.match(after))
+
+
 _REGISTRATION_AFTER = re.compile(r"^[^.]{0,30}\bas\s+a\s+result\b|register", re.IGNORECASE)
 
 
@@ -560,6 +588,7 @@ def sentence_kind(text: str, start: int, end: int) -> str:
         _NOT_SENTENCE_BEFORE.search(before)
         or (time_offset and not offset_follows_imposed)
         or re.search(r"\bregister\w*\b[^.]{0,40}$", before, re.I)
+        or _is_activity_duration(text, start, end)
         # "abusing a minor for over 5 years" is how long the abuse lasted, not the term.
         or re.search(r"\babus\w*(?:\s+\w+){0,4}\s+for\s+$", before, re.I)
         # "please visit Cloud Man Sentenced To Ten Years" is the next article's title.

@@ -134,3 +134,48 @@ def test_mapper_mints_readable_agency_iri():
     det = g.get_context(GRAPH_DETERMINISTIC)
     assert {str(o) for o in det.objects(uri, CASELINKER_ORI)} == {"NJ0152100"}
     assert "Toms River Police Department" in {str(x) for x in det.objects(uri, RDFS.label)}
+
+
+# --- labels that are not grounded: how far one node is shared ----------------
+
+def _agency_iris(case_id, source, mention, ground):
+    sys.path.insert(0, str(ROOT / "ontology"))
+    from features_to_cac import CAC_MULTI, CaseToCAC, GRAPH_DETERMINISTIC
+
+    case = {
+        "id": case_id, "source": source, "agencies_involved": [mention],
+        "agency_grounds": [dict(ground, mention=mention, registry_version="cde-2026-10-20")],
+        "locations": [], "location_grounds": [], "case_topics": [], "platforms_used": [], "severity_indicators": [],
+    }
+    g, _ = CaseToCAC().map_case(case)
+    return {str(o) for o in g.get_context(GRAPH_DETERMINISTIC).objects(None, CAC_MULTI.involvesAgency)}
+
+
+RES = "https://w3id.org/caselinker/resource/"
+UNGROUNDED = {"status": "ungrounded", "reason": "no_cde_match"}
+
+
+def test_springfield_in_two_states_is_two_nodes():
+    # nj_ag_2017_001 (NJ release) and doj_ceos_2012_007 (federal release, Springfield, Ill.)
+    nj = _agency_iris("nj_case", "NJ AG", "Springfield Police Department", dict(UNGROUNDED, state_hint="NJ"))
+    fed = _agency_iris("ceos_case", "DOJ CEOS", "Springfield Police Department",
+                       {"status": "ungrounded", "reason": "no_state_hint", "state_hint": None})
+    assert nj == {RES + "agency/springfield-police-department-nj-unverified"}
+    assert fed == {RES + "case/ceos_case/agency/springfield-police-department"}
+
+
+def test_generic_sheriffs_department_does_not_cross_states():
+    ambiguous = {"status": "ambiguous", "reason": "generic_no_place"}
+    nj = _agency_iris("nj_case", "NJ AG", "Sheriff's Department", dict(ambiguous, state_hint="NJ"))
+    oh = _agency_iris("oh_case", "Ohio AG", "Sheriff's Department", dict(ambiguous, state_hint="OH"))
+    assert nj == {RES + "agency/sheriffs-department-nj-unverified"}
+    assert oh == {RES + "agency/sheriffs-department-oh-unverified"}
+
+
+def test_state_named_and_national_labels_stay_one_node(ag):
+    assert ag.ungrounded_agency_scope("Kentucky State Police Department", dict(UNGROUNDED, state_hint="NJ")) == "shared"
+    assert ag.ungrounded_agency_scope("S.C. Attorney General's Office", dict(UNGROUNDED, state_hint="SC")) == "shared"
+    assert ag.ungrounded_agency_scope("Department of Homeland Security", UNGROUNDED) == "shared"
+    assert ag.ungrounded_agency_scope("NCA", {"status": "out_of_scope"}) == "shared"
+    # A county that shares a state's name is not that state.
+    assert ag.ungrounded_agency_scope("Washington County Sheriff's Office", UNGROUNDED) == "case"

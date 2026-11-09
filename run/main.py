@@ -3888,7 +3888,7 @@ Rules:
 - Evidence for one case: the case node dcterms:provenance points at GRAPH <https://w3id.org/caselinker/resource/case/{case_id}/provenance>. Inside it, the case IRI prov:wasGeneratedBy the extraction activity, and each annotation prov:wasGeneratedBy that same activity. Do not treat the provenance graph as a case.
 - Case ids look like nj_ag_2017_001. dcterms:identifier on cac:CACInvestigation holds the case_id.
 - Platform IRIs: https://w3id.org/caselinker/resource/platform/{slug}
-- Agency IRIs: https://w3id.org/caselinker/resource/agency/{slug}
+- Agency IRIs: https://w3id.org/caselinker/resource/agency/{slug}. A slug ending in -{st}-unverified is a label the registry could not confirm, shared only within releases from that state. An agency under https://w3id.org/caselinker/resource/case/{case_id}/agency/{slug} belongs to that one case and links no others.
 
 Prefixes (use as needed):
 PREFIX cac: <https://cacontology.projectvic.org#>

@@ -335,6 +335,7 @@ PLATFORM_MAP: Dict[str, Tuple[str, Dict[str, Any]]] = {
     "Telegram":                 ("MessagingService",         {}),
     "Snapchat":                 ("MessagingService",         {"encryptionLevel": "end-to-end"}),
     "Skype":                    ("MessagingService",         {}),
+    "FaceTime":                 ("MessagingService",         {}),
     "Kik":                      ("MessagingService",         {}),
     "Discord":                  ("MessagingService",         {}),
     "AOL Instant Messenger":    ("MessagingService",         {"platformType": "legacy"}),
@@ -1921,7 +1922,11 @@ class CaseToCAC:
 
         When ``agency_grounds`` is present (or the pinned CDE registry is on disk),
         grounded mentions mint readable ``agency/{name}-{st}`` IRIs with
-        ``caselinker:oriCode``. Ungrounded keep string-based slugs.
+        ``caselinker:oriCode``. A mention that is not grounded is shared only as far
+        as its label supports (``agency_grounding.ungrounded_agency_scope``): in a
+        release from one state it becomes ``agency/{name}-{st}-unverified``, and in a
+        release with no state it becomes ``case/{id}/agency/{name}``, which no other
+        case can reach. Federal bodies and labels that name a state stay shared.
         """
         agencies_raw = case.get("agencies_involved") or []
         if isinstance(agencies_raw, str):
@@ -1963,6 +1968,7 @@ class CaseToCAC:
             gnd = ground_by_mention.get(str(agency_name).strip()) or {}
             status = (gnd.get("status") or "").strip() or "ungrounded"
             display = (gnd.get("agency_name") or agency_name).strip()
+            case_scope = None
             if status == "grounded" and gnd.get("slug"):
                 slug = str(gnd["slug"]).strip()
             elif status == "grounded":
@@ -1974,12 +1980,20 @@ class CaseToCAC:
                 )
             else:
                 slug = _slug(agency_name)
+                scope = self._ungrounded_agency_scope(
+                    agency_name, gnd, federal=class_uri == CAC_MULTI.FederalAgency
+                )
+                if scope == "state":
+                    slug = f"{slug}-{str(gnd.get('state_hint')).strip().lower()}-unverified"
+                elif scope == "case":
+                    case_scope = str(case_id)
             used_slugs.add(slug)
             ag_uri = self._get_or_create_agency(
                 g,
                 slug,
                 display,
                 class_uri,
+                case_scope=case_scope,
                 ori=gnd.get("ori") if status == "grounded" else None,
                 ground_status=status,
                 ground_meta=gnd if status == "grounded" else None,
@@ -2039,6 +2053,27 @@ class CaseToCAC:
                 raise
             warnings.append(f"agency_grounding failed: {exc}")
             return []
+
+    def _ungrounded_agency_scope(
+        self, agency_name: str, gnd: Dict[str, Any], *, federal: bool
+    ) -> str:
+        import importlib.util
+        import sys
+        from pathlib import Path
+
+        proc = Path(__file__).resolve().parents[1] / "src" / "Processing Layer"
+        if str(proc) not in sys.path:
+            sys.path.insert(0, str(proc))
+        mod = sys.modules.get("agency_grounding")
+        if mod is None:
+            spec = importlib.util.spec_from_file_location(
+                "agency_grounding", proc / "agency_grounding.py"
+            )
+            mod = importlib.util.module_from_spec(spec)
+            assert spec.loader
+            sys.modules["agency_grounding"] = mod
+            spec.loader.exec_module(mod)
+        return mod.ungrounded_agency_scope(agency_name, gnd, federal=federal)
 
     @staticmethod
     def _readable_agency_slug(
@@ -2357,6 +2392,7 @@ class CaseToCAC:
         ground_status: Optional[str] = None,
         ground_meta: Optional[Dict[str, Any]] = None,
         article_mention: Optional[str] = None,
+        case_scope: Optional[str] = None,
     ) -> URIRef:
         """Return shared singleton agency URIRef, creating it if new.
 
@@ -2366,10 +2402,14 @@ class CaseToCAC:
         Article wording (when distinct from the CDE/federal canonical name) is
         ``skos:altLabel``.
         """
-        uri = self._agency_registry.get(slug)
-        if uri is None:
-            uri = BASE[f"agency/{slug}"]
-            self._agency_registry[slug] = uri
+        if case_scope:
+            # Not a shared node: the label could not be tied to one agency.
+            uri = BASE[f"case/{case_scope}/agency/{slug}"]
+        else:
+            uri = self._agency_registry.get(slug)
+            if uri is None:
+                uri = BASE[f"agency/{slug}"]
+                self._agency_registry[slug] = uri
         g.add((uri, RDF.type, class_uri))
         g.add((uri, RDF.type, CAC_CORE.OrganizationLikeEntity))
         g.add((uri, RDFS.label, Literal(label)))
