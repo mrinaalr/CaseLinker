@@ -46,8 +46,9 @@ Source documents name people. CaseLinker reads them; it does not republish them.
 | Research files: `scripts/verify/`, `ontology/platform_affordance_evidence/`, `ontology/PACER/` | Graphs, the SPARQL store, Zenodo and other releases |
 | | Test fixtures, logs, issues, PRs, commit messages, chat summaries |
 
-"Names" means direct identifiers of a person (defendants, victims, family, witnesses, officials named as
-people), plus addresses, phone numbers, emails, handles, and docket numbers tied to a name. Case facts such as
+"Names" means the names of people (defendants, victims, family, witnesses, officials named as people). Masking
+covers names only: addresses, phone numbers, emails and handles in a release stay as published in the public
+text, and none of them, nor a docket number tied to a name, is extracted into structured data. Case facts such as
 age, place, date, charge, occupation, relationship type and agency are the research data, and are fine.
 
 How the pipeline does this, so you can build on it rather than around it:
