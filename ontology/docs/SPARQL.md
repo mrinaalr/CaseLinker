@@ -134,7 +134,7 @@ PREFIX xsd:          <http://www.w3.org/2001/XMLSchema#>
 
 Other CAC modules appear when the mapped features need them (`grooming#`, `custodial#`, `sextortion#`, `production#`, `ai-csam#`, `us/ncmec#`, `usa-federal-law#`, `undercover#`). Bindings: [CASE/UCO SDK](https://github.com/vulnmaster/CASE-UCO-SDK) (`CASE_UCO_EXTENSIONS=cac`).
 
-NER place strings land on shared `uco-location:Location` nodes (`resource/location/{slug}`), typed also as `cac-core:PlaceLikeEntity`, linked from the investigation via `dcterms:spatial` (and `caselinker:mentionsLocation`):
+NER place strings land on `uco-location:Location` nodes, typed also as `cac-core:PlaceLikeEntity` and linked from the investigation via `dcterms:spatial`. A place the Census gazetteer grounds is shared across cases (`resource/location/{slug}`, `dcterms:identifier "fips:…"`); one it does not ground stays inside its case (`resource/case/{id}/location/{slug}`), so one "Springfield" never joins two states:
 
 ```sparql
 SELECT ?caseId ?place WHERE {
@@ -209,6 +209,52 @@ GROUP BY ?platform ?label
 ORDER BY DESC(?cases)
 LIMIT 8
 ```
+
+### Who sent a case's CyberTip
+
+A CyberTip report is an object of the investigation. When the release names who sent it, the report is `hotlines:reportedBy` a `ReporterRole` that an `ElectronicServiceProvider` (`resource/esp/{slug}`) plays; NCMEC is the receiver (`hotlines:receivedBy`), never the reporter. No `reportedBy` means the release does not say. The quote and confidence come from the provenance graph through the extraction run.
+
+```sparql
+PREFIX ncmec: <https://cacontology.projectvic.org/us/ncmec#>
+PREFIX hotlines: <https://cacontology.projectvic.org/hotlines#>
+PREFIX uco-core: <https://ontology.unifiedcyberontology.org/uco/core/>
+PREFIX cac-core: <https://cacontology.projectvic.org/core#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX prov: <http://www.w3.org/ns/prov#>
+PREFIX oa: <http://www.w3.org/ns/oa#>
+SELECT ?reporter ?confidence ?quote ?start ?end WHERE {
+  BIND(<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2024_108> AS ?case)
+  GRAPH ?case { ?case uco-core:object ?tip . ?tip a ncmec:NCMECCybertipReport .
+    OPTIONAL { ?tip hotlines:reportedBy ?role . ?rel uco-core:target ?role ; uco-core:source ?esp . ?esp rdfs:label ?reporter } }
+  ?case prov:wasGeneratedBy ?run .
+  OPTIONAL { ?res dcterms:subject "cybertip_reporter" ; prov:wasGeneratedBy ?run ; prov:wasDerivedFrom ?ann .
+    ?ann prov:value ?v ; cac-core:hasConfidence ?confidence .
+    ?ann oa:hasTarget/oa:hasSelector ?q . ?q oa:exact ?quote .
+    ?ann oa:hasTarget/oa:hasSelector ?pos . ?pos oa:start ?start ; oa:end ?end .
+    FILTER(STR(?v) = STR(?reporter)) }
+}
+```
+
+### CyberTips by reporter
+
+`resource/esp/kik` alone counts one provider. "unnamed provider" is a report from an ESP the release does not name.
+
+```sparql
+PREFIX ncmec: <https://cacontology.projectvic.org/us/ncmec#>
+PREFIX hotlines: <https://cacontology.projectvic.org/hotlines#>
+PREFIX uco-core: <https://ontology.unifiedcyberontology.org/uco/core/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?reporter (COUNT(DISTINCT ?tip) AS ?tips) WHERE {
+  ?tip a ncmec:NCMECCybertipReport .
+  OPTIONAL { ?tip hotlines:reportedBy ?role . ?rel uco-core:target ?role ; uco-core:source ?esp . ?esp rdfs:label ?name }
+  BIND(COALESCE(?name, IF(EXISTS { ?tip a hotlines:ESPReport }, "unnamed provider", "not stated")) AS ?reporter)
+}
+GROUP BY ?reporter
+ORDER BY DESC(?tips)
+```
+
+Add `GRAPH ?g { ?case uco-core:object ?tip ; dcterms:spatial ?loc . ?loc dcterms:identifier ?f FILTER(STRSTARTS(STR(?f), "fips:24")) }` to scope it to one state (24 = Maryland).
 
 ### One case (named graph)
 
