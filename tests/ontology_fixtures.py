@@ -82,6 +82,7 @@ FULL_CASE: Dict[str, Any] = {
     ],
     "perpetrator_admission_themes": ["recidivism_escalation"],
     "press_digest_pollution": False,
+    "cybertip_reporter": {"kind": "esp", "esps": ["Kik"], "category": None},
     "tags": ["fixture"],
     "notes": None,
     "case_text": _TIP_TEXT,
@@ -151,11 +152,18 @@ FULL_CASE_ASSERTIONS: List[Dict[str, Any]] = [
         "span_text": "37", "confidence": 0.9,
     },
 ]
+FULL_CASE_ASSERTIONS.append({
+    "field": "cybertip_reporter", "method": "regex", "method_version": "regex_3.0.1",
+    "family": "surface_pattern", "value": "Kik", "role": "named_esp",
+    "span_start": _KIK, "span_end": _KIK + 3, "span_text": "Kik", "confidence": 0.9,
+})
 FULL_CASE_RESOLUTIONS: Dict[str, Dict[str, Any]] = {
     "investigation_type": {"status": "resolved", "rule_set_version": "resolve_v3.0",
                            "final_value": ["cybertip"]},
     "age": {"status": "resolved", "rule_set_version": "resolve_v3.0",
             "final_value": {"perpetrators": [37], "victims": []}},
+    "cybertip_reporter": {"status": "resolved", "rule_set_version": "resolve_v3.0",
+                          "final_value": {"kind": "esp", "esps": ["Kik"], "category": None}},
 }
 
 

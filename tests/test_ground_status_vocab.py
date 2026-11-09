@@ -21,12 +21,13 @@ def test_shapes_cover_ground_status():
     assert "caselinker:groundStatus" in shapes or "groundStatus" in shapes
 
 
-def test_mapper_emits_ground_status_iri():
+def test_ground_status_is_written_once_in_the_provenance_namespace():
+    """The case graph no longer repeats grounding facts under resource/vocab/ (#57)."""
     sys.path.insert(0, str(ROOT / "ontology"))
-    from features_to_cac import BASE, CASELINKER_GROUND_STATUS
+    import features_to_cac as F
 
-    assert str(CASELINKER_GROUND_STATUS).endswith("vocab/groundStatus")
-    assert "locationGroundStatus" not in str(CASELINKER_GROUND_STATUS)
+    assert not hasattr(F, "CASELINKER_GROUND_STATUS")
+    assert "resource/vocab" not in (ROOT / "ontology" / "features_to_cac.py").read_text(encoding="utf-8")
 
 
 def test_provenance_export_uses_ground_status():

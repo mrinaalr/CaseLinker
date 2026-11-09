@@ -32,6 +32,7 @@ import logging
 import os
 import re
 import sys
+from decimal import Decimal
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Union
 from urllib.parse import quote
@@ -143,22 +144,13 @@ CAC_MULTI = Namespace("https://cacontology.projectvic.org/multi-jurisdiction#")
 CAC_AI = Namespace("https://cacontology.projectvic.org/ai-csam#")
 CAC_USA_FEDERAL = Namespace("https://cacontology.projectvic.org/usa-federal-law#")
 CAC_UNDERCOVER = Namespace("https://cacontology.projectvic.org/undercover#")
+CAC_HOTLINES = Namespace("https://cacontology.projectvic.org/hotlines#")
+CAC_TEMPORAL = Namespace("https://cacontology.projectvic.org/temporal#")
+CAC_REGISTRY = Namespace("https://cacontology.projectvic.org/sex-offender-registry#")
 
-# CaseLinker annotations (not in CAC ontology TTL)
-CASELINKER_CHARGE_CLUSTER = BASE["vocab/chargeCluster"]
-CASELINKER_CHARGE_OFFENSE_EVENT = BASE["vocab/chargeOffenseEvent"]
-CASELINKER_ADMISSION_FRAME = BASE["vocab/admissionFrame"]
-CASELINKER_QUOTE_TYPE = BASE["vocab/quoteType"]
-CASELINKER_ADMISSION_THEME = BASE["vocab/admissionTheme"]
-CASELINKER_ADMISSION_CONTEXT = BASE["vocab/admissionContext"]
-CASELINKER_ATTRIBUTED_TO_ROLE = BASE["vocab/attributedToOffenderRole"]
-CASELINKER_EVIDENCE_TIER = BASE["vocab/evidenceTier"]
-# NER geographic mentions → uco-location:Location (CAC has no dedicated geo class;
-# PlaceLikeEntity is the CAC spine branch; PACER graphs use the same UCO type).
-CASELINKER_MENTIONS_LOCATION = BASE["vocab/mentionsLocation"]
-CASELINKER_FIPS = BASE["vocab/fipsCode"]
-CASELINKER_ORI = BASE["vocab/oriCode"]
-CASELINKER_GROUND_STATUS = BASE["vocab/groundStatus"]
+# Every term below is declared in ontology/vendor (tests/test_term_resolution.py).
+# CaseLinker mints no vocabulary of its own in case graphs; grounding and
+# extraction facts live in the provenance graph (caselinker-provenance.ttl).
 
 UCO_CORE = Namespace("https://ontology.unifiedcyberontology.org/uco/core/")
 UCO_ACTION = Namespace("https://ontology.unifiedcyberontology.org/uco/action/")
@@ -270,40 +262,49 @@ def _mask_case_people(case: Dict[str, Any]) -> Dict[str, Any]:
     return out
 
 
-def _to_xsd_datetime_stamp(value: Any) -> Optional[str]:
-    """
-    Normalize a CaseLinker date/year string into an ``xsd:dateTimeStamp``
-    lexical form (RFC 3339 with a timezone offset).
+# Statuses after which the accused is convicted: a guilty plea, a verdict or a sentence.
+_CONVICTED_STATUSES = frozenset({"pleaded_guilty", "pled_guilty", "convicted", "sentenced"})
 
-    CaseLinker stores dates as ``"YYYY"``, ``"YYYY-MM"``, ``"YYYY-MM-DD"``,
-    or already-ISO timestamps. The CAC core-shapes file requires
-    ``xsd:dateTimeStamp`` for phase begin/end points, which mandates a
-    full date + time + timezone. We pin missing components to ``-01``
-    and ``00:00:00Z`` so the literal validates.
+
+def _prosecution_record(case: Dict[str, Any]) -> Dict[str, Any]:
+    """The case's prosecution facts, or {} when the release reports none."""
+    record = case.get("prosecution_outcome")
+    if not record and case.get("prosecution_outcomes"):
+        record = (case["prosecution_outcomes"] or [None])[0]
+    if not isinstance(record, dict):
+        return {}
+    has_facts = any(
+        record.get(k) for k in ("booking_status", "status", "charges", "sentences", "jail")
+    )
+    return record if has_facts else {}
+
+
+def _date_at_stated_precision(value: Any) -> Optional[Literal]:
+    """A case date as ``xsd:date`` / ``xsd:gYearMonth`` / ``xsd:gYear``, never more precise than stored.
+
+    Ingest pads a month-only batch date to ``YYYY-MM-01`` (``merge_processing``
+    replaces it when the release states a day), so a stored ``-01`` day is read
+    as month precision. No day or time is invented (#23).
     """
     if value is None:
         return None
-    s = str(value).strip()
-    if not s:
+    text = str(value).strip()
+    if re.fullmatch(r"\d{4}", text):
+        return Literal(text, datatype=XSD.gYear)
+    m = re.fullmatch(r"(\d{4}-\d{2})(?:-(\d{2}))?", text[:10]) if len(text) >= 7 else None
+    if not m:
         return None
-    # Already a full timestamp with timezone?
-    if re.match(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$", s):
-        return s
-    # ISO datetime missing timezone
-    if re.match(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}", s):
-        return (s.split("+")[0].split("-", 3)[-1] and s) + ("Z" if not s.endswith("Z") else "")
-    # YYYY-MM-DD
-    if re.match(r"^\d{4}-\d{2}-\d{2}$", s):
-        return f"{s}T00:00:00Z"
-    # YYYY-MM
-    if re.match(r"^\d{4}-\d{2}$", s):
-        return f"{s}-01T00:00:00Z"
-    # YYYY
-    if re.match(r"^\d{4}$", s):
-        return f"{s}-01-01T00:00:00Z"
-    return None
+    if m.group(2) and m.group(2) != "01":
+        return Literal(text[:10], datatype=XSD.date)
+    return Literal(m.group(1), datatype=XSD.gYearMonth)
 
 
+def _xsd_datetime(value: Any) -> Optional[Literal]:
+    """A stored timestamp (``2026-10-18 05:52:13.049383``) as ``xsd:dateTime``."""
+    text = str(value or "").strip().replace(" ", "T", 1)
+    if not re.match(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}", text):
+        return None
+    return Literal(text, datatype=XSD.dateTime)
 # ---------------------------------------------------------------------------
 # PLATFORM_MAP
 # 44 canonical platform labels → (CAC class, extra properties dict)
@@ -321,7 +322,7 @@ PLATFORM_MAP: Dict[str, Tuple[str, Dict[str, Any]]] = {
     "MeWe":                     ("SocialMediaPlatform",      {}),
     "MySpace":                  ("SocialMediaPlatform",      {"platformType": "legacy"}),
     "Craigslist":               ("SocialMediaPlatform",      {"platformType": "classifieds"}),
-    "social media":             ("SocialMediaPlatform",      {"platformSpecificity": "generic"}),
+    "social media":             ("SocialMediaPlatform",      {}),
     # Dating / hookup
     "Grindr":                   ("OnlineDatingPlatform",     {}),
     "Skout":                    ("OnlineDatingPlatform",     {}),
@@ -350,7 +351,7 @@ PLATFORM_MAP: Dict[str, Tuple[str, Dict[str, Any]]] = {
     "Chatroulette":             ("AnonymousChatPlatform",    {"guestAccountsAllowed": "true", "identityVerificationRequired": "false"}),
     "YouNow":                   ("AnonymousChatPlatform",    {"guestAccountsAllowed": "true"}),
     "IRC":                      ("AnonymousChatPlatform",    {"platformType": "legacy"}),
-    "chat":                     ("AnonymousChatPlatform",    {"platformSpecificity": "generic"}),
+    "chat":                     ("AnonymousChatPlatform",    {}),
     # --- Video Streaming ---
     "YouTube":                  ("VideoStreamingPlatform",   {}),
     "YouTube Live":             ("VideoStreamingPlatform",   {}),
@@ -379,7 +380,7 @@ PLATFORM_MAP: Dict[str, Tuple[str, Dict[str, Any]]] = {
     # --- P2P (no P2PService in CAC TTL — FileHostingService + platformType=p2p) ---
     "LimeWire":                 ("FileHostingService",       {"platformType": "p2p"}),
     "BitTorrent":               ("FileHostingService",       {"platformType": "p2p"}),
-    "Kazaa":                    ("FileHostingService",       {"platformType": "p2p", "platformVersion": "legacy"}),
+    "Kazaa":                    ("FileHostingService",       {"platformType": "p2p"}),
     # --- Messaging (legacy / avatar social) ---
     "IMVU":                     ("MessagingService",         {"platformType": "avatar-social"}),
     "Gigatribe":                ("FileHostingService",       {"platformType": "p2p"}),
@@ -397,9 +398,6 @@ PLATFORM_MAP: Dict[str, Tuple[str, Dict[str, Any]]] = {
     "Cash App":                 (_SKIP,                      {}),
     "online":                   (_SKIP,                      {}),
 }
-
-# Fiat payment apps in platforms_used with no platforms# class (Q1: FinancialTransferService).
-_FIAT_PAYMENT_PLATFORM_LABELS: frozenset = frozenset({"Cash App"})
 
 _PLATFORM_CLASS_URI: Dict[str, URIRef] = {
     "SocialMediaPlatform":   CAC_PLATFORMS.SocialMediaPlatform,
@@ -504,14 +502,14 @@ TOPIC_MAP: Dict[str, Dict[str, Any]] = {
 # ---------------------------------------------------------------------------
 
 INVESTIGATION_TYPE_MAP: Dict[str, Optional[URIRef]] = {
-    "undercover": CAC_TASKFORCE.UndercoverUnit,
+    "undercover": CAC_UNDERCOVER.UndercoverOperation,
     "proactive":  CAC_TASKFORCE.ProactiveOperation,
     "reactive":   CAC_TASKFORCE.ReactiveOperation,
     # NCMEC CyberTipline referral origin (tip-driven → reactive operation).
     # Complements NCMECCybertipReport when agencies_involved includes NCMEC.
     "cybertip":   CAC_TASKFORCE.ReactiveOperation,
     "online":     CAC_TASKFORCE.TaskForceOperation,
-    "unknown":    None,  # No operation node; set investigationStatus=unknown on investigation
+    "unknown":    None,  # No operation node: an unknown type is not a fact about the case
 }
 
 # ---------------------------------------------------------------------------
@@ -725,7 +723,9 @@ CHARGE_PATTERN_MAP: List[Tuple[str, URIRef]] = [
     (pat, cls) for pat, cls, _cluster in CHARGE_MATCH_RULES
 ]
 
-# Contact-abuse charge clusters → parallel usa-federal offense event (also typed ChildSexualAbuseEvent).
+# Contact-abuse charge clusters → the CAC offense class the charge concerns. CAC has no
+# contact-abuse charge class, so the charge stays a CriminalCharge with
+# dcterms:subject <offense class>; no offense event is minted from a charge.
 CONTACT_CLUSTER_EVENT_MAP: Dict[str, URIRef] = {
     "child_molestation": CAC_USA_FEDERAL.SexualAbuseOfMinor,
     "gross_sexual_imposition": CAC_USA_FEDERAL.AbusiveContactWithMinor,
@@ -744,7 +744,7 @@ CONTACT_CLUSTER_EVENT_MAP: Dict[str, URIRef] = {
     "ca_penal_288": CAC_USA_FEDERAL.SexualAbuseOfMinor,
 }
 
-# All contact-abuse cluster tags that receive a parallel offense event node.
+# All contact-abuse cluster tags (dcterms:subject defaults to ChildSexualAbuseEvent).
 CONTACT_ABUSE_CLUSTERS: frozenset = frozenset({
     *CONTACT_CLUSTER_EVENT_MAP.keys(),
     "encouraging_child_sexual_abuse",
@@ -841,7 +841,16 @@ ROLE_MAP: Dict[str, Tuple[URIRef, URIRef]] = {
     "babysitter":   (CAC_CUSTODIAL.Babysitter,                 CAC_CUSTODIAL.PositionOfTrust),
     "guardian":     (CAC_CUSTODIAL.Guardian,                   CAC_CUSTODIAL.CaregiverRelationship),
     "family friend":(CAC_CUSTODIAL.FamilyFriend,               CAC_CUSTODIAL.PositionOfTrust),
-    "stranger":     (CAC_GROOMING.OnlinePredator,              CAC_GROOMING.OnlinePredator),
+}
+
+# relationship_to_victim → the custodial:relationshipType value CAC allows (custodial-shapes sh:in).
+# "stranger" is no custodial relationship and maps to nothing.
+_CUSTODIAL_RELATIONSHIP_TYPE: Dict[str, str] = {
+    "family": "relative", "father": "parent", "mother": "parent", "parent": "parent",
+    "brother": "relative", "sister": "relative", "sibling": "relative", "uncle": "relative",
+    "aunt": "relative", "cousin": "relative", "teacher": "teacher", "coach": "coach",
+    "mentor": "mentor", "babysitter": "babysitter", "guardian": "guardian",
+    "family friend": "family_friend",
 }
 
 # ---------------------------------------------------------------------------
@@ -878,7 +887,6 @@ INVESTIGATION_TECH_MAP: Dict[str, URIRef] = {
     "PhotoDNA":      CAC_DETECTION.ContentHashingAction,
     "CSAI Match":    CAC_DETECTION.AutomatedDetectionAction,
     "hash matching": CAC_DETECTION.ContentHashingAction,
-    "CyberTipline":  CAC_NCMEC.NCMECCybertipReport,
 }
 
 ANON_NETWORK_MAP: Dict[str, URIRef] = {
@@ -907,7 +915,7 @@ NLP_CONCEPT_MAP: Dict[str, Tuple[float, URIRef]] = {
     "possession_csam":       (0.50, CAC.CSAMIncident),
     "dissemination":         (0.45, CAC_LEGAL.CSAM_Distribution),
     "exploitive_positions":  (0.45, CAC_CUSTODIAL.PositionOfTrust),
-    "registered_sex_offender":(0.45, None),   # applied as flag on OffenderRole
+    "registered_sex_offender":(0.45, CAC_REGISTRY.RegisteredSexOffender),
     "evidence_seizure":      (0.45, CAC_PRODUCTION.ProducedContent),
     # Do not promote DigitallyGeneratedCSAMIncident from this vague embedding —
     # same false-positive class as case_topics ai_csam. AI-CSAM graph nodes come
@@ -921,16 +929,6 @@ PERPETRATOR_ADMISSION_CONFIDENCE: Dict[str, float] = {
     "medium": 0.65,
     "low": 0.4,
 }
-
-# Themes that warrant linking an admission artifact to CSA offense events.
-_PERP_ADMISSION_CONDUCT_THEMES = frozenset({
-    "harm_conduct",
-    "sexual_interest",
-    "recidivism_escalation",
-    "tech_use",
-    "minimization",
-})
-
 
 # ===========================================================================
 # Graph builder
@@ -960,19 +958,15 @@ class CaseToCAC:
     def map_case(
         self,
         case: Dict[str, Any],
-        *,
-        apply_role_temporal: bool = True,
-        apply_shacl_required_triples: bool = True,
     ) -> Tuple[ConjunctiveGraph, List[str]]:
         """
         Map one case dict to a ConjunctiveGraph.
 
-        Parameters
-        ----------
-        apply_role_temporal
-            When True, set hasRoleBeginPoint on roles from case dates (SHACL).
-        apply_shacl_required_triples
-            When True, add participatesInEvent, hasFacet stubs, etc. (SHACL).
+        The graph states only what the case's extracted fields state. A link
+        between two nodes (a role in an event, a platform used in an event) is
+        written only when the case has exactly one event to attach it to; the
+        extraction holds case-level sets, not pairings. Nothing is added to
+        satisfy a SHACL shape.
 
         Returns
         -------
@@ -998,41 +992,24 @@ class CaseToCAC:
 
         # --- deterministic mapping steps ---
         event_uris = self.map_topics(det_g, case, inv_uri, warnings)
-        platform_uris = self.map_platforms(det_g, case, event_uris, warnings)
-        victim_uris, offender_uris = self.map_roles(
-            det_g, case, inv_uri, event_uris, warnings
-        )
-        self.map_perpetrator_admissions(
-            det_g, case, inv_uri, offender_uris, event_uris, warnings
-        )
-        self.map_severity(det_g, case, event_uris, offender_uris, warnings)
-        self.map_prosecution(det_g, case, inv_uri, event_uris, warnings)
-        self.map_sextortion_monetary_demands(
-            det_g, case, inv_uri, event_uris, warnings
-        )
-        # Contact-abuse offense events are created during prosecution (after map_roles).
-        self._link_roles_to_csa_events(
-            det_g, event_uris, victim_uris, offender_uris
-        )
-        self._backfill_uses_channel_on_csa_events(
-            det_g, case, event_uris
-        )
-        self.map_agencies(det_g, case, inv_uri, warnings)
+        platform_uris = self.map_platforms(det_g, case, warnings)
+        victim_uris, offender_uris = self.map_roles(det_g, case, inv_uri, warnings)
+        self.map_perpetrator_admissions(det_g, case, inv_uri, warnings)
+        self.map_prosecution(det_g, case, inv_uri, offender_uris, warnings)
+        agency_uris = self.map_agencies(det_g, case, inv_uri, warnings)
         self.map_locations(det_g, case, inv_uri, warnings)
-        self.map_technology(det_g, case, inv_uri, event_uris, warnings)
+        platform_uris += self.map_technology(det_g, case, inv_uri, warnings)
         self.map_investigation_type(det_g, case, inv_uri, warnings)
-
-        if apply_role_temporal:
-            self._apply_role_temporal(det_g, case, victim_uris, offender_uris)
-
-        if apply_shacl_required_triples:
-            self._apply_shacl_required_triples(
-                det_g, case, event_uris, victim_uris, offender_uris
-            )
+        self.map_cybertip(det_g, case, inv_uri, agency_uris, warnings)
+        self._link_to_single_event(
+            det_g, case, event_uris, victim_uris, offender_uris, platform_uris
+        )
 
         # --- NLP mapping (separate named graph) ---
-        self.map_nlp_features(nlp_g, case, inv_uri, offender_uris, warnings)
+        self.map_nlp_features(nlp_g, case, inv_uri, warnings)
 
+        _label_case_nodes(det_g, case_id)
+        _label_case_nodes(nlp_g, case_id)
         return cg, warnings
 
     def validate(
@@ -1040,6 +1017,12 @@ class CaseToCAC:
     ) -> Tuple[bool, str]:
         """
         Run pyshacl against cacontology-core-shapes.ttl.
+
+        ``conforms`` is False only for violations that are CaseLinker's: a
+        shape that requires a value the release does not state, or a shape CAC
+        has to fix, is reported but does not fail the graph
+        (``shacl_validation.UNSTATED`` / ``UPSTREAM``). The report text lists
+        every violation with its bucket.
 
         Raises
         ------
@@ -1070,7 +1053,7 @@ class CaseToCAC:
             for triple in ctx:
                 data_graph.add(triple)
 
-        conforms, _results_graph, results_text = shacl_validate(
+        _conforms, results_graph, results_text = shacl_validate(
             data_graph=data_graph,
             shacl_graph=shapes_graph,
             inference="none",
@@ -1078,7 +1061,14 @@ class CaseToCAC:
             allow_infos=True,
             abort_on_first=False,
         )
-        return conforms, results_text
+        from shacl_validation import classify_report
+
+        buckets = classify_report(results_graph)
+        summary = "\n".join(
+            f"{bucket}: {sum(c.values())} " + "; ".join(f"{m} ({n})" for m, n in c.most_common())
+            for bucket, c in buckets.items() if c
+        )
+        return not buckets["caselinker"], (summary + "\n\n" + results_text) if summary else results_text
 
     def export_case(
         self,
@@ -1164,15 +1154,22 @@ class CaseToCAC:
         if case.get("tags"):
             tags = case["tags"] if isinstance(case["tags"], list) else [case["tags"]]
             for tag in tags:
-                g.add((inv_uri, SKOS.altLabel, Literal(str(tag))))
-        if case.get("created_at"):
-            g.add((inv_uri, DCTERMS.created, Literal(str(case["created_at"]))))
-        if case.get("updated_at"):
-            g.add((inv_uri, DCTERMS.modified, Literal(str(case["updated_at"]))))
+                g.add((inv_uri, DCTERMS.subject, Literal(str(tag))))
+        for prop, key in ((DCTERMS.created, "created_at"), (DCTERMS.modified, "updated_at")):
+            stamp = _xsd_datetime(case.get(key))
+            if stamp is not None:
+                g.add((inv_uri, prop, stamp))
 
-        # hasPhaseBeginPoint / hasPhaseEndPoint are scoped to cac-core:Phase only
-        # (cacontology-core.ttl); coarse investigation dates belong on phase nodes
-        # or uco-core:startTime, not on CACInvestigation.
+        # The release date, at the precision stored. Roles, phases and
+        # proceedings get no begin point: the release date is not when any of
+        # them began.
+        date_range = case.get("date_range") or {}
+        released = _date_at_stated_precision(
+            (date_range.get("start") if isinstance(date_range, dict) else None)
+            or case.get("date_start")
+        )
+        if released is not None:
+            g.add((inv_uri, DCTERMS.date, released))
 
         return inv_uri
 
@@ -1184,10 +1181,9 @@ class CaseToCAC:
         self,
         g: Graph,
         case: Dict[str, Any],
-        event_uris: Dict[str, URIRef],
         warnings: List[str],
     ) -> List[URIRef]:
-        """Create platform nodes (shared singletons) and link via usesChannel on CSA events."""
+        """Create platform nodes (shared singletons). Linking is ``_link_to_single_event``."""
         platforms_raw = case.get("platforms_used") or []
         if isinstance(platforms_raw, str):
             try:
@@ -1227,83 +1223,7 @@ class CaseToCAC:
             p_uri = self._get_or_create_platform(g, slug, label, class_uri, extra_props)
             uris.append(p_uri)
 
-        csa_events = self._core_csa_event_uris(g, event_uris)
-        if uris and not csa_events:
-            warnings.append(
-                "usesChannel: no ChildSexualAbuseEvent node — platform links skipped"
-            )
-        for evt_uri in csa_events:
-            for p_uri in uris:
-                g.add((evt_uri, CAC.usesChannel, p_uri))
-
         return uris
-
-    def _case_has_sextortion_charge(self, case: Dict[str, Any]) -> bool:
-        prosecution = case.get("prosecution") or {}
-        if isinstance(prosecution, str):
-            try:
-                prosecution = json.loads(prosecution)
-            except (json.JSONDecodeError, TypeError):
-                prosecution = {}
-        charges_raw = prosecution.get("charges") or []
-        if isinstance(charges_raw, str):
-            try:
-                charges_raw = json.loads(charges_raw)
-            except (json.JSONDecodeError, TypeError):
-                charges_raw = []
-        for charge in charges_raw:
-            if isinstance(charge, dict):
-                charge_str = str(charge.get("charge") or "")
-            else:
-                charge_str = str(charge)
-            charge_class, _, _ = self._match_charge(charge_str, [])
-            if charge_class == CAC_LEGAL.SextortionCharge:
-                return True
-        return False
-
-    def map_sextortion_monetary_demands(
-        self,
-        g: Graph,
-        case: Dict[str, Any],
-        inv_uri: URIRef,
-        event_uris: Dict[str, URIRef],
-        warnings: List[str],
-    ) -> None:
-        """
-        Fiat payment rails (e.g. Cash App) have no CAC platform class; on sextortion
-        cases emit MonetaryDemand linked to the sextortion incident instead.
-        """
-        platforms_raw = case.get("platforms_used") or []
-        if isinstance(platforms_raw, str):
-            try:
-                platforms_raw = json.loads(platforms_raw)
-            except (json.JSONDecodeError, TypeError):
-                platforms_raw = [platforms_raw]
-        fiat_labels = _FIAT_PAYMENT_PLATFORM_LABELS.intersection(platforms_raw)
-        if not fiat_labels:
-            return
-
-        if not self._case_has_sextortion_charge(case):
-            return
-
-        case_id = case.get("id", "unknown")
-        sextortion_uri = event_uris.get("sextortion")
-        if sextortion_uri is None:
-            sextortion_uri = BASE[f"case/{case_id}/event/sextortion"]
-            g.add((sextortion_uri, RDF.type, CAC_SEXTORTION.SextortionIncident))
-            g.add((sextortion_uri, RDF.type, CAC_CORE.Event))
-            g.add((inv_uri, CAC.hasStep, sextortion_uri))
-            event_uris["sextortion"] = sextortion_uri
-
-        for label in sorted(fiat_labels):
-            slug = _slug(label)
-            demand_uri = BASE[f"case/{case_id}/demand/monetary-{slug}"]
-            g.add((demand_uri, RDF.type, CAC_SEXTORTION.MonetaryDemand))
-            g.add((demand_uri, RDF.type, CAC_SEXTORTION.ExtortionDemand))
-            g.add((demand_uri, RDFS.label,
-                   Literal(f"Monetary demand (payment via {label})")))
-            g.add((demand_uri, CAC_SEXTORTION.demandType, Literal("money")))
-            g.add((sextortion_uri, CAC_SEXTORTION.makesDemand, demand_uri))
 
     def _get_or_create_platform(
         self,
@@ -1311,7 +1231,7 @@ class CaseToCAC:
         slug: str,
         label: str,
         class_uri: URIRef,
-        extra_props: Dict[str, str],
+        extra_props: Optional[Dict[str, Any]] = None,
     ) -> URIRef:
         """Return a shared singleton platform URIRef and write its full node.
 
@@ -1326,7 +1246,8 @@ class CaseToCAC:
         g.add((uri, RDF.type, class_uri))
         g.add((uri, RDF.type, CAC_CORE.DigitalSystemEntity))
         g.add((uri, RDFS.label, Literal(label)))
-        for prop_name, prop_val in extra_props.items():
+        g.add((uri, UCO_CORE.name, Literal(label)))
+        for prop_name, prop_val in (extra_props or {}).items():
             g.add((uri, CAC_PLATFORMS[prop_name], Literal(prop_val)))
         return uri
 
@@ -1361,11 +1282,9 @@ class CaseToCAC:
         if "csam" in topics_set and "possession" in topics_set:
             topics_set.discard("csam")  # keep "possession" to drive the node
 
-        # Determine if grooming is present (for online_only resolution)
-        has_grooming = (
-            "grooming" in topics_set
-            or self._nlp_score(case, "grooming") >= 0.45
-        )
+        # online_only is a grooming event only when the release's topics say grooming;
+        # a similarity score never chooses an event's class.
+        has_grooming = "grooming" in topics_set
 
         # Multi-jurisdiction: merge international + multi_state into one node
         multi_juris_uri: Optional[URIRef] = None
@@ -1429,70 +1348,67 @@ class CaseToCAC:
         g: Graph,
         case: Dict[str, Any],
         inv_uri: URIRef,
-        event_uris: Dict[str, URIRef],
         warnings: List[str],
     ) -> Tuple[List[URIRef], List[URIRef]]:
         """
-        Create VictimRole, OffenderRole, and Person nodes.
+        Create victim and offender roles and the people who play them.
 
-        Returns (victim_uris, offender_uris).
+        A victim exists only when the case states a victim count or a victim age;
+        a release about possessed images names no identified child, and CSAM
+        event types already carry that. An offender exists for each extracted
+        perpetrator age or count, or one when the release reports a prosecution.
+        The offender's role is ``OffenderRole`` once convicted (plea, verdict or
+        sentence) and ``DefendantRole`` before. A person plays a role through a
+        UCO ``Has_Role`` relationship; an age is a CAC ``AgeAtTimeSituation``.
+
+        Returns (victim_role_uris, offender_role_uris).
         """
         case_id = case.get("id", "unknown")
         victim_uris: List[URIRef] = []
         offender_uris: List[URIRef] = []
 
         # --- Victims ---
-        # Defensive guard: CaseLinker's upstream extractor occasionally
-        # mis-parses a year (e.g. "4/17/2007" in a press-release footer)
-        # as a victim count. Anything wildly out of range for a single
-        # press-release scope (>200) is almost certainly a parse error;
-        # clamp to 1 and emit a warning so the graph isn't polluted with
-        # thousands of phantom victim nodes.
         raw_victim_count = case.get("victim_count")
         try:
-            victim_count = int(raw_victim_count) if raw_victim_count else 1
+            victim_count = int(raw_victim_count) if raw_victim_count else 0
         except (TypeError, ValueError):
-            victim_count = 1
+            victim_count = 0
         if victim_count > 200:
+            # A year mis-parsed as a count ("4/17/2007" in a footer).
             warnings.append(
-                f"victim_count={victim_count} for {case.get('id')!r} looks "
-                f"like an upstream extraction error (likely a year mis-parsed "
-                f"as a count). Clamping to 1."
+                f"victim_count={victim_count} for {case_id!r} looks like an upstream "
+                f"extraction error; no victims mapped."
             )
-            victim_count = 1
-        elif victim_count < 1:
-            victim_count = 1
+            victim_count = 0
         case_demo = case.get("case_demographics") or {}
         if isinstance(case_demo, str):
             try:
                 case_demo = json.loads(case_demo)
             except (json.JSONDecodeError, TypeError):
                 case_demo = {}
+        victim_ages: List[int] = []
+        if isinstance(case_demo, dict):
+            victim_ages = [int(a) for a in (case_demo.get("ages") or []) if a is not None]
+            age_range = case_demo.get("age_range") or {}
+            if (
+                not victim_ages
+                and isinstance(age_range, dict)
+                and age_range.get("min") is not None
+                and age_range.get("min") == age_range.get("max")
+                and victim_count <= 1
+            ):
+                victim_ages = [int(age_range["min"])]
         # victim_gender / perpetrator_gender: no CAC Person gender property in TTL yet
         # (MAPPING_PLAN Q7.5d). Omit RDF triples until Cory adds VictimGender / OffenderGender.
 
-        age_range = None
-        if isinstance(case_demo, dict):
-            age_range = case_demo.get("age_range")
-            if not age_range and case_demo.get("ages"):
-                ages = case_demo["ages"]
-                if ages:
-                    age_range = {"min": min(ages), "max": max(ages)}
-
-        for n in range(1, int(victim_count) + 1):
+        for n in range(1, max(victim_count, len(victim_ages)) + 1):
             person_uri = BASE[f"case/{case_id}/person/victim/{n}"]
             role_uri = BASE[f"case/{case_id}/role/victim/{n}"]
-
             g.add((person_uri, RDF.type, UCO_IDENTITY.Person))
             g.add((role_uri, RDF.type, CAC.VictimRole))
-            g.add((role_uri, RDF.type, UCO_ROLE.VictimRole))
-            g.add((role_uri, CAC_CORE.hasRole, person_uri))
-
-            if age_range and isinstance(age_range, dict):
-                if age_range.get("min") is not None:
-                    g.add((person_uri, CAC_PRODUCTION.victimAge,
-                           Literal(age_range["min"], datatype=XSD.integer)))
-
+            self._has_role(g, person_uri, role_uri)
+            if n - 1 < len(victim_ages):
+                self._age(g, person_uri, victim_ages[n - 1])
             victim_uris.append(role_uri)
 
         # --- Offenders ---
@@ -1513,9 +1429,10 @@ class CaseToCAC:
         if perp_count_raw > 200:
             warnings.append(
                 f"perpetrator_count={perp_count_raw} for {case_id!r} looks "
-                f"like an upstream extraction error. Clamping to len(ages) or 1."
+                f"like an upstream extraction error. Using the stated ages instead."
             )
             perp_count_raw = 0
+        prosecution = _prosecution_record(case)
         press_digest = _case_bool_flag(case, "press_digest_pollution")
         if press_digest:
             if len(perp_ages) > 1:
@@ -1524,30 +1441,40 @@ class CaseToCAC:
                     f"perpetrator ages to a single OffenderRole (press digest, not one "
                     f"coordinated matter)."
                 )
-            perp_count = 1
+            perp_count = 1 if (perp_ages or prosecution) else 0
         else:
-            perp_count = max(1, perp_count_raw or len(perp_ages) or 1)
-        is_rso = bool(case.get("perpetrator_registered_sex_offender", False))
+            perp_count = perp_count_raw or len(perp_ages) or (1 if prosecution else 0)
 
+        status = str(
+            prosecution.get("booking_status") or prosecution.get("status") or ""
+        ).lower().strip()
+        offender_class = (
+            CAC.OffenderRole if status in _CONVICTED_STATUSES else CAC_LEGAL.DefendantRole
+        )
+        offender_people: List[URIRef] = []
         for n in range(1, perp_count + 1):
             person_uri = BASE[f"case/{case_id}/person/offender/{n}"]
             role_uri = BASE[f"case/{case_id}/role/offender/{n}"]
-
             g.add((person_uri, RDF.type, UCO_IDENTITY.Person))
-            g.add((role_uri, RDF.type, CAC.OffenderRole))
-            g.add((role_uri, RDF.type, UCO_ROLE.OffenderRole))
-            g.add((role_uri, CAC_CORE.hasRole, person_uri))
-
+            g.add((role_uri, RDF.type, offender_class))
+            self._has_role(g, person_uri, role_uri)
             # Age (only if we have it for this index; omit on press digests)
             if not press_digest and n - 1 < len(perp_ages):
-                g.add((person_uri, CAC_DETECTION.ageEstimate,
-                       Literal(perp_ages[n - 1], datatype=XSD.integer)))
-
-            if is_rso:
-                g.add((role_uri, CAC.perpetratorRegisteredSexOffender,
-                       Literal(True, datatype=XSD.boolean)))
-
+                self._age(g, person_uri, perp_ages[n - 1])
             offender_uris.append(role_uri)
+            offender_people.append(person_uri)
+
+        # Registration is stated once per case; it attributes only to a sole offender.
+        if bool(case.get("perpetrator_registered_sex_offender", False)):
+            if len(offender_people) == 1:
+                rso_uri = BASE[f"case/{case_id}/role/registered-sex-offender/1"]
+                g.add((rso_uri, RDF.type, CAC_REGISTRY.RegisteredSexOffender))
+                self._has_role(g, offender_people[0], rso_uri)
+            else:
+                warnings.append(
+                    f"perpetrator_registered_sex_offender with {len(offender_people)} "
+                    f"offenders — not attributed to any one of them"
+                )
 
         # --- Relationship node ---
         rel = case.get("relationship_to_victim")
@@ -1555,17 +1482,42 @@ class CaseToCAC:
             rel = rel.lower().strip()
         role_config = ROLE_MAP.get(rel) if rel else None
 
+        if role_config and len(offender_uris) == 1 and len(victim_uris) > 1:
+            warnings.append(
+                f"relationship_to_victim '{rel}' with {len(victim_uris)} victims — the release "
+                f"does not say which victim; no custodial relationship mapped"
+            )
+            role_config = None
+        elif role_config and len(offender_uris) != 1:
+            warnings.append(
+                f"relationship_to_victim '{rel}' with {len(offender_uris)} offenders — "
+                f"no custodial relationship mapped"
+            )
+            role_config = None
+
         if role_config:
             rel_class, secondary_class = role_config
+            # "his stepdaughter" states a victim even when no count was extracted.
+            if not victim_uris:
+                person_uri = BASE[f"case/{case_id}/person/victim/1"]
+                role_uri = BASE[f"case/{case_id}/role/victim/1"]
+                g.add((person_uri, RDF.type, UCO_IDENTITY.Person))
+                g.add((role_uri, RDF.type, CAC.VictimRole))
+                self._has_role(g, person_uri, role_uri)
+                victim_uris.append(role_uri)
             rel_uri = BASE[f"case/{case_id}/relationship/{_slug(rel)}"]
             g.add((rel_uri, RDF.type, rel_class))
             g.add((rel_uri, RDF.type, CAC_CUSTODIAL.CustodialRelationship))
-            g.add((rel_uri, CAC_CUSTODIAL.relationshipType, Literal(rel)))
+            g.add((rel_uri, CAC_CUSTODIAL.relationshipType,
+                   Literal(_CUSTODIAL_RELATIONSHIP_TYPE[rel])))
 
-            if victim_uris:
-                g.add((rel_uri, CAC_CUSTODIAL.involvesChild, victim_uris[0]))
-            for off_uri in offender_uris:
-                g.add((rel_uri, CAC_CUSTODIAL.involvesCustodian, off_uri))
+            # A custodial relationship is a UCO relationship, custodian (source) →
+            # child (target); it is mapped only when the release pairs one of each.
+            g.add((rel_uri, CAC_CUSTODIAL.involvesChild, victim_uris[0]))
+            g.add((rel_uri, CAC_CUSTODIAL.involvesCustodian, offender_uris[0]))
+            g.add((rel_uri, UCO_CORE.source, offender_uris[0]))
+            g.add((rel_uri, UCO_CORE.target, victim_uris[0]))
+            g.add((rel_uri, UCO_CORE.isDirectional, Literal(True)))
 
             # Trust violation for familial / custodial relationships
             is_familial = rel in {
@@ -1581,75 +1533,31 @@ class CaseToCAC:
                        CAC_CUSTODIAL.CustodialAbuse if is_familial
                        else CAC_CUSTODIAL.AuthorityAbuse))
                 g.add((tv_uri, CAC_CUSTODIAL.violatesRelationship, rel_uri))
+                g.add((tv_uri, CAC_CUSTODIAL.perpetratedBy, offender_uris[0]))
                 g.add((inv_uri, CAC.hasStep, tv_uri))
         elif rel and rel not in ("stranger", "unknown", ""):
-            warnings.append(f"ROLE_MAP: unmapped relationship '{rel}' — OffenderRole only")
-
-        self._link_roles_to_csa_events(g, event_uris, victim_uris, offender_uris)
+            warnings.append(f"ROLE_MAP: unmapped relationship '{rel}' — no relationship node")
 
         return victim_uris, offender_uris
 
-    # ------------------------------------------------------------------
-    # Step 5: Severity → event properties + conspiracy node
-    # ------------------------------------------------------------------
+    @staticmethod
+    def _has_role(g: Graph, person_uri: URIRef, role_uri: URIRef) -> None:
+        """UCO's idiom for a role bearer: a ``Has_Role`` relationship, person → role."""
+        rel_uri = URIRef(f"{role_uri}/has-role")
+        g.add((rel_uri, RDF.type, UCO_CORE.Relationship))
+        g.add((rel_uri, UCO_CORE.source, person_uri))
+        g.add((rel_uri, UCO_CORE.target, role_uri))
+        g.add((rel_uri, UCO_CORE.kindOfRelationship, Literal("Has_Role")))
+        g.add((rel_uri, UCO_CORE.isDirectional, Literal(True)))
 
-    def map_severity(
-        self,
-        g: Graph,
-        case: Dict[str, Any],
-        event_uris: Dict[str, URIRef],
-        offender_uris: List[URIRef],
-        warnings: List[str],
-    ) -> None:
-        """Apply severity indicators to event nodes and create conspiracy node if needed."""
-        severity_raw = case.get("severity_indicators") or []
-        if isinstance(severity_raw, str):
-            try:
-                severity_raw = json.loads(severity_raw)
-            except (json.JSONDecodeError, TypeError):
-                severity_raw = [severity_raw]
-
-        case_id = case.get("id", "unknown")
-
-        max_level = 0
-        create_conspiracy = False
-
-        for indicator in severity_raw:
-            config = SEVERITY_MAP.get(indicator)
-            if config is None:
-                warnings.append(f"SEVERITY_MAP: unmapped indicator '{indicator}' — skipped")
-                continue
-            level, extra_class = config
-            max_level = max(max_level, level)
-            if indicator == "multiple_perpetrators":
-                create_conspiracy = True
-
-        # Apply severityLevel to all event nodes
-        if max_level > 0:
-            for evt_uri in event_uris.values():
-                if evt_uri is not None:
-                    g.add((evt_uri, CAC.severityLevel,
-                           Literal(max_level, datatype=XSD.integer)))
-
-        # Conspiracy node for multiple perpetrators (not press-digest roundups)
-        if (
-            create_conspiracy
-            and len(offender_uris) > 1
-            and not _case_bool_flag(case, "press_digest_pollution")
-        ):
-            conspiracy_uri = BASE[f"case/{case_id}/event/conspiracy"]
-            g.add((conspiracy_uri, RDF.type, CAC.ConspiracyToCommitCSA))
-            g.add((conspiracy_uri, RDF.type, CAC_CORE.Event))
-            g.add((conspiracy_uri, CAC.conspiracyMemberCount,
-                   Literal(len(offender_uris), datatype=XSD.integer)))
-            inv_uri = BASE[f"case/{case_id}"]
-            g.add((inv_uri, CAC.hasStep, conspiracy_uri))
-            for off_uri in offender_uris:
-                g.add((conspiracy_uri, CAC.participatesInConspiracy, off_uri))
-            event_uris["conspiracy"] = conspiracy_uri
-            if max_level > 0:
-                g.add((conspiracy_uri, CAC.severityLevel,
-                       Literal(max_level, datatype=XSD.integer)))
+    @staticmethod
+    def _age(g: Graph, person_uri: URIRef, years: int) -> None:
+        """An age the release states for this person, as a CAC ``AgeAtTimeSituation``."""
+        age_uri = URIRef(f"{person_uri}/age")
+        g.add((age_uri, RDF.type, CAC_TEMPORAL.AgeAtTimeSituation))
+        g.add((age_uri, CAC_TEMPORAL.ageSubject, person_uri))
+        g.add((age_uri, CAC_TEMPORAL.concernsAgeQuality, CAC_TEMPORAL.Age))
+        g.add((age_uri, CAC_TEMPORAL.hasAgeInYears, Literal(Decimal(int(years)))))
 
     # ------------------------------------------------------------------
     # Step 5b: Investigation type → operation node
@@ -1668,11 +1576,9 @@ class CaseToCAC:
             return None
 
         op_class = INVESTIGATION_TYPE_MAP.get(inv_type)
-        if op_class is None and inv_type != "unknown":
-            warnings.append(f"INVESTIGATION_TYPE_MAP: unmapped type '{inv_type}' — skipped")
-            return None
-        if inv_type == "unknown":
-            g.add((inv_uri, CAC.investigationStatus, Literal("unknown")))
+        if op_class is None:
+            if inv_type != "unknown":
+                warnings.append(f"INVESTIGATION_TYPE_MAP: unmapped type '{inv_type}' — skipped")
             return None
 
         case_id = case.get("id", "unknown")
@@ -1683,64 +1589,6 @@ class CaseToCAC:
         return op_uri
 
     # ------------------------------------------------------------------
-    # Step 5c: SHACL-required temporal triples on roles
-    # ------------------------------------------------------------------
-
-    def _apply_role_temporal(
-        self,
-        g: Graph,
-        case: Dict[str, Any],
-        victim_uris: List[URIRef],
-        offender_uris: List[URIRef],
-    ) -> None:
-        """
-        Set cacontology:hasRoleBeginPoint on every Role node.
-        Uses date_start (or date_range.start) as the begin point.
-        This satisfies the SHACL MinCount constraint on Role nodes.
-        """
-        date_range = case.get("date_range") or {}
-        start = _to_xsd_datetime_stamp(
-            (date_range.get("start") if isinstance(date_range, dict) else None)
-            or case.get("date_start")
-        )
-        if not start:
-            return
-
-        begin_lit = Literal(start, datatype=XSD.dateTimeStamp)
-        for uri in victim_uris + offender_uris:
-            g.add((uri, CAC.hasRoleBeginPoint, begin_lit))
-
-    # ------------------------------------------------------------------
-    # Step 5d: SHACL-required structural triples
-    # ------------------------------------------------------------------
-
-    def _apply_shacl_required_triples(
-        self,
-        g: Graph,
-        case: Dict[str, Any],
-        event_uris: Dict[str, URIRef],
-        victim_uris: List[URIRef],
-        offender_uris: List[URIRef],
-    ) -> None:
-        """Apply SHACL-required triples (e.g. CSAMIncident → uco-core:hasFacet stub)."""
-        case_id = case.get("id", "unknown")
-        UCO_OBS = Namespace("https://ontology.unifiedcyberontology.org/uco/observable/")
-
-        for topic, evt_uri in event_uris.items():
-            if evt_uri is None:
-                continue
-
-            # CSAMIncident → add a minimal ContentDataFacet
-            is_csam = (
-                (evt_uri, RDF.type, CAC.CSAMIncident) in g
-                or (evt_uri, RDF.type, CAC_PRODUCTION.ProductionOffense) in g
-            )
-            if is_csam:
-                facet_uri = BASE[f"case/{case_id}/facet/{_slug(topic)}"]
-                g.add((facet_uri, RDF.type, UCO_OBS.ContentDataFacet))
-                g.add((evt_uri, UCO_CORE.hasFacet, facet_uri))
-
-    # ------------------------------------------------------------------
     # Step 6: Prosecution
     # ------------------------------------------------------------------
 
@@ -1749,19 +1597,19 @@ class CaseToCAC:
         g: Graph,
         case: Dict[str, Any],
         inv_uri: URIRef,
-        event_uris: Dict[str, URIRef],
+        offender_uris: List[URIRef],
         warnings: List[str],
     ) -> None:
-        """Create LegalProceeding, CriminalCharge, CriminalSentence, Phase, and step events."""
+        """Create LegalProceeding, CriminalCharge, CriminalSentence, Phase, and step events.
+
+        A charge is an allegation: it is a ``CriminalCharge`` on the proceeding,
+        never an abuse event. Phases and proceedings carry no begin point; the
+        release date is not when they began.
+        """
         case_id = case.get("id", "unknown")
 
-        prosecution = case.get("prosecution_outcome")
-        if not prosecution and case.get("prosecution_outcomes"):
-            rows = case["prosecution_outcomes"]
-            if rows:
-                prosecution = rows[0]
-
-        if not prosecution or not isinstance(prosecution, dict):
+        prosecution = _prosecution_record(case)
+        if not prosecution:
             return
 
         status = (
@@ -1769,12 +1617,6 @@ class CaseToCAC:
             or prosecution.get("status")
             or ""
         ).lower().strip()
-
-        date_range = case.get("date_range") or {}
-        start = _to_xsd_datetime_stamp(
-            (date_range.get("start") if isinstance(date_range, dict) else None)
-            or case.get("date_start")
-        )
 
         # Status → phase (hasPhase) and/or legal event (hasStep)
         phase_class = PROSECUTION_PHASE_MAP.get(status)
@@ -1784,9 +1626,6 @@ class CaseToCAC:
             g.add((phase_uri, RDF.type, CAC_CORE.Phase))
             g.add((inv_uri, CAC.hasPhase, phase_uri))
             g.add((inv_uri, CAC.currentPhase, phase_uri))
-            if start:
-                g.add((phase_uri, CAC.hasPhaseBeginPoint,
-                       Literal(start, datatype=XSD.dateTimeStamp)))
         elif status:
             warnings.append(f"PROSECUTION_PHASE_MAP: unmapped status '{status}' — skipped")
 
@@ -1798,9 +1637,6 @@ class CaseToCAC:
             g.add((step_uri, RDF.type, CAC_CORE.LegalEvent))
             g.add((step_uri, RDF.type, CAC_CORE.Event))
             g.add((inv_uri, CAC.hasStep, step_uri))
-            if start:
-                g.add((step_uri, CAC_LEGAL.hasProceedingBeginPoint,
-                       Literal(start, datatype=XSD.dateTimeStamp)))
 
         # Charges and sentences → LegalProceeding (domain in legal-outcomes.ttl)
         charges_raw = prosecution.get("charges") or []
@@ -1833,10 +1669,8 @@ class CaseToCAC:
             g.add((proceeding_uri, RDF.type, CAC_CORE.LegalEvent))
             g.add((proceeding_uri, RDF.type, CAC_CORE.Event))
             g.add((inv_uri, CAC.hasStep, proceeding_uri))
-            if start:
-                g.add((proceeding_uri, CAC_LEGAL.hasProceedingBeginPoint,
-                       Literal(start, datatype=XSD.dateTimeStamp)))
 
+        total_counts = 0
         for i, charge in enumerate(charges_raw, start=1):
             if isinstance(charge, dict):
                 charge_str = str(charge.get("charge") or "")
@@ -1851,34 +1685,21 @@ class CaseToCAC:
             g.add((charge_uri, RDF.type, charge_class))
             if charge_class != CAC_LEGAL.CriminalCharge:
                 g.add((charge_uri, RDF.type, CAC_LEGAL.CriminalCharge))
-            if cluster:
-                g.add((charge_uri, CASELINKER_CHARGE_CLUSTER, Literal(cluster)))
-            if count and count != 1:
-                g.add((charge_uri, CAC_LEGAL.indictmentCounts,
-                       Literal(int(count), datatype=XSD.integer)))
             g.add((charge_uri, RDFS.label, Literal(charge_str)))
+            if cluster in CONTACT_ABUSE_CLUSTERS:
+                g.add((charge_uri, DCTERMS.subject,
+                       CONTACT_CLUSTER_EVENT_MAP.get(cluster, CAC.ChildSexualAbuseEvent)))
             if proceeding_uri is not None:
                 g.add((proceeding_uri, CAC_LEGAL.hasCharge, charge_uri))
+            try:
+                total_counts += max(int(count or 1), 1)
+            except (TypeError, ValueError):
+                total_counts += 1
 
-            if cluster and cluster in CONTACT_ABUSE_CLUSTERS:
-                offense_class = CONTACT_CLUSTER_EVENT_MAP.get(
-                    cluster, CAC.ChildSexualAbuseEvent
-                )
-            else:
-                offense_class = None
-
-            if offense_class is not None:
-                evt_uri = BASE[f"case/{case_id}/offense-event/charge-{i}"]
-                g.add((evt_uri, RDF.type, offense_class))
-                g.add((evt_uri, RDF.type, CAC.ChildSexualAbuseEvent))
-                g.add((evt_uri, RDF.type, CAC_CORE.Event))
-                g.add((evt_uri, RDF.type, UCO_ACTION.Crime))
-                g.add((evt_uri, RDFS.label,
-                       Literal(f"Inferred offense from charge: {charge_str[:200]}")))
-                g.add((inv_uri, CAC.hasStep, evt_uri))
-                g.add((charge_uri, RDFS.seeAlso, evt_uri))
-                g.add((charge_uri, CASELINKER_CHARGE_OFFENSE_EVENT, evt_uri))
-                event_uris[f"charge_offense_{i}"] = evt_uri
+        # CAC has no per-charge count; chargeCount is the proceeding's total.
+        if proceeding_uri is not None and total_counts:
+            g.add((proceeding_uri, CAC_LEGAL.chargeCount,
+                   Literal(total_counts, datatype=XSD.nonNegativeInteger)))
 
         # CriminalSentence only from duration/outcome phrases — not county-jail names.
         for j, sent_text in enumerate(sentence_texts, start=1):
@@ -1890,6 +1711,9 @@ class CaseToCAC:
             g.add((sent_uri, RDF.type, CAC_LEGAL.CriminalSentence))
             g.add((sent_uri, RDFS.label, Literal(sent_text)))
             g.add((proceeding_uri, CAC_LEGAL.resultsSentence, sent_uri))
+            # A CAC sentence is an AssessmentResult about the person sentenced.
+            if len(offender_uris) == 1:
+                g.add((sent_uri, CAC_CORE.assesses, offender_uris[0]))
 
         # Pretrial detention: legal-outcomes has bailStatus on LegalProceeding, not a
         # dedicated pretrial-detention node class — annotate via bailStatus + comment.
@@ -1989,13 +1813,6 @@ class CaseToCAC:
                 ),
             )
 
-            # NCMEC also triggers a CyberTipline node
-            if re.search(r"\bNCMEC\b|National Center for Missing", agency_name, re.I):
-                tip_uri = BASE[f"case/{case_id}/cybertip"]
-                g.add((tip_uri, RDF.type, CAC_NCMEC.NCMECCybertipReport))
-                g.add((tip_uri, CAC_NCMEC.supportedBy, ag_uri))
-                g.add((inv_uri, CAC.hasStep, tip_uri))
-
             g.add((inv_uri, CAC_MULTI.involvesAgency, ag_uri))
             uris.append(ag_uri)
 
@@ -2088,7 +1905,10 @@ class CaseToCAC:
         is on disk, grounded mentions mint readable ``location/{name}-{st}``
         singletons (GEOID suffix on collision) so "Cumberland County" in NJ and NC
         do not collapse. Ungrounded mentions keep the string slug. Link via
-        ``dcterms:spatial`` and ``caselinker:mentionsLocation``.
+        ``dcterms:spatial``. A mention the gazetteer did not ground (ungrounded,
+        ambiguous, outside the US registry) is a node of this case only,
+        ``case/{id}/location/{slug}``, so one "Springfield" never joins cases
+        in different states.
         """
         locations_raw = case.get("locations") or []
         if isinstance(locations_raw, str):
@@ -2111,6 +1931,7 @@ class CaseToCAC:
             if isinstance(gnd, dict) and gnd.get("mention")
         }
 
+        case_id = case.get("id", "unknown")
         uris: List[URIRef] = []
         seen_slugs: set = set()
 
@@ -2135,26 +1956,29 @@ class CaseToCAC:
             else:
                 slug = _slug(label)
                 status = status if status != "grounded" else "ungrounded"
+            grounded = status == "grounded" and bool(fips)
             if slug in seen_slugs:
-                loc_uri = self._location_registry.get(slug) or BASE[f"location/{slug}"]
-                if status == "grounded" and label and label != display:
+                loc_uri = (
+                    (self._location_registry.get(slug) or BASE[f"location/{slug}"])
+                    if grounded else BASE[f"case/{case_id}/location/{slug}"]
+                )
+                if grounded and label and label != display:
                     self._add_alt_label(g, loc_uri, label)
                 g.add((inv_uri, DCTERMS.spatial, loc_uri))
-                g.add((inv_uri, CASELINKER_MENTIONS_LOCATION, loc_uri))
                 continue
             seen_slugs.add(slug)
 
-            loc_uri = self._get_or_create_location(
-                g,
-                slug,
-                display,
-                fips=fips if status == "grounded" else None,
-                ground_status=status,
-                ground_meta=gnd if status == "grounded" else None,
-                article_mention=label if status == "grounded" else None,
-            )
+            if grounded:
+                loc_uri = self._get_or_create_location(
+                    g, slug, display, fips=fips, article_mention=label,
+                )
+            else:
+                loc_uri = BASE[f"case/{case_id}/location/{slug}"]
+                g.add((loc_uri, RDF.type, UCO_LOCATION.Location))
+                g.add((loc_uri, RDF.type, CAC_CORE.PlaceLikeEntity))
+                g.add((loc_uri, RDFS.label, Literal(display)))
+                g.add((loc_uri, UCO_CORE.name, Literal(display)))
             g.add((inv_uri, DCTERMS.spatial, loc_uri))
-            g.add((inv_uri, CASELINKER_MENTIONS_LOCATION, loc_uri))
             uris.append(loc_uri)
 
         return uris
@@ -2252,18 +2076,16 @@ class CaseToCAC:
         label: str,
         *,
         fips: Optional[str] = None,
-        ground_status: Optional[str] = None,
-        ground_meta: Optional[Dict[str, Any]] = None,
         article_mention: Optional[str] = None,
     ) -> URIRef:
         """Return shared singleton location URIRef, creating it if new.
 
         Always (re)assert ``rdfs:label`` / ``uco-core:name`` on the current graph.
         Registry hits from earlier cases in a batch used to omit labels, which made
-        location nodes look vacuous in per-case TTL/JSON-LD. Grounded places also
-        carry ``caselinker:fipsCode`` and grounding provenance literals.
-        Article wording (when distinct from the canonical label) is
-        ``skos:altLabel``.
+        location nodes look vacuous in per-case TTL/JSON-LD. A grounded place
+        carries its Census code as ``dcterms:identifier "fips:…"``; how it was
+        grounded is in the provenance graph. Article wording (when distinct from
+        the canonical label) is ``skos:altLabel``.
         """
         uri = self._location_registry.get(slug)
         if uri is None:
@@ -2276,35 +2098,7 @@ class CaseToCAC:
         if article_mention:
             self._add_alt_label(g, uri, article_mention)
         if fips:
-            g.add((uri, CASELINKER_FIPS, Literal(str(fips))))
             g.add((uri, DCTERMS.identifier, Literal(f"fips:{fips}")))
-        if ground_status:
-            g.add((uri, CASELINKER_GROUND_STATUS, Literal(ground_status)))
-        meta = ground_meta or {}
-        if meta.get("gazetteer_version"):
-            g.add(
-                (
-                    uri,
-                    BASE["vocab/gazetteerVersion"],
-                    Literal(str(meta["gazetteer_version"])),
-                )
-            )
-        if meta.get("hint_source"):
-            g.add(
-                (
-                    uri,
-                    BASE["vocab/stateHintSource"],
-                    Literal(str(meta["hint_source"])),
-                )
-            )
-        if meta.get("state_hint"):
-            g.add(
-                (
-                    uri,
-                    BASE["vocab/stateHint"],
-                    Literal(str(meta["state_hint"])),
-                )
-            )
         return uri
 
     def _classify_agency(
@@ -2374,38 +2168,11 @@ class CaseToCAC:
         g.add((uri, RDF.type, class_uri))
         g.add((uri, RDF.type, CAC_CORE.OrganizationLikeEntity))
         g.add((uri, RDFS.label, Literal(label)))
+        g.add((uri, UCO_CORE.name, Literal(label)))
         if article_mention:
             self._add_alt_label(g, uri, article_mention)
         if ori:
-            g.add((uri, CASELINKER_ORI, Literal(str(ori))))
             g.add((uri, DCTERMS.identifier, Literal(f"ori:{ori}")))
-        if ground_status:
-            g.add((uri, CASELINKER_GROUND_STATUS, Literal(ground_status)))
-        meta = ground_meta or {}
-        if meta.get("registry_version"):
-            g.add(
-                (
-                    uri,
-                    BASE["vocab/agencyRegistryVersion"],
-                    Literal(str(meta["registry_version"])),
-                )
-            )
-        if meta.get("hint_source"):
-            g.add(
-                (
-                    uri,
-                    BASE["vocab/stateHintSource"],
-                    Literal(str(meta["hint_source"])),
-                )
-            )
-        if meta.get("state_hint"):
-            g.add(
-                (
-                    uri,
-                    BASE["vocab/stateHint"],
-                    Literal(str(meta["state_hint"])),
-                )
-            )
         return uri
 
     # ------------------------------------------------------------------
@@ -2417,37 +2184,36 @@ class CaseToCAC:
         g: Graph,
         case: Dict[str, Any],
         inv_uri: URIRef,
-        event_uris: Dict[str, URIRef],
         warnings: List[str],
-    ) -> None:
-        """Create detection technology, anonymization network, and P2P nodes."""
+    ) -> List[URIRef]:
+        """Detection steps (PhotoDNA, hash matching, CSAI Match) and anonymization networks.
+
+        A detection technology is a ``cac-core:DetectionEvent`` step of the
+        investigation. ``CyberTipline`` is the tip itself (``map_cybertip``), not a
+        method. Returns the anonymization-network platform nodes.
+        """
         case_id = case.get("id", "unknown")
 
-        # Investigation technology
         for tech in (case.get("investigation_technology") or []):
+            if tech == "CyberTipline":
+                continue
             class_uri = INVESTIGATION_TECH_MAP.get(tech)
             if class_uri is None:
                 warnings.append(f"TECHNOLOGY_MAP: unmapped tech '{tech}' — skipped")
                 continue
-            slug = _slug(tech)
-            tech_uri = BASE[f"case/{case_id}/tech/{slug}"]
+            tech_uri = BASE[f"case/{case_id}/detection/{_slug(tech)}"]
             g.add((tech_uri, RDF.type, class_uri))
             g.add((tech_uri, RDFS.label, Literal(tech)))
-            g.add((inv_uri, CAC.usesMethod, tech_uri))
+            g.add((inv_uri, CAC.hasStep, tech_uri))
 
-        # Anonymization networks
+        networks: List[URIRef] = []
         for net in (case.get("anonymization_network") or []):
             class_uri = ANON_NETWORK_MAP.get(net)
             if class_uri is None:
                 warnings.append(f"ANON_MAP: unmapped network '{net}' — skipped")
                 continue
-            slug = _slug(net)
-            plat_uri = self._get_or_create_platform(
-                g, slug, net, class_uri, {}
-            )
-            csa_events = self._core_csa_event_uris(g, event_uris)
-            for evt_uri in csa_events:
-                g.add((evt_uri, CAC.usesChannel, plat_uri))
+            networks.append(self._get_or_create_platform(g, _slug(net), net, class_uri))
+        return networks
 
     # ------------------------------------------------------------------
     # Step 9: NLP features (separate named graph)
@@ -2458,56 +2224,42 @@ class CaseToCAC:
         g: Graph,
         case: Dict[str, Any],
         inv_uri: URIRef,
-        offender_uris: List[URIRef],
         warnings: List[str],
     ) -> None:
         """
-        Map NLP-derived semantic concept scores into the NLP named graph.
-        Each node gets a cac-core:hasConfidence annotation.
+        Map semantic-similarity scores into the NLP named graph as assessments.
+
+        A score says the narrative resembles a concept; it does not say the
+        concept happened. Each concept at or above its threshold is one
+        ``cac-core:AssessmentResult`` that assesses the case narrative, with
+        ``dcterms:subject`` the CAC class it resembles and ``hasConfidence`` the
+        score. No event or role is minted from a score.
         """
         case_id = case.get("id", "unknown")
-        ml = case.get("ml_features") or {}
+        ml = _case_feature(case, "ml_features") or {}
         if isinstance(ml, str):
             try:
                 ml = json.loads(ml)
             except (json.JSONDecodeError, TypeError):
                 ml = {}
 
-        semantic = ml.get("semantic_severity") or {}
+        semantic = ml.get("semantic_severity") or {} if isinstance(ml, dict) else {}
         scores = semantic.get("scores") or {}
         if not scores:
             return
 
+        narrative = BASE[f"case/{case_id}/narrative"]
         for concept, (threshold, class_uri) in NLP_CONCEPT_MAP.items():
             score = scores.get(concept)
-            if score is None:
+            if score is None or score < threshold:
                 continue
-            if score < threshold:
-                continue
-
-            # registered_sex_offender → flag on offender roles from deterministic graph
-            if concept == "registered_sex_offender":
-                for off_uri in offender_uris:
-                    g.add((off_uri, CAC.perpetratorRegisteredSexOffender,
-                           Literal(True, datatype=XSD.boolean)))
-                continue
-
-            if class_uri is None:
-                continue
-
-            slug = _slug(concept)
-            node_uri = BASE[f"case/{case_id}/nlp/{slug}"]
-            g.add((node_uri, RDF.type, class_uri))
-            g.add((node_uri, RDF.type, CAC_CORE.Event))
-
-            result_uri = BASE[f"case/{case_id}/nlp/{slug}/confidence"]
-            g.add((result_uri, RDF.type, CAC_CORE.AssessmentResult))
-            g.add((result_uri, CAC_CORE.hasConfidence,
-                   Literal(round(float(score), 4), datatype=XSD.decimal)))
-            g.add((result_uri, CAC_CORE.assesses, node_uri))
-            g.add((result_uri, CAC_CORE.generatedBy, inv_uri))
-
-            g.add((inv_uri, CAC.hasStep, node_uri))
+            node_uri = BASE[f"case/{case_id}/assessment/semantic/{_slug(concept)}"]
+            g.add((node_uri, RDF.type, CAC_CORE.AssessmentResult))
+            g.add((node_uri, RDFS.label, Literal(f"semantic similarity · {concept}")))
+            g.add((node_uri, CAC_CORE.assesses, narrative))
+            g.add((node_uri, DCTERMS.subject, class_uri))
+            g.add((node_uri, CAC_CORE.hasConfidence, Literal(Decimal(str(round(float(score), 4))))))
+            g.add((node_uri, CAC_CORE.usesMethod, BASE["extractor/semantic-embedding"]))
 
     # ------------------------------------------------------------------
     # Step 10: Perpetrator admissions (regex extraction → CAC artifact)
@@ -2518,8 +2270,6 @@ class CaseToCAC:
         g: Graph,
         case: Dict[str, Any],
         inv_uri: URIRef,
-        offender_uris: List[URIRef],
-        event_uris: Dict[str, URIRef],
         warnings: List[str],
     ) -> None:
         """
@@ -2528,10 +2278,12 @@ class CaseToCAC:
 
         CaseLinker extracts these from ICAC press-release narrative via
         regex attribution frames in ``perpetrator_admissions.py``. There is
-        no dedicated ``PerpetratorAdmission`` class in CAC v3.0.0; the
-        undercover module's ``IncriminatingStatement`` (subClassOf
-        ``uco-observable:Message``, ``cac-core:Artifact``) is the closest
-        fit for suspect speech that evidences criminal intent or conduct.
+        no dedicated ``PerpetratorAdmission`` class in CAC; the undercover
+        module's ``IncriminatingStatement`` ("statement made by suspect",
+        subClassOf ``uco-observable:Message``, ``cac-core:Artifact``) is the
+        closest fit. A statement is an object of the investigation
+        (``uco-core:object``), not a step, and is not tied to any one offender
+        or event: the release states neither pairing.
         """
         case_id = case.get("id", "unknown")
         raw = _case_feature(case, "perpetrator_admissions")
@@ -2544,8 +2296,6 @@ class CaseToCAC:
             return
 
         source_url = case.get("source_url")
-        source_label = case.get("source")
-        evidence_tier = "press_release_stated"
 
         for index, record in enumerate(raw, start=1):
             if not isinstance(record, dict):
@@ -2553,14 +2303,6 @@ class CaseToCAC:
             quote = str(record.get("quote") or "").strip()
             if not quote:
                 continue
-
-            frame = str(record.get("frame") or "unknown")
-            quote_type = str(record.get("quote_type") or "unknown")
-            context = str(record.get("context") or "").strip()
-            themes = record.get("themes") or []
-            if not isinstance(themes, list):
-                themes = []
-            themes = [str(t) for t in themes if t]
 
             confidence_label = str(record.get("confidence") or "medium").lower()
             confidence_score = PERPETRATOR_ADMISSION_CONFIDENCE.get(
@@ -2573,36 +2315,15 @@ class CaseToCAC:
             g.add((adm_uri, RDF.type, CAC_UNDERCOVER.IncriminatingStatement))
             g.add((adm_uri, RDFS.label, Literal(label)))
             g.add((adm_uri, UCO_CORE.description, Literal(quote)))
-            g.add((adm_uri, CASELINKER_ADMISSION_FRAME, Literal(frame)))
-            g.add((adm_uri, CASELINKER_QUOTE_TYPE, Literal(quote_type)))
-            g.add((adm_uri, CASELINKER_EVIDENCE_TIER, Literal(evidence_tier)))
-
-            for theme in themes:
-                g.add((adm_uri, CASELINKER_ADMISSION_THEME, Literal(theme)))
-
-            if context:
-                g.add((adm_uri, CASELINKER_ADMISSION_CONTEXT, Literal(context)))
-
             if source_url:
                 g.add((adm_uri, DCTERMS.source, _source_url_term(str(source_url))))
-            elif source_label:
-                g.add((adm_uri, DCTERMS.source, Literal(str(source_label))))
-
-            g.add((inv_uri, CAC.hasStep, adm_uri))
-
-            if offender_uris:
-                g.add((adm_uri, CASELINKER_ATTRIBUTED_TO_ROLE, offender_uris[0]))
+            g.add((inv_uri, UCO_CORE.object, adm_uri))
 
             result_uri = BASE[f"case/{case_id}/admission/{index}/extraction-confidence"]
             g.add((result_uri, RDF.type, CAC_CORE.AssessmentResult))
-            g.add((result_uri, CAC_CORE.hasConfidence,
-                   Literal(round(confidence_score, 4), datatype=XSD.decimal)))
+            g.add((result_uri, CAC_CORE.hasConfidence, Literal(Decimal(str(round(confidence_score, 4))))))
             g.add((result_uri, CAC_CORE.assesses, adm_uri))
-            g.add((result_uri, CAC_CORE.generatedBy, inv_uri))
-
-            if themes and any(t in _PERP_ADMISSION_CONDUCT_THEMES for t in themes):
-                for evt_uri in self._core_csa_event_uris(g, event_uris):
-                    g.add((evt_uri, CAC.producesArtifact, adm_uri))
+            g.add((result_uri, CAC_CORE.usesMethod, BASE["extractor/perpetrator-admissions"]))
 
     # ------------------------------------------------------------------
     # Helpers
@@ -2642,35 +2363,115 @@ class CaseToCAC:
                 result.append(evt_uri)
         return result
 
-    def _link_roles_to_csa_events(
+    def _link_to_single_event(
         self,
         g: Graph,
+        case: Dict[str, Any],
         event_uris: Dict[str, URIRef],
         victim_uris: List[URIRef],
         offender_uris: List[URIRef],
+        platform_uris: List[URIRef],
     ) -> None:
         """
-        Link victim/offender roles to CSA events via participatesInEvent
-        (role → event), matching core-shapes ChildSexualAbuseEventShape.
-        """
-        for evt_uri in self._core_csa_event_uris(g, event_uris):
-            for v_uri in victim_uris:
-                g.add((v_uri, CAC.participatesInEvent, evt_uri))
-            for o_uri in offender_uris:
-                g.add((o_uri, CAC.participatesInEvent, evt_uri))
+        Attach roles, platforms and severity to the case's one CSA event.
 
-    @staticmethod
-    def _nlp_score(case: Dict[str, Any], concept: str) -> float:
-        """Safely extract a semantic concept score from ml_features."""
-        ml = case.get("ml_features") or {}
-        if isinstance(ml, str):
+        Roles, platforms and severity indicators are extracted per case, not per
+        event. With one CSA event the case and the event are the same scope, so
+        ``participatesInEvent``, ``usesChannel`` and ``severityLevel`` say
+        exactly what the release says. With several, any pairing would be a
+        guess; the nodes stay in the case graph unlinked to an event.
+        """
+        events = self._core_csa_event_uris(g, event_uris)
+        if len(events) != 1:
+            return
+        evt_uri = events[0]
+        for role_uri in victim_uris + offender_uris:
+            g.add((role_uri, CAC.participatesInEvent, evt_uri))
+        for p_uri in dict.fromkeys(platform_uris):
+            g.add((evt_uri, CAC.usesChannel, p_uri))
+
+        severity_raw = case.get("severity_indicators") or []
+        if isinstance(severity_raw, str):
             try:
-                ml = json.loads(ml)
+                severity_raw = json.loads(severity_raw)
             except (json.JSONDecodeError, TypeError):
-                return 0.0
-        return float(
-            (ml.get("semantic_severity") or {}).get("scores", {}).get(concept, 0.0)
-        )
+                severity_raw = [severity_raw]
+        levels = [SEVERITY_MAP[i][0] for i in severity_raw if i in SEVERITY_MAP]
+        if levels and max(levels) > 0:
+            g.add((evt_uri, CAC.severityLevel, Literal(max(levels), datatype=XSD.integer)))
+
+    def map_cybertip(
+        self,
+        g: Graph,
+        case: Dict[str, Any],
+        inv_uri: URIRef,
+        agency_uris: List[URIRef],
+        warnings: List[str],
+    ) -> Optional[URIRef]:
+        """
+        The CyberTipline report this case's release says it came from (#20).
+
+        A tip exists only when the resolved investigation types include
+        ``cybertip``: a tip sentence about this case, not an NCMEC footer.
+        NCMEC receives every CyberTip, so it is the receiver
+        (``hotlines:receivedBy``), never the reporter. The reporter is the
+        ``cybertip_reporter`` field: a named ESP becomes a ``ReporterRole``
+        played by that platform; an unnamed ESP or a member of the public
+        types the report (``ESPReport`` / ``PublicReport``) with no bearer; an
+        unstated reporter leaves the report without ``reportedBy``.
+        """
+        if "cybertip" not in (_case_feature(case, "investigation_types") or []):
+            return None
+        case_id = case.get("id", "unknown")
+        tip_uri = BASE[f"case/{case_id}/cybertip"]
+        g.add((tip_uri, RDF.type, CAC_NCMEC.NCMECCybertipReport))
+        g.add((tip_uri, RDFS.label, Literal("CyberTipline report")))
+        # CAC types a hotline report as a UCO Observation, whose name UCO fixes as "observe".
+        g.add((tip_uri, UCO_CORE.name, Literal("observe")))
+        g.add((inv_uri, UCO_CORE.object, tip_uri))
+
+        ncmec = BASE["agency/ncmec"]
+        if ncmec in agency_uris:
+            g.add((ncmec, RDF.type, CAC_HOTLINES.HotlineOrganization))
+            g.add((tip_uri, CAC_HOTLINES.receivedBy, ncmec))
+
+        reporter = _case_feature(case, "cybertip_reporter") or {}
+        if not isinstance(reporter, dict):
+            return tip_uri
+        kind = reporter.get("kind")
+        if kind == "public":
+            g.add((tip_uri, RDF.type, CAC_HOTLINES.PublicReport))
+        elif kind == "esp":
+            g.add((tip_uri, RDF.type, CAC_HOTLINES.ESPReport))
+            for name in reporter.get("esps") or []:
+                esp_uri = self._get_or_create_esp(g, str(name))
+                role_uri = BASE[f"case/{case_id}/cybertip/reporter/{_slug(str(name))}"]
+                g.add((role_uri, RDF.type, CAC_HOTLINES.ReporterRole))
+                # The release names the provider, so the reporter is not anonymous.
+                g.add((role_uri, CAC_HOTLINES.isAnonymous, Literal(False)))
+                g.add((tip_uri, CAC_HOTLINES.reportedBy, role_uri))
+                self._has_role(g, esp_uri, role_uri)
+            if reporter.get("category") and not reporter.get("esps"):
+                g.add((tip_uri, RDFS.comment, Literal(
+                    f"Reported by an unnamed {str(reporter['category']).replace('_', ' ')}"
+                )))
+        return tip_uri
+
+    def _get_or_create_esp(self, g: Graph, name: str) -> URIRef:
+        """A shared ``ElectronicServiceProvider`` (the company that files CyberTips).
+
+        When the case already uses a platform of that name (Kik, Snapchat), the
+        platform is ``operatedBy`` the provider. A reporter never adds a platform
+        to a case: reporting a tip is not using the service in the offense.
+        """
+        uri = BASE[f"esp/{_slug(name)}"]
+        g.add((uri, RDF.type, CAC_PLATFORMS.ElectronicServiceProvider))
+        g.add((uri, RDFS.label, Literal(name)))
+        g.add((uri, UCO_CORE.name, Literal(name)))
+        platform_uri = BASE[f"platform/{_slug(name)}"]
+        if (platform_uri, RDF.type, CAC_CORE.DigitalSystemEntity) in g:
+            g.add((platform_uri, CAC_PLATFORMS.operatedBy, uri))
+        return uri
 
     @staticmethod
     def _match_charge(
@@ -2758,48 +2559,6 @@ class CaseToCAC:
                 f"→ {len(merged)} unique CAC charge nodes"
             )
         return [merged[k] for k in order]
-
-    def _backfill_uses_channel_on_csa_events(
-        self,
-        g: Graph,
-        case: Dict[str, Any],
-        event_uris: Dict[str, URIRef],
-    ) -> None:
-        """Link platforms/P2P/anonymization labels to CSA events created after map_platforms."""
-        platforms_raw = case.get("platforms_used") or []
-        if isinstance(platforms_raw, str):
-            try:
-                platforms_raw = json.loads(platforms_raw)
-            except (json.JSONDecodeError, TypeError):
-                platforms_raw = [platforms_raw]
-
-        p2p = case.get("p2p_clients") or []
-        anon = case.get("anonymization_network") or []
-        all_platforms = list(platforms_raw) + list(p2p) + [
-            label for label in anon if label in PLATFORM_MAP
-        ]
-
-        seen: set = set()
-        platform_uris: List[URIRef] = []
-        for label in all_platforms:
-            if not label or label in seen:
-                continue
-            seen.add(label)
-            mapping = PLATFORM_MAP.get(label)
-            if mapping is None or mapping[0] == _SKIP:
-                continue
-            class_uri = _PLATFORM_CLASS_URI.get(mapping[0])
-            if class_uri is None:
-                continue
-            platform_uris.append(
-                self._get_or_create_platform(
-                    g, _slug(label), label, class_uri, mapping[1]
-                )
-            )
-
-        for evt_uri in self._core_csa_event_uris(g, event_uris):
-            for p_uri in platform_uris:
-                g.add((evt_uri, CAC.usesChannel, p_uri))
 
     @classmethod
     def classify_charge_string(cls, charge_str: str) -> Tuple[str, str]:
@@ -3096,6 +2855,38 @@ _EXPECTED_NODE_TYPES = {
 # ===========================================================================
 # CLI / test runner
 # ===========================================================================
+
+_GENERIC_TYPES = frozenset({
+    CAC_CORE.Event, CAC_CORE.EnduringEntity, CAC_CORE.LegalEvent, CAC_CORE.Phase,
+    CAC_LEGAL.CriminalCharge, CAC_LEGAL.CriminalSentence, CAC_LEGAL.LegalProceeding,
+    CAC_CORE.PlaceLikeEntity, CAC_CORE.OrganizationLikeEntity, CAC_CORE.DigitalSystemEntity,
+})
+
+
+def _label_case_nodes(g: Graph, case_id: str) -> None:
+    """Give every case-scoped node without a label one built from its type and IRI.
+
+    "CSAM incident · event/csam", "Person · person/victim/1". The label
+    names what the node is and where it sits; it adds no fact.
+    """
+    prefix = str(BASE[f"case/{case_id}"])
+    for node in set(g.subjects(RDF.type, None)):
+        if not isinstance(node, URIRef) or (node, RDFS.label, None) in g:
+            continue
+        iri = str(node)
+        if iri == prefix:
+            g.add((node, RDFS.label, Literal(f"Case {case_id}")))
+            continue
+        if not iri.startswith(prefix + "/"):
+            continue
+        types = sorted(
+            (t for t in g.objects(node, RDF.type) if t not in _GENERIC_TYPES),
+            key=str,
+        ) or sorted(g.objects(node, RDF.type), key=str)
+        name = re.sub(r"(?<=[a-z])(?=[A-Z])", " ", re.split(r"[#/]", str(types[0]))[-1])
+        name = name.replace("_", " ")
+        g.add((node, RDFS.label, Literal(f"{name[:1].upper()}{name[1:]} · {iri[len(prefix) + 1:]}")))
+
 
 def flatten_dataset(dataset: Any) -> Graph:
     """Copy every triple in a Dataset's named graphs into one graph.
