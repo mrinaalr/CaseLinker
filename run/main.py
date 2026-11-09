@@ -2296,7 +2296,7 @@ def get_case(request: Request, case_id: str):
     return case
 
 
-_ASSERTION_FIELDS = ("age", "sentence", "investigation_type", "date")
+_ASSERTION_FIELDS = ("age", "sentence", "investigation_type", "cybertip_reporter", "date")
 _REVIEW_STATUSES = ("needs_review", "disagreement", "partial")
 
 
@@ -3889,9 +3889,14 @@ Rules:
 - Case ids look like nj_ag_2017_001. dcterms:identifier on cac:CACInvestigation holds the case_id.
 - Platform IRIs: https://w3id.org/caselinker/resource/platform/{slug}
 - Agency IRIs: https://w3id.org/caselinker/resource/agency/{slug}
+- ESP (CyberTip reporter) IRIs: https://w3id.org/caselinker/resource/esp/{slug}
 
 Prefixes (use as needed):
 PREFIX cac: <https://cacontology.projectvic.org#>
+PREFIX cac-core: <https://cacontology.projectvic.org/core#>
+PREFIX uco-core: <https://ontology.unifiedcyberontology.org/uco/core/>
+PREFIX ncmec: <https://cacontology.projectvic.org/us/ncmec#>
+PREFIX hotlines: <https://cacontology.projectvic.org/hotlines#>
 PREFIX cac-multi: <https://cacontology.projectvic.org/multi-jurisdiction#>
 PREFIX cac-plat: <https://cacontology.projectvic.org/platforms#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -3899,7 +3904,8 @@ PREFIX dcterms: <http://purl.org/dc/terms/>
 
 Useful patterns:
 - Investigation: ?case a cac:CACInvestigation
-- Platform use: ?event cac:usesChannel ?platform . ?case cac:hasStep ?event . ?platform rdfs:label ?label
+- Platform use: GRAPH ?case { ?platform a cac-core:DigitalSystemEntity ; rdfs:label ?label } (the case graph IRI is the case IRI; cac:usesChannel exists only when the case has one event)
+- CyberTip and who sent it: ?case uco-core:object ?tip . ?tip a ncmec:NCMECCybertipReport . OPTIONAL { ?tip hotlines:reportedBy ?role . ?rel uco-core:target ?role ; uco-core:source ?esp . ?esp rdfs:label ?reporter }
 - Agency: ?case cac-multi:involvesAgency ?agency . ?agency rdfs:label ?label
 - Press-release case graphs only: FILTER(STRSTARTS(STR(?g), "https://w3id.org/caselinker/resource/case/") && !STRENDS(STR(?g), "/provenance"))
 """

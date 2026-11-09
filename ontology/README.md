@@ -55,16 +55,16 @@ flowchart LR
   inv -->|hasPhase / currentPhase| phase
   inv -->|hasStep| event
   inv -->|involvesAgency| agency
-  event -->|usesChannel| plat
-  vRole -->|participatesInEvent| event
-  oRole -->|participatesInEvent| event
-  vRole --> person
-  oRole --> person
+  event -->|usesChannel, one event only| plat
+  vRole -->|participatesInEvent, one event only| event
+  oRole -->|participatesInEvent, one event only| event
+  person -->|Has_Role relationship| vRole
+  person -->|Has_Role relationship| oRole
   proc -->|hasCharge| charge
   inv -->|hasStep| proc
 ```
 
-Typical triples: investigation metadata (`dcterms:source`, `dcterms:created`), current prosecution phase, offense events (`cac:hasStep`), platform channels (`cac:usesChannel`), victim/offender roles on UCO `Person` nodes, and legal outcomes when the press release supports them. Mapping rules and unmappable gaps: [MAPPING_PLAN.md](MAPPING_PLAN.md).
+Typical triples: investigation metadata (`dcterms:source`, `dcterms:created`, `dcterms:date` at the precision stored), current prosecution phase, offense events (`cac:hasStep`), the case's platforms (nodes in the case graph; `cac:usesChannel` only when the case has one event), victim/offender/defendant roles played by UCO `Person` nodes through `Has_Role` relationships, ages as `AgeAtTimeSituation`, the CyberTip report and who sent it (`uco-core:object`, `hotlines:reportedBy`), and legal outcomes when the press release supports them. Every term is declared in `vendor/` (`tests/test_term_resolution.py`); nothing is added to satisfy a SHACL shape (`shacl_validation.py`). Mapping rules and unmappable gaps: [MAPPING_PLAN.md](MAPPING_PLAN.md).
 
 Example files: [`graph_output/nj_ag_2017_001.ttl`](graph_output/nj_ag_2017_001.ttl) (Turtle) and the matching `.jsonld`.
 

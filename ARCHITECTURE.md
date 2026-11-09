@@ -371,11 +371,11 @@ flowchart LR
   inv -->|"hasStep"| event
   inv -->|"involvesAgency"| agency
   inv -->|"dcterms:spatial"| loc
-  event -->|"usesChannel"| plat
-  vRole -->|"participatesInEvent"| event
-  oRole -->|"participatesInEvent"| event
-  vRole --> person
-  oRole --> person
+  event -->|"usesChannel (one event only)"| plat
+  vRole -->|"participatesInEvent (one event only)"| event
+  oRole -->|"participatesInEvent (one event only)"| event
+  person -->|"uco-core:Relationship Has_Role"| vRole
+  person -->|"uco-core:Relationship Has_Role"| oRole
   proc -->|"hasCharge"| charge
   inv -->|"hasStep"| proc
   inv -.->|"dcterms:provenance"| prov

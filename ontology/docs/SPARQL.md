@@ -198,13 +198,12 @@ SELECT (COUNT(?s) AS ?n) WHERE { ?s a cac:CACInvestigation }
 ### Platforms by case count
 
 ```sparql
-PREFIX cac: <https://cacontology.projectvic.org#>
+PREFIX cac-core: <https://cacontology.projectvic.org/core#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-SELECT ?platform ?label (COUNT(DISTINCT ?case) AS ?cases)
+SELECT ?platform ?label (COUNT(DISTINCT ?g) AS ?cases)
 WHERE {
-  ?event cac:usesChannel ?platform .
-  ?platform rdfs:label ?label .
-  ?case a cac:CACInvestigation ; cac:hasStep ?event .
+  GRAPH ?g { ?platform a cac-core:DigitalSystemEntity ; rdfs:label ?label . }
+  FILTER(STRSTARTS(STR(?g), "https://w3id.org/caselinker/resource/case/") && !STRENDS(STR(?g), "/provenance"))
 }
 GROUP BY ?platform ?label
 ORDER BY DESC(?cases)

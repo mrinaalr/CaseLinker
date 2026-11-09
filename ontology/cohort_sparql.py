@@ -31,6 +31,7 @@ _LABEL_UNSAFE = re.compile(r"[^\w .,:;/+()'\"-]+", re.UNICODE)
 _QUERY = Template(
     """$header
 PREFIX cac: <https://cacontology.projectvic.org#>
+PREFIX cac-core: <https://cacontology.projectvic.org/core#>
 PREFIX cac-legal: <https://cacontology.projectvic.org/legal-outcomes#>
 PREFIX cac-multi: <https://cacontology.projectvic.org/multi-jurisdiction#>
 PREFIX dcterms: <http://purl.org/dc/terms/>
@@ -49,8 +50,8 @@ WHERE {
     OPTIONAL {
       SELECT ?case (GROUP_CONCAT(DISTINCT ?platform; separator=", ") AS ?platforms)
       WHERE {
-        ?case cac:hasStep ?step .
-        ?step cac:usesChannel ?node .
+        ?case a cac:CACInvestigation .
+        ?node a cac-core:DigitalSystemEntity .
         OPTIONAL { ?node rdfs:label ?label }
         BIND(COALESCE(STR(?label), REPLACE(STR(?node), "^.*/", "")) AS ?platform)
       }

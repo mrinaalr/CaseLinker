@@ -45,13 +45,12 @@ def post(client: httpx.Client, query: str, headers: dict | None = None) -> httpx
 
 
 def test_q1_platform_count_social_media_261(client):
-    q = """PREFIX cac: <https://cacontology.projectvic.org#>
+    q = """PREFIX cac-core: <https://cacontology.projectvic.org/core#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-SELECT ?platform ?label (COUNT(DISTINCT ?case) AS ?cases)
+SELECT ?platform ?label (COUNT(DISTINCT ?g) AS ?cases)
 WHERE {
-  ?event cac:usesChannel ?platform .
-  ?platform rdfs:label ?label .
-  ?case a cac:CACInvestigation ; cac:hasStep ?event .
+  GRAPH ?g { ?platform a cac-core:DigitalSystemEntity ; rdfs:label ?label . }
+  FILTER(STRSTARTS(STR(?g), "https://w3id.org/caselinker/resource/case/") && !STRENDS(STR(?g), "/provenance"))
 }
 GROUP BY ?platform ?label
 ORDER BY DESC(?cases)
