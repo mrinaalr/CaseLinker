@@ -525,7 +525,7 @@ def _all_caps_name(text: str, s: int, e: int) -> bool:
     return bool(_AGE_AFTER.match(after) or _PERSON_VERB_AFTER.match(after) or _PERSON_TITLE_BEFORE.search(before))
 
 
-def _span_is_person(text: str, s: int, e: int, not_people: Set[str] = frozenset()) -> bool:
+def _span_is_person(text: str, s: int, e: int, not_people: Set[str] = frozenset(), on_map_ok: bool = False) -> bool:
     name = text[s:e].strip()
     possessive = name.endswith(("'s", "’s"))  # "Ashcombe's office said" is still Ashcombe
     if _ORG_BEFORE.search(re.sub(r"\s+", " ", text[max(0, s - 40):s])) or (
@@ -546,7 +546,7 @@ def _span_is_person(text: str, s: int, e: int, not_people: Set[str] = frozenset(
         return False  # "Boyd Co." is a county
     if _reads_as_place(name, text, set(not_people), gazetteer=False):
         return False
-    if _norm_name(name).lower() not in _places():
+    if on_map_ok or _norm_name(name).lower() not in _places():
         return True
     # A name that is also on the map ("Lincoln", "Jackson"): a person only where the text treats
     # it as one, so a town NER mistook for a person stays readable.
@@ -632,12 +632,24 @@ def person_spans(text: str, ner_person_spans: Iterable = (), not_people: Iterabl
     text = text or ""
     not_people = frozenset(x for x in not_people if isinstance(x, str) and x)
     spans: List[List[int]] = []
-    for sp in ner_person_spans or ():
-        s, e = int(sp[0]), int(sp[1])
-        if not 0 <= s < e <= len(text):
-            continue
+    ner = sorted([int(sp[0]), int(sp[1])] for sp in ner_person_spans or () if 0 <= int(sp[0]) < int(sp[1]) <= len(text))
+    on_map: List[List[int]] = []
+    for s, e in ner:
         s = _after_titles(text, s, e)
         if _span_is_person(text, s, e, not_people):
+            spans.append([s, e])
+        elif _span_is_person(text, s, e, not_people, on_map_ok=True):
+            on_map.append([s, e])
+    # A name that is also on the map and has no title or verb beside it is still the person when
+    # NER split one name in two ("[first] | [Lincoln]", "[Lincoln] and [first last]") or when it
+    # is part of a name this release already gave in full.
+    parts = {t.strip(".,’'") for a, b in spans if len(text[a:b].split()) > 1 for t in text[a:b].split()}
+    for s, e in on_map:
+        beside = any(
+            (b <= s and not text[b:s].strip()) or (e <= a and re.fullmatch(r"\s+and\s+", text[e:a]))
+            for a, b in ner
+        )
+        if beside or text[s:e].strip(".,’'") in parts:
             spans.append([s, e])
     # Age cues ("Smith, 32," / "32-year-old John Smith") name a person on their own.
     for pat in _PERSON_CUES[:2]:

@@ -330,6 +330,18 @@ def test_a_name_that_is_also_a_rank_or_office_is_masked():
     assert "Bishop" not in public and "Hollis" not in public and "Corin" not in public
 
 
+def test_a_name_on_the_map_is_masked_beside_or_after_the_rest_of_the_name():
+    # "Hartwell" and "Lincoln" are towns. NER split "Reese | Hartwell" and "Lincoln | and Corin Ashcombe",
+    # and "Lincoln" comes back alone after "Lincoln Wexley" was given in full.
+    text = ("District Judge Reese Hartwell found probable cause. An Ohio couple, Lincoln and Corin Ashcombe, "
+            "were sentenced. Lincoln Wexley, 34, was charged; staff would be making contact with Lincoln later.")
+    public = _public(text, "Reese", "Hartwell", "Lincoln", "Corin Ashcombe", "Lincoln Wexley")
+    assert "Hartwell" not in public and "Lincoln" not in public and "Reese" not in public
+    # A town NER calls a person, with no name beside it, stays readable.
+    town = "Corin Ashcombe, 41, of Hartwell, Georgia, was arrested in Hartwell on Monday."
+    assert _public(town, "Corin Ashcombe", "Hartwell") == town.replace("Corin Ashcombe", "[PERSON]")
+
+
 def test_a_name_ends_with_its_line_when_the_next_line_is_a_label():
     text = "Contact Reese Thistlewood\nSource:\nNASHVILLE – An investigation led to an arrest."
     public = _public(text, "Reese Thistlewood\nSource")
