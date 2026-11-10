@@ -124,6 +124,5 @@ def test_case_payload_carries_jurisdiction(db, monkeypatch):
     body = got.json()
     assert body["jurisdiction"] == "state"
     assert "state:states_attorney" in body["jurisdiction_basis"]
-    # Public callers get the cleaned case_text by design, never raw_data (the raw ingestion record).
-    assert body["case_text"] == CASES["st"][1]
-    assert "raw_data" not in body
+    # The label is derived before the public payload drops the narrative keys.
+    assert "raw_data" not in body and "case_text" not in body

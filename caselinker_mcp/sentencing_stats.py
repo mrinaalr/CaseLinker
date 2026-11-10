@@ -24,17 +24,27 @@ sg = importlib.util.module_from_spec(_spec)
 assert _spec.loader
 _spec.loader.exec_module(sg)
 
+_spec = importlib.util.spec_from_file_location("caselinker_case_jurisdiction", _REPO_ROOT / "run" / "case_jurisdiction.py")
+cj = importlib.util.module_from_spec(_spec)
+assert _spec.loader
+_spec.loader.exec_module(cj)
+
 INTERPRETATION_KIND = "imposed_sentence_summary"
 INTERPRETATION_NOTE = (
     "Descriptive summary of extracted imposed terms only; not a validated disparity or "
     "sentencing-severity claim. Unit is the release (case), not the defendant; value is the "
     "longest single imposed custodial term, nominal as written. Life is counted, not given "
     "months. Dropped and counted, never guessed: spans the resolver left unlabelled or under "
-    "review (kind_unknown), multi-defendant, split/suspended or indeterminate terms, imposed "
+    "review (kind_unknown), multi-defendant, split/suspended or indeterminate terms, several "
+    "imposed terms that differ twofold or more (multiple_terms_ambiguous), imposed "
     "spans without sentencing context (plea terms, recommendations, what the law provides, "
     "earlier sentences, restitution and payments), exposure-only and statutory fines "
     "(statutory_max) and not-yet-sentenced "
-    "cases. 'pending' is a heuristic from booking_status. Death sentences are not extracted."
+    "cases. 'pending' is a heuristic from booking_status. Death sentences are not extracted. "
+    "by_jurisdiction splits the same counts by the derived prosecuting forum; 'unknown' is its "
+    "own group (no prosecutor or court named, both forums named, or a non-US source) and is "
+    "never federal or state. A group's drop mix differs by forum, so compare n_used and "
+    "dropped before comparing medians."
 )
 
 USED = ("custodial", "life", "non_custodial")
@@ -45,6 +55,7 @@ DROP_REASONS = (
     "doubtful_imposed_context",
     "multi_defendant_suspected",
     "split_or_suspended_term",
+    "multiple_terms_ambiguous",
     "indeterminate_term",
     "statutory_max",
     "pending",
@@ -262,8 +273,11 @@ def classify_case(
         if len(defendants - {None, ""}) > 1 or _near_imposed(text, assertions, _MULTI_DEFENDANT_RE):
             return {**base, "outcome": None, "reason": "multi_defendant_suspected"}
         months = [t["months"] for t in terms if t["kind"] == "months"]
-        if _near_imposed(text, assertions, _SPLIT_RE) or (len(months) > 1 and min(months) > 0 and max(months) / min(months) >= 2):
+        if _near_imposed(text, assertions, _SPLIT_RE):
             return {**base, "outcome": None, "reason": "split_or_suspended_term"}
+        # "10 years" and "5 years" in one release: counts, defendants or a credit, not one term.
+        if len(months) > 1 and min(months) > 0 and max(months) / min(months) >= 2:
+            return {**base, "outcome": None, "reason": "multiple_terms_ambiguous"}
         if any(t["kind"] == "indeterminate" for t in terms) or any(
             _RANGE_BEFORE_RE.search(text[max(0, a["span_start"] - 14) : a["span_start"]]) for a in spans
         ):
@@ -289,13 +303,13 @@ def classify_case(
     return {"outcome": None, "reason": "no_sentence"}
 
 
-def summarize(results: Dict[str, Dict[str, Any]]) -> Dict[str, Any]:
+def _aggregate(results: Sequence[Dict[str, Any]]) -> Dict[str, Any]:
     dropped = {r: 0 for r in DROP_REASONS}
     detail: Dict[str, int] = {}
     outcomes = {o: 0 for o in USED}
     months: List[float] = []
     flags = {"multiple_imposed_terms": 0, "list_form": 0}
-    for res in results.values():
+    for res in results:
         if res.get("outcome"):
             outcomes[res["outcome"]] += 1
             if res.get("months") is not None:
@@ -324,13 +338,25 @@ def summarize(results: Dict[str, Dict[str, Any]]) -> Dict[str, Any]:
         "outcomes": outcomes,
         "custodial_months": stats,
         "flags": flags,
-        "cases": [{"case_id": cid, **res} for cid, res in results.items()],
-        "interpretation_kind": INTERPRETATION_KIND,
-        "interpretation_note": INTERPRETATION_NOTE,
     }
 
 
-def sentencing_stats_payload(case_ids: Sequence[str]) -> Dict[str, Any]:
+def summarize(results: Dict[str, Dict[str, Any]], by_jurisdiction: bool = False) -> Dict[str, Any]:
+    out = _aggregate(list(results.values()))
+    if by_jurisdiction:
+        # Cases not in the DB have no text to label and sit in no group.
+        out["by_jurisdiction"] = {
+            j: _aggregate([r for r in results.values() if r.get("jurisdiction") == j]) for j in cj.JURISDICTIONS
+        }
+    out.update(
+        cases=[{"case_id": cid, **res} for cid, res in results.items()],
+        interpretation_kind=INTERPRETATION_KIND,
+        interpretation_note=INTERPRETATION_NOTE,
+    )
+    return out
+
+
+def sentencing_stats_payload(case_ids: Sequence[str], by_jurisdiction: bool = True) -> Dict[str, Any]:
     """Load only the requested cases from the local DB and summarize (MCP-local)."""
     from caselinker_mcp.facet_local import CaseStorage, _db_path
 
@@ -348,4 +374,6 @@ def sentencing_stats_payload(case_ids: Sequence[str]) -> Dict[str, Any]:
             continue
         got = storage.get_case_assertions(cid, field="sentence")
         results[cid] = classify_case(case, (got.get("resolutions") or {}).get("sentence"), got.get("assertions") or [])
-    return summarize(results)
+        if by_jurisdiction:
+            results[cid].update(cj.derive_jurisdiction(case))
+    return summarize(results, by_jurisdiction=by_jurisdiction)
