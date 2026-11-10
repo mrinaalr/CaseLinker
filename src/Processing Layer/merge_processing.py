@@ -460,6 +460,13 @@ class MergeProcessing:
             case_demo = {}
         case_demo = dict(case_demo)
         case_demo["ages"] = victims
+        # One stated span of victim ages; several spans give the lowest low and the highest high.
+        # The pattern layer's "ages N thru M" guess never survives the resolved view (#19).
+        ranges = final.get("victim_ranges") or []
+        if ranges:
+            case_demo["age_range"] = {"min": min(r["min"] for r in ranges), "max": max(r["max"] for r in ranges)}
+        else:
+            case_demo.pop("age_range", None)
         case_demo.pop("gender", None)
         gender_mod = _gender_extraction()
         vg = gender_mod.extract_victim_gender(case_text, victims)

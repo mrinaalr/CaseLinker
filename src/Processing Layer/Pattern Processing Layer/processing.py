@@ -637,14 +637,7 @@ def assign_comparison_values(case_features: Dict[str, Any]) -> Dict[str, Any]:
     date_range = case_features.get('date_range') or {}
     evidence_vol = case_features.get('evidence_volume') or {}
     
-    # Calculate case age range from ages list
-    case_age_range = None
-    if isinstance(case_demo, dict):
-        ages = case_demo.get('ages', [])
-        if ages:
-            case_age_range = {'min': min(ages), 'max': max(ages)}
-        elif case_demo.get('age_range'):
-            case_age_range = case_demo.get('age_range')
+    case_age_range = victim_age_span(case_demo)
     
     # Handle perpetrator_age (can be single int or list)
     perpetrator_age = case_features.get('perpetrator_age')
@@ -2300,6 +2293,20 @@ _SENTENCE_IMPOSED_ANCHOR_RE = re.compile(
 
 _SENTENCE_URL_JUNK_RE = re.compile(r'[#%]|%20|://|crime#', re.I)
 _SENTENCE_AGE_AFTER_RE = re.compile(r'^\s*old\b', re.I)
+
+
+def victim_age_span(case_demo: Any) -> Optional[Dict[str, int]]:
+    """Lowest and highest victim age a case states: its span of ages widened by any single ages.
+
+    The one rule for every reader of ``case_demographics`` (#19); content_sanitization applies
+    the same rule to its key facts.
+    """
+    if not isinstance(case_demo, dict):
+        return None
+    span = case_demo.get('age_range') if isinstance(case_demo.get('age_range'), dict) else {}
+    values = [a for a in (case_demo.get('ages') or []) if isinstance(a, int)]
+    values += [span[k] for k in ('min', 'max') if isinstance(span.get(k), int)]
+    return {'min': min(values), 'max': max(values)} if values else None
 
 
 def _sentence_match_is_statutory_exposure(

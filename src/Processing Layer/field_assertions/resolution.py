@@ -362,6 +362,8 @@ def resolve_age(assertions: List[Dict], text: Optional[str] = None) -> Dict:
                 human[int(a["value"])].append(a)
 
     victims: Dict[int, List[Dict]] = defaultdict(list)
+    victim_ranges: Dict[Tuple[int, int], List[Dict]] = defaultdict(list)
+    range_ends: Set[int] = set()
     perp_mentions: List[Tuple[int, Dict]] = []
     excluded: Set[Tuple[int, str]] = set()
     contested: Dict[str, Dict] = {}
@@ -397,6 +399,16 @@ def resolve_age(assertions: List[Dict], text: Optional[str] = None) -> Dict:
                     victims[value].extend(vote["support"])
                 else:
                     perp_mentions.append((value, vote))
+            elif role == "victim_range":
+                # One end of "ages 6 to 16": the span is kept; the end is not a victim's age.
+                span = next(((a.get("extras") or {}).get("range") for a in vote["support"]
+                             if (a.get("extras") or {}).get("range")), None)
+                if span:
+                    victim_ranges[(int(span[0]), int(span[1]))].extend(vote["support"])
+                    range_ends.add(value)
+                    winning.extend(vote["support"])
+                else:
+                    unresolved.append({"value": value, "span": [s, e], "state": "weak", "role": role})
             else:
                 excluded.add((value, role))
         else:
@@ -432,11 +444,12 @@ def resolve_age(assertions: List[Dict], text: Optional[str] = None) -> Dict:
         }
         victims.pop(value)
 
-    settled_values = set(victims) | {v for v, _ in perp_mentions} | {v for v, _ in excluded}
+    settled_values = set(victims) | {v for v, _ in perp_mentions} | {v for v, _ in excluded} | range_ends
     needs = [u for u in unresolved if u["value"] not in settled_values]
     perp_entities = _collapse_perpetrators(perp_mentions, text)
     final = {
         "victims": sorted(victims),
+        "victim_ranges": [{"min": lo, "max": hi} for lo, hi in sorted(victim_ranges)],
         "perpetrators": sorted({p["age"] for p in perp_entities}),
         "perpetrator_entities": perp_entities,
         "excluded": [{"age": v, "role": r} for v, r in sorted(excluded)],
@@ -446,7 +459,7 @@ def resolve_age(assertions: List[Dict], text: Optional[str] = None) -> Dict:
     disagreement = {"contested": contested, "self_contradictions": self_contradictions}
     review = [{"reason": "contested", **c} for c in contested.values()]
     review += [{"reason": _age_review_reason(u), **u} for u in needs]
-    has_final = bool(final["victims"] or final["perpetrators"])
+    has_final = bool(final["victims"] or final["victim_ranges"] or final["perpetrators"])
     if has_final and not contested and not needs:
         status, rule = ("agreed", "family_agreement") if all_multi_family else ("resolved", "single_family_resolved")
     elif has_final:
