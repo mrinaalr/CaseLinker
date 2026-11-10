@@ -98,6 +98,8 @@ CASES = {
     "range_cut": ("He will serve 16½ to 33 years in prison.", "sentenced", _res(imposed=["33 years"]), ["33 years"]),
     "convicted_in_year": ("He was convicted in May 2022 and was placed on probation for five years.", "sentenced",
                           _res(probation=["five years"]), [("probation", "five years")]),
+    "state_term": ("He was sentenced in Superior Court to 12 years in state prison.", "sentenced",
+                   _res(imposed=["12 years"]), ["12 years"]),
     "exposure_and_probation": ("He faced up to 10 years. He was sentenced to 3 years of probation.", "sentenced",
                                _res(exposure=["10 years"], probation=["3 years"]), [("probation", "3 years")]),
 }
@@ -132,9 +134,9 @@ def db(tmp_path: Path, monkeypatch) -> Path:
     return path
 
 
-def _run(ids):
+def _run(ids, **kwargs):
     fn = getattr(server.get_sentencing_stats, "fn", server.get_sentencing_stats)
-    return asyncio.run(fn(case_ids=ids))
+    return asyncio.run(fn(case_ids=ids, **kwargs))
 
 
 def test_each_case_gets_one_outcome_or_drop_reason(db):
@@ -142,7 +144,7 @@ def test_each_case_gets_one_outcome_or_drop_reason(db):
     by = {c["case_id"]: (c.get("outcome") or c["reason"]) for c in out["cases"]}
     assert by == {
         "clean": "custodial",
-        "two_terms": "split_or_suspended_term",  # 10 vs 5 years: max/min >= 2
+        "two_terms": "multiple_terms_ambiguous",  # 10 vs 5 years: max/min >= 2
         "list_form": "custodial",
         "life": "life",
         "to_life": "indeterminate_term",
@@ -172,20 +174,23 @@ def test_each_case_gets_one_outcome_or_drop_reason(db):
         "statutory_fine": "statutory_max",
         "restitution": "doubtful_imposed_context",
         "exposure_and_probation": "non_custodial",
+        "state_term": "custodial",
         "range_cut": "indeterminate_term",
         "restated": "custodial",
         "restated_prior": "doubtful_imposed_context",
         "convicted_in_year": "doubtful_imposed_context",
         "missing_id": "not_found",
     }
-    assert out["n_requested"] == 36
-    assert out["n_used"] == 11
+    assert out["n_requested"] == 37
+    assert out["n_used"] == 12
     assert out["n_dropped"] == 25
     assert out["dropped"]["kind_unknown"] == 3
     assert out["kind_unknown_detail"] == {"unlabelled_span": 1, "review_status": 1, "no_current_resolution": 1}
     assert out["dropped"]["statutory_max"] == 2 and out["dropped"]["pending"] == 1
-    assert out["outcomes"] == {"custodial": 7, "life": 1, "non_custodial": 3}
+    assert out["outcomes"] == {"custodial": 8, "life": 1, "non_custodial": 3}
     assert out["dropped"]["doubtful_imposed_context"] == 10
+    # A suspended term and a twofold spread between terms are different reasons.
+    assert out["dropped"]["split_or_suspended_term"] == 2 and out["dropped"]["multiple_terms_ambiguous"] == 1
     assert out["interpretation_kind"] == "imposed_sentence_summary"
     assert "not a validated disparity" in out["interpretation_note"]
 
@@ -197,6 +202,38 @@ def test_aggregation_is_longest_single_term_and_lists_are_not_ranges(db):
     assert months == {"clean": 180, "list_form": 360}
     assert out["custodial_months"] == {"n": 2, "median": 270.0, "mean": 270.0, "min": 180.0, "max": 360.0}
     assert out["flags"]["list_form"] == 1
+
+
+def test_by_jurisdiction_splits_counts_and_keeps_unknown_apart(db):
+    out = _run(["clean", "initials", "state_term", "exposure", "split", "missing_id"])
+    label = {c["case_id"]: c.get("jurisdiction") for c in out["cases"]}
+    assert label == {
+        "clean": "federal",  # "federal prison"
+        "initials": "federal",  # "U.S. District Judge"
+        "state_term": "state",
+        "exposure": "unknown",
+        "split": "unknown",
+        "missing_id": None,
+    }
+    groups = out["by_jurisdiction"]
+    assert set(groups) == {"federal", "state", "unknown"}
+    assert groups["federal"]["custodial_months"] == {"n": 2, "median": 180.0, "mean": 180.0, "min": 180.0, "max": 180.0}
+    assert groups["state"]["custodial_months"] == {"n": 1, "median": 144.0, "mean": 144.0, "min": 144.0, "max": 144.0}
+    # Unknown is its own group: its drops are counted there, never under federal or state.
+    assert groups["unknown"]["n_used"] == 0
+    assert groups["unknown"]["dropped"]["statutory_max"] == 1 and groups["unknown"]["dropped"]["split_or_suspended_term"] == 1
+    assert groups["federal"]["n_dropped"] == 0 and groups["state"]["n_dropped"] == 0
+    # A case that is not in the DB has no label and sits in no group.
+    assert sum(g["n_requested"] for g in groups.values()) == 5 and out["n_requested"] == 6
+    assert out["dropped"]["not_found"] == 1
+    assert out["custodial_months"]["n"] == 3
+
+
+def test_by_jurisdiction_off_adds_no_labels(db):
+    out = _run(["clean", "state_term"], by_jurisdiction=False)
+    assert "by_jurisdiction" not in out
+    assert all("jurisdiction" not in c for c in out["cases"])
+    assert out["custodial_months"]["n"] == 2
 
 
 def test_exposure_beats_pending_and_never_becomes_months(db):

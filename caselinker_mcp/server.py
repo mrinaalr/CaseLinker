@@ -480,6 +480,10 @@ async def get_case(case_id: str) -> dict[str, Any]:
     """Fetch full detail for one case by ID (features, platforms, severity, charges, demographics, agencies, narrative).
 
     Public responses omit raw_data unless CASELINKER_KEY is a trusted key on the server.
+    prosecution_outcome.sentences is a flat list of strings that mixes imposed terms with
+    statutory maximums, supervised release, probation and fines: do not average it. Use
+    get_sentencing_stats for imposed terms. jurisdiction (federal / state / unknown) and
+    jurisdiction_basis are derived at read time from prosecutor and court wording.
     Example case_id values: 'azicac_2011_001', 'doj_ceos_2020_042' (format varies by source).
     """
     try:
@@ -536,7 +540,7 @@ async def get_field_disagreements(
 
 
 @mcp.tool()
-async def get_sentencing_stats(case_ids: list[str]) -> dict[str, Any]:
+async def get_sentencing_stats(case_ids: list[str], by_jurisdiction: bool = True) -> dict[str, Any]:
     """Imposed-only sentencing summary for a case_id list (MCP-only, reads the local DB).
 
     Uses the persisted sentence-kind buckets (imposed / exposure / supervised_release /
@@ -546,11 +550,15 @@ async def get_sentencing_stats(case_ids: list[str]) -> dict[str, Any]:
     left a span unlabelled or under review), unparseable_term, doubtful_imposed_context (span
     has no sentencing context, or is a plea term, recommendation, what the law provides, an
     earlier sentence, restitution or a payment), multi_defendant_suspected,
-    split_or_suspended_term, indeterminate_term, statutory_max (exposure or statutory fine
+    split_or_suspended_term, multiple_terms_ambiguous (several imposed terms that differ
+    twofold or more), indeterminate_term, statutory_max (exposure or statutory fine
     only), pending (pre-sentence booking_status, heuristic) or no_sentence. Returns n_used, n_dropped, the
     count per drop reason, custodial_months {n, median, mean, min, max}, per-case results
-    and interpretation_kind "imposed_sentence_summary". Descriptive only; not a validated
-    disparity claim. Hard cap: 1000 case_ids.
+    and interpretation_kind "imposed_sentence_summary". With by_jurisdiction (default) each
+    case also carries jurisdiction / jurisdiction_basis (as filter_cases_by_jurisdiction) and
+    by_jurisdiction repeats the counts and custodial_months for federal, state and unknown;
+    unknown is never folded into either. Descriptive only; not a validated disparity claim.
+    Hard cap: 1000 case_ids.
     """
     try:
         ids = [c.strip() for c in case_ids or [] if c and c.strip()]
@@ -560,7 +568,7 @@ async def get_sentencing_stats(case_ids: list[str]) -> dict[str, Any]:
             return {"error": f"Too many case_ids ({len(ids)}); max 1000.", "n_requested": len(ids)}
         from caselinker_mcp.sentencing_stats import sentencing_stats_payload
 
-        return await asyncio.to_thread(sentencing_stats_payload, ids)
+        return await asyncio.to_thread(sentencing_stats_payload, ids, by_jurisdiction)
     except Exception as e:
         logger.exception("get_sentencing_stats failed")
         return {"error": f"{type(e).__name__}: {e}" if str(e) else type(e).__name__}
