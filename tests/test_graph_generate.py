@@ -120,17 +120,21 @@ def test_railway_resource_iri_is_not_marked_done(tmp_path, monkeypatch):
     assert not (out / "done.txt").exists()
 
 
-def test_flat_case_jsonld_and_dataset_jsonld_both_yield_nodes():
+def test_flat_case_jsonld_and_dataset_jsonld_both_yield_nodes(tmp_path, monkeypatch):
     """Patterns reads the flat Phase 3 files and the older named-graph files."""
     import json
 
     from merge_graph_cache import flatten_named_graphs
 
-    flat_path = ONTOLOGY / "graph_output" / "doj_ceos_2025_007.jsonld"
-    flat = json.loads(flat_path.read_text())
+    # The flat file as the exporter writes it, not a committed export that changes on regeneration.
+    monkeypatch.setattr(features_to_cac, "CaseToCAC", _GoodMapper)
+    out = tmp_path / "graphs"
+    graph_generate.generate_graphs(["aa_2020_001"], out, provenance=False, storage=_Storage())
+    flat = json.loads((out / "aa_2020_001.jsonld").read_text())
+    assert isinstance(flat, list) and flat and all("@graph" not in node for node in flat)
     nodes = flatten_named_graphs(flat)
-    assert len(nodes) == len(flat) == 42
-    assert any(n["@id"].endswith("/case/doj_ceos_2025_007") for n in nodes)
+    assert len(nodes) == len(flat)
+    assert any(n["@id"].endswith("/case/aa_2020_001") for n in nodes)
 
     dataset = [
         {

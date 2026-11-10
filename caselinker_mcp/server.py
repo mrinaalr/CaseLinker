@@ -480,6 +480,10 @@ async def get_case(case_id: str) -> dict[str, Any]:
     """Fetch full detail for one case by ID (features, platforms, severity, charges, demographics, agencies, narrative).
 
     Public responses omit raw_data unless CASELINKER_KEY is a trusted key on the server.
+    prosecution_outcome.sentences is a flat list of strings that mixes imposed terms with
+    statutory maximums, supervised release, probation and fines: do not average it. Use
+    get_sentencing_stats for imposed terms. jurisdiction (federal / state / unknown) and
+    jurisdiction_basis are derived at read time from prosecutor and court wording.
     Example case_id values: 'azicac_2011_001', 'doj_ceos_2020_042' (format varies by source).
     """
     try:
@@ -533,6 +537,41 @@ async def get_field_disagreements(
     except Exception as e:
         logger.exception("get_field_disagreements failed")
         return {"error": str(e)}
+
+
+@mcp.tool()
+async def get_sentencing_stats(case_ids: list[str], by_jurisdiction: bool = True) -> dict[str, Any]:
+    """Imposed-only sentencing summary for a case_id list (MCP-only, reads the local DB).
+
+    Uses the persisted sentence-kind buckets (imposed / exposure / supervised_release /
+    probation / fine), never the flat prosecution_outcome.sentences strings. Each case gets
+    one outcome: custodial (longest single imposed term, months), life, or non_custodial
+    (an imposed probation term or fine); or one drop reason: not_found, kind_unknown (resolver
+    left a span unlabelled or under review), unparseable_term, doubtful_imposed_context (span
+    has no sentencing context, or is a plea term, recommendation, what the law provides, an
+    earlier sentence, restitution or a payment), multi_defendant_suspected,
+    split_or_suspended_term, multiple_terms_ambiguous (several imposed terms that differ
+    twofold or more), indeterminate_term, statutory_max (exposure or statutory fine
+    only), pending (pre-sentence booking_status, heuristic) or no_sentence. Returns n_used, n_dropped, the
+    count per drop reason, custodial_months {n, median, mean, min, max}, per-case results
+    and interpretation_kind "imposed_sentence_summary". With by_jurisdiction (default) each
+    case also carries jurisdiction / jurisdiction_basis (as filter_cases_by_jurisdiction) and
+    by_jurisdiction repeats the counts and custodial_months for federal, state and unknown;
+    unknown is never folded into either. Descriptive only; not a validated disparity claim.
+    Hard cap: 1000 case_ids.
+    """
+    try:
+        ids = [c.strip() for c in case_ids or [] if c and c.strip()]
+        if not ids:
+            return {"error": "Provide case_ids (from filter or cohort tools).", "n_requested": 0}
+        if len(ids) > 1000:
+            return {"error": f"Too many case_ids ({len(ids)}); max 1000.", "n_requested": len(ids)}
+        from caselinker_mcp.sentencing_stats import sentencing_stats_payload
+
+        return await asyncio.to_thread(sentencing_stats_payload, ids, by_jurisdiction)
+    except Exception as e:
+        logger.exception("get_sentencing_stats failed")
+        return {"error": f"{type(e).__name__}: {e}" if str(e) else type(e).__name__}
 
 
 @mcp.tool()
@@ -728,6 +767,51 @@ async def get_cohort_members(
     except Exception as e:
         logger.exception("get_cohort_members failed")
         return {"error": str(e)}
+
+
+@mcp.tool()
+async def filter_cases_by_jurisdiction(case_ids: list[str], jurisdiction: str = "") -> dict[str, Any]:
+    """Label each case federal / state / unknown and optionally keep one label (MCP-only, local DB).
+
+    Prosecuting jurisdiction, derived at read time (never stored) from the source and the
+    release's prosecutor, court and charging language (e.g. U.S. District Court, Assistant
+    U.S. Attorney, U.S.C. vs District Attorney, State's Attorney, Superior/Circuit Court).
+    Investigating agencies are not used. Both or neither signal, non-US sources and
+    courts-martial are "unknown"; unknown is never folded into federal or state. Returns
+    counts per label, each case's label and jurisdiction_basis (signal names), and case_ids
+    filtered to `jurisdiction` when given. Hard cap: 1000 case_ids.
+    """
+    try:
+        from case_jurisdiction import JURISDICTIONS, derive_jurisdiction
+        from caselinker_mcp.facet_local import CaseStorage, _db_path
+
+        ids = list(dict.fromkeys(c.strip() for c in case_ids or [] if c and c.strip()))
+        want = jurisdiction.strip().lower()
+        if not ids:
+            return {"error": "Provide case_ids (from filter or cohort tools)."}
+        if len(ids) > 1000:
+            return {"error": f"Too many case_ids ({len(ids)}); max 1000."}
+        if want and want not in JURISDICTIONS:
+            return {"error": f"jurisdiction must be one of {list(JURISDICTIONS)} or empty"}
+        db = _db_path()
+        if not db.exists():
+            return {"error": f"Database not found: {db}"}
+        cases = await asyncio.to_thread(
+            lambda: CaseStorage(str(db)).get_cases_by_ids(ids, include_raw_data=True) or []
+        )
+        found = {c["id"]: c for c in cases}
+        labels = {cid: derive_jurisdiction(found[cid]) for cid in ids if cid in found}
+        counts = {j: sum(1 for v in labels.values() if v["jurisdiction"] == j) for j in JURISDICTIONS}
+        return {
+            "counts": counts,
+            "not_found": [cid for cid in ids if cid not in found],
+            "cases": [{"case_id": cid, **v} for cid, v in labels.items()],
+            "case_ids": [cid for cid, v in labels.items() if not want or v["jurisdiction"] == want],
+            "jurisdiction_filter": want or None,
+        }
+    except Exception as e:
+        logger.exception("filter_cases_by_jurisdiction failed")
+        return {"error": f"{type(e).__name__}: {e}" if str(e) else type(e).__name__}
 
 
 @mcp.tool()

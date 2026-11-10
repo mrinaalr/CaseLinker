@@ -1,0 +1,640 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix gufo: <http://purl.org/nemo/gufo#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-observable: <https://ontology.unifiedcyberontology.org/uco/observable/> .
+@prefix cacontology-usa-federal: <https://cacontology.projectvic.org/usa-federal-law#> .
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+
+# Ontology Declaration
+<https://cacontology.projectvic.org/usa-federal-law> rdf:type owl:Ontology ;
+    dcterms:title "CAC USA Federal Child Exploitation and Obscenity Law Ontology"@en ;
+    dcterms:description "Comprehensive semantic framework for U.S. federal child exploitation and obscenity laws with gUFO foundational ontology grounding for enhanced semantic precision, temporal modeling, and validation capabilities. Based on DOJ CEOS guidelines and models federal statutes, prosecution mechanisms, extraterritorial crimes, child support enforcement intersection, and obscenity law frameworks."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/usa-federal-law/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:created "2025-01-03"^^xsd:date ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    rdfs:comment "Based on US DOJ Child Exploitation and Obscenity Section (CEOS) Citizens Guide to U.S. Federal Child Exploitation and Obscenity Laws. Grounded in gUFO foundational ontology."@en ;
+    owl:imports <http://purl.org/nemo/gufo#/1.0.0> ,
+                <https://cacontology.projectvic.org/core/3.1.0> .
+
+# =============================================================================
+# GUFO TYPE DECLARATIONS FOR USA FEDERAL LAW CLASSES
+# =============================================================================
+
+# Organizations as Kinds (rigid sortals providing identity)
+cacontology-usa-federal:CEOSdivision rdf:type gufo:Kind .
+cacontology-usa-federal:FederalChildExploitationLaw rdf:type gufo:Kind .
+cacontology-usa-federal:FederalObscenityLaw rdf:type gufo:Kind .
+cacontology-usa-federal:FederalChildPornographyLaw rdf:type gufo:SubKind .
+cacontology-usa-federal:FederalChildSexTraffickingLaw rdf:type gufo:SubKind .
+cacontology-usa-federal:FederalChildSexualAbuseLaw rdf:type gufo:SubKind .
+cacontology-usa-federal:ChildSupportEnforcementLaw rdf:type gufo:SubKind .
+cacontology-usa-federal:ExtraterritorialSexualExploitationLaw rdf:type gufo:SubKind .
+
+# Federal Legal Processes as Event Types
+cacontology-usa-federal:FederalProsecution rdf:type gufo:EventType .
+cacontology-usa-federal:FederalInvestigation rdf:type gufo:EventType .
+cacontology-usa-federal:ChildPornographyProduction rdf:type gufo:EventType .
+cacontology-usa-federal:ChildPornographyDistribution rdf:type gufo:EventType .
+cacontology-usa-federal:ChildPornographyReceipt rdf:type gufo:EventType .
+cacontology-usa-federal:ChildPornographyPossession rdf:type gufo:EventType .
+cacontology-usa-federal:SexTraffickingOfMinors rdf:type gufo:EventType .
+cacontology-usa-federal:CommercialSexualExploitation rdf:type gufo:EventType .
+cacontology-usa-federal:SexTraffickingConspiracy rdf:type gufo:EventType .
+cacontology-usa-federal:AggravatedSexualAbuse rdf:type gufo:EventType .
+cacontology-usa-federal:SexualAbuseOfMinor rdf:type gufo:EventType .
+cacontology-usa-federal:AbusiveContactWithMinor rdf:type gufo:EventType .
+cacontology-usa-federal:ChildSupportEvasion rdf:type gufo:EventType .
+cacontology-usa-federal:SexTourism rdf:type gufo:EventType .
+cacontology-usa-federal:ForeignCommerceExploitation rdf:type gufo:EventType .
+cacontology-usa-federal:ExtraterritorialProduction rdf:type gufo:EventType .
+cacontology-usa-federal:TransportationForSexualExploitation rdf:type gufo:EventType .
+cacontology-usa-federal:ObscenityDistribution rdf:type gufo:EventType .
+cacontology-usa-federal:ObscenityTransportation rdf:type gufo:EventType .
+cacontology-usa-federal:ObscenityImportation rdf:type gufo:EventType .
+cacontology-usa-federal:OnlineObscenityDistribution rdf:type gufo:EventType .
+
+# Federal Legal Phases as Phases (anti-rigid temporal stages)
+cacontology-usa-federal:PreTrialPhase rdf:type gufo:Phase ;
+    rdfs:subClassOf cac-core:Phase .
+cacontology-usa-federal:TrialPhase rdf:type gufo:Phase ;
+    rdfs:subClassOf cac-core:Phase .
+cacontology-usa-federal:SentencingPhase rdf:type gufo:Phase ;
+    rdfs:subClassOf cac-core:Phase .
+cacontology-usa-federal:PostConvictionPhase rdf:type gufo:Phase ;
+    rdfs:subClassOf cac-core:Phase .
+
+# Federal Law Enforcement Roles as Roles (anti-rigid relationally dependent)
+cacontology-usa-federal:FederalProsecutorRole rdf:type gufo:Role .
+cacontology-usa-federal:CEOSAttorneyRole rdf:type gufo:Role .
+cacontology-usa-federal:FederalInvestigatorRole rdf:type gufo:Role .
+cacontology-usa-federal:FederalDefendantRole rdf:type gufo:Role .
+cacontology-usa-federal:FederalVictimRole rdf:type gufo:Role .
+
+# Situational Contexts as Situations
+cacontology-usa-federal:ChildSupportExploitationLink rdf:type gufo:SituationType .
+cacontology-usa-federal:FinancialControlPattern rdf:type gufo:SituationType .
+
+# =============================================================================
+# DOJ CHILD EXPLOITATION AND OBSCENITY SECTION (gUFO Organization modeling)
+# =============================================================================
+
+cacontology-usa-federal:CEOSdivision rdf:type owl:Class ;
+    rdfs:subClassOf uco-identity:Organization, 
+                    gufo:FunctionalComplex ;
+    rdfs:label "CEOS Division"@en ;
+    rdfs:comment "DOJ Child Exploitation and Obscenity Section serving unique and critical function in enforcement of federal laws protecting children from exploitation and prohibiting distribution of obscenity. Modeled as gUFO FunctionalComplex Organization."@en .
+
+# Federal Law Objects (gUFO Object modeling)
+cacontology-usa-federal:FederalChildExploitationLaw rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject, 
+                    cac-core:EnduringEntity ;
+    rdfs:label "Federal Child Exploitation Law"@en ;
+    rdfs:comment "U.S. federal law related to child exploitation as enforced by CEOS. Modeled as gUFO Object providing legal framework."@en .
+
+cacontology-usa-federal:FederalObscenityLaw rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject, 
+                    cac-core:EnduringEntity ;
+    rdfs:label "Federal Obscenity Law"@en ;
+    rdfs:comment "U.S. federal law related to obscenity distribution and enforcement as managed by CEOS. Modeled as gUFO Object providing legal framework."@en .
+
+# Federal Legal Processes as gUFO Events
+cacontology-usa-federal:FederalProsecution rdf:type owl:Class ;
+    rdfs:label "Federal Prosecution"@en ;
+    rdfs:comment "Federal legal prosecution process for child exploitation crimes. Modeled as gUFO Event with temporal progression through phases."@en ;
+    rdfs:subClassOf cac-core:LegalEvent .
+
+cacontology-usa-federal:FederalInvestigation rdf:type owl:Class ;
+    rdfs:label "Federal Investigation"@en ;
+    rdfs:comment "Federal investigation of child exploitation crimes. Modeled as gUFO Event with temporal boundaries and evidence gathering."@en ;
+    rdfs:subClassOf cac-core:InvestigativeAction .
+
+# Federal Legal Phases (gUFO Phase anti-rigid modeling)
+cacontology-usa-federal:PreTrialPhase rdf:type owl:Class ;
+    rdfs:label "Pre-Trial Phase"@en ;
+    rdfs:comment "Pre-trial phase of federal prosecution including investigation and charging."@en ;
+    rdfs:subClassOf cacontology-usa-federal:FederalProsecution ,
+                    cac-core:Phase .
+
+cacontology-usa-federal:TrialPhase rdf:type owl:Class ;
+    rdfs:label "Trial Phase"@en ;
+    rdfs:comment "Trial phase of federal prosecution including court proceedings."@en ;
+    rdfs:subClassOf cacontology-usa-federal:FederalProsecution ,
+                    cac-core:Phase .
+
+cacontology-usa-federal:SentencingPhase rdf:type owl:Class ;
+    rdfs:label "Sentencing Phase"@en ;
+    rdfs:comment "Sentencing phase of federal prosecution including penalty determination. Modeled as anti-rigid gUFO Phase that prosecution temporarily exemplifies."@en ;
+    rdfs:subClassOf cacontology-usa-federal:FederalProsecution ,
+                    cac-core:Phase .
+
+cacontology-usa-federal:PostConvictionPhase rdf:type owl:Class ;
+    rdfs:label "Post-Conviction Phase"@en ;
+    rdfs:comment "Post-conviction phase including appeals and compliance monitoring."@en ;
+    rdfs:subClassOf cacontology-usa-federal:FederalProsecution ,
+                    cac-core:Phase .
+
+# =============================================================================
+# CHILD PORNOGRAPHY FEDERAL LAW (gUFO Event modeling)
+# =============================================================================
+
+cacontology-usa-federal:FederalChildPornographyLaw rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-usa-federal:FederalChildExploitationLaw ;
+    rdfs:label "Federal Child Pornography Law"@en ;
+    rdfs:comment "Federal statutes criminalizing child pornography production, distribution, receipt, and possession."@en .
+
+# Child Pornography Crimes as gUFO Events
+cacontology-usa-federal:ChildPornographyProduction rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:ExploitationEvent ;
+    rdfs:seeAlso cacontology-usa-federal:FederalChildPornographyLaw ;
+    rdfs:label "Child Pornography Production"@en ;
+    rdfs:comment "Federal crime of producing child pornography, carrying severe mandatory minimum sentences. Modeled as gUFO Event."@en ;
+    owl:equivalentClass cacontology-usa-federal:ChildPornographyProduction .
+
+cacontology-usa-federal:ChildPornographyDistribution rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:ExploitationEvent ;
+    rdfs:seeAlso cacontology-usa-federal:FederalChildPornographyLaw ;
+    rdfs:label "Child Pornography Distribution"@en ;
+    rdfs:comment "Federal crime of distributing child pornography across state or international boundaries. Modeled as gUFO Event."@en ;
+    owl:equivalentClass cacontology-usa-federal:ChildPornographyDistribution .
+
+cacontology-usa-federal:ChildPornographyReceipt rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:ExploitationEvent ;
+    rdfs:seeAlso cacontology-usa-federal:FederalChildPornographyLaw ;
+    rdfs:label "Child Pornography Receipt"@en ;
+    rdfs:comment "Federal crime of knowingly receiving child pornography through interstate or foreign commerce. Modeled as gUFO Event."@en ;
+    owl:equivalentClass cacontology-usa-federal:ChildPornographyReceipt .
+
+cacontology-usa-federal:ChildPornographyPossession rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:ExploitationEvent ;
+    rdfs:seeAlso cacontology-usa-federal:FederalChildPornographyLaw ;
+    rdfs:label "Child Pornography Possession"@en ;
+    rdfs:comment "Federal crime of possessing child pornography that has traveled in interstate or foreign commerce. Modeled as gUFO Event."@en ;
+    owl:equivalentClass cacontology-usa-federal:ChildPornographyPossession .
+
+# =============================================================================
+# CHILD SEX TRAFFICKING FEDERAL LAW (gUFO Event modeling)
+# =============================================================================
+
+cacontology-usa-federal:FederalChildSexTraffickingLaw rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-usa-federal:FederalChildExploitationLaw ;
+    rdfs:label "Federal Child Sex Trafficking Law"@en ;
+    rdfs:comment "Federal statutes criminalizing child sex trafficking, commercial sexual exploitation, and related crimes."@en .
+
+# Child Sex Trafficking Crimes as gUFO Events
+cacontology-usa-federal:SexTraffickingOfMinors rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:ExploitationEvent ;
+    rdfs:seeAlso cacontology-usa-federal:FederalChildSexTraffickingLaw ;
+    rdfs:label "Sex Trafficking of Minors"@en ;
+    rdfs:comment "Federal crime of sex trafficking involving minors, including recruitment, harboring, transportation, or obtaining. Modeled as gUFO Event."@en ;
+    owl:equivalentClass cacontology-usa-federal:SexTraffickingOfMinors .
+
+cacontology-usa-federal:CommercialSexualExploitation rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:ExploitationEvent ;
+    rdfs:seeAlso cacontology-usa-federal:FederalChildSexTraffickingLaw ;
+    rdfs:label "Commercial Sexual Exploitation"@en ;
+    rdfs:comment "Federal crime involving commercial sexual exploitation of children through force, fraud, or coercion. Modeled as gUFO Event."@en ;
+    owl:equivalentClass cacontology-usa-federal:CommercialSexualExploitation .
+
+cacontology-usa-federal:SexTraffickingConspiracy rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:ExploitationEvent ;
+    rdfs:seeAlso cacontology-usa-federal:FederalChildSexTraffickingLaw ;
+    rdfs:label "Sex Trafficking Conspiracy"@en ;
+    rdfs:comment "Federal crime of conspiracy to engage in sex trafficking of minors. Modeled as gUFO Event."@en ;
+    owl:equivalentClass cacontology-usa-federal:SexTraffickingConspiracy .
+
+# =============================================================================
+# CHILD SEXUAL ABUSE FEDERAL LAW (gUFO Event modeling)
+# =============================================================================
+
+cacontology-usa-federal:FederalChildSexualAbuseLaw rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-usa-federal:FederalChildExploitationLaw ;
+    rdfs:label "Federal Child Sexual Abuse Law"@en ;
+    rdfs:comment "Federal statutes criminalizing child sexual abuse in federal jurisdiction or involving interstate elements."@en .
+
+# Child Sexual Abuse Crimes as gUFO Events
+cacontology-usa-federal:AggravatedSexualAbuse rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:ExploitationEvent ;
+    rdfs:seeAlso cacontology-usa-federal:FederalChildSexualAbuseLaw ;
+    rdfs:label "Aggravated Sexual Abuse"@en ;
+    rdfs:comment "Federal crime of aggravated sexual abuse involving children in federal jurisdiction. Modeled as gUFO Event."@en ;
+    owl:equivalentClass cacontology-usa-federal:AggravatedSexualAbuse .
+
+cacontology-usa-federal:SexualAbuseOfMinor rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:ExploitationEvent ;
+    rdfs:seeAlso cacontology-usa-federal:FederalChildSexualAbuseLaw ;
+    rdfs:label "Sexual Abuse of Minor"@en ;
+    rdfs:comment "Federal crime of sexual abuse specifically involving minor victims. Modeled as gUFO Event."@en ;
+    owl:equivalentClass cacontology-usa-federal:SexualAbuseOfMinor .
+
+cacontology-usa-federal:AbusiveContactWithMinor rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:ExploitationEvent ;
+    rdfs:seeAlso cacontology-usa-federal:FederalChildSexualAbuseLaw ;
+    rdfs:label "Abusive Contact with Minor"@en ;
+    rdfs:comment "Federal crime involving abusive sexual contact with minor victims. Modeled as gUFO Event."@en ;
+    owl:equivalentClass cacontology-usa-federal:AbusiveContactWithMinor .
+
+# =============================================================================
+# CHILD SUPPORT ENFORCEMENT INTERSECTION (gUFO Event and Situation modeling)
+# =============================================================================
+
+cacontology-usa-federal:ChildSupportEnforcementLaw rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-usa-federal:FederalChildExploitationLaw ;
+    rdfs:label "Child Support Enforcement Law"@en ;
+    rdfs:comment "Federal laws related to child support enforcement that intersect with child exploitation cases."@en .
+
+# Child Support Crimes as gUFO Events
+cacontology-usa-federal:ChildSupportEvasion rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:ExploitationEvent ;
+    rdfs:seeAlso cacontology-usa-federal:ChildSupportEnforcementLaw ;
+    rdfs:label "Child Support Evasion"@en ;
+    rdfs:comment "Federal crime of willfully failing to pay child support across state lines. Modeled as gUFO Event."@en ;
+    owl:equivalentClass cacontology-usa-federal:ChildSupportEvasion .
+
+# Child Support Exploitation Connections as gUFO Situations
+cacontology-usa-federal:ChildSupportExploitationLink rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:Situation ;
+    rdfs:label "Child Support Exploitation Link"@en ;
+    rdfs:comment "Connection between child support violations and child exploitation crimes. Modeled as gUFO Situation."@en .
+
+cacontology-usa-federal:FinancialControlPattern rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-usa-federal:ChildSupportExploitationLink ;
+    rdfs:label "Financial Control Pattern"@en ;
+    rdfs:comment "Pattern where child support evasion is used as mechanism of control in exploitation cases."@en .
+
+# =============================================================================
+# EXTRATERRITORIAL SEXUAL EXPLOITATION (gUFO Event modeling)
+# =============================================================================
+
+cacontology-usa-federal:ExtraterritorialSexualExploitationLaw rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-usa-federal:FederalChildExploitationLaw ;
+    rdfs:label "Extraterritorial Sexual Exploitation Law"@en ;
+    rdfs:comment "Federal laws criminalizing sexual exploitation of children committed by U.S. citizens or residents abroad."@en .
+
+# Extraterritorial Crimes as gUFO Events
+cacontology-usa-federal:SexTourism rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:ExploitationEvent ;
+    rdfs:seeAlso cacontology-usa-federal:ExtraterritorialSexualExploitationLaw ;
+    rdfs:label "Sex Tourism"@en ;
+    rdfs:comment "Federal crime of traveling abroad with intent to engage in sexual conduct with minors. Modeled as gUFO Event."@en ;
+    owl:equivalentClass cacontology-usa-federal:SexTourism .
+
+cacontology-usa-federal:ForeignCommerceExploitation rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:ExploitationEvent ;
+    rdfs:seeAlso cacontology-usa-federal:ExtraterritorialSexualExploitationLaw ;
+    rdfs:label "Foreign Commerce Exploitation"@en ;
+    rdfs:comment "Federal crime involving sexual exploitation of children in foreign commerce. Modeled as gUFO Event."@en ;
+    owl:equivalentClass cacontology-usa-federal:ForeignCommerceExploitation .
+
+cacontology-usa-federal:ExtraterritorialProduction rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:ExploitationEvent ;
+    rdfs:seeAlso cacontology-usa-federal:ExtraterritorialSexualExploitationLaw ;
+    rdfs:label "Extraterritorial Production"@en ;
+    rdfs:comment "Federal crime of producing child pornography outside U.S. by U.S. citizens or residents. Modeled as gUFO Event."@en ;
+    owl:equivalentClass cacontology-usa-federal:ExtraterritorialProduction .
+
+cacontology-usa-federal:TransportationForSexualExploitation rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:ExploitationEvent ;
+    rdfs:seeAlso cacontology-usa-federal:ExtraterritorialSexualExploitationLaw ;
+    rdfs:label "Transportation for Sexual Exploitation"@en ;
+    rdfs:comment "Federal crime of transporting minors across international boundaries for sexual exploitation. Modeled as gUFO Event."@en ;
+    owl:equivalentClass cacontology-usa-federal:TransportationForSexualExploitation .
+
+# =============================================================================
+# OBSCENITY LAW FRAMEWORK (gUFO Event modeling)
+# =============================================================================
+
+# Obscenity Crimes as gUFO Events
+cacontology-usa-federal:ObscenityDistribution rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:ExploitationEvent ;
+    rdfs:seeAlso cacontology-usa-federal:FederalObscenityLaw ;
+    rdfs:label "Obscenity Distribution"@en ;
+    rdfs:comment "Federal crime of distributing obscene materials through interstate or foreign commerce. Modeled as gUFO Event."@en ;
+    owl:equivalentClass cacontology-usa-federal:ObscenityDistribution .
+
+cacontology-usa-federal:ObscenityTransportation rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:ExploitationEvent ;
+    rdfs:seeAlso cacontology-usa-federal:FederalObscenityLaw ;
+    rdfs:label "Obscenity Transportation"@en ;
+    rdfs:comment "Federal crime of transporting obscene materials across state or international boundaries. Modeled as gUFO Event."@en ;
+    owl:equivalentClass cacontology-usa-federal:ObscenityTransportation .
+
+cacontology-usa-federal:ObscenityImportation rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:ExploitationEvent ;
+    rdfs:seeAlso cacontology-usa-federal:FederalObscenityLaw ;
+    rdfs:label "Obscenity Importation"@en ;
+    rdfs:comment "Federal crime of importing obscene materials into the United States. Modeled as gUFO Event."@en ;
+    owl:equivalentClass cacontology-usa-federal:ObscenityImportation .
+
+cacontology-usa-federal:OnlineObscenityDistribution rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-usa-federal:ObscenityDistribution ;
+    rdfs:label "Online Obscenity Distribution"@en ;
+    rdfs:comment "Federal crime of distributing obscene materials through internet and digital platforms. Modeled as gUFO Event."@en ;
+    owl:equivalentClass cacontology-usa-federal:OnlineObscenityDistribution .
+
+# =============================================================================
+# FEDERAL LAW ENFORCEMENT ROLES (gUFO Role anti-rigid modeling)
+# =============================================================================
+
+# Federal Law Enforcement Roles as gUFO Roles (anti-rigid)
+cacontology-usa-federal:FederalProsecutorRole rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Federal Prosecutor Role"@en ;
+    rdfs:comment "Role of federal prosecutor handling child exploitation cases. Modeled as anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cac-core:Role .
+
+cacontology-usa-federal:CEOSAttorneyRole rdf:type owl:Class, gufo:Role ;
+    rdfs:label "CEOS Attorney Role"@en ;
+    rdfs:comment "Role of DOJ CEOS attorney specializing in child exploitation prosecution. Modeled as anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cacontology-usa-federal:FederalProsecutorRole .
+
+cacontology-usa-federal:FederalInvestigatorRole rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Federal Investigator Role"@en ;
+    rdfs:comment "Role of federal investigator (FBI, ICE, etc.) investigating child exploitation. Modeled as anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cac-core:Role .
+
+cacontology-usa-federal:FederalDefendantRole rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Federal Defendant Role"@en ;
+    rdfs:comment "Role of individual charged in federal child exploitation case. Modeled as anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cac-core:Role ;
+    owl:equivalentClass cacontology-usa-federal:FederalDefendantRole .
+
+cacontology-usa-federal:FederalVictimRole rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Federal Victim Role"@en ;
+    rdfs:comment "Role of victim in federal child exploitation prosecution. Modeled as anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cac-core:Role ;
+    owl:equivalentClass cacontology-usa-federal:FederalVictimRole .
+
+# =============================================================================
+# gUFO TEMPORAL PROPERTIES
+# =============================================================================
+
+# Federal Prosecution Temporal Properties
+cacontology-usa-federal:hasProsecutionBeginPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has prosecution begin point"@en ;
+    rdfs:comment "Temporal begin point for federal prosecution."@en ;
+    rdfs:subPropertyOf gufo:hasBeginPointInXSDDateTimeStamp ;
+    rdfs:domain cacontology-usa-federal:FederalProsecution ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-usa-federal:hasProsecutionEndPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has prosecution end point"@en ;
+    rdfs:comment "Temporal end point for federal prosecution."@en ;
+    rdfs:subPropertyOf gufo:hasEndPointInXSDDateTimeStamp ;
+    rdfs:domain cacontology-usa-federal:FederalProsecution ;
+    rdfs:range xsd:dateTimeStamp .
+
+# Federal Legal Phase Temporal Properties
+cacontology-usa-federal:hasPhaseBeginPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has phase begin point"@en ;
+    rdfs:comment "Temporal begin point for federal legal phase."@en ;
+    rdfs:subPropertyOf gufo:hasBeginPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-usa-federal:hasPhaseEndPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has phase end point"@en ;
+    rdfs:comment "Temporal end point for federal legal phase."@en ;
+    rdfs:subPropertyOf gufo:hasEndPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:dateTimeStamp .
+
+# Federal Role Temporal Properties
+cacontology-usa-federal:hasRoleBeginPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has role begin point"@en ;
+    rdfs:comment "Temporal begin point for federal role."@en ;
+    rdfs:subPropertyOf gufo:hasBeginPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Role ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-usa-federal:hasRoleEndPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has role end point"@en ;
+    rdfs:comment "Temporal end point for federal role."@en ;
+    rdfs:subPropertyOf gufo:hasEndPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Role ;
+    rdfs:range xsd:dateTimeStamp .
+
+# Duration Properties
+cacontology-usa-federal:prosecutionDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "prosecution duration"@en ;
+    rdfs:comment "Duration of federal prosecution from charge to resolution."@en ;
+    rdfs:domain cacontology-usa-federal:FederalProsecution ;
+    rdfs:range xsd:duration .
+
+cacontology-usa-federal:phaseDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "phase duration"@en ;
+    rdfs:comment "Duration of federal legal phase."@en ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:duration .
+
+cacontology-usa-federal:roleDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "role duration"@en ;
+    rdfs:comment "Duration of individual's federal role."@en ;
+    rdfs:domain cac-core:Role ;
+    rdfs:range xsd:duration .
+
+# =============================================================================
+# gUFO PARTICIPATION AND PART-WHOLE RELATIONSHIPS
+# =============================================================================
+
+# Participation Properties (connecting Events to Objects)
+cacontology-usa-federal:prosecutedBy rdf:type owl:ObjectProperty ;
+    rdfs:label "prosecuted by"@en ;
+    rdfs:comment "Links federal prosecution event to prosecuting attorney (gUFO participation)."@en ;
+    rdfs:subPropertyOf gufo:participantIn ;
+    rdfs:domain cacontology-usa-federal:FederalProsecution ;
+    rdfs:range cacontology-usa-federal:FederalProsecutorRole .
+
+cacontology-usa-federal:investigatedBy rdf:type owl:ObjectProperty ;
+    rdfs:label "investigated by"@en ;
+    rdfs:comment "Links federal investigation event to investigating agent (gUFO participation)."@en ;
+    rdfs:subPropertyOf gufo:participantIn ;
+    rdfs:domain cacontology-usa-federal:FederalInvestigation ;
+    rdfs:range cacontology-usa-federal:FederalInvestigatorRole .
+
+cacontology-usa-federal:defendedBy rdf:type owl:ObjectProperty ;
+    rdfs:label "defended by"@en ;
+    rdfs:comment "Links criminal event to defendant (gUFO participation)."@en ;
+    rdfs:subPropertyOf gufo:participantIn ;
+    rdfs:domain cac-core:Event ;
+    rdfs:range cacontology-usa-federal:FederalDefendantRole .
+
+cacontology-usa-federal:victimizedBy rdf:type owl:ObjectProperty ;
+    rdfs:label "victimized by"@en ;
+    rdfs:comment "Links criminal event to victim (gUFO participation)."@en ;
+    rdfs:subPropertyOf gufo:participantIn ;
+    rdfs:domain cac-core:Event ;
+    rdfs:range cacontology-usa-federal:FederalVictimRole .
+
+# Part-Whole Relationships for Federal Legal Processes
+cacontology-usa-federal:hasLegalPhase rdf:type owl:ObjectProperty ;
+    rdfs:label "has legal phase"@en ;
+    rdfs:comment "Links federal prosecution to its constituent phases (gUFO part-whole)."@en ;
+    rdfs:subPropertyOf gufo:isObjectProperPartOf ;
+    rdfs:domain cacontology-usa-federal:FederalProsecution ;
+    rdfs:range cac-core:Phase .
+
+cacontology-usa-federal:isPhaseOf rdf:type owl:ObjectProperty ;
+    rdfs:label "is phase of"@en ;
+    rdfs:comment "Links legal phase to its parent prosecution (gUFO part-whole)."@en ;
+    rdfs:subPropertyOf gufo:isObjectProperPartOf ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range cacontology-usa-federal:FederalProsecution ;
+    owl:inverseOf cacontology-usa-federal:hasLegalPhase .
+
+# Federal Organization Structure
+cacontology-usa-federal:hasDivision rdf:type owl:ObjectProperty ;
+    rdfs:label "has division"@en ;
+    rdfs:comment "Links DOJ to its divisions like CEOS (gUFO functional complex structure)."@en ;
+    rdfs:subPropertyOf gufo:isComponentOf ;
+    rdfs:domain gufo:FunctionalComplex ;
+    rdfs:range cacontology-usa-federal:CEOSdivision .
+
+# Evidence Collection Relationships
+cacontology-usa-federal:collectsEvidence rdf:type owl:ObjectProperty ;
+    rdfs:label "collects evidence"@en ;
+    rdfs:comment "Links investigation to evidence collected (gUFO object-aspect relationship)."@en ;
+    rdfs:domain cacontology-usa-federal:FederalInvestigation ;
+    rdfs:range uco-observable:ObservableObject .
+
+cacontology-usa-federal:usesEvidence rdf:type owl:ObjectProperty ;
+    rdfs:label "uses evidence"@en ;
+    rdfs:comment "Links prosecution to evidence used (gUFO object-aspect relationship)."@en ;
+    rdfs:domain cacontology-usa-federal:FederalProsecution ;
+    rdfs:range uco-observable:ObservableObject .
+
+# =============================================================================
+# gUFO QUALITY AND MODE ASPECTS
+# =============================================================================
+
+# Prosecution Quality Aspects
+cacontology-usa-federal:prosecutionComplexity rdf:type owl:DatatypeProperty ;
+    rdfs:label "prosecution complexity"@en ;
+    rdfs:comment "Complexity level of federal prosecution (gUFO quality aspect)."@en ;
+    rdfs:domain cacontology-usa-federal:FederalProsecution ;
+    rdfs:range xsd:string .
+
+cacontology-usa-federal:prosecutionSeverity rdf:type owl:DatatypeProperty ;
+    rdfs:label "prosecution severity"@en ;
+    rdfs:comment "Severity level of federal prosecution charges (gUFO quality aspect)."@en ;
+    rdfs:domain cacontology-usa-federal:FederalProsecution ;
+    rdfs:range xsd:string .
+
+cacontology-usa-federal:prosecutionStatus rdf:type owl:DatatypeProperty ;
+    rdfs:label "prosecution status"@en ;
+    rdfs:comment "Current status of federal prosecution (gUFO mode aspect)."@en ;
+    rdfs:domain cacontology-usa-federal:FederalProsecution ;
+    rdfs:range xsd:string .
+
+# Federal Crime Qualities
+cacontology-usa-federal:crimeJurisdiction rdf:type owl:DatatypeProperty ;
+    rdfs:label "crime jurisdiction"@en ;
+    rdfs:comment "Federal jurisdiction basis for crime (gUFO quality aspect)."@en ;
+    rdfs:domain cac-core:Event ;
+    rdfs:range xsd:string .
+
+cacontology-usa-federal:crimeSeverityLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "crime severity level"@en ;
+    rdfs:comment "Severity classification of federal crime (gUFO quality aspect)."@en ;
+    rdfs:domain cac-core:Event ;
+    rdfs:range xsd:integer .
+
+cacontology-usa-federal:mandatoryMinimumSentence rdf:type owl:DatatypeProperty ;
+    rdfs:label "mandatory minimum sentence"@en ;
+    rdfs:comment "Mandatory minimum sentence for federal crime in years (gUFO quality aspect)."@en ;
+    rdfs:domain cac-core:Event ;
+    rdfs:range xsd:integer .
+
+# Legal Role Qualities
+cacontology-usa-federal:roleSpecialization rdf:type owl:DatatypeProperty ;
+    rdfs:label "role specialization"@en ;
+    rdfs:comment "Area of specialization for federal legal role (gUFO quality aspect)."@en ;
+    rdfs:domain cac-core:Role ;
+    rdfs:range xsd:string .
+
+cacontology-usa-federal:roleExperience rdf:type owl:DatatypeProperty ;
+    rdfs:label "role experience"@en ;
+    rdfs:comment "Years of experience in federal legal role (gUFO quality aspect)."@en ;
+    rdfs:domain cac-core:Role ;
+    rdfs:range xsd:integer .
+
+# =============================================================================
+# gUFO SITUATIONAL AND CONTEXTUAL RELATIONSHIPS
+# =============================================================================
+
+# Multi-State Crime Situations
+cacontology-usa-federal:involvesMultipleStates rdf:type owl:DatatypeProperty ;
+    rdfs:label "involves multiple states"@en ;
+    rdfs:comment "Whether federal crime involves multiple states (gUFO situational context)."@en ;
+    rdfs:domain cac-core:Event ;
+    rdfs:range xsd:boolean .
+
+cacontology-usa-federal:hasInterstateNexus rdf:type owl:DatatypeProperty ;
+    rdfs:label "has interstate nexus"@en ;
+    rdfs:comment "Description of interstate commerce connection (gUFO situational context)."@en ;
+    rdfs:domain cac-core:Event ;
+    rdfs:range xsd:string .
+
+# International Crime Situations
+cacontology-usa-federal:involvesInternationalElements rdf:type owl:DatatypeProperty ;
+    rdfs:label "involves international elements"@en ;
+    rdfs:comment "Whether federal crime involves international elements (gUFO situational context)."@en ;
+    rdfs:domain cac-core:Event ;
+    rdfs:range xsd:boolean .
+
+cacontology-usa-federal:foreignCountriesInvolved rdf:type owl:DatatypeProperty ;
+    rdfs:label "foreign countries involved"@en ;
+    rdfs:comment "List of foreign countries involved in crime (gUFO situational context)."@en ;
+    rdfs:domain cac-core:Event ;
+    rdfs:range xsd:string .
+
+# Technology-Mediated Crime Situations
+cacontology-usa-federal:involvesDigitalEvidence rdf:type owl:DatatypeProperty ;
+    rdfs:label "involves digital evidence"@en ;
+    rdfs:comment "Whether federal crime involves digital evidence (gUFO situational context)."@en ;
+    rdfs:domain cac-core:Event ;
+    rdfs:range xsd:boolean .
+
+cacontology-usa-federal:requiresForensicAnalysis rdf:type owl:DatatypeProperty ;
+    rdfs:label "requires forensic analysis"@en ;
+    rdfs:comment "Whether federal crime requires digital forensic analysis (gUFO situational context)."@en ;
+    rdfs:domain cac-core:Event ;
+    rdfs:range xsd:boolean .
+
+# =============================================================================
+# gUFO FOUNDATIONAL CONSTRAINTS AND AXIOMS
+# =============================================================================
+
+# Phase Ordering Constraints (leveraging gUFO temporal ordering)
+cacontology-usa-federal:precedesPhase rdf:type owl:ObjectProperty ;
+    rdfs:label "precedes phase"@en ;
+    rdfs:comment "Temporal precedence relationship between federal legal phases (gUFO temporal ordering)."@en ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range cac-core:Phase ;
+    rdf:type owl:TransitiveProperty .
+
+cacontology-usa-federal:followsPhase rdf:type owl:ObjectProperty ;
+    rdfs:label "follows phase"@en ;
+    rdfs:comment "Temporal succession relationship between federal legal phases (gUFO temporal ordering)."@en ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range cac-core:Phase ;
+    owl:inverseOf cacontology-usa-federal:precedesPhase .
+
+# Role Dependencies (leveraging gUFO relational dependence)
+cacontology-usa-federal:requiresRole rdf:type owl:ObjectProperty ;
+    rdfs:label "requires role"@en ;
+    rdfs:comment "Dependency relationship between federal legal roles (gUFO relational dependence)."@en ;
+    rdfs:domain cac-core:Role ;
+    rdfs:range cac-core:Role .
+
+cacontology-usa-federal:collaboratesWith rdf:type owl:ObjectProperty ;
+    rdfs:label "collaborates with"@en ;
+    rdfs:comment "Collaboration relationship between federal legal roles (gUFO relational dependence)."@en ;
+    rdfs:domain cac-core:Role ;
+    rdfs:range cac-core:Role ;
+    rdf:type owl:SymmetricProperty . 

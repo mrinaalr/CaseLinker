@@ -1,0 +1,1153 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix gufo: <http://purl.org/nemo/gufo#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix cacontology-international: <https://cacontology.projectvic.org/international#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+
+# Ontology Declaration
+<https://cacontology.projectvic.org/international/shapes> rdf:type owl:Ontology ;
+    rdfs:label "CAC International Cooperation SHACL Shapes with gUFO Validation"@en ;
+    rdfs:comment "SHACL validation shapes for gUFO-enhanced CAC international cooperation ontology, including anti-rigidity constraints, temporal validation, and foundational type compliance."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/international/shapes/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://cacontology.projectvic.org/international/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> .
+
+# =============================================================================
+# gUFO TYPE CONSISTENCY VALIDATION FOR INTERNATIONAL COOPERATION
+# =============================================================================
+
+# Organization Kind validation for international partnerships (rigid sortals)
+cacontology-international:InternationalPartnershipKindValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass gufo:Kind ;
+    sh:property [
+        sh:path rdf:type ;
+        sh:hasValue gufo:Kind ;
+        sh:minCount 1     ] ;
+    sh:message "Every international partnership Kind must be properly classified"@en .
+
+# EventType validation for cross-border operations
+cacontology-international:CrossBorderEventTypeValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass gufo:EventType ;
+    sh:message "Every cross-border operation EventType must be declared as rdf:type gufo:EventType"@en .
+
+# Role validation for international coordinators (anti-rigid relational)
+cacontology-international:InternationalRoleValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cac-core:Role ;
+    sh:not [
+        sh:property [
+            sh:path rdfs:subClassOf ;
+            sh:class gufo:Kind         ]     ] ;
+    sh:message "International coordination roles are anti-rigid and cannot be subclasses of rigid Kinds"@en .
+
+# SituationType validation for legal and coordination situations
+cacontology-international:InternationalSituationTypeValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass gufo:SituationType ;
+    sh:message "Every international SituationType must be declared as rdf:type gufo:SituationType"@en .
+
+# =============================================================================
+# gUFO TEMPORAL CONSTRAINTS FOR INTERNATIONAL OPERATIONS
+# =============================================================================
+
+# Cross-Border Operation Temporal Validation
+cacontology-international:CrossBorderOperationTemporalShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:CrossBorderOperation ;
+    sh:property [
+        sh:path gufo:hasBeginPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTime ;
+        sh:maxCount 1 ;
+        sh:message "Cross-border operation may have at most one start time (gUFO temporal boundary)"@en     ] ;
+    sh:property [
+        sh:path gufo:hasEndPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTime ;
+        sh:maxCount 1 ;
+        sh:message "Cross-border operation may have at most one end time (gUFO temporal boundary)"@en     ] ;
+    sh:sparql [
+        sh:message "Operation end time must be after start time when both specified (gUFO temporal ordering)"@en ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "gufo" ;
+                sh:namespace "http://purl.org/nemo/gufo#"^^xsd:anyURI             ]         ] ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this gufo:hasBeginPointInXSDDateTimeStamp ?startTime .
+                $this gufo:hasEndPointInXSDDateTimeStamp ?endTime .
+                FILTER (?endTime <= ?startTime)
+            }
+        """     ] .
+
+# International Alert Temporal Validation
+cacontology-international:InternationalAlertTemporalShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:InternationalAlert ;
+    sh:property [
+        sh:path gufo:hasBeginPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "International alert must have exactly one start time (gUFO temporal boundary)"@en     ] .
+
+# International Partnership Temporal Validation
+cacontology-international:InternationalPartnershipTemporalShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:InternationalPartnership ;
+    sh:property [
+        sh:path gufo:hasBeginPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTime ;
+        sh:maxCount 1 ;
+        sh:message "Partnership may have establishment date (gUFO temporal boundary)"@en     ] ;
+    sh:property [
+        sh:path gufo:hasEndPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTime ;
+        sh:maxCount 1 ;
+        sh:message "Partnership may have termination date (gUFO temporal boundary)"@en     ] .
+
+# =============================================================================
+# INTERNATIONAL PARTNERSHIP SHAPES
+# =============================================================================
+
+cacontology-international:InternationalPartnershipShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:InternationalPartnership ;
+    rdfs:label "International Partnership Shape"@en ;
+    rdfs:comment "Validation shape for international partnership instances with gUFO integration."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Partnership name should be 5-200 characters when specified."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-international:partnerCountryCount ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 2 ;
+        sh:maxInclusive 200 ;
+        sh:message "Partner country count must be between 2 and 200 when specified."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-international:coordinationMethod ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "formal_request" "intelligence_sharing" "joint_investigation" "bilateral_agreement" "multilateral_treaty" ) ;
+        sh:message "Coordination method must be from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-international:hasCoordinationEffectiveness ;
+        sh:datatype xsd:string ;
+        sh:in ( "low" "moderate" "high" "excellent" "outstanding" ) ;
+        sh:maxCount 1 ;
+        sh:message "Partnership effectiveness level must be from allowed list (gUFO quality aspect)"@en     ] ;
+    sh:property [
+        sh:path cacontology-international:hasTrustLevel ;
+        sh:datatype xsd:string ;
+        sh:in ( "developing" "established" "strong" "exceptional" "complete" ) ;
+        sh:maxCount 1 ;
+        sh:message "Partnership trust level must be from allowed list (gUFO quality aspect)"@en     ] ;
+    sh:property [
+        sh:path gufo:hasBeginPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTime ;
+        sh:maxCount 1 ;
+        sh:message "Partnership may have establishment date (gUFO temporal boundary)"@en     ] .
+
+cacontology-international:CountryPartnershipShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:CountryPartnership ;
+    rdfs:label "Country Partnership Shape"@en ;
+    rdfs:comment "Validation shape for country partnership instances."@en ;
+    sh:property [
+        sh:path cacontology-international:partnerCountryCount ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 2 ;
+        sh:maxInclusive 50 ;
+        sh:message "Country partnership must specify partner count between 2 and 50."@en
+    ] .
+
+cacontology-international:RegionalCoordinationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:RegionalCoordination ;
+    rdfs:label "Regional Coordination Shape"@en ;
+    rdfs:comment "Validation shape for regional coordination instances."@en ;
+    sh:property [
+        sh:path cacontology-international:globalCoverage ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "europe" "asia_pacific" "americas" "africa" "middle_east" "global" ) ;
+        sh:message "Global coverage must be from the allowed list."@en
+    ] .
+
+cacontology-international:GlobalMissingChildrenCenterShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:GlobalMissingChildrenCenter ;
+    rdfs:label "Global Missing Children Center Shape"@en ;
+    rdfs:comment "Validation shape for global missing children center instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Global missing children center must have a name (5-200 characters)."@en
+    ] .
+
+cacontology-international:InternationalTaskForceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:InternationalTaskForce ;
+    rdfs:label "International Task Force Shape"@en ;
+    rdfs:comment "Validation shape for international task force instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "International task force must have a name (5-200 characters)."@en
+    ] .
+
+# =============================================================================
+# CROSS-BORDER OPERATION SHAPES
+# =============================================================================
+
+cacontology-international:CrossBorderOperationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:CrossBorderOperation ;
+    rdfs:label "Cross-Border Operation Shape"@en ;
+    rdfs:comment "Validation shape for cross-border operation instances with gUFO integration."@en ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Cross-border operation must specify start time."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:endTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Cross-border operation may specify end time."@en
+    ] ;
+    sh:property [
+        sh:path gufo:hasBeginPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Cross-border operation must have start time (gUFO temporal boundary)"@en     ] ;
+    sh:property [
+        sh:path gufo:hasEndPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTime ;
+        sh:maxCount 1 ;
+        sh:message "Cross-border operation may have end time (gUFO temporal boundary)"@en     ] ;
+    sh:property [
+        sh:path cacontology-international:crossBorderCapability ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "basic" "enhanced" "advanced" "expert" ) ;
+        sh:message "Cross-border capability must be from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-international:coordinationComplexity ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "low" "medium" "high" "complex" ) ;
+        sh:message "Coordination complexity must be from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-international:hasOperationalUrgency ;
+        sh:datatype xsd:string ;
+        sh:in ( "routine" "urgent" "critical" "emergency" "immediate" ) ;
+        sh:maxCount 1 ;
+        sh:message "Operational urgency level must be from allowed list (gUFO quality aspect)"@en     ] ;
+    sh:property [
+        sh:path cacontology-international:hasSuccessLikelihood ;
+        sh:datatype xsd:double ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:maxCount 1 ;
+        sh:message "Success likelihood must be between 0.0 and 1.0 (gUFO quality aspect)"@en     ] .
+
+cacontology-international:CrossBorderInvestigationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:CrossBorderInvestigation ;
+    rdfs:label "Cross-Border Investigation Shape"@en ;
+    rdfs:comment "Validation shape for cross-border investigation instances."@en ;
+    sh:property [
+        sh:path cacontology-international:jurisdictionCount ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 2 ;
+        sh:maxInclusive 50 ;
+        sh:message "Jurisdiction count must be between 2 and 50 when specified."@en
+    ] .
+
+cacontology-international:InternationalAlertShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:InternationalAlert ;
+    rdfs:label "International Alert Shape"@en ;
+    rdfs:comment "Validation shape for international alert instances."@en ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "International alert must specify start time."@en
+    ] .
+
+cacontology-international:GlobalCaseTrackingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:GlobalCaseTracking ;
+    rdfs:label "Global Case Tracking Shape"@en ;
+    rdfs:comment "Validation shape for global case tracking instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 100 ;
+        sh:message "Case tracking name should be 5-100 characters when specified."@en
+    ] .
+
+cacontology-international:InternationalReferralShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:InternationalReferral ;
+    rdfs:label "International Referral Shape"@en ;
+    rdfs:comment "Validation shape for international referral instances."@en ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "International referral must specify start time."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-international:responseTimeInternational ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1.0 ;
+        sh:maxInclusive 8760.0 ;
+        sh:message "International response time must be between 1 and 8760 hours (1 year)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-international:undercoverCoordination ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Undercover coordination must be a boolean value."@en
+    ] .
+
+# =============================================================================
+# SPECIALIZED OPERATION SHAPES
+# =============================================================================
+
+cacontology-international:LiveStreamingInvestigationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:LiveStreamingInvestigation ;
+    rdfs:label "Live Streaming Investigation Shape"@en ;
+    rdfs:comment "Validation shape for live streaming investigation instances with gUFO integration."@en ;
+    sh:property [
+        sh:path cacontology-international:jurisdictionCount ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 2 ;
+        sh:maxInclusive 10 ;
+        sh:message "Live streaming investigation must involve 2-10 jurisdictions."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-international:crossBorderCapability ;
+        sh:hasValue "expert" ;
+        sh:message "Live streaming investigations require expert cross-border capability (gUFO quality constraint)"@en     ] ;
+    sh:property [
+        sh:path cacontology-international:coordinationComplexity ;
+        sh:hasValue "complex" ;
+        sh:message "Live streaming investigations require complex coordination (gUFO quality constraint)"@en     ] ;
+    sh:property [
+        sh:path cacontology-international:hasOperationalUrgency ;
+        sh:datatype xsd:string ;
+        sh:in ( "urgent" "critical" "emergency" "immediate" ) ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Live streaming investigations must have urgent operational priority (gUFO quality aspect)"@en     ] ;
+    sh:property [
+        sh:path gufo:hasBeginPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Investigation must have start time (gUFO temporal boundary)"@en     ] .
+
+cacontology-international:DistanceChildAbuseShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:DistanceChildAbuse ;
+    rdfs:label "Distance Child Abuse Shape"@en ;
+    rdfs:comment "Validation shape for distance child abuse instances."@en ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Distance child abuse operation must specify start time."@en
+    ] .
+
+cacontology-international:InstructedAbuseOperationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:InstructedAbuseOperation ;
+    rdfs:label "Instructed Abuse Operation Shape"@en ;
+    rdfs:comment "Validation shape for instructed abuse operation instances."@en ;
+    sh:property [
+        sh:path cacontology-international:coordinationComplexity ;
+        sh:hasValue "high" ;
+        sh:message "Instructed abuse operations must have high coordination complexity."@en
+    ] .
+
+cacontology-international:OverseasVictimCoordinationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:OverseasVictimCoordination ;
+    rdfs:label "Overseas Victim Coordination Shape"@en ;
+    rdfs:comment "Validation shape for overseas victim coordination instances."@en ;
+    sh:property [
+        sh:path cacontology-international:responseTimeInternational ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1.0 ;
+        sh:maxInclusive 72.0 ;
+        sh:message "Overseas victim coordination response time should be within 72 hours."@en
+    ] .
+
+cacontology-international:NCMECReportingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:NCMECReporting ;
+    rdfs:label "NCMEC Reporting Shape"@en ;
+    rdfs:comment "Validation shape for NCMEC reporting instances."@en ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "NCMEC reporting must specify start time."@en
+    ] .
+
+cacontology-international:USAustraliaCoordinationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:USAustraliaCoordination ;
+    rdfs:label "US-Australia Coordination Shape"@en ;
+    rdfs:comment "Validation shape for US-Australia coordination instances."@en ;
+    sh:property [
+        sh:path cacontology-international:operationContext ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "undercover_investigation" "direct_referral" "joint_operation" "intelligence_sharing" ) ;
+        sh:message "Operation context must be from the allowed list."@en
+    ] .
+
+cacontology-international:ACCCEIntegrationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:ACCCEIntegration ;
+    rdfs:label "ACCCE Integration Shape"@en ;
+    rdfs:comment "Validation shape for ACCCE integration instances."@en ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "ACCCE integration must specify start time."@en
+    ] .
+
+# =============================================================================
+# INFORMATION SHARING SHAPES
+# =============================================================================
+
+cacontology-international:InformationSharingAgreementShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:InformationSharingAgreement ;
+    rdfs:label "Information Sharing Agreement Shape"@en ;
+    rdfs:comment "Validation shape for information sharing agreement instances with gUFO integration."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Information sharing agreement must have a name (5-200 characters)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-international:multilateralAgreement ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Multilateral agreement must be a boolean value."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-international:informationSharingLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "basic" "enhanced" "full" "restricted" ) ;
+        sh:message "Information sharing level must be from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-international:hasAgreementStability ;
+        sh:datatype xsd:string ;
+        sh:in ( "temporary" "provisional" "stable" "long_term" "permanent" ) ;
+        sh:maxCount 1 ;
+        sh:message "Agreement stability level must be from allowed list (gUFO quality aspect)"@en     ] ;
+    sh:property [
+        sh:path cacontology-international:hasCompliance ;
+        sh:datatype xsd:double ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:maxCount 1 ;
+        sh:message "Compliance rate must be between 0.0 and 1.0 (gUFO quality aspect)"@en     ] ;
+    sh:property [
+        sh:path gufo:hasBeginPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTime ;
+        sh:maxCount 1 ;
+        sh:message "Agreement may have effective date (gUFO temporal boundary)"@en     ] ;
+    sh:property [
+        sh:path gufo:hasEndPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTime ;
+        sh:maxCount 1 ;
+        sh:message "Agreement may have expiration date (gUFO temporal boundary)"@en     ] .
+
+cacontology-international:DataExchangeProtocolShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:DataExchangeProtocol ;
+    rdfs:label "Data Exchange Protocol Shape"@en ;
+    rdfs:comment "Validation shape for data exchange protocol instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 100 ;
+        sh:message "Data exchange protocol must have a name (5-100 characters)."@en
+    ] .
+
+cacontology-international:SecureChannelShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:SecureChannel ;
+    rdfs:label "Secure Communication Channel Shape"@en ;
+    rdfs:comment "Validation shape for secure communication channel instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 100 ;
+        sh:message "Secure channel must have a name (5-100 characters)."@en
+    ] .
+
+cacontology-international:InternationalDatabaseShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:InternationalDatabase ;
+    rdfs:label "International Database Shape"@en ;
+    rdfs:comment "Validation shape for international database instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 100 ;
+        sh:message "International database must have a name (5-100 characters)."@en
+    ] .
+
+# =============================================================================
+# GLOBAL HOTLINE NETWORK SHAPES
+# =============================================================================
+
+cacontology-international:GlobalHotlineNetworkShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:GlobalHotlineNetwork ;
+    rdfs:label "Global Hotline Network Shape"@en ;
+    rdfs:comment "Validation shape for global hotline network instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Global hotline network must have a name (5-200 characters)."@en
+    ] .
+
+cacontology-international:InternationalHotlineCoordinationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:InternationalHotlineCoordination ;
+    rdfs:label "International Hotline Coordination Shape"@en ;
+    rdfs:comment "Validation shape for international hotline coordination instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Hotline coordination name should be 5-200 characters when specified."@en
+    ] .
+
+cacontology-international:CrossReferralProtocolShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:CrossReferralProtocol ;
+    rdfs:label "Cross-Referral Protocol Shape"@en ;
+    rdfs:comment "Validation shape for cross-referral protocol instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 100 ;
+        sh:message "Cross-referral protocol must have a name (5-100 characters)."@en
+    ] .
+
+cacontology-international:MultilingualSupportShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:MultilingualSupport ;
+    rdfs:label "Multilingual Support Shape"@en ;
+    rdfs:comment "Validation shape for multilingual support instances."@en ;
+    sh:property [
+        sh:path cacontology-international:languageSupport ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 50 ;
+        sh:minLength 2 ;
+        sh:maxLength 50 ;
+        sh:message "Language support must specify 1-50 languages (2-50 characters each)."@en
+    ] .
+
+# =============================================================================
+# INTERNATIONAL LEGAL COOPERATION SHAPES
+# =============================================================================
+
+cacontology-international:MutualLegalAssistanceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:MutualLegalAssistance ;
+    rdfs:label "Mutual Legal Assistance Shape"@en ;
+    rdfs:comment "Validation shape for mutual legal assistance instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Mutual legal assistance must have a name (5-200 characters)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-international:treatyBasis ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Treaty basis should be 5-200 characters when specified."@en
+    ] .
+
+cacontology-international:ExtraditionAgreementShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:ExtraditionAgreement ;
+    rdfs:label "Extradition Agreement Shape"@en ;
+    rdfs:comment "Validation shape for extradition agreement instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Extradition agreement must have a name (5-200 characters)."@en
+    ] .
+
+cacontology-international:JurisdictionalCoordinationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:JurisdictionalCoordination ;
+    rdfs:label "Jurisdictional Coordination Shape"@en ;
+    rdfs:comment "Validation shape for jurisdictional coordination instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Jurisdictional coordination name should be 5-200 characters when specified."@en
+    ] .
+
+cacontology-international:InternationalWarrantShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:InternationalWarrant ;
+    rdfs:label "International Warrant Shape"@en ;
+    rdfs:comment "Validation shape for international warrant instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 100 ;
+        sh:message "International warrant must have a name (5-100 characters)."@en
+    ] .
+
+# =============================================================================
+# EUROPOL FRAMEWORK SHAPES
+# =============================================================================
+
+cacontology-international:EuropolOperationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:EuropolOperation ;
+    rdfs:label "Europol Operation Shape"@en ;
+    rdfs:comment "Validation shape for Europol operation instances."@en ;
+    sh:property [
+        sh:path cacontology-international:jurisdictionCount ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 3 ;
+        sh:maxInclusive 50 ;
+        sh:message "Europol operation must involve 3-50 jurisdictions."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-international:coordinationComplexity ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "high" "complex" ) ;
+        sh:message "Europol operations must have high or complex coordination complexity."@en
+    ] .
+
+cacontology-international:MultiCountryTakedownShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:MultiCountryTakedown ;
+    rdfs:label "Multi-Country Takedown Shape"@en ;
+    rdfs:comment "Validation shape for multi-country takedown instances."@en ;
+    sh:property [
+        sh:path cacontology-international:jurisdictionCount ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 2 ;
+        sh:maxInclusive 50 ;
+        sh:message "Multi-country takedown must involve 2-50 jurisdictions."@en
+    ] .
+
+cacontology-international:InternationalIntelligenceSharingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:InternationalIntelligenceSharing ;
+    rdfs:label "International Intelligence Sharing Shape"@en ;
+    rdfs:comment "Validation shape for international intelligence sharing instances."@en ;
+    sh:property [
+        sh:path cacontology-international:informationSharingLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "enhanced" "full" ) ;
+        sh:message "International intelligence sharing must have enhanced or full sharing level."@en
+    ] .
+
+cacontology-international:GlobalPlatformTakedownShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:GlobalPlatformTakedown ;
+    rdfs:label "Global Platform Takedown Shape"@en ;
+    rdfs:comment "Validation shape for global platform takedown instances."@en ;
+    sh:property [
+        sh:path cacontology-international:coordinationComplexity ;
+        sh:hasValue "complex" ;
+        sh:message "Global platform takedowns must have complex coordination complexity."@en
+    ] .
+
+# =============================================================================
+# CROSS-REFERENCE VALIDATION SHAPES
+# =============================================================================
+
+cacontology-international:PartnershipCoordinationCrossReferenceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:InternationalPartnership ;
+    rdfs:label "Partnership Coordination Cross Reference Shape"@en ;
+    rdfs:comment "Validates that international partnerships have coordinating organizations."@en ;
+    sh:sparql [
+        sh:message "International partnership should have coordinating organizations."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-international:InternationalPartnership .
+                FILTER NOT EXISTS {
+                    $this cacontology-international:coordinatesWith ?org .
+                    ?org a uco-identity:Organization .
+                }
+            }
+        """
+    ] .
+
+cacontology-international:CrossBorderOperationCrossReferenceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:CrossBorderOperation ;
+    rdfs:label "Cross-Border Operation Cross Reference Shape"@en ;
+    rdfs:comment "Validates that cross-border operations operate in multiple countries."@en ;
+    sh:sparql [
+        sh:message "Cross-border operation should operate in multiple countries."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-international:CrossBorderOperation .
+                FILTER NOT EXISTS {
+                    $this cacontology-international:operatesInCountry ?country1 .
+                    $this cacontology-international:operatesInCountry ?country2 .
+                    FILTER (?country1 != ?country2)
+                }
+            }
+        """
+    ] .
+
+cacontology-international:InternationalReferralCrossReferenceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:InternationalReferral ;
+    rdfs:label "International Referral Cross Reference Shape"@en ;
+    rdfs:comment "Validates that international referrals have alerting and receiving partners."@en ;
+    sh:sparql [
+        sh:message "International referral should have alerting partner and referral target."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-international:InternationalReferral .
+                FILTER NOT EXISTS {
+                    $this cacontology-international:alertingPartner ?alerter ;
+                          cacontology-international:referredTo ?target .
+                    FILTER (?alerter != ?target)
+                }
+            }
+        """
+    ] .
+
+cacontology-international:InformationSharingCrossReferenceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:InformationSharingAgreement ;
+    rdfs:label "Information Sharing Cross Reference Shape"@en ;
+    rdfs:comment "Validates that information sharing agreements have data sharing partners."@en ;
+    sh:sparql [
+        sh:message "Information sharing agreement should have data sharing partners."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-international:InformationSharingAgreement .
+                FILTER NOT EXISTS {
+                    $this cacontology-international:sharesDataWith ?partner .
+                    ?partner a uco-identity:Organization .
+                }
+            }
+        """
+    ] .
+
+# =============================================================================
+# TEMPORAL VALIDATION SHAPES
+# =============================================================================
+
+cacontology-international:TemporalValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:CrossBorderOperation ,
+                   cacontology-international:InternationalAlert ,
+                   cacontology-international:InternationalReferral ,
+                   cacontology-international:NCMECReporting ,
+                   cacontology-international:ACCCEIntegration ;
+    rdfs:label "Temporal Validation Shape"@en ;
+    rdfs:comment "Validates temporal consistency for international operations."@en ;
+    sh:sparql [
+        sh:message "Start time must be before end time when both are specified."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this uco-core:startTime ?start ;
+                      uco-core:endTime ?end .
+                FILTER (?start >= ?end)
+            }
+        """
+    ] .
+
+cacontology-international:ResponseTimeValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:InternationalReferral ;
+    rdfs:label "Response Time Validation Shape"@en ;
+    rdfs:comment "Validates reasonable response times for international referrals."@en ;
+    sh:sparql [
+        sh:message "Urgent international referrals should have rapid response times."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-international:OverseasVictimCoordination ;
+                      cacontology-international:responseTimeInternational ?responseTime .
+                FILTER (?responseTime > 72.0)
+            }
+        """
+    ] .
+
+# =============================================================================
+# gUFO PARTICIPATION CONSTRAINTS FOR INTERNATIONAL COOPERATION
+# =============================================================================
+
+# Cross-Border Operation Participation Validation
+cacontology-international:CrossBorderOperationParticipationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:CrossBorderOperation ;
+    sh:property [
+        sh:path [ sh:alternativePath ( 
+            gufo:participatedIn 
+            cacontology-international:coordinatedBy 
+            cacontology-international:operatesInCountry 
+        ) ] ;
+        sh:minCount 2 ;
+        sh:message "Every cross-border operation must have at least two participating entities (gUFO participation)"@en     ] .
+
+# International Partnership Participation Validation
+cacontology-international:InternationalPartnershipParticipationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:InternationalPartnership ;
+    sh:property [
+        sh:path [ sh:alternativePath ( 
+            cacontology-international:partnerOrganization 
+            cacontology-international:coordinatesWith 
+        ) ] ;
+        sh:minCount 2 ;
+        sh:message "Partnership must have at least two participating organizations (gUFO participation)"@en     ] .
+
+# Information Sharing Agreement Participation Validation
+cacontology-international:InformationSharingParticipationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:InformationSharingAgreement ;
+    sh:property [
+        sh:path cacontology-international:sharesDataWith ;
+        sh:class uco-identity:Organization ;
+        sh:minCount 2 ;
+        sh:message "Information sharing must involve at least two organizations (gUFO participation)"@en     ] .
+
+# =============================================================================
+# gUFO PART-WHOLE RELATIONSHIP VALIDATION FOR INTERNATIONAL COOPERATION
+# =============================================================================
+
+# International Task Force Composition Validation
+cacontology-international:InternationalTaskForceCompositionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:InternationalTaskForce ;
+    sh:property [
+        sh:path [ sh:inversePath gufo:isProperPartOf ] ;
+        sh:minCount 1 ;
+        sh:message "Task force must have component organizations or units (gUFO part-whole)"@en     ] .
+
+# Global Network Composition Validation
+cacontology-international:GlobalNetworkCompositionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:GlobalHotlineNetwork ;
+    sh:property [
+        sh:path [ sh:inversePath gufo:isProperPartOf ] ;
+        sh:minCount 3 ;
+        sh:message "Global network must be composed of at least 3 national components (gUFO part-whole)"@en     ] .
+
+# Cross-Border Investigation Composition Validation
+cacontology-international:CrossBorderInvestigationCompositionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:CrossBorderInvestigation ;
+    sh:property [
+        sh:path [ sh:inversePath gufo:isProperPartOf ] ;
+        sh:minCount 2 ;
+        sh:message "Cross-border investigation must include at least two national investigation components (gUFO part-whole)"@en     ] .
+
+# =============================================================================
+# DATA QUALITY SHAPES
+# =============================================================================
+
+cacontology-international:DataQualityShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:InternationalPartnership ,
+                   cacontology-international:CrossBorderOperation ,
+                   cacontology-international:InformationSharingAgreement ,
+                   cacontology-international:GlobalHotlineNetwork ,
+                   cacontology-international:MutualLegalAssistance ;
+    rdfs:label "Data Quality Shape"@en ;
+    rdfs:comment "Validates data quality for international coordination entities with gUFO quality aspects."@en ;
+    sh:property [
+        sh:path uco-core:createdTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Creation time should be specified when available."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:modifiedTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Modification time should be specified when available."@en
+    ] ;
+    sh:property [
+        sh:path gufo:hasBeginPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTime ;
+        sh:maxCount 1 ;
+        sh:message "Entity may have temporal beginning (gUFO temporal boundary)"@en     ] ;
+    sh:property [
+        sh:path cacontology-international:hasDataQuality ;
+        sh:datatype xsd:string ;
+        sh:in ( "poor" "fair" "good" "excellent" "validated" ) ;
+        sh:maxCount 1 ;
+        sh:message "Data quality level must be from allowed list (gUFO quality aspect)"@en     ] ;
+    sh:property [
+        sh:path cacontology-international:hasReliabilityScore ;
+        sh:datatype xsd:double ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:maxCount 1 ;
+        sh:message "Reliability score must be between 0.0 and 1.0 (gUFO quality aspect)"@en     ] .
+
+cacontology-international:CoordinationComplexityValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:CrossBorderOperation ;
+    rdfs:label "Coordination Complexity Validation Shape"@en ;
+    rdfs:comment "Validates coordination complexity consistency."@en ;
+    sh:sparql [
+        sh:message "Operations with many jurisdictions should have high coordination complexity."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-international:jurisdictionCount ?count ;
+                      cacontology-international:coordinationComplexity ?complexity .
+                FILTER (?count > 10 && ?complexity IN ("low", "medium"))
+            }
+        """
+    ] .
+
+cacontology-international:PartnershipSizeValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:InternationalPartnership ;
+    rdfs:label "Partnership Size Validation Shape"@en ;
+    rdfs:comment "Validates partnership size consistency."@en ;
+    sh:sparql [
+        sh:message "Large partnerships should have appropriate coordination methods."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-international:partnerCountryCount ?count ;
+                      cacontology-international:coordinationMethod "formal_request" .
+                FILTER (?count > 20)
+            }
+        """
+    ] .
+
+cacontology-international:InformationSharingLevelValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:InformationSharingAgreement ;
+    rdfs:label "Information Sharing Level Validation Shape"@en ;
+    rdfs:comment "Validates information sharing level consistency."@en ;
+    sh:sparql [
+        sh:message "Multilateral agreements should have enhanced or full information sharing."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-international:multilateralAgreement true ;
+                      cacontology-international:informationSharingLevel "basic" .
+            }
+        """
+    ] .
+
+cacontology-international:SpecializedOperationValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:LiveStreamingInvestigation ,
+                   cacontology-international:InstructedAbuseOperation ,
+                   cacontology-international:GlobalPlatformTakedown ;
+    rdfs:label "Specialized Operation Validation Shape"@en ;
+    rdfs:comment "Validates specialized international operations."@en ;
+    sh:sparql [
+        sh:message "Specialized operations should have appropriate support mechanisms."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a ?operationType .
+                FILTER (?operationType IN (
+                    cacontology-international:LiveStreamingInvestigation,
+                    cacontology-international:InstructedAbuseOperation,
+                    cacontology-international:GlobalPlatformTakedown
+                ))
+                FILTER NOT EXISTS {
+                    $this cacontology-international:supportedBy ?taskforce .
+                    ?taskforce a cacontology-international:InternationalTaskForce .
+                }
+            }
+        """
+    ] .
+
+# =============================================================================
+# gUFO BUSINESS RULES FOR INTERNATIONAL COOPERATION
+# =============================================================================
+
+# Multi-Jurisdiction Coordination Business Rule
+cacontology-international:MultiJurisdictionCoordinationBusinessRule rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:CrossBorderOperation ;
+    sh:sparql [
+        sh:message "High complexity operations must involve multiple jurisdictions and advanced capabilities"@en ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "cacontology-international" ;
+                sh:namespace "https://cacontology.projectvic.org/international#"^^xsd:anyURI             ]         ] ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-international:coordinationComplexity ?complexity ;
+                      cacontology-international:crossBorderCapability ?capability .
+                FILTER (?complexity IN ("high", "complex") && 
+                        ?capability NOT IN ("advanced", "expert"))
+            }
+        """     ] .
+
+# Partnership Trust and Effectiveness Business Rule
+cacontology-international:PartnershipEffectivenessBusinessRule rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:InternationalPartnership ;
+    sh:sparql [
+        sh:message "High effectiveness partnerships require established or strong trust levels"@en ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "cacontology-international" ;
+                sh:namespace "https://cacontology.projectvic.org/international#"^^xsd:anyURI             ]         ] ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-international:hasCoordinationEffectiveness ?effectiveness ;
+                      cacontology-international:hasTrustLevel ?trust .
+                FILTER (?effectiveness IN ("high", "excellent", "outstanding") && 
+                        ?trust IN ("developing"))
+            }
+        """     ] .
+
+# Urgent Operation Response Business Rule
+cacontology-international:UrgentOperationResponseBusinessRule rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:InternationalReferral ;
+    sh:sparql [
+        sh:message "Emergency operations must have rapid response times"@en ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "cacontology-international" ;
+                sh:namespace "https://cacontology.projectvic.org/international#"^^xsd:anyURI             ]         ] ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-international:hasOperationalUrgency ?urgency ;
+                      cacontology-international:responseTimeInternational ?responseTime .
+                FILTER (?urgency IN ("emergency", "immediate") && ?responseTime > 24.0)
+            }
+        """     ] .
+
+# Information Sharing Level Business Rule
+cacontology-international:InformationSharingLevelBusinessRule rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:InformationSharingAgreement ;
+    sh:sparql [
+        sh:message "Multilateral agreements with many partners require enhanced information sharing"@en ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "cacontology-international" ;
+                sh:namespace "https://cacontology.projectvic.org/international#"^^xsd:anyURI             ]         ] ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-international:multilateralAgreement true ;
+                      cacontology-international:informationSharingLevel "basic" .
+                {
+                    SELECT $this (COUNT(?partner) as ?partnerCount)
+                    WHERE {
+                        $this cacontology-international:sharesDataWith ?partner .
+                    }
+                    GROUP BY $this
+                    HAVING (?partnerCount > 5)
+                }
+            }
+        """     ] .
+
+# Live Streaming Investigation Capability Business Rule
+cacontology-international:LiveStreamingInvestigationCapabilityBusinessRule rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-international:LiveStreamingInvestigation ;
+    sh:sparql [
+        sh:message "Live streaming investigations require expert capabilities and complex coordination"@en ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "cacontology-international" ;
+                sh:namespace "https://cacontology.projectvic.org/international#"^^xsd:anyURI             ]         ] ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-international:crossBorderCapability ?capability ;
+                      cacontology-international:coordinationComplexity ?complexity .
+                FILTER (?capability != "expert" || ?complexity != "complex")
+            }
+        """     ] . 

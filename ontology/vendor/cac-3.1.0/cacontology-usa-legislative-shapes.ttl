@@ -1,0 +1,394 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+@prefix cacontology-legal: <https://cacontology.projectvic.org/legal-harmonization#> .
+@prefix cacontology-usa-leg: <https://cacontology.projectvic.org/usa-legislative#> .
+@prefix cacontology-usa-leg-shapes: <https://cacontology.projectvic.org/usa-legislative/shapes#> .
+
+# =============================================================================
+# CAC USA LEGISLATIVE FRAMEWORK SHACL SHAPES
+# Raven US Extensions - USA-Specific Validation Shapes
+# =============================================================================
+
+<https://cacontology.projectvic.org/usa-legislative/shapes> rdf:type owl:Ontology ;
+    rdfs:label "CAC USA Legislative Framework SHACL Shapes"@en ;
+    rdfs:comment "SHACL shapes for validating USA-specific legislative framework instances including federal agencies, congressional committees, state organizations, legislative stages, and funding mechanisms."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/usa-legislative/shapes/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:created "2026-01-27"^^xsd:date ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://cacontology.projectvic.org/usa-legislative/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> ,
+                <http://www.w3.org/ns/shacl#> .
+
+# =============================================================================
+# U.S. CABINET AGENCY SHAPES
+# =============================================================================
+
+cacontology-usa-leg-shapes:USCabinetAgencyShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-usa-leg:USCabinetAgency ;
+    rdfs:label "U.S. Cabinet Agency Shape"@en ;
+    rdfs:comment "Validates U.S. cabinet-level agency instances."@en ;
+    sh:property [
+        sh:path cacontology-usa-leg:acronym ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 2 ;
+        sh:maxLength 10 ;
+        sh:severity sh:Warning ;
+        sh:message "Cabinet agency should have an acronym (2-10 characters)"@en
+    ] ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype rdf:langString ;
+        sh:minCount 1 ;
+        sh:severity sh:Violation ;
+        sh:message "Cabinet agency must have a label"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal:jurisdictionScope ;
+        sh:hasValue "US" ;
+        sh:minCount 1 ;
+        sh:severity sh:Warning ;
+        sh:message "Cabinet agency should have jurisdiction scope 'US'"@en
+    ] .
+
+# =============================================================================
+# U.S. SUB-CABINET AGENCY SHAPES
+# =============================================================================
+
+cacontology-usa-leg-shapes:USSubCabinetAgencyShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-usa-leg:USSubCabinetAgency ;
+    rdfs:label "U.S. Sub-Cabinet Agency Shape"@en ;
+    rdfs:comment "Validates U.S. sub-cabinet agency instances."@en ;
+    sh:property [
+        sh:path cacontology-usa-leg:acronym ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:severity sh:Warning ;
+        sh:message "Sub-cabinet agency should have an acronym"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-usa-leg:parentAgency ;
+        sh:class cacontology-usa-leg:USCabinetAgency ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:severity sh:Violation ;
+        sh:message "Sub-cabinet agency must have exactly one parent cabinet agency"@en
+    ] ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype rdf:langString ;
+        sh:minCount 1 ;
+        sh:severity sh:Violation ;
+        sh:message "Sub-cabinet agency must have a label"@en
+    ] .
+
+# =============================================================================
+# U.S. FEDERAL DIRECTORATE SHAPES
+# =============================================================================
+
+cacontology-usa-leg-shapes:USFederalDirectorateShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-usa-leg:USFederalDirectorate ;
+    rdfs:label "U.S. Federal Directorate Shape"@en ;
+    rdfs:comment "Validates U.S. federal directorate instances."@en ;
+    sh:property [
+        sh:path cacontology-usa-leg:acronym ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:severity sh:Warning ;
+        sh:message "Federal directorate should have an acronym"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-usa-leg:parentAgency ;
+        sh:class cacontology-usa-leg:USSubCabinetAgency ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:severity sh:Violation ;
+        sh:message "Federal directorate must have exactly one parent sub-cabinet agency"@en
+    ] ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype rdf:langString ;
+        sh:minCount 1 ;
+        sh:severity sh:Violation ;
+        sh:message "Federal directorate must have a label"@en
+    ] .
+
+# =============================================================================
+# U.S. FEDERAL AGENCY OFFICE SHAPES
+# =============================================================================
+
+cacontology-usa-leg-shapes:USFederalAgencyOfficeShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-usa-leg:USFederalAgencyOffice ;
+    rdfs:label "U.S. Federal Agency Office Shape"@en ;
+    rdfs:comment "Validates U.S. federal agency office instances."@en ;
+    sh:property [
+        sh:path cacontology-usa-leg:acronym ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:severity sh:Warning ;
+        sh:message "Federal agency office should have an acronym"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-usa-leg:parentAgency ;
+        sh:or (
+            [ sh:class cacontology-usa-leg:USCabinetAgency ]
+            [ sh:class cacontology-usa-leg:USSubCabinetAgency ]
+        ) ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:severity sh:Violation ;
+        sh:message "Federal agency office must have exactly one parent agency"@en
+    ] .
+
+# =============================================================================
+# U.S. CONGRESSIONAL COMMITTEE SHAPES
+# =============================================================================
+
+cacontology-usa-leg-shapes:USCongressionalCommitteeShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-usa-leg:USCongressionalCommittee ;
+    rdfs:label "U.S. Congressional Committee Shape"@en ;
+    rdfs:comment "Validates U.S. congressional committee instances."@en ;
+    sh:property [
+        sh:path cacontology-usa-leg:chamber ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "house" "senate" ) ;
+        sh:severity sh:Violation ;
+        sh:message "Congressional committee must specify chamber (house or senate)"@en
+    ] ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype rdf:langString ;
+        sh:minCount 1 ;
+        sh:severity sh:Violation ;
+        sh:message "Congressional committee must have a label"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal:jurisdictionScope ;
+        sh:hasValue "US" ;
+        sh:minCount 1 ;
+        sh:severity sh:Warning ;
+        sh:message "Congressional committee should have jurisdiction scope 'US'"@en
+    ] .
+
+# =============================================================================
+# U.S. STATE AGENCY SHAPES
+# =============================================================================
+
+cacontology-usa-leg-shapes:USStateAgencyShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-usa-leg:USStateAgency ;
+    rdfs:label "U.S. State Agency Shape"@en ;
+    rdfs:comment "Validates U.S. state agency instances."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype rdf:langString ;
+        sh:minCount 1 ;
+        sh:severity sh:Violation ;
+        sh:message "State agency must have a label"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal:jurisdictionScope ;
+        sh:hasValue "US" ;
+        sh:minCount 1 ;
+        sh:severity sh:Warning ;
+        sh:message "State agency should have jurisdiction scope 'US'"@en
+    ] .
+
+cacontology-usa-leg-shapes:USStateAttorneyGeneralShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-usa-leg:USStateAttorneyGeneral ;
+    rdfs:label "U.S. State Attorney General Shape"@en ;
+    rdfs:comment "Validates U.S. state attorney general office instances."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype rdf:langString ;
+        sh:minCount 1 ;
+        sh:severity sh:Violation ;
+        sh:message "State Attorney General office must have a label"@en
+    ] .
+
+# =============================================================================
+# LEGISLATIVE STAGE SHAPES (gUFO Phase validation)
+# =============================================================================
+
+cacontology-usa-leg-shapes:LegislativeStageShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-usa-leg:LegislativeStage ;
+    rdfs:label "Legislative Stage Shape"@en ;
+    rdfs:comment "Validates U.S. legislative stage instances as gUFO Phases."@en ;
+    sh:property [
+        sh:path cacontology-usa-leg:stageOrder ;
+        sh:datatype xsd:integer ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 10 ;
+        sh:severity sh:Warning ;
+        sh:message "Legislative stage should have a stage order (1-10)"@en
+    ] ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype rdf:langString ;
+        sh:minCount 1 ;
+        sh:severity sh:Violation ;
+        sh:message "Legislative stage must have a label"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-usa-leg:isFinal ;
+        sh:datatype xsd:boolean ;
+        sh:maxCount 1 ;
+        sh:severity sh:Info ;
+        sh:message "Legislative stage may indicate if it is a final stage"@en
+    ] .
+
+# Stage Ordering Validation
+cacontology-usa-leg-shapes:LegislativeStageOrderingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-usa-leg:LegislativeStage ;
+    rdfs:label "Legislative Stage Ordering Shape"@en ;
+    rdfs:comment "Validates proper ordering of legislative stages."@en ;
+    sh:sparql [
+        sh:message "Final stages should have the highest stage order"@en ;
+        sh:severity sh:Warning ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "cacontology-usa-leg" ;
+                sh:namespace "https://cacontology.projectvic.org/usa-legislative#"^^xsd:anyURI
+            ]
+        ] ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-usa-leg:isFinal true .
+                $this cacontology-usa-leg:stageOrder ?order .
+                FILTER (?order < 6)
+            }
+        """
+    ] .
+
+# =============================================================================
+# FUNDING NEED SHAPES
+# =============================================================================
+
+cacontology-usa-leg-shapes:FundingNeedShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-usa-leg:FundingNeed ;
+    rdfs:label "Funding Need Shape"@en ;
+    rdfs:comment "Validates funding need instances."@en ;
+    sh:property [
+        sh:path cacontology-usa-leg:needDescription ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:minLength 10 ;
+        sh:severity sh:Warning ;
+        sh:message "Funding need should have a description (at least 10 characters)"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-usa-leg:requestedAmount ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 1 ;
+        sh:minExclusive 0 ;
+        sh:severity sh:Warning ;
+        sh:message "Funding need should have a positive requested amount"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-usa-leg:priorityLevel ;
+        sh:datatype xsd:string ;
+        sh:in ( "low" "medium" "high" "urgent" "critical" ) ;
+        sh:maxCount 1 ;
+        sh:severity sh:Info ;
+        sh:message "Priority level should be one of: low, medium, high, urgent, critical"@en
+    ] .
+
+# =============================================================================
+# APPROPRIATION TYPE SHAPES
+# =============================================================================
+
+cacontology-usa-leg-shapes:AppropriationTypeShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-usa-leg:AppropriationType ;
+    rdfs:label "Appropriation Type Shape"@en ;
+    rdfs:comment "Validates appropriation type instances."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype rdf:langString ;
+        sh:minCount 1 ;
+        sh:severity sh:Violation ;
+        sh:message "Appropriation type must have a label"@en
+    ] .
+
+# =============================================================================
+# OUTCOME SHAPES
+# =============================================================================
+
+cacontology-usa-leg-shapes:OutcomeShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-usa-leg:Outcome ;
+    rdfs:label "Outcome Shape"@en ;
+    rdfs:comment "Validates advocacy outcome instances."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype rdf:langString ;
+        sh:minCount 1 ;
+        sh:severity sh:Violation ;
+        sh:message "Outcome must have a label"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-usa-leg:isPositive ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:severity sh:Warning ;
+        sh:message "Outcome should indicate if it is positive"@en
+    ] .
+
+# =============================================================================
+# U.S.-SPECIFIC LEGISLATIVE PROCESS SHAPES
+# =============================================================================
+
+cacontology-usa-leg-shapes:USConferenceCommitteeShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-usa-leg:USConferenceCommittee ;
+    rdfs:label "U.S. Conference Committee Shape"@en .
+
+cacontology-usa-leg-shapes:USExecutiveActionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-usa-leg:USExecutiveAction ;
+    rdfs:label "U.S. Executive Action Shape"@en .
+
+cacontology-usa-leg-shapes:USRulemakingProcessShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-usa-leg:USRulemakingProcess ;
+    rdfs:label "U.S. Rulemaking Process Shape"@en .
+
+cacontology-usa-leg-shapes:USReconciliationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-usa-leg:USReconciliation ;
+    rdfs:label "U.S. Budget Reconciliation Shape"@en .
+
+# =============================================================================
+# ORGANIZATION HIERARCHY VALIDATION
+# =============================================================================
+
+cacontology-usa-leg-shapes:OrganizationHierarchyConsistencyShape rdf:type sh:NodeShape ;
+    sh:targetSubjectsOf cacontology-usa-leg:parentAgency ;
+    rdfs:label "Organization Hierarchy Consistency Shape"@en ;
+    rdfs:comment "Validates that organization hierarchy is consistent."@en ;
+    sh:sparql [
+        sh:message "Organization cannot be its own parent"@en ;
+        sh:severity sh:Violation ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "cacontology-usa-leg" ;
+                sh:namespace "https://cacontology.projectvic.org/usa-legislative#"^^xsd:anyURI
+            ]
+        ] ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-usa-leg:parentAgency $this .
+            }
+        """
+    ] .

@@ -1,0 +1,951 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-tool: <https://ontology.unifiedcyberontology.org/uco/tool/> .
+@prefix uco-types: <https://ontology.unifiedcyberontology.org/uco/types/> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
+
+# gUFO Integration
+@prefix gufo: <http://purl.org/nemo/gufo#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+
+# Enhanced Ontology Declaration with gUFO Validation
+<https://cacontology.projectvic.org/detection/shapes> rdf:type owl:Ontology ;
+    rdfs:label "CAC Detection SHACL Shapes with gUFO Validation"@en ;
+    rdfs:comment "Comprehensive SHACL validation shapes for gUFO-enhanced CAC detection ontology, including foundational type validation, anti-rigidity constraints for detection roles and phases, temporal consistency validation, detection workflow validation, and advanced cross-reference validation for content detection systems."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/detection/shapes/3.1.0> ;
+    owl:imports <https://cacontology.projectvic.org/detection/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:modified "2026-08-09"^^xsd:date .
+
+# =============================================================================
+# gUFO DETECTION TOOL VALIDATION (Objects)
+# =============================================================================
+
+# Detection Tool gUFO Object Validation
+cacontology-detection:DetectionToolGUFOShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-detection:ContentHashingTool ,
+                   cacontology-detection:MachineLearningDetectionTool ,
+                   cacontology-detection:DatabaseMatchingTool ,
+                   cacontology-detection:ManualReviewTool ;
+    rdfs:label "gUFO Detection Tool Shape"@en ;
+    rdfs:comment "Validates detection tools as gUFO Objects with foundational constraints."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 2 ;
+        sh:maxLength 100 ;
+        sh:message "Detection tool must have a name (2-100 characters)"@en
+    ] .
+
+# Content Hashing Tool Shape with gUFO Object validation
+cacontology-detection:ContentHashingToolGUFOShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-detection:ContentHashingTool ;
+    rdfs:label "gUFO Content Hashing Tool Shape"@en ;
+    rdfs:comment "Validates content hashing tool instances with gUFO foundational constraints."@en ;
+    sh:property [
+        sh:path uco-tool:version ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:pattern "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$" ;
+        sh:message "Tool version must follow semantic versioning pattern (e.g., '1.0', '2.1.3')"@en
+    ] .
+
+# Machine Learning Detection Tool Shape with gUFO Object validation
+cacontology-detection:MachineLearningDetectionToolGUFOShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-detection:MachineLearningDetectionTool ;
+    rdfs:label "gUFO Machine Learning Detection Tool Shape"@en ;
+    rdfs:comment "Validates machine learning detection tool instances with gUFO foundational constraints."@en ;
+    sh:property [
+        sh:path cacontology-detection:modelVersion ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 1 ;
+        sh:maxLength 50 ;
+        sh:message "Model version should be 1-50 characters when specified"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-detection:detectionThreshold ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:message "Detection threshold must be between 0.0 and 1.0"@en
+    ] .
+
+# =============================================================================
+# gUFO DETECTION ACTION VALIDATION (Events)
+# =============================================================================
+
+# Detection Action gUFO Event Validation
+cacontology-detection:DetectionActionGUFOShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-detection:ContentHashingAction ,
+                   cacontology-detection:AutomatedDetectionAction ,
+                   cacontology-detection:ManualClassificationAction ,
+                   cacontology-detection:DatabaseMatchAction ,
+                   cacontology-detection:FalsePositiveAnalysisAction ,
+                   cacontology-detection:RiskStratificationAction ;
+    rdfs:label "gUFO Detection Action Shape"@en ;
+    rdfs:comment "Validates detection actions as gUFO Events with temporal boundaries."@en ;
+    sh:property [
+        sh:path cacontology-detection:hasDetectionBeginPoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Detection action can have at most one begin point"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-detection:hasDetectionEndPoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Detection action can have at most one end point"@en
+    ] ;
+    # Event temporal consistency
+    sh:sparql [
+        sh:message "Detection begin point must precede end point"@en ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "cacontology-detection" ;
+                sh:namespace "https://cacontology.projectvic.org/detection#"^^xsd:anyURI
+            ]
+        ] ;
+        sh:select """
+            PREFIX cacontology-detection: <https://cacontology.projectvic.org/detection#>
+            SELECT ?this
+            WHERE {
+                ?this cacontology-detection:hasDetectionBeginPoint ?begin ;
+                      cacontology-detection:hasDetectionEndPoint ?end .
+                FILTER (?begin >= ?end)
+            }
+        """
+    ] .
+
+# Content Hashing Action Shape with gUFO Event validation
+cacontology-detection:ContentHashingActionGUFOShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-detection:ContentHashingAction ;
+    rdfs:label "gUFO Content Hashing Action Shape"@en ;
+    rdfs:comment "Validates content hashing action instances with gUFO Event constraints."@en ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Content hashing action must specify start time"@en
+    ] ;
+    sh:property [
+        sh:path uco-action:instrument ;
+        sh:class cacontology-detection:ContentHashingTool ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Content hashing action must specify the hashing tool used"@en
+    ] .
+
+# Automated Detection Action Shape with gUFO Event validation
+cacontology-detection:AutomatedDetectionActionGUFOShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-detection:AutomatedDetectionAction ;
+    rdfs:label "gUFO Automated Detection Action Shape"@en ;
+    rdfs:comment "Validates automated detection action instances with gUFO Event constraints."@en ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Automated detection action must specify start time"@en
+    ] ;
+    sh:property [
+        sh:path uco-action:instrument ;
+        sh:class cacontology-detection:MachineLearningDetectionTool ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Automated detection action must specify the ML tool used"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-detection:confidenceScore ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:message "Confidence score must be between 0.0 and 1.0"@en
+    ] .
+
+# Manual Classification Action Shape with gUFO Event validation
+cacontology-detection:ManualClassificationActionGUFOShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-detection:ManualClassificationAction ;
+    rdfs:label "gUFO Manual Classification Action Shape"@en ;
+    rdfs:comment "Validates manual classification action instances with gUFO Event constraints."@en ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Manual classification action must specify start time"@en
+    ] ;
+    sh:property [
+        sh:path uco-action:performer ;
+        sh:class uco-identity:Person ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Manual classification action must specify the person performing the review"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-detection:reviewDecision ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "confirmed_csam" "not_csam" "requires_further_review" "inconclusive" "false_positive" ) ;
+        sh:message "Review decision must be from the allowed list"@en
+    ] .
+
+# =============================================================================
+# gUFO DETECTION PHASE VALIDATION (Anti-Rigid Phases)
+# =============================================================================
+
+# Detection Phase gUFO Phase Validation
+cacontology-detection:DetectionPhaseGUFOShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-detection:InitialDetectionPhase ,
+                   cacontology-detection:HashComparisonPhase ,
+                   cacontology-detection:ManualReviewPhase ,
+                   cacontology-detection:ValidationPhase ,
+                   cacontology-detection:ReportingPhase ;
+    rdfs:label "gUFO Detection Phase Shape"@en ;
+    rdfs:comment "Validates detection phases as anti-rigid gUFO phases."@en ;
+    sh:property [
+        sh:path cacontology-detection:hasPhaseBeginPoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Detection phase can have at most one begin point"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-detection:hasPhaseEndPoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Detection phase can have at most one end point"@en
+    ] ;
+    # Phase temporal consistency
+    sh:sparql [
+        sh:message "Phase begin point must precede end point"@en ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "cacontology-detection" ;
+                sh:namespace "https://cacontology.projectvic.org/detection#"^^xsd:anyURI
+            ]
+        ] ;
+        sh:select """
+            SELECT ?this
+            WHERE {
+                ?this cacontology-detection:hasPhaseBeginPoint ?begin ;
+                      cacontology-detection:hasPhaseEndPoint ?end .
+                FILTER (?begin >= ?end)
+            }
+        """
+    ] .
+
+# Detection Phase Sequence Validation
+cacontology-detection:DetectionPhaseSequenceShape rdf:type sh:NodeShape ;
+    sh:targetClass cac-core:Phase ;
+    rdfs:label "Detection Phase Sequence Shape"@en ;
+    rdfs:comment "Validates proper sequencing of detection phases."@en ;
+    sh:sparql [
+        sh:message "Detection phases must follow logical workflow sequence"@en ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "cacontology-detection" ;
+                sh:namespace "https://cacontology.projectvic.org/detection#"^^xsd:anyURI
+            ]
+        ] ;
+        sh:select """
+            PREFIX cacontology-detection: <https://cacontology.projectvic.org/detection#>
+            SELECT ?this
+            WHERE {
+                ?this a cacontology-detection:ManualReviewPhase ;
+                      cacontology-detection:hasPhaseBeginPoint ?manualStart .
+                ?initialPhase a cacontology-detection:InitialDetectionPhase ;
+                             cacontology-detection:hasPhaseEndPoint ?initialEnd .
+                FILTER (?manualStart < ?initialEnd)
+            }
+        """
+    ] .
+
+# =============================================================================
+# gUFO DETECTION ROLE VALIDATION (Anti-Rigid Roles)
+# =============================================================================
+
+# Detection Role gUFO Role Validation
+cacontology-detection:DetectionRoleGUFOShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-detection:ContentAnalystRole ,
+                   cacontology-detection:HashAnalystRole ,
+                   cacontology-detection:MachineLearningSpecialistRole ,
+                   cacontology-detection:QualityAssuranceAnalystRole ;
+    rdfs:label "gUFO Detection Role Shape"@en ;
+    rdfs:comment "Validates detection roles as anti-rigid gUFO roles."@en ;
+    sh:property [
+        sh:path cacontology-detection:hasRoleBeginPoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Detection role can have at most one begin point"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-detection:hasRoleEndPoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Detection role can have at most one end point"@en
+    ] ;
+    # Role temporal consistency
+    sh:sparql [
+        sh:message "Role begin point must precede end point"@en ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "cacontology-detection" ;
+                sh:namespace "https://cacontology.projectvic.org/detection#"^^xsd:anyURI
+            ]
+        ] ;
+        sh:select """
+            PREFIX cacontology-detection: <https://cacontology.projectvic.org/detection#>
+            SELECT ?this
+            WHERE {
+                ?this cacontology-detection:hasRoleBeginPoint ?begin ;
+                      cacontology-detection:hasRoleEndPoint ?end .
+                FILTER (?begin >= ?end)
+            }
+        """
+    ] .
+
+# =============================================================================
+# gUFO DETECTION SITUATION VALIDATION
+# =============================================================================
+
+# Detection Situation gUFO Situation Validation
+cacontology-detection:DetectionSituationGUFOShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-detection:MassContentAnalysisSituation ,
+                   cacontology-detection:CrossPlatformDetectionSituation ,
+                   cacontology-detection:FalsePositiveManagementSituation ;
+    rdfs:label "gUFO Detection Situation Shape"@en ;
+    rdfs:comment "Validates detection situations with gUFO constraints."@en  .
+
+# Mass Content Analysis Situation Validation
+cacontology-detection:MassContentAnalysisSituationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-detection:MassContentAnalysisSituation ;
+    rdfs:label "Mass Content Analysis Situation Shape"@en ;
+    rdfs:comment "Validates mass content analysis situations."@en ;
+    sh:sparql [
+        sh:message "Mass content analysis situation must involve multiple detection actions"@en ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "cacontology-detection" ;
+                sh:namespace "https://cacontology.projectvic.org/detection#"^^xsd:anyURI
+            ] , [
+                sh:prefix "gufo" ;
+                sh:namespace "http://purl.org/nemo/gufo#"^^xsd:anyURI
+            ]
+        ] ;
+        sh:select """
+            PREFIX cacontology-detection: <https://cacontology.projectvic.org/detection#>
+            PREFIX gufo: <http://purl.org/nemo/gufo#>
+            SELECT ?this
+            WHERE {
+                ?this a cacontology-detection:MassContentAnalysisSituation .
+                {
+                    SELECT ?this (COUNT(?action) as ?actionCount)
+                    WHERE {
+                        ?action gufo:occursInSituation ?this ;
+                        ?action a cacontology-detection:AutomatedDetectionAction .
+                    }
+                    GROUP BY ?this
+                }
+                FILTER (?actionCount < 10)
+            }
+        """
+    ] .
+
+# =============================================================================
+# gUFO HASH ARTIFACT VALIDATION (Objects)
+# =============================================================================
+
+# Hash Artifact gUFO Object Validation
+cacontology-detection:HashArtifactGUFOShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-detection:PhotoDNAHash ,
+                   cacontology-detection:PerceptualHash ;
+    rdfs:label "gUFO Hash Artifact Shape"@en ;
+    rdfs:comment "Validates hash artifacts as gUFO Objects."@en .
+
+# PhotoDNA Hash Shape with gUFO Object validation
+cacontology-detection:PhotoDNAHashGUFOShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-detection:PhotoDNAHash ;
+    rdfs:label "gUFO PhotoDNA Hash Shape"@en ;
+    rdfs:comment "Validates PhotoDNA hash instances with gUFO foundational constraints."@en ;
+    sh:property [
+        sh:path cacontology-detection:photoDNAValue ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:pattern "^[0-9A-Fa-f]+$" ;
+        sh:minLength 32 ;
+        sh:maxLength 128 ;
+        sh:message "PhotoDNA value must be a hexadecimal string (32-128 characters)"@en
+    ] .
+
+# Perceptual Hash Shape with gUFO Object validation
+cacontology-detection:PerceptualHashGUFOShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-detection:PerceptualHash ;
+    rdfs:label "gUFO Perceptual Hash Shape"@en ;
+    rdfs:comment "Validates perceptual hash instances with gUFO foundational constraints."@en ;
+    sh:property [
+        sh:path cacontology-detection:perceptualHashValue ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:pattern "^[0-9A-Fa-f]+$" ;
+        sh:minLength 8 ;
+        sh:maxLength 128 ;
+        sh:message "Perceptual hash value must be a hexadecimal string (8-128 characters)"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-detection:hashAlgorithm ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "pHash" "aHash" "dHash" "wHash" "colorHash" "blockHash" ) ;
+        sh:message "Hash algorithm must be from the allowed list"@en
+    ] .
+
+# =============================================================================
+# gUFO DETECTION RESULT VALIDATION (Objects)
+# =============================================================================
+
+# Detection Result gUFO Object Validation
+cacontology-detection:DetectionResultGUFOShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-detection:DetectionResult ,
+                   cacontology-detection:ClassificationResult ;
+    rdfs:label "gUFO Detection Result Shape"@en ;
+    rdfs:comment "Validates detection results as gUFO Objects."@en  .
+
+# Detection Result Shape with gUFO Object validation
+cacontology-detection:DetectionResultObjectShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-detection:DetectionResult ;
+    rdfs:label "Detection Result Object Shape"@en ;
+    rdfs:comment "Validates detection result instances with gUFO Object constraints."@en ;
+    sh:property [
+        sh:path cacontology-detection:confidenceScore ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:message "Detection result must have a confidence score between 0.0 and 1.0"@en
+    ] ;
+    sh:property [
+        sh:path uco-core:createdTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Detection result must specify creation time"@en
+    ] .
+
+# Classification Result Shape with gUFO Object validation
+cacontology-detection:ClassificationResultObjectShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-detection:ClassificationResult ;
+    rdfs:label "Classification Result Object Shape"@en ;
+    rdfs:comment "Validates classification result instances with gUFO Object constraints."@en ;
+    sh:property [
+        sh:path uco-core:createdTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Classification result must specify creation time"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-detection:ageEstimate ;
+        sh:datatype xsd:integer ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 25 ;
+        sh:message "Age estimate must be between 0 and 25 years when specified"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-detection:tannerStage ;
+        sh:datatype xsd:integer ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 5 ;
+        sh:message "Tanner stage must be between 1 and 5 when specified"@en
+    ] .
+
+# =============================================================================
+# gUFO CLASSIFICATION SCHEME VALIDATION
+# =============================================================================
+
+# Classification Scheme gUFO Object Validation
+cacontology-detection:ClassificationSchemeGUFOShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-detection:SARClassificationScheme ,
+                   cacontology-detection:COPINEClassificationScheme ,
+                   cacontology-detection:TannerScaleScheme ;
+    rdfs:label "gUFO Classification Scheme Shape"@en ;
+    rdfs:comment "Validates classification schemes as gUFO Objects."@en  .
+
+# SAR Classification Validation
+cacontology-detection:SARClassificationGUFOShape rdf:type sh:NodeShape ;
+    sh:targetNode cacontology-detection:sar-1 ,
+                  cacontology-detection:sar-2 ,
+                  cacontology-detection:sar-3 ,
+                  cacontology-detection:sar-4 ,
+                  cacontology-detection:sar-5 ;
+    rdfs:label "SAR Classification gUFO Shape"@en ;
+    rdfs:comment "Validates SAR classification concept instances with gUFO enhancements."@en ;
+    sh:property [
+        sh:path skos:prefLabel ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 100 ;
+        sh:message "SAR classification must have a preferred label (5-100 characters)"@en
+    ] ;
+    sh:property [
+        sh:path skos:definition ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 10 ;
+        sh:maxLength 500 ;
+        sh:message "SAR classification must have a definition (10-500 characters)"@en
+    ] ;
+    sh:property [
+        sh:path skos:inScheme ;
+        sh:hasValue cacontology-detection:SARClassificationScheme ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "SAR classification must be in the SAR Classification Scheme"@en
+    ] .
+
+# COPINE Classification Validation
+cacontology-detection:COPINEClassificationGUFOShape rdf:type sh:NodeShape ;
+    sh:targetNode cacontology-detection:copine-1 ,
+                  cacontology-detection:copine-4 ,
+                  cacontology-detection:copine-7 ,
+                  cacontology-detection:copine-8 ,
+                  cacontology-detection:copine-10 ;
+    rdfs:label "COPINE Classification gUFO Shape"@en ;
+    rdfs:comment "Validates COPINE classification concept instances with gUFO enhancements."@en ;
+    sh:property [
+        sh:path skos:prefLabel ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 100 ;
+        sh:message "COPINE classification must have a preferred label (5-100 characters)"@en
+    ] ;
+    sh:property [
+        sh:path skos:definition ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 10 ;
+        sh:maxLength 500 ;
+        sh:message "COPINE classification must have a definition (10-500 characters)"@en
+    ] ;
+    sh:property [
+        sh:path skos:inScheme ;
+        sh:hasValue cacontology-detection:COPINEClassificationScheme ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "COPINE classification must be in the COPINE Classification Scheme"@en
+    ] .
+
+# =============================================================================
+# gUFO FOUNDATIONAL TYPE COMPLIANCE
+# =============================================================================
+
+# gUFO Type Consistency Shape for Detection Domain
+cacontology-detection:DetectionFoundationalTypeShape rdf:type sh:NodeShape ;
+    sh:targetNode cacontology-detection:ContentHashingTool ;
+    rdfs:label "Detection gUFO Foundational Type Consistency Shape"@en ;
+    rdfs:comment "Validates proper gUFO foundational typing for detection entities."@en ;
+    sh:sparql [
+        sh:message "All detection gUFO entities must have proper foundational typing"@en ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "gufo" ;
+                sh:namespace "http://purl.org/nemo/gufo#"^^xsd:anyURI
+            ] ,
+            [
+                sh:prefix "cacontology-detection" ;
+                sh:namespace "https://cacontology.projectvic.org/detection#"^^xsd:anyURI
+            ]
+        ] ;
+        sh:select """
+            PREFIX gufo: <http://purl.org/nemo/gufo#>
+            PREFIX cacontology-detection: <https://cacontology.projectvic.org/detection#>
+            SELECT ?entity
+            WHERE {
+                {
+                    ?entity a cacontology-detection:ContentHashingTool .
+                    FILTER NOT EXISTS { ?entity a gufo:Object . }
+                } UNION {
+                    ?entity a cacontology-detection:AutomatedDetectionAction .
+                    FILTER NOT EXISTS { ?entity a gufo:Event . }
+                } UNION {
+                    ?entity a cacontology-detection:ContentAnalystRole .
+                    FILTER NOT EXISTS { ?entity a gufo:Role . }
+                } UNION {
+                    ?entity a cacontology-detection:InitialDetectionPhase .
+                    FILTER NOT EXISTS { ?entity a gufo:Phase . }
+                } UNION {
+                    ?entity a cacontology-detection:DetectionResult .
+                    FILTER NOT EXISTS { ?entity a gufo:Object . }
+                }
+            }
+        """
+    ] .
+
+# =============================================================================
+# TEMPORAL CONSISTENCY VALIDATION
+# =============================================================================
+
+# Detection Temporal Consistency Shape
+cacontology-detection:DetectionTemporalConsistencyShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-detection:AutomatedDetectionAction ;
+    rdfs:label "Detection Temporal Consistency Shape"@en ;
+    rdfs:comment "Validates temporal consistency across detection events and phases."@en ;
+    sh:sparql [
+        sh:message "Detection actions must occur within active detection phase timeframe"@en ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "cacontology-detection" ;
+                sh:namespace "https://cacontology.projectvic.org/detection#"^^xsd:anyURI
+            ] , [
+                sh:prefix "gufo" ;
+                sh:namespace "http://purl.org/nemo/gufo#"^^xsd:anyURI
+            ]
+        ] ;
+        sh:select """
+            PREFIX cacontology-detection: <https://cacontology.projectvic.org/detection#>
+            PREFIX gufo: <http://purl.org/nemo/gufo#>
+            SELECT ?this
+            WHERE {
+                ?this cacontology-detection:hasDetectionBeginPoint ?detectionBegin ;
+                ?phase a cacontology-detection:InitialDetectionPhase ;
+                       cacontology-detection:hasPhaseBeginPoint ?phaseBegin ;
+                       cacontology-detection:hasPhaseEndPoint ?phaseEnd .
+                ?this gufo:occursInPhase ?phase .
+                FILTER (?detectionBegin < ?phaseBegin || ?detectionBegin > ?phaseEnd)
+            }
+        """
+    ] .
+
+# Detection Workflow Temporal Validation
+cacontology-detection:DetectionWorkflowTemporalShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-detection:ManualClassificationAction ;
+    rdfs:label "Detection Workflow Temporal Shape"@en ;
+    rdfs:comment "Validates temporal workflow progression in detection processes."@en ;
+    sh:sparql [
+        sh:message "Manual classification should follow automated detection"@en ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "cacontology-detection" ;
+                sh:namespace "https://cacontology.projectvic.org/detection#"^^xsd:anyURI
+            ]
+        ] ;
+        sh:select """
+            PREFIX cacontology-detection: <https://cacontology.projectvic.org/detection#>
+            PREFIX uco-core: <https://ontology.unifiedcyberontology.org/uco/core/1.5.0>
+            PREFIX uco-action: <https://ontology.unifiedcyberontology.org/uco/action/1.5.0>
+            SELECT ?this
+            WHERE {
+                ?this a cacontology-detection:ManualClassificationAction ;
+                      uco-core:startTime ?manualTime .
+                ?autoDetection a cacontology-detection:AutomatedDetectionAction ;
+                               uco-core:startTime ?autoTime ;
+                               uco-action:object ?content .
+                ?this uco-action:object ?content .
+                FILTER (?manualTime < ?autoTime)
+            }
+        """
+    ] .
+
+# =============================================================================
+# CROSS-REFERENCE VALIDATION
+# =============================================================================
+
+# Detection Action Result Cross Reference Shape
+cacontology-detection:DetectionActionResultCrossReferenceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-detection:AutomatedDetectionAction ;
+    rdfs:label "Detection Action Result Cross Reference Shape"@en ;
+    rdfs:comment "Validates that detection actions produce appropriate results."@en ;
+    sh:sparql [
+        sh:message "Automated detection action should produce detection results"@en ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "cacontology-detection" ;
+                sh:namespace "https://cacontology.projectvic.org/detection#"^^xsd:anyURI
+            ]
+        ] ;
+        sh:select """
+            PREFIX cacontology-detection: <https://cacontology.projectvic.org/detection#>
+            PREFIX uco-action: <https://ontology.unifiedcyberontology.org/uco/action/1.5.0>
+            SELECT ?this
+            WHERE {
+                ?this a cacontology-detection:AutomatedDetectionAction .
+                FILTER NOT EXISTS {
+                    ?this uco-action:result ?result ;
+                    ?result a cacontology-detection:DetectionResult .
+                }
+            }
+        """
+    ] .
+
+# Hashing Action Result Cross Reference Shape
+cacontology-detection:HashingActionResultCrossReferenceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-detection:ContentHashingAction ;
+    rdfs:label "Hashing Action Result Cross Reference Shape"@en ;
+    rdfs:comment "Validates that hashing actions produce hash artifacts."@en ;
+    sh:sparql [
+        sh:message "Content hashing action should produce hash results"@en ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "cacontology-detection" ;
+                sh:namespace "https://cacontology.projectvic.org/detection#"^^xsd:anyURI
+            ]
+        ] ;
+        sh:select """
+            PREFIX cacontology-detection: <https://cacontology.projectvic.org/detection#>
+            PREFIX uco-action: <https://ontology.unifiedcyberontology.org/uco/action/1.5.0>
+            PREFIX uco-types: <https://ontology.unifiedcyberontology.org/uco/types/1.5.0>
+            SELECT ?this
+            WHERE {
+                ?this a cacontology-detection:ContentHashingAction .
+                FILTER NOT EXISTS {
+                    ?this uco-action:result ?hash ;
+                    ?hash a ?hashType .
+                    FILTER (?hashType IN (
+                        cacontology-detection:PhotoDNAHash,
+                        cacontology-detection:PerceptualHash,
+                        uco-types:Hash
+                    ))
+                }
+            }
+        """
+    ] .
+
+# Classification Action Result Cross Reference Shape
+cacontology-detection:ClassificationActionResultCrossReferenceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-detection:ManualClassificationAction ;
+    rdfs:label "Classification Action Result Cross Reference Shape"@en ;
+    rdfs:comment "Validates that classification actions produce classification results."@en ;
+    sh:sparql [
+        sh:message "Manual classification action should produce classification results"@en ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "cacontology-detection" ;
+                sh:namespace "https://cacontology.projectvic.org/detection#"^^xsd:anyURI
+            ]
+        ] ;
+        sh:select """
+            SELECT ?this
+            WHERE {
+                ?this a cacontology-detection:ManualClassificationAction .
+                FILTER NOT EXISTS {
+                    ?this uco-action:result ?result ;
+                    ?result a cacontology-detection:ClassificationResult .
+                }
+            }
+        """
+    ] .
+
+# Database Match Input Cross Reference Shape
+cacontology-detection:DatabaseMatchInputCrossReferenceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-detection:DatabaseMatchAction ;
+    rdfs:label "Database Match Input Cross Reference Shape"@en ;
+    rdfs:comment "Validates that database match actions have hash inputs."@en ;
+    sh:sparql [
+        sh:message "Database match action should have hash inputs for comparison"@en ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "cacontology-detection" ;
+                sh:namespace "https://cacontology.projectvic.org/detection#"^^xsd:anyURI
+            ]
+        ] ;
+        sh:select """
+            PREFIX cacontology-detection: <https://cacontology.projectvic.org/detection#>
+            PREFIX uco-action: <https://ontology.unifiedcyberontology.org/uco/action/1.5.0>
+            PREFIX uco-types: <https://ontology.unifiedcyberontology.org/uco/types/1.5.0>
+            SELECT ?this
+            WHERE {
+                ?this a cacontology-detection:DatabaseMatchAction .
+                FILTER NOT EXISTS {
+                    ?this uco-action:object ?hash ;
+                    ?hash a ?hashType .
+                    FILTER (?hashType IN (
+                        cacontology-detection:PhotoDNAHash,
+                        cacontology-detection:PerceptualHash,
+                        uco-types:Hash
+                    ))
+                }
+            }
+        """
+    ] .
+
+# =============================================================================
+# ROLE PARTICIPATION VALIDATION
+# =============================================================================
+
+# Detection Role Participation Shape
+cacontology-detection:DetectionRoleParticipationShape rdf:type sh:NodeShape ;
+    sh:targetClass uco-identity:Person ;
+    rdfs:label "Detection Role Participation Shape"@en ;
+    rdfs:comment "Validates detection role participation constraints."@en ;
+    sh:sparql [
+        sh:message "Person in detection role must participate in appropriate detection actions"@en ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "cacontology-detection" ;
+                sh:namespace "https://cacontology.projectvic.org/detection#"^^xsd:anyURI
+            ] , [
+                sh:prefix "gufo" ;
+                sh:namespace "http://purl.org/nemo/gufo#"^^xsd:anyURI
+            ]
+        ] ;
+        sh:select """
+            PREFIX cacontology-detection: <https://cacontology.projectvic.org/detection#>
+            PREFIX gufo: <http://purl.org/nemo/gufo#>
+            PREFIX uco-action: <https://ontology.unifiedcyberontology.org/uco/action/1.5.0>
+            SELECT ?this
+            WHERE {
+                ?this gufo:playsRole ?role ;
+                ?role a cacontology-detection:ContentAnalystRole .
+                FILTER NOT EXISTS {
+                    ?action a cacontology-detection:ManualClassificationAction ;
+                           uco-action:performer ?this .
+                }
+            }
+        """
+    ] .
+
+# =============================================================================
+# DATA QUALITY VALIDATION
+# =============================================================================
+
+# Detection Data Quality Shape
+cacontology-detection:DetectionDataQualityShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-detection:ContentHashingTool ,
+                   cacontology-detection:MachineLearningDetectionTool ,
+                   cacontology-detection:DatabaseMatchingTool ,
+                   cacontology-detection:ManualReviewTool ;
+    rdfs:label "Detection Data Quality Shape"@en ;
+    rdfs:comment "Validates data quality for detection tool entities."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 2 ;
+        sh:maxLength 100 ;
+        sh:message "Tool name must be between 2 and 100 characters"@en
+    ] ;
+    sh:property [
+        sh:path uco-core:description ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 10 ;
+        sh:maxLength 1000 ;
+        sh:message "Tool description should be between 10 and 1000 characters when provided"@en
+    ] .
+
+# Confidence Score Validation Shape
+cacontology-detection:ConfidenceScoreValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-detection:AutomatedDetectionAction ,
+                   cacontology-detection:DetectionResult ;
+    rdfs:label "Confidence Score Validation Shape"@en ;
+    rdfs:comment "Validates confidence score consistency and reasonableness."@en ;
+    sh:sparql [
+        sh:message "High confidence scores should correlate with positive detection decisions"@en ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "cacontology-detection" ;
+                sh:namespace "https://cacontology.projectvic.org/detection#"^^xsd:anyURI
+            ]
+        ] ;
+        sh:select """
+            PREFIX cacontology-detection: <https://cacontology.projectvic.org/detection#>
+            SELECT ?this
+            WHERE {
+                ?this cacontology-detection:confidenceScore ?score ;
+                      cacontology-detection:reviewDecision "false_positive" .
+                FILTER (?score > 0.8)
+            }
+        """
+    ] .
+
+# Hash Format Validation Shape
+cacontology-detection:HashFormatValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-detection:PhotoDNAHash ,
+                   cacontology-detection:PerceptualHash ;
+    rdfs:label "Hash Format Validation Shape"@en ;
+    rdfs:comment "Validates hash format and consistency."@en ;
+    sh:property [
+        sh:path uco-core:createdTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Hash creation time should be specified when available"@en
+    ] .
+
+# =============================================================================
+# RISK STRATIFICATION SHAPES (beyond raw detection flags; GEN 2026-02-10)
+# =============================================================================
+
+cacontology-detection:RiskStratificationActionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-detection:RiskStratificationAction ;
+    rdfs:label "Risk Stratification Action Shape"@en ;
+    rdfs:comment "Validates risk stratification actions that produce explainable prioritization outputs."@en ;
+    sh:property [
+        sh:path cacontology-detection:producesRiskStratificationResult ;
+        sh:minCount 1 ;
+        sh:message "Risk stratification action must produce at least one risk stratification result."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-detection:stratifiesDetectionResult ;
+        sh:minCount 0 ;
+        sh:message "Risk stratification action may link to a detection result it stratifies."@en
+    ] .
+
+cacontology-detection:RiskStratificationResultShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-detection:RiskStratificationResult ;
+    rdfs:label "Risk Stratification Result Shape"@en ;
+    rdfs:comment "Validates risk stratification result artifacts with optional tier/score and explainability rationale."@en ;
+    sh:property [
+        sh:path cacontology-detection:riskTier ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "critical" "high" "medium" "low" "unknown" ) ;
+        sh:message "Risk tier must be one of: critical/high/medium/low/unknown (when present)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-detection:riskScore ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Risk score must be a decimal when present."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-detection:riskRationale ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Risk rationale must be a string when present."@en
+    ] .

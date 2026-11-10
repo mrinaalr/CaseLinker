@@ -1187,3 +1187,76 @@ def test_llm_rule_draft_must_earn_the_quotes(tmp_path):
         regex=r"(\d{1,2})",
     )
     assert too_wide["ok"] is False
+
+
+# --- appositive child ages, charged juveniles, activity durations ----------------
+
+# nj_ag_2017_001
+CAMP_COUNSELOR = (
+    "TRENTON – Thane Corbridge, 22, of Hopatcong, N.J., a camp counselor, was arrested on Oct. 10 and charged "
+    "with aggravated criminal sexual contact for allegedly engaging in sexual conduct with a girl, 14, over "
+    "whom he had direct supervision as a camp counselor."
+)
+CHARGED_JUVENILE = (
+    "TRENTON – Thane Corbridge, 24, of Hammonton, N.J., was arrested on Oct. 17 and charged with manufacturing "
+    "child pornography. A 17-year-old student from Bergen County, whose name is not being released due to his "
+    "juvenile status, was arrested on Aug. 17 and charged by the Bergen County Prosecutor’s Office with "
+    "manufacturing, distributing and possessing child pornography."
+)
+
+
+def _regex_roles(case, age):
+    return {a["role"] for a in case["assertions"] if a["field"] == "age" and a["method"] == "regex" and a["value"] == age}
+
+
+def test_girl_comma_age_is_read_as_a_victim():
+    case, _ = run(CAMP_COUNSELOR)
+    assert _regex_roles(case, 14) == {"victim"}
+    final = case["resolutions"]["age"]["final_value"] or {}
+    assert 14 in (final.get("victims") or [])
+    assert 14 not in [p.get("age") for p in final.get("perpetrator_entities") or []]
+
+
+def test_girl_comma_age_beside_photos_is_the_child_contacted():
+    case, _ = run(
+        "TRENTON – Thane Corbridge, 22, of Hopatcong, N.J., was arrested on Oct. 10. Corbridge allegedly "
+        "exchanged sexual photos and texts with a girl, 14, including a photo of his penis."
+    )
+    assert _regex_roles(case, 14) == {"victim"}
+
+
+def test_charged_juvenile_is_read_as_a_defendant_not_a_victim():
+    case, _ = run(CHARGED_JUVENILE)
+    assert _regex_roles(case, 17) == {"perpetrator"}
+    final = case["resolutions"]["age"]["final_value"] or {}
+    assert 17 not in (final.get("victims") or [])
+
+
+# nj_ag_2017_001
+NINE_MONTH_INITIATIVE = (
+    "TRENTON – Attorney General today announced arrests of 79 offenders in “Operation Safety Net,” a nine-month, "
+    "multi-agency child protection initiative. “The nine-month investigation conducted by the task force led to "
+    "these arrests,” the Colonel said. Second-degree crimes carry a sentence of five to 10 years in state prison."
+)
+
+
+def _sentence_values(case):
+    return {str(a["value"]).lower() for a in case["assertions"] if a["field"] == "sentence"}
+
+
+def test_length_of_an_investigation_is_not_a_sentence_candidate():
+    case, _ = run(NINE_MONTH_INITIATIVE)
+    assert "nine-month" not in _sentence_values(case)
+    final = case["resolutions"]["sentence"]["final_value"] or {}
+    assert final.get("imposed") == []
+    assert final.get("exposure") == ["five to 10 years"]
+
+
+def test_a_real_hyphenated_term_is_still_a_sentence():
+    case, _ = run(
+        "Marrowby pleaded guilty and was sentenced to an 18-month prison term. He was also sentenced to "
+        "five years in prison after a three-day trial."
+    )
+    final = case["resolutions"]["sentence"]["final_value"] or {}
+    assert "18-month" in final.get("imposed") and "five years" in final.get("imposed")
+    assert "three-day" not in _sentence_values(case)

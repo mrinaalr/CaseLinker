@@ -1,0 +1,200 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
+@prefix cacontology-trafficking: <https://cacontology.projectvic.org/trafficking#> .
+@prefix cacontology-trafficking-shapes: <https://cacontology.projectvic.org/trafficking/shapes#> .
+@prefix gufo: <http://purl.org/nemo/gufo#> .
+
+# =============================================================================
+# ONTOLOGY DECLARATION - SEX TRAFFICKING SHACL SHAPES (MINIMAL CORE)
+# =============================================================================
+
+<https://cacontology.projectvic.org/trafficking/shapes> rdf:type owl:Ontology ;
+    rdfs:label "CAC Sex Trafficking SHACL Shapes - Minimal Core"@en ;
+    rdfs:comment "Minimal SHACL validation shapes for the CAC Sex Trafficking Ontology, focusing on core gUFO-aligned structures (organizations, roles, events) and key temporal and quantitative properties."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/trafficking/shapes/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:issued "2025-11-18"^^xsd:date ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://cacontology.projectvic.org/trafficking/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> .
+
+# =============================================================================
+# TRAFFICKING ENTERPRISE TEMPORAL AND ORGANIZATION SHAPES
+# =============================================================================
+
+cacontology-trafficking-shapes:TraffickingEnterpriseShape rdf:type sh:NodeShape ;
+    rdfs:label "Trafficking Enterprise Shape"@en ;
+    rdfs:comment "Validates core temporal and jurisdictional properties for trafficking enterprises modeled as gUFO organizations."@en ;
+    sh:targetClass cacontology-trafficking:TraffickingEnterprise ;
+    sh:property [
+        sh:path cacontology-trafficking:hasEnterpriseBeginPoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Trafficking enterprise can have at most one enterprise begin point as xsd:dateTimeStamp."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-trafficking:hasEnterpriseEndPoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Trafficking enterprise can have at most one enterprise end point as xsd:dateTimeStamp."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-trafficking:enterpriseDuration ;
+        sh:datatype xsd:duration ;
+        sh:maxCount 1 ;
+        sh:message "Trafficking enterprise can have at most one enterpriseDuration value of type xsd:duration."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-trafficking:operatesInJurisdiction ;
+        sh:class uco-location:Location ;
+        sh:message "Trafficking enterprise jurisdictions must be uco-location:Location instances when provided."@en
+    ] .
+
+# =============================================================================
+# TRAFFICKING ROLES (OFFENDER AND VICTIM) SHAPES
+# =============================================================================
+
+cacontology-trafficking-shapes:TraffickerRoleShape rdf:type sh:NodeShape ;
+    rdfs:label "Trafficker Role Shape"@en ;
+    rdfs:comment "Validates that trafficker roles are modeled as gUFO roles with optional hierarchy and control properties."@en ;
+    sh:targetClass cacontology-trafficking:TraffickerRole ;
+    sh:property [
+        sh:path cacontology-trafficking:hasHierarchyLevel ;
+        sh:datatype xsd:integer ;
+        sh:maxCount 1 ;
+        sh:message "Hierarchy level, when provided, must be a single xsd:integer value."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-trafficking:controlsVictim ;
+        sh:class cacontology-trafficking:TraffickingVictimRole ;
+        sh:message "controlsVictim links should point to TraffickingVictimRole instances."@en
+    ] .
+
+cacontology-trafficking-shapes:TraffickingVictimRoleShape rdf:type sh:NodeShape ;
+    rdfs:label "Trafficking Victim Role Shape"@en ;
+    rdfs:comment "Validates temporal role properties for trafficking victim roles."@en ;
+    sh:targetClass cacontology-trafficking:TraffickingVictimRole ;
+    sh:property [
+        sh:path cacontology-trafficking:hasRoleBeginPoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Victim roles can have at most one role begin point as xsd:dateTimeStamp."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-trafficking:hasRoleEndPoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Victim roles can have at most one role end point as xsd:dateTimeStamp."@en
+    ] .
+
+# =============================================================================
+# TRAFFICKING OPERATIONS AND TRANSPORTATION SHAPES
+# =============================================================================
+
+cacontology-trafficking-shapes:TraffickingOperationShape rdf:type sh:NodeShape ;
+    rdfs:label "Trafficking Operation Shape"@en ;
+    rdfs:comment "Minimal temporal validation for trafficking operations modeled as gUFO events."@en ;
+    sh:targetClass cacontology-trafficking:TraffickingOperation ;
+    sh:property [
+        sh:path gufo:hasBeginPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Trafficking operations can have at most one begin point in xsd:dateTimeStamp."@en
+    ] ;
+    sh:property [
+        sh:path gufo:hasEndPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Trafficking operations can have at most one end point in xsd:dateTimeStamp."@en
+    ] .
+
+cacontology-trafficking-shapes:VictimTransportationShape rdf:type sh:NodeShape ;
+    rdfs:label "Victim Transportation Shape"@en ;
+    rdfs:comment "Validates origin, destination, and method properties for victim transportation events."@en ;
+    sh:targetClass cacontology-trafficking:VictimTransportation ;
+    sh:property [
+        sh:path cacontology-trafficking:originLocation ;
+        sh:class uco-location:Location ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Victim transportation must have exactly one originLocation of type uco-location:Location."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-trafficking:destinationLocation ;
+        sh:class uco-location:Location ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Victim transportation must have exactly one destinationLocation of type uco-location:Location."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-trafficking:transportationMethod ;
+        sh:class uco-core:UcoObject ;
+        sh:maxCount 1 ;
+        sh:message "transportationMethod, when provided, must reference a single uco-core:UcoObject (e.g., vehicle or method artifact)."@en
+    ] .
+
+# =============================================================================
+# FINANCIAL AND SITUATION METRICS SHAPES
+# =============================================================================
+
+cacontology-trafficking-shapes:EarningsCollectionShape rdf:type sh:NodeShape ;
+    rdfs:label "Earnings Collection Shape"@en ;
+    rdfs:comment "Validates core financial properties for earnings collection events."@en ;
+    sh:targetClass cacontology-trafficking:EarningsCollection ;
+    sh:property [
+        sh:path cacontology-trafficking:earningsAmount ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:message "earningsAmount must be a single non-negative xsd:decimal value."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-trafficking:earningsPeriod ;
+        sh:datatype xsd:duration ;
+        sh:maxCount 1 ;
+        sh:message "earningsPeriod, when provided, must be a single xsd:duration value."@en
+    ] .
+
+cacontology-trafficking-shapes:MultiJurisdictionalSituationShape rdf:type sh:NodeShape ;
+    rdfs:label "Multi-Jurisdictional Situation Shape"@en ;
+    rdfs:comment "Validates basic complexity and count metrics for multi-jurisdictional trafficking situations."@en ;
+    sh:targetClass cacontology-trafficking:MultiJurisdictionalSituation ;
+    sh:property [
+        sh:path cacontology-trafficking:situationComplexity ;
+        sh:datatype xsd:integer ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 5 ;
+        sh:message "situationComplexity, when provided, must be an integer between 1 and 5."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-trafficking:involvesJurisdictionCount ;
+        sh:datatype xsd:integer ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0 ;
+        sh:message "involvesJurisdictionCount, when provided, must be a non-negative integer."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-trafficking:involvesVictimCount ;
+        sh:datatype xsd:integer ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0 ;
+        sh:message "involvesVictimCount, when provided, must be a non-negative integer."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-trafficking:involvesTraffickerCount ;
+        sh:datatype xsd:integer ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0 ;
+        sh:message "involvesTraffickerCount, when provided, must be a non-negative integer."@en
+    ] .
+
+

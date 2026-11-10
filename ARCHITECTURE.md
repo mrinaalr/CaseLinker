@@ -350,7 +350,7 @@ Hand-off: [`search.md`](search.md) (which surface answers which question) · [`t
 
 ## 8. Knowledge graphs
 
-Every case is mapped onto the [CAC Ontology](https://github.com/Project-VIC-International/CAC-Ontology) (Crimes Against Children, Project VIC) on the [UCO](https://unifiedcyberontology.org/) / [CASE](https://caseontology.org/) stack. The pinned modules and SHACL shapes live in `ontology/cacontology-*.ttl`; the pin is recorded in [`CAC_ONTOLOGY_VERSION`](ontology/CAC_ONTOLOGY_VERSION) (`v3.0.0-3-gb73b51b`). Missing or empty shapes raise; validation never reports conformance against zero shapes.
+Every case is mapped onto the [CAC Ontology](https://github.com/Project-VIC-International/CAC-Ontology) (Crimes Against Children, Project VIC) on the [UCO](https://unifiedcyberontology.org/) / [CASE](https://caseontology.org/) stack. All 97 CAC modules and their SHACL shapes, plus UCO 1.5.0, CASE 1.5.0 and gUFO 1.0.0, are vendored in `ontology/vendor/`; the pins are recorded in [`CAC_ONTOLOGY_VERSION`](ontology/CAC_ONTOLOGY_VERSION) (CAC `v3.1.0`). Missing or empty shapes raise; validation never reports conformance against zero shapes.
 
 ```mermaid
 flowchart LR
@@ -371,11 +371,11 @@ flowchart LR
   inv -->|"hasStep"| event
   inv -->|"involvesAgency"| agency
   inv -->|"dcterms:spatial"| loc
-  event -->|"usesChannel"| plat
-  vRole -->|"participatesInEvent"| event
-  oRole -->|"participatesInEvent"| event
-  vRole --> person
-  oRole --> person
+  event -->|"usesChannel (one event only)"| plat
+  vRole -->|"participatesInEvent (one event only)"| event
+  oRole -->|"participatesInEvent (one event only)"| event
+  person -->|"uco-core:Relationship Has_Role"| vRole
+  person -->|"uco-core:Relationship Has_Role"| oRole
   proc -->|"hasCharge"| charge
   inv -->|"hasStep"| proc
   inv -.->|"dcterms:provenance"| prov
@@ -599,7 +599,7 @@ CaseLinker/
 │                                      public_records.py, collector_tools.py, clean_and_validate.py
 ├── ontology/                          features_to_cac.py, graph_generate.py, provenance_export.py,
 │   │                                  oxigraph_rebuild.py, cohort_sparql.py, select_cases.py, big_bang.py
-│   ├── cacontology-*.ttl              pinned CAC modules and SHACL shapes (CAC_ONTOLOGY_VERSION)
+│   ├── vendor/                        pinned CAC, UCO, CASE, gUFO, OA copies (CAC_ONTOLOGY_VERSION)
 │   ├── caselinker-provenance.ttl      provenance vocabulary and shapes
 │   ├── graph_output/                  staging + universe/ big_bang/ analysis/ (TTL, JSON-LD, provenance)
 │   ├── PACER/                         court-record narratives, facts, CASE-UCO JSON-LD by offense family

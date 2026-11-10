@@ -70,6 +70,7 @@ if os.getenv("DATABASE_URL"):
 else:
     from storage import CaseStorage
     print("✅ Using SQLite database (local development)")
+from case_jurisdiction import derive_jurisdiction
 from corpus_export import iter_corpus_json
 from platform_affordance_evidence_freshness import (
     read_corpus_identity,
@@ -2290,13 +2291,15 @@ def get_case(request: Request, case_id: str):
     case = storage.get_case(case_id)
     if not case:
         raise HTTPException(status_code=404, detail="Case not found")
+    # Derived at read time from source + text, before the text is stripped; never stored (#29).
+    case.update(derive_jurisdiction(case))
     # Public callers can still fetch a case, but never raw narrative payloads.
     if not _has_bulk_corpus_access(request):
         case = _sanitize_case_for_public(case)
     return case
 
 
-_ASSERTION_FIELDS = ("age", "sentence", "investigation_type", "date")
+_ASSERTION_FIELDS = ("age", "sentence", "investigation_type", "cybertip_reporter", "date")
 _REVIEW_STATUSES = ("needs_review", "disagreement", "partial")
 
 
@@ -3888,10 +3891,15 @@ Rules:
 - Evidence for one case: the case node dcterms:provenance points at GRAPH <https://w3id.org/caselinker/resource/case/{case_id}/provenance>. Inside it, the case IRI prov:wasGeneratedBy the extraction activity, and each annotation prov:wasGeneratedBy that same activity. Do not treat the provenance graph as a case.
 - Case ids look like nj_ag_2017_001. dcterms:identifier on cac:CACInvestigation holds the case_id.
 - Platform IRIs: https://w3id.org/caselinker/resource/platform/{slug}
-- Agency IRIs: https://w3id.org/caselinker/resource/agency/{slug}
+- Agency IRIs: https://w3id.org/caselinker/resource/agency/{slug}. A slug ending in -{st}-unverified is a label the registry could not confirm, shared only within releases from that state. An agency under https://w3id.org/caselinker/resource/case/{case_id}/agency/{slug} belongs to that one case and links no others.
+- ESP (CyberTip reporter) IRIs: https://w3id.org/caselinker/resource/esp/{slug}
 
 Prefixes (use as needed):
 PREFIX cac: <https://cacontology.projectvic.org#>
+PREFIX cac-core: <https://cacontology.projectvic.org/core#>
+PREFIX uco-core: <https://ontology.unifiedcyberontology.org/uco/core/>
+PREFIX ncmec: <https://cacontology.projectvic.org/us/ncmec#>
+PREFIX hotlines: <https://cacontology.projectvic.org/hotlines#>
 PREFIX cac-multi: <https://cacontology.projectvic.org/multi-jurisdiction#>
 PREFIX cac-plat: <https://cacontology.projectvic.org/platforms#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -3899,7 +3907,8 @@ PREFIX dcterms: <http://purl.org/dc/terms/>
 
 Useful patterns:
 - Investigation: ?case a cac:CACInvestigation
-- Platform use: ?event cac:usesChannel ?platform . ?case cac:hasStep ?event . ?platform rdfs:label ?label
+- Platform use: GRAPH ?case { ?platform a cac-core:DigitalSystemEntity ; rdfs:label ?label } (the case graph IRI is the case IRI; cac:usesChannel exists only when the case has one event)
+- CyberTip and who sent it: ?case uco-core:object ?tip . ?tip a ncmec:NCMECCybertipReport . OPTIONAL { ?tip hotlines:reportedBy ?role . ?rel uco-core:target ?role ; uco-core:source ?esp . ?esp rdfs:label ?reporter }
 - Agency: ?case cac-multi:involvesAgency ?agency . ?agency rdfs:label ?label
 - Press-release case graphs only: FILTER(STRSTARTS(STR(?g), "https://w3id.org/caselinker/resource/case/") && !STRENDS(STR(?g), "/provenance"))
 """

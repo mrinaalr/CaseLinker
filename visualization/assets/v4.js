@@ -238,18 +238,31 @@
     return { html: out, found: marks.length, missed: missed };
   }
   function narrativePanel(opts) {
-    /* opts: { caseId, spans, title } → element with a header, a scrolling narrative and a jump API */
+    /* opts: { caseId, spans, title, collapsed, openAt } → element with a header, a scrolling narrative and a jump API.
+       collapsed: the full release stays closed until the reader opens it (or picks a passage). openAt: the mark to show on first open. */
     var panel = el('section', { class: 'cl-narrative' });
+    var toggle = opts.collapsed ? el('button', { type: 'button', class: 'cl-btn cl-btn--sm cl-narrative__toggle', 'aria-expanded': 'false' }, 'Show full release') : null;
     var head = el('div', { class: 'cl-narrative__head' }, [
       el('div', {}, [el('span', { class: 'cl-label' }, opts.title || 'Source text'), ' ', el('span', { class: 'cl-id' }, opts.caseId)]),
       el('div', { class: 'cl-narrative__meta', html: '<span class="cl-spinner"></span>' })
-    ]);
+    ].concat(toggle ? [toggle] : []));
     var body = el('div', { class: 'cl-narrative__body', tabindex: '0' });
     panel.appendChild(head); panel.appendChild(body);
+    var pending = opts.openAt || null;
+    panel.setOpen = function (open) {
+      if (!toggle) return;
+      body.hidden = !open;
+      panel.classList.toggle('is-collapsed', !open);
+      toggle.textContent = open ? 'Hide full release' : 'Show full release';
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (open && pending) { var id = pending; pending = null; panel.jump(id); }
+    };
+    if (toggle) { toggle.addEventListener('click', function () { panel.setOpen(body.hidden); }); panel.setOpen(false); }
     panel.jump = function (id) {
+      if (toggle && body.hidden) { pending = null; panel.setOpen(true); }
       var m = body.querySelector('#mk-' + CSS.escape(String(id)));
       Array.prototype.forEach.call(body.querySelectorAll('mark.is-on'), function (x) { x.classList.remove('is-on'); });
-      if (!m) { toast('That passage is not in the served text'); return false; }
+      if (!m) { if (!body.querySelector('.cl-narrative__text')) { pending = id; return false; } toast('That passage is not in the served text'); return false; }
       m.classList.add('is-on');
       var top = m.offsetTop - body.clientHeight / 2 + m.offsetHeight / 2;
       body.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
@@ -262,6 +275,7 @@
       if (opts.spans && opts.spans.length) meta = r.found + ' of ' + opts.spans.length + ' passages located · ' + meta;
       if (r.missed > 0) meta += ' · ' + r.missed + ' not found in this copy of the text';
       head.querySelector('.cl-narrative__meta').innerHTML = esc(meta) + (c.url ? ' · <a href="' + esc(c.url) + '" rel="noopener" target="_blank">original</a>' : '');
+      if (pending && !body.hidden) { var id = pending; pending = null; panel.jump(id); }
       if (opts.onReady) opts.onReady(panel, r);
     }).catch(function (e) {
       body.innerHTML = '<div class="cl-notice cl-notice--warn">Source text unavailable: ' + esc(e.message) + '</div>';

@@ -1,0 +1,530 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+
+@prefix cacontology-training: <https://cacontology.projectvic.org/training#> .
+@prefix gufo: <http://purl.org/nemo/gufo#> .
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+<https://cacontology.projectvic.org/training> rdf:type owl:Ontology ;
+    rdfs:label "CAC Training and Capacity Building Ontology"@en ;
+    rdfs:comment "An ontology for modeling professional development, training programs, and capacity building initiatives for child protection professionals with gUFO foundational ontology enhancements for improved semantic precision, temporal modeling, and validation capabilities, based on ICMEC's training of 155,000+ professionals globally."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/training/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://cacontology.projectvic.org/core/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> .
+
+# =============================================================================
+# TRAINING INFRASTRUCTURE (gUFO Event and Organization modeling)
+# =============================================================================
+
+# Training Programs as gUFO Events
+cacontology-training:InternationalTraining rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:SupportEvent ;
+    rdfs:label "International Training"@en ;
+    rdfs:comment "Training program conducted across multiple countries. Modeled as gUFO Event."@en .
+
+# Training Infrastructure as gUFO Organizations
+cacontology-training:CapacityBuildingProgram rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:OrganizationLikeEntity ;
+    rdfs:label "Capacity Building Program"@en ;
+    rdfs:comment "Structured program for building organizational and individual capacity. Modeled as gUFO Organization."@en .
+
+# Training Objects as gUFO Objects
+cacontology-training:ProfessionalCertification rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:Artifact ;
+    rdfs:label "Professional Certification"@en ;
+    rdfs:comment "Formal certification for child protection professionals. Modeled as gUFO Object."@en .
+
+cacontology-training:TrainingModule rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:Artifact ;
+    rdfs:label "Training Module"@en ;
+    rdfs:comment "Individual training module covering specific topics. Modeled as gUFO Object."@en .
+
+cacontology-training:SkillsDevelopmentProgram rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-training:CapacityBuildingProgram ;
+    rdfs:label "Skills Development Program"@en ;
+    rdfs:comment "Program focused on developing specific professional skills. Modeled as gUFO Organization."@en .
+
+cacontology-training:TrainingCurriculum rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:Artifact ;
+    rdfs:label "Training Curriculum"@en ;
+    rdfs:comment "Structured curriculum for child protection training. Modeled as gUFO Object."@en .
+
+# =============================================================================
+# TRAINING DELIVERY METHODS (gUFO Event modeling)
+# =============================================================================
+
+# Training Delivery as gUFO Events
+cacontology-training:OnlineTraining rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-training:InternationalTraining ;
+    rdfs:label "Online Training"@en ;
+    rdfs:comment "Training delivered through online platforms. Modeled as gUFO Event."@en .
+
+cacontology-training:InPersonTraining rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-training:InternationalTraining ;
+    rdfs:label "In-Person Training"@en ;
+    rdfs:comment "Training delivered in physical classroom settings. Modeled as gUFO Event."@en .
+
+cacontology-training:HybridTraining rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-training:InternationalTraining ;
+    rdfs:label "Hybrid Training"@en ;
+    rdfs:comment "Training combining online and in-person delivery. Modeled as gUFO Event."@en .
+
+cacontology-training:MentorshipProgram rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-training:CapacityBuildingProgram ;
+    rdfs:label "Mentorship Program"@en ;
+    rdfs:comment "One-on-one mentorship for professional development. Modeled as gUFO Organization."@en .
+
+# =============================================================================
+# SPECIALIZED TRAINING TYPES (gUFO Event modeling)
+# =============================================================================
+
+# Specialized Training as gUFO Events
+cacontology-training:CriminalJusticeTraining rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-training:InternationalTraining ;
+    rdfs:label "Criminal Justice Training"@en ;
+    rdfs:comment "Training for criminal justice professionals on child protection. Modeled as gUFO Event."@en .
+
+cacontology-training:ChildProtectionTraining rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-training:InternationalTraining ;
+    rdfs:label "Child Protection Training"@en ;
+    rdfs:comment "Training focused on child protection methodologies. Modeled as gUFO Event."@en .
+
+cacontology-training:CommunityEducationTraining rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-training:ChildProtectionTraining ;
+    rdfs:label "Community Education Training"@en ;
+    rdfs:comment "Training designed to educate community members and caregivers about child abuse dynamics, disclosure support, and prevention awareness."@en ;
+    dcterms:source "Robert Peters, 'Winning Without Words: Prosecuting Cases with Recanting or Nonverbal Victims' (Coursing Justice presentation, 2026)."@en ;
+    rdfs:seeAlso <https://www.coursingjustice.com/> .
+
+cacontology-training:DigitalForensicsTraining rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-training:InternationalTraining ;
+    rdfs:label "Digital Forensics Training"@en ;
+    rdfs:comment "Training on digital forensics techniques for child protection cases. Modeled as gUFO Event."@en .
+
+cacontology-training:InvestigationTraining rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-training:InternationalTraining ;
+    rdfs:label "Investigation Training"@en ;
+    rdfs:comment "Training on investigation methodologies and techniques. Modeled as gUFO Event."@en .
+
+cacontology-training:LegalTraining rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-training:InternationalTraining ;
+    rdfs:label "Legal Training"@en ;
+    rdfs:comment "Training on legal aspects of child protection. Modeled as gUFO Event."@en .
+
+cacontology-training:JudicialEducationTraining rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-training:LegalTraining ;
+    rdfs:label "Judicial Education Training"@en ;
+    rdfs:comment "Training focused on judicial understanding of trauma, recantation, and accommodation needs in child abuse cases."@en ;
+    dcterms:source "Robert Peters, 'Winning Without Words: Prosecuting Cases with Recanting or Nonverbal Victims' (Coursing Justice presentation, 2026)."@en ;
+    rdfs:seeAlso <https://www.coursingjustice.com/> .
+
+cacontology-training:VictimServiceTraining rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-training:InternationalTraining ;
+    rdfs:label "Victim Service Training"@en ;
+    rdfs:comment "Training for professionals providing victim services. Modeled as gUFO Event."@en .
+
+cacontology-training:RecantationResponseTraining rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-training:VictimServiceTraining ;
+    rdfs:label "Recantation Response Training"@en ;
+    rdfs:comment "Training for multidisciplinary teams on anticipating recantation, strengthening support, and investigating statement change."@en ;
+    dcterms:source "Robert Peters, 'Winning Without Words: Prosecuting Cases with Recanting or Nonverbal Victims' (Coursing Justice presentation, 2026)."@en ;
+    rdfs:seeAlso <https://www.coursingjustice.com/> .
+
+cacontology-training:HotlineTraining rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-training:InternationalTraining ;
+    rdfs:label "Hotline Training"@en ;
+    rdfs:comment "Training for hotline operators and managers. Modeled as gUFO Event."@en .
+
+# =============================================================================
+# TRAINING OUTCOMES AND ASSESSMENT (gUFO Object modeling)
+# =============================================================================
+
+# Training Outcomes as gUFO Objects
+cacontology-training:TrainingCertificate rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:Artifact ;
+    rdfs:label "Training Certificate"@en ;
+    rdfs:comment "Certificate awarded upon successful completion of training. Modeled as gUFO Object."@en .
+
+cacontology-training:CompetencyAssessment rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:AssessmentResult ;
+    rdfs:label "Competency Assessment"@en ;
+    rdfs:comment "Assessment of professional competencies acquired through training. Modeled as gUFO Object."@en .
+
+cacontology-training:SkillsValidation rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:AssessmentResult ;
+    rdfs:label "Skills Validation"@en ;
+    rdfs:comment "Validation of skills acquired through training programs. Modeled as gUFO Object."@en .
+
+cacontology-training:ContinuingEducation rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-training:CapacityBuildingProgram ;
+    rdfs:label "Continuing Education"@en ;
+    rdfs:comment "Ongoing education for certified professionals. Modeled as gUFO Organization."@en .
+
+cacontology-training:ProfessionalDevelopment rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:EnduringEntity ;
+    rdfs:label "Professional Development"@en ;
+    rdfs:comment "Career development for child protection professionals. Modeled as gUFO Object."@en .
+
+# =============================================================================
+# TRAINING ROLES (gUFO Role anti-rigid modeling)
+# =============================================================================
+
+# Training Roles as gUFO Roles (anti-rigid)
+cacontology-training:InternationalTrainer rdf:type owl:Class, gufo:Role ;
+    rdfs:subClassOf cac-core:Role ;
+    rdfs:label "International Trainer"@en ;
+    rdfs:comment "Trainer delivering international training programs. Modeled as anti-rigid gUFO Role."@en .
+
+cacontology-training:TrainingCoordinator rdf:type owl:Class, gufo:Role ;
+    rdfs:subClassOf cac-core:Role ;
+    rdfs:label "Training Coordinator"@en ;
+    rdfs:comment "Coordinator responsible for organizing training programs. Modeled as anti-rigid gUFO Role."@en .
+
+cacontology-training:SubjectMatterExpert rdf:type owl:Class, gufo:Role ;
+    rdfs:subClassOf cac-core:Role ;
+    rdfs:label "Subject Matter Expert"@en ;
+    rdfs:comment "Expert providing specialized knowledge in training. Modeled as anti-rigid gUFO Role."@en .
+
+cacontology-training:TrainingParticipant rdf:type owl:Class, gufo:Role ;
+    rdfs:subClassOf cac-core:Role ;
+    rdfs:label "Training Participant"@en ;
+    rdfs:comment "Professional participating in training programs. Modeled as anti-rigid gUFO Role."@en .
+
+cacontology-training:CertifiedProfessional rdf:type owl:Class, gufo:Role ;
+    rdfs:subClassOf cac-core:Role ;
+    rdfs:label "Certified Professional"@en ;
+    rdfs:comment "Professional who has achieved certification. Modeled as anti-rigid gUFO Role."@en .
+
+# =============================================================================
+# TRAINING INSTITUTIONS AND ORGANIZATIONS (gUFO Organization modeling)
+# =============================================================================
+
+# Training Organizations as gUFO Organizations
+cacontology-training:TrainingInstitution rdf:type owl:Class ;
+    rdfs:subClassOf uco-identity:Organization, cac-core:OrganizationLikeEntity ;
+    rdfs:label "Training Institution"@en ;
+    rdfs:comment "Institution providing child protection training. Modeled as gUFO Organization."@en .
+
+cacontology-training:CapacityBuildingPartner rdf:type owl:Class ;
+    rdfs:subClassOf uco-identity:Organization, cac-core:OrganizationLikeEntity ;
+    rdfs:label "Capacity Building Partner"@en ;
+    rdfs:comment "Partner organization supporting capacity building efforts. Modeled as gUFO Organization."@en .
+
+cacontology-training:CertificationBody rdf:type owl:Class ;
+    rdfs:subClassOf uco-identity:Organization, cac-core:OrganizationLikeEntity ;
+    rdfs:label "Certification Body"@en ;
+    rdfs:comment "Organization responsible for professional certification. Modeled as gUFO Organization."@en .
+
+# =============================================================================
+# TRAINING PHASES (gUFO Phase anti-rigid modeling)
+# =============================================================================
+
+# Training Program Phases (gUFO Phase anti-rigid modeling)
+cacontology-training:ProgramPlanningPhase rdf:type owl:Class ;
+    rdfs:label "Program Planning Phase"@en ;
+    rdfs:comment "Phase of training program planning and curriculum development. Modeled as anti-rigid gUFO Phase."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+cacontology-training:ContentDevelopmentPhase rdf:type owl:Class ;
+    rdfs:label "Content Development Phase"@en ;
+    rdfs:comment "Phase of developing training content and materials. Modeled as anti-rigid gUFO Phase."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+cacontology-training:TrainingDeliveryPhase rdf:type owl:Class ;
+    rdfs:label "Training Delivery Phase"@en ;
+    rdfs:comment "Phase of active training delivery and instruction. Modeled as anti-rigid gUFO Phase."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+cacontology-training:AssessmentPhase rdf:type owl:Class ;
+    rdfs:label "Assessment Phase"@en ;
+    rdfs:comment "Phase of participant assessment and competency evaluation. Modeled as anti-rigid gUFO Phase."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+cacontology-training:CertificationPhase rdf:type owl:Class ;
+    rdfs:label "Certification Phase"@en ;
+    rdfs:comment "Phase of awarding certifications and credentials. Modeled as anti-rigid gUFO Phase."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+# =============================================================================
+# TRAINING SITUATIONS (gUFO Situation modeling)
+# =============================================================================
+
+# Training Program Situations (gUFO Situation)
+cacontology-training:GlobalTrainingSituation rdf:type owl:Class ;
+    rdfs:label "Global Training Situation"@en ;
+    rdfs:comment "Situation involving global training initiatives across multiple countries and organizations. Modeled as gUFO Situation."@en ;
+    rdfs:subClassOf cac-core:Situation .
+
+cacontology-training:MultiStakeholderTrainingSituation rdf:type owl:Class ;
+    rdfs:label "Multi-Stakeholder Training Situation"@en ;
+    rdfs:comment "Situation involving training coordination between multiple stakeholder organizations. Modeled as gUFO Situation."@en ;
+    rdfs:subClassOf cac-core:Situation .
+
+cacontology-training:CapacityBuildingSituation rdf:type owl:Class ;
+    rdfs:label "Capacity Building Situation"@en ;
+    rdfs:comment "Situation focused on building institutional and individual capacity for child protection. Modeled as gUFO Situation."@en ;
+    rdfs:subClassOf cac-core:Situation .
+
+# =============================================================================
+# TRAINING METRICS AND ANALYTICS (gUFO Object modeling)
+# =============================================================================
+
+# Training Metrics as gUFO Objects
+cacontology-training:TrainingMetrics rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:AssessmentResult ;
+    rdfs:label "Training Metrics"@en ;
+    rdfs:comment "Metrics measuring training effectiveness and reach. Modeled as gUFO Object."@en .
+
+# =============================================================================
+# gUFO TEMPORAL PROPERTIES
+# =============================================================================
+
+# Training Program Temporal Properties
+cacontology-training:hasTrainingBeginPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has training begin point"@en ;
+    rdfs:comment "Temporal begin point for training program."@en ;
+    rdfs:subPropertyOf gufo:hasBeginPointInXSDDateTimeStamp ;
+    rdfs:domain cacontology-training:InternationalTraining ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-training:hasTrainingEndPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has training end point"@en ;
+    rdfs:comment "Temporal end point for training program."@en ;
+    rdfs:subPropertyOf gufo:hasEndPointInXSDDateTimeStamp ;
+    rdfs:domain cacontology-training:InternationalTraining ;
+    rdfs:range xsd:dateTimeStamp .
+
+# Training Phase Temporal Properties
+cacontology-training:hasPhaseBeginPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has phase begin point"@en ;
+    rdfs:comment "Temporal begin point for training phase."@en ;
+    rdfs:subPropertyOf gufo:hasBeginPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-training:hasPhaseEndPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has phase end point"@en ;
+    rdfs:comment "Temporal end point for training phase."@en ;
+    rdfs:subPropertyOf gufo:hasEndPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:dateTimeStamp .
+
+# Training Role Temporal Properties
+cacontology-training:hasRoleBeginPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has role begin point"@en ;
+    rdfs:comment "Temporal begin point for training role."@en ;
+    rdfs:subPropertyOf gufo:hasBeginPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Role ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-training:hasRoleEndPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has role end point"@en ;
+    rdfs:comment "Temporal end point for training role."@en ;
+    rdfs:subPropertyOf gufo:hasEndPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Role ;
+    rdfs:range xsd:dateTimeStamp .
+
+# Duration Properties
+cacontology-training:trainingDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "training duration"@en ;
+    rdfs:comment "Duration of training program from start to completion."@en ;
+    rdfs:domain cacontology-training:InternationalTraining ;
+    rdfs:range xsd:duration .
+
+cacontology-training:phaseDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "phase duration"@en ;
+    rdfs:comment "Duration of training phase."@en ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:duration .
+
+cacontology-training:roleDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "role duration"@en ;
+    rdfs:comment "Duration of individual's training role."@en ;
+    rdfs:domain cac-core:Role ;
+    rdfs:range xsd:duration .
+
+# =============================================================================
+# PROPERTIES FOR TRAINING DATA
+# =============================================================================
+
+cacontology-training:professionalsTrained rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-training:GlobalTrainingReach ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "professionals trained"@en ;
+    rdfs:comment "Total number of professionals trained."@en .
+
+cacontology-training:trainingReachCount rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-training:InternationalTraining ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "training reach count"@en ;
+    rdfs:comment "Number of participants reached by training program."@en .
+
+cacontology-training:capacityLevel rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-training:CapacityBuildingProgram ;
+    rdfs:range xsd:string ;
+    rdfs:label "capacity level"@en ;
+    rdfs:comment "Level of capacity being built (basic, intermediate, advanced, expert)."@en .
+
+cacontology-training:competencyLevel rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-training:CompetencyAssessment ;
+    rdfs:range xsd:string ;
+    rdfs:label "competency level"@en ;
+    rdfs:comment "Level of competency achieved (novice, competent, proficient, expert)."@en .
+
+cacontology-training:trainingEffectiveness rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-training:TrainingEffectiveness ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "training effectiveness"@en ;
+    rdfs:comment "Effectiveness score of training program (0.0-1.0)."@en .
+
+cacontology-training:certificationStatus rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-training:ProfessionalCertification ;
+    rdfs:range xsd:string ;
+    rdfs:label "certification status"@en ;
+    rdfs:comment "Status of professional certification (active, expired, suspended)."@en .
+
+cacontology-training:participationRate rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-training:InternationalTraining ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "participation rate"@en ;
+    rdfs:comment "Rate of participation in training program (0.0-1.0)."@en .
+
+cacontology-training:completionRate rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-training:InternationalTraining ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "completion rate"@en ;
+    rdfs:comment "Rate of completion for training program (0.0-1.0)."@en .
+
+cacontology-training:certificationValidityPeriod rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-training:ProfessionalCertification ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "certification validity period"@en ;
+    rdfs:comment "Validity period of certification in months."@en .
+
+cacontology-training:skillsAcquired rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-training:SkillsValidation ;
+    rdfs:range xsd:string ;
+    rdfs:label "skills acquired"@en ;
+    rdfs:comment "Description of skills acquired through training."@en .
+
+cacontology-training:trainingLanguage rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-training:InternationalTraining ;
+    rdfs:range xsd:string ;
+    rdfs:label "training language"@en ;
+    rdfs:comment "Language in which training is delivered."@en .
+
+# Enhanced Metrics Properties (Idaho Case Analysis)
+cacontology-training:outreachEventsCount rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-training:OutreachEventMetrics ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "outreach events count"@en ;
+    rdfs:comment "Number of community outreach events conducted."@en .
+
+cacontology-training:totalAttendeesReached rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-training:OutreachEventMetrics ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "total attendees reached"@en ;
+    rdfs:comment "Total number of community members reached through outreach events."@en .
+
+cacontology-training:professionalsTrainedCount rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-training:ProfessionalTrainingMetrics ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "professionals trained count"@en ;
+    rdfs:comment "Number of professionals trained in specialized programs."@en .
+
+cacontology-training:k9SearchWarrantsAssisted rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-training:K9ProgramMetrics ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "K9 search warrants assisted"@en ;
+    rdfs:comment "Number of search warrants where K9 units provided assistance."@en .
+
+cacontology-training:k9PublicPresentations rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-training:K9ProgramMetrics ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "K9 public presentations"@en ;
+    rdfs:comment "Number of public presentations featuring K9 units."@en .
+
+cacontology-training:operationalDeploymentCount rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-training:OperationalTrainingMetrics ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "operational deployment count"@en ;
+    rdfs:comment "Number of times training was applied in operational deployments."@en .
+
+cacontology-training:trainingToOperationEffectiveness rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-training:OperationalTrainingMetrics ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "training to operation effectiveness"@en ;
+    rdfs:comment "Effectiveness ratio of training application in operations (0.0-1.0)."@en .
+
+# =============================================================================
+# OBJECT PROPERTIES FOR TRAINING RELATIONSHIPS
+# =============================================================================
+
+cacontology-training:deliveredBy rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-training:InternationalTraining ;
+    rdfs:range cacontology-training:InternationalTrainer ;
+    rdfs:label "delivered by"@en ;
+    rdfs:comment "Trainer delivering the training program."@en .
+
+cacontology-training:participatedIn rdf:type owl:ObjectProperty ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range cacontology-training:InternationalTraining ;
+    rdfs:label "participated in"@en ;
+    rdfs:comment "Training program participated in by a person."@en .
+
+cacontology-training:certifiedBy rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-training:ProfessionalCertification ;
+    rdfs:range cacontology-training:CertificationBody ;
+    rdfs:label "certified by"@en ;
+    rdfs:comment "Organization providing the certification."@en .
+
+cacontology-training:includedInCurriculum rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-training:TrainingModule ;
+    rdfs:range cacontology-training:TrainingCurriculum ;
+    rdfs:label "included in curriculum"@en ;
+    rdfs:comment "Training module included in curriculum."@en .
+
+cacontology-training:assessedBy rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-training:TrainingParticipant ;
+    rdfs:range cacontology-training:CompetencyAssessment ;
+    rdfs:label "assessed by"@en ;
+    rdfs:comment "Assessment conducted for training participant."@en .
+
+cacontology-training:buildsCapacityFor rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-training:CapacityBuildingProgram ;
+    rdfs:range uco-identity:Organization ;
+    rdfs:label "builds capacity for"@en ;
+    rdfs:comment "Organization for which capacity is being built."@en .
+
+cacontology-training:supportedBy rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-training:InternationalTraining ;
+    rdfs:range cacontology-training:CapacityBuildingPartner ;
+    rdfs:label "supported by"@en ;
+    rdfs:comment "Partner supporting the training program."@en .
+
+cacontology-training:mentors rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-training:InternationalTrainer ;
+    rdfs:range cacontology-training:TrainingParticipant ;
+    rdfs:label "mentors"@en ;
+    rdfs:comment "Participant being mentored by trainer."@en .
+
+cacontology-training:validatesSkills rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-training:SkillsValidation ;
+    rdfs:range cacontology-training:TrainingParticipant ;
+    rdfs:label "validates skills"@en ;
+    rdfs:comment "Participant whose skills are being validated."@en .
+
+cacontology-training:improvesProficiency rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-training:InternationalTraining ;
+    rdfs:range uco-core:UcoObject ;
+    rdfs:label "improves proficiency"@en ;
+    rdfs:comment "Area of proficiency improved by training."@en . 

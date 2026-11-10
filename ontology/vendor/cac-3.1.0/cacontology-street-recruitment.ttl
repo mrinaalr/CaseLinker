@@ -1,0 +1,711 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-observable: <https://ontology.unifiedcyberontology.org/uco/observable/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology-street: <https://cacontology.projectvic.org/street#> .
+@prefix cacontology-grooming: <https://cacontology.projectvic.org/grooming#> .
+@prefix cacontology-trafficking: <https://cacontology.projectvic.org/trafficking#> .
+
+# Ontology Declaration
+<https://cacontology.projectvic.org/street> rdf:type owl:Ontology ;
+    rdfs:label "CAC Street-Based Recruitment & Opportunistic Exploitation Ontology"@en ;
+    rdfs:comment "Specialized ontology for modeling street-based trafficking recruitment, opportunistic exploitation, and public space predatory behavior, based on cases like Brooklyn DA v. Deandre Lee (2024)."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/street/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:issued "2025-05-28"^^xsd:date ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> ,
+                <https://ontology.caseontology.org/case/case/1.5.0> ,
+                <https://cacontology.projectvic.org/core/3.1.0> .
+
+# =============================================================================
+# STREET-BASED RECRUITMENT CORE CLASSES
+# =============================================================================
+
+cacontology-street:StreetBasedRecruitment rdf:type owl:Class ;
+    rdfs:label "Street Based Recruitment"@en ;
+    rdfs:comment "Trafficking recruitment occurring in public spaces through direct physical approach and opportunistic exploitation."@en ;
+    rdfs:subClassOf cacontology-trafficking:VictimRecruitment .
+
+cacontology-street:OpportunisticExploitation rdf:type owl:Class ;
+    rdfs:label "Opportunistic Exploitation"@en ;
+    rdfs:comment "Exploitation of vulnerable individuals encountered in public spaces without prior planning or relationship."@en ;
+    rdfs:subClassOf cacontology-street:StreetBasedRecruitment .
+
+cacontology-street:PublicSpaceTargeting rdf:type owl:Class ;
+    rdfs:label "Public Space Targeting"@en ;
+    rdfs:comment "Systematic targeting of vulnerable individuals in specific public locations for trafficking recruitment."@en ;
+    rdfs:subClassOf cacontology-street:StreetBasedRecruitment .
+
+cacontology-street:NeighborhoodTargeting rdf:type owl:Class ;
+    rdfs:label "Neighborhood Targeting"@en ;
+    rdfs:comment "Targeting specific neighborhoods or geographic areas known for vulnerable populations."@en ;
+    rdfs:subClassOf cacontology-street:PublicSpaceTargeting .
+
+cacontology-street:DemographicTargeting rdf:type owl:Class ;
+    rdfs:label "Demographic Targeting"@en ;
+    rdfs:comment "Targeting individuals based on specific demographic characteristics indicating vulnerability."@en ;
+    rdfs:subClassOf cacontology-street:PublicSpaceTargeting .
+
+# =============================================================================
+# INITIAL CONTACT AND APPROACH STRATEGIES
+# =============================================================================
+
+cacontology-street:InitialStreetContact rdf:type owl:Class ;
+    rdfs:label "Initial Street Contact"@en ;
+    rdfs:comment "First contact between trafficker and victim occurring in public space."@en ;
+    rdfs:subClassOf cac-core:ExploitationEvent .
+
+cacontology-street:PretextBasedApproach rdf:type owl:Class ;
+    rdfs:label "Pretext Based Approach"@en ;
+    rdfs:comment "Initial approach using false pretext or offer of assistance to establish contact."@en ;
+    rdfs:subClassOf cacontology-street:InitialStreetContact .
+
+cacontology-street:HelpOfferApproach rdf:type owl:Class ;
+    rdfs:label "Help Offer Approach"@en ;
+    rdfs:comment "Approach offering assistance such as phone charging, food, transportation, or shelter."@en ;
+    rdfs:subClassOf cacontology-street:PretextBasedApproach .
+
+cacontology-street:PhoneChargingOffer rdf:type owl:Class ;
+    rdfs:label "Phone Charging Offer"@en ;
+    rdfs:comment "Specific pretext offering to charge victim's phone in vehicle or location."@en ;
+    rdfs:subClassOf cacontology-street:HelpOfferApproach .
+
+cacontology-street:FoodOfferApproach rdf:type owl:Class ;
+    rdfs:label "Food Offer Approach"@en ;
+    rdfs:comment "Approach offering food or meals to establish trust and create obligation."@en ;
+    rdfs:subClassOf cacontology-street:HelpOfferApproach .
+
+cacontology-street:TransportationOfferApproach rdf:type owl:Class ;
+    rdfs:label "Transportation Offer Approach"@en ;
+    rdfs:comment "Offer of rides or transportation to isolated locations for exploitation."@en ;
+    rdfs:subClassOf cacontology-street:HelpOfferApproach .
+
+cacontology-street:CasualConversationApproach rdf:type owl:Class ;
+    rdfs:label "Casual Conversation Approach"@en ;
+    rdfs:comment "Approach through seemingly innocent casual conversation to assess vulnerability."@en ;
+    rdfs:subClassOf cacontology-street:InitialStreetContact .
+
+cacontology-street:DirectSolicitationApproach rdf:type owl:Class ;
+    rdfs:label "Direct Solicitation Approach"@en ;
+    rdfs:comment "Direct approach with immediate commercial sexual proposition."@en ;
+    rdfs:subClassOf cacontology-street:InitialStreetContact .
+
+# =============================================================================
+# VULNERABILITY IDENTIFICATION AND EXPLOITATION
+# =============================================================================
+
+cacontology-street:StreetVulnerabilityAssessment rdf:type owl:Class ;
+    rdfs:label "Street Vulnerability Assessment"@en ;
+    rdfs:comment "Rapid assessment of individual vulnerability factors in public space encounters."@en ;
+    rdfs:subClassOf cac-core:ExploitationEvent .
+
+cacontology-street:VulnerabilityIndicator rdf:type owl:Class ;
+    rdfs:label "Vulnerability Indicator"@en ;
+    rdfs:comment "Observable characteristic or behavior indicating potential trafficking vulnerability."@en ;
+    rdfs:subClassOf uco-core:UcoObject .
+
+cacontology-street:PhysicalVulnerabilityIndicator rdf:type owl:Class ;
+    rdfs:label "Physical Vulnerability Indicator"@en ;
+    rdfs:comment "Physical appearance or condition indicating vulnerability (youth, fatigue, distress)."@en ;
+    rdfs:subClassOf cacontology-street:VulnerabilityIndicator .
+
+cacontology-street:BehavioralVulnerabilityIndicator rdf:type owl:Class ;
+    rdfs:label "Behavioral Vulnerability Indicator"@en ;
+    rdfs:comment "Behavioral patterns indicating vulnerability (isolation, confusion, seeking help)."@en ;
+    rdfs:subClassOf cacontology-street:VulnerabilityIndicator .
+
+cacontology-street:SocioeconomicVulnerabilityIndicator rdf:type owl:Class ;
+    rdfs:label "Socioeconomic Vulnerability Indicator"@en ;
+    rdfs:comment "Indicators of economic hardship or social disadvantage (clothing, possessions, location)."@en ;
+    rdfs:subClassOf cacontology-street:VulnerabilityIndicator .
+
+cacontology-street:IsolationVulnerabilityIndicator rdf:type owl:Class ;
+    rdfs:label "Isolation Vulnerability Indicator"@en ;
+    rdfs:comment "Indicators that individual is alone or lacks social support (walking alone, no companions)."@en ;
+    rdfs:subClassOf cacontology-street:VulnerabilityIndicator .
+
+cacontology-street:AgeVulnerabilityIndicator rdf:type owl:Class ;
+    rdfs:label "Age Vulnerability Indicator"@en ;
+    rdfs:comment "Apparent youth or minor status making individual vulnerable to exploitation."@en ;
+    rdfs:subClassOf cacontology-street:PhysicalVulnerabilityIndicator .
+
+# =============================================================================
+# RAPID ESCALATION PATTERNS
+# =============================================================================
+
+cacontology-street:RapidEscalationRecruitment rdf:type owl:Class ;
+    rdfs:label "Rapid Escalation Recruitment"@en ;
+    rdfs:comment "Trafficking recruitment with accelerated timeline from initial contact to exploitation attempt."@en ;
+    rdfs:subClassOf cacontology-street:StreetBasedRecruitment .
+
+cacontology-street:SameDayProgression rdf:type owl:Class ;
+    rdfs:label "Same Day Progression"@en ;
+    rdfs:comment "Progression from initial contact to sexual assault and trafficking proposition within same day."@en ;
+    rdfs:subClassOf cacontology-street:RapidEscalationRecruitment .
+
+cacontology-street:ImmediateIsolation rdf:type owl:Class ;
+    rdfs:label "Immediate Isolation"@en ;
+    rdfs:comment "Rapid removal of victim from public space to isolated location for exploitation."@en ;
+    rdfs:subClassOf cacontology-street:RapidEscalationRecruitment .
+
+cacontology-street:LocationTransition rdf:type owl:Class ;
+    rdfs:label "Location Transition"@en ;
+    rdfs:comment "Movement of victim from initial contact location to exploitation location."@en ;
+    rdfs:subClassOf cac-core:ExploitationEvent .
+
+cacontology-street:VehicleBasedIsolation rdf:type owl:Class ;
+    rdfs:label "Vehicle Based Isolation"@en ;
+    rdfs:comment "Use of vehicle to isolate victim and transport to exploitation location."@en ;
+    rdfs:subClassOf cacontology-street:ImmediateIsolation .
+
+cacontology-street:SecondaryLocationExploitation rdf:type owl:Class ;
+    rdfs:label "Secondary Location Exploitation"@en ;
+    rdfs:comment "Exploitation occurring at secondary location away from initial contact point."@en ;
+    rdfs:subClassOf cacontology-street:LocationTransition .
+
+# =============================================================================
+# DIRECT TRAFFICKING PROPOSITIONS
+# =============================================================================
+
+cacontology-street:DirectTraffickingProposition rdf:type owl:Class ;
+    rdfs:label "Direct Trafficking Proposition"@en ;
+    rdfs:comment "Explicit, immediate proposition for victim to engage in commercial sexual activity."@en ;
+    rdfs:subClassOf cacontology-grooming:SexualExploitation .
+
+cacontology-street:ExplicitCommercialOffer rdf:type owl:Class ;
+    rdfs:label "Explicit Commercial Offer"@en ;
+    rdfs:comment "Direct offer of money in exchange for sexual services or performances."@en ;
+    rdfs:subClassOf cacontology-street:DirectTraffickingProposition .
+
+cacontology-street:StrippingProposition rdf:type owl:Class ;
+    rdfs:label "Stripping Proposition"@en ;
+    rdfs:comment "Specific proposition to engage in stripping or exotic dancing for money."@en ;
+    rdfs:subClassOf cacontology-street:ExplicitCommercialOffer .
+
+cacontology-street:ProstitutionProposition rdf:type owl:Class ;
+    rdfs:label "Prostitution Proposition"@en ;
+    rdfs:comment "Direct proposition to engage in prostitution or selling sexual services."@en ;
+    rdfs:subClassOf cacontology-street:ExplicitCommercialOffer .
+
+cacontology-street:BodySellingProposition rdf:type owl:Class ;
+    rdfs:label "Body Selling Proposition"@en ;
+    rdfs:comment "Explicit suggestion that victim can make money by 'selling their body'."@en ;
+    rdfs:subClassOf cacontology-street:ProstitutionProposition .
+
+cacontology-street:EconomicIncentivePresentation rdf:type owl:Class ;
+    rdfs:label "Economic Incentive Presentation"@en ;
+    rdfs:comment "Presentation of financial benefits and earning potential from commercial sexual activity."@en ;
+    rdfs:subClassOf cacontology-street:DirectTraffickingProposition .
+
+cacontology-street:ImmediateExploitationAttempt rdf:type owl:Class ;
+    rdfs:label "Immediate Exploitation Attempt"@en ;
+    rdfs:comment "Attempt to immediately engage victim in commercial sexual activity without extended grooming."@en ;
+    rdfs:subClassOf cacontology-street:DirectTraffickingProposition .
+
+# =============================================================================
+# SUBSTANCE-FACILITATED RECRUITMENT
+# =============================================================================
+
+cacontology-street:SubstanceFacilitatedRecruitment rdf:type owl:Class ;
+    rdfs:label "Substance Facilitated Recruitment"@en ;
+    rdfs:comment "Use of alcohol or drugs to facilitate trafficking recruitment and reduce victim resistance."@en ;
+    rdfs:subClassOf cacontology-street:StreetBasedRecruitment .
+
+cacontology-street:DrugFacilitatedVulnerability rdf:type owl:Class ;
+    rdfs:label "Drug Facilitated Vulnerability"@en ;
+    rdfs:comment "Creation or exploitation of vulnerability through substance administration."@en ;
+    rdfs:subClassOf cacontology-street:SubstanceFacilitatedRecruitment .
+
+cacontology-street:MarijuanaFacilitation rdf:type owl:Class ;
+    rdfs:label "Marijuana Facilitation"@en ;
+    rdfs:comment "Use of marijuana to reduce victim inhibitions and facilitate exploitation."@en ;
+    rdfs:subClassOf cacontology-street:DrugFacilitatedVulnerability .
+
+cacontology-street:AlcoholFacilitation rdf:type owl:Class ;
+    rdfs:label "Alcohol Facilitation"@en ;
+    rdfs:comment "Use of alcohol to impair victim judgment and facilitate exploitation."@en ;
+    rdfs:subClassOf cacontology-street:DrugFacilitatedVulnerability .
+
+cacontology-street:SubstanceBasedControl rdf:type owl:Class ;
+    rdfs:label "Substance Based Control"@en ;
+    rdfs:comment "Use of substance dependency or impairment to maintain control over victim."@en ;
+    rdfs:subClassOf cacontology-street:SubstanceFacilitatedRecruitment .
+
+cacontology-street:ImpairmentExploitation rdf:type owl:Class ;
+    rdfs:label "Impairment Exploitation"@en ;
+    rdfs:comment "Exploitation of victim while impaired by substances to reduce resistance."@en ;
+    rdfs:subClassOf cacontology-street:SubstanceBasedControl .
+
+# =============================================================================
+# FOLLOW-UP AND REINFORCEMENT PATTERNS
+# =============================================================================
+
+cacontology-street:PostContactReinforcement rdf:type owl:Class ;
+    rdfs:label "Post Contact Reinforcement"@en ;
+    rdfs:comment "Follow-up contact after initial encounter to reinforce trafficking proposition."@en ;
+    rdfs:subClassOf cac-core:ExploitationEvent .
+
+cacontology-street:NextDayFollowUp rdf:type owl:Class ;
+    rdfs:label "Next Day Follow Up"@en ;
+    rdfs:comment "Follow-up contact occurring the day after initial encounter."@en ;
+    rdfs:subClassOf cacontology-street:PostContactReinforcement .
+
+cacontology-street:DigitalFollowUp rdf:type owl:Class ;
+    rdfs:label "Digital Follow Up"@en ;
+    rdfs:comment "Follow-up through digital communication channels (text, social media, calls)."@en ;
+    rdfs:subClassOf cacontology-street:PostContactReinforcement .
+
+cacontology-street:TextMessageFollowUp rdf:type owl:Class ;
+    rdfs:label "Text Message Follow Up"@en ;
+    rdfs:comment "Follow-up through text messaging to reinforce trafficking proposition."@en ;
+    rdfs:subClassOf cacontology-street:DigitalFollowUp .
+
+cacontology-street:TraffickingPropositionReinforcement rdf:type owl:Class ;
+    rdfs:label "Trafficking Proposition Reinforcement"@en ;
+    rdfs:comment "Repeated presentation of trafficking proposition to overcome initial resistance."@en ;
+    rdfs:subClassOf cacontology-street:PostContactReinforcement .
+
+cacontology-street:PersistenceAfterRejection rdf:type owl:Class ;
+    rdfs:label "Persistence After Rejection"@en ;
+    rdfs:comment "Continued recruitment attempts after initial rejection of trafficking proposition."@en ;
+    rdfs:subClassOf cacontology-street:TraffickingPropositionReinforcement .
+
+cacontology-street:DigitalToPhysicalBridge rdf:type owl:Class ;
+    rdfs:label "Digital to Physical Bridge"@en ;
+    rdfs:comment "Use of digital communication to maintain connection after physical encounter."@en ;
+    rdfs:subClassOf cacontology-street:DigitalFollowUp .
+
+# =============================================================================
+# VICTIM RESPONSE AND RESISTANCE PATTERNS
+# =============================================================================
+
+cacontology-street:VictimStreetResponse rdf:type owl:Class ;
+    rdfs:label "Victim Street Response"@en ;
+    rdfs:comment "Victim's response to street-based recruitment attempts and trafficking propositions."@en ;
+    rdfs:subClassOf cac-core:Event .
+
+cacontology-street:TraffickingPropositionRejection rdf:type owl:Class ;
+    rdfs:label "Trafficking Proposition Rejection"@en ;
+    rdfs:comment "Victim's rejection of trafficking proposition or commercial sexual offer."@en ;
+    rdfs:subClassOf cacontology-street:VictimStreetResponse .
+
+cacontology-street:VictimResistance rdf:type owl:Class ;
+    rdfs:label "Victim Resistance"@en ;
+    rdfs:comment "Active resistance to trafficking recruitment attempts or exploitation."@en ;
+    rdfs:subClassOf cacontology-street:VictimStreetResponse .
+
+cacontology-street:EscapeAttempt rdf:type owl:Class ;
+    rdfs:label "Escape Attempt"@en ;
+    rdfs:comment "Victim's attempt to escape from trafficking situation or recruitment."@en ;
+    rdfs:subClassOf cacontology-street:VictimResistance .
+
+cacontology-street:HelpSeekingBehavior rdf:type owl:Class ;
+    rdfs:label "Help Seeking Behavior"@en ;
+    rdfs:comment "Victim's attempts to seek help or report trafficking recruitment."@en ;
+    rdfs:subClassOf cacontology-street:VictimStreetResponse .
+
+cacontology-street:VictimReporting rdf:type owl:Class ;
+    rdfs:label "Victim Reporting"@en ;
+    rdfs:comment "Victim's decision to report trafficking recruitment or assault to authorities."@en ;
+    rdfs:subClassOf cacontology-street:HelpSeekingBehavior .
+
+cacontology-street:DisclosureToAuthorities rdf:type owl:Class ;
+    rdfs:label "Disclosure to Authorities"@en ;
+    rdfs:comment "Victim's disclosure of trafficking recruitment or exploitation to law enforcement."@en ;
+    rdfs:subClassOf cacontology-street:VictimReporting .
+
+cacontology-street:DelayedReporting rdf:type owl:Class ;
+    rdfs:label "Delayed Reporting"@en ;
+    rdfs:comment "Victim reporting that occurs days or weeks after initial incident."@en ;
+    rdfs:subClassOf cacontology-street:VictimReporting .
+
+cacontology-street:ImmediateReporting rdf:type owl:Class ;
+    rdfs:label "Immediate Reporting"@en ;
+    rdfs:comment "Victim reporting that occurs immediately or within hours of incident."@en ;
+    rdfs:subClassOf cacontology-street:VictimReporting .
+
+# =============================================================================
+# GEOGRAPHIC AND ENVIRONMENTAL FACTORS
+# =============================================================================
+
+cacontology-street:StreetRecruitmentLocation rdf:type owl:Class ;
+    rdfs:label "Street Recruitment Location"@en ;
+    rdfs:comment "Specific location where street-based trafficking recruitment occurs."@en ;
+    rdfs:subClassOf uco-location:Location .
+
+cacontology-street:HighTrafficArea rdf:type owl:Class ;
+    rdfs:label "High Traffic Area"@en ;
+    rdfs:comment "Public area with high pedestrian traffic used for victim identification."@en ;
+    rdfs:subClassOf cacontology-street:StreetRecruitmentLocation .
+
+cacontology-street:TransitArea rdf:type owl:Class ;
+    rdfs:label "Transit Area"@en ;
+    rdfs:comment "Transportation hubs or transit areas where vulnerable individuals may be targeted."@en ;
+    rdfs:subClassOf cacontology-street:HighTrafficArea .
+
+cacontology-street:CommercialDistrict rdf:type owl:Class ;
+    rdfs:label "Commercial District"@en ;
+    rdfs:comment "Commercial areas with restaurants, shops, and businesses used for recruitment."@en ;
+    rdfs:subClassOf cacontology-street:HighTrafficArea .
+
+cacontology-street:ResidentialArea rdf:type owl:Class ;
+    rdfs:label "Residential Area"@en ;
+    rdfs:comment "Residential neighborhoods where victims may be walking or living."@en ;
+    rdfs:subClassOf cacontology-street:StreetRecruitmentLocation .
+
+cacontology-street:VulnerableNeighborhood rdf:type owl:Class ;
+    rdfs:label "Vulnerable Neighborhood"@en ;
+    rdfs:comment "Neighborhood with high poverty, crime, or social vulnerability targeted by traffickers."@en ;
+    rdfs:subClassOf cacontology-street:ResidentialArea .
+
+cacontology-street:IsolatedLocation rdf:type owl:Class ;
+    rdfs:label "Isolated Location"@en ;
+    rdfs:comment "Secluded location used for exploitation away from public view."@en ;
+    rdfs:subClassOf uco-location:Location .
+
+cacontology-street:HighwayLocation rdf:type owl:Class ;
+    rdfs:label "Highway Location"@en ;
+    rdfs:comment "Location near or alongside highways used for isolated exploitation."@en ;
+    rdfs:subClassOf cacontology-street:IsolatedLocation .
+
+cacontology-street:VehicleLocation rdf:type owl:Class ;
+    rdfs:label "Vehicle Location"@en ;
+    rdfs:comment "Vehicle used as location for exploitation or transportation to exploitation site."@en ;
+    rdfs:subClassOf cacontology-street:IsolatedLocation .
+
+# =============================================================================
+# STREET RECRUITMENT PROPERTIES
+# =============================================================================
+
+# Timing and Duration Properties
+cacontology-street:contactDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "contact duration"@en ;
+    rdfs:comment "Duration of initial street contact in minutes."@en ;
+    rdfs:domain cacontology-street:InitialStreetContact ;
+    rdfs:range xsd:decimal .
+
+cacontology-street:escalationTimeframe rdf:type owl:DatatypeProperty ;
+    rdfs:label "escalation timeframe"@en ;
+    rdfs:comment "Time from initial contact to trafficking proposition in hours."@en ;
+    rdfs:domain cacontology-street:RapidEscalationRecruitment ;
+    rdfs:range xsd:decimal .
+
+cacontology-street:sameDayProgression rdf:type owl:DatatypeProperty ;
+    rdfs:label "same day progression"@en ;
+    rdfs:comment "Whether recruitment progressed from contact to proposition within same day."@en ;
+    rdfs:domain cacontology-street:SameDayProgression ;
+    rdfs:range xsd:boolean .
+
+cacontology-street:followUpDelay rdf:type owl:DatatypeProperty ;
+    rdfs:label "follow up delay"@en ;
+    rdfs:comment "Time delay between initial contact and follow-up in hours."@en ;
+    rdfs:domain cacontology-street:PostContactReinforcement ;
+    rdfs:range xsd:decimal .
+
+# Approach and Contact Properties
+cacontology-street:approachMethod rdf:type owl:DatatypeProperty ;
+    rdfs:label "approach method"@en ;
+    rdfs:comment "Method used for initial approach (help_offer, casual_conversation, direct_solicitation)."@en ;
+    rdfs:domain cacontology-street:InitialStreetContact ;
+    rdfs:range xsd:string .
+
+cacontology-street:pretextUsed rdf:type owl:DatatypeProperty ;
+    rdfs:label "pretext used"@en ;
+    rdfs:comment "Specific pretext used for initial contact (phone_charging, food_offer, transportation)."@en ;
+    rdfs:domain cacontology-street:PretextBasedApproach ;
+    rdfs:range xsd:string .
+
+cacontology-street:helpOfferType rdf:type owl:DatatypeProperty ;
+    rdfs:label "help offer type"@en ;
+    rdfs:comment "Type of assistance offered (phone_charging, food, ride, shelter)."@en ;
+    rdfs:domain cacontology-street:HelpOfferApproach ;
+    rdfs:range xsd:string .
+
+cacontology-street:conversationTopic rdf:type owl:DatatypeProperty ;
+    rdfs:label "conversation topic"@en ;
+    rdfs:comment "Initial conversation topic used to establish rapport."@en ;
+    rdfs:domain cacontology-street:CasualConversationApproach ;
+    rdfs:range xsd:string .
+
+# Vulnerability Assessment Properties
+cacontology-street:vulnerabilityIndicators rdf:type owl:DatatypeProperty ;
+    rdfs:label "vulnerability indicators"@en ;
+    rdfs:comment "Observable indicators of victim vulnerability (youth, isolation, distress, poverty)."@en ;
+    rdfs:domain cacontology-street:StreetVulnerabilityAssessment ;
+    rdfs:range xsd:string .
+
+cacontology-street:apparentAge rdf:type owl:DatatypeProperty ;
+    rdfs:label "apparent age"@en ;
+    rdfs:comment "Apparent age of victim as assessed by trafficker."@en ;
+    rdfs:domain cacontology-street:AgeVulnerabilityIndicator ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-street:isolationLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "isolation level"@en ;
+    rdfs:comment "Level of victim isolation (alone, with_friends, with_family)."@en ;
+    rdfs:domain cacontology-street:IsolationVulnerabilityIndicator ;
+    rdfs:range xsd:string .
+
+cacontology-street:distressIndicators rdf:type owl:DatatypeProperty ;
+    rdfs:label "distress indicators"@en ;
+    rdfs:comment "Observable signs of distress or vulnerability."@en ;
+    rdfs:domain cacontology-street:BehavioralVulnerabilityIndicator ;
+    rdfs:range xsd:string .
+
+# Location and Movement Properties
+cacontology-street:initialContactLocation rdf:type owl:DatatypeProperty ;
+    rdfs:label "initial contact location"@en ;
+    rdfs:comment "Specific location where initial contact occurred."@en ;
+    rdfs:domain cacontology-street:InitialStreetContact ;
+    rdfs:range xsd:string .
+
+cacontology-street:exploitationLocation rdf:type owl:DatatypeProperty ;
+    rdfs:label "exploitation location"@en ;
+    rdfs:comment "Location where exploitation or assault occurred."@en ;
+    rdfs:domain cacontology-street:SecondaryLocationExploitation ;
+    rdfs:range xsd:string .
+
+cacontology-street:transportationMethod rdf:type owl:DatatypeProperty ;
+    rdfs:label "transportation method"@en ;
+    rdfs:comment "Method used to transport victim to exploitation location."@en ;
+    rdfs:domain cacontology-street:LocationTransition ;
+    rdfs:range xsd:string .
+
+cacontology-street:distanceFromContact rdf:type owl:DatatypeProperty ;
+    rdfs:label "distance from contact"@en ;
+    rdfs:comment "Distance in miles from initial contact to exploitation location."@en ;
+    rdfs:domain cacontology-street:SecondaryLocationExploitation ;
+    rdfs:range xsd:decimal .
+
+# Trafficking Proposition Properties
+cacontology-street:propositionType rdf:type owl:DatatypeProperty ;
+    rdfs:label "proposition type"@en ;
+    rdfs:comment "Type of trafficking proposition (stripping, prostitution, body_selling)."@en ;
+    rdfs:domain cacontology-street:DirectTraffickingProposition ;
+    rdfs:range xsd:string .
+
+cacontology-street:explicitnessLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "explicitness level"@en ;
+    rdfs:comment "Level of explicitness in trafficking proposition (subtle, direct, explicit)."@en ;
+    rdfs:domain cacontology-street:DirectTraffickingProposition ;
+    rdfs:range xsd:string .
+
+cacontology-street:economicIncentive rdf:type owl:DatatypeProperty ;
+    rdfs:label "economic incentive"@en ;
+    rdfs:comment "Financial incentive presented to victim for commercial sexual activity."@en ;
+    rdfs:domain cacontology-street:EconomicIncentivePresentation ;
+    rdfs:range xsd:string .
+
+cacontology-street:moneyAmountMentioned rdf:type owl:DatatypeProperty ;
+    rdfs:label "money amount mentioned"@en ;
+    rdfs:comment "Specific amount of money mentioned in trafficking proposition."@en ;
+    rdfs:domain cacontology-street:ExplicitCommercialOffer ;
+    rdfs:range xsd:decimal .
+
+# Substance Use Properties
+cacontology-street:substanceType rdf:type owl:DatatypeProperty ;
+    rdfs:label "substance type"@en ;
+    rdfs:comment "Type of substance used to facilitate recruitment (marijuana, alcohol, other)."@en ;
+    rdfs:domain cacontology-street:SubstanceFacilitatedRecruitment ;
+    rdfs:range xsd:string .
+
+cacontology-street:administrationMethod rdf:type owl:DatatypeProperty ;
+    rdfs:label "administration method"@en ;
+    rdfs:comment "Method of substance administration (offered, forced, shared)."@en ;
+    rdfs:domain cacontology-street:DrugFacilitatedVulnerability ;
+    rdfs:range xsd:string .
+
+cacontology-street:impairmentLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "impairment level"@en ;
+    rdfs:comment "Level of victim impairment from substances (mild, moderate, severe)."@en ;
+    rdfs:domain cacontology-street:ImpairmentExploitation ;
+    rdfs:range xsd:string .
+
+# Victim Response Properties
+cacontology-street:responseType rdf:type owl:DatatypeProperty ;
+    rdfs:label "response type"@en ;
+    rdfs:comment "Type of victim response (acceptance, rejection, resistance, compliance)."@en ;
+    rdfs:domain cacontology-street:VictimStreetResponse ;
+    rdfs:range xsd:string .
+
+cacontology-street:resistanceLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "resistance level"@en ;
+    rdfs:comment "Level of victim resistance (none, passive, active, aggressive)."@en ;
+    rdfs:domain cacontology-street:VictimResistance ;
+    rdfs:range xsd:string .
+
+cacontology-street:reportingDelay rdf:type owl:DatatypeProperty ;
+    rdfs:label "reporting delay"@en ;
+    rdfs:comment "Time delay between incident and reporting in hours."@en ;
+    rdfs:domain cacontology-street:VictimReporting ;
+    rdfs:range xsd:decimal .
+
+cacontology-street:reportingMethod rdf:type owl:DatatypeProperty ;
+    rdfs:label "reporting method"@en ;
+    rdfs:comment "Method used for reporting (police_call, in_person, third_party)."@en ;
+    rdfs:domain cacontology-street:VictimReporting ;
+    rdfs:range xsd:string .
+
+# Follow-up Properties
+cacontology-street:followUpMethod rdf:type owl:DatatypeProperty ;
+    rdfs:label "follow up method"@en ;
+    rdfs:comment "Method used for follow-up contact (text, call, social_media, in_person)."@en ;
+    rdfs:domain cacontology-street:PostContactReinforcement ;
+    rdfs:range xsd:string .
+
+cacontology-street:reinforcementAttempts rdf:type owl:DatatypeProperty ;
+    rdfs:label "reinforcement attempts"@en ;
+    rdfs:comment "Number of attempts to reinforce trafficking proposition."@en ;
+    rdfs:domain cacontology-street:TraffickingPropositionReinforcement ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-street:persistenceLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "persistence level"@en ;
+    rdfs:comment "Level of persistence after initial rejection (low, moderate, high, aggressive)."@en ;
+    rdfs:domain cacontology-street:PersistenceAfterRejection ;
+    rdfs:range xsd:string .
+
+# =============================================================================
+# STREET RECRUITMENT RELATIONSHIPS
+# =============================================================================
+
+# Contact and Approach Relationships
+cacontology-street:initiatesContact rdf:type owl:ObjectProperty ;
+    rdfs:label "initiates contact"@en ;
+    rdfs:comment "Links trafficker to initial street contact with victim."@en ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range cacontology-street:InitialStreetContact .
+
+cacontology-street:usesPretext rdf:type owl:ObjectProperty ;
+    rdfs:label "uses pretext"@en ;
+    rdfs:comment "Links initial contact to pretext used for approach."@en ;
+    rdfs:domain cacontology-street:InitialStreetContact ;
+    rdfs:range cacontology-street:PretextBasedApproach .
+
+cacontology-street:targetsVictim rdf:type owl:ObjectProperty ;
+    rdfs:label "targets victim"@en ;
+    rdfs:comment "Links recruitment activity to victim being targeted."@en ;
+    rdfs:domain cacontology-street:StreetBasedRecruitment ;
+    rdfs:range uco-identity:Person .
+
+cacontology-street:occursAt rdf:type owl:ObjectProperty ;
+    rdfs:label "occurs at"@en ;
+    rdfs:comment "Links recruitment activity to location where it occurs."@en ;
+    rdfs:domain cacontology-street:StreetBasedRecruitment ;
+    rdfs:range cacontology-street:StreetRecruitmentLocation .
+
+# Vulnerability Assessment Relationships
+cacontology-street:assessesVulnerability rdf:type owl:ObjectProperty ;
+    rdfs:label "assesses vulnerability"@en ;
+    rdfs:comment "Links trafficker to vulnerability assessment of potential victim."@en ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range cacontology-street:StreetVulnerabilityAssessment .
+
+cacontology-street:exhibitsIndicator rdf:type owl:ObjectProperty ;
+    rdfs:label "exhibits indicator"@en ;
+    rdfs:comment "Links victim to vulnerability indicator they exhibit."@en ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range cacontology-street:VulnerabilityIndicator .
+
+cacontology-street:exploitsVulnerability rdf:type owl:ObjectProperty ;
+    rdfs:label "exploits vulnerability"@en ;
+    rdfs:comment "Links recruitment to vulnerability being exploited."@en ;
+    rdfs:domain cacontology-street:StreetBasedRecruitment ;
+    rdfs:range cacontology-street:VulnerabilityIndicator .
+
+# Location and Movement Relationships
+cacontology-street:transitionsTo rdf:type owl:ObjectProperty ;
+    rdfs:label "transitions to"@en ;
+    rdfs:comment "Links initial contact location to exploitation location."@en ;
+    rdfs:domain cacontology-street:StreetRecruitmentLocation ;
+    rdfs:range cacontology-street:IsolatedLocation .
+
+cacontology-street:facilitatesTransition rdf:type owl:ObjectProperty ;
+    rdfs:label "facilitates transition"@en ;
+    rdfs:comment "Links transportation method to location transition."@en ;
+    rdfs:domain cacontology-street:TransportationOfferApproach ;
+    rdfs:range cacontology-street:LocationTransition .
+
+cacontology-street:isolatesAt rdf:type owl:ObjectProperty ;
+    rdfs:label "isolates at"@en ;
+    rdfs:comment "Links isolation activity to location used for isolation."@en ;
+    rdfs:domain cacontology-street:ImmediateIsolation ;
+    rdfs:range cacontology-street:IsolatedLocation .
+
+# Proposition and Escalation Relationships
+cacontology-street:makesProposition rdf:type owl:ObjectProperty ;
+    rdfs:label "makes proposition"@en ;
+    rdfs:comment "Links trafficker to trafficking proposition made to victim."@en ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range cacontology-street:DirectTraffickingProposition .
+
+cacontology-street:escalatesTo rdf:type owl:ObjectProperty ;
+    rdfs:label "escalates to"@en ;
+    rdfs:comment "Links initial contact to trafficking proposition escalation."@en ;
+    rdfs:domain cacontology-street:InitialStreetContact ;
+    rdfs:range cacontology-street:DirectTraffickingProposition .
+
+cacontology-street:facilitatesWithSubstance rdf:type owl:ObjectProperty ;
+    rdfs:label "facilitates with substance"@en ;
+    rdfs:comment "Links recruitment to substance used for facilitation."@en ;
+    rdfs:domain cacontology-street:SubstanceFacilitatedRecruitment ;
+    rdfs:range uco-observable:ObservableObject .
+
+# Victim Response Relationships
+cacontology-street:respondsTo rdf:type owl:ObjectProperty ;
+    rdfs:label "responds to"@en ;
+    rdfs:comment "Links victim response to trafficking proposition."@en ;
+    rdfs:domain cacontology-street:VictimStreetResponse ;
+    rdfs:range cacontology-street:DirectTraffickingProposition .
+
+cacontology-street:rejects rdf:type owl:ObjectProperty ;
+    rdfs:label "rejects"@en ;
+    rdfs:comment "Links victim to trafficking proposition they reject."@en ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range cacontology-street:DirectTraffickingProposition .
+
+cacontology-street:reportsTo rdf:type owl:ObjectProperty ;
+    rdfs:label "reports to"@en ;
+    rdfs:comment "Links victim reporting to law enforcement agency."@en ;
+    rdfs:domain cacontology-street:VictimReporting ;
+    rdfs:range uco-identity:Organization .
+
+# Follow-up and Reinforcement Relationships
+cacontology-street:followsUpWith rdf:type owl:ObjectProperty ;
+    rdfs:label "follows up with"@en ;
+    rdfs:comment "Links trafficker to follow-up contact with victim."@en ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range cacontology-street:PostContactReinforcement .
+
+cacontology-street:reinforces rdf:type owl:ObjectProperty ;
+    rdfs:label "reinforces"@en ;
+    rdfs:comment "Links follow-up contact to trafficking proposition being reinforced."@en ;
+    rdfs:domain cacontology-street:PostContactReinforcement ;
+    rdfs:range cacontology-street:DirectTraffickingProposition .
+
+cacontology-street:persistsAfter rdf:type owl:ObjectProperty ;
+    rdfs:label "persists after"@en ;
+    rdfs:comment "Links persistence to initial rejection being overcome."@en ;
+    rdfs:domain cacontology-street:PersistenceAfterRejection ;
+    rdfs:range cacontology-street:TraffickingPropositionRejection .
+
+# Investigation and Evidence Relationships
+cacontology-street:documentsRecruitment rdf:type owl:ObjectProperty ;
+    rdfs:label "documents recruitment"@en ;
+    rdfs:comment "Links evidence to street recruitment activity it documents."@en ;
+    rdfs:domain uco-observable:ObservableObject ;
+    rdfs:range cacontology-street:StreetBasedRecruitment .
+
+cacontology-street:supportsCharge rdf:type owl:ObjectProperty ;
+    rdfs:label "supports charge"@en ;
+    rdfs:comment "Links street recruitment evidence to criminal charges."@en ;
+    rdfs:domain cacontology-street:StreetBasedRecruitment ;
+    rdfs:range uco-observable:ObservableObject . 

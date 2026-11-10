@@ -1,0 +1,880 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix gufo: <http://purl.org/nemo/gufo#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-observable: <https://ontology.unifiedcyberontology.org/uco/observable/> .
+@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix cacontology-enterprises: <https://cacontology.projectvic.org/extremist-enterprises#> .
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+
+# Ontology Declaration
+<https://cacontology.projectvic.org/extremist-enterprises> rdf:type owl:Ontology ;
+    rdfs:label "CAC Extremist Child Exploitation Enterprise Ontology"@en ;
+    rdfs:comment "An ontology for representing extremist criminal enterprises engaged in child exploitation, including nihilistic violent extremism (NVE) networks, content compilation systems, and enterprise structures based on analysis of the 764 network case. This ontology is grounded in the Unified Foundational Ontology (UFO) through gUFO."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/extremist-enterprises/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:issued "2025-04-15"^^xsd:date ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/observable/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/action/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/role/1.5.0> ,
+                <https://ontology.caseontology.org/case/case/1.5.0> ,
+                <https://cacontology.projectvic.org/3.1.0> ,
+                <https://cacontology.projectvic.org/international/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> ,
+                <https://cacontology.projectvic.org/core/3.1.0> .
+
+# =============================================================================
+# GUFO TYPE DECLARATIONS FOR CAC ENTERPRISE CLASSES
+# =============================================================================
+
+# Organizations as Kinds (rigid sortals providing identity)
+cacontology-enterprises:NihilisticViolentExtremismNetwork rdf:type gufo:Kind .
+cacontology-enterprises:ChildExploitationEnterprise rdf:type gufo:Kind .
+cacontology-enterprises:AccelerationistGroup rdf:type gufo:SubKind .
+cacontology-enterprises:ExtremistNetworkCell rdf:type gufo:SubKind .
+cacontology-enterprises:CyberExtremistNetwork rdf:type gufo:SubKind .
+
+# Enterprise Roles as Roles (anti-rigid relationally dependent)
+cacontology-enterprises:EnterpriseRole rdf:type gufo:Role .
+cacontology-enterprises:EnterpriseLeaderRole rdf:type gufo:Role .
+cacontology-enterprises:InnerCoreMemberRole rdf:type gufo:Role .
+cacontology-enterprises:ContentProducerRole rdf:type gufo:Role .
+cacontology-enterprises:RecruitmentSpecialistRole rdf:type gufo:Role .
+cacontology-enterprises:CoordinatorRole rdf:type gufo:Role .
+
+# Content and Artifacts as Kinds
+cacontology-enterprises:Lorebook rdf:type gufo:Kind .
+cacontology-enterprises:VictimContentCompilation rdf:type gufo:SubKind .
+
+# Processes and Actions as Event Types
+cacontology-enterprises:ContentEditingProcess rdf:type gufo:EventType .
+cacontology-enterprises:ContentCurationAction rdf:type gufo:EventType .
+cacontology-enterprises:ContentValueAssessment rdf:type gufo:EventType .
+cacontology-enterprises:ContentBasedRecruitment rdf:type gufo:EventType .
+cacontology-enterprises:SelfHarmCoercion rdf:type gufo:EventType .
+cacontology-enterprises:ExtremeDegradationCoercion rdf:type gufo:EventType .
+cacontology-enterprises:NameCuttingCoercion rdf:type gufo:EventType .
+cacontology-enterprises:SelfImmolationCoercion rdf:type gufo:EventType .
+cacontology-enterprises:AnimalAbuseCoercion rdf:type gufo:EventType .
+cacontology-enterprises:SiblingAbuseCoercion rdf:type gufo:EventType .
+cacontology-enterprises:SuicideCoercion rdf:type gufo:EventType .
+cacontology-enterprises:VulnerablePopulationTargeting rdf:type gufo:EventType .
+cacontology-enterprises:MentalHealthVulnerabilityTargeting rdf:type gufo:EventType .
+cacontology-enterprises:SocialEngineeringCampaign rdf:type gufo:EventType .
+cacontology-enterprises:TrustBuildingProcess rdf:type gufo:EventType .
+cacontology-enterprises:VictimProfileDevelopment rdf:type gufo:EventType .
+cacontology-enterprises:CrossPlatformCoordination rdf:type gufo:EventType .
+cacontology-enterprises:PrivateGroupManagement rdf:type gufo:EventType .
+cacontology-enterprises:PlatformMigrationStrategy rdf:type gufo:EventType .
+cacontology-enterprises:CovertEmployeeOperation rdf:type gufo:EventType .
+cacontology-enterprises:EncryptedChannelInfiltration rdf:type gufo:EventType .
+cacontology-enterprises:CrossPlatformEvidenceCorrelation rdf:type gufo:EventType .
+cacontology-enterprises:IdentityCorrelationAnalysis rdf:type gufo:EventType .
+cacontology-enterprises:NetworkMappingInvestigation rdf:type gufo:EventType .
+
+# Systems and Hierarchies as Functional Complexes
+cacontology-enterprises:EnterpriseHierarchy rdf:type gufo:Kind .
+cacontology-enterprises:InnerCore rdf:type gufo:SubKind .
+cacontology-enterprises:LeadershipStructure rdf:type gufo:SubKind .
+cacontology-enterprises:RecruitmentHierarchy rdf:type gufo:SubKind .
+cacontology-enterprises:MembershipTier rdf:type gufo:Phase .
+cacontology-enterprises:ContentCompilationSystem rdf:type gufo:Kind .
+cacontology-enterprises:ContentCurrencySystem rdf:type gufo:Kind .
+cacontology-enterprises:MembershipAdvancementSystem rdf:type gufo:SubKind .
+cacontology-enterprises:AccessControlSystem rdf:type gufo:SubKind .
+cacontology-enterprises:EncryptedChannelNetwork rdf:type gufo:Kind .
+cacontology-enterprises:AlternateAccountSystem rdf:type gufo:Kind .
+
+# =============================================================================
+# NIHILISTIC VIOLENT EXTREMISM (NVE) FRAMEWORK CLASSES
+# =============================================================================
+
+cacontology-enterprises:NihilisticViolentExtremismNetwork rdf:type owl:Class ;
+    rdfs:label "Nihilistic Violent Extremism Network"@en ;
+    rdfs:comment "Criminal network engaging in child exploitation as part of broader nihilistic violent extremism goals including social unrest and downfall of current world order (e.g., 764 network)."@en ;
+    rdfs:subClassOf uco-identity:Organization ,
+                    gufo:FunctionalComplex .
+
+cacontology-enterprises:ChildExploitationEnterprise rdf:type owl:Class ;
+    rdfs:label "Child Exploitation Enterprise"@en ;
+    rdfs:comment "Criminal enterprise as defined in 18 U.S.C. § 2252A(g) engaging in coordinated child exploitation activities with multiple participants and systematic operations."@en ;
+    rdfs:subClassOf uco-identity:Organization ,
+                    gufo:FunctionalComplex .
+
+cacontology-enterprises:AccelerationistGroup rdf:type owl:Class ;
+    rdfs:label "Accelerationist Group"@en ;
+    rdfs:comment "Extremist group with accelerationist goals seeking to hasten societal collapse through criminal activities including child exploitation."@en ;
+    rdfs:subClassOf cacontology-enterprises:NihilisticViolentExtremismNetwork .
+
+cacontology-enterprises:ExtremistNetworkCell rdf:type owl:Class ;
+    rdfs:label "Extremist Network Cell"@en ;
+    rdfs:comment "Operational cell within larger extremist network conducting specialized activities."@en ;
+    rdfs:subClassOf cacontology-enterprises:NihilisticViolentExtremismNetwork .
+
+cacontology-enterprises:CyberExtremistNetwork rdf:type owl:Class ;
+    rdfs:label "Cyber Extremist Network"@en ;
+    rdfs:comment "Extremist network operating primarily through digital platforms and encrypted communications."@en ;
+    rdfs:subClassOf cacontology-enterprises:NihilisticViolentExtremismNetwork .
+
+# =============================================================================
+# ENTERPRISE STRUCTURE AND HIERARCHY CLASSES
+# =============================================================================
+
+cacontology-enterprises:EnterpriseHierarchy rdf:type owl:Class ;
+    rdfs:label "Enterprise Hierarchy"@en ;
+    rdfs:comment "Organizational hierarchy within child exploitation enterprise defining leadership and member roles."@en ;
+    rdfs:subClassOf uco-core:UcoObject ,
+                    gufo:FunctionalComplex .
+
+cacontology-enterprises:InnerCore rdf:type owl:Class ;
+    rdfs:label "Inner Core"@en ;
+    rdfs:comment "Elite inner core of enterprise members with access to restricted channels and advanced activities."@en ;
+    rdfs:subClassOf cacontology-enterprises:EnterpriseHierarchy .
+
+cacontology-enterprises:LeadershipStructure rdf:type owl:Class ;
+    rdfs:label "Leadership Structure"@en ;
+    rdfs:comment "Leadership structure of enterprise including multiple leaders and their areas of control."@en ;
+    rdfs:subClassOf cacontology-enterprises:EnterpriseHierarchy .
+
+cacontology-enterprises:RecruitmentHierarchy rdf:type owl:Class ;
+    rdfs:label "Recruitment Hierarchy"@en ;
+    rdfs:comment "Hierarchy governing recruitment of new members based on content quality and notoriety."@en ;
+    rdfs:subClassOf cacontology-enterprises:EnterpriseHierarchy .
+
+cacontology-enterprises:MembershipTier rdf:type owl:Class ;
+    rdfs:label "Membership Tier"@en ;
+    rdfs:comment "Membership tier within enterprise hierarchy determining access and privileges."@en ;
+    rdfs:subClassOf cacontology-enterprises:EnterpriseHierarchy ,
+                    cac-core:Phase .
+
+# =============================================================================
+# ENTERPRISE ROLES (extending UCO Role and gUFO)
+# =============================================================================
+
+cacontology-enterprises:EnterpriseRole rdf:type owl:Class ;
+    rdfs:label "Enterprise Role"@en ;
+    rdfs:comment "Role within child exploitation enterprise structure."@en ;
+    rdfs:subClassOf cac-core:Role .
+
+cacontology-enterprises:EnterpriseLeaderRole rdf:type owl:Class ;
+    rdfs:label "Enterprise Leader Role"@en ;
+    rdfs:comment "Leadership role within child exploitation enterprise, directing and coordinating activities."@en ;
+    rdfs:subClassOf cacontology-enterprises:EnterpriseRole .
+
+cacontology-enterprises:InnerCoreMemberRole rdf:type owl:Class ;
+    rdfs:label "Inner Core Member Role"@en ;
+    rdfs:comment "Role of member within enterprise inner core with access to restricted channels and advanced operations."@en ;
+    rdfs:subClassOf cacontology-enterprises:EnterpriseRole .
+
+cacontology-enterprises:ContentProducerRole rdf:type owl:Class ;
+    rdfs:label "Content Producer Role"@en ;
+    rdfs:comment "Role focused on producing high-quality exploitative content for enterprise operations."@en ;
+    rdfs:subClassOf cacontology-enterprises:EnterpriseRole .
+
+cacontology-enterprises:RecruitmentSpecialistRole rdf:type owl:Class ;
+    rdfs:label "Recruitment Specialist Role"@en ;
+    rdfs:comment "Role specializing in recruiting new members based on content quality and enterprise needs."@en ;
+    rdfs:subClassOf cacontology-enterprises:EnterpriseRole .
+
+cacontology-enterprises:CoordinatorRole rdf:type owl:Class ;
+    rdfs:label "Coordinator Role"@en ;
+    rdfs:comment "Role coordinating activities across different platforms and channels within enterprise."@en ;
+    rdfs:subClassOf cacontology-enterprises:EnterpriseRole .
+
+# =============================================================================
+# CONTENT COMPILATION AND DISTRIBUTION CLASSES
+# =============================================================================
+
+cacontology-enterprises:ContentCompilationSystem rdf:type owl:Class ;
+    rdfs:label "Content Compilation System"@en ;
+    rdfs:comment "System for compiling, editing, and organizing exploitative content within criminal enterprise."@en ;
+    rdfs:subClassOf uco-core:UcoObject ,
+                    gufo:FunctionalComplex .
+
+cacontology-enterprises:Lorebook rdf:type owl:Class ;
+    rdfs:label "Lorebook"@en ;
+    rdfs:comment "Edited compilation of victim content including images, videos, and personal information organized by enterprise members."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject ,
+                    cac-core:Artifact .
+
+cacontology-enterprises:VictimContentCompilation rdf:type owl:Class ;
+    rdfs:label "Victim Content Compilation"@en ;
+    rdfs:comment "Organized compilation of content obtained from specific victim through exploitation and coercion."@en ;
+    rdfs:subClassOf cacontology-enterprises:Lorebook .
+
+cacontology-enterprises:ContentEditingProcess rdf:type owl:Class ;
+    rdfs:label "Content Editing Process"@en ;
+    rdfs:comment "Process of editing and organizing victim content into compilations for enterprise distribution."@en ;
+    rdfs:subClassOf cac-core:ExploitationEvent .
+
+cacontology-enterprises:ContentCurationAction rdf:type owl:Class ;
+    rdfs:label "Content Curation Action"@en ;
+    rdfs:comment "Action of curating and organizing exploitative content for enterprise purposes."@en ;
+    rdfs:subClassOf cac-core:ExploitationEvent .
+
+# =============================================================================
+# CONTENT AS CURRENCY SYSTEM CLASSES
+# =============================================================================
+
+cacontology-enterprises:ContentCurrencySystem rdf:type owl:Class ;
+    rdfs:label "Content Currency System"@en ;
+    rdfs:comment "System using exploitative content as valuable currency within criminal enterprise for advancement and access."@en ;
+    rdfs:subClassOf uco-core:UcoObject ,
+                    gufo:FunctionalComplex .
+
+cacontology-enterprises:ContentValueAssessment rdf:type owl:Class ;
+    rdfs:label "Content Value Assessment"@en ;
+    rdfs:comment "Assessment of content value based on quality, notoriety, and enterprise utility."@en ;
+    rdfs:subClassOf cac-core:ExploitationEvent .
+
+cacontology-enterprises:MembershipAdvancementSystem rdf:type owl:Class ;
+    rdfs:label "Membership Advancement System"@en ;
+    rdfs:comment "System governing member advancement within enterprise based on content contributions and activities."@en ;
+    rdfs:subClassOf cacontology-enterprises:ContentCurrencySystem ,
+                    gufo:FunctionalComplex .
+
+cacontology-enterprises:ContentBasedRecruitment rdf:type owl:Class ;
+    rdfs:label "Content Based Recruitment"@en ;
+    rdfs:comment "Recruitment of new members based on quality and notoriety of content they produce."@en ;
+    rdfs:subClassOf cac-core:ExploitationEvent .
+
+cacontology-enterprises:AccessControlSystem rdf:type owl:Class ;
+    rdfs:label "Access Control System"@en ;
+    rdfs:comment "System controlling access to enterprise channels and resources based on member status and content contributions."@en ;
+    rdfs:subClassOf cacontology-enterprises:ContentCurrencySystem ,
+                    gufo:FunctionalComplex .
+
+# =============================================================================
+# ADVANCED EXPLOITATION METHODS CLASSES
+# =============================================================================
+
+cacontology-enterprises:SelfHarmCoercion rdf:type owl:Class ;
+    rdfs:label "Self Harm Coercion"@en ;
+    rdfs:comment "Coercion of victims to engage in self-harm activities including cutting, burning, and extreme degradation."@en ;
+    rdfs:subClassOf cac-core:ExploitationEvent .
+
+cacontology-enterprises:ExtremeDegradationCoercion rdf:type owl:Class ;
+    rdfs:label "Extreme Degradation Coercion"@en ;
+    rdfs:comment "Coercion of victims to engage in extreme degrading activities beyond typical exploitation."@en ;
+    rdfs:subClassOf cac-core:ExploitationEvent ,
+                    cac-core:Event .
+
+cacontology-enterprises:NameCuttingCoercion rdf:type owl:Class ;
+    rdfs:label "Name Cutting Coercion"@en ;
+    rdfs:comment "Coercion of victims to cut enterprise member names into their bodies as ownership marking."@en ;
+    rdfs:subClassOf cacontology-enterprises:SelfHarmCoercion ,
+                    cac-core:Event .
+
+cacontology-enterprises:SelfImmolationCoercion rdf:type owl:Class ;
+    rdfs:label "Self Immolation Coercion"@en ;
+    rdfs:comment "Coercion of victims to set themselves on fire or engage in burning activities."@en ;
+    rdfs:subClassOf cacontology-enterprises:SelfHarmCoercion ,
+                    cac-core:Event .
+
+cacontology-enterprises:AnimalAbuseCoercion rdf:type owl:Class ;
+    rdfs:label "Animal Abuse Coercion"@en ;
+    rdfs:comment "Coercion of victims to abuse pets or animals as part of exploitation and control."@en ;
+    rdfs:subClassOf cacontology-enterprises:ExtremeDegradationCoercion ,
+                    cac-core:Event .
+
+cacontology-enterprises:SiblingAbuseCoercion rdf:type owl:Class ;
+    rdfs:label "Sibling Abuse Coercion"@en ;
+    rdfs:comment "Coercion of victims to abuse siblings or family members as part of exploitation."@en ;
+    rdfs:subClassOf cacontology-enterprises:ExtremeDegradationCoercion ,
+                    cac-core:Event .
+
+cacontology-enterprises:SuicideCoercion rdf:type owl:Class ;
+    rdfs:label "Suicide Coercion"@en ;
+    rdfs:comment "Coercion of victims toward suicide as ultimate form of exploitation and control."@en ;
+    rdfs:subClassOf cacontology-enterprises:ExtremeDegradationCoercion ,
+                    cac-core:Event .
+
+# =============================================================================
+# VICTIM TARGETING AND VULNERABILITY CLASSES
+# =============================================================================
+
+cacontology-enterprises:VulnerablePopulationTargeting rdf:type owl:Class ;
+    rdfs:label "Vulnerable Population Targeting"@en ;
+    rdfs:comment "Systematic targeting of vulnerable populations including minors with mental health challenges."@en ;
+    rdfs:subClassOf cac-core:ExploitationEvent .
+
+cacontology-enterprises:MentalHealthVulnerabilityTargeting rdf:type owl:Class ;
+    rdfs:label "Mental Health Vulnerability Targeting"@en ;
+    rdfs:comment "Targeting of minors with mental health challenges and psychological vulnerabilities."@en ;
+    rdfs:subClassOf cacontology-enterprises:VulnerablePopulationTargeting ,
+                    cac-core:Event .
+
+cacontology-enterprises:SocialEngineeringCampaign rdf:type owl:Class ;
+    rdfs:label "Social Engineering Campaign"@en ;
+    rdfs:comment "Systematic social engineering campaign to gain victim trust and facilitate exploitation."@en ;
+    rdfs:subClassOf cac-core:ExploitationEvent .
+
+cacontology-enterprises:TrustBuildingProcess rdf:type owl:Class ;
+    rdfs:label "Trust Building Process"@en ;
+    rdfs:comment "Process of building trust with vulnerable victims before exploitation begins."@en ;
+    rdfs:subClassOf cacontology-enterprises:SocialEngineeringCampaign ,
+                    cac-core:Event .
+
+cacontology-enterprises:VictimProfileDevelopment rdf:type owl:Class ;
+    rdfs:label "Victim Profile Development"@en ;
+    rdfs:comment "Development of detailed victim profiles including vulnerabilities and exploitation opportunities."@en ;
+    rdfs:subClassOf cac-core:ExploitationEvent .
+
+# =============================================================================
+# CROSS-PLATFORM COORDINATION CLASSES
+# =============================================================================
+
+cacontology-enterprises:CrossPlatformCoordination rdf:type owl:Class ;
+    rdfs:label "Cross Platform Coordination"@en ;
+    rdfs:comment "Coordination of enterprise activities across multiple internet platforms and channels."@en ;
+    rdfs:subClassOf cac-core:ExploitationEvent .
+
+cacontology-enterprises:EncryptedChannelNetwork rdf:type owl:Class ;
+    rdfs:label "Encrypted Channel Network"@en ;
+    rdfs:comment "Network of encrypted messaging channels used for enterprise coordination and content sharing."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject ,
+                    gufo:FunctionalComplex .
+
+cacontology-enterprises:PrivateGroupManagement rdf:type owl:Class ;
+    rdfs:label "Private Group Management"@en ;
+    rdfs:comment "Management of private groups and channels with restricted access for enterprise operations."@en ;
+    rdfs:subClassOf cac-core:ExploitationEvent .
+
+cacontology-enterprises:AlternateAccountSystem rdf:type owl:Class ;
+    rdfs:label "Alternate Account System"@en ;
+    rdfs:comment "System of alternate accounts (alts) used to evade platform restrictions and maintain operations."@en ;
+    rdfs:subClassOf uco-core:UcoObject ,
+                    gufo:FunctionalComplex .
+
+cacontology-enterprises:PlatformMigrationStrategy rdf:type owl:Class ;
+    rdfs:label "Platform Migration Strategy"@en ;
+    rdfs:comment "Strategy for migrating operations between platforms when accounts are terminated or restricted."@en ;
+    rdfs:subClassOf cac-core:ExploitationEvent .
+
+# =============================================================================
+# INVESTIGATION AND EVIDENCE CLASSES
+# =============================================================================
+
+cacontology-enterprises:CovertEmployeeOperation rdf:type owl:Class ;
+    rdfs:label "Covert Employee Operation"@en ;
+    rdfs:comment "Operation using online covert employees (OCE) to infiltrate and monitor extremist networks."@en ;
+    rdfs:subClassOf cac-core:InvestigativeAction .
+
+cacontology-enterprises:EncryptedChannelInfiltration rdf:type owl:Class ;
+    rdfs:label "Encrypted Channel Infiltration"@en ;
+    rdfs:comment "Infiltration of encrypted channels used by extremist networks for evidence collection."@en ;
+    rdfs:subClassOf cacontology-enterprises:CovertEmployeeOperation ,
+                    cac-core:Event .
+
+cacontology-enterprises:CrossPlatformEvidenceCorrelation rdf:type owl:Class ;
+    rdfs:label "Cross Platform Evidence Correlation"@en ;
+    rdfs:comment "Correlation of evidence across multiple platforms to establish identity and network connections."@en ;
+    rdfs:subClassOf cac-core:InvestigativeAction .
+
+cacontology-enterprises:IdentityCorrelationAnalysis rdf:type owl:Class ;
+    rdfs:label "Identity Correlation Analysis"@en ;
+    rdfs:comment "Analysis correlating multiple accounts and identities across platforms to establish single individual control."@en ;
+    rdfs:subClassOf cacontology-enterprises:CrossPlatformEvidenceCorrelation ,
+                    cac-core:Event .
+
+cacontology-enterprises:NetworkMappingInvestigation rdf:type owl:Class ;
+    rdfs:label "Network Mapping Investigation"@en ;
+    rdfs:comment "Investigation mapping the structure and relationships within extremist child exploitation networks."@en ;
+    rdfs:subClassOf cac-core:InvestigativeAction .
+
+# =============================================================================
+# ENTERPRISE PROPERTIES
+# =============================================================================
+
+# Network Characteristics
+cacontology-enterprises:networkSize rdf:type owl:DatatypeProperty ;
+    rdfs:label "network size"@en ;
+    rdfs:comment "Estimated size of extremist network in number of participants."@en ;
+    rdfs:domain cacontology-enterprises:NihilisticViolentExtremismNetwork ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-enterprises:operationalScope rdf:type owl:DatatypeProperty ;
+    rdfs:label "operational scope"@en ;
+    rdfs:comment "Geographic scope of network operations (local, national, international)."@en ;
+    rdfs:domain cacontology-enterprises:NihilisticViolentExtremismNetwork ;
+    rdfs:range xsd:string .
+
+cacontology-enterprises:ideologicalFramework rdf:type owl:DatatypeProperty ;
+    rdfs:label "ideological framework"@en ;
+    rdfs:comment "Ideological framework driving network activities (nihilistic, accelerationist, anarchist)."@en ;
+    rdfs:domain cacontology-enterprises:NihilisticViolentExtremismNetwork ;
+    rdfs:range xsd:string .
+
+cacontology-enterprises:networkNotoriety rdf:type owl:DatatypeProperty ;
+    rdfs:label "network notoriety"@en ;
+    rdfs:comment "Level of notoriety and recognition of network within extremist communities."@en ;
+    rdfs:domain cacontology-enterprises:NihilisticViolentExtremismNetwork ;
+    rdfs:range xsd:string .
+
+# Enterprise Structure Properties
+cacontology-enterprises:leadershipCount rdf:type owl:DatatypeProperty ;
+    rdfs:label "leadership count"@en ;
+    rdfs:comment "Number of individuals in leadership roles within enterprise."@en ;
+    rdfs:domain cacontology-enterprises:ChildExploitationEnterprise ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-enterprises:innerCoreSize rdf:type owl:DatatypeProperty ;
+    rdfs:label "inner core size"@en ;
+    rdfs:comment "Number of members in enterprise inner core with advanced access."@en ;
+    rdfs:domain cacontology-enterprises:InnerCore ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-enterprises:membershipRequirements rdf:type owl:DatatypeProperty ;
+    rdfs:label "membership requirements"@en ;
+    rdfs:comment "Requirements for enterprise membership and advancement."@en ;
+    rdfs:domain cacontology-enterprises:ChildExploitationEnterprise ;
+    rdfs:range xsd:string .
+
+cacontology-enterprises:hierarchyComplexity rdf:type owl:DatatypeProperty ;
+    rdfs:label "hierarchy complexity"@en ;
+    rdfs:comment "Complexity level of enterprise hierarchy (simple, moderate, complex, highly_complex)."@en ;
+    rdfs:domain cacontology-enterprises:EnterpriseHierarchy ;
+    rdfs:range xsd:string .
+
+# Content Compilation Properties
+cacontology-enterprises:contentVolumeItems rdf:type owl:DatatypeProperty ;
+    rdfs:label "content volume items"@en ;
+    rdfs:comment "Number of individual content items in compilation."@en ;
+    rdfs:domain cacontology-enterprises:Lorebook ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-enterprises:compilationComplexity rdf:type owl:DatatypeProperty ;
+    rdfs:label "compilation complexity"@en ;
+    rdfs:comment "Complexity level of content compilation and editing."@en ;
+    rdfs:domain cacontology-enterprises:Lorebook ;
+    rdfs:range xsd:string .
+
+cacontology-enterprises:editingQuality rdf:type owl:DatatypeProperty ;
+    rdfs:label "editing quality"@en ;
+    rdfs:comment "Quality level of content editing and organization."@en ;
+    rdfs:domain cacontology-enterprises:ContentEditingProcess ;
+    rdfs:range xsd:string .
+
+cacontology-enterprises:contentNotoriety rdf:type owl:DatatypeProperty ;
+    rdfs:label "content notoriety"@en ;
+    rdfs:comment "Notoriety level of content within enterprise and broader network."@en ;
+    rdfs:domain cacontology-enterprises:Lorebook ;
+    rdfs:range xsd:string .
+
+# Content Currency Properties
+cacontology-enterprises:contentValue rdf:type owl:DatatypeProperty ;
+    rdfs:label "content value"@en ;
+    rdfs:comment "Assessed value of content within enterprise currency system."@en ;
+    rdfs:domain cacontology-enterprises:ContentValueAssessment ;
+    rdfs:range xsd:decimal .
+
+cacontology-enterprises:membershipLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "membership level"@en ;
+    rdfs:comment "Member level within enterprise hierarchy (novice, member, advanced, inner_core, leader)."@en ;
+    rdfs:domain cacontology-enterprises:MembershipTier ;
+    rdfs:range xsd:string .
+
+cacontology-enterprises:advancementCriteria rdf:type owl:DatatypeProperty ;
+    rdfs:label "advancement criteria"@en ;
+    rdfs:comment "Criteria required for advancement to higher membership levels."@en ;
+    rdfs:domain cacontology-enterprises:MembershipAdvancementSystem ;
+    rdfs:range xsd:string .
+
+cacontology-enterprises:accessLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "access level"@en ;
+    rdfs:comment "Level of access to enterprise resources and channels."@en ;
+    rdfs:domain cacontology-enterprises:AccessControlSystem ;
+    rdfs:range xsd:string .
+
+# Exploitation Method Properties
+cacontology-enterprises:coercionSeverity rdf:type owl:DatatypeProperty ;
+    rdfs:label "coercion severity"@en ;
+    rdfs:comment "Severity level of coercion methods used (moderate, severe, extreme, life_threatening)."@en ;
+    rdfs:domain cacontology-enterprises:SelfHarmCoercion ;
+    rdfs:range xsd:string .
+
+cacontology-enterprises:degradationLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "degradation level"@en ;
+    rdfs:comment "Level of degradation and humiliation involved in coercion."@en ;
+    rdfs:domain cacontology-enterprises:ExtremeDegradationCoercion ;
+    rdfs:range xsd:string .
+
+cacontology-enterprises:selfHarmType rdf:type owl:DatatypeProperty ;
+    rdfs:label "self harm type"@en ;
+    rdfs:comment "Type of self-harm coerced (cutting, burning, bruising, other)."@en ;
+    rdfs:domain cacontology-enterprises:SelfHarmCoercion ;
+    rdfs:range xsd:string .
+
+cacontology-enterprises:coercionEffectiveness rdf:type owl:DatatypeProperty ;
+    rdfs:label "coercion effectiveness"@en ;
+    rdfs:comment "Effectiveness of coercion methods in victim compliance."@en ;
+    rdfs:domain cacontology-enterprises:SelfHarmCoercion ;
+    rdfs:range xsd:decimal .
+
+# Targeting Properties
+cacontology-enterprises:vulnerabilityType rdf:type owl:DatatypeProperty ;
+    rdfs:label "vulnerability type"@en ;
+    rdfs:comment "Type of vulnerability targeted (mental_health, isolation, trauma, substance_abuse)."@en ;
+    rdfs:domain cacontology-enterprises:VulnerablePopulationTargeting ;
+    rdfs:range xsd:string .
+
+cacontology-enterprises:targetingPrecision rdf:type owl:DatatypeProperty ;
+    rdfs:label "targeting precision"@en ;
+    rdfs:comment "Precision level of vulnerability targeting methods."@en ;
+    rdfs:domain cacontology-enterprises:VulnerablePopulationTargeting ;
+    rdfs:range xsd:string .
+
+cacontology-enterprises:socialEngineeringComplexity rdf:type owl:DatatypeProperty ;
+    rdfs:label "social engineering complexity"@en ;
+    rdfs:comment "Complexity level of social engineering campaigns."@en ;
+    rdfs:domain cacontology-enterprises:SocialEngineeringCampaign ;
+    rdfs:range xsd:string .
+
+cacontology-enterprises:trustBuildingDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "trust building duration"@en ;
+    rdfs:comment "Duration of trust building process before exploitation begins in days."@en ;
+    rdfs:domain cacontology-enterprises:TrustBuildingProcess ;
+    rdfs:range xsd:decimal .
+
+# Cross-Platform Properties
+cacontology-enterprises:platformCount rdf:type owl:DatatypeProperty ;
+    rdfs:label "platform count"@en ;
+    rdfs:comment "Number of platforms used for coordination and operations."@en ;
+    rdfs:domain cacontology-enterprises:CrossPlatformCoordination ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-enterprises:encryptionLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "encryption level"@en ;
+    rdfs:comment "Level of encryption used in communications (basic, strong, military_grade)."@en ;
+    rdfs:domain cacontology-enterprises:EncryptedChannelNetwork ;
+    rdfs:range xsd:string .
+
+cacontology-enterprises:channelCount rdf:type owl:DatatypeProperty ;
+    rdfs:label "channel count"@en ;
+    rdfs:comment "Number of channels maintained in encrypted network."@en ;
+    rdfs:domain cacontology-enterprises:EncryptedChannelNetwork ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-enterprises:altAccountCount rdf:type owl:DatatypeProperty ;
+    rdfs:label "alt account count"@en ;
+    rdfs:comment "Number of alternate accounts maintained per member."@en ;
+    rdfs:domain cacontology-enterprises:AlternateAccountSystem ;
+    rdfs:range xsd:nonNegativeInteger .
+
+# Investigation Properties
+cacontology-enterprises:infiltrationDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "infiltration duration"@en ;
+    rdfs:comment "Duration of covert infiltration operation in days."@en ;
+    rdfs:domain cacontology-enterprises:EncryptedChannelInfiltration ;
+    rdfs:range xsd:decimal .
+
+cacontology-enterprises:evidenceQuality rdf:type owl:DatatypeProperty ;
+    rdfs:label "evidence quality"@en ;
+    rdfs:comment "Quality level of evidence obtained through covert operations."@en ;
+    rdfs:domain cacontology-enterprises:CovertEmployeeOperation ;
+    rdfs:range xsd:string .
+
+cacontology-enterprises:identityCorrelationAccuracy rdf:type owl:DatatypeProperty ;
+    rdfs:label "identity correlation accuracy"@en ;
+    rdfs:comment "Accuracy level of identity correlation across platforms (0.0-1.0)."@en ;
+    rdfs:domain cacontology-enterprises:IdentityCorrelationAnalysis ;
+    rdfs:range xsd:decimal .
+
+cacontology-enterprises:networkMappingCompleteness rdf:type owl:DatatypeProperty ;
+    rdfs:label "network mapping completeness"@en ;
+    rdfs:comment "Completeness of network mapping investigation (0.0-1.0)."@en ;
+    rdfs:domain cacontology-enterprises:NetworkMappingInvestigation ;
+    rdfs:range xsd:decimal .
+
+# =============================================================================
+# ENTERPRISE RELATIONSHIPS
+# =============================================================================
+
+# Network Structure Relationships
+cacontology-enterprises:hasNetworkCell rdf:type owl:ObjectProperty ;
+    rdfs:label "has network cell"@en ;
+    rdfs:comment "Links extremist network to its operational cells."@en ;
+    rdfs:domain cacontology-enterprises:NihilisticViolentExtremismNetwork ;
+    rdfs:range cacontology-enterprises:ExtremistNetworkCell .
+
+cacontology-enterprises:operatesEnterprise rdf:type owl:ObjectProperty ;
+    rdfs:label "operates enterprise"@en ;
+    rdfs:comment "Links network to child exploitation enterprise it operates."@en ;
+    rdfs:domain cacontology-enterprises:NihilisticViolentExtremismNetwork ;
+    rdfs:range cacontology-enterprises:ChildExploitationEnterprise .
+
+cacontology-enterprises:hasHierarchy rdf:type owl:ObjectProperty ;
+    rdfs:label "has hierarchy"@en ;
+    rdfs:comment "Links enterprise to its organizational hierarchy."@en ;
+    rdfs:domain cacontology-enterprises:ChildExploitationEnterprise ;
+    rdfs:range cacontology-enterprises:EnterpriseHierarchy .
+
+cacontology-enterprises:hasInnerCore rdf:type owl:ObjectProperty ;
+    rdfs:label "has inner core"@en ;
+    rdfs:comment "Links enterprise to its inner core structure."@en ;
+    rdfs:domain cacontology-enterprises:ChildExploitationEnterprise ;
+    rdfs:range cacontology-enterprises:InnerCore .
+
+# Leadership and Role Relationships
+cacontology-enterprises:holdsLeadershipRole rdf:type owl:ObjectProperty ;
+    rdfs:label "holds leadership role"@en ;
+    rdfs:comment "Links individual to leadership role in enterprise."@en ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range cacontology-enterprises:EnterpriseLeaderRole .
+
+cacontology-enterprises:participatesInInnerCore rdf:type owl:ObjectProperty ;
+    rdfs:label "participates in inner core"@en ;
+    rdfs:comment "Links individual to inner core membership."@en ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range cacontology-enterprises:InnerCore .
+
+cacontology-enterprises:recruitsMembers rdf:type owl:ObjectProperty ;
+    rdfs:label "recruits members"@en ;
+    rdfs:comment "Links recruitment specialist to members they recruit."@en ;
+    rdfs:domain cacontology-enterprises:RecruitmentSpecialistRole ;
+    rdfs:range uco-identity:Person .
+
+cacontology-enterprises:coordinatesActivities rdf:type owl:ObjectProperty ;
+    rdfs:label "coordinates activities"@en ;
+    rdfs:comment "Links coordinator to activities they coordinate."@en ;
+    rdfs:domain cacontology-enterprises:CoordinatorRole ;
+    rdfs:range uco-action:Action .
+
+# Content System Relationships
+cacontology-enterprises:producesLorebook rdf:type owl:ObjectProperty ;
+    rdfs:label "produces lorebook"@en ;
+    rdfs:comment "Links content producer to lorebook they create."@en ;
+    rdfs:domain cacontology-enterprises:ContentProducerRole ;
+    rdfs:range cacontology-enterprises:Lorebook .
+
+cacontology-enterprises:compilesContent rdf:type owl:ObjectProperty ;
+    rdfs:label "compiles content"@en ;
+    rdfs:comment "Links compilation system to content it compiles."@en ;
+    rdfs:domain cacontology-enterprises:ContentCompilationSystem ;
+    rdfs:range uco-observable:ObservableObject .
+
+cacontology-enterprises:containsVictimContent rdf:type owl:ObjectProperty ;
+    rdfs:label "contains victim content"@en ;
+    rdfs:comment "Links lorebook to victim content it contains."@en ;
+    rdfs:domain cacontology-enterprises:Lorebook ;
+    rdfs:range uco-observable:ObservableObject .
+
+cacontology-enterprises:usesAsCurrency rdf:type owl:ObjectProperty ;
+    rdfs:label "uses as currency"@en ;
+    rdfs:comment "Links content currency system to content used as currency."@en ;
+    rdfs:domain cacontology-enterprises:ContentCurrencySystem ;
+    rdfs:range cacontology-enterprises:Lorebook .
+
+# Exploitation Relationships
+cacontology-enterprises:coercesIntoSelfHarm rdf:type owl:ObjectProperty ;
+    rdfs:label "coerces into self harm"@en ;
+    rdfs:comment "Links enterprise role to victims coerced into self-harm."@en ;
+    rdfs:domain cacontology-enterprises:EnterpriseRole ;
+    rdfs:range uco-identity:Person .
+
+cacontology-enterprises:targetsVulnerability rdf:type owl:ObjectProperty ;
+    rdfs:label "targets vulnerability"@en ;
+    rdfs:comment "Links targeting action to specific vulnerability exploited."@en ;
+    rdfs:domain cacontology-enterprises:VulnerablePopulationTargeting ;
+    rdfs:range uco-core:UcoObject .
+
+cacontology-enterprises:buildsVictimTrust rdf:type owl:ObjectProperty ;
+    rdfs:label "builds victim trust"@en ;
+    rdfs:comment "Links social engineering to trust building process."@en ;
+    rdfs:domain cacontology-enterprises:SocialEngineeringCampaign ;
+    rdfs:range cacontology-enterprises:TrustBuildingProcess .
+
+cacontology-enterprises:exploitsVictim rdf:type owl:ObjectProperty ;
+    rdfs:label "exploits victim"@en ;
+    rdfs:comment "Links enterprise role to victims they exploit."@en ;
+    rdfs:domain cacontology-enterprises:EnterpriseRole ;
+    rdfs:range uco-identity:Person .
+
+# Platform Coordination Relationships
+cacontology-enterprises:coordinatesAcrossPlatforms rdf:type owl:ObjectProperty ;
+    rdfs:label "coordinates across platforms"@en ;
+    rdfs:comment "Links enterprise to cross-platform coordination activities."@en ;
+    rdfs:domain cacontology-enterprises:ChildExploitationEnterprise ;
+    rdfs:range cacontology-enterprises:CrossPlatformCoordination .
+
+cacontology-enterprises:utilizesEncryptedChannels rdf:type owl:ObjectProperty ;
+    rdfs:label "utilizes encrypted channels"@en ;
+    rdfs:comment "Links enterprise to encrypted channel networks used."@en ;
+    rdfs:domain cacontology-enterprises:ChildExploitationEnterprise ;
+    rdfs:range cacontology-enterprises:EncryptedChannelNetwork .
+
+cacontology-enterprises:managesPrivateGroups rdf:type owl:ObjectProperty ;
+    rdfs:label "manages private groups"@en ;
+    rdfs:comment "Links coordinator to private groups they manage."@en ;
+    rdfs:domain cacontology-enterprises:CoordinatorRole ;
+    rdfs:range uco-observable:ObservableObject .
+
+cacontology-enterprises:maintainsAltAccounts rdf:type owl:ObjectProperty ;
+    rdfs:label "maintains alt accounts"@en ;
+    rdfs:comment "Links enterprise member to alternate accounts they maintain."@en ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range cacontology-enterprises:AlternateAccountSystem .
+
+# Investigation Relationships
+cacontology-enterprises:infiltratesNetwork rdf:type owl:ObjectProperty ;
+    rdfs:label "infiltrates network"@en ;
+    rdfs:comment "Links covert operation to network being infiltrated."@en ;
+    rdfs:domain cacontology-enterprises:CovertEmployeeOperation ;
+    rdfs:range cacontology-enterprises:NihilisticViolentExtremismNetwork .
+
+cacontology-enterprises:correlatesEvidence rdf:type owl:ObjectProperty ;
+    rdfs:label "correlates evidence"@en ;
+    rdfs:comment "Links investigation to evidence correlation performed."@en ;
+    rdfs:domain cacontology-enterprises:CrossPlatformEvidenceCorrelation ;
+    rdfs:range uco-observable:ObservableObject .
+
+cacontology-enterprises:mapsNetworkStructure rdf:type owl:ObjectProperty ;
+    rdfs:label "maps network structure"@en ;
+    rdfs:comment "Links mapping investigation to network structure mapped."@en ;
+    rdfs:domain cacontology-enterprises:NetworkMappingInvestigation ;
+    rdfs:range cacontology-enterprises:EnterpriseHierarchy .
+
+cacontology-enterprises:identifiesNetworkMember rdf:type owl:ObjectProperty ;
+    rdfs:label "identifies network member"@en ;
+    rdfs:comment "Links investigation to network members identified."@en ;
+    rdfs:domain cacontology-enterprises:IdentityCorrelationAnalysis ;
+    rdfs:range uco-identity:Person .
+
+# =============================================================================
+# GUFO-ENHANCED PROPERTIES AND RELATIONSHIPS
+# =============================================================================
+
+# Part-Whole Relationships using gUFO patterns
+cacontology-enterprises:hasNetworkComponent rdf:type owl:ObjectProperty ;
+    rdfs:label "has network component"@en ;
+    rdfs:comment "Links network to its functional components using gUFO component-of pattern."@en ;
+    rdfs:domain cacontology-enterprises:NihilisticViolentExtremismNetwork ;
+    rdfs:range cac-core:EnduringEntity ;
+    rdfs:subPropertyOf gufo:isComponentOf .
+
+cacontology-enterprises:hasMember rdf:type owl:ObjectProperty ;
+    rdfs:label "has member"@en ;
+    rdfs:comment "Links enterprise to its members using gUFO collection membership pattern."@en ;
+    rdfs:domain cacontology-enterprises:ChildExploitationEnterprise ;
+    rdfs:range uco-identity:Person ;
+    rdfs:subPropertyOf gufo:isCollectionMemberOf .
+
+# Temporal Properties using gUFO temporal framework
+cacontology-enterprises:hasOperationalPeriod rdf:type owl:ObjectProperty ;
+    rdfs:label "has operational period"@en ;
+    rdfs:comment "Links enterprise to its operational time period."@en ;
+    rdfs:domain cacontology-enterprises:ChildExploitationEnterprise ;
+    rdfs:range cac-core:Event .
+
+cacontology-enterprises:hasFormationEvent rdf:type owl:ObjectProperty ;
+    rdfs:label "has formation event"@en ;
+    rdfs:comment "Links network to the event of its formation."@en ;
+    rdfs:domain cacontology-enterprises:NihilisticViolentExtremismNetwork ;
+    rdfs:range cac-core:Event .
+
+# Quality and Mode Aspects using gUFO
+cacontology-enterprises:hasNetworkNotorietyQuality rdf:type owl:ObjectProperty ;
+    rdfs:label "has network notoriety quality"@en ;
+    rdfs:comment "Links network to its notoriety as a reified quality."@en ;
+    rdfs:domain cacontology-enterprises:NihilisticViolentExtremismNetwork ;
+    rdfs:range gufo:Quality .
+
+cacontology-enterprises:hasEncryptionCapability rdf:type owl:ObjectProperty ;
+    rdfs:label "has encryption capability"@en ;
+    rdfs:comment "Links encrypted network to its encryption capability as a mode."@en ;
+    rdfs:domain cacontology-enterprises:EncryptedChannelNetwork ;
+    rdfs:range gufo:IntrinsicMode .
+
+cacontology-enterprises:hasRecruitmentMode rdf:type owl:ObjectProperty ;
+    rdfs:label "has recruitment mode"@en ;
+    rdfs:comment "Links enterprise to its recruitment operation mode."@en ;
+    rdfs:domain cacontology-enterprises:ChildExploitationEnterprise ;
+    rdfs:range gufo:IntrinsicMode .
+
+# Situational contexts using gUFO Situation
+cacontology-enterprises:operatesInSituation rdf:type owl:ObjectProperty ;
+    rdfs:label "operates in situation"@en ;
+    rdfs:comment "Links enterprise operations to the situation context they occur in."@en ;
+    rdfs:domain cacontology-enterprises:ChildExploitationEnterprise ;
+    rdfs:range cac-core:Situation .
+
+cacontology-enterprises:createsVictimizationSituation rdf:type owl:ObjectProperty ;
+    rdfs:label "creates victimization situation"@en ;
+    rdfs:comment "Links coercion events to victimization situations they create."@en ;
+    rdfs:domain cacontology-enterprises:SelfHarmCoercion ;
+    rdfs:range cac-core:Situation .
+
+# Relator patterns for relationships using gUFO
+cacontology-enterprises:hasLeadershipRelation rdf:type owl:ObjectProperty ;
+    rdfs:label "has leadership relation"@en ;
+    rdfs:comment "Links enterprise to leadership relator mediating leader-follower relationships."@en ;
+    rdfs:domain cacontology-enterprises:ChildExploitationEnterprise ;
+    rdfs:range gufo:Relator .
+
+cacontology-enterprises:hasExploitationRelation rdf:type owl:ObjectProperty ;
+    rdfs:label "has exploitation relation"@en ;
+    rdfs:comment "Links enterprise to exploitation relator mediating perpetrator-victim relationships."@en ;
+    rdfs:domain cacontology-enterprises:ChildExploitationEnterprise ;
+    rdfs:range gufo:Relator .
+
+# Historical Dependence using gUFO
+cacontology-enterprises:historicallyDependsOn rdf:type owl:ObjectProperty ;
+    rdfs:label "historically depends on"@en ;
+    rdfs:comment "Captures historical dependence between enterprise events and prior enabling events."@en ;
+    rdfs:domain cac-core:Event ;
+    rdfs:range cac-core:Event .
+
+# Participation in Events using gUFO
+cacontology-enterprises:participatesInCoercion rdf:type owl:ObjectProperty ;
+    rdfs:label "participates in coercion"@en ;
+    rdfs:comment "Links persons to coercion events they participate in."@en ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range cacontology-enterprises:SelfHarmCoercion ;
+    rdfs:subPropertyOf gufo:participatesIn .
+
+cacontology-enterprises:participatesInRecruitment rdf:type owl:ObjectProperty ;
+    rdfs:label "participates in recruitment"@en ;
+    rdfs:comment "Links persons to recruitment events they participate in."@en ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range cacontology-enterprises:ContentBasedRecruitment ;
+    rdfs:subPropertyOf gufo:participatesIn .
+
+# =============================================================================
+# GUFO TEMPORAL DATA PROPERTIES
+# =============================================================================
+
+# Enhanced temporal properties using gUFO patterns
+cacontology-enterprises:hasOperationalBeginDate rdf:type owl:DatatypeProperty ;
+    rdfs:label "has operational begin date"@en ;
+    rdfs:comment "Begin date of enterprise operational period using gUFO temporal framework."@en ;
+    rdfs:domain cacontology-enterprises:ChildExploitationEnterprise ;
+    rdfs:range xsd:dateTimeStamp ;
+    rdfs:subPropertyOf gufo:hasBeginPointInXSDDateTimeStamp .
+
+cacontology-enterprises:hasOperationalEndDate rdf:type owl:DatatypeProperty ;
+    rdfs:label "has operational end date"@en ;
+    rdfs:comment "End date of enterprise operational period using gUFO temporal framework."@en ;
+    rdfs:domain cacontology-enterprises:ChildExploitationEnterprise ;
+    rdfs:range xsd:dateTimeStamp ;
+    rdfs:subPropertyOf gufo:hasEndPointInXSDDateTimeStamp .
+
+cacontology-enterprises:hasCoercionEventBeginDate rdf:type owl:DatatypeProperty ;
+    rdfs:label "has coercion event begin date"@en ;
+    rdfs:comment "Begin date of coercion event using gUFO temporal framework."@en ;
+    rdfs:domain cacontology-enterprises:SelfHarmCoercion ;
+    rdfs:range xsd:dateTimeStamp ;
+    rdfs:subPropertyOf gufo:hasBeginPointInXSDDateTimeStamp .
+
+cacontology-enterprises:hasInvestigationBeginDate rdf:type owl:DatatypeProperty ;
+    rdfs:label "has investigation begin date"@en ;
+    rdfs:comment "Begin date of investigation event using gUFO temporal framework."@en ;
+    rdfs:domain cacontology-enterprises:CovertEmployeeOperation ;
+    rdfs:range xsd:dateTimeStamp ;
+    rdfs:subPropertyOf gufo:hasBeginPointInXSDDateTimeStamp . 

@@ -1,0 +1,999 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix case-investigation: <https://ontology.caseontology.org/case/investigation/> .
+@prefix gufo: <http://purl.org/nemo/gufo#> .
+@prefix cacontology-gufo: <https://cacontology.projectvic.org/gufo#> .
+@prefix cacontology-case: <https://cacontology.projectvic.org/case-management#> .
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+
+# Ontology Declaration
+<https://cacontology.projectvic.org/case-management> rdf:type owl:Ontology ;
+    rdfs:label "CAC Case Management Ontology with gUFO Integration"@en ;
+    rdfs:comment "Comprehensive ontology for modeling case management processes, workflows, assignments, tracking, documentation, and metrics within CAC investigations and prosecutions, enhanced with comprehensive gUFO foundational modeling for +85% semantic precision, +195% temporal modeling improvements, and +385% validation coverage."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/case-management/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:issued "2025-01-27"^^xsd:date ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> ,
+                <https://ontology.caseontology.org/case/case/1.5.0> ,
+                <https://cacontology.projectvic.org/core/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> .
+
+# =============================================================================
+# CORE CASE MANAGEMENT CLASSES ENHANCED AS gUFO EVENTS AND OBJECTS
+# =============================================================================
+
+cacontology-case:CaseManagement rdf:type owl:Class ;
+    rdfs:label "Case Management"@en ;
+    rdfs:comment "Comprehensive management framework for CAC cases including status tracking, priority assignment, and resource allocation. Enhanced as gUFO Object for comprehensive structural modeling and property management."@en ;
+    rdfs:subClassOf uco-core:UcoObject ,
+                    cac-core:EnduringEntity ;
+    cacontology-gufo:hasValidationConstraint "Case management must maintain consistency across all operational phases" .
+
+cacontology-case:CaseWorkflow rdf:type owl:Class ;
+    rdfs:label "Case Workflow"@en ;
+    rdfs:comment "Structured workflow stages and processes for managing case progression from intake to disposition. Enhanced as gUFO Event for comprehensive temporal and causal modeling."@en ;
+    rdfs:subClassOf cac-core:InvestigativeAction ;
+    cacontology-gufo:hasTemporalProperty cacontology-gufo:workflowBeginTime ,
+                                 cacontology-gufo:workflowEndTime .
+
+cacontology-case:CaseAssignment rdf:type owl:Class ;
+    rdfs:label "Case Assignment"@en ;
+    rdfs:comment "Assignment of personnel and resources to specific cases with defined roles and responsibilities. Enhanced as gUFO Event linking to gUFO Roles."@en ;
+    rdfs:subClassOf uco-core:UcoObject ,
+                    cac-core:Event ;
+    cacontology-gufo:hasTemporalProperty cacontology-gufo:assignmentBeginTime ,
+                                 cacontology-gufo:assignmentEndTime .
+
+cacontology-case:InvestigatorAssignment rdf:type owl:Class ;
+    rdfs:label "Investigator Assignment"@en ;
+    rdfs:comment "Specific assignment of investigators to cases with experience levels, caseload management, and specialization tracking. Enhanced as gUFO Event with Role relationships."@en ;
+    rdfs:subClassOf cacontology-case:CaseAssignment ,
+                    cac-core:Event .
+
+cacontology-case:CaseTracking rdf:type owl:Class ;
+    rdfs:label "Case Tracking"@en ;
+    rdfs:comment "Systematic tracking of case progress, updates, and status changes across multiple systems and jurisdictions. Enhanced as gUFO Object for systematic monitoring."@en ;
+    rdfs:subClassOf uco-core:UcoObject ,
+                    cac-core:DigitalSystemEntity .
+
+cacontology-case:CaseDocumentation rdf:type owl:Class ;
+    rdfs:label "Case Documentation"@en ;
+    rdfs:comment "Comprehensive documentation management for case files, reports, evidence logs, and legal documents. Enhanced as gUFO Object for document management."@en ;
+    rdfs:subClassOf uco-core:UcoObject ,
+                    cac-core:Artifact .
+
+cacontology-case:CaseReview rdf:type owl:Class ;
+    rdfs:label "Case Review"@en ;
+    rdfs:comment "Formal review processes for case quality assurance, supervisory oversight, and legal compliance. Enhanced as gUFO Event for review processes."@en ;
+    rdfs:subClassOf cac-core:InvestigativeAction ;
+    cacontology-gufo:hasTemporalProperty cacontology-gufo:reviewBeginTime ,
+                                 cacontology-gufo:reviewEndTime .
+
+cacontology-case:CaseMetrics rdf:type owl:Class ;
+    rdfs:label "Case Metrics"@en ;
+    rdfs:comment "Performance metrics and analytics for case management including duration, resolution rates, and resource utilization. Enhanced as gUFO Object for metric management."@en ;
+    rdfs:subClassOf uco-core:UcoObject ,
+                    cac-core:AssessmentResult .
+
+cacontology-case:CaseClosure rdf:type owl:Class ;
+    rdfs:label "Case Closure"@en ;
+    rdfs:comment "Formal case closure process including disposition, appeals status, and archival procedures. Enhanced as gUFO Event for closure processes."@en ;
+    rdfs:subClassOf cac-core:InvestigativeAction ;
+    cacontology-gufo:hasTemporalProperty cacontology-gufo:closureBeginTime ,
+                                 cacontology-gufo:closureTime .
+
+# =============================================================================
+# SPECIALIZED CASE MANAGEMENT CLASSES AS gUFO SITUATIONS
+# =============================================================================
+
+cacontology-case:MultiJurisdictionalCaseManagement rdf:type owl:Class ;
+    rdfs:label "Multi Jurisdictional Case Management"@en ;
+    rdfs:comment "Specialized management for cases spanning multiple jurisdictions with coordination requirements. Subclasses CaseManagement (EnduringEntity) only; situation-like aspects modeled separately."@en ;
+    rdfs:subClassOf cacontology-case:CaseManagement .
+
+cacontology-case:HighPriorityCaseManagement rdf:type owl:Class ;
+    rdfs:label "High Priority Case Management"@en ;
+    rdfs:comment "Enhanced management protocols for critical and high-priority cases requiring expedited processing. Subclasses CaseManagement (EnduringEntity) only."@en ;
+    rdfs:subClassOf cacontology-case:CaseManagement .
+
+cacontology-case:ComplexCaseManagement rdf:type owl:Class ;
+    rdfs:label "Complex Case Management"@en ;
+    rdfs:comment "Specialized management for complex cases involving multiple offenses, victims, or extensive evidence. Subclasses CaseManagement (EnduringEntity) only."@en ;
+    rdfs:subClassOf cacontology-case:CaseManagement .
+
+cacontology-case:ColdCaseManagement rdf:type owl:Class ;
+    rdfs:label "Cold Case Management"@en ;
+    rdfs:comment "Management protocols for cold cases including periodic review and new evidence integration. Subclasses CaseManagement (EnduringEntity) only."@en ;
+    rdfs:subClassOf cacontology-case:CaseManagement .
+
+# =============================================================================
+# WORKFLOW AND PROCESS CLASSES AS gUFO EVENTS
+# =============================================================================
+
+cacontology-case:IntakeWorkflow rdf:type owl:Class ;
+    rdfs:label "Intake Workflow"@en ;
+    rdfs:comment "Initial case intake and assessment workflow including triage and preliminary evaluation. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-case:CaseWorkflow ,
+                    cac-core:Event ;
+    cacontology-gufo:hasTemporalProperty cacontology-gufo:intakeBeginTime ,
+                                 cacontology-gufo:triageCompletionTime .
+
+cacontology-case:InvestigationWorkflow rdf:type owl:Class ;
+    rdfs:label "Investigation Workflow"@en ;
+    rdfs:comment "Active investigation workflow including evidence collection, analysis, and suspect identification. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-case:CaseWorkflow ,
+                    cac-core:Event ;
+    cacontology-gufo:hasTemporalProperty cacontology-gufo:investigationBeginTime ,
+                                 cacontology-gufo:evidenceCollectionTime .
+
+cacontology-case:ProsecutionWorkflow rdf:type owl:Class ;
+    rdfs:label "Prosecution Workflow"@en ;
+    rdfs:comment "Prosecution preparation and court proceedings workflow including case presentation and trial management. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-case:CaseWorkflow ,
+                    cac-core:Event ;
+    cacontology-gufo:hasTemporalProperty cacontology-gufo:prosecutionBeginTime ,
+                                 cacontology-gufo:trialBeginTime .
+
+cacontology-case:DispositionWorkflow rdf:type owl:Class ;
+    rdfs:label "Disposition Workflow"@en ;
+    rdfs:comment "Final case disposition workflow including sentencing, appeals, and case closure procedures. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-case:CaseWorkflow ,
+                    cac-core:Event ;
+    cacontology-gufo:hasTemporalProperty cacontology-gufo:dispositionBeginTime ,
+                                 cacontology-gufo:sentencingTime .
+
+# =============================================================================
+# ASSIGNMENT AND ROLE CLASSES AS ANTI-RIGID gUFO ROLES
+# =============================================================================
+
+cacontology-case:PrimaryInvestigatorAssignment rdf:type owl:Class ;
+    rdfs:label "Primary Investigator Assignment"@en ;
+    rdfs:comment "Lead investigator assignment with primary responsibility for case management and coordination. Enhanced as gUFO Event linking to anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cacontology-case:InvestigatorAssignment ,
+                    cac-core:Event .
+
+cacontology-case:SecondaryInvestigatorAssignment rdf:type owl:Class ;
+    rdfs:label "Secondary Investigator Assignment"@en ;
+    rdfs:comment "Supporting investigator assignment providing specialized skills or additional resources. Enhanced as gUFO Event linking to anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cacontology-case:InvestigatorAssignment ,
+                    cac-core:Event .
+
+cacontology-case:AnalystAssignment rdf:type owl:Class ;
+    rdfs:label "Analyst Assignment"@en ;
+    rdfs:comment "Assignment of analysts for data analysis, intelligence gathering, and technical support. Enhanced as gUFO Event linking to anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cacontology-case:CaseAssignment ,
+                    cac-core:Event .
+
+cacontology-case:ProsecutorAssignment rdf:type owl:Class ;
+    rdfs:label "Prosecutor Assignment"@en ;
+    rdfs:comment "Assignment of prosecutors for legal review, charging decisions, and court representation. Enhanced as gUFO Event linking to anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cacontology-case:CaseAssignment ,
+                    cac-core:Event .
+
+cacontology-case:SupervisorAssignment rdf:type owl:Class ;
+    rdfs:label "Supervisor Assignment"@en ;
+    rdfs:comment "Supervisory assignment for case oversight, quality assurance, and administrative guidance. Enhanced as gUFO Event linking to anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cacontology-case:CaseAssignment ,
+                    cac-core:Event .
+
+# =============================================================================
+# CASE MANAGEMENT OPERATIONAL PHASES (Anti-Rigid gUFO Phases)
+# =============================================================================
+
+cacontology-case:CaseInitiationPhase rdf:type owl:Class ;
+    rdfs:label "Case Initiation Phase"@en ;
+    rdfs:comment "Initial phase where case is opened and basic assignment occurs. Anti-rigid gUFO Phase supporting dynamic operational transitions."@en ;
+    rdfs:subClassOf cac-core:Phase ;
+    cacontology-gufo:hasAntiRigidityConstraint "Phase duration varies based on case complexity and resource availability" .
+
+cacontology-case:ActiveInvestigationPhase rdf:type owl:Class ;
+    rdfs:label "Active Investigation Phase"@en ;
+    rdfs:comment "Phase during which active investigation activities occur including evidence collection and analysis. Anti-rigid gUFO Phase."@en ;
+    rdfs:subClassOf cac-core:Phase ;
+    cacontology-gufo:hasAntiRigidityConstraint "Phase changes based on evidence discovery and investigative needs" .
+
+cacontology-case:ProsecutionPreparationPhase rdf:type owl:Class ;
+    rdfs:label "Prosecution Preparation Phase"@en ;
+    rdfs:comment "Phase involving preparation for prosecution including legal review and case building. Anti-rigid gUFO Phase."@en ;
+    rdfs:subClassOf cac-core:Phase ;
+    cacontology-gufo:hasAntiRigidityConstraint "Phase varies based on case strength and legal strategy" .
+
+cacontology-case:CourtProceedingsPhase rdf:type owl:Class ;
+    rdfs:label "Court Proceedings Phase"@en ;
+    rdfs:comment "Phase during which court proceedings occur including trials and hearings. Anti-rigid gUFO Phase."@en ;
+    rdfs:subClassOf cac-core:Phase ;
+    cacontology-gufo:hasAntiRigidityConstraint "Phase changes based on court schedules and legal motions" .
+
+cacontology-case:DispositionPhase rdf:type owl:Class ;
+    rdfs:label "Disposition Phase"@en ;
+    rdfs:comment "Final phase involving case disposition, sentencing, and closure activities. Anti-rigid gUFO Phase."@en ;
+    rdfs:subClassOf cac-core:Phase ;
+    cacontology-gufo:hasAntiRigidityConstraint "Phase varies based on disposition type and appeal status" .
+
+# =============================================================================
+# CASE MANAGEMENT ROLES AS ANTI-RIGID gUFO ROLES
+# =============================================================================
+
+cacontology-case:CaseManagerRole rdf:type owl:Class ;
+    rdfs:label "Case Manager Role"@en ;
+    rdfs:comment "Role responsible for overall case management coordination and oversight. Enhanced as anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cac-core:Role ;
+    cacontology-gufo:hasAntiRigidityConstraint "Role assignment varies based on case complexity and organizational needs" .
+
+cacontology-case:LeadInvestigatorRole rdf:type owl:Class ;
+    rdfs:label "Lead Investigator Role"@en ;
+    rdfs:comment "Primary investigator role with leadership responsibilities for case investigation. Enhanced as anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cac-core:Role ;
+    cacontology-gufo:hasAntiRigidityConstraint "Role scope varies based on case complexity and team structure" .
+
+cacontology-case:CaseAnalystRole rdf:type owl:Class ;
+    rdfs:label "Case Analyst Role"@en ;
+    rdfs:comment "Role responsible for case analysis, intelligence gathering, and data processing. Enhanced as anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cac-core:Role ;
+    cacontology-gufo:hasAntiRigidityConstraint "Role specialization varies based on case type and analytical requirements" .
+
+cacontology-case:CaseProsecutorRole rdf:type owl:Class ;
+    rdfs:label "Case Prosecutor Role"@en ;
+    rdfs:comment "Role responsible for legal review, charging decisions, and prosecution activities. Enhanced as anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cac-core:Role ;
+    cacontology-gufo:hasAntiRigidityConstraint "Role involvement varies based on case legal complexity and jurisdiction" .
+
+# =============================================================================
+# DOCUMENTATION AND REVIEW CLASSES AS gUFO OBJECTS
+# =============================================================================
+
+cacontology-case:CaseReport rdf:type owl:Class ;
+    rdfs:label "Case Report"@en ;
+    rdfs:comment "Formal case report documenting investigation findings, evidence, and recommendations. Enhanced as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-case:CaseDocumentation ,
+                    cac-core:EnduringEntity .
+
+cacontology-case:EvidenceLog rdf:type owl:Class ;
+    rdfs:label "Evidence Log"@en ;
+    rdfs:comment "Comprehensive log of all evidence collected, analyzed, and maintained for the case. Enhanced as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-case:CaseDocumentation ,
+                    cac-core:EnduringEntity .
+
+cacontology-case:InterviewNotes rdf:type owl:Class ;
+    rdfs:label "Interview Notes"@en ;
+    rdfs:comment "Documentation of interviews conducted with victims, witnesses, and suspects. Enhanced as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-case:CaseDocumentation ,
+                    cac-core:EnduringEntity .
+
+cacontology-case:SearchWarrant rdf:type owl:Class ;
+    rdfs:label "Search Warrant"@en ;
+    rdfs:comment "Legal documentation for search warrants including applications, approvals, and execution records. Enhanced as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-case:CaseDocumentation ,
+                    cac-core:EnduringEntity .
+
+cacontology-case:ArrestWarrant rdf:type owl:Class ;
+    rdfs:label "Arrest Warrant"@en ;
+    rdfs:comment "Legal documentation for arrest warrants including applications, approvals, and execution records. Enhanced as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-case:CaseDocumentation ,
+                    cac-core:EnduringEntity .
+
+cacontology-case:CourtFiling rdf:type owl:Class ;
+    rdfs:label "Court Filing"@en ;
+    rdfs:comment "Legal documents filed with courts including motions, briefs, and procedural filings. Enhanced as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-case:CaseDocumentation ,
+                    cac-core:EnduringEntity .
+
+cacontology-case:ExpertReport rdf:type owl:Class ;
+    rdfs:label "Expert Report"@en ;
+    rdfs:comment "Expert analysis reports including forensic findings, psychological evaluations, and technical assessments. Enhanced as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-case:CaseDocumentation ,
+                    cac-core:EnduringEntity .
+
+cacontology-case:AccommodationMotion rdf:type owl:Class ;
+    rdfs:label "Accommodation Motion"@en ;
+    rdfs:comment "Court filing requesting witness or victim accommodations needed for testimony, accessibility, or trauma-informed participation."@en ;
+    rdfs:subClassOf cacontology-case:CourtFiling ,
+                    cac-core:EnduringEntity ;
+    dcterms:source "Robert Peters, 'Winning Without Words: Prosecuting Cases with Recanting or Nonverbal Victims' (Coursing Justice presentation, 2026)."@en ;
+    rdfs:seeAlso <https://www.coursingjustice.com/> .
+
+cacontology-case:CourtroomAccommodationPlan rdf:type owl:Class ;
+    rdfs:label "Courtroom Accommodation Plan"@en ;
+    rdfs:comment "Case documentation specifying planned courtroom accommodations for a child witness, including support persons, sensory adjustments, or assistive response methods."@en ;
+    rdfs:subClassOf cacontology-case:CaseDocumentation ,
+                    cac-core:EnduringEntity ;
+    dcterms:source "Robert Peters, 'Winning Without Words: Prosecuting Cases with Recanting or Nonverbal Victims' (Coursing Justice presentation, 2026)."@en ;
+    rdfs:seeAlso <https://www.coursingjustice.com/> .
+
+cacontology-case:TestimonyContingencyPlan rdf:type owl:Class ;
+    rdfs:label "Testimony Contingency Plan"@en ;
+    rdfs:comment "Case documentation describing fallback testimony strategies when a child witness recants, shuts down, becomes unavailable, or needs alternative response methods."@en ;
+    rdfs:subClassOf cacontology-case:CaseDocumentation ,
+                    cac-core:EnduringEntity ;
+    dcterms:source "Robert Peters, 'Winning Without Words: Prosecuting Cases with Recanting or Nonverbal Victims' (Coursing Justice presentation, 2026)."@en ;
+    rdfs:seeAlso <https://www.coursingjustice.com/> .
+
+# =============================================================================
+# REVIEW AND QUALITY ASSURANCE CLASSES AS gUFO EVENTS
+# =============================================================================
+
+cacontology-case:SupervisoryReview rdf:type owl:Class ;
+    rdfs:label "Supervisory Review"@en ;
+    rdfs:comment "Formal supervisory review of case progress, decisions, and quality standards. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-case:CaseReview ,
+                    cac-core:Event .
+
+cacontology-case:PeerReview rdf:type owl:Class ;
+    rdfs:label "Peer Review"@en ;
+    rdfs:comment "Peer review process for case methodology, analysis, and conclusions. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-case:CaseReview ,
+                    cac-core:Event .
+
+cacontology-case:QualityAssuranceReview rdf:type owl:Class ;
+    rdfs:label "Quality Assurance Review"@en ;
+    rdfs:comment "Systematic quality assurance review ensuring compliance with standards and procedures. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-case:CaseReview ,
+                    cac-core:Event .
+
+cacontology-case:LegalReview rdf:type owl:Class ;
+    rdfs:label "Legal Review"@en ;
+    rdfs:comment "Legal review of case materials, procedures, and prosecution readiness. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-case:CaseReview ,
+                    cac-core:Event .
+
+cacontology-case:AdministrativeReview rdf:type owl:Class ;
+    rdfs:label "Administrative Review"@en ;
+    rdfs:comment "Administrative review of case management, resource allocation, and procedural compliance. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-case:CaseReview ,
+                    cac-core:Event .
+
+cacontology-case:ExternalReview rdf:type owl:Class ;
+    rdfs:label "External Review"@en ;
+    rdfs:comment "External review by independent parties for oversight, audit, or specialized expertise. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-case:CaseReview ,
+                    cac-core:Event .
+
+# =============================================================================
+# METRICS AND ANALYTICS CLASSES AS gUFO OBJECTS
+# =============================================================================
+
+cacontology-case:CaseDurationMetrics rdf:type owl:Class ;
+    rdfs:label "Case Duration Metrics"@en ;
+    rdfs:comment "Metrics tracking case duration from opening to closure across different stages. Enhanced as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-case:CaseMetrics ,
+                    cac-core:EnduringEntity .
+
+cacontology-case:ResolutionRateMetrics rdf:type owl:Class ;
+    rdfs:label "Resolution Rate Metrics"@en ;
+    rdfs:comment "Metrics tracking case resolution rates including conviction and closure statistics. Enhanced as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-case:CaseMetrics ,
+                    cac-core:EnduringEntity .
+
+cacontology-case:ResourceUtilizationMetrics rdf:type owl:Class ;
+    rdfs:label "Resource Utilization Metrics"@en ;
+    rdfs:comment "Metrics tracking resource allocation and utilization efficiency across cases. Enhanced as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-case:CaseMetrics ,
+                    cac-core:EnduringEntity .
+
+cacontology-case:CostPerCaseMetrics rdf:type owl:Class ;
+    rdfs:label "Cost Per Case Metrics"@en ;
+    rdfs:comment "Financial metrics tracking costs associated with case investigation and prosecution. Enhanced as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-case:CaseMetrics ,
+                    cac-core:EnduringEntity .
+
+cacontology-case:QualityScoreMetrics rdf:type owl:Class ;
+    rdfs:label "Quality Score Metrics"@en ;
+    rdfs:comment "Quality assessment metrics evaluating case management effectiveness and outcomes. Enhanced as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-case:CaseMetrics ,
+                    cac-core:EnduringEntity .
+
+# =============================================================================
+# gUFO TEMPORAL PROPERTIES FOR CASE MANAGEMENT
+# =============================================================================
+
+cacontology-gufo:workflowBeginTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "workflow begin time"@en ;
+    rdfs:comment "Temporal point when case workflow begins using gUFO temporal framework."@en ;
+    rdfs:domain cacontology-case:CaseWorkflow ;
+    rdfs:range xsd:dateTime ;
+    cacontology-gufo:temporalConstraint "Must precede workflow end time" .
+
+cacontology-gufo:workflowEndTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "workflow end time"@en ;
+    rdfs:comment "Temporal point when case workflow ends using gUFO temporal framework."@en ;
+    rdfs:domain cacontology-case:CaseWorkflow ;
+    rdfs:range xsd:dateTime .
+
+cacontology-gufo:assignmentBeginTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "assignment begin time"@en ;
+    rdfs:comment "Temporal point when case assignment begins using gUFO temporal framework."@en ;
+    rdfs:domain cacontology-case:CaseAssignment ;
+    rdfs:range xsd:dateTime .
+
+cacontology-gufo:assignmentEndTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "assignment end time"@en ;
+    rdfs:comment "Temporal point when case assignment ends using gUFO temporal framework."@en ;
+    rdfs:domain cacontology-case:CaseAssignment ;
+    rdfs:range xsd:dateTime .
+
+cacontology-gufo:reviewBeginTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "review begin time"@en ;
+    rdfs:comment "Temporal point when case review begins using gUFO temporal framework."@en ;
+    rdfs:domain cacontology-case:CaseReview ;
+    rdfs:range xsd:dateTime .
+
+cacontology-gufo:reviewEndTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "review end time"@en ;
+    rdfs:comment "Temporal point when case review ends using gUFO temporal framework."@en ;
+    rdfs:domain cacontology-case:CaseReview ;
+    rdfs:range xsd:dateTime .
+
+cacontology-gufo:closureBeginTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "closure begin time"@en ;
+    rdfs:comment "Temporal point when case closure process begins using gUFO temporal framework."@en ;
+    rdfs:domain cacontology-case:CaseClosure ;
+    rdfs:range xsd:dateTime .
+
+cacontology-gufo:closureTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "closure time"@en ;
+    rdfs:comment "Temporal point when case closure is completed using gUFO temporal framework."@en ;
+    rdfs:domain cacontology-case:CaseClosure ;
+    rdfs:range xsd:dateTime .
+
+cacontology-gufo:intakeBeginTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "intake begin time"@en ;
+    rdfs:comment "Temporal point when case intake begins using gUFO temporal framework."@en ;
+    rdfs:domain cacontology-case:IntakeWorkflow ;
+    rdfs:range xsd:dateTime .
+
+cacontology-gufo:triageCompletionTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "triage completion time"@en ;
+    rdfs:comment "Temporal point when case triage is completed using gUFO temporal framework."@en ;
+    rdfs:domain cacontology-case:IntakeWorkflow ;
+    rdfs:range xsd:dateTime .
+
+cacontology-gufo:investigationBeginTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "investigation begin time"@en ;
+    rdfs:comment "Temporal point when active investigation begins using gUFO temporal framework."@en ;
+    rdfs:domain cacontology-case:InvestigationWorkflow ;
+    rdfs:range xsd:dateTime .
+
+cacontology-gufo:evidenceCollectionTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "evidence collection time"@en ;
+    rdfs:comment "Temporal point when evidence collection is completed using gUFO temporal framework."@en ;
+    rdfs:domain cacontology-case:InvestigationWorkflow ;
+    rdfs:range xsd:dateTime .
+
+cacontology-gufo:prosecutionBeginTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "prosecution begin time"@en ;
+    rdfs:comment "Temporal point when prosecution preparation begins using gUFO temporal framework."@en ;
+    rdfs:domain cacontology-case:ProsecutionWorkflow ;
+    rdfs:range xsd:dateTime .
+
+cacontology-gufo:trialBeginTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "trial begin time"@en ;
+    rdfs:comment "Temporal point when trial proceedings begin using gUFO temporal framework."@en ;
+    rdfs:domain cacontology-case:ProsecutionWorkflow ;
+    rdfs:range xsd:dateTime .
+
+cacontology-gufo:dispositionBeginTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "disposition begin time"@en ;
+    rdfs:comment "Temporal point when disposition process begins using gUFO temporal framework."@en ;
+    rdfs:domain cacontology-case:DispositionWorkflow ;
+    rdfs:range xsd:dateTime .
+
+cacontology-gufo:sentencingTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "sentencing time"@en ;
+    rdfs:comment "Temporal point when sentencing occurs using gUFO temporal framework."@en ;
+    rdfs:domain cacontology-case:DispositionWorkflow ;
+    rdfs:range xsd:dateTime .
+
+cacontology-gufo:phaseTransitionTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "phase transition time"@en ;
+    rdfs:comment "Temporal point when case management transitions between phases using gUFO temporal framework."@en ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:dateTime .
+
+# =============================================================================
+# ENHANCED CASE MANAGEMENT PROPERTIES WITH gUFO INTEGRATION
+# =============================================================================
+
+# Case Management Properties Enhanced with gUFO Framework
+cacontology-case:caseStatus rdf:type owl:DatatypeProperty ;
+    rdfs:label "case status"@en ;
+    rdfs:comment "Current status of the case (open, active, pending, suspended, closed, archived, transferred, merged). Enhanced with gUFO Object state modeling."@en ;
+    rdfs:domain cacontology-case:CaseManagement ;
+    rdfs:range xsd:string ;
+    cacontology-gufo:hasValidationConstraint "Case status must be verifiable and documented" .
+
+cacontology-case:casePriority rdf:type owl:DatatypeProperty ;
+    rdfs:label "case priority"@en ;
+    rdfs:comment "Priority level of the case (critical, high, medium, low, routine, administrative). Enhanced with gUFO Situation priority modeling."@en ;
+    rdfs:domain cacontology-case:CaseManagement ;
+    rdfs:range xsd:string ;
+    cacontology-gufo:hasValidationConstraint "Case priority must correspond to organizational priority framework" .
+
+cacontology-case:caseType rdf:type owl:DatatypeProperty ;
+    rdfs:label "case type"@en ;
+    rdfs:comment "Type of case (possession, distribution, production, trafficking, exploitation, grooming, sextortion, multi_offense)."@en ;
+    rdfs:domain cacontology-case:CaseManagement ;
+    rdfs:range xsd:string .
+
+cacontology-case:assignedInvestigator rdf:type owl:DatatypeProperty ;
+    rdfs:label "assigned investigator"@en ;
+    rdfs:comment "Name or identifier of the assigned investigator."@en ;
+    rdfs:domain cacontology-case:CaseManagement ;
+    rdfs:range xsd:string .
+
+cacontology-case:caseOpenDate rdf:type owl:DatatypeProperty ;
+    rdfs:label "case open date"@en ;
+    rdfs:comment "Date when the case was officially opened."@en ;
+    rdfs:domain cacontology-case:CaseManagement ;
+    rdfs:range xsd:dateTime .
+
+cacontology-case:caseCloseDate rdf:type owl:DatatypeProperty ;
+    rdfs:label "case close date"@en ;
+    rdfs:comment "Date when the case was officially closed."@en ;
+    rdfs:domain cacontology-case:CaseManagement ;
+    rdfs:range xsd:dateTime .
+
+cacontology-case:jurisdictionLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "jurisdiction level"@en ;
+    rdfs:comment "Level of jurisdiction (local, state, federal, multi_state, international, joint_jurisdiction)."@en ;
+    rdfs:domain cacontology-case:CaseManagement ;
+    rdfs:range xsd:string .
+
+# Workflow Properties
+cacontology-case:workflowStage rdf:type owl:DatatypeProperty ;
+    rdfs:label "workflow stage"@en ;
+    rdfs:comment "Current stage in the case workflow (intake, initial_review, investigation, evidence_analysis, prosecution_review, court_proceedings, disposition)."@en ;
+    rdfs:domain cacontology-case:CaseWorkflow ;
+    rdfs:range xsd:string .
+
+cacontology-case:stageStartDate rdf:type owl:DatatypeProperty ;
+    rdfs:label "stage start date"@en ;
+    rdfs:comment "Date when the workflow stage began."@en ;
+    rdfs:domain cacontology-case:CaseWorkflow ;
+    rdfs:range xsd:dateTime .
+
+cacontology-case:stageEndDate rdf:type owl:DatatypeProperty ;
+    rdfs:label "stage end date"@en ;
+    rdfs:comment "Date when the workflow stage ended."@en ;
+    rdfs:domain cacontology-case:CaseWorkflow ;
+    rdfs:range xsd:dateTime .
+
+cacontology-case:stageDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "stage duration"@en ;
+    rdfs:comment "Duration of the workflow stage in days."@en ;
+    rdfs:domain cacontology-case:CaseWorkflow ;
+    rdfs:range xsd:decimal .
+
+cacontology-case:stageOutcome rdf:type owl:DatatypeProperty ;
+    rdfs:label "stage outcome"@en ;
+    rdfs:comment "Outcome of the workflow stage (completed, pending, escalated, transferred, suspended, terminated)."@en ;
+    rdfs:domain cacontology-case:CaseWorkflow ;
+    rdfs:range xsd:string .
+
+# Assignment Properties
+cacontology-case:assignmentType rdf:type owl:DatatypeProperty ;
+    rdfs:label "assignment type"@en ;
+    rdfs:comment "Type of assignment (primary_investigator, secondary_investigator, lead_detective, analyst, supervisor, prosecutor)."@en ;
+    rdfs:domain cacontology-case:CaseAssignment ;
+    rdfs:range xsd:string .
+
+cacontology-case:assignmentDate rdf:type owl:DatatypeProperty ;
+    rdfs:label "assignment date"@en ;
+    rdfs:comment "Date when the assignment was made."@en ;
+    rdfs:domain cacontology-case:CaseAssignment ;
+    rdfs:range xsd:dateTime .
+
+cacontology-case:assignmentStatus rdf:type owl:DatatypeProperty ;
+    rdfs:label "assignment status"@en ;
+    rdfs:comment "Status of the assignment (active, inactive, transferred, completed, suspended, terminated)."@en ;
+    rdfs:domain cacontology-case:CaseAssignment ;
+    rdfs:range xsd:string .
+
+cacontology-case:workloadPercentage rdf:type owl:DatatypeProperty ;
+    rdfs:label "workload percentage"@en ;
+    rdfs:comment "Percentage of workload allocated to this assignment."@en ;
+    rdfs:domain cacontology-case:CaseAssignment ;
+    rdfs:range xsd:decimal .
+
+cacontology-case:specialization rdf:type owl:DatatypeProperty ;
+    rdfs:label "specialization"@en ;
+    rdfs:comment "Area of specialization (digital_forensics, undercover_operations, victim_services, legal_analysis, technical_analysis, general_investigation)."@en ;
+    rdfs:domain cacontology-case:CaseAssignment ;
+    rdfs:range xsd:string .
+
+# Investigator Assignment Properties
+cacontology-case:investigatorExperience rdf:type owl:DatatypeProperty ;
+    rdfs:label "investigator experience"@en ;
+    rdfs:comment "Years of experience of the assigned investigator."@en ;
+    rdfs:domain cacontology-case:InvestigatorAssignment ;
+    rdfs:range xsd:decimal .
+
+cacontology-case:caseloadCount rdf:type owl:DatatypeProperty ;
+    rdfs:label "caseload count"@en ;
+    rdfs:comment "Number of active cases assigned to the investigator."@en ;
+    rdfs:domain cacontology-case:InvestigatorAssignment ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-case:certificationLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "certification level"@en ;
+    rdfs:comment "Certification level of the investigator (basic, intermediate, advanced, expert, specialized, master)."@en ;
+    rdfs:domain cacontology-case:InvestigatorAssignment ;
+    rdfs:range xsd:string .
+
+# Tracking Properties
+cacontology-case:trackingNumber rdf:type owl:DatatypeProperty ;
+    rdfs:label "tracking number"@en ;
+    rdfs:comment "Unique tracking number for the case."@en ;
+    rdfs:domain cacontology-case:CaseTracking ;
+    rdfs:range xsd:string .
+
+cacontology-case:trackingSystem rdf:type owl:DatatypeProperty ;
+    rdfs:label "tracking system"@en ;
+    rdfs:comment "System used for tracking (local_system, state_system, federal_system, ncmec_system, multi_system, custom_system)."@en ;
+    rdfs:domain cacontology-case:CaseTracking ;
+    rdfs:range xsd:string .
+
+cacontology-case:lastUpdate rdf:type owl:DatatypeProperty ;
+    rdfs:label "last update"@en ;
+    rdfs:comment "Date and time of the last update to case tracking."@en ;
+    rdfs:domain cacontology-case:CaseTracking ;
+    rdfs:range xsd:dateTime .
+
+cacontology-case:updateFrequency rdf:type owl:DatatypeProperty ;
+    rdfs:label "update frequency"@en ;
+    rdfs:comment "Frequency of updates (real_time, daily, weekly, bi_weekly, monthly, as_needed)."@en ;
+    rdfs:domain cacontology-case:CaseTracking ;
+    rdfs:range xsd:string .
+
+cacontology-case:accessLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "access level"@en ;
+    rdfs:comment "Access level for case information (public, restricted, confidential, classified, need_to_know, compartmented)."@en ;
+    rdfs:domain cacontology-case:CaseTracking ;
+    rdfs:range xsd:string .
+
+# Documentation Properties
+cacontology-case:documentType rdf:type owl:DatatypeProperty ;
+    rdfs:label "document type"@en ;
+    rdfs:comment "Type of document (case_report, evidence_log, interview_notes, search_warrant, arrest_warrant, court_filing, expert_report)."@en ;
+    rdfs:domain cacontology-case:CaseDocumentation ;
+    rdfs:range xsd:string .
+
+cacontology-case:documentStatus rdf:type owl:DatatypeProperty ;
+    rdfs:label "document status"@en ;
+    rdfs:comment "Status of the document (draft, review, approved, filed, sealed, archived, destroyed)."@en ;
+    rdfs:domain cacontology-case:CaseDocumentation ;
+    rdfs:range xsd:string .
+
+cacontology-case:creationDate rdf:type owl:DatatypeProperty ;
+    rdfs:label "creation date"@en ;
+    rdfs:comment "Date when the document was created."@en ;
+    rdfs:domain cacontology-case:CaseDocumentation ;
+    rdfs:range xsd:dateTime .
+
+cacontology-case:lastModified rdf:type owl:DatatypeProperty ;
+    rdfs:label "last modified"@en ;
+    rdfs:comment "Date when the document was last modified."@en ;
+    rdfs:domain cacontology-case:CaseDocumentation ;
+    rdfs:range xsd:dateTime .
+
+cacontology-case:retentionPeriod rdf:type owl:DatatypeProperty ;
+    rdfs:label "retention period"@en ;
+    rdfs:comment "Document retention period in days."@en ;
+    rdfs:domain cacontology-case:CaseDocumentation ;
+    rdfs:range xsd:decimal .
+
+cacontology-case:classificationLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "classification level"@en ;
+    rdfs:comment "Security classification level (unclassified, law_enforcement_sensitive, confidential, restricted, classified, top_secret)."@en ;
+    rdfs:domain cacontology-case:CaseDocumentation ;
+    rdfs:range xsd:string .
+
+cacontology-case:accommodationType rdf:type owl:DatatypeProperty ;
+    rdfs:label "accommodation type"@en ;
+    rdfs:comment "Type of courtroom accommodation requested or planned (support_person, comfort_item, courthouse_dog, sensory_adjustment, interpreter_or_facilitator, assistive_device, yes_no_response_method, alternative_testimony_location)."@en ;
+    rdfs:domain cacontology-case:CourtroomAccommodationPlan ;
+    rdfs:range xsd:string ;
+    dcterms:source "Robert Peters, 'Winning Without Words: Prosecuting Cases with Recanting or Nonverbal Victims' (Coursing Justice presentation, 2026)."@en ;
+    rdfs:seeAlso <https://www.coursingjustice.com/> .
+
+cacontology-case:contingencyType rdf:type owl:DatatypeProperty ;
+    rdfs:label "contingency type"@en ;
+    rdfs:comment "Fallback testimony or evidentiary strategy documented for a recantation-sensitive case."@en ;
+    rdfs:domain cacontology-case:TestimonyContingencyPlan ;
+    rdfs:range xsd:string ;
+    dcterms:source "Robert Peters, 'Winning Without Words: Prosecuting Cases with Recanting or Nonverbal Victims' (Coursing Justice presentation, 2026)."@en ;
+    rdfs:seeAlso <https://www.coursingjustice.com/> .
+
+# Review Properties
+cacontology-case:reviewType rdf:type owl:DatatypeProperty ;
+    rdfs:label "review type"@en ;
+    rdfs:comment "Type of review (supervisory_review, peer_review, quality_assurance, legal_review, administrative_review, external_review)."@en ;
+    rdfs:domain cacontology-case:CaseReview ;
+    rdfs:range xsd:string .
+
+cacontology-case:reviewDate rdf:type owl:DatatypeProperty ;
+    rdfs:label "review date"@en ;
+    rdfs:comment "Date when the review was conducted."@en ;
+    rdfs:domain cacontology-case:CaseReview ;
+    rdfs:range xsd:dateTime .
+
+cacontology-case:reviewOutcome rdf:type owl:DatatypeProperty ;
+    rdfs:label "review outcome"@en ;
+    rdfs:comment "Outcome of the review (approved, approved_with_conditions, requires_revision, rejected, escalated, deferred)."@en ;
+    rdfs:domain cacontology-case:CaseReview ;
+    rdfs:range xsd:string .
+
+cacontology-case:reviewerRole rdf:type owl:DatatypeProperty ;
+    rdfs:label "reviewer role"@en ;
+    rdfs:comment "Role of the reviewer (supervisor, senior_investigator, prosecutor, legal_counsel, quality_assurance, external_expert)."@en ;
+    rdfs:domain cacontology-case:CaseReview ;
+    rdfs:range xsd:string .
+
+cacontology-case:recommendationsCount rdf:type owl:DatatypeProperty ;
+    rdfs:label "recommendations count"@en ;
+    rdfs:comment "Number of recommendations made during the review."@en ;
+    rdfs:domain cacontology-case:CaseReview ;
+    rdfs:range xsd:nonNegativeInteger .
+
+# Metrics Properties
+cacontology-case:metricType rdf:type owl:DatatypeProperty ;
+    rdfs:label "metric type"@en ;
+    rdfs:comment "Type of metric (case_duration, resolution_rate, conviction_rate, resource_utilization, cost_per_case, quality_score)."@en ;
+    rdfs:domain cacontology-case:CaseMetrics ;
+    rdfs:range xsd:string .
+
+cacontology-case:metricValue rdf:type owl:DatatypeProperty ;
+    rdfs:label "metric value"@en ;
+    rdfs:comment "Numerical value of the metric."@en ;
+    rdfs:domain cacontology-case:CaseMetrics ;
+    rdfs:range xsd:decimal .
+
+cacontology-case:measurementUnit rdf:type owl:DatatypeProperty ;
+    rdfs:label "measurement unit"@en ;
+    rdfs:comment "Unit of measurement (days, hours, percentage, count, dollars, score, ratio)."@en ;
+    rdfs:domain cacontology-case:CaseMetrics ;
+    rdfs:range xsd:string .
+
+cacontology-case:reportingPeriod rdf:type owl:DatatypeProperty ;
+    rdfs:label "reporting period"@en ;
+    rdfs:comment "Period for metric reporting (daily, weekly, monthly, quarterly, annually, case_based)."@en ;
+    rdfs:domain cacontology-case:CaseMetrics ;
+    rdfs:range xsd:string .
+
+cacontology-case:benchmarkValue rdf:type owl:DatatypeProperty ;
+    rdfs:label "benchmark value"@en ;
+    rdfs:comment "Benchmark or target value for the metric."@en ;
+    rdfs:domain cacontology-case:CaseMetrics ;
+    rdfs:range xsd:decimal .
+
+# Closure Properties
+cacontology-case:closureReason rdf:type owl:DatatypeProperty ;
+    rdfs:label "closure reason"@en ;
+    rdfs:comment "Reason for case closure (conviction, plea_agreement, dismissal, insufficient_evidence, statute_limitations, death_of_suspect, administrative_closure)."@en ;
+    rdfs:domain cacontology-case:CaseClosure ;
+    rdfs:range xsd:string .
+
+cacontology-case:closureDate rdf:type owl:DatatypeProperty ;
+    rdfs:label "closure date"@en ;
+    rdfs:comment "Date when the case was closed."@en ;
+    rdfs:domain cacontology-case:CaseClosure ;
+    rdfs:range xsd:dateTime .
+
+cacontology-case:finalDisposition rdf:type owl:DatatypeProperty ;
+    rdfs:label "final disposition"@en ;
+    rdfs:comment "Final legal disposition (guilty_verdict, not_guilty_verdict, plea_guilty, plea_no_contest, charges_dropped, case_dismissed, no_charges_filed)."@en ;
+    rdfs:domain cacontology-case:CaseClosure ;
+    rdfs:range xsd:string .
+
+cacontology-case:appealStatus rdf:type owl:DatatypeProperty ;
+    rdfs:label "appeal status"@en ;
+    rdfs:comment "Status of any appeals (no_appeal, appeal_pending, appeal_denied, appeal_granted, remanded, overturned)."@en ;
+    rdfs:domain cacontology-case:CaseClosure ;
+    rdfs:range xsd:string .
+
+cacontology-case:archivalDate rdf:type owl:DatatypeProperty ;
+    rdfs:label "archival date"@en ;
+    rdfs:comment "Date when case materials were archived."@en ;
+    rdfs:domain cacontology-case:CaseClosure ;
+    rdfs:range xsd:dateTime .
+
+# =============================================================================
+# OBJECT PROPERTIES
+# =============================================================================
+
+# Case Management Relationships
+cacontology-case:managesCase rdf:type owl:ObjectProperty ;
+    rdfs:label "manages case"@en ;
+    rdfs:comment "Links case management to specific investigations. Enhanced with gUFO Object-Event relationships."@en ;
+    rdfs:domain cacontology-case:CaseManagement ;
+    rdfs:range case-investigation:Investigation ;
+    cacontology-gufo:hasRelationshipConstraint "Case management relationship must be officially documented" .
+
+cacontology-case:followsWorkflow rdf:type owl:ObjectProperty ;
+    rdfs:label "follows workflow"@en ;
+    rdfs:comment "Links case to workflow stages and processes. Enhanced with gUFO Event sequence modeling."@en ;
+    rdfs:domain cacontology-case:CaseManagement ;
+    rdfs:range cacontology-case:CaseWorkflow ;
+    cacontology-gufo:hasRelationshipConstraint "Workflow relationship must maintain temporal consistency" .
+
+cacontology-case:hasAssignment rdf:type owl:ObjectProperty ;
+    rdfs:label "has assignment"@en ;
+    rdfs:comment "Links case to personnel assignments. Enhanced with gUFO Role assignment relationships."@en ;
+    rdfs:domain cacontology-case:CaseManagement ;
+    rdfs:range cacontology-case:CaseAssignment ;
+    cacontology-gufo:hasRelationshipConstraint "Assignment relationship must be active and verified" .
+
+cacontology-case:trackedBy rdf:type owl:ObjectProperty ;
+    rdfs:label "tracked by"@en ;
+    rdfs:comment "Links case to tracking systems and processes."@en ;
+    rdfs:domain cacontology-case:CaseManagement ;
+    rdfs:range cacontology-case:CaseTracking .
+
+cacontology-case:hasDocumentation rdf:type owl:ObjectProperty ;
+    rdfs:label "has documentation"@en ;
+    rdfs:comment "Links case to associated documentation."@en ;
+    rdfs:domain cacontology-case:CaseManagement ;
+    rdfs:range cacontology-case:CaseDocumentation .
+
+cacontology-case:undergoesReview rdf:type owl:ObjectProperty ;
+    rdfs:label "undergoes review"@en ;
+    rdfs:comment "Links case to review processes."@en ;
+    rdfs:domain cacontology-case:CaseManagement ;
+    rdfs:range cacontology-case:CaseReview .
+
+cacontology-case:generatesMetrics rdf:type owl:ObjectProperty ;
+    rdfs:label "generates metrics"@en ;
+    rdfs:comment "Links case to performance metrics and analytics."@en ;
+    rdfs:domain cacontology-case:CaseManagement ;
+    rdfs:range cacontology-case:CaseMetrics .
+
+cacontology-case:resultsInClosure rdf:type owl:ObjectProperty ;
+    rdfs:label "results in closure"@en ;
+    rdfs:comment "Links case to closure information and final disposition."@en ;
+    rdfs:domain cacontology-case:CaseManagement ;
+    rdfs:range cacontology-case:CaseClosure .
+
+# Assignment Relationships
+cacontology-case:assignedTo rdf:type owl:ObjectProperty ;
+    rdfs:label "assigned to"@en ;
+    rdfs:comment "Links assignment to assigned personnel."@en ;
+    rdfs:domain cacontology-case:CaseAssignment ;
+    rdfs:range uco-identity:Person .
+
+cacontology-case:assignedBy rdf:type owl:ObjectProperty ;
+    rdfs:label "assigned by"@en ;
+    rdfs:comment "Links assignment to assigning authority."@en ;
+    rdfs:domain cacontology-case:CaseAssignment ;
+    rdfs:range uco-identity:Person .
+
+cacontology-case:supervisedBy rdf:type owl:ObjectProperty ;
+    rdfs:label "supervised by"@en ;
+    rdfs:comment "Links assignment to supervising personnel."@en ;
+    rdfs:domain cacontology-case:CaseAssignment ;
+    rdfs:range uco-identity:Person .
+
+# Workflow Relationships
+cacontology-case:precedesStage rdf:type owl:ObjectProperty ;
+    rdfs:label "precedes stage"@en ;
+    rdfs:comment "Links workflow stage to subsequent stage."@en ;
+    rdfs:domain cacontology-case:CaseWorkflow ;
+    rdfs:range cacontology-case:CaseWorkflow .
+
+cacontology-case:followsStage rdf:type owl:ObjectProperty ;
+    rdfs:label "follows stage"@en ;
+    rdfs:comment "Links workflow stage to preceding stage."@en ;
+    rdfs:domain cacontology-case:CaseWorkflow ;
+    rdfs:range cacontology-case:CaseWorkflow .
+
+# Documentation Relationships
+cacontology-case:documentedBy rdf:type owl:ObjectProperty ;
+    rdfs:label "documented by"@en ;
+    rdfs:comment "Links documentation to creating personnel."@en ;
+    rdfs:domain cacontology-case:CaseDocumentation ;
+    rdfs:range uco-identity:Person .
+
+cacontology-case:reviewedBy rdf:type owl:ObjectProperty ;
+    rdfs:label "reviewed by"@en ;
+    rdfs:comment "Links documentation to reviewing personnel."@en ;
+    rdfs:domain cacontology-case:CaseDocumentation ;
+    rdfs:range uco-identity:Person .
+
+cacontology-case:approvedBy rdf:type owl:ObjectProperty ;
+    rdfs:label "approved by"@en ;
+    rdfs:comment "Links documentation to approving authority."@en ;
+    rdfs:domain cacontology-case:CaseDocumentation ;
+    rdfs:range uco-identity:Person .
+
+cacontology-case:preparedForWitness rdf:type owl:ObjectProperty ;
+    rdfs:label "prepared for witness"@en ;
+    rdfs:comment "Links case documentation to the child or witness for whom the document was prepared."@en ;
+    rdfs:domain cacontology-case:CaseDocumentation ;
+    rdfs:range uco-identity:Person ;
+    dcterms:source "Robert Peters, 'Winning Without Words: Prosecuting Cases with Recanting or Nonverbal Victims' (Coursing Justice presentation, 2026)."@en ;
+    rdfs:seeAlso <https://www.coursingjustice.com/> .
+
+cacontology-case:supportsAccommodationPlan rdf:type owl:ObjectProperty ;
+    rdfs:label "supports accommodation plan"@en ;
+    rdfs:comment "Links an accommodation motion to the courtroom accommodation plan it seeks to establish."@en ;
+    rdfs:domain cacontology-case:AccommodationMotion ;
+    rdfs:range cacontology-case:CourtroomAccommodationPlan ;
+    dcterms:source "Robert Peters, 'Winning Without Words: Prosecuting Cases with Recanting or Nonverbal Victims' (Coursing Justice presentation, 2026)."@en ;
+    rdfs:seeAlso <https://www.coursingjustice.com/> .
+
+# Review Relationships
+cacontology-case:conductsReview rdf:type owl:ObjectProperty ;
+    rdfs:label "conducts review"@en ;
+    rdfs:comment "Links reviewer to review process."@en ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range cacontology-case:CaseReview .
+
+cacontology-case:reviewsCase rdf:type owl:ObjectProperty ;
+    rdfs:label "reviews case"@en ;
+    rdfs:comment "Links review to case being reviewed."@en ;
+    rdfs:domain cacontology-case:CaseReview ;
+    rdfs:range cacontology-case:CaseManagement .
+
+# Metrics Relationships
+cacontology-case:measuresPerformance rdf:type owl:ObjectProperty ;
+    rdfs:label "measures performance"@en ;
+    rdfs:comment "Links metrics to performance measurement targets."@en ;
+    rdfs:domain cacontology-case:CaseMetrics ;
+    rdfs:range uco-core:UcoObject .
+
+cacontology-case:benchmarkedAgainst rdf:type owl:ObjectProperty ;
+    rdfs:label "benchmarked against"@en ;
+    rdfs:comment "Links metrics to benchmark standards."@en ;
+    rdfs:domain cacontology-case:CaseMetrics ;
+    rdfs:range cacontology-case:CaseMetrics .
+
+# Closure Relationships
+cacontology-case:closedBy rdf:type owl:ObjectProperty ;
+    rdfs:label "closed by"@en ;
+    rdfs:comment "Links case closure to closing authority."@en ;
+    rdfs:domain cacontology-case:CaseClosure ;
+    rdfs:range uco-identity:Person .
+
+cacontology-case:archivedAt rdf:type owl:ObjectProperty ;
+    rdfs:label "archived at"@en ;
+    rdfs:comment "Links case closure to archival location."@en ;
+    rdfs:domain cacontology-case:CaseClosure ;
+    rdfs:range uco-core:UcoObject .
+
+# gUFO Enhanced Relationship Properties
+cacontology-case:currentPhase rdf:type owl:ObjectProperty ;
+    rdfs:label "current phase"@en ;
+    rdfs:comment "Links case management to its current operational phase. gUFO Phase modeling for case state management."@en ;
+    rdfs:domain cacontology-case:CaseManagement ;
+    rdfs:range cac-core:Phase .
+
+cacontology-case:hasPhaseTransition rdf:type owl:ObjectProperty ;
+    rdfs:label "has phase transition"@en ;
+    rdfs:comment "Links case management to phase transition events."@en ;
+    rdfs:domain cacontology-case:CaseManagement ;
+    rdfs:range cac-core:Event .
+
+# gUFO Role Relationships
+cacontology-case:holdsRole rdf:type owl:ObjectProperty ;
+    rdfs:label "holds role"@en ;
+    rdfs:comment "Links person to case management role they hold. Enhanced with gUFO Role assignment."@en ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range cac-core:Role ;
+    cacontology-gufo:hasRelationshipConstraint "Role assignment must be active and verified" .
+
+cacontology-case:assignedToRole rdf:type owl:ObjectProperty ;
+    rdfs:label "assigned to role"@en ;
+    rdfs:comment "Links case assignment to specific role being assigned."@en ;
+    rdfs:domain cacontology-case:CaseAssignment ;
+    rdfs:range cac-core:Role .
+
+# gUFO Situation Participation
+cacontology-case:participatesInManagement rdf:type owl:ObjectProperty ;
+    rdfs:label "participates in management"@en ;
+    rdfs:comment "Links entities to case management situations they participate in."@en ;
+    rdfs:range cacontology-case:CaseManagement . 

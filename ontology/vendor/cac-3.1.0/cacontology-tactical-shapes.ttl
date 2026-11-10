@@ -1,0 +1,960 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix cacontology-tactical: <https://cacontology.projectvic.org/tactical#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+# Ontology Declaration
+<https://cacontology.projectvic.org/tactical/shapes> rdf:type owl:Ontology ;
+    rdfs:label "CAC Tactical Operations SHACL Shapes"@en ;
+    rdfs:comment "SHACL validation shapes for the CAC Tactical Operations Ontology, providing validation for SWAT operations, high-risk arrests, and specialized tactical procedures."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/tactical/shapes/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://cacontology.projectvic.org/tactical/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> .
+
+# =============================================================================
+# TACTICAL OPERATION SHAPES
+# =============================================================================
+
+cacontology-tactical:TacticalOperationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-tactical:TacticalOperation ;
+    rdfs:label "Tactical Operation Shape"@en ;
+    rdfs:comment "Validation shape for tactical operation instances."@en ;
+    sh:property [
+        sh:path cacontology-tactical:operationType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "arrest_operation" "search_warrant" "surveillance_operation" "undercover_operation" "raid" "rescue_operation" "containment" ) ;
+        sh:message "Tactical operation must specify operation type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:operationScope ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "single_target" "multiple_targets" "area_operation" "coordinated_operation" "multi_jurisdictional" "international" ) ;
+        sh:message "Tactical operation must specify operation scope from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:riskLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "low" "moderate" "high" "extreme" "critical" "unknown" ) ;
+        sh:message "Tactical operation must specify risk level from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:operationStatus ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "planning" "approved" "active" "completed" "aborted" "suspended" "failed" ) ;
+        sh:message "Tactical operation must specify operation status from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:personnelCount ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 200 ;
+        sh:message "Tactical operation must have between 1 and 200 personnel."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:planningDuration ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1.0 ;
+        sh:maxInclusive 8760.0 ;
+        sh:message "Planning duration must be between 1 and 8760 hours (1 year)."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Tactical operation may have a start time."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:endTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Tactical operation may have an end time."@en
+    ] .
+
+cacontology-tactical:ArrestOperationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-tactical:ArrestOperation ;
+    rdfs:label "Arrest Operation Shape"@en ;
+    rdfs:comment "Validation shape for arrest operation instances."@en ;
+    sh:property [
+        sh:path cacontology-tactical:arrestType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "warrant_arrest" "probable_cause_arrest" "consensual_arrest" "traffic_stop_arrest" "field_arrest" "coordinated_arrest" "sting_operation" "undercover_takedown" "multi_target_sweep" "surveillance_arrest" ) ;
+        sh:message "Arrest operation must specify arrest type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:targetCount ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 50 ;
+        sh:message "Arrest operation must target between 1 and 50 individuals."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:resistanceExpected ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Arrest operation must specify if resistance is expected."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:weaponsExpected ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Arrest operation must specify if weapons are expected."@en
+    ] .
+
+cacontology-tactical:SearchWarrantOperationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-tactical:SearchWarrantOperation ;
+    rdfs:label "Search Warrant Operation Shape"@en ;
+    rdfs:comment "Validation shape for search warrant operation instances."@en ;
+    sh:property [
+        sh:path cacontology-tactical:warrantType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "premises_search" "vehicle_search" "person_search" "digital_search" "combined_search" "no_knock_warrant" ) ;
+        sh:message "Search warrant operation must specify warrant type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:searchScope ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "specific_items" "general_evidence" "digital_evidence" "contraband" "weapons" "comprehensive" ) ;
+        sh:message "Search warrant operation must specify search scope from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:entryMethod ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "knock_announce" "no_knock" "consent" "key_entry" "forced_entry" "stealth_entry" ) ;
+        sh:message "Search warrant operation must specify entry method from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:evidenceExpected ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Search warrant operation must specify if evidence is expected."@en
+    ] .
+
+# =============================================================================
+# TACTICAL TEAM SHAPES
+# =============================================================================
+
+cacontology-tactical:TacticalTeamShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-tactical:TacticalTeam ;
+    rdfs:label "Tactical Team Shape"@en ;
+    rdfs:comment "Validation shape for tactical team instances."@en ;
+    sh:property [
+        sh:path cacontology-tactical:teamType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "swat_team" "entry_team" "surveillance_team" "arrest_team" "support_team" "specialized_unit" ) ;
+        sh:message "Tactical team must specify team type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:teamSize ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 2 ;
+        sh:maxInclusive 50 ;
+        sh:message "Tactical team must have between 2 and 50 members."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:teamLeader ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 3 ;
+        sh:maxLength 100 ;
+        sh:message "Tactical team must specify team leader (3-100 characters)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:readinessLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "standby" "ready" "deployed" "engaged" "stand_down" "maintenance" ) ;
+        sh:message "Tactical team must specify readiness level from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:specialization ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "high_risk_entry" "hostage_rescue" "surveillance" "digital_forensics" "explosive_ordnance" "sniper_team" ) ;
+        sh:message "Team specialization must be from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:certificationLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "basic" "intermediate" "advanced" "expert" "specialized" "elite" ) ;
+        sh:message "Tactical team must specify certification level from the allowed list."@en
+    ] .
+
+cacontology-tactical:SwatTeamShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-tactical:SwatTeam ;
+    rdfs:label "SWAT Team Shape"@en ;
+    rdfs:comment "Validation shape for SWAT team instances."@en ;
+    sh:property [
+        sh:path cacontology-tactical:swatClassification ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "full_time" "part_time" "regional" "multi_jurisdictional" "federal" "specialized" ) ;
+        sh:message "SWAT team must specify SWAT classification from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:equipmentLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "basic" "standard" "enhanced" "advanced" "specialized" "military_grade" ) ;
+        sh:message "SWAT team must specify equipment level from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:trainingHours ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 40.0 ;
+        sh:maxInclusive 2000.0 ;
+        sh:message "SWAT team training hours must be between 40 and 2000 hours."@en
+    ] .
+
+# =============================================================================
+# TACTICAL PLANNING SHAPES
+# =============================================================================
+
+cacontology-tactical:TacticalPlanShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-tactical:TacticalPlan ;
+    rdfs:label "Tactical Plan Shape"@en ;
+    rdfs:comment "Validation shape for tactical plan instances."@en ;
+    sh:property [
+        sh:path cacontology-tactical:planType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "operation_plan" "contingency_plan" "emergency_plan" "standard_plan" "specialized_plan" "multi_phase_plan" ) ;
+        sh:message "Tactical plan must specify plan type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:planComplexity ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "simple" "moderate" "complex" "highly_complex" "multi_dimensional" ) ;
+        sh:message "Tactical plan must specify plan complexity from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:approvalLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "supervisor" "commander" "chief" "federal_approval" "multi_agency_approval" "judicial_approval" ) ;
+        sh:message "Tactical plan must specify approval level from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:planStatus ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "draft" "review" "approved" "active" "executed" "archived" "cancelled" ) ;
+        sh:message "Tactical plan must specify plan status from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:riskAssessment ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "low_risk" "moderate_risk" "high_risk" "extreme_risk" "critical_risk" ) ;
+        sh:message "Tactical plan must specify risk assessment from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:contingencyPlans ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 10 ;
+        sh:message "Number of contingency plans must be between 0 and 10."@en
+    ] .
+
+cacontology-tactical:OperationBriefingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-tactical:OperationBriefing ;
+    rdfs:label "Operation Briefing Shape"@en ;
+    rdfs:comment "Validation shape for operation briefing instances."@en ;
+    sh:property [
+        sh:path cacontology-tactical:briefingType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "pre_operation" "tactical_briefing" "intelligence_briefing" "safety_briefing" "post_operation" "emergency_briefing" ) ;
+        sh:message "Operation briefing must specify briefing type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:briefingDuration ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.25 ;
+        sh:maxInclusive 8.0 ;
+        sh:message "Briefing duration must be between 0.25 and 8 hours."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:attendeeCount ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 2 ;
+        sh:maxInclusive 100 ;
+        sh:message "Operation briefing must have between 2 and 100 attendees."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:briefingDate ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Operation briefing must specify briefing date."@en
+    ] .
+
+# =============================================================================
+# TACTICAL EQUIPMENT SHAPES
+# =============================================================================
+
+cacontology-tactical:TacticalEquipmentShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-tactical:TacticalEquipment ;
+    rdfs:label "Tactical Equipment Shape"@en ;
+    rdfs:comment "Validation shape for tactical equipment instances."@en ;
+    sh:property [
+        sh:path cacontology-tactical:equipmentType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "protective_gear" "weapons" "communication" "surveillance" "breaching_tools" "medical_equipment" "vehicles" ) ;
+        sh:message "Tactical equipment must specify equipment type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:equipmentStatus ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "available" "deployed" "maintenance" "repair" "retired" "reserved" ) ;
+        sh:message "Tactical equipment must specify equipment status from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:certificationRequired ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Tactical equipment must specify if certification is required."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:maintenanceInterval ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1.0 ;
+        sh:maxInclusive 365.0 ;
+        sh:message "Maintenance interval must be between 1 and 365 days."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:lastMaintenance ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Tactical equipment may specify last maintenance date."@en
+    ] .
+
+cacontology-tactical:ProtectiveGearShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-tactical:ProtectiveGear ;
+    rdfs:label "Protective Gear Shape"@en ;
+    rdfs:comment "Validation shape for protective gear instances."@en ;
+    sh:property [
+        sh:path cacontology-tactical:protectionLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "level_i" "level_ii" "level_iii" "level_iv" "specialized" "custom" ) ;
+        sh:message "Protective gear must specify protection level from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:gearType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "body_armor" "helmet" "shield" "gas_mask" "eye_protection" "complete_suit" ) ;
+        sh:message "Protective gear must specify gear type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:threatProtection ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "ballistic" "stab_resistant" "chemical" "biological" "explosive" "multi_threat" ) ;
+        sh:message "Protective gear must specify threat protection from the allowed list."@en
+    ] .
+
+# =============================================================================
+# SURVEILLANCE OPERATION SHAPES
+# =============================================================================
+
+cacontology-tactical:SurveillanceOperationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-tactical:SurveillanceOperation ;
+    rdfs:label "Surveillance Operation Shape"@en ;
+    rdfs:comment "Validation shape for surveillance operation instances."@en ;
+    sh:property [
+        sh:path cacontology-tactical:surveillanceType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "physical_surveillance" "electronic_surveillance" "mobile_surveillance" "static_surveillance" "covert_surveillance" "overt_surveillance" ) ;
+        sh:message "Surveillance operation must specify surveillance type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:surveillanceDuration ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1.0 ;
+        sh:maxInclusive 8760.0 ;
+        sh:message "Surveillance duration must be between 1 and 8760 hours (1 year)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:targetType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "person" "location" "vehicle" "communication" "activity" "network" ) ;
+        sh:message "Surveillance operation must specify target type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:detectionRisk ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "low" "moderate" "high" "extreme" "acceptable" "unacceptable" ) ;
+        sh:message "Surveillance operation must specify detection risk from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:surveillanceTeamSize ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 20 ;
+        sh:message "Surveillance team size must be between 1 and 20 members."@en
+    ] .
+
+cacontology-tactical:ElectronicSurveillanceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-tactical:ElectronicSurveillance ;
+    rdfs:label "Electronic Surveillance Shape"@en ;
+    rdfs:comment "Validation shape for electronic surveillance instances."@en ;
+    sh:property [
+        sh:path cacontology-tactical:surveillanceMethod ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "wiretap" "gps_tracking" "video_surveillance" "audio_surveillance" "digital_monitoring" "communication_intercept" ) ;
+        sh:message "Electronic surveillance must specify surveillance method from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:legalAuthorization ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Electronic surveillance must specify if legal authorization exists."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:dataRetention ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1.0 ;
+        sh:maxInclusive 3650.0 ;
+        sh:message "Data retention period must be between 1 and 3650 days (10 years)."@en
+    ] .
+
+# =============================================================================
+# TACTICAL EXECUTION SHAPES
+# =============================================================================
+
+cacontology-tactical:TacticalExecutionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-tactical:TacticalExecution ;
+    rdfs:label "Tactical Execution Shape"@en ;
+    rdfs:comment "Validation shape for tactical execution instances."@en ;
+    sh:property [
+        sh:path cacontology-tactical:executionPhase ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "preparation" "deployment" "execution" "consolidation" "withdrawal" "debriefing" ) ;
+        sh:message "Tactical execution must specify execution phase from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:executionStatus ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "successful" "partially_successful" "failed" "aborted" "compromised" "ongoing" ) ;
+        sh:message "Tactical execution must specify execution status from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:forceUsed ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Tactical execution must specify if force was used."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:injuriesReported ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Tactical execution must specify if injuries were reported."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:evidenceSeized ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Tactical execution must specify if evidence was seized."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:arrestsMade ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 100 ;
+        sh:message "Number of arrests made must be between 0 and 100."@en
+    ] .
+
+cacontology-tactical:PostOperationReportShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-tactical:PostOperationReport ;
+    rdfs:label "Post Operation Report Shape"@en ;
+    rdfs:comment "Validation shape for post operation report instances."@en ;
+    sh:property [
+        sh:path cacontology-tactical:reportType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "after_action_report" "incident_report" "use_of_force_report" "injury_report" "equipment_report" "lessons_learned" ) ;
+        sh:message "Post operation report must specify report type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:reportDate ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Post operation report must specify report date."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:objectivesAchieved ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Post operation report must specify if objectives were achieved."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:recommendationsCount ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 50 ;
+        sh:message "Number of recommendations must be between 0 and 50."@en
+    ] .
+
+# =============================================================================
+# OBJECT PROPERTY SHAPES
+# =============================================================================
+
+cacontology-tactical:ExecutedByTeamShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-tactical:executedByTeam ;
+    sh:name "executed by team" ;
+    sh:description "Links operation to executing team" ;
+    sh:class cacontology-tactical:TacticalTeam ;
+    sh:minCount 1 .
+
+cacontology-tactical:FollowsPlanShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-tactical:followsPlan ;
+    sh:name "follows plan" ;
+    sh:description "Links operation to tactical plan" ;
+    sh:class cacontology-tactical:TacticalPlan ;
+    sh:minCount 1 ;
+    sh:maxCount 1 .
+
+cacontology-tactical:UsesEquipmentShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-tactical:usesEquipment ;
+    sh:name "uses equipment" ;
+    sh:description "Links operation to equipment used" ;
+    sh:class cacontology-tactical:TacticalEquipment ;
+    sh:minCount 0 .
+
+cacontology-tactical:IncludesBriefingShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-tactical:includesBriefing ;
+    sh:name "includes briefing" ;
+    sh:description "Links operation to briefings" ;
+    sh:class cacontology-tactical:OperationBriefing ;
+    sh:minCount 1 .
+
+cacontology-tactical:ResultsInExecutionShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-tactical:resultsInExecution ;
+    sh:name "results in execution" ;
+    sh:description "Links operation to execution details" ;
+    sh:class cacontology-tactical:TacticalExecution ;
+    sh:minCount 0 ;
+    sh:maxCount 1 .
+
+cacontology-tactical:GeneratesReportShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-tactical:generatesReport ;
+    sh:name "generates report" ;
+    sh:description "Links operation to post-operation reports" ;
+    sh:class cacontology-tactical:PostOperationReport ;
+    sh:minCount 0 .
+
+cacontology-tactical:IncludesSurveillanceShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-tactical:includesSurveillance ;
+    sh:name "includes surveillance" ;
+    sh:description "Links operation to surveillance components" ;
+    sh:class cacontology-tactical:SurveillanceOperation ;
+    sh:minCount 0 .
+
+# =============================================================================
+# CROSS-REFERENCE VALIDATION SHAPES
+# =============================================================================
+
+cacontology-tactical:TacticalOperationCrossReferenceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-tactical:TacticalOperation ;
+    rdfs:label "Tactical Operation Cross Reference Shape"@en ;
+    rdfs:comment "Validates cross-references between tactical operations and related entities."@en ;
+    sh:sparql [
+        sh:message "Tactical operation must have executing team, plan, and briefing."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-tactical:TacticalOperation .
+                FILTER NOT EXISTS {
+                    $this cacontology-tactical:executedByTeam ?team ;
+                          cacontology-tactical:followsPlan ?plan ;
+                          cacontology-tactical:includesBriefing ?briefing .
+                }
+            }
+        """
+    ] .
+
+cacontology-tactical:RiskAssessmentValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-tactical:TacticalPlan ;
+    rdfs:label "Risk Assessment Validation Shape"@en ;
+    rdfs:comment "Validates risk assessment consistency in tactical plans."@en ;
+    sh:sparql [
+        sh:message "High-risk operations should have contingency plans."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-tactical:riskAssessment ?risk ;
+                      cacontology-tactical:contingencyPlans ?contingencies .
+                FILTER (?risk IN ("high_risk", "extreme_risk", "critical_risk") && ?contingencies = 0)
+            }
+        """
+    ] .
+
+cacontology-tactical:TeamCertificationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-tactical:TacticalTeam ;
+    rdfs:label "Team Certification Shape"@en ;
+    rdfs:comment "Validates tactical team certification requirements."@en ;
+    sh:sparql [
+        sh:message "SWAT teams should have advanced certification and adequate training."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-tactical:SwatTeam ;
+                      cacontology-tactical:certificationLevel ?cert ;
+                      cacontology-tactical:trainingHours ?hours .
+                FILTER (?cert IN ("basic", "intermediate") || ?hours < 200.0)
+            }
+        """
+    ] .
+
+# =============================================================================
+# TEMPORAL VALIDATION SHAPES
+# =============================================================================
+
+cacontology-tactical:TemporalValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-tactical:TacticalOperation ;
+    rdfs:label "Temporal Validation Shape"@en ;
+    rdfs:comment "Validates temporal consistency in tactical operations."@en ;
+    sh:sparql [
+        sh:message "Operation start time must be before end time when both are specified."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this uco-core:startTime ?start ;
+                      uco-core:endTime ?end .
+                FILTER (?start >= ?end)
+            }
+        """
+    ] .
+
+cacontology-tactical:BriefingTimingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-tactical:OperationBriefing ;
+    rdfs:label "Briefing Timing Shape"@en ;
+    rdfs:comment "Validates operation briefing timing."@en ;
+    sh:sparql [
+        sh:message "Pre-operation briefings should occur before operation start time."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-tactical:briefingType "pre_operation" ;
+                      cacontology-tactical:briefingDate ?briefingDate .
+                ?operation cacontology-tactical:includesBriefing $this ;
+                          uco-core:startTime ?operationStart .
+                FILTER (?briefingDate >= ?operationStart)
+            }
+        """
+    ] .
+
+cacontology-tactical:MaintenanceTimingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-tactical:TacticalEquipment ;
+    rdfs:label "Maintenance Timing Shape"@en ;
+    rdfs:comment "Validates equipment maintenance timing."@en ;
+    sh:sparql [
+        sh:message "Equipment should not be overdue for maintenance."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-tactical:lastMaintenance ?lastMaint ;
+                      cacontology-tactical:maintenanceInterval ?interval .
+                FILTER ((NOW() - ?lastMaint) > (?interval * 24 * 60 * 60))
+            }
+        """
+    ] .
+
+# =============================================================================
+# DATA QUALITY SHAPES
+# =============================================================================
+
+cacontology-tactical:DataQualityShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-tactical:TacticalOperation ;
+    rdfs:label "Data Quality Shape"@en ;
+    rdfs:comment "Validates data quality for tactical operations."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Label should be between 5 and 200 characters when provided."@en
+    ] ;
+    sh:property [
+        sh:path rdfs:comment ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 10 ;
+        sh:maxLength 1000 ;
+        sh:message "Comment should be between 10 and 1000 characters when provided."@en
+    ] .
+
+# =============================================================================
+# ARREST OPERATION SHAPES (Miami CAC Case Enhancement)
+# =============================================================================
+
+cacontology-tactical:ArrestOperationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-tactical:ArrestOperation ;
+    rdfs:label "Arrest Operation Shape"@en ;
+    rdfs:comment "Validation shape for arrest operations in CAC investigations."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype rdf:langString ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Arrest operation should have a label."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:targetCount ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 100 ;
+        sh:message "Target count should be between 1 and 100."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "May specify the arrest operation time."@en
+    ] .
+
+# =============================================================================
+# BOOKING ACTION SHAPES (Miami CAC Case Enhancement)
+# =============================================================================
+
+cacontology-tactical:BookingActionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-tactical:BookingAction ;
+    rdfs:label "Booking Action Shape"@en ;
+    rdfs:comment "Validation shape for booking actions after arrest."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype rdf:langString ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Booking action should have a label."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:bookingDate ;
+        sh:datatype xsd:date ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "May specify the booking date."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:bookingOfficer ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "May specify the booking officer."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:occursAtFacility ;
+        sh:class cacontology-tactical:CorrectionalFacility ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "May link to the correctional facility."@en
+    ] .
+
+# =============================================================================
+# CORRECTIONAL FACILITY SHAPES (Miami CAC Case Enhancement)
+# =============================================================================
+
+cacontology-tactical:CorrectionalFacilityShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-tactical:CorrectionalFacility ;
+    rdfs:label "Correctional Facility Shape"@en ;
+    rdfs:comment "Validation shape for correctional facilities."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype rdf:langString ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Correctional facility should have a label."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:correctionalFacilityName ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 1 ;
+        sh:maxLength 200 ;
+        sh:message "Facility name should be between 1 and 200 characters."@en
+    ] .
+
+# =============================================================================
+# IMMIGRATION HOLD SHAPES (Miami CAC Case Enhancement)
+# =============================================================================
+
+cacontology-tactical:ImmigrationHoldShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-tactical:ImmigrationHold ;
+    rdfs:label "Immigration Hold Shape"@en ;
+    rdfs:comment "Validation shape for immigration holds on arrested suspects."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype rdf:langString ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Immigration hold should have a label."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:immigrationStatus ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "May specify the immigration status."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:immigrationHoldReason ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "May specify the reason for immigration hold."@en
+    ] .
+
+# =============================================================================
+# INTERVIEW WITHOUT COUNSEL SHAPES (Miami CAC Case Enhancement)
+# =============================================================================
+
+cacontology-tactical:InterviewWithoutCounselShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-tactical:InterviewWithoutCounsel ;
+    rdfs:label "Interview Without Counsel Shape"@en ;
+    rdfs:comment "Validation shape for interviews conducted without legal counsel."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype rdf:langString ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Interview should have a label."@en
+    ] .
+
+# =============================================================================
+# ARREST REPORT SHAPES (Miami CAC Case Enhancement)
+# =============================================================================
+
+cacontology-tactical:ArrestReportShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-tactical:ArrestReport ;
+    rdfs:label "Arrest Report Shape"@en ;
+    rdfs:comment "Validation shape for arrest report provenance records."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype rdf:langString ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Arrest report should have a label."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:reportDate ;
+        sh:datatype xsd:date ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "May specify the report date."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-tactical:documentsArrest ;
+        sh:class cacontology-tactical:ArrestOperation ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "May link to the arrest operation documented."@en
+    ] . 

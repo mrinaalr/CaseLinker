@@ -1,0 +1,1093 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix gufo: <http://purl.org/nemo/gufo#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
+@prefix case-investigation: <https://ontology.caseontology.org/case/investigation/> .
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology-coord: <https://cacontology.projectvic.org/investigation-coordination#> .
+
+# Ontology Declaration
+<https://cacontology.projectvic.org/investigation-coordination> rdf:type owl:Ontology ;
+    rdfs:label "CAC Investigation Coordination Ontology"@en ;
+    rdfs:comment "Comprehensive ontology for modeling investigation coordination processes, information sharing, resource sharing, communication protocols, and inter-agency collaboration within CAC investigations. Enhanced with gUFO (gentle Unified Foundational Ontology) integration for improved semantic precision and validation capabilities."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/investigation-coordination/3.1.0> ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:issued "2025-01-27"^^xsd:date ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:versionInfo "3.1.0" ;
+    owl:imports <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> ,
+                <https://ontology.caseontology.org/case/case/1.5.0> ,
+                <https://cacontology.projectvic.org/core/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> .
+
+# =============================================================================
+# CORE INVESTIGATION COORDINATION CLASSES (gUFO: EventType)
+# =============================================================================
+
+cacontology-coord:InvestigationCoordination rdf:type owl:Class ;
+    rdfs:label "Investigation Coordination"@en ;
+    rdfs:comment "Comprehensive framework for coordinating investigations across multiple agencies, jurisdictions, and organizational boundaries."@en ;
+    rdfs:subClassOf cac-core:CoordinationEvent ;
+    rdf:type gufo:EventType .
+
+cacontology-coord:JointInvestigation rdf:type owl:Class ;
+    rdfs:label "Joint Investigation"@en ;
+    rdfs:comment "Formal joint investigation involving multiple agencies working together with shared resources, command structure, and unified reporting."@en ;
+    rdfs:subClassOf cacontology-coord:InvestigationCoordination ;
+    rdf:type gufo:EventType .
+
+cacontology-coord:ParallelInvestigation rdf:type owl:Class ;
+    rdfs:label "Parallel Investigation"@en ;
+    rdfs:comment "Parallel investigation where multiple agencies investigate related aspects independently while maintaining coordination."@en ;
+    rdfs:subClassOf cacontology-coord:InvestigationCoordination ;
+    rdf:type gufo:EventType .
+
+cacontology-coord:TaskForceCoordination rdf:type owl:Class ;
+    rdfs:label "Task Force Coordination"@en ;
+    rdfs:comment "Coordination through specialized task forces bringing together personnel from multiple agencies for specific operations."@en ;
+    rdfs:subClassOf cacontology-coord:InvestigationCoordination ;
+    rdf:type gufo:EventType .
+
+cacontology-coord:MultiAgencyCoordination rdf:type owl:Class ;
+    rdfs:label "Multi Agency Coordination"@en ;
+    rdfs:comment "Coordination involving multiple law enforcement agencies at various jurisdictional levels."@en ;
+    rdfs:subClassOf cacontology-coord:InvestigationCoordination ;
+    rdf:type gufo:EventType .
+
+# =============================================================================
+# MISSING-CHILD RECOVERY OPERATIONS (event-focused coordination)
+# Based on NCPTF/DCJS Westchester Missing Child Rescue Operation press release
+# Source: https://ncptf.org/westchester-missing-child-rescue-operation-results-in-successful-location-of-44-children-and-teens/
+# =============================================================================
+
+cacontology-coord:MissingChildRescueOperation rdf:type owl:Class ;
+    rdfs:label "Missing Child Rescue Operation"@en ;
+    rdfs:comment "Time-boxed, multi-party operation focused on locating missing children/teens at risk of endangerment, exploitation, or harm, and connecting them with appropriate services and supports. Modeled as an investigative action and gUFO Event."@en ;
+    rdfs:subClassOf case-investigation:InvestigativeAction, cac-core:InvestigativeAction ;
+    dcterms:source "National Child Protection Task Force (NCPTF) press release, 2026-02-13 (Westchester Missing Child Rescue Operation)."@en ;
+    rdfs:seeAlso <https://ncptf.org/westchester-missing-child-rescue-operation-results-in-successful-location-of-44-children-and-teens/> .
+
+# =============================================================================
+# INFORMATION SHARING CLASSES (gUFO: EventType)
+# =============================================================================
+
+cacontology-coord:InformationSharing rdf:type owl:Class ;
+    rdfs:label "Information Sharing"@en ;
+    rdfs:comment "Systematic sharing of information between agencies including intelligence, evidence, case data, and technical information."@en ;
+    rdfs:subClassOf cac-core:CoordinationEvent ;
+    rdf:type gufo:EventType .
+
+cacontology-coord:IntelligenceSharing rdf:type owl:Class ;
+    rdfs:label "Intelligence Sharing"@en ;
+    rdfs:comment "Specialized sharing of intelligence information including tactical, strategic, operational, and threat assessment data."@en ;
+    rdfs:subClassOf cacontology-coord:InformationSharing ;
+    rdf:type gufo:EventType .
+
+cacontology-coord:EvidenceSharing rdf:type owl:Class ;
+    rdfs:label "Evidence Sharing"@en ;
+    rdfs:comment "Formal sharing of evidence between agencies including digital evidence, physical evidence, and forensic analysis results."@en ;
+    rdfs:subClassOf cacontology-coord:InformationSharing ;
+    rdf:type gufo:EventType .
+
+cacontology-coord:CaseInformationSharing rdf:type owl:Class ;
+    rdfs:label "Case Information Sharing"@en ;
+    rdfs:comment "Sharing of case-specific information including case files, reports, witness statements, and investigative findings."@en ;
+    rdfs:subClassOf cacontology-coord:InformationSharing ;
+    rdf:type gufo:EventType .
+
+cacontology-coord:SuspectInformationSharing rdf:type owl:Class ;
+    rdfs:label "Suspect Information Sharing"@en ;
+    rdfs:comment "Sharing of suspect-related information including identification, criminal history, and behavioral patterns."@en ;
+    rdfs:subClassOf cacontology-coord:InformationSharing ;
+    rdf:type gufo:EventType .
+
+cacontology-coord:VictimInformationSharing rdf:type owl:Class ;
+    rdfs:label "Victim Information Sharing"@en ;
+    rdfs:comment "Coordinated sharing of victim information while maintaining privacy and protection protocols."@en ;
+    rdfs:subClassOf cacontology-coord:InformationSharing ;
+    rdf:type gufo:EventType .
+
+cacontology-coord:TechnicalDataSharing rdf:type owl:Class ;
+    rdfs:label "Technical Data Sharing"@en ;
+    rdfs:comment "Sharing of technical data including forensic tools, methodologies, and technical analysis results."@en ;
+    rdfs:subClassOf cacontology-coord:InformationSharing ;
+    rdf:type gufo:EventType .
+
+# =============================================================================
+# RESOURCE SHARING CLASSES (gUFO: EventType)
+# =============================================================================
+
+cacontology-coord:ResourceSharing rdf:type owl:Class ;
+    rdfs:label "Resource Sharing"@en ;
+    rdfs:comment "Systematic sharing of resources between agencies including personnel, equipment, facilities, and expertise."@en ;
+    rdfs:subClassOf cac-core:CoordinationEvent ;
+    rdf:type gufo:EventType .
+
+cacontology-coord:PersonnelSharing rdf:type owl:Class ;
+    rdfs:label "Personnel Sharing"@en ;
+    rdfs:comment "Sharing of specialized personnel including investigators, analysts, technical experts, and support staff."@en ;
+    rdfs:subClassOf cacontology-coord:ResourceSharing ;
+    rdf:type gufo:EventType .
+
+cacontology-coord:EquipmentSharing rdf:type owl:Class ;
+    rdfs:label "Equipment Sharing"@en ;
+    rdfs:comment "Sharing of specialized equipment including forensic tools, surveillance equipment, and technical devices."@en ;
+    rdfs:subClassOf cacontology-coord:ResourceSharing ;
+    rdf:type gufo:EventType .
+
+cacontology-coord:FacilitySharing rdf:type owl:Class ;
+    rdfs:label "Facility Sharing"@en ;
+    rdfs:comment "Sharing of facilities including laboratories, command centers, training facilities, and secure meeting spaces."@en ;
+    rdfs:subClassOf cacontology-coord:ResourceSharing ;
+    rdf:type gufo:EventType .
+
+cacontology-coord:TechnologySharing rdf:type owl:Class ;
+    rdfs:label "Technology Sharing"@en ;
+    rdfs:comment "Sharing of technology resources including software, databases, communication systems, and analytical tools."@en ;
+    rdfs:subClassOf cacontology-coord:ResourceSharing ;
+    rdf:type gufo:EventType .
+
+cacontology-coord:ExpertiseSharing rdf:type owl:Class ;
+    rdfs:label "Expertise Sharing"@en ;
+    rdfs:comment "Sharing of specialized expertise including subject matter experts, consultants, and technical specialists."@en ;
+    rdfs:subClassOf cacontology-coord:ResourceSharing ;
+    rdf:type gufo:EventType .
+
+cacontology-coord:FundingSharing rdf:type owl:Class ;
+    rdfs:label "Funding Sharing"@en ;
+    rdfs:comment "Coordinated funding arrangements including cost sharing, joint funding, and resource pooling."@en ;
+    rdfs:subClassOf cacontology-coord:ResourceSharing ;
+    rdf:type gufo:EventType .
+
+# =============================================================================
+# COMMUNICATION AND PROTOCOL CLASSES (gUFO: SituationType)
+# =============================================================================
+
+cacontology-coord:CommunicationProtocol rdf:type owl:Class ;
+    rdfs:label "Communication Protocol"@en ;
+    rdfs:comment "Formal protocols governing communication between agencies including channels, frequencies, and procedures."@en ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:Situation ;
+    rdf:type gufo:SituationType .
+
+cacontology-coord:FormalCommunicationChannel rdf:type owl:Class ;
+    rdfs:label "Formal Communication Channel"@en ;
+    rdfs:comment "Official communication channels following established protocols and hierarchies."@en ;
+    rdfs:subClassOf cacontology-coord:CommunicationProtocol ;
+    rdf:type gufo:SituationType .
+
+cacontology-coord:InformalCommunicationChannel rdf:type owl:Class ;
+    rdfs:label "Informal Communication Channel"@en ;
+    rdfs:comment "Informal communication channels for rapid information exchange and coordination."@en ;
+    rdfs:subClassOf cacontology-coord:CommunicationProtocol ;
+    rdf:type gufo:SituationType .
+
+cacontology-coord:EmergencyCommunicationChannel rdf:type owl:Class ;
+    rdfs:label "Emergency Communication Channel"@en ;
+    rdfs:comment "Emergency communication channels for urgent coordination and crisis response."@en ;
+    rdfs:subClassOf cacontology-coord:CommunicationProtocol ;
+    rdf:type gufo:SituationType .
+
+cacontology-coord:SecureCommunicationChannel rdf:type owl:Class ;
+    rdfs:label "Secure Communication Channel"@en ;
+    rdfs:comment "Secure communication channels for sensitive information and classified communications."@en ;
+    rdfs:subClassOf cacontology-coord:CommunicationProtocol ;
+    rdf:type gufo:SituationType .
+
+cacontology-coord:EncryptedCommunicationChannel rdf:type owl:Class ;
+    rdfs:label "Encrypted Communication Channel"@en ;
+    rdfs:comment "Encrypted communication channels providing enhanced security for sensitive operations."@en ;
+    rdfs:subClassOf cacontology-coord:SecureCommunicationChannel ;
+    rdf:type gufo:SituationType .
+
+cacontology-coord:LiaisonCommunicationChannel rdf:type owl:Class ;
+    rdfs:label "Liaison Communication Channel"@en ;
+    rdfs:comment "Communication channels managed through designated liaison officers for inter-agency coordination."@en ;
+    rdfs:subClassOf cacontology-coord:CommunicationProtocol ;
+    rdf:type gufo:SituationType .
+
+# =============================================================================
+# AGREEMENT AND GOVERNANCE CLASSES (gUFO: SituationType)
+# =============================================================================
+
+cacontology-coord:CoordinationAgreement rdf:type owl:Class ;
+    rdfs:label "Coordination Agreement"@en ;
+    rdfs:comment "Formal agreements governing coordination between agencies including MOUs, MOAs, and operational agreements."@en ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:Situation ;
+    rdf:type gufo:SituationType .
+
+cacontology-coord:MemorandumOfUnderstanding rdf:type owl:Class ;
+    rdfs:label "Memorandum of Understanding"@en ;
+    rdfs:comment "Formal MOU establishing framework for ongoing cooperation and coordination between agencies."@en ;
+    rdfs:subClassOf cacontology-coord:CoordinationAgreement ;
+    rdf:type gufo:SituationType .
+
+cacontology-coord:MemorandumOfAgreement rdf:type owl:Class ;
+    rdfs:label "Memorandum of Agreement"@en ;
+    rdfs:comment "Formal MOA defining specific terms and conditions for inter-agency cooperation."@en ;
+    rdfs:subClassOf cacontology-coord:CoordinationAgreement ;
+    rdf:type gufo:SituationType .
+
+cacontology-coord:FormalAgreement rdf:type owl:Class ;
+    rdfs:label "Formal Agreement"@en ;
+    rdfs:comment "Comprehensive formal agreement with legal binding terms for inter-agency coordination."@en ;
+    rdfs:subClassOf cacontology-coord:CoordinationAgreement ;
+    rdf:type gufo:SituationType .
+
+cacontology-coord:InformalAgreement rdf:type owl:Class ;
+    rdfs:label "Informal Agreement"@en ;
+    rdfs:comment "Informal agreement or understanding for coordination without formal legal binding."@en ;
+    rdfs:subClassOf cacontology-coord:CoordinationAgreement ;
+    rdf:type gufo:SituationType .
+
+cacontology-coord:TaskForceCharter rdf:type owl:Class ;
+    rdfs:label "Task Force Charter"@en ;
+    rdfs:comment "Charter document establishing task force structure, authority, and operational parameters."@en ;
+    rdfs:subClassOf cacontology-coord:CoordinationAgreement ;
+    rdf:type gufo:SituationType .
+
+cacontology-coord:JointOperationsPlan rdf:type owl:Class ;
+    rdfs:label "Joint Operations Plan"@en ;
+    rdfs:comment "Detailed operational plan for joint investigations and coordinated activities."@en ;
+    rdfs:subClassOf cacontology-coord:CoordinationAgreement ;
+    rdf:type gufo:SituationType .
+
+# =============================================================================
+# LIAISON AND PERSONNEL CLASSES (gUFO: Role - anti-rigid relational)
+# =============================================================================
+
+cacontology-coord:LiaisonOfficer rdf:type owl:Class ;
+    rdfs:label "Liaison Officer"@en ;
+    rdfs:comment "Designated officer responsible for maintaining communication and coordination between agencies."@en ;
+    rdfs:subClassOf uco-role:Role , cac-core:Role ;
+    rdf:type gufo:Role .
+
+cacontology-coord:PrimaryLiaison rdf:type owl:Class ;
+    rdfs:label "Primary Liaison"@en ;
+    rdfs:comment "Primary liaison officer with full authority for inter-agency communication and coordination."@en ;
+    rdfs:subClassOf cacontology-coord:LiaisonOfficer ;
+    rdf:type gufo:Role .
+
+cacontology-coord:SecondaryLiaison rdf:type owl:Class ;
+    rdfs:label "Secondary Liaison"@en ;
+    rdfs:comment "Secondary liaison officer providing backup and specialized coordination support."@en ;
+    rdfs:subClassOf cacontology-coord:LiaisonOfficer ;
+    rdf:type gufo:Role .
+
+cacontology-coord:TechnicalLiaison rdf:type owl:Class ;
+    rdfs:label "Technical Liaison"@en ;
+    rdfs:comment "Technical liaison officer specializing in technical coordination and information sharing."@en ;
+    rdfs:subClassOf cacontology-coord:LiaisonOfficer ;
+    rdf:type gufo:Role .
+
+cacontology-coord:LegalLiaison rdf:type owl:Class ;
+    rdfs:label "Legal Liaison"@en ;
+    rdfs:comment "Legal liaison officer handling legal aspects of inter-agency coordination and agreements."@en ;
+    rdfs:subClassOf cacontology-coord:LiaisonOfficer ;
+    rdf:type gufo:Role .
+
+cacontology-coord:IntelligenceLiaison rdf:type owl:Class ;
+    rdfs:label "Intelligence Liaison"@en ;
+    rdfs:comment "Intelligence liaison officer managing intelligence sharing and coordination activities."@en ;
+    rdfs:subClassOf cacontology-coord:LiaisonOfficer ;
+    rdf:type gufo:Role .
+
+cacontology-coord:OperationalLiaison rdf:type owl:Class ;
+    rdfs:label "Operational Liaison"@en ;
+    rdfs:comment "Operational liaison officer coordinating operational activities and tactical coordination."@en ;
+    rdfs:subClassOf cacontology-coord:LiaisonOfficer ;
+    rdf:type gufo:Role .
+
+# =============================================================================
+# METRICS AND PERFORMANCE CLASSES (gUFO: Object)
+# =============================================================================
+
+cacontology-coord:CoordinationMetrics rdf:type owl:Class ;
+    rdfs:label "Coordination Metrics"@en ;
+    rdfs:comment "Performance metrics for measuring effectiveness and efficiency of inter-agency coordination."@en ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:AssessmentResult ;
+    rdf:type gufo:Kind .
+
+cacontology-coord:ResponseTimeMetrics rdf:type owl:Class ;
+    rdfs:label "Response Time Metrics"@en ;
+    rdfs:comment "Metrics measuring response times for coordination requests and information sharing."@en ;
+    rdfs:subClassOf cacontology-coord:CoordinationMetrics ;
+    rdf:type gufo:SubKind .
+
+cacontology-coord:InformationSharingRateMetrics rdf:type owl:Class ;
+    rdfs:label "Information Sharing Rate Metrics"@en ;
+    rdfs:comment "Metrics measuring the rate and volume of information sharing between agencies."@en ;
+    rdfs:subClassOf cacontology-coord:CoordinationMetrics ;
+    rdf:type gufo:SubKind .
+
+cacontology-coord:ResourceUtilizationMetrics rdf:type owl:Class ;
+    rdfs:label "Resource Utilization Metrics"@en ;
+    rdfs:comment "Metrics measuring efficiency of shared resource utilization and allocation."@en ;
+    rdfs:subClassOf cacontology-coord:CoordinationMetrics ;
+    rdf:type gufo:SubKind .
+
+cacontology-coord:CaseResolutionTimeMetrics rdf:type owl:Class ;
+    rdfs:label "Case Resolution Time Metrics"@en ;
+    rdfs:comment "Metrics measuring impact of coordination on case resolution times and outcomes."@en ;
+    rdfs:subClassOf cacontology-coord:CoordinationMetrics ;
+    rdf:type gufo:SubKind .
+
+cacontology-coord:CoordinationEffectivenessMetrics rdf:type owl:Class ;
+    rdfs:label "Coordination Effectiveness Metrics"@en ;
+    rdfs:comment "Metrics measuring overall effectiveness of coordination efforts and outcomes."@en ;
+    rdfs:subClassOf cacontology-coord:CoordinationMetrics ;
+    rdf:type gufo:SubKind .
+
+cacontology-coord:CostEfficiencyMetrics rdf:type owl:Class ;
+    rdfs:label "Cost Efficiency Metrics"@en ;
+    rdfs:comment "Metrics measuring cost efficiency and financial benefits of coordination activities."@en ;
+    rdfs:subClassOf cacontology-coord:CoordinationMetrics ;
+    rdf:type gufo:SubKind .
+
+# =============================================================================
+# SPECIALIZED COORDINATION CLASSES (gUFO: EventType)
+# =============================================================================
+
+cacontology-coord:LocalCoordination rdf:type owl:Class ;
+    rdfs:label "Local Coordination"@en ;
+    rdfs:comment "Coordination activities within local jurisdictions and municipal boundaries."@en ;
+    rdfs:subClassOf cacontology-coord:InvestigationCoordination ;
+    rdf:type gufo:EventType .
+
+cacontology-coord:RegionalCoordination rdf:type owl:Class ;
+    rdfs:label "Regional Coordination"@en ;
+    rdfs:comment "Coordination activities spanning regional areas and multiple local jurisdictions."@en ;
+    rdfs:subClassOf cacontology-coord:InvestigationCoordination ;
+    rdf:type gufo:EventType .
+
+cacontology-coord:StateCoordination rdf:type owl:Class ;
+    rdfs:label "State Coordination"@en ;
+    rdfs:comment "Coordination activities within state boundaries involving state and local agencies."@en ;
+    rdfs:subClassOf cacontology-coord:InvestigationCoordination ;
+    rdf:type gufo:EventType .
+
+cacontology-coord:MultiStateCoordination rdf:type owl:Class ;
+    rdfs:label "Multi State Coordination"@en ;
+    rdfs:comment "Coordination activities spanning multiple states requiring interstate cooperation."@en ;
+    rdfs:subClassOf cacontology-coord:InvestigationCoordination ;
+    rdf:type gufo:EventType .
+
+cacontology-coord:FederalCoordination rdf:type owl:Class ;
+    rdfs:label "Federal Coordination"@en ;
+    rdfs:comment "Coordination involving federal agencies and national-level law enforcement."@en ;
+    rdfs:subClassOf cacontology-coord:InvestigationCoordination ;
+    rdf:type gufo:EventType .
+
+cacontology-coord:InternationalCoordination rdf:type owl:Class ;
+    rdfs:label "International Coordination"@en ;
+    rdfs:comment "Coordination activities involving international agencies and cross-border cooperation."@en ;
+    rdfs:subClassOf cacontology-coord:InvestigationCoordination ;
+    rdf:type gufo:EventType .
+
+# =============================================================================
+# DATATYPE PROPERTIES
+# =============================================================================
+
+# Investigation Coordination Properties
+cacontology-coord:coordinationType rdf:type owl:DatatypeProperty ;
+    rdfs:label "coordination type"@en ;
+    rdfs:comment "Type of coordination (joint_investigation, parallel_investigation, information_sharing, resource_sharing, task_force_coordination, multi_agency_coordination)."@en ;
+    rdfs:domain cacontology-coord:InvestigationCoordination ;
+    rdfs:range xsd:string .
+
+cacontology-coord:coordinationLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "coordination level"@en ;
+    rdfs:comment "Level of coordination (local, regional, state, multi_state, federal, international)."@en ;
+    rdfs:domain cacontology-coord:InvestigationCoordination ;
+    rdfs:range xsd:string .
+
+cacontology-coord:participatingAgencies rdf:type owl:DatatypeProperty ;
+    rdfs:label "participating agencies"@en ;
+    rdfs:comment "Number of agencies participating in the coordination."@en ;
+    rdfs:domain cacontology-coord:InvestigationCoordination ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-coord:leadAgency rdf:type owl:DatatypeProperty ;
+    rdfs:label "lead agency"@en ;
+    rdfs:comment "Name or identifier of the lead agency in the coordination."@en ;
+    rdfs:domain cacontology-coord:InvestigationCoordination ;
+    rdfs:range xsd:string .
+
+cacontology-coord:coordinationStatus rdf:type owl:DatatypeProperty ;
+    rdfs:label "coordination status"@en ;
+    rdfs:comment "Current status of the coordination (active, inactive, pending, completed, suspended, terminated)."@en ;
+    rdfs:domain cacontology-coord:InvestigationCoordination ;
+    rdfs:range xsd:string .
+
+# Missing-child rescue operation outcome/scale properties
+cacontology-coord:childrenLocatedCount rdf:type owl:DatatypeProperty ;
+    rdfs:label "children located count"@en ;
+    rdfs:comment "Number of missing children/teens located through the operation (located does not necessarily imply rescued from ongoing abuse)."@en ;
+    rdfs:domain cacontology-coord:MissingChildRescueOperation ;
+    rdfs:range xsd:nonNegativeInteger ;
+    dcterms:source "National Child Protection Task Force (NCPTF) press release, 2026-02-13 (Westchester Missing Child Rescue Operation)."@en ;
+    rdfs:seeAlso <https://ncptf.org/westchester-missing-child-rescue-operation-results-in-successful-location-of-44-children-and-teens/> .
+
+cacontology-coord:casesInProgressCount rdf:type owl:DatatypeProperty ;
+    rdfs:label "cases in progress count"@en ;
+    rdfs:comment "Number of missing-child cases still in progress as of a reported timepoint during the operation."@en ;
+    rdfs:domain cacontology-coord:MissingChildRescueOperation ;
+    rdfs:range xsd:nonNegativeInteger ;
+    dcterms:source "National Child Protection Task Force (NCPTF) press release, 2026-02-13 (Westchester Missing Child Rescue Operation)."@en ;
+    rdfs:seeAlso <https://ncptf.org/westchester-missing-child-rescue-operation-results-in-successful-location-of-44-children-and-teens/> .
+
+# Joint Investigation Properties
+cacontology-coord:investigationScope rdf:type owl:DatatypeProperty ;
+    rdfs:label "investigation scope"@en ;
+    rdfs:comment "Scope of the joint investigation (single_case, related_cases, criminal_network, organized_crime, multi_jurisdictional, international)."@en ;
+    rdfs:domain cacontology-coord:JointInvestigation ;
+    rdfs:range xsd:string .
+
+cacontology-coord:resourcePooling rdf:type owl:DatatypeProperty ;
+    rdfs:label "resource pooling"@en ;
+    rdfs:comment "Whether resource pooling is used in the joint investigation."@en ;
+    rdfs:domain cacontology-coord:JointInvestigation ;
+    rdfs:range xsd:boolean .
+
+cacontology-coord:sharedCommand rdf:type owl:DatatypeProperty ;
+    rdfs:label "shared command"@en ;
+    rdfs:comment "Whether shared command structure is used in the joint investigation."@en ;
+    rdfs:domain cacontology-coord:JointInvestigation ;
+    rdfs:range xsd:boolean .
+
+cacontology-coord:unifiedReporting rdf:type owl:DatatypeProperty ;
+    rdfs:label "unified reporting"@en ;
+    rdfs:comment "Whether unified reporting is used in the joint investigation."@en ;
+    rdfs:domain cacontology-coord:JointInvestigation ;
+    rdfs:range xsd:boolean .
+
+# Information Sharing Properties
+cacontology-coord:sharingType rdf:type owl:DatatypeProperty ;
+    rdfs:label "sharing type"@en ;
+    rdfs:comment "Type of information sharing (intelligence_sharing, evidence_sharing, case_information, suspect_information, victim_information, technical_data)."@en ;
+    rdfs:domain cacontology-coord:InformationSharing ;
+    rdfs:range xsd:string .
+
+cacontology-coord:classificationLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "classification level"@en ;
+    rdfs:comment "Security classification level (unclassified, law_enforcement_sensitive, confidential, restricted, classified, top_secret)."@en ;
+    rdfs:domain cacontology-coord:InformationSharing ;
+    rdfs:range xsd:string .
+
+cacontology-coord:sharingMechanism rdf:type owl:DatatypeProperty ;
+    rdfs:label "sharing mechanism"@en ;
+    rdfs:comment "Mechanism used for sharing (secure_email, encrypted_portal, database_access, formal_request, liaison_officer, joint_briefing)."@en ;
+    rdfs:domain cacontology-coord:InformationSharing ;
+    rdfs:range xsd:string .
+
+cacontology-coord:reciprocity rdf:type owl:DatatypeProperty ;
+    rdfs:label "reciprocity"@en ;
+    rdfs:comment "Whether reciprocity is expected in information sharing."@en ;
+    rdfs:domain cacontology-coord:InformationSharing ;
+    rdfs:range xsd:boolean .
+
+cacontology-coord:sharingAgreement rdf:type owl:DatatypeProperty ;
+    rdfs:label "sharing agreement"@en ;
+    rdfs:comment "Whether formal sharing agreement exists."@en ;
+    rdfs:domain cacontology-coord:InformationSharing ;
+    rdfs:range xsd:boolean .
+
+# Intelligence Sharing Properties
+cacontology-coord:intelligenceType rdf:type owl:DatatypeProperty ;
+    rdfs:label "intelligence type"@en ;
+    rdfs:comment "Type of intelligence (tactical, strategic, operational, technical, threat_assessment, pattern_analysis)."@en ;
+    rdfs:domain cacontology-coord:IntelligenceSharing ;
+    rdfs:range xsd:string .
+
+cacontology-coord:sourceReliability rdf:type owl:DatatypeProperty ;
+    rdfs:label "source reliability"@en ;
+    rdfs:comment "Reliability of intelligence source (reliable, usually_reliable, fairly_reliable, not_usually_reliable, unreliable, unknown)."@en ;
+    rdfs:domain cacontology-coord:IntelligenceSharing ;
+    rdfs:range xsd:string .
+
+cacontology-coord:informationAccuracy rdf:type owl:DatatypeProperty ;
+    rdfs:label "information accuracy"@en ;
+    rdfs:comment "Accuracy of intelligence information (confirmed, probably_true, possibly_true, doubtfully_true, improbable, cannot_be_judged)."@en ;
+    rdfs:domain cacontology-coord:IntelligenceSharing ;
+    rdfs:range xsd:string .
+
+# Resource Sharing Properties
+cacontology-coord:resourceType rdf:type owl:DatatypeProperty ;
+    rdfs:label "resource type"@en ;
+    rdfs:comment "Type of resource being shared (personnel, equipment, facilities, technology, expertise, funding, vehicles, specialized_units)."@en ;
+    rdfs:domain cacontology-coord:ResourceSharing ;
+    rdfs:range xsd:string .
+
+cacontology-coord:sharingDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "sharing duration"@en ;
+    rdfs:comment "Duration of resource sharing in hours."@en ;
+    rdfs:domain cacontology-coord:ResourceSharing ;
+    rdfs:range xsd:decimal .
+
+cacontology-coord:costSharing rdf:type owl:DatatypeProperty ;
+    rdfs:label "cost sharing"@en ;
+    rdfs:comment "Whether cost sharing is involved in resource sharing."@en ;
+    rdfs:domain cacontology-coord:ResourceSharing ;
+    rdfs:range xsd:boolean .
+
+cacontology-coord:reimbursement rdf:type owl:DatatypeProperty ;
+    rdfs:label "reimbursement"@en ;
+    rdfs:comment "Whether reimbursement is required for resource sharing."@en ;
+    rdfs:domain cacontology-coord:ResourceSharing ;
+    rdfs:range xsd:boolean .
+
+cacontology-coord:availabilityLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "availability level"@en ;
+    rdfs:comment "Availability level of shared resources (immediate, short_notice, scheduled, on_request, limited, emergency_only)."@en ;
+    rdfs:domain cacontology-coord:ResourceSharing ;
+    rdfs:range xsd:string .
+
+# Personnel Sharing Properties
+cacontology-coord:personnelCount rdf:type owl:DatatypeProperty ;
+    rdfs:label "personnel count"@en ;
+    rdfs:comment "Number of personnel being shared."@en ;
+    rdfs:domain cacontology-coord:PersonnelSharing ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-coord:specialization rdf:type owl:DatatypeProperty ;
+    rdfs:label "specialization"@en ;
+    rdfs:comment "Area of specialization (digital_forensics, undercover_operations, surveillance, analysis, technical_support, legal_expertise)."@en ;
+    rdfs:domain cacontology-coord:PersonnelSharing ;
+    rdfs:range xsd:string .
+
+cacontology-coord:securityClearance rdf:type owl:DatatypeProperty ;
+    rdfs:label "security clearance"@en ;
+    rdfs:comment "Security clearance level (none, public_trust, confidential, secret, top_secret, sci_access)."@en ;
+    rdfs:domain cacontology-coord:PersonnelSharing ;
+    rdfs:range xsd:string .
+
+# Communication Protocol Properties
+cacontology-coord:protocolType rdf:type owl:DatatypeProperty ;
+    rdfs:label "protocol type"@en ;
+    rdfs:comment "Type of communication protocol (formal_channels, informal_channels, emergency_channels, secure_channels, encrypted_channels, liaison_channels)."@en ;
+    rdfs:domain cacontology-coord:CommunicationProtocol ;
+    rdfs:range xsd:string .
+
+cacontology-coord:communicationFrequency rdf:type owl:DatatypeProperty ;
+    rdfs:label "communication frequency"@en ;
+    rdfs:comment "Frequency of communication (real_time, daily, weekly, bi_weekly, monthly, as_needed, emergency_only)."@en ;
+    rdfs:domain cacontology-coord:CommunicationProtocol ;
+    rdfs:range xsd:string .
+
+cacontology-coord:escalationProcedure rdf:type owl:DatatypeProperty ;
+    rdfs:label "escalation procedure"@en ;
+    rdfs:comment "Whether escalation procedure exists in the communication protocol."@en ;
+    rdfs:domain cacontology-coord:CommunicationProtocol ;
+    rdfs:range xsd:boolean .
+
+cacontology-coord:responseTimeRequirement rdf:type owl:DatatypeProperty ;
+    rdfs:label "response time requirement"@en ;
+    rdfs:comment "Required response time in hours."@en ;
+    rdfs:domain cacontology-coord:CommunicationProtocol ;
+    rdfs:range xsd:decimal .
+
+# Coordination Agreement Properties
+cacontology-coord:agreementType rdf:type owl:DatatypeProperty ;
+    rdfs:label "agreement type"@en ;
+    rdfs:comment "Type of coordination agreement (mou, moa, formal_agreement, informal_agreement, task_force_charter, joint_operations_plan)."@en ;
+    rdfs:domain cacontology-coord:CoordinationAgreement ;
+    rdfs:range xsd:string .
+
+cacontology-coord:agreementScope rdf:type owl:DatatypeProperty ;
+    rdfs:label "agreement scope"@en ;
+    rdfs:comment "Scope of the agreement (specific_case, case_category, ongoing_cooperation, resource_sharing, information_sharing, comprehensive)."@en ;
+    rdfs:domain cacontology-coord:CoordinationAgreement ;
+    rdfs:range xsd:string .
+
+cacontology-coord:effectiveDate rdf:type owl:DatatypeProperty ;
+    rdfs:label "effective date"@en ;
+    rdfs:comment "Date when the agreement becomes effective."@en ;
+    rdfs:domain cacontology-coord:CoordinationAgreement ;
+    rdfs:range xsd:dateTime .
+
+cacontology-coord:expirationDate rdf:type owl:DatatypeProperty ;
+    rdfs:label "expiration date"@en ;
+    rdfs:comment "Date when the agreement expires."@en ;
+    rdfs:domain cacontology-coord:CoordinationAgreement ;
+    rdfs:range xsd:dateTime .
+
+cacontology-coord:renewalClause rdf:type owl:DatatypeProperty ;
+    rdfs:label "renewal clause"@en ;
+    rdfs:comment "Whether the agreement contains a renewal clause."@en ;
+    rdfs:domain cacontology-coord:CoordinationAgreement ;
+    rdfs:range xsd:boolean .
+
+cacontology-coord:terminationClause rdf:type owl:DatatypeProperty ;
+    rdfs:label "termination clause"@en ;
+    rdfs:comment "Whether the agreement contains a termination clause."@en ;
+    rdfs:domain cacontology-coord:CoordinationAgreement ;
+    rdfs:range xsd:boolean .
+
+# Liaison Officer Properties
+cacontology-coord:liaisonRole rdf:type owl:DatatypeProperty ;
+    rdfs:label "liaison role"@en ;
+    rdfs:comment "Role of the liaison officer (primary_liaison, secondary_liaison, technical_liaison, legal_liaison, intelligence_liaison, operational_liaison)."@en ;
+    rdfs:domain cacontology-coord:LiaisonOfficer ;
+    rdfs:range xsd:string .
+
+cacontology-coord:assignmentDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "assignment duration"@en ;
+    rdfs:comment "Duration of liaison assignment in days."@en ;
+    rdfs:domain cacontology-coord:LiaisonOfficer ;
+    rdfs:range xsd:decimal .
+
+cacontology-coord:clearanceLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "clearance level"@en ;
+    rdfs:comment "Security clearance level of the liaison officer (none, public_trust, confidential, secret, top_secret, sci_access)."@en ;
+    rdfs:domain cacontology-coord:LiaisonOfficer ;
+    rdfs:range xsd:string .
+
+cacontology-coord:communicationAuthority rdf:type owl:DatatypeProperty ;
+    rdfs:label "communication authority"@en ;
+    rdfs:comment "Level of communication authority (full_authority, limited_authority, information_only, coordination_only, advisory_only)."@en ;
+    rdfs:domain cacontology-coord:LiaisonOfficer ;
+    rdfs:range xsd:string .
+
+# Coordination Metrics Properties
+cacontology-coord:metricType rdf:type owl:DatatypeProperty ;
+    rdfs:label "metric type"@en ;
+    rdfs:comment "Type of coordination metric (response_time, information_sharing_rate, resource_utilization, case_resolution_time, coordination_effectiveness, cost_efficiency)."@en ;
+    rdfs:domain cacontology-coord:CoordinationMetrics ;
+    rdfs:range xsd:string .
+
+cacontology-coord:metricValue rdf:type owl:DatatypeProperty ;
+    rdfs:label "metric value"@en ;
+    rdfs:comment "Numerical value of the metric."@en ;
+    rdfs:domain cacontology-coord:CoordinationMetrics ;
+    rdfs:range xsd:decimal .
+
+cacontology-coord:measurementPeriod rdf:type owl:DatatypeProperty ;
+    rdfs:label "measurement period"@en ;
+    rdfs:comment "Period for metric measurement (daily, weekly, monthly, quarterly, annually, case_based)."@en ;
+    rdfs:domain cacontology-coord:CoordinationMetrics ;
+    rdfs:range xsd:string .
+
+cacontology-coord:benchmarkComparison rdf:type owl:DatatypeProperty ;
+    rdfs:label "benchmark comparison"@en ;
+    rdfs:comment "Comparison to benchmark (above_benchmark, meets_benchmark, below_benchmark, no_benchmark, exceeds_target)."@en ;
+    rdfs:domain cacontology-coord:CoordinationMetrics ;
+    rdfs:range xsd:string .
+
+# =============================================================================
+# OBJECT PROPERTIES
+# =============================================================================
+
+# Core Coordination Relationships
+cacontology-coord:involvesAgency rdf:type owl:ObjectProperty ;
+    rdfs:label "involves agency"@en ;
+    rdfs:comment "Links coordination to participating agencies."@en ;
+    rdfs:domain cacontology-coord:InvestigationCoordination ;
+    rdfs:range uco-identity:Organization .
+
+cacontology-coord:usesProtocol rdf:type owl:ObjectProperty ;
+    rdfs:label "uses protocol"@en ;
+    rdfs:comment "Links coordination to communication protocols."@en ;
+    rdfs:domain cacontology-coord:InvestigationCoordination ;
+    rdfs:range cacontology-coord:CommunicationProtocol .
+
+cacontology-coord:governsAgreement rdf:type owl:ObjectProperty ;
+    rdfs:label "governs agreement"@en ;
+    rdfs:comment "Links coordination to governing agreements."@en ;
+    rdfs:domain cacontology-coord:InvestigationCoordination ;
+    rdfs:range cacontology-coord:CoordinationAgreement .
+
+cacontology-coord:assignsLiaison rdf:type owl:ObjectProperty ;
+    rdfs:label "assigns liaison"@en ;
+    rdfs:comment "Links coordination to liaison officers."@en ;
+    rdfs:domain cacontology-coord:InvestigationCoordination ;
+    rdfs:range cacontology-coord:LiaisonOfficer .
+
+cacontology-coord:sharesInformation rdf:type owl:ObjectProperty ;
+    rdfs:label "shares information"@en ;
+    rdfs:comment "Links coordination to information sharing activities."@en ;
+    rdfs:domain cacontology-coord:InvestigationCoordination ;
+    rdfs:range cacontology-coord:InformationSharing .
+
+cacontology-coord:sharesResources rdf:type owl:ObjectProperty ;
+    rdfs:label "shares resources"@en ;
+    rdfs:comment "Links coordination to resource sharing activities."@en ;
+    rdfs:domain cacontology-coord:InvestigationCoordination ;
+    rdfs:range cacontology-coord:ResourceSharing .
+
+cacontology-coord:measuresPerformance rdf:type owl:ObjectProperty ;
+    rdfs:label "measures performance"@en ;
+    rdfs:comment "Links coordination to performance metrics."@en ;
+    rdfs:domain cacontology-coord:InvestigationCoordination ;
+    rdfs:range cacontology-coord:CoordinationMetrics .
+
+# Information Sharing Relationships
+cacontology-coord:sharesWithAgency rdf:type owl:ObjectProperty ;
+    rdfs:label "shares with agency"@en ;
+    rdfs:comment "Links information sharing to recipient agencies."@en ;
+    rdfs:domain cacontology-coord:InformationSharing ;
+    rdfs:range uco-identity:Organization .
+
+cacontology-coord:sharesFromAgency rdf:type owl:ObjectProperty ;
+    rdfs:label "shares from agency"@en ;
+    rdfs:comment "Links information sharing to source agencies."@en ;
+    rdfs:domain cacontology-coord:InformationSharing ;
+    rdfs:range uco-identity:Organization .
+
+cacontology-coord:concernsCase rdf:type owl:ObjectProperty ;
+    rdfs:label "concerns case"@en ;
+    rdfs:comment "Links information sharing to related cases."@en ;
+    rdfs:domain cacontology-coord:InformationSharing ;
+    rdfs:range case-investigation:Investigation .
+
+# Resource Sharing Relationships
+cacontology-coord:providesResource rdf:type owl:ObjectProperty ;
+    rdfs:label "provides resource"@en ;
+    rdfs:comment "Links resource sharing to providing agency."@en ;
+    rdfs:domain cacontology-coord:ResourceSharing ;
+    rdfs:range uco-identity:Organization .
+
+cacontology-coord:receivesResource rdf:type owl:ObjectProperty ;
+    rdfs:label "receives resource"@en ;
+    rdfs:comment "Links resource sharing to receiving agency."@en ;
+    rdfs:domain cacontology-coord:ResourceSharing ;
+    rdfs:range uco-identity:Organization .
+
+cacontology-coord:involvesPersonnel rdf:type owl:ObjectProperty ;
+    rdfs:label "involves personnel"@en ;
+    rdfs:comment "Links personnel sharing to specific personnel."@en ;
+    rdfs:domain cacontology-coord:PersonnelSharing ;
+    rdfs:range uco-identity:Person .
+
+# Agreement Relationships
+cacontology-coord:signedByAgency rdf:type owl:ObjectProperty ;
+    rdfs:label "signed by agency"@en ;
+    rdfs:comment "Links agreement to signatory agencies."@en ;
+    rdfs:domain cacontology-coord:CoordinationAgreement ;
+    rdfs:range uco-identity:Organization .
+
+cacontology-coord:authorizedBy rdf:type owl:ObjectProperty ;
+    rdfs:label "authorized by"@en ;
+    rdfs:comment "Links agreement to authorizing officials."@en ;
+    rdfs:domain cacontology-coord:CoordinationAgreement ;
+    rdfs:range uco-identity:Person .
+
+# Liaison Relationships
+cacontology-coord:representsAgency rdf:type owl:ObjectProperty ;
+    rdfs:label "represents agency"@en ;
+    rdfs:comment "Links liaison officer to represented agency."@en ;
+    rdfs:domain cacontology-coord:LiaisonOfficer ;
+    rdfs:range uco-identity:Organization .
+
+cacontology-coord:liaisonWith rdf:type owl:ObjectProperty ;
+    rdfs:label "liaison with"@en ;
+    rdfs:comment "Links liaison officer to partner agencies."@en ;
+    rdfs:domain cacontology-coord:LiaisonOfficer ;
+    rdfs:range uco-identity:Organization .
+
+cacontology-coord:assignedBy rdf:type owl:ObjectProperty ;
+    rdfs:label "assigned by"@en ;
+    rdfs:comment "Links liaison officer to assigning authority."@en ;
+    rdfs:domain cacontology-coord:LiaisonOfficer ;
+    rdfs:range uco-identity:Person .
+
+# Communication Relationships
+cacontology-coord:facilitatesCommunication rdf:type owl:ObjectProperty ;
+    rdfs:label "facilitates communication"@en ;
+    rdfs:comment "Links protocol to communication facilitation."@en ;
+    rdfs:domain cacontology-coord:CommunicationProtocol ;
+    rdfs:range cacontology-coord:InvestigationCoordination .
+
+cacontology-coord:connectsAgencies rdf:type owl:ObjectProperty ;
+    rdfs:label "connects agencies"@en ;
+    rdfs:comment "Links communication protocol to connected agencies."@en ;
+    rdfs:domain cacontology-coord:CommunicationProtocol ;
+    rdfs:range uco-identity:Organization .
+
+# Metrics Relationships
+cacontology-coord:evaluatesCoordination rdf:type owl:ObjectProperty ;
+    rdfs:label "evaluates coordination"@en ;
+    rdfs:comment "Links metrics to evaluated coordination activities."@en ;
+    rdfs:domain cacontology-coord:CoordinationMetrics ;
+    rdfs:range cacontology-coord:InvestigationCoordination .
+
+cacontology-coord:benchmarkedAgainst rdf:type owl:ObjectProperty ;
+    rdfs:label "benchmarked against"@en ;
+    rdfs:comment "Links metrics to benchmark standards."@en ;
+    rdfs:domain cacontology-coord:CoordinationMetrics ;
+    rdfs:range cacontology-coord:CoordinationMetrics .
+
+# =============================================================================
+# gUFO TEMPORAL PROPERTIES
+# =============================================================================
+
+# Temporal boundary properties (from gUFO)
+# Note: These are imported from gUFO but documented here for clarity
+
+# gufo:hasBeginPointInXSDDateTimeStamp - Start time for events and situations
+# gufo:hasEndPointInXSDDateTimeStamp - End time for events and situations
+
+# =============================================================================
+# gUFO QUALITY ASPECTS FOR INVESTIGATION COORDINATION
+# =============================================================================
+
+# Coordination Quality Aspects
+cacontology-coord:hasCoordinationEffectiveness rdf:type owl:DatatypeProperty ;
+    rdfs:label "has coordination effectiveness"@en ;
+    rdfs:comment "Coordination effectiveness level assessment (poor, fair, good, excellent, outstanding) - gUFO quality aspect."@en ;
+    rdfs:domain cacontology-coord:InvestigationCoordination ;
+    rdfs:range xsd:string ;
+    rdfs:subPropertyOf gufo:hasQuality .
+
+cacontology-coord:hasComplexityLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "has complexity level"@en ;
+    rdfs:comment "Coordination complexity level assessment (simple, moderate, complex, highly_complex, extremely_complex) - gUFO quality aspect."@en ;
+    rdfs:domain cacontology-coord:InvestigationCoordination ;
+    rdfs:range xsd:string ;
+    rdfs:subPropertyOf gufo:hasQuality .
+
+cacontology-coord:hasSuccessRate rdf:type owl:DatatypeProperty ;
+    rdfs:label "has success rate"@en ;
+    rdfs:comment "Success rate measurement (0.0 to 1.0) - gUFO quality aspect."@en ;
+    rdfs:domain cacontology-coord:InvestigationCoordination ;
+    rdfs:range xsd:double ;
+    rdfs:subPropertyOf gufo:hasQuality .
+
+cacontology-coord:hasCoordinationIntensity rdf:type owl:DatatypeProperty ;
+    rdfs:label "has coordination intensity"@en ;
+    rdfs:comment "Coordination integration intensity (minimal, moderate, high, intensive, fully_integrated) - gUFO quality aspect."@en ;
+    rdfs:domain cacontology-coord:JointInvestigation ;
+    rdfs:range xsd:string ;
+    rdfs:subPropertyOf gufo:hasQuality .
+
+cacontology-coord:hasUnificationLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "has unification level"@en ;
+    rdfs:comment "Unification degree measurement (0.0 to 1.0) - gUFO quality aspect."@en ;
+    rdfs:domain cacontology-coord:JointInvestigation ;
+    rdfs:range xsd:double ;
+    rdfs:subPropertyOf gufo:hasQuality .
+
+# Information Sharing Quality Aspects
+cacontology-coord:hasSharingEfficiency rdf:type owl:DatatypeProperty ;
+    rdfs:label "has sharing efficiency"@en ;
+    rdfs:comment "Information sharing efficiency level (poor, fair, good, excellent, optimal) - gUFO quality aspect."@en ;
+    rdfs:domain cacontology-coord:InformationSharing ;
+    rdfs:range xsd:string ;
+    rdfs:subPropertyOf gufo:hasQuality .
+
+cacontology-coord:hasSecurityLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "has security level"@en ;
+    rdfs:comment "Security assessment level (basic, standard, enhanced, high, maximum) - gUFO quality aspect."@en ;
+    rdfs:domain cacontology-coord:InformationSharing ;
+    rdfs:range xsd:string ;
+    rdfs:subPropertyOf gufo:hasQuality .
+
+cacontology-coord:hasTimeliness rdf:type owl:DatatypeProperty ;
+    rdfs:label "has timeliness"@en ;
+    rdfs:comment "Timeliness score measurement (0.0 to 1.0) - gUFO quality aspect."@en ;
+    rdfs:domain cacontology-coord:InformationSharing ;
+    rdfs:range xsd:double ;
+    rdfs:subPropertyOf gufo:hasQuality .
+
+cacontology-coord:hasIntelligenceValue rdf:type owl:DatatypeProperty ;
+    rdfs:label "has intelligence value"@en ;
+    rdfs:comment "Intelligence value assessment (low, moderate, high, critical, exceptional) - gUFO quality aspect."@en ;
+    rdfs:domain cacontology-coord:IntelligenceSharing ;
+    rdfs:range xsd:string ;
+    rdfs:subPropertyOf gufo:hasQuality .
+
+cacontology-coord:hasActionability rdf:type owl:DatatypeProperty ;
+    rdfs:label "has actionability"@en ;
+    rdfs:comment "Actionability score measurement (0.0 to 1.0) - gUFO quality aspect."@en ;
+    rdfs:domain cacontology-coord:IntelligenceSharing ;
+    rdfs:range xsd:double ;
+    rdfs:subPropertyOf gufo:hasQuality .
+
+# Personnel Quality Aspects
+cacontology-coord:hasLiaisonEffectiveness rdf:type owl:DatatypeProperty ;
+    rdfs:label "has liaison effectiveness"@en ;
+    rdfs:comment "Liaison effectiveness level (poor, adequate, good, excellent, exceptional) - gUFO quality aspect."@en ;
+    rdfs:domain cacontology-coord:LiaisonOfficer ;
+    rdfs:range xsd:string ;
+    rdfs:subPropertyOf gufo:hasQuality .
+
+cacontology-coord:hasTrustLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "has trust level"@en ;
+    rdfs:comment "Trust relationship measurement (0.0 to 1.0) - gUFO quality aspect."@en ;
+    rdfs:domain cacontology-coord:LiaisonOfficer ;
+    rdfs:range xsd:double ;
+    rdfs:subPropertyOf gufo:hasQuality .
+
+cacontology-coord:hasResponsiveness rdf:type owl:DatatypeProperty ;
+    rdfs:label "has responsiveness"@en ;
+    rdfs:comment "Response capability level (slow, moderate, good, rapid, immediate) - gUFO quality aspect."@en ;
+    rdfs:domain cacontology-coord:LiaisonOfficer ;
+    rdfs:range xsd:string ;
+    rdfs:subPropertyOf gufo:hasQuality .
+
+# Data Quality Aspects
+cacontology-coord:hasDataQuality rdf:type owl:DatatypeProperty ;
+    rdfs:label "has data quality"@en ;
+    rdfs:comment "Data quality assessment (poor, fair, good, excellent, validated) - gUFO quality aspect."@en ;
+    rdfs:domain [ 
+        owl:unionOf ( 
+            cacontology-coord:InvestigationCoordination 
+            cacontology-coord:InformationSharing 
+            cacontology-coord:ResourceSharing 
+            cacontology-coord:CoordinationAgreement 
+            cacontology-coord:LiaisonOfficer 
+            cacontology-coord:CoordinationMetrics 
+        ) 
+    ] ;
+    rdfs:range xsd:string ;
+    rdfs:subPropertyOf gufo:hasQuality .
+
+cacontology-coord:hasDataCompleteness rdf:type owl:DatatypeProperty ;
+    rdfs:label "has data completeness"@en ;
+    rdfs:comment "Data completeness measurement (0.0 to 1.0) - gUFO quality aspect."@en ;
+    rdfs:domain [ 
+        owl:unionOf ( 
+            cacontology-coord:InvestigationCoordination 
+            cacontology-coord:InformationSharing 
+            cacontology-coord:ResourceSharing 
+            cacontology-coord:CoordinationAgreement 
+            cacontology-coord:LiaisonOfficer 
+            cacontology-coord:CoordinationMetrics 
+        ) 
+    ] ;
+    rdfs:range xsd:double ;
+    rdfs:subPropertyOf gufo:hasQuality .
+
+cacontology-coord:hasDataConsistency rdf:type owl:DatatypeProperty ;
+    rdfs:label "has data consistency"@en ;
+    rdfs:comment "Data consistency measurement (0.0 to 1.0) - gUFO quality aspect."@en ;
+    rdfs:domain [ 
+        owl:unionOf ( 
+            cacontology-coord:InvestigationCoordination 
+            cacontology-coord:InformationSharing 
+            cacontology-coord:ResourceSharing 
+            cacontology-coord:CoordinationAgreement 
+            cacontology-coord:LiaisonOfficer 
+            cacontology-coord:CoordinationMetrics 
+        ) 
+    ] ;
+    rdfs:range xsd:double ;
+    rdfs:subPropertyOf gufo:hasQuality .
+
+cacontology-coord:hasValidationLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "has validation level"@en ;
+    rdfs:comment "Validation thoroughness (none, basic, standard, comprehensive, full_verification) - gUFO quality aspect."@en ;
+    rdfs:domain [ 
+        owl:unionOf ( 
+            cacontology-coord:InvestigationCoordination 
+            cacontology-coord:InformationSharing 
+            cacontology-coord:ResourceSharing 
+            cacontology-coord:CoordinationAgreement 
+            cacontology-coord:LiaisonOfficer 
+            cacontology-coord:CoordinationMetrics 
+        ) 
+    ] ;
+    rdfs:range xsd:string ;
+    rdfs:subPropertyOf gufo:hasQuality .
+
+cacontology-coord:hasReliability rdf:type owl:DatatypeProperty ;
+    rdfs:label "has reliability"@en ;
+    rdfs:comment "Reliability measurement (0.0 to 1.0) - gUFO quality aspect."@en ;
+    rdfs:domain cacontology-coord:CoordinationMetrics ;
+    rdfs:range xsd:double ;
+    rdfs:subPropertyOf gufo:hasQuality .
+
+cacontology-coord:hasAccuracy rdf:type owl:DatatypeProperty ;
+    rdfs:label "has accuracy"@en ;
+    rdfs:comment "Accuracy measurement (0.0 to 1.0) - gUFO quality aspect."@en ;
+    rdfs:domain cacontology-coord:CoordinationMetrics ;
+    rdfs:range xsd:double ;
+    rdfs:subPropertyOf gufo:hasQuality .
+
+# =============================================================================
+# gUFO PARTICIPATION AND PART-WHOLE RELATIONSHIPS
+# =============================================================================
+
+# Participation relationships (from gUFO)
+# Note: These properties connect entities to events and situations they participate in
+
+cacontology-coord:participatesIn rdf:type owl:ObjectProperty ;
+    rdfs:label "participates in"@en ;
+    rdfs:comment "Links an organization or person to coordination activities they participate in - gUFO participation relation."@en ;
+    rdfs:domain [ owl:unionOf ( uco-identity:Organization uco-identity:Person ) ] ;
+    rdfs:range cacontology-coord:InvestigationCoordination ;
+    rdfs:subPropertyOf gufo:participatedIn .
+
+cacontology-coord:participatesInSharing rdf:type owl:ObjectProperty ;
+    rdfs:label "participates in sharing"@en ;
+    rdfs:comment "Links an organization to information or resource sharing activities - gUFO participation relation."@en ;
+    rdfs:domain uco-identity:Organization ;
+    rdfs:range [ owl:unionOf ( cacontology-coord:InformationSharing cacontology-coord:ResourceSharing ) ] ;
+    rdfs:subPropertyOf gufo:participatedIn .
+
+# Part-whole relationships for complex coordination structures
+cacontology-coord:isComponentOf rdf:type owl:ObjectProperty ;
+    rdfs:label "is component of"@en ;
+    rdfs:comment "Links component agencies to task force or multi-agency coordination structures - gUFO part-whole relation."@en ;
+    rdfs:domain uco-identity:Organization ;
+    rdfs:range [ owl:unionOf ( cacontology-coord:TaskForceCoordination cacontology-coord:MultiAgencyCoordination ) ] ;
+    rdfs:subPropertyOf gufo:isComponentOf .
+
+cacontology-coord:hasComponent rdf:type owl:ObjectProperty ;
+    rdfs:label "has component"@en ;
+    rdfs:comment "Links coordination structures to their component agencies - gUFO part-whole relation."@en ;
+    rdfs:domain [ owl:unionOf ( cacontology-coord:TaskForceCoordination cacontology-coord:MultiAgencyCoordination cacontology-coord:JointInvestigation ) ] ;
+    rdfs:range uco-identity:Organization ;
+    owl:inverseOf cacontology-coord:isComponentOf .
+
+cacontology-coord:isSubInvestigationOf rdf:type owl:ObjectProperty ;
+    rdfs:label "is sub investigation of"@en ;
+    rdfs:comment "Links sub-investigations to larger joint investigation structures - gUFO part-whole relation."@en ;
+    rdfs:domain case-investigation:Investigation ;
+    rdfs:range cacontology-coord:JointInvestigation ;
+    rdfs:subPropertyOf gufo:isProperPartOf .
+
+cacontology-coord:hasSubInvestigation rdf:type owl:ObjectProperty ;
+    rdfs:label "has sub investigation"@en ;
+    rdfs:comment "Links joint investigations to their component sub-investigations - gUFO part-whole relation."@en ;
+    rdfs:domain cacontology-coord:JointInvestigation ;
+    rdfs:range case-investigation:Investigation ;
+    owl:inverseOf cacontology-coord:isSubInvestigationOf .
+
+# =============================================================================
+# gUFO QUALIFIED RELATIONS FOR INVESTIGATION COORDINATION
+# =============================================================================
+
+# Qualified relations enable temporal and quality aspects of participation
+cacontology-coord:standsInQualifiedParticipation rdf:type owl:ObjectProperty ;
+    rdfs:label "stands in qualified participation"@en ;
+    rdfs:comment "Links entities to qualified participation situations in coordination - gUFO qualified relation."@en ;
+    rdfs:domain [ owl:unionOf ( uco-identity:Organization uco-identity:Person ) ] ;
+    rdfs:range gufo:ParticipationSituation .
+
+cacontology-coord:standsInQualifiedParthood rdf:type owl:ObjectProperty ;
+    rdfs:label "stands in qualified parthood"@en ;
+    rdfs:comment "Links entities to qualified part-whole situations in coordination structures - gUFO qualified relation."@en ;
+    rdfs:domain [ owl:unionOf ( uco-identity:Organization case-investigation:Investigation ) ] ;
+    rdfs:range gufo:TemporaryParthoodSituation .
+
+cacontology-coord:concernsParticipant rdf:type owl:ObjectProperty ;
+    rdfs:label "concerns participant"@en ;
+    rdfs:comment "Links participation situations to the participating entities - gUFO qualified relation."@en ;
+    rdfs:domain gufo:ParticipationSituation ;
+    rdfs:range [ owl:unionOf ( uco-identity:Organization uco-identity:Person ) ] .
+
+cacontology-coord:concernsTemporaryWhole rdf:type owl:ObjectProperty ;
+    rdfs:label "concerns temporary whole"@en ;
+    rdfs:comment "Links part-whole situations to the whole entity - gUFO qualified relation."@en ;
+    rdfs:domain gufo:TemporaryParthoodSituation ;
+    rdfs:range [ owl:unionOf ( cacontology-coord:InvestigationCoordination uco-identity:Organization ) ] .
+
+cacontology-coord:concernsTemporaryPart rdf:type owl:ObjectProperty ;
+    rdfs:label "concerns temporary part"@en ;
+    rdfs:comment "Links part-whole situations to the part entity - gUFO qualified relation."@en ;
+    rdfs:domain gufo:TemporaryParthoodSituation ;
+    rdfs:range [ owl:unionOf ( uco-identity:Organization case-investigation:Investigation ) ] . 

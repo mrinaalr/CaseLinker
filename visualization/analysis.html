@@ -153,6 +153,9 @@
     'PREFIX cac: <https://cacontology.projectvic.org#>\n' +
     'PREFIX cac-multi: <https://cacontology.projectvic.org/multi-jurisdiction#>\n' +
     'PREFIX ncmec: <https://cacontology.projectvic.org/us/ncmec#>\n' +
+    'PREFIX cac-core: <https://cacontology.projectvic.org/core#>\n' +
+    'PREFIX uco-core: <https://ontology.unifiedcyberontology.org/uco/core/>\n' +
+    'PREFIX hotlines: <https://cacontology.projectvic.org/hotlines#>\n' +
     'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n' +
     'PREFIX dcterms: <http://purl.org/dc/terms/>\n';
   var RES = 'https://w3id.org/caselinker/resource/';
@@ -195,32 +198,32 @@
     var oneCase = PREFIXES + 'SELECT ?caseId WHERE { GRAPH <' + (id ? caseIri(id) : '') + '> { ?case a cac:CACInvestigation ; dcterms:identifier ?caseId } }';
     if (id && subject) return { how: 'Template: passages for one field in one case', kind: 'field', field: subject, casesSparql: oneCase, sparql: PREFIXES +
       'PREFIX oa: <http://www.w3.org/ns/oa#>\nPREFIX prov: <http://www.w3.org/ns/prov#>\nPREFIX cacc: <https://cacontology.projectvic.org/core#>\n' +
-      'SELECT ?value ?quote ?start ?end ?confidence ?method WHERE {\n' +
+      'PREFIX clp: <https://w3id.org/caselinker/ns/provenance#>\n' +
+      'SELECT ?value ?role ?quote ?start ?end ?confidence ?method WHERE {\n' +
       '  GRAPH <' + caseIri(id) + '/provenance> {\n' +
       '    ?a a oa:Annotation ; dcterms:subject "' + subject + '" ; prov:value ?value ; oa:hasTarget ?t .\n' +
       '    ?t oa:hasSelector ?qs . ?qs oa:exact ?quote .\n' +
       '    ?t oa:hasSelector ?ps . ?ps oa:start ?start ; oa:end ?end .\n' +
+      '    OPTIONAL { ?a clp:assertionRole ?role }\n' +
       '    OPTIONAL { ?a cacc:hasConfidence ?confidence } OPTIONAL { ?a cacc:usesMethod ?method }\n' +
-      '  }\n} ORDER BY ?start LIMIT 50', evidenceCase: id };
+      '  }\n} ORDER BY ?start LIMIT 300', evidenceCase: id };
 
-    if (id && tip) return { casesSparql: oneCase, how: 'Template: the CyberTip step in one case (its reporting body and channel, if recorded) beside the platforms on the case\u2019s other steps', kind: 'cybertip', sparql: PREFIXES +
-      'SELECT ?tip ?reporterLabel ?tipChannelLabel ?platform ?label (GROUP_CONCAT(DISTINCT ?stepName; separator=", ") AS ?steps) WHERE {\n' +
+    if (id && tip) return { casesSparql: oneCase, how: 'Template: the CyberTip report in one case and who sent it (when the release says), beside the case\u2019s platforms', kind: 'cybertip', sparql: PREFIXES +
+      'SELECT ?tip ?reporterLabel ?platform ?label (GROUP_CONCAT(DISTINCT ?stepName; separator=", ") AS ?steps) WHERE {\n' +
       '  GRAPH <' + caseIri(id) + '> {\n' +
       '    ?case a cac:CACInvestigation .\n' +
-      '    OPTIONAL { ?case cac:hasStep ?tip . ?tip a ncmec:NCMECCybertipReport .\n' +
-      '      OPTIONAL { ?tip ncmec:supportedBy ?reporter . ?reporter rdfs:label ?reporterLabel }\n' +
-      '      OPTIONAL { ?tip cac:usesChannel ?tipChannel . ?tipChannel rdfs:label ?tipChannelLabel } }\n' +
-      '    OPTIONAL { ?case cac:hasStep ?step . ?step cac:usesChannel ?platform . ?platform rdfs:label ?label .\n' +
-      '      OPTIONAL { ?step a ?stepType FILTER(?stepType != <https://cacontology.projectvic.org/core#Event>) }\n' +
+      '    OPTIONAL { ?case uco-core:object ?tip . ?tip a ncmec:NCMECCybertipReport .\n' +
+      '      OPTIONAL { ?tip hotlines:reportedBy ?role . ?rel uco-core:target ?role ; uco-core:source ?reporter . ?reporter rdfs:label ?reporterLabel } }\n' +
+      '    OPTIONAL { ?platform a cac-core:DigitalSystemEntity ; rdfs:label ?label .\n' +
+      '      OPTIONAL { ?step cac:usesChannel ?platform . ?step a ?stepType FILTER(?stepType != <https://cacontology.projectvic.org/core#Event>) }\n' +
       '      BIND(REPLACE(STR(?stepType), "^.*[#/]", "") AS ?stepName) }\n' +
-      '  }\n} GROUP BY ?tip ?reporterLabel ?tipChannelLabel ?platform ?label ORDER BY ?label LIMIT 50', evidenceCase: id };
+      '  }\n} GROUP BY ?tip ?reporterLabel ?platform ?label ORDER BY ?label LIMIT 50', evidenceCase: id };
 
-    if (id && (wantPlatform || tip)) return { casesSparql: oneCase, how: 'Template: platforms used in one case, with the step they attach to', sparql: PREFIXES +
+    if (id && (wantPlatform || tip)) return { casesSparql: oneCase, how: 'Template: platforms used in one case, with the event they attach to when the case has one event', sparql: PREFIXES +
       'SELECT ?platform ?label (GROUP_CONCAT(DISTINCT ?stepName; separator=", ") AS ?steps) WHERE {\n' +
       '  GRAPH <' + caseIri(id) + '> {\n' +
-      '    ?case a cac:CACInvestigation ; cac:hasStep ?step .\n' +
-      '    ?step cac:usesChannel ?platform . ?platform rdfs:label ?label .\n' +
-      '    OPTIONAL { ?step a ?stepType FILTER(?stepType != <https://cacontology.projectvic.org/core#Event>) }\n' +
+      '    ?platform a cac-core:DigitalSystemEntity ; rdfs:label ?label .\n' +
+      '    OPTIONAL { ?step cac:usesChannel ?platform . ?step a ?stepType FILTER(?stepType != <https://cacontology.projectvic.org/core#Event>) }\n' +
       '    BIND(REPLACE(STR(?stepType), "^.*[#/]", "") AS ?stepName)\n' +
       '  }\n} GROUP BY ?platform ?label ORDER BY ?label LIMIT 50', evidenceCase: id };
 
@@ -232,12 +235,12 @@
       '  }\n} ORDER BY ?label LIMIT 100', evidenceCase: id };
 
     if (id) return { casesSparql: oneCase, kind: 'case', how: 'Template: what the case graph records about this investigation', sparql: PREFIXES +
-      'SELECT ?kind ?label ?node WHERE {\n  GRAPH <' + caseIri(id) + '> {\n    BIND(<' + caseIri(id) + '> AS ?case)\n    {\n      ?case cac:hasStep ?node . ?node a ?t FILTER(?t != <https://cacontology.projectvic.org/core#Event>)\n      BIND("step" AS ?kind) BIND(REPLACE(STR(?t), "^.*[#/]", "") AS ?label)\n    } UNION {\n      ?case cac:hasStep ?s . ?s cac:usesChannel ?node . ?node rdfs:label ?label BIND("platform" AS ?kind)\n    } UNION {\n      ?case cac-multi:involvesAgency ?node . ?node rdfs:label ?label BIND("agency" AS ?kind)\n    } UNION {\n      ?case dcterms:spatial ?node . ?node rdfs:label ?label BIND("location" AS ?kind)\n    } UNION {\n      ?case dcterms:source ?node FILTER(isLiteral(?node)) BIND("source" AS ?kind) BIND(STR(?node) AS ?label)\n    }\n  }\n} ORDER BY ?kind ?label LIMIT 300', evidenceCase: id };
+      'SELECT ?kind ?label ?node WHERE {\n  GRAPH <' + caseIri(id) + '> {\n    BIND(<' + caseIri(id) + '> AS ?case)\n    {\n      ?case cac:hasStep ?node . ?node a ?t FILTER(?t != <https://cacontology.projectvic.org/core#Event>)\n      BIND("step" AS ?kind) BIND(REPLACE(STR(?t), "^.*[#/]", "") AS ?label)\n    } UNION {\n      ?node a cac-core:DigitalSystemEntity ; rdfs:label ?label BIND("platform" AS ?kind)\n    } UNION {\n      ?case cac-multi:involvesAgency ?node . ?node rdfs:label ?label BIND("agency" AS ?kind)\n    } UNION {\n      ?case dcterms:spatial ?node . ?node rdfs:label ?label BIND("location" AS ?kind)\n    } UNION {\n      ?case dcterms:source ?node FILTER(isLiteral(?node)) BIND("source" AS ?kind) BIND(STR(?node) AS ?label)\n    }\n  }\n} ORDER BY ?kind ?label LIMIT 300', evidenceCase: id };
 
     var where = '    ?case a cac:CACInvestigation ; dcterms:identifier ?caseId .\n';
     if (state) where += '    ?case dcterms:spatial <' + state.iri + '> .\n';
-    if (tip) where += '    ?case cac:hasStep ?tip . ?tip a ncmec:NCMECCybertipReport .\n';
-    plats.forEach(function (p, i) { where += '    ?case cac:hasStep ?e' + i + ' . ?e' + i + ' cac:usesChannel <' + RES + 'platform/' + p.slug + '> .\n'; });
+    if (tip) where += '    ?case uco-core:object ?tip . ?tip a ncmec:NCMECCybertipReport .\n';
+    plats.forEach(function (p) { where += '    <' + RES + 'platform/' + p.slug + '> a cac-core:DigitalSystemEntity .\n'; });
     ags.forEach(function (a) { where += '    ?case cac-multi:involvesAgency <' + RES + 'agency/' + a + '> .\n'; });
     var casesQ = PREFIXES + 'SELECT DISTINCT ?caseId WHERE {\n  GRAPH ?g {\n' + where + '  }\n  ' + PRESS + '\n} ORDER BY ?caseId LIMIT 500';
     var desc = [state ? state.label : null, tip ? 'CyberTip' : null].concat(plats.map(function (p) { return p.label; })).concat(ags.map(function (a) { return a.toUpperCase(); })).filter(Boolean).join(' · ');
@@ -248,19 +251,19 @@
 
     if (wantPlatform && (count || !state) && !(state && !count)) return { casesSparql: casesQ, how: 'Template: platforms by number of cases' + (desc ? ' (' + desc + ')' : ''), sparql: PREFIXES +
       'SELECT ?label (COUNT(DISTINCT ?case) AS ?cases) WHERE {\n  GRAPH ?g {\n' + where +
-      '    ?case cac:hasStep ?ev . ?ev cac:usesChannel ?platform . ?platform rdfs:label ?label .\n  }\n  ' + PRESS + '\n} GROUP BY ?label ORDER BY DESC(?cases) LIMIT 30' };
+      '    ?platform a cac-core:DigitalSystemEntity ; rdfs:label ?label .\n  }\n  ' + PRESS + '\n} GROUP BY ?label ORDER BY DESC(?cases) LIMIT 30' };
 
     if (count && (state || tip || plats.length || ags.length)) return { casesSparql: casesQ, how: 'Template: count of matching cases' + (desc ? ' (' + desc + ')' : ''), sparql: PREFIXES +
       'SELECT (COUNT(DISTINCT ?case) AS ?cases) WHERE {\n  GRAPH ?g {\n' + where + '  }\n  ' + PRESS + '\n}' };
 
     if (state || tip || plats.length || ags.length) return { casesSparql: casesQ, how: 'Template: matching cases with their platforms' + (desc ? ' (' + desc + ')' : ''), sparql: PREFIXES +
       'SELECT ?caseId (GROUP_CONCAT(DISTINCT ?label; separator=", ") AS ?platforms) WHERE {\n  GRAPH ?g {\n' + where +
-      '    OPTIONAL { ?case cac:hasStep ?ev . ?ev cac:usesChannel ?platform . ?platform rdfs:label ?label }\n  }\n  ' + PRESS + '\n} GROUP BY ?caseId ORDER BY ?caseId LIMIT 50' };
+      '    OPTIONAL { ?platform a cac-core:DigitalSystemEntity ; rdfs:label ?label }\n  }\n  ' + PRESS + '\n} GROUP BY ?caseId ORDER BY ?caseId LIMIT 50' };
 
     return null;
   }
 
-  var SCHEMA_HINT = '\n\nSchema notes for this store: a CyberTip step is `?case cac:hasStep ?tip . ?tip a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport>` (there is no cac:CyberTip class). Platforms: `?case cac:hasStep ?e . ?e cac:usesChannel ?platform . ?platform rdfs:label ?label`, platform IRIs are https://w3id.org/caselinker/resource/platform/{slug} (e.g. snapchat, kik, discord, social-media). Locations: `?case dcterms:spatial <https://w3id.org/caselinker/resource/location/{state}-{abbr}>` e.g. maryland-md, texas-tx. Agencies: `?case cac-multi:involvesAgency ?a . ?a rdfs:label ?l`; agency IRIs are https://w3id.org/caselinker/resource/agency/{slug} (fbi, hsi, ncmec, icac, usao, usms, cbp, plus local departments like bayonne-police-department-nj); rdfs:label is the full name (e.g. "Federal Bureau of Investigation") and acronyms are skos:altLabel, so match a named agency by IRI, never by a literal acronym label. Case ids are dcterms:identifier on cac:CACInvestigation. Always wrap patterns in GRAPH ?g and exclude provenance graphs with FILTER(STRSTARTS(STR(?g),"https://w3id.org/caselinker/resource/case/") && !STRENDS(STR(?g),"/provenance")). Provenance quotes live in GRAPH <case-iri/provenance> as oa:Annotation with dcterms:subject in {age,date,sentence,investigation_type}, prov:value, oa:hasTarget/oa:hasSelector with oa:exact and oa:start/oa:end.';
+  var SCHEMA_HINT = '\n\nSchema notes for this store: a CyberTip report is `?case uco-core:object ?tip . ?tip a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport>` (there is no cac:CyberTip class); who sent it, when the release says, is `?tip hotlines:reportedBy ?role . ?rel uco-core:target ?role ; uco-core:source ?esp . ?esp rdfs:label ?name` with ESP IRIs https://w3id.org/caselinker/resource/esp/{slug}; a tip with no reportedBy means the release does not say. Platforms used in a case are the platform nodes in its graph: `GRAPH ?g { ?platform a cac-core:DigitalSystemEntity ; rdfs:label ?label }` (cac:usesChannel links an event only when the case has one event), platform IRIs are https://w3id.org/caselinker/resource/platform/{slug} (e.g. snapchat, kik, discord, social-media). Locations: `?case dcterms:spatial <https://w3id.org/caselinker/resource/location/{state}-{abbr}>` e.g. maryland-md, texas-tx. Agencies: `?case cac-multi:involvesAgency ?a . ?a rdfs:label ?l`; agency IRIs are https://w3id.org/caselinker/resource/agency/{slug} (fbi, hsi, ncmec, icac, usao, usms, cbp, plus local departments like bayonne-police-department-nj); rdfs:label is the full name (e.g. "Federal Bureau of Investigation") and acronyms are skos:altLabel, so match a named agency by IRI, never by a literal acronym label. Case ids are dcterms:identifier on cac:CACInvestigation. Always wrap patterns in GRAPH ?g and exclude provenance graphs with FILTER(STRSTARTS(STR(?g),"https://w3id.org/caselinker/resource/case/") && !STRENDS(STR(?g),"/provenance")). Provenance quotes live in GRAPH <case-iri/provenance> as oa:Annotation with dcterms:subject in {age,date,sentence,investigation_type,cybertip_reporter}, prov:value, oa:hasTarget/oa:hasSelector with oa:exact and oa:start/oa:end.';
 
   /* ---------- examples ---------- */
   var EXAMPLES = [
@@ -359,12 +362,37 @@
       if (tipIri) kicker += '<p class="answer-note cl-small"><a href="/explore?iri=' + encodeURIComponent(tipIri) + '" class="cl-id">' + CL.esc(tipIri.slice(RES.length)) + '</a></p>';
     }
     else if (lastKind === 'field' && lastEvidenceCase) {
-      var vals = [], seen = {};
-      rows.forEach(function (r) { var v = r.value && r.value.value; if (v == null) return; var k = String(v).toLowerCase().replace(/\s+/g, ' ').trim(); if (!seen[k]) { seen[k] = 1; vals.push(String(v).replace(/\b([A-Z])([a-z]+)\b/g, function (m, a, b) { return /^(Years?|Months?|Days?|Life|Prison)$/.test(m) ? m.toLowerCase() : m; })); } });
-      var spans = {}; rows.forEach(function (r) { if (r.start) spans[r.start.value] = 1; });
-      var n = Object.keys(spans).length;
-      host.innerHTML = '<div class="answer-kicker">' + (vals.length ? vals.map(function (v) { return '<b>' + CL.esc(v) + '</b>'; }).join(', ') : 'Nothing recorded') + '</div>' +
-        '<p class="answer-note">' + CL.esc(lastField === 'age' ? 'Ages' : lastField === 'sentence' ? 'Sentences' : 'Dates') + ' recorded for <b>' + CL.esc(lastEvidenceCase) + '</b>: ' + vals.length + ' distinct value' + (vals.length === 1 ? '' : 's') + ' from ' + n + ' passage' + (n === 1 ? '' : 's') + '. Open Passages to read them.</p>';
+      /* One passage can carry several readers' roles. A value is listed under a role only when
+         every reader that gave one agrees; the rest is shown as disagreement, not as an answer. */
+      var bySpan = {}, order = [];
+      rows.forEach(function (r) {
+        var v = r.value && r.value.value; if (v == null) return;
+        var k = (r.start ? r.start.value : '') + ':' + String(v).toLowerCase().replace(/\s+/g, ' ').trim();
+        if (!bySpan[k]) { bySpan[k] = { value: String(v).replace(/\b(Years?|Months?|Days?|Life|Prison)\b/g, function (m) { return m.toLowerCase(); }), roles: {} }; order.push(k); }
+        if (r.role && r.role.value) bySpan[k].roles[r.role.value] = 1;
+      });
+      var GROUPS = lastField === 'age'
+        ? [['perpetrator', 'Defendants'], ['victim', 'Victims'], ['persona', 'Undercover or claimed ages, not real children'], ['contested', 'Readers disagree on whose age'], ['other', 'Other age mentions']]
+        : lastField === 'sentence'
+          ? [['imposed', 'Imposed'], ['supervised_release', 'Supervised release'], ['probation', 'Probation'], ['fine', 'Fines'], ['custody', 'Custody'], ['exposure', 'Statutory range, not imposed'], ['prior', 'From an earlier case'], ['contested', 'Readers disagree'], ['other', 'Durations with no sentencing role']]
+          : [['publication', 'Published'], ['event', 'Events'], ['contested', 'Readers disagree'], ['other', 'Other dates']];
+      var known = {}; GROUPS.forEach(function (g) { known[g[0]] = 1; });
+      var buckets = {};
+      order.forEach(function (k) {
+        var roles = Object.keys(bySpan[k].roles), g;
+        if (lastField === 'age' && roles.length && roles.every(function (x) { return x === 'decoy' || x === 'claimed'; })) g = 'persona';
+        else if (roles.length > 1) g = 'contested';
+        else if (roles.length === 1 && known[roles[0]]) g = roles[0];
+        else g = 'other';
+        (buckets[g] = buckets[g] || []);
+        if (buckets[g].indexOf(bySpan[k].value) < 0) buckets[g].push(bySpan[k].value);
+      });
+      var lead = GROUPS[0][0], what = lastField === 'age' ? 'defendant age' : lastField === 'sentence' ? 'imposed sentence' : 'publication date';
+      host.innerHTML = '<div class="answer-kicker">' + (buckets[lead] ? buckets[lead].map(function (v) { return '<b>' + CL.esc(v) + '</b>'; }).join(', ') : 'No ' + what + ' recorded') + '</div>' +
+        '<div class="case-sum">' + GROUPS.filter(function (g) { return buckets[g[0]]; }).map(function (g) {
+          return '<div class="case-sum__row"><div class="case-sum__k">' + CL.esc(g[1]) + '</div><div class="case-sum__v">' + buckets[g[0]].map(function (v) { return '<span class="cl-chip">' + CL.esc(v) + '</span>'; }).join('') + '</div></div>';
+        }).join('') + '</div>' +
+        '<p class="answer-note">From ' + order.length + ' passage' + (order.length === 1 ? '' : 's') + ' in <b>' + CL.esc(lastEvidenceCase) + '</b>. Only the first row answers the question; the others are what else the text mentions. Open Passages to read them.</p>';
       return;
     }
     else if (lastKind === 'case' && lastEvidenceCase) {
@@ -461,7 +489,7 @@
   function wireEvidence(host, id, spans) {
     var list = CL.el('div', { class: 'ev-list' });
     while (host.firstChild) list.appendChild(host.firstChild);
-    var panel = CL.narrativePanel({ caseId: id, spans: spans, title: 'Released text', onReady: function (p) {
+    var panel = CL.narrativePanel({ caseId: id, spans: spans, title: 'Released text', collapsed: true, onReady: function (p) {
       Array.prototype.forEach.call(p.querySelectorAll('mark.cl-mark'), function (m) {
         m.addEventListener('click', function () { select(m.getAttribute('data-span'), true); });
       });

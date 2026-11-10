@@ -1,0 +1,501 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-observable: <https://ontology.unifiedcyberontology.org/uco/observable/> .
+@prefix gufo: <http://purl.org/nemo/gufo#> .
+@prefix cacontology-gufo: <https://cacontology.projectvic.org/gufo#> .
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology-asset-forfeiture: <https://cacontology.projectvic.org/asset-forfeiture#> .
+
+# Ontology Declaration
+<https://cacontology.projectvic.org/asset-forfeiture> rdf:type owl:Ontology ;
+    rdfs:label "CAC Asset Forfeiture and Financial Recovery Ontology with gUFO Integration"@en ;
+    rdfs:comment "An ontology for representing asset forfeiture, property restraints, and financial recovery actions in Internet Crimes Against Children investigations, enhanced with comprehensive gUFO foundational modeling. Based on Criminal Assets Confiscation Taskforce (CACT) operations and Commonwealth financial penalties, featuring gUFO Events, Organizations, Objects, Roles, Phases, and Situations for enhanced semantic precision and anti-rigidity enforcement."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/asset-forfeiture/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:issued "2025-05-23"^^xsd:date ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/identity/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/observable/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/action/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/role/1.5.0> ,
+                <https://cacontology.projectvic.org/3.1.0> ,
+                <https://cacontology.projectvic.org/core/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> .
+
+# =============================================================================
+# ASSET FORFEITURE ACTIONS ENHANCED AS gUFO EVENTS
+# =============================================================================
+
+cacontology-asset-forfeiture:AssetForfeitureAction rdf:type owl:Class ;
+    rdfs:label "Asset Forfeiture Action"@en ;
+    rdfs:comment "Legal action to forfeit assets derived from or used in child exploitation crimes. Enhanced as gUFO Event for comprehensive temporal and causal modeling of forfeiture proceedings."@en ;
+    rdfs:subClassOf cac-core:LegalEvent ;
+    cacontology-gufo:hasTemporalProperty cacontology-gufo:forfeitureBeginTime ,
+                                 cacontology-gufo:forfeitureEndTime .
+
+cacontology-asset-forfeiture:PropertyRestraintAction rdf:type owl:Class ;
+    rdfs:label "Property Restraint Action"@en ;
+    rdfs:comment "Legal action to restrain property pending forfeiture proceedings, preventing disposal or transfer. Enhanced as gUFO Event with restraint temporal modeling."@en ;
+    rdfs:subClassOf cacontology-asset-forfeiture:AssetForfeitureAction ;
+    cacontology-gufo:hasTemporalProperty cacontology-gufo:restraintBeginTime .
+
+cacontology-asset-forfeiture:PropertyForfeitureAction rdf:type owl:Class ;
+    rdfs:label "Property Forfeiture Action"@en ;
+    rdfs:comment "Legal action resulting in permanent forfeiture of property to the Commonwealth or state. Enhanced as gUFO Event with completion modeling."@en ;
+    rdfs:subClassOf cacontology-asset-forfeiture:AssetForfeitureAction ;
+    cacontology-gufo:hasTemporalProperty cacontology-gufo:forfeitureCompletionTime .
+
+cacontology-asset-forfeiture:FinancialPenaltyAction rdf:type owl:Class ;
+    rdfs:label "Financial Penalty Action"@en ;
+    rdfs:comment "Court-ordered financial penalty equal to benefits derived from child exploitation offenses. Enhanced as gUFO Event for penalty proceedings."@en ;
+    rdfs:subClassOf cacontology-asset-forfeiture:AssetForfeitureAction ;
+    cacontology-gufo:hasTemporalProperty cacontology-gufo:penaltyImpositionTime .
+
+cacontology-asset-forfeiture:EquipmentSeizureAction rdf:type owl:Class ;
+    rdfs:label "Equipment Seizure Action"@en ;
+    rdfs:comment "Seizure of equipment used in commission of child exploitation offenses. Enhanced as gUFO Event for seizure operations."@en ;
+    rdfs:subClassOf cacontology-asset-forfeiture:AssetForfeitureAction ;
+    cacontology-gufo:hasTemporalProperty cacontology-gufo:seizureTime .
+
+# =============================================================================
+# CRIMINAL ASSETS CONFISCATION TASKFORCE AS gUFO ORGANIZATION
+# =============================================================================
+
+cacontology-asset-forfeiture:CriminalAssetsConfiscationTaskforce rdf:type owl:Class ;
+    rdfs:label "Criminal Assets Confiscation Taskforce"@en ;
+    rdfs:comment "Specialized taskforce responsible for asset restraint and forfeiture in child exploitation cases. Enhanced as gUFO Organization with structured operational frameworks."@en ;
+    rdfs:subClassOf uco-identity:Organization ,
+                    cac-core:OrganizationLikeEntity .
+
+cacontology-asset-forfeiture:CACTInvestigation rdf:type owl:Class ;
+    rdfs:label "CACT Investigation"@en ;
+    rdfs:comment "Investigation conducted by Criminal Assets Confiscation Taskforce targeting assets of child exploitation offenders. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cac-core:InvestigativeAction ;
+    cacontology-gufo:hasTemporalProperty cacontology-gufo:investigationBeginTime ,
+                                 cacontology-gufo:investigationEndTime .
+
+cacontology-asset-forfeiture:AssetAssessmentAction rdf:type owl:Class ;
+    rdfs:label "Asset Assessment Action"@en ;
+    rdfs:comment "Action to assess the value and ownership of assets for potential forfeiture. Enhanced as gUFO Event with assessment phases."@en ;
+    rdfs:subClassOf cac-core:LegalEvent ;
+    cacontology-gufo:hasTemporalProperty cacontology-gufo:assessmentCompletionTime .
+
+# =============================================================================
+# FORFEITURE TARGET ASSETS AS gUFO OBJECTS
+# =============================================================================
+
+cacontology-asset-forfeiture:ResidentialProperty rdf:type owl:Class ;
+    rdfs:label "Residential Property"@en ;
+    rdfs:comment "Residential home subject to restraint or forfeiture in child exploitation cases. Enhanced as gUFO Object for comprehensive property modeling."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject ,
+                    cac-core:PlaceLikeEntity .
+
+cacontology-asset-forfeiture:TechnicalEquipment rdf:type owl:Class ;
+    rdfs:label "Technical Equipment"@en ;
+    rdfs:comment "Technical equipment used in child exploitation offenses (cameras, computers, drones, etc.). Enhanced as gUFO Object for equipment modeling."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject ,
+                    cac-core:Artifact .
+
+cacontology-asset-forfeiture:FinancialAccount rdf:type owl:Class ;
+    rdfs:label "Financial Account"@en ;
+    rdfs:comment "Bank account or financial instrument subject to restraint or forfeiture. Enhanced as gUFO Object for financial asset modeling."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject ,
+                    cac-core:Artifact .
+
+cacontology-asset-forfeiture:Vehicle rdf:type owl:Class ;
+    rdfs:label "Vehicle"@en ;
+    rdfs:comment "Vehicle used in or purchased with proceeds from child exploitation offenses. Enhanced as gUFO Object for vehicle asset modeling."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject ,
+                    cac-core:Artifact .
+
+cacontology-asset-forfeiture:HouseholdItems rdf:type owl:Class ;
+    rdfs:label "Household Items"@en ;
+    rdfs:comment "High-value household items including electronics, furniture, and appliances subject to forfeiture. Enhanced as gUFO Object for personal property modeling."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject ,
+                    cac-core:Artifact .
+
+# =============================================================================
+# FORFEITURE LEGAL BASIS AS gUFO OBJECTS
+# =============================================================================
+
+cacontology-asset-forfeiture:LegalBasisForForfeiture rdf:type owl:Class ;
+    rdfs:label "Legal Basis for Forfeiture"@en ;
+    rdfs:comment "Legal justification and framework for asset forfeiture action."@en ;
+    rdfs:subClassOf cac-core:EnduringEntity .
+
+cacontology-asset-forfeiture:ProceedsOfCrime rdf:type owl:Class ;
+    rdfs:label "Proceeds of Crime"@en ;
+    rdfs:comment "Assets that are proceeds or benefits derived from child exploitation offenses. Enhanced as gUFO Object."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject ,
+                    cac-core:Artifact .
+
+cacontology-asset-forfeiture:InstrumentOfOffense rdf:type owl:Class ;
+    rdfs:label "Instrument of Offense"@en ;
+    rdfs:comment "Assets used as instruments in the commission of child exploitation offenses. Enhanced as gUFO Object."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject ,
+                    cac-core:Artifact .
+
+cacontology-asset-forfeiture:NonProfitOffenderAssets rdf:type owl:Class ;
+    rdfs:label "Non-Profit Offender Assets"@en ;
+    rdfs:comment "Assets of offenders who were not accused of profiting from their crimes, representing first-of-kind forfeiture precedent. Enhanced as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-asset-forfeiture:LegalBasisForForfeiture .
+
+# =============================================================================
+# FORFEITURE OUTCOMES AS gUFO OBJECTS
+# =============================================================================
+
+cacontology-asset-forfeiture:ForfeitureOutcome rdf:type owl:Class ;
+    rdfs:label "Forfeiture Outcome"@en ;
+    rdfs:comment "Result of asset forfeiture proceedings. Enhanced as gUFO Object for outcome modeling."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject ,
+                    cac-core:AssessmentResult .
+
+cacontology-asset-forfeiture:PartialForfeiture rdf:type owl:Class ;
+    rdfs:label "Partial Forfeiture"@en ;
+    rdfs:comment "Forfeiture of a percentage of property value (e.g., 50% of market value). Enhanced as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-asset-forfeiture:ForfeitureOutcome .
+
+cacontology-asset-forfeiture:CompleteForfeiture rdf:type owl:Class ;
+    rdfs:label "Complete Forfeiture"@en ;
+    rdfs:comment "Complete forfeiture of property to the Commonwealth or state. Enhanced as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-asset-forfeiture:ForfeitureOutcome .
+
+cacontology-asset-forfeiture:ConsentOrder rdf:type owl:Class ;
+    rdfs:label "Consent Order"@en ;
+    rdfs:comment "Court order agreed to by parties for financial penalty payment. Enhanced as gUFO Object."@en ;
+    rdfs:subClassOf cacontology-asset-forfeiture:ForfeitureOutcome .
+
+# =============================================================================
+# MULTI-JURISDICTIONAL COORDINATION AS gUFO SITUATIONS
+# =============================================================================
+
+cacontology-asset-forfeiture:MultiStateForfeiture rdf:type owl:Class ;
+    rdfs:label "Multi-State Forfeiture"@en ;
+    rdfs:comment "Asset forfeiture operation spanning multiple Australian states and territories. Subclasses AssetForfeitureAction (Event) only; multi-jurisdictional coordination modeled via involvesCoordination to JurisdictionalCoordination."@en ;
+    rdfs:subClassOf cacontology-asset-forfeiture:AssetForfeitureAction .
+
+cacontology-asset-forfeiture:StateSupremeCourt rdf:type owl:Class ;
+    rdfs:label "State Supreme Court"@en ;
+    rdfs:comment "State Supreme Court with jurisdiction over forfeiture proceedings. Enhanced as gUFO Organization for judicial institution modeling."@en ;
+    rdfs:subClassOf uco-identity:Organization ,
+                    cac-core:OrganizationLikeEntity .
+
+cacontology-asset-forfeiture:JurisdictionalCoordination rdf:type owl:Class ;
+    rdfs:label "Jurisdictional Coordination"@en ;
+    rdfs:comment "Complex coordination situation involving multiple legal jurisdictions for asset forfeiture operations. gUFO Situation for inter-jurisdictional modeling."@en ;
+    rdfs:subClassOf cac-core:Situation .
+
+cacontology-asset-forfeiture:LegalProceedingsSituation rdf:type owl:Class ;
+    rdfs:label "Legal Proceedings Situation"@en ;
+    rdfs:comment "Complex situation involving courts, legal counsel, and multiple parties in forfeiture proceedings. gUFO Situation for legal process coordination."@en ;
+    rdfs:subClassOf cac-core:Situation .
+
+# =============================================================================
+# FORFEITURE OPERATIONAL PHASES (Anti-Rigid gUFO Phases)
+# =============================================================================
+
+cacontology-asset-forfeiture:AssetIdentificationPhase rdf:type owl:Class ;
+    rdfs:label "Asset Identification Phase"@en ;
+    rdfs:comment "Phase during which assets are identified and assessed for potential forfeiture. Anti-rigid gUFO Phase supporting dynamic operational transitions."@en ;
+    rdfs:subClassOf cac-core:Phase ;
+    cacontology-gufo:hasAntiRigidityConstraint "Phase duration varies based on asset complexity and investigation scope" .
+
+cacontology-asset-forfeiture:RestraintPhase rdf:type owl:Class ;
+    rdfs:label "Restraint Phase"@en ;
+    rdfs:comment "Phase during which property is restrained pending forfeiture proceedings. Anti-rigid gUFO Phase."@en ;
+    rdfs:subClassOf cac-core:Phase ;
+    cacontology-gufo:hasAntiRigidityConstraint "Phase changes based on legal proceedings and court decisions" .
+
+cacontology-asset-forfeiture:LegalProceedingsPhase rdf:type owl:Class ;
+    rdfs:label "Legal Proceedings Phase"@en ;
+    rdfs:comment "Phase during which formal forfeiture proceedings occur in court. Anti-rigid gUFO Phase."@en ;
+    rdfs:subClassOf cac-core:Phase ;
+    cacontology-gufo:hasAntiRigidityConstraint "Phase varies based on legal complexity and jurisdictional requirements" .
+
+cacontology-asset-forfeiture:RecoveryPhase rdf:type owl:Class ;
+    rdfs:label "Recovery Phase"@en ;
+    rdfs:comment "Phase during which forfeited assets are recovered and transferred to appropriate authorities. Anti-rigid gUFO Phase."@en ;
+    rdfs:subClassOf cac-core:Phase ;
+    cacontology-gufo:hasAntiRigidityConstraint "Phase changes based on asset type and recovery logistics" .
+
+# =============================================================================
+# FORFEITURE SPECIALIST ROLES (Anti-Rigid gUFO Roles)
+# =============================================================================
+
+cacontology-asset-forfeiture:AssetForfeitureOfficer rdf:type owl:Class ;
+    rdfs:label "Asset Forfeiture Officer"@en ;
+    rdfs:comment "Officer specializing in asset identification and forfeiture proceedings."@en ;
+    rdfs:subClassOf cac-core:Role ;
+    cacontology-gufo:hasAntiRigidityConstraint "Role assignment varies based on case complexity and specialization needs" .
+
+cacontology-asset-forfeiture:AssetValuationExpert rdf:type owl:Class ;
+    rdfs:label "Asset Valuation Expert"@en ;
+    rdfs:comment "Expert responsible for determining market value of assets for forfeiture proceedings."@en ;
+    rdfs:subClassOf cac-core:Role ;
+    cacontology-gufo:hasAntiRigidityConstraint "Role varies based on asset type and valuation complexity" .
+
+cacontology-asset-forfeiture:LegalCounsel rdf:type owl:Class ;
+    rdfs:label "Legal Counsel"@en ;
+    rdfs:comment "Legal counsel specialized in asset forfeiture law and proceedings."@en ;
+    rdfs:subClassOf cac-core:Role ;
+    cacontology-gufo:hasAntiRigidityConstraint "Role assignment changes based on jurisdictional requirements and case complexity" .
+
+cacontology-asset-forfeiture:ForensicAccountant rdf:type owl:Class ;
+    rdfs:label "Forensic Accountant"@en ;
+    rdfs:comment "Specialist in tracing financial assets and determining proceeds of crime."@en ;
+    rdfs:subClassOf cac-core:Role ;
+    cacontology-gufo:hasAntiRigidityConstraint "Role varies based on financial complexity and asset types" .
+
+cacontology-asset-forfeiture:PropertyManager rdf:type owl:Class ;
+    rdfs:label "Property Manager"@en ;
+    rdfs:comment "Specialist responsible for managing restrained and forfeited property."@en ;
+    rdfs:subClassOf cac-core:Role ;
+    cacontology-gufo:hasAntiRigidityConstraint "Role changes based on property type and management requirements" .
+
+# =============================================================================
+# gUFO TEMPORAL PROPERTIES FOR ASSET FORFEITURE
+# =============================================================================
+
+cacontology-gufo:forfeitureBeginTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "forfeiture begin time"@en ;
+    rdfs:comment "Temporal point when asset forfeiture proceedings begin using gUFO temporal framework."@en ;
+    rdfs:domain cacontology-asset-forfeiture:AssetForfeitureAction ;
+    rdfs:range xsd:dateTime ;
+    cacontology-gufo:temporalConstraint "Must precede forfeiture completion time" .
+
+cacontology-gufo:forfeitureEndTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "forfeiture end time"@en ;
+    rdfs:comment "Temporal point when asset forfeiture proceedings are completed using gUFO temporal framework."@en ;
+    rdfs:domain cacontology-asset-forfeiture:AssetForfeitureAction ;
+    rdfs:range xsd:dateTime .
+
+cacontology-gufo:restraintBeginTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "restraint begin time"@en ;
+    rdfs:comment "Temporal point when property restraint order is issued using gUFO temporal framework."@en ;
+    rdfs:domain cacontology-asset-forfeiture:PropertyRestraintAction ;
+    rdfs:range xsd:dateTime .
+
+cacontology-gufo:forfeitureCompletionTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "forfeiture completion time"@en ;
+    rdfs:comment "Temporal point when property forfeiture is finalized using gUFO temporal framework."@en ;
+    rdfs:domain cacontology-asset-forfeiture:PropertyForfeitureAction ;
+    rdfs:range xsd:dateTime .
+
+cacontology-gufo:penaltyImpositionTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "penalty imposition time"@en ;
+    rdfs:comment "Temporal point when financial penalty is imposed using gUFO temporal framework."@en ;
+    rdfs:domain cacontology-asset-forfeiture:FinancialPenaltyAction ;
+    rdfs:range xsd:dateTime .
+
+cacontology-gufo:seizureTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "seizure time"@en ;
+    rdfs:comment "Temporal point when equipment seizure occurs using gUFO temporal framework."@en ;
+    rdfs:domain cacontology-asset-forfeiture:EquipmentSeizureAction ;
+    rdfs:range xsd:dateTime .
+
+cacontology-gufo:coordinationBeginTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "coordination begin time"@en ;
+    rdfs:comment "Temporal point when multi-jurisdictional coordination begins using gUFO temporal framework."@en ;
+    rdfs:domain cacontology-asset-forfeiture:JurisdictionalCoordination ;
+    rdfs:range xsd:dateTime .
+
+# =============================================================================
+# ENHANCED PROPERTIES FOR ASSET FORFEITURE WITH gUFO INTEGRATION
+# =============================================================================
+
+# Financial Properties Enhanced with gUFO Framework
+cacontology-asset-forfeiture:marketValue rdf:type owl:DatatypeProperty ;
+    rdfs:label "market value"@en ;
+    rdfs:comment "Market value of property subject to forfeiture (e.g., $850,000). Enhanced with gUFO Object value modeling."@en ;
+    rdfs:domain cacontology-asset-forfeiture:ResidentialProperty ;
+    rdfs:range xsd:decimal ;
+    cacontology-gufo:hasValidationConstraint "Market value must be professionally assessed and documented" .
+
+cacontology-asset-forfeiture:forfeiturePercentage rdf:type owl:DatatypeProperty ;
+    rdfs:label "forfeiture percentage"@en ;
+    rdfs:comment "Percentage of property value subject to forfeiture (e.g., 50%). Enhanced with gUFO outcome quantification."@en ;
+    rdfs:domain cacontology-asset-forfeiture:PartialForfeiture ;
+    rdfs:range xsd:decimal ;
+    cacontology-gufo:hasValidationConstraint "Percentage must be between 0 and 100" .
+
+cacontology-asset-forfeiture:financialPenaltyAmount rdf:type owl:DatatypeProperty ;
+    rdfs:label "financial penalty amount"@en ;
+    rdfs:comment "Amount of financial penalty equal to benefits derived from offenses. Enhanced with gUFO Event outcome modeling."@en ;
+    rdfs:domain cacontology-asset-forfeiture:FinancialPenaltyAction ;
+    rdfs:range xsd:decimal ;
+    cacontology-gufo:hasValidationConstraint "Penalty amount must correspond to proven criminal benefits" .
+
+cacontology-asset-forfeiture:estimatedValue rdf:type owl:DatatypeProperty ;
+    rdfs:label "estimated value"@en ;
+    rdfs:comment "Estimated total value of restrained assets (e.g., $30,000). Enhanced with gUFO Object aggregation."@en ;
+    rdfs:range xsd:decimal ;
+    cacontology-gufo:hasValidationConstraint "Estimated value should be based on professional assessment" .
+
+# Legal Properties Enhanced with gUFO Temporal Framework
+cacontology-asset-forfeiture:restraintDate rdf:type owl:DatatypeProperty ;
+    rdfs:label "restraint date"@en ;
+    rdfs:comment "Date when property restraint order was issued. Superseded by gUFO temporal framework."@en ;
+    rdfs:domain cacontology-asset-forfeiture:PropertyRestraintAction ;
+    rdfs:range xsd:dateTime ;
+    owl:deprecated true .
+
+cacontology-asset-forfeiture:forfeitureDate rdf:type owl:DatatypeProperty ;
+    rdfs:label "forfeiture date"@en ;
+    rdfs:comment "Date when property was forfeited to the Commonwealth. Superseded by gUFO temporal framework."@en ;
+    rdfs:domain cacontology-asset-forfeiture:PropertyForfeitureAction ;
+    rdfs:range xsd:dateTime ;
+    owl:deprecated true .
+
+cacontology-asset-forfeiture:courtJurisdiction rdf:type owl:DatatypeProperty ;
+    rdfs:label "court jurisdiction"@en ;
+    rdfs:comment "Court jurisdiction for forfeiture proceedings (e.g., 'NSW', 'VIC', 'SA'). Enhanced with gUFO Situation context."@en ;
+    rdfs:range xsd:string ;
+    cacontology-gufo:hasValidationConstraint "Jurisdiction must be a valid jurisdiction code" .
+
+# gUFO Enhanced Relationship Properties
+cacontology-asset-forfeiture:relatedCriminalCharges rdf:type owl:ObjectProperty ;
+    rdfs:label "related criminal charges"@en ;
+    rdfs:comment "Criminal charges related to the asset forfeiture action. Enhanced with gUFO Event relationships."@en ;
+    rdfs:domain cacontology-asset-forfeiture:AssetForfeitureAction ;
+    rdfs:range uco-observable:ObservableObject ;
+    cacontology-gufo:hasRelationshipConstraint "Charges must be directly related to asset origins or usage" .
+
+cacontology-asset-forfeiture:targetedAsset rdf:type owl:ObjectProperty ;
+    rdfs:label "targeted asset"@en ;
+    rdfs:comment "Asset that is the target of forfeiture action. Enhanced with gUFO Object targeting."@en ;
+    rdfs:domain cacontology-asset-forfeiture:AssetForfeitureAction ;
+    rdfs:range uco-observable:ObservableObject ;
+    cacontology-gufo:hasRelationshipConstraint "Targeted assets must be gUFO Objects with established ownership" .
+
+cacontology-asset-forfeiture:involvesTaskforce rdf:type owl:ObjectProperty ;
+    rdfs:label "involves taskforce"@en ;
+    rdfs:comment "Links forfeiture action to the CACT or other taskforce involved. Enhanced with gUFO Organization participation."@en ;
+    rdfs:domain cacontology-asset-forfeiture:AssetForfeitureAction ;
+    rdfs:range cacontology-asset-forfeiture:CriminalAssetsConfiscationTaskforce ;
+    cacontology-gufo:hasRelationshipConstraint "Taskforce must be active gUFO Organization with appropriate authority" .
+
+# gUFO Phase Relationships
+cacontology-asset-forfeiture:currentPhase rdf:type owl:ObjectProperty ;
+    rdfs:label "current phase"@en ;
+    rdfs:comment "Links asset forfeiture action to its current operational phase. gUFO Phase modeling for operational state management."@en ;
+    rdfs:domain cacontology-asset-forfeiture:AssetForfeitureAction ;
+    rdfs:range cac-core:Phase .
+
+cacontology-asset-forfeiture:hasPhaseTransition rdf:type owl:ObjectProperty ;
+    rdfs:label "has phase transition"@en ;
+    rdfs:comment "Links asset forfeiture action to phase transition events."@en ;
+    rdfs:domain cacontology-asset-forfeiture:AssetForfeitureAction ;
+    rdfs:range cac-core:Event .
+
+# gUFO Role Assignment Properties
+cacontology-asset-forfeiture:assignedRole rdf:type owl:ObjectProperty ;
+    rdfs:label "assigned role"@en ;
+    rdfs:comment "Links a person to their assigned forfeiture role. gUFO Role modeling for dynamic assignment."@en ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range cac-core:Role .
+
+cacontology-asset-forfeiture:playsRole rdf:type owl:ObjectProperty ;
+    rdfs:label "plays role"@en ;
+    rdfs:comment "Links an entity to a role it plays in forfeiture operations."@en ;
+    rdfs:range cac-core:Role .
+
+# gUFO Coordination Properties
+cacontology-asset-forfeiture:involvesCoordination rdf:type owl:ObjectProperty ;
+    rdfs:label "involves coordination"@en ;
+    rdfs:comment "Links forfeiture action to coordination situations involving multiple jurisdictions."@en ;
+    rdfs:domain cacontology-asset-forfeiture:AssetForfeitureAction ;
+    rdfs:range cacontology-asset-forfeiture:JurisdictionalCoordination .
+
+cacontology-asset-forfeiture:precedentSetting rdf:type owl:DatatypeProperty ;
+    rdfs:label "precedent setting"@en ;
+    rdfs:comment "Indicates whether this forfeiture set a legal precedent (e.g., first restraint of non-profit offender home). Enhanced with gUFO precedential significance."@en ;
+    rdfs:domain cacontology-asset-forfeiture:AssetForfeitureAction ;
+    rdfs:range xsd:boolean ;
+    cacontology-gufo:hasValidationConstraint "Precedent status must be legally verified and documented" .
+
+# Equipment Properties Enhanced with gUFO Object Modeling
+cacontology-asset-forfeiture:equipmentType rdf:type owl:DatatypeProperty ;
+    rdfs:label "equipment type"@en ;
+    rdfs:comment "Type of technical equipment (e.g., 'camera equipment', 'drone', 'scuba diving gear'). Enhanced with gUFO Object classification."@en ;
+    rdfs:domain cacontology-asset-forfeiture:TechnicalEquipment ;
+    rdfs:range xsd:string ;
+    cacontology-gufo:hasValidationConstraint "Equipment type must be forensically verified and categorized" .
+
+cacontology-asset-forfeiture:itemCount rdf:type owl:DatatypeProperty ;
+    rdfs:label "item count"@en ;
+    rdfs:comment "Number of household items forfeited (e.g., 48 household items). Enhanced with gUFO Object quantification."@en ;
+    rdfs:domain cacontology-asset-forfeiture:HouseholdItems ;
+    rdfs:range xsd:nonNegativeInteger ;
+    cacontology-gufo:hasValidationConstraint "Item count must be verified through inventory documentation" .
+
+cacontology-asset-forfeiture:accountFunds rdf:type owl:DatatypeProperty ;
+    rdfs:label "account funds"@en ;
+    rdfs:comment "Amount of funds in financial accounts subject to forfeiture. Enhanced with gUFO Object financial quantification."@en ;
+    rdfs:domain cacontology-asset-forfeiture:FinancialAccount ;
+    rdfs:range xsd:decimal ;
+    cacontology-gufo:hasValidationConstraint "Account funds must be verified through financial institution records" .
+
+# =============================================================================
+# ADDITIONAL PROPERTIES (referenced by SHACL shapes)
+# =============================================================================
+
+cacontology-asset-forfeiture:forfeitureOutcome rdf:type owl:ObjectProperty ;
+    rdfs:label "forfeiture outcome"@en ;
+    rdfs:comment "Links a property forfeiture action to its outcome."@en ;
+    rdfs:domain cacontology-asset-forfeiture:PropertyForfeitureAction ;
+    rdfs:range cacontology-asset-forfeiture:ForfeitureOutcome .
+
+cacontology-asset-forfeiture:financialInstitution rdf:type owl:DatatypeProperty ;
+    rdfs:label "financial institution"@en ;
+    rdfs:comment "Name of the financial institution holding an account subject to forfeiture."@en ;
+    rdfs:domain cacontology-asset-forfeiture:FinancialAccount ;
+    rdfs:range xsd:string .
+
+cacontology-asset-forfeiture:previousPhase rdf:type owl:ObjectProperty ;
+    rdfs:label "previous phase"@en ;
+    rdfs:comment "Links a forfeiture action to its previous operational phase for sequence tracking."@en ;
+    rdfs:domain cacontology-asset-forfeiture:AssetForfeitureAction ;
+    rdfs:range cac-core:Phase .
+
+cacontology-asset-forfeiture:phaseStatus rdf:type owl:DatatypeProperty ;
+    rdfs:label "phase status"@en ;
+    rdfs:comment "DEPRECATED: use cacontology-legal-outcomes:phaseStatus (domain cac-core:Phase) as the canonical phase status property. This module-local copy is retained for backward compatibility with existing asset-forfeiture graphs and shapes and is owl:equivalentProperty to the legal-outcomes declaration."@en ;
+    owl:deprecated "true"^^xsd:boolean ;
+    owl:equivalentProperty <https://cacontology.projectvic.org/legal-outcomes#phaseStatus> ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:string ;
+    rdfs:seeAlso <https://cacontology.projectvic.org/legal-outcomes#phaseStatus> .
+
+cacontology-asset-forfeiture:involvesJurisdiction rdf:type owl:ObjectProperty ;
+    rdfs:label "involves jurisdiction"@en ;
+    rdfs:comment "Links a multi-state forfeiture to a jurisdiction involved in the operation."@en ;
+    rdfs:domain cacontology-asset-forfeiture:MultiStateForfeiture ;
+    rdfs:range uco-identity:Organization .
+
+cacontology-asset-forfeiture:hasParticipant rdf:type owl:ObjectProperty ;
+    rdfs:label "has participant"@en ;
+    rdfs:comment "Links a situation to an entity participating in it."@en ;
+    rdfs:domain cac-core:Situation ;
+    rdfs:range owl:Thing .
+
+cacontology-asset-forfeiture:organizationType rdf:type owl:DatatypeProperty ;
+    rdfs:label "organization type"@en ;
+    rdfs:comment "Classification of an organization (e.g., 'legal_authority', 'enforcement_agency')."@en ;
+    rdfs:range xsd:string .
+
+cacontology-asset-forfeiture:organizationStatus rdf:type owl:DatatypeProperty ;
+    rdfs:label "organization status"@en ;
+    rdfs:comment "Operational status of an organization (e.g., 'active', 'inactive')."@en ;
+    rdfs:range xsd:string .
+
+cacontology-asset-forfeiture:involvesCourtProceeding rdf:type owl:ObjectProperty ;
+    rdfs:label "involves court proceeding"@en ;
+    rdfs:comment "Links a legal proceedings phase to its associated court situation."@en ;
+    rdfs:domain cacontology-asset-forfeiture:LegalProceedingsPhase ;
+    rdfs:range cacontology-asset-forfeiture:LegalProceedingsSituation . 

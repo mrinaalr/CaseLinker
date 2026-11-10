@@ -1,0 +1,817 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
+@prefix uco-observable: <https://ontology.unifiedcyberontology.org/uco/observable/> .
+@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-registry: <https://cacontology.projectvic.org/sex-offender-registry#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+<https://cacontology.projectvic.org/sex-offender-registry> rdf:type owl:Ontology ;
+    rdfs:label "CAC Sex Offender Registry Ontology"@en ;
+    rdfs:comment "An ontology for modeling sex offender registry data, registration requirements, and registry management systems for child protection investigations."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/sex-offender-registry/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://cacontology.projectvic.org/core/3.1.0> .
+
+# =============================================================================
+# REGISTRY CORE CLASSES
+# =============================================================================
+
+cacontology-registry:SexOffenderRegistry rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Sex Offender Registry"@en ;
+    rdfs:comment "Registry system maintaining information about registered sex offenders."@en .
+
+cacontology-registry:RegisteredSexOffender rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:Role ;
+    rdfs:label "Registered Sex Offender"@en ;
+    rdfs:comment "Legal status/role that a person can gain or lose; individual required to register as a sex offender."@en .
+
+cacontology-registry:OffenderProfile rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Offender Profile"@en ;
+    rdfs:comment "Comprehensive profile of registered sex offender including all required information."@en .
+
+cacontology-registry:RegistrationRecord rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Registration Record"@en ;
+    rdfs:comment "Official record of sex offender registration including all required data elements."@en .
+
+cacontology-registry:RegistrationRequirement rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Registration Requirement"@en ;
+    rdfs:comment "Specific requirement for sex offender registration (location, frequency, restrictions)."@en .
+
+# =============================================================================
+# OFFENSE AND CONVICTION INFORMATION
+# =============================================================================
+
+cacontology-registry:ConvictingOffense rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Convicting Offense"@en ;
+    rdfs:comment "Criminal offense that resulted in sex offender registration requirement."@en .
+
+cacontology-registry:OffenseClassification rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Offense Classification"@en ;
+    rdfs:comment "Classification of sexual offense (felony/misdemeanor, degree, special categories)."@en .
+
+cacontology-registry:VictimInformation rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Victim Information"@en ;
+    rdfs:comment "Information about victims relevant to registration (age, relationship, count)."@en .
+
+cacontology-registry:FailureToRegisterOffense rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-registry:ConvictingOffense ;
+    rdfs:label "Failure to Register Offense"@en ;
+    rdfs:comment "Criminal offense for failing to register or update required information in a sex offender registry. Typically serves as a registry-triggering or enhancing offense for compliance analytics."@en .
+
+cacontology-registry:FalseInformationRegistrationOffense rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-registry:ConvictingOffense ;
+    rdfs:label "False Information Registration Offense"@en ;
+    rdfs:comment "Criminal offense for knowingly providing false or misleading information in connection with sex offender registration (e.g., false address, contact information, or online identifiers)."@en .
+
+cacontology-registry:CourtOrder rdf:type owl:Class ;
+    rdfs:subClassOf uco-observable:ObservableObject ;
+    rdfs:label "Court Order"@en ;
+    rdfs:comment "Court order mandating sex offender registration."@en .
+
+# =============================================================================
+# REGISTRATION STATUS AND COMPLIANCE
+# =============================================================================
+
+cacontology-registry:RegistrationStatus rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Registration Status"@en ;
+    rdfs:comment "Current status of sex offender registration (active, inactive, non-compliant, etc.)."@en .
+
+cacontology-registry:ComplianceHistory rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Compliance History"@en ;
+    rdfs:comment "History of compliance with registration requirements."@en .
+
+cacontology-registry:RegistrationUpdate rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:LegalEvent ;
+    rdfs:label "Registration Update"@en ;
+    rdfs:comment "Update to sex offender registration information."@en .
+
+cacontology-registry:ComplianceViolation rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Compliance Violation"@en ;
+    rdfs:comment "Violation of sex offender registration requirements."@en .
+
+cacontology-registry:VerificationCheck rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:LegalEvent ;
+    rdfs:label "Verification Check"@en ;
+    rdfs:comment "Official verification of sex offender registration information."@en .
+
+# =============================================================================
+# PERSONAL IDENTIFICATION AND DEMOGRAPHICS
+# =============================================================================
+
+cacontology-registry:PersonalIdentifiers rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Personal Identifiers"@en ;
+    rdfs:comment "Collection of identifiers for registered sex offender (SSN, DOB, aliases, etc.)."@en .
+
+cacontology-registry:PhysicalDescription rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Physical Description"@en ;
+    rdfs:comment "Physical description of registered sex offender (height, weight, scars, tattoos)."@en .
+
+cacontology-registry:Photograph rdf:type owl:Class ;
+    rdfs:subClassOf uco-observable:ObservableObject ;
+    rdfs:label "Photograph"@en ;
+    rdfs:comment "Official photograph of registered sex offender."@en .
+
+cacontology-registry:Alias rdf:type owl:Class ;
+    rdfs:subClassOf uco-identity:Identity ;
+    rdfs:label "Alias"@en ;
+    rdfs:comment "Known alias or alternate name used by registered sex offender."@en .
+
+cacontology-registry:IdentifyingMark rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Identifying Mark"@en ;
+    rdfs:comment "Distinctive physical mark (scar, tattoo, birthmark) for identification."@en .
+
+# =============================================================================
+# ADDRESS AND LOCATION INFORMATION
+# =============================================================================
+
+cacontology-registry:RegisteredAddress rdf:type owl:Class ;
+    rdfs:subClassOf uco-location:Location ;
+    rdfs:label "Registered Address"@en ;
+    rdfs:comment "Official registered address of sex offender."@en .
+
+cacontology-registry:PrimaryResidence rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-registry:RegisteredAddress ;
+    rdfs:label "Primary Residence"@en ;
+    rdfs:comment "Primary residential address where offender lives."@en .
+
+cacontology-registry:TemporaryAddress rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-registry:RegisteredAddress ;
+    rdfs:label "Temporary Address"@en ;
+    rdfs:comment "Temporary address where offender will be residing."@en .
+
+cacontology-registry:WorkLocation rdf:type owl:Class ;
+    rdfs:subClassOf uco-location:Location ;
+    rdfs:label "Work Location"@en ;
+    rdfs:comment "Location where registered sex offender is employed."@en .
+
+cacontology-registry:SchoolLocation rdf:type owl:Class ;
+    rdfs:subClassOf uco-location:Location ;
+    rdfs:label "School Location"@en ;
+    rdfs:comment "Educational institution where offender is enrolled."@en .
+
+cacontology-registry:AddressHistory rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Address History"@en ;
+    rdfs:comment "Historical record of registered addresses."@en .
+
+# =============================================================================
+# EMPLOYMENT AND EDUCATION
+# =============================================================================
+
+cacontology-registry:EmploymentInformation rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Employment Information"@en ;
+    rdfs:comment "Current employment information for registered sex offender."@en .
+
+cacontology-registry:EducationInformation rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Education Information"@en ;
+    rdfs:comment "Educational enrollment information for registered sex offender."@en .
+
+cacontology-registry:ProfessionalLicense rdf:type owl:Class ;
+    rdfs:subClassOf uco-observable:ObservableObject ;
+    rdfs:label "Professional License"@en ;
+    rdfs:comment "Professional license held by registered sex offender."@en .
+
+# =============================================================================
+# VEHICLE AND TRANSPORTATION
+# =============================================================================
+
+cacontology-registry:VehicleInformation rdf:type owl:Class ;
+    rdfs:subClassOf uco-observable:ObservableObject ;
+    rdfs:label "Vehicle Information"@en ;
+    rdfs:comment "Information about vehicles owned or operated by registered sex offender."@en .
+
+cacontology-registry:RegisteredVehicle rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-registry:VehicleInformation ;
+    rdfs:label "Registered Vehicle"@en ;
+    rdfs:comment "Vehicle registered to sex offender."@en .
+
+# =============================================================================
+# INTERNET AND DIGITAL PRESENCE
+# =============================================================================
+
+cacontology-registry:InternetInformation rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Internet Information"@en ;
+    rdfs:comment "Internet-related information for registered sex offender."@en .
+
+cacontology-registry:OnlineIdentifier rdf:type owl:Class ;
+    rdfs:subClassOf uco-identity:Identity ;
+    rdfs:label "Online Identifier"@en ;
+    rdfs:comment "Online username, email, or identifier used by registered sex offender."@en .
+
+cacontology-registry:SocialMediaAccount rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-registry:OnlineIdentifier ;
+    rdfs:label "Social Media Account"@en ;
+    rdfs:comment "Social media account belonging to registered sex offender."@en .
+
+cacontology-registry:InternetServiceProvider rdf:type owl:Class ;
+    rdfs:subClassOf uco-identity:Organization ;
+    rdfs:label "Internet Service Provider"@en ;
+    rdfs:comment "Internet service provider used by registered sex offender."@en .
+
+# =============================================================================
+# RESTRICTIONS AND CONDITIONS
+# =============================================================================
+
+cacontology-registry:RegistrationRestriction rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Registration Restriction"@en ;
+    rdfs:comment "Restriction placed on registered sex offender."@en .
+
+cacontology-registry:GeographicRestriction rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-registry:RegistrationRestriction ;
+    rdfs:label "Geographic Restriction"@en ;
+    rdfs:comment "Geographic area where offender is restricted from being."@en .
+
+cacontology-registry:ContactRestriction rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-registry:RegistrationRestriction ;
+    rdfs:label "Contact Restriction"@en ;
+    rdfs:comment "Restriction on contact with certain individuals or groups."@en .
+
+cacontology-registry:InternetRestriction rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-registry:RegistrationRestriction ;
+    rdfs:label "Internet Restriction"@en ;
+    rdfs:comment "Restriction on internet use or online activities."@en .
+
+cacontology-registry:EmploymentRestriction rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-registry:RegistrationRestriction ;
+    rdfs:label "Employment Restriction"@en ;
+    rdfs:comment "Restriction on types of employment."@en .
+
+# =============================================================================
+# REGISTRY MANAGEMENT
+# =============================================================================
+
+cacontology-registry:RegistryAgency rdf:type owl:Class ;
+    rdfs:subClassOf uco-identity:Organization ;
+    rdfs:label "Registry Agency"@en ;
+    rdfs:comment "Law enforcement agency responsible for maintaining sex offender registry."@en .
+
+cacontology-registry:RegistryOfficer rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:Role ;
+    rdfs:label "Registry Officer"@en ;
+    rdfs:comment "Officer responsible for sex offender registration management."@en .
+
+cacontology-registry:RegistrySystem rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Registry System"@en ;
+    rdfs:comment "Information system used to manage sex offender registry."@en .
+
+cacontology-registry:PublicWebsite rdf:type owl:Class ;
+    rdfs:subClassOf uco-observable:ObservableObject ;
+    rdfs:label "Public Website"@en ;
+    rdfs:comment "Public website for searching sex offender registry information."@en .
+
+# =============================================================================
+# NOTIFICATION AND ALERTS
+# =============================================================================
+
+cacontology-registry:CommunityNotification rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:LegalEvent ;
+    rdfs:label "Community Notification"@en ;
+    rdfs:comment "Notification to community about registered sex offender."@en .
+
+cacontology-registry:RegistrationAlert rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Registration Alert"@en ;
+    rdfs:comment "Alert generated by registry system (non-compliance, address change, etc.)."@en .
+
+cacontology-registry:NotificationTier rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Notification Tier"@en ;
+    rdfs:comment "Classification tier determining level of community notification required."@en .
+
+# =============================================================================
+# DATATYPE PROPERTIES - OFFENDER INFORMATION
+# =============================================================================
+
+cacontology-registry:registrationNumber rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-registry:RegistrationRecord ;
+    rdfs:range xsd:string ;
+    rdfs:label "registration number"@en ;
+    rdfs:comment "Unique identifier assigned to sex offender registration."@en .
+
+cacontology-registry:registrationDate rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-registry:RegistrationRecord ;
+    rdfs:range xsd:dateTime ;
+    rdfs:label "registration date"@en ;
+    rdfs:comment "Date when sex offender registration was first required."@en .
+
+cacontology-registry:expirationDate rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-registry:RegistrationRecord ;
+    rdfs:range xsd:dateTime ;
+    rdfs:label "expiration date"@en ;
+    rdfs:comment "Date when registration requirement expires (if applicable)."@en .
+
+cacontology-registry:lastUpdate rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-registry:RegistrationRecord ;
+    rdfs:range xsd:dateTime ;
+    rdfs:label "last update"@en ;
+    rdfs:comment "Date of last update to registration information."@en .
+
+cacontology-registry:registrationFrequency rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-registry:RegistrationRequirement ;
+    rdfs:range xsd:string ;
+    rdfs:label "registration frequency"@en ;
+    rdfs:comment "Required frequency of registration updates (annual, quarterly, monthly)."@en .
+
+cacontology-registry:tier rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-registry:RegisteredSexOffender ;
+    rdfs:range xsd:string ;
+    rdfs:label "tier"@en ;
+    rdfs:comment "Risk tier classification (Tier I, II, III)."@en .
+
+cacontology-registry:lifetimeRegistration rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-registry:RegistrationRecord ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "lifetime registration"@en ;
+    rdfs:comment "Whether registration is required for life."@en .
+
+# Personal Information Properties
+cacontology-registry:fullName rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-registry:RegisteredSexOffender ;
+    rdfs:range xsd:string ;
+    rdfs:label "full name"@en ;
+    rdfs:comment "Legal full name of registered sex offender."@en .
+
+cacontology-registry:dateOfBirth rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-registry:RegisteredSexOffender ;
+    rdfs:range xsd:date ;
+    rdfs:label "date of birth"@en ;
+    rdfs:comment "Date of birth of registered sex offender."@en .
+
+cacontology-registry:socialSecurityNumber rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-registry:PersonalIdentifiers ;
+    rdfs:range xsd:string ;
+    rdfs:label "social security number"@en ;
+    rdfs:comment "Social Security Number (restricted access)."@en .
+
+cacontology-registry:height rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-registry:PhysicalDescription ;
+    rdfs:range xsd:string ;
+    rdfs:label "height"@en ;
+    rdfs:comment "Height of registered sex offender."@en .
+
+cacontology-registry:weight rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-registry:PhysicalDescription ;
+    rdfs:range xsd:string ;
+    rdfs:label "weight"@en ;
+    rdfs:comment "Weight of registered sex offender."@en .
+
+cacontology-registry:eyeColor rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-registry:PhysicalDescription ;
+    rdfs:range xsd:string ;
+    rdfs:label "eye color"@en ;
+    rdfs:comment "Eye color of registered sex offender."@en .
+
+cacontology-registry:hairColor rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-registry:PhysicalDescription ;
+    rdfs:range xsd:string ;
+    rdfs:label "hair color"@en ;
+    rdfs:comment "Hair color of registered sex offender."@en .
+
+cacontology-registry:race rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-registry:RegisteredSexOffender ;
+    rdfs:range xsd:string ;
+    rdfs:label "race"@en ;
+    rdfs:comment "Race of registered sex offender."@en .
+
+cacontology-registry:sex rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-registry:RegisteredSexOffender ;
+    rdfs:range xsd:string ;
+    rdfs:label "sex"@en ;
+    rdfs:comment "Sex of registered sex offender."@en .
+
+# Offense Information Properties
+cacontology-registry:offenseDescription rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-registry:ConvictingOffense ;
+    rdfs:range xsd:string ;
+    rdfs:label "offense description"@en ;
+    rdfs:comment "Description of the sexual offense."@en .
+
+cacontology-registry:convictionDate rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-registry:ConvictingOffense ;
+    rdfs:range xsd:date ;
+    rdfs:label "conviction date"@en ;
+    rdfs:comment "Date of conviction for sexual offense."@en .
+
+cacontology-registry:sentenceLength rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-registry:ConvictingOffense ;
+    rdfs:range xsd:string ;
+    rdfs:label "sentence length"@en ;
+    rdfs:comment "Length of sentence imposed for offense."@en .
+
+cacontology-registry:victimAge rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-registry:VictimInformation ;
+    rdfs:range xsd:integer ;
+    rdfs:label "victim age"@en ;
+    rdfs:comment "Age of victim at time of offense."@en .
+
+cacontology-registry:victimCount rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-registry:VictimInformation ;
+    rdfs:range xsd:integer ;
+    rdfs:label "victim count"@en ;
+    rdfs:comment "Number of victims involved in offense."@en .
+
+cacontology-registry:victimRelationship rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-registry:VictimInformation ;
+    rdfs:range xsd:string ;
+    rdfs:label "victim relationship"@en ;
+    rdfs:comment "Relationship between offender and victim (stranger, known, family)."@en .
+
+cacontology-registry:violationCategory rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-registry:ComplianceViolation ;
+    rdfs:range xsd:string ;
+    rdfs:label "violation category"@en ;
+    rdfs:comment "Categorization of a registry compliance violation (e.g., failure_to_register, false_information, late_update, residency_restriction_violation)."@en .
+
+# =============================================================================
+# OBJECT PROPERTIES - RELATIONSHIPS
+# =============================================================================
+
+cacontology-registry:registeredIn rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-registry:RegisteredSexOffender ;
+    rdfs:range cacontology-registry:SexOffenderRegistry ;
+    rdfs:label "registered in"@en ;
+    rdfs:comment "Registry system where offender is registered."@en .
+
+cacontology-registry:hasProfile rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-registry:RegisteredSexOffender ;
+    rdfs:range cacontology-registry:OffenderProfile ;
+    rdfs:label "has profile"@en ;
+    rdfs:comment "Offender profile containing comprehensive information."@en .
+
+cacontology-registry:hasRegistrationRecord rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-registry:RegisteredSexOffender ;
+    rdfs:range cacontology-registry:RegistrationRecord ;
+    rdfs:label "has registration record"@en ;
+    rdfs:comment "Official registration record for offender."@en .
+
+cacontology-registry:basedOnOffense rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-registry:RegistrationRecord ;
+    rdfs:range cacontology-registry:ConvictingOffense ;
+    rdfs:label "based on offense"@en ;
+    rdfs:comment "Criminal offense that triggered registration requirement."@en .
+
+cacontology-registry:residesAt rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-registry:RegisteredSexOffender ;
+    rdfs:range cacontology-registry:RegisteredAddress ;
+    rdfs:label "resides at"@en ;
+    rdfs:comment "Current registered address of offender."@en .
+
+cacontology-registry:employedAt rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-registry:RegisteredSexOffender ;
+    rdfs:range cacontology-registry:WorkLocation ;
+    rdfs:label "employed at"@en ;
+    rdfs:comment "Location where offender is employed."@en .
+
+cacontology-registry:attendsSchool rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-registry:RegisteredSexOffender ;
+    rdfs:range cacontology-registry:SchoolLocation ;
+    rdfs:label "attends school"@en ;
+    rdfs:comment "Educational institution where offender is enrolled."@en .
+
+cacontology-registry:ownsVehicle rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-registry:RegisteredSexOffender ;
+    rdfs:range cacontology-registry:RegisteredVehicle ;
+    rdfs:label "owns vehicle"@en ;
+    rdfs:comment "Vehicle owned or operated by offender."@en .
+
+cacontology-registry:subjectToRestriction rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-registry:RegisteredSexOffender ;
+    rdfs:range cacontology-registry:RegistrationRestriction ;
+    rdfs:label "subject to restriction"@en ;
+    rdfs:comment "Restriction imposed on registered sex offender."@en .
+
+cacontology-registry:managedBy rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-registry:SexOffenderRegistry ;
+    rdfs:range cacontology-registry:RegistryAgency ;
+    rdfs:label "managed by"@en ;
+    rdfs:comment "Agency responsible for managing registry."@en .
+
+cacontology-registry:verifiedBy rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-registry:RegistrationRecord ;
+    rdfs:range cacontology-registry:VerificationCheck ;
+    rdfs:label "verified by"@en ;
+    rdfs:comment "Verification check confirming registration information."@en .
+
+cacontology-registry:hasCompliance rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-registry:RegisteredSexOffender ;
+    rdfs:range cacontology-registry:ComplianceHistory ;
+    rdfs:label "has compliance"@en ;
+    rdfs:comment "Compliance history for registered sex offender."@en .
+
+cacontology-registry:hasAlias rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-registry:RegisteredSexOffender ;
+    rdfs:range cacontology-registry:Alias ;
+    rdfs:label "has alias"@en ;
+    rdfs:comment "Known alias used by registered sex offender."@en .
+
+cacontology-registry:hasOnlineIdentifier rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-registry:RegisteredSexOffender ;
+    rdfs:range cacontology-registry:OnlineIdentifier ;
+    rdfs:label "has online identifier"@en ;
+    rdfs:comment "Online identifier used by registered sex offender."@en .
+
+# =============================================================================
+# RECIDIVISM AND REPEAT OFFENSE PATTERNS (Palmisano Case Enhancements)
+# =============================================================================
+
+cacontology-registry:RecidivistSexOffender rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-registry:RegisteredSexOffender ;
+    rdfs:label "Recidivist Sex Offender"@en ;
+    rdfs:comment "Registered sex offender who has committed subsequent sexual offenses after initial conviction and registration."@en .
+
+cacontology-registry:CrossStateRecidivism rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Cross State Recidivism"@en ;
+    rdfs:comment "Pattern of recidivism involving offenses across state boundaries."@en .
+
+cacontology-registry:DigitalRecidivismPattern rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Digital Recidivism Pattern"@en ;
+    rdfs:comment "Pattern of repeat sexual offenses using digital communication platforms."@en .
+
+cacontology-registry:AgeAwareExploitation rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Age Aware Exploitation"@en ;
+    rdfs:comment "Exploitation where offender explicitly acknowledges victim's minor status but continues criminal activity."@en .
+
+cacontology-registry:HighVolumeDigitalExploitation rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "High Volume Digital Exploitation"@en ;
+    rdfs:comment "Digital exploitation involving thousands of messages or communications over extended period."@en .
+
+cacontology-registry:BidirectionalContentExchange rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Bidirectional Content Exchange"@en ;
+    rdfs:comment "Exchange where offender both sends explicit content to victim and solicits/receives explicit content from victim."@en .
+
+cacontology-registry:MultiModalDigitalEvidence rdf:type owl:Class ;
+    rdfs:subClassOf uco-observable:ObservableObject ;
+    rdfs:label "Multi Modal Digital Evidence"@en ;
+    rdfs:comment "Digital evidence containing multiple content types (text, images, audio, video) in single exploitation case."@en .
+
+# =============================================================================
+# COMPLIANCE-BASED ARREST COORDINATION (Palmisano Case Analysis)
+# =============================================================================
+
+cacontology-registry:ComplianceBasedArrest rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:InvestigativeAction ;
+    rdfs:label "Compliance Based Arrest"@en ;
+    rdfs:comment "Arrest coordinated with scheduled compliance activity such as annual registration review."@en .
+
+cacontology-registry:RegistrationReviewArrest rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-registry:ComplianceBasedArrest ;
+    rdfs:label "Registration Review Arrest"@en ;
+    rdfs:comment "Arrest executed when offender arrives for scheduled registration review or update."@en .
+
+cacontology-registry:AnnualRegistrationReview rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-registry:VerificationCheck ;
+    rdfs:label "Annual Registration Review"@en ;
+    rdfs:comment "Annual review and update of sex offender registration information."@en .
+
+cacontology-registry:ComplianceScheduleCoordination rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:CoordinationEvent ;
+    rdfs:label "Compliance Schedule Coordination"@en ;
+    rdfs:comment "Coordination between law enforcement investigations and compliance schedules for arrest timing."@en .
+
+# =============================================================================
+# CROSS-JURISDICTIONAL DIGITAL INVESTIGATIONS
+# =============================================================================
+
+cacontology-registry:CrossStateDigitalInvestigation rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Cross State Digital Investigation"@en ;
+    rdfs:comment "Investigation involving registered sex offender targeting victims across state boundaries using digital platforms."@en .
+
+cacontology-registry:VictimDeviceForensics rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:InvestigativeAction ;
+    rdfs:label "Victim Device Forensics"@en ;
+    rdfs:comment "Forensic examination of victim's device to recover evidence of digital exploitation."@en .
+
+cacontology-registry:OffenderDeviceSearchWarrant rdf:type owl:Class ;
+    rdfs:subClassOf uco-observable:ObservableObject ;
+    rdfs:label "Offender Device Search Warrant"@en ;
+    rdfs:comment "Search warrant executed on registered sex offender's residence and devices for digital evidence recovery."@en .
+
+# =============================================================================
+# ENHANCED PROPERTIES FOR RECIDIVISM PATTERNS
+# =============================================================================
+
+# Recidivism Pattern Properties
+cacontology-registry:priorConvictionCount rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-registry:RecidivistSexOffender ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "prior conviction count"@en ;
+    rdfs:comment "Number of prior sexual offense convictions."@en .
+
+cacontology-registry:yearsBetweenOffenses rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-registry:RecidivistSexOffender ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "years between offenses"@en ;
+    rdfs:comment "Years between release from prior offense and new offense."@en .
+
+cacontology-registry:sentenceServed rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-registry:RecidivistSexOffender ;
+    rdfs:range xsd:string ;
+    rdfs:label "sentence served"@en ;
+    rdfs:comment "Sentence served for prior conviction before reoffending."@en .
+
+cacontology-registry:recidivismPattern rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-registry:CrossStateRecidivism ;
+    rdfs:range xsd:string ;
+    rdfs:label "recidivism pattern"@en ;
+    rdfs:comment "Pattern of recidivism (escalation, similar_mo, cross_jurisdictional)."@en .
+
+# Digital Exploitation Properties
+cacontology-registry:messageCount rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-registry:HighVolumeDigitalExploitation ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "message count"@en ;
+    rdfs:comment "Total number of messages sent in digital exploitation."@en .
+
+cacontology-registry:exploitationDurationMonths rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-registry:DigitalRecidivismPattern ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "exploitation duration months"@en ;
+    rdfs:comment "Duration of digital exploitation in months."@en .
+
+cacontology-registry:victimAgeAcknowledged rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-registry:AgeAwareExploitation ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "victim age acknowledged"@en ;
+    rdfs:comment "Age of victim that offender explicitly acknowledged."@en .
+
+cacontology-registry:ageAcknowledgmentMethod rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-registry:AgeAwareExploitation ;
+    rdfs:range xsd:string ;
+    rdfs:label "age acknowledgment method"@en ;
+    rdfs:comment "Method by which offender acknowledged victim's age (verbal, written, direct_question)."@en .
+
+cacontology-registry:contentTypesSent rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-registry:BidirectionalContentExchange ;
+    rdfs:range xsd:string ;
+    rdfs:label "content types sent"@en ;
+    rdfs:comment "Types of explicit content sent to victim (text, images, audio, video)."@en .
+
+cacontology-registry:contentTypesReceived rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-registry:BidirectionalContentExchange ;
+    rdfs:range xsd:string ;
+    rdfs:label "content types received"@en ;
+    rdfs:comment "Types of explicit content solicited and received from victim."@en .
+
+# Compliance and Arrest Coordination Properties
+cacontology-registry:arrestTiming rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-registry:ComplianceBasedArrest ;
+    rdfs:range xsd:string ;
+    rdfs:label "arrest timing"@en ;
+    rdfs:comment "Timing of arrest in relation to compliance activity (arrival, during, departure)."@en .
+
+cacontology-registry:complianceType rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-registry:ComplianceBasedArrest ;
+    rdfs:range xsd:string ;
+    rdfs:label "compliance type"@en ;
+    rdfs:comment "Type of compliance activity used for arrest coordination (annual_review, quarterly_check, address_update)."@en .
+
+cacontology-registry:coordinationTimeframe rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-registry:ComplianceScheduleCoordination ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "coordination timeframe"@en ;
+    rdfs:comment "Timeframe in days between investigation completion and compliance-based arrest."@en .
+
+# Federal Charges and Sentencing Properties
+cacontology-registry:mandatoryMinimumYears rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-registry:RecidivistSexOffender ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "mandatory minimum years"@en ;
+    rdfs:comment "Mandatory minimum sentence in years for recidivist offense."@en .
+
+cacontology-registry:maximumSentenceYears rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-registry:RecidivistSexOffender ;
+    rdfs:range xsd:string ;
+    rdfs:label "maximum sentence years"@en ;
+    rdfs:comment "Maximum sentence exposure (years or life)."@en .
+
+cacontology-registry:lifetimeSupervision rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-registry:RecidivistSexOffender ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "lifetime supervision"@en ;
+    rdfs:comment "Whether lifetime supervised release is required."@en .
+
+# =============================================================================
+# ENHANCED RELATIONSHIPS FOR RECIDIVISM AND COMPLIANCE
+# =============================================================================
+
+# Recidivism Relationships
+cacontology-registry:exhibitsRecidivism rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-registry:RegisteredSexOffender ;
+    rdfs:range cacontology-registry:RecidivistSexOffender ;
+    rdfs:label "exhibits recidivism"@en ;
+    rdfs:comment "Links registered offender to recidivist classification."@en .
+
+cacontology-registry:involvesPattern rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-registry:RecidivistSexOffender ;
+    rdfs:range cacontology-registry:DigitalRecidivismPattern ;
+    rdfs:label "involves pattern"@en ;
+    rdfs:comment "Links recidivist offender to digital exploitation pattern."@en .
+
+cacontology-registry:demonstratesAgeAwareness rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-registry:DigitalRecidivismPattern ;
+    rdfs:range cacontology-registry:AgeAwareExploitation ;
+    rdfs:label "demonstrates age awareness"@en ;
+    rdfs:comment "Links exploitation pattern to age-aware criminal activity."@en .
+
+cacontology-registry:involvesHighVolumeExploitation rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-registry:DigitalRecidivismPattern ;
+    rdfs:range cacontology-registry:HighVolumeDigitalExploitation ;
+    rdfs:label "involves high volume exploitation"@en ;
+    rdfs:comment "Links pattern to high-volume communication exploitation."@en .
+
+cacontology-registry:involvesBidirectionalExchange rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-registry:HighVolumeDigitalExploitation ;
+    rdfs:range cacontology-registry:BidirectionalContentExchange ;
+    rdfs:label "involves bidirectional exchange"@en ;
+    rdfs:comment "Links high-volume exploitation to bidirectional content exchange."@en .
+
+cacontology-registry:postRegistrationEvent rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-registry:RecidivistSexOffender ;
+    rdfs:range cacontology:ChildSexualAbuseEvent ;
+    rdfs:label "post-registration event"@en ;
+    rdfs:comment "Links a recidivist sex offender to child sexual abuse or CSAM incidents that occurred after their initial sex offender registration date."@en .
+
+# Compliance and Investigation Relationships
+cacontology-registry:coordinatedWithCompliance rdf:type owl:ObjectProperty ;
+    rdfs:domain uco-action:Action ;
+    rdfs:range cacontology-registry:ComplianceBasedArrest ;
+    rdfs:label "coordinated with compliance"@en ;
+    rdfs:comment "Links investigation to compliance-based arrest coordination."@en .
+
+cacontology-registry:executedDuring rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-registry:RegistrationReviewArrest ;
+    rdfs:range cacontology-registry:AnnualRegistrationReview ;
+    rdfs:label "executed during"@en ;
+    rdfs:comment "Links arrest to specific compliance activity during which it was executed."@en .
+
+cacontology-registry:triggersInvestigation rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-registry:RecidivistSexOffender ;
+    rdfs:range cacontology-registry:CrossStateDigitalInvestigation ;
+    rdfs:label "triggers investigation"@en ;
+    rdfs:comment "Links recidivist activity to cross-state digital investigation."@en .
+
+cacontology-registry:recoversEvidence rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-registry:VictimDeviceForensics ;
+    rdfs:range cacontology-registry:MultiModalDigitalEvidence ;
+    rdfs:label "recovers evidence"@en ;
+    rdfs:comment "Links forensic examination to multi-modal digital evidence recovered."@en .
+
+cacontology-registry:executedAt rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-registry:OffenderDeviceSearchWarrant ;
+    rdfs:range cacontology-registry:RegisteredAddress ;
+    rdfs:label "executed at"@en ;
+    rdfs:comment "Links search warrant to registered address where it was executed."@en .
+
+# Cross-Jurisdictional Relationships
+cacontology-registry:crossesStates rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-registry:CrossStateRecidivism ;
+    rdfs:range uco-location:Location ;
+    rdfs:label "crosses states"@en ;
+    rdfs:comment "Links cross-state recidivism to states involved."@en .
+
+cacontology-registry:targetsCrossState rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-registry:CrossStateDigitalInvestigation ;
+    rdfs:range uco-identity:Person ;
+    rdfs:label "targets cross state"@en ;
+    rdfs:comment "Links investigation to cross-state victim targeting."@en .
+
+cacontology-registry:coordinatesBetweenAgencies rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-registry:CrossStateDigitalInvestigation ;
+    rdfs:range uco-identity:Organization ;
+    rdfs:label "coordinates between agencies"@en ;
+    rdfs:comment "Links investigation to agencies coordinating across state boundaries."@en . 

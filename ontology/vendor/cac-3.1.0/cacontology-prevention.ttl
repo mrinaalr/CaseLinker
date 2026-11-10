@@ -1,0 +1,1067 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
+
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology-prevention: <https://cacontology.projectvic.org/prevention#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+<https://cacontology.projectvic.org/prevention> rdf:type owl:Ontology ;
+    rdfs:label "CAC Prevention and Education Ontology"@en ;
+    rdfs:comment "An ontology for modeling prevention programs, education initiatives, safety protocols, and community outreach efforts for child protection with gUFO foundational ontology enhancements for improved semantic precision, temporal modeling, and validation capabilities."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/prevention/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <http://purl.org/nemo/gufo#/1.0.0> ,
+                <https://cacontology.projectvic.org/core/3.1.0> .
+
+# =============================================================================
+# PREVENTION PROGRAM FRAMEWORK (gUFO Event and Organization modeling)
+# =============================================================================
+
+# Prevention Programs as gUFO Events
+cacontology-prevention:PreventionProgram rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:SupportEvent ;
+    rdfs:label "Prevention Program"@en ;
+    rdfs:comment "Structured program designed to prevent child abuse and exploitation. Modeled as gUFO Event."@en .
+
+# Education Portals as gUFO Objects
+cacontology-prevention:EducationPortal rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:DigitalSystemEntity ;
+    rdfs:label "Education Portal"@en ;
+    rdfs:comment "Online portal providing educational resources for child protection. Modeled as gUFO Object."@en .
+
+# School Protocols as gUFO Objects
+cacontology-prevention:SchoolAllegationProtocol rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:Artifact ;
+    rdfs:label "School Allegation Protocol"@en ;
+    rdfs:comment "Protocol for managing allegations of abuse in school settings. Modeled as gUFO Object."@en .
+
+# Community Outreach as gUFO Events
+cacontology-prevention:CommunityOutreach rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:SupportEvent ;
+    rdfs:label "Community Outreach"@en ;
+    rdfs:comment "Outreach programs to engage communities in child protection. Modeled as gUFO Event."@en .
+
+cacontology-prevention:PublicAwareness rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:SupportEvent ;
+    rdfs:label "Public Awareness"@en ;
+    rdfs:comment "Campaigns to raise public awareness about child protection. Modeled as gUFO Event."@en .
+
+cacontology-prevention:RiskPrevention rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:PreventionProgram ;
+    rdfs:label "Risk Prevention"@en ;
+    rdfs:comment "Programs focused on preventing risk factors for child abuse. Modeled as gUFO Event."@en .
+
+# =============================================================================
+# EDUCATIONAL RESOURCES AND MATERIALS
+# =============================================================================
+
+cacontology-prevention:EducationalResource rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Educational Resource"@en ;
+    rdfs:comment "Resource designed for educational purposes in child protection."@en .
+
+cacontology-prevention:PreventionMaterial rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:EducationalResource ;
+    rdfs:label "Prevention Material"@en ;
+    rdfs:comment "Educational material focused on prevention strategies."@en .
+
+cacontology-prevention:SafetyProtocol rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Safety Protocol"@en ;
+    rdfs:comment "Protocol designed to ensure child safety in various settings."@en .
+
+cacontology-prevention:RiskAssessmentTool rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Risk Assessment Tool"@en ;
+    rdfs:comment "Tool for assessing risks to child safety."@en .
+
+cacontology-prevention:SafetyGuideline rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:EducationalResource ;
+    rdfs:label "Safety Guideline"@en ;
+    rdfs:comment "Guidelines for maintaining child safety."@en .
+
+cacontology-prevention:PreventionCurriculum rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Prevention Curriculum"@en ;
+    rdfs:comment "Structured curriculum for prevention education."@en .
+
+# =============================================================================
+# TARGET AUDIENCES AND TRAINING
+# =============================================================================
+
+cacontology-prevention:EducatorTraining rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:SupportEvent ;
+    rdfs:label "Educator Training"@en ;
+    rdfs:comment "Training programs specifically designed for educators."@en .
+
+cacontology-prevention:ParentEducation rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:SupportEvent ;
+    rdfs:label "Parent Education"@en ;
+    rdfs:comment "Education programs for parents and caregivers."@en .
+
+cacontology-prevention:ChildSafetyEducation rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:SupportEvent ;
+    rdfs:label "Child Safety Education"@en ;
+    rdfs:comment "Education programs teaching children about safety."@en .
+
+cacontology-prevention:HealthcareProviderTraining rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:SupportEvent ;
+    rdfs:label "Healthcare Provider Training"@en ;
+    rdfs:comment "Training for healthcare providers on child protection."@en .
+
+cacontology-prevention:CommunityEducation rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:SupportEvent ;
+    rdfs:label "Community Education"@en ;
+    rdfs:comment "Education programs for community members."@en .
+
+# =============================================================================
+# PREVENTION STRATEGIES AND APPROACHES
+# =============================================================================
+
+cacontology-prevention:PrimaryPrevention rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:PreventionProgram ;
+    rdfs:label "Primary Prevention"@en ;
+    rdfs:comment "Prevention strategies that stop abuse before it occurs."@en .
+
+cacontology-prevention:SecondaryPrevention rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:PreventionProgram ;
+    rdfs:label "Secondary Prevention"@en ;
+    rdfs:comment "Early intervention strategies to prevent escalation."@en .
+
+cacontology-prevention:TertiaryPrevention rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:PreventionProgram ;
+    rdfs:label "Tertiary Prevention"@en ;
+    rdfs:comment "Prevention of re-victimization and recurrence."@en .
+
+cacontology-prevention:EnvironmentalPrevention rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:PreventionProgram ;
+    rdfs:label "Environmental Prevention"@en ;
+    rdfs:comment "Prevention strategies focused on environmental factors."@en .
+
+cacontology-prevention:BehavioralPrevention rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:PreventionProgram ;
+    rdfs:label "Behavioral Prevention"@en ;
+    rdfs:comment "Prevention strategies focused on behavioral changes."@en .
+
+# =============================================================================
+# SCHOOL-BASED PREVENTION
+# =============================================================================
+
+cacontology-prevention:SchoolSafetyProgram rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:PreventionProgram ;
+    rdfs:label "School Safety Program"@en ;
+    rdfs:comment "Safety program implemented in school settings."@en .
+
+cacontology-prevention:SchoolPolicy rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "School Policy"@en ;
+    rdfs:comment "Policy governing child protection in schools."@en .
+
+cacontology-prevention:TeacherTraining rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:EducatorTraining ;
+    rdfs:label "Teacher Training"@en ;
+    rdfs:comment "Training program specifically for teachers."@en .
+
+cacontology-prevention:StudentEducation rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:ChildSafetyEducation ;
+    rdfs:label "Student Education"@en ;
+    rdfs:comment "Safety education program for students."@en .
+
+cacontology-prevention:SchoolCounselorTraining rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:EducatorTraining ;
+    rdfs:label "School Counselor Training"@en ;
+    rdfs:comment "Training program for school counselors."@en .
+
+# =============================================================================
+# TECHNOLOGY-BASED PREVENTION
+# =============================================================================
+
+cacontology-prevention:DigitalSafety rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:PreventionProgram ;
+    rdfs:label "Digital Safety"@en ;
+    rdfs:comment "Prevention programs focused on digital safety."@en .
+
+cacontology-prevention:OnlineSafetyEducation rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:ChildSafetyEducation ;
+    rdfs:label "Online Safety Education"@en ;
+    rdfs:comment "Education about staying safe online."@en .
+
+cacontology-prevention:ParentalControl rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:SafetyProtocol ;
+    rdfs:label "Parental Control"@en ;
+    rdfs:comment "Technology tools for parental oversight."@en .
+
+cacontology-prevention:PlatformSafety rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:SafetyProtocol ;
+    rdfs:label "Platform Safety"@en ;
+    rdfs:comment "Safety measures implemented by technology platforms."@en .
+
+# =============================================================================
+# PREVENTION ROLES
+# =============================================================================
+
+cacontology-prevention:PreventionSpecialist rdf:type owl:Class ;
+    rdfs:subClassOf uco-role:Role ;
+    rdfs:label "Prevention Specialist"@en ;
+    rdfs:comment "Professional specializing in prevention programs."@en .
+
+cacontology-prevention:CommunityEducator rdf:type owl:Class ;
+    rdfs:subClassOf uco-role:Role ;
+    rdfs:label "Community Educator"@en ;
+    rdfs:comment "Educator working in community prevention programs."@en .
+
+cacontology-prevention:SafetyCoordinator rdf:type owl:Class ;
+    rdfs:subClassOf uco-role:Role ;
+    rdfs:label "Safety Coordinator"@en ;
+    rdfs:comment "Coordinator responsible for safety programs."@en .
+
+cacontology-prevention:PreventionAdvocate rdf:type owl:Class ;
+    rdfs:subClassOf uco-role:Role ;
+    rdfs:label "Prevention Advocate"@en ;
+    rdfs:comment "Advocate promoting prevention initiatives."@en .
+
+# =============================================================================
+# PREVENTION METRICS AND ASSESSMENT
+# =============================================================================
+
+cacontology-prevention:PreventionMetrics rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Prevention Metrics"@en ;
+    rdfs:comment "Metrics for measuring prevention program effectiveness."@en .
+
+cacontology-prevention:PreventionEffectiveness rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:PreventionMetrics ;
+    rdfs:label "Prevention Effectiveness"@en ;
+    rdfs:comment "Assessment of prevention program effectiveness."@en .
+
+cacontology-prevention:RiskReduction rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:PreventionMetrics ;
+    rdfs:label "Risk Reduction"@en ;
+    rdfs:comment "Measurement of risk reduction achieved."@en .
+
+cacontology-prevention:CommunityEngagement rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:PreventionMetrics ;
+    rdfs:label "Community Engagement"@en ;
+    rdfs:comment "Measurement of community engagement in prevention."@en .
+
+# =============================================================================
+# PROPERTIES FOR PREVENTION DATA
+# =============================================================================
+
+cacontology-prevention:educationPortalReach rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-prevention:EducationPortal ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "education portal reach"@en ;
+    rdfs:comment "Number of users reached by education portal."@en .
+
+cacontology-prevention:preventionEffectiveness rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-prevention:PreventionEffectiveness ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "prevention effectiveness"@en ;
+    rdfs:comment "Effectiveness score of prevention program (0.0-1.0)."@en .
+
+cacontology-prevention:riskReductionLevel rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-prevention:RiskReduction ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "risk reduction level"@en ;
+    rdfs:comment "Level of risk reduction achieved (0.0-1.0)."@en .
+
+cacontology-prevention:communityParticipation rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-prevention:CommunityEngagement ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "community participation"@en ;
+    rdfs:comment "Level of community participation (0.0-1.0)."@en .
+
+cacontology-prevention:programDuration rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-prevention:PreventionProgram ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "program duration"@en ;
+    rdfs:comment "Duration of prevention program in months."@en .
+
+cacontology-prevention:participantCount rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-prevention:PreventionProgram ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "participant count"@en ;
+    rdfs:comment "Number of participants in prevention program."@en .
+
+cacontology-prevention:ageGroup rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-prevention:ChildSafetyEducation ;
+    rdfs:range xsd:string ;
+    rdfs:label "age group"@en ;
+    rdfs:comment "Target age group for safety education."@en .
+
+cacontology-prevention:languageAvailability rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-prevention:EducationalResource ;
+    rdfs:range xsd:string ;
+    rdfs:label "language availability"@en ;
+    rdfs:comment "Languages in which resource is available."@en .
+
+cacontology-prevention:implementationStatus rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-prevention:SafetyProtocol ;
+    rdfs:range xsd:string ;
+    rdfs:label "implementation status"@en ;
+    rdfs:comment "Status of protocol implementation (planned, active, completed)."@en .
+
+cacontology-prevention:targetAudience rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-prevention:EducationalResource ;
+    rdfs:range xsd:string ;
+    rdfs:label "target audience"@en ;
+    rdfs:comment "Target audience for educational resource."@en .
+
+# =============================================================================
+# OBJECT PROPERTIES FOR PREVENTION RELATIONSHIPS
+# =============================================================================
+
+cacontology-prevention:implementsProtocol rdf:type owl:ObjectProperty ;
+    rdfs:domain uco-identity:Organization ;
+    rdfs:range cacontology-prevention:SafetyProtocol ;
+    rdfs:label "implements protocol"@en ;
+    rdfs:comment "Safety protocol implemented by organization."@en .
+
+cacontology-prevention:providesResource rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-prevention:EducationPortal ;
+    rdfs:range cacontology-prevention:EducationalResource ;
+    rdfs:label "provides resource"@en ;
+    rdfs:comment "Educational resource provided by portal."@en .
+
+cacontology-prevention:targetsAudience rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-prevention:PreventionProgram ;
+    rdfs:range uco-identity:Person ;
+    rdfs:label "targets audience"@en ;
+    rdfs:comment "Target audience for prevention program."@en .
+
+cacontology-prevention:deliveredBy rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-prevention:PreventionProgram ;
+    rdfs:range cacontology-prevention:PreventionSpecialist ;
+    rdfs:label "delivered by"@en ;
+    rdfs:comment "Specialist delivering the prevention program."@en .
+
+cacontology-prevention:supportedBy rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-prevention:PreventionProgram ;
+    rdfs:range uco-identity:Organization ;
+    rdfs:label "supported by"@en ;
+    rdfs:comment "Organization supporting the prevention program."@en .
+
+cacontology-prevention:assessesRisk rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-prevention:RiskAssessmentTool ;
+    rdfs:range uco-core:UcoObject ;
+    rdfs:label "assesses risk"@en ;
+    rdfs:comment "Risk factor assessed by the tool."@en .
+
+cacontology-prevention:educatesOn rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-prevention:EducationalResource ;
+    rdfs:range uco-core:UcoObject ;
+    rdfs:label "educates on"@en ;
+    rdfs:comment "Topic or subject covered by educational resource."@en .
+
+cacontology-prevention:preventsMechanism rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-prevention:PreventionProgram ;
+    rdfs:range uco-core:UcoObject ;
+    rdfs:label "prevents mechanism"@en ;
+    rdfs:comment "Mechanism or behavior prevented by program."@en .
+
+cacontology-prevention:coordinatedBy rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-prevention:CommunityOutreach ;
+    rdfs:range cacontology-prevention:SafetyCoordinator ;
+    rdfs:label "coordinated by"@en ;
+    rdfs:comment "Coordinator responsible for outreach program."@en .
+
+cacontology-prevention:engagesCommunity rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-prevention:CommunityOutreach ;
+    rdfs:range uco-identity:Organization ;
+    rdfs:label "engages community"@en ;
+    rdfs:comment "Community organization engaged by outreach."@en .
+
+# =============================================================================
+# SEXTORTION PREVENTION AND AWARENESS (Arkansas Case Analysis)
+# =============================================================================
+
+cacontology-prevention:SextortionAwareness rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:PreventionProgram ;
+    rdfs:label "Sextortion Awareness"@en ;
+    rdfs:comment "Prevention program focused on sextortion education and awareness."@en .
+
+cacontology-prevention:SextortionEducation rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:ChildSafetyEducation ;
+    rdfs:label "Sextortion Education"@en ;
+    rdfs:comment "Educational content specifically addressing sextortion risks and prevention."@en .
+
+cacontology-prevention:SextortionWarningSign rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Sextortion Warning Sign"@en ;
+    rdfs:comment "Identifiable warning signs of sextortion activities."@en .
+
+cacontology-prevention:SextortionResponse rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:SafetyProtocol ;
+    rdfs:label "Sextortion Response"@en ;
+    rdfs:comment "Response protocol for sextortion incidents."@en .
+
+# =============================================================================
+# EDUCATIONAL POSTER CAMPAIGNS AND QR CODE INTEGRATION
+# =============================================================================
+
+cacontology-prevention:EducationalPosterCampaign rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:PreventionProgram ;
+    rdfs:label "Educational Poster Campaign"@en ;
+    rdfs:comment "School-based poster distribution campaign for prevention education."@en .
+
+cacontology-prevention:QRCodeIntegration rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "QR Code Integration"@en ;
+    rdfs:comment "QR code system for discreet access to prevention information."@en .
+
+cacontology-prevention:DiscreetAccessSystem rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:DigitalSafety ;
+    rdfs:label "Discreet Access System"@en ;
+    rdfs:comment "System allowing discreet access to safety information to reduce bullying and shaming."@en .
+
+cacontology-prevention:SchoolDistribution rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:SupportEvent ;
+    rdfs:label "School Distribution"@en ;
+    rdfs:comment "Distribution of educational materials to schools."@en .
+
+cacontology-prevention:InformationPoster rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:EducationalResource ;
+    rdfs:label "Information Poster"@en ;
+    rdfs:comment "Physical poster containing educational information and QR codes."@en .
+
+# =============================================================================
+# ENHANCED DIGITAL SAFETY EDUCATION
+# =============================================================================
+
+cacontology-prevention:AgeTargetedEducation rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:ChildSafetyEducation ;
+    rdfs:label "Age-Targeted Education"@en ;
+    rdfs:comment "Education programs targeted to specific age groups."@en .
+
+cacontology-prevention:TwelvePlusEducation rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:AgeTargetedEducation ;
+    rdfs:label "Twelve Plus Education"@en ;
+    rdfs:comment "Safety education targeted specifically for students 12 years and older."@en .
+
+cacontology-prevention:BullyingPrevention rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:PreventionProgram ;
+    rdfs:label "Bullying Prevention"@en ;
+    rdfs:comment "Prevention programs focused on reducing bullying and shaming."@en .
+
+cacontology-prevention:DigitalLiteracy rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:ChildSafetyEducation ;
+    rdfs:label "Digital Literacy"@en ;
+    rdfs:comment "Education on digital literacy and safe technology use."@en .
+
+# =============================================================================
+# ENHANCED PREVENTION METRICS (Arkansas Scale)
+# =============================================================================
+
+cacontology-prevention:StatewideCampaignMetrics rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:PreventionMetrics ;
+    rdfs:label "Statewide Campaign Metrics"@en ;
+    rdfs:comment "Metrics for measuring statewide prevention campaign effectiveness."@en .
+
+cacontology-prevention:PosterDistributionMetrics rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:PreventionMetrics ;
+    rdfs:label "Poster Distribution Metrics"@en ;
+    rdfs:comment "Metrics tracking poster distribution and reach."@en .
+
+cacontology-prevention:QRCodeEngagementMetrics rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:PreventionMetrics ;
+    rdfs:label "QR Code Engagement Metrics"@en ;
+    rdfs:comment "Metrics tracking QR code usage and engagement."@en .
+
+# =============================================================================
+# ENHANCED PREVENTION PROPERTIES (Arkansas Analysis)
+# =============================================================================
+
+cacontology-prevention:targetAgeGroup rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-prevention:EducationalPosterCampaign ;
+    rdfs:range xsd:string ;
+    rdfs:label "target age group"@en ;
+    rdfs:comment "Age group targeted by poster campaign (e.g., '12+')."@en .
+
+cacontology-prevention:qrCodeEnabled rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-prevention:EducationalPosterCampaign ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "QR code enabled"@en ;
+    rdfs:comment "Whether campaign uses QR codes for information access."@en .
+
+cacontology-prevention:schoolsTargeted rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-prevention:EducationalPosterCampaign ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "schools targeted"@en ;
+    rdfs:comment "Number of schools targeted by poster campaign."@en .
+
+cacontology-prevention:postersDistributed rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-prevention:PosterDistributionMetrics ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "posters distributed"@en ;
+    rdfs:comment "Number of posters distributed in campaign."@en .
+
+cacontology-prevention:qrCodeScans rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-prevention:QRCodeEngagementMetrics ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "QR code scans"@en ;
+    rdfs:comment "Number of QR code scans recorded."@en .
+
+cacontology-prevention:discreteAccessCount rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-prevention:DiscreetAccessSystem ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "discrete access count"@en ;
+    rdfs:comment "Number of discrete accesses to safety information."@en .
+
+cacontology-prevention:sextortionWarningSignsCount rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-prevention:SextortionEducation ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "sextortion warning signs count"@en ;
+    rdfs:comment "Number of warning signs covered in education."@en .
+
+cacontology-prevention:preventsBullying rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-prevention:DiscreetAccessSystem ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "prevents bullying"@en ;
+    rdfs:comment "Whether system helps prevent bullying and shaming."@en .
+
+cacontology-prevention:statewideCoverage rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-prevention:StatewideCampaignMetrics ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "statewide coverage"@en ;
+    rdfs:comment "Percentage of state covered by campaign (0.0-1.0)."@en .
+
+# Enhanced Object Properties for Arkansas Framework
+cacontology-prevention:integratesQRCode rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-prevention:InformationPoster ;
+    rdfs:range cacontology-prevention:QRCodeIntegration ;
+    rdfs:label "integrates QR code"@en ;
+    rdfs:comment "Poster integrates QR code for information access."@en .
+
+cacontology-prevention:enablesDiscreetAccess rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-prevention:QRCodeIntegration ;
+    rdfs:range cacontology-prevention:DiscreetAccessSystem ;
+    rdfs:label "enables discreet access"@en ;
+    rdfs:comment "QR code enables discreet access to safety information."@en .
+
+cacontology-prevention:distributedTo rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-prevention:InformationPoster ;
+    rdfs:range uco-identity:Organization ;
+    rdfs:label "distributed to"@en ;
+    rdfs:comment "Organization (school) receiving poster distribution."@en .
+
+cacontology-prevention:addressesSextortion rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-prevention:SextortionEducation ;
+    rdfs:range cacontology-prevention:SextortionWarningSign ;
+    rdfs:label "addresses sextortion"@en ;
+    rdfs:comment "Education addresses specific sextortion warning signs."@en .
+
+cacontology-prevention:reducesShaming rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-prevention:DiscreetAccessSystem ;
+    rdfs:range cacontology-prevention:BullyingPrevention ;
+    rdfs:label "reduces shaming"@en ;
+    rdfs:comment "System reduces shaming associated with seeking help."@en .
+
+# =============================================================================
+# WISCONSIN CAC WEBSITE INSPIRED ENHANCEMENTS
+# =============================================================================
+
+# =============================================================================
+# COMMUNITY COMMUNICATION SYSTEMS
+# =============================================================================
+
+cacontology-prevention:CommunityEmailList rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Community Email List"@en ;
+    rdfs:comment "Organized email communication system for ongoing safety updates to parents and community members."@en .
+
+cacontology-prevention:ParentCommunityEmailList rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:CommunityEmailList ;
+    rdfs:label "Parent Community Email List"@en ;
+    rdfs:comment "Specialized email list for parent and community safety updates and archived publication access."@en .
+
+cacontology-prevention:ArchivePublicationSystem rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Archive Publication System"@en ;
+    rdfs:comment "Knowledge repository system providing access to archived educational publications and historical safety information."@en .
+
+cacontology-prevention:FAQKnowledgeBase rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "FAQ Knowledge Base"@en ;
+    rdfs:comment "Structured question and answer system for Internet Crimes Against Children frequently asked questions."@en .
+
+cacontology-prevention:CommunityNewsletterSystem rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:CommunityEmailList ;
+    rdfs:label "Community Newsletter System"@en ;
+    rdfs:comment "Regular newsletter communication system for ongoing community engagement and safety updates."@en .
+
+# =============================================================================
+# ENHANCED DIGITAL EDUCATION DELIVERY SYSTEMS
+# =============================================================================
+
+cacontology-prevention:PodcastEducationSeries rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:ChildSafetyEducation ;
+    rdfs:label "Podcast Education Series"@en ;
+    rdfs:comment "Audio-based educational content delivery system, such as the Protect Kids Online (PKO) Podcast."@en .
+
+cacontology-prevention:InteractiveCourseSystem rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:OnlineSafetyEducation ;
+    rdfs:label "Interactive Course System"@en ;
+    rdfs:comment "Interactive online safety course platform with progression tracking and engagement features."@en .
+
+cacontology-prevention:CourseCompletionTracking rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Course Completion Tracking"@en ;
+    rdfs:comment "System for tracking participant progress and completion rates in interactive safety courses."@en .
+
+cacontology-prevention:MultimediaEducationContent rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:EducationalResource ;
+    rdfs:label "Multimedia Education Content"@en ;
+    rdfs:comment "Educational content incorporating multiple media types including audio, video, and interactive elements."@en .
+
+cacontology-prevention:EducationPlatformIntegration rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject ;
+    rdfs:label "Education Platform Integration"@en ;
+    rdfs:comment "Integration capabilities between different educational delivery platforms and content management systems."@en .
+
+# =============================================================================
+# AFFILIATE NETWORK MANAGEMENT
+# =============================================================================
+
+cacontology-prevention:ICACAffiliateNetwork rdf:type owl:Class ;
+    rdfs:subClassOf uco-identity:Organization ;
+    rdfs:label "CAC Affiliate Network"@en ;
+    rdfs:comment "Network of formally affiliated CAC organizations for coordinated child protection efforts."@en .
+
+cacontology-prevention:AffiliateResourceSharing rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:SupportEvent ;
+    rdfs:label "Affiliate Resource Sharing"@en ;
+    rdfs:comment "Coordinated sharing of educational resources and prevention materials among CAC affiliates."@en .
+
+cacontology-prevention:AffiliateCoordination rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:SupportEvent ;
+    rdfs:label "Affiliate Coordination"@en ;
+    rdfs:comment "Coordination activities between CAC affiliate organizations for unified prevention efforts."@en .
+
+# =============================================================================
+# ENHANCED COMMUNITY ENGAGEMENT METRICS
+# =============================================================================
+
+cacontology-prevention:CommunityEngagementMetrics rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:PreventionMetrics ;
+    rdfs:label "Community Engagement Metrics"@en ;
+    rdfs:comment "Comprehensive metrics for measuring community engagement across multiple communication channels."@en .
+
+cacontology-prevention:EmailListEngagementMetrics rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:CommunityEngagementMetrics ;
+    rdfs:label "Email List Engagement Metrics"@en ;
+    rdfs:comment "Metrics tracking email list subscription rates, open rates, and engagement patterns."@en .
+
+cacontology-prevention:PodcastEngagementMetrics rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:CommunityEngagementMetrics ;
+    rdfs:label "Podcast Engagement Metrics"@en ;
+    rdfs:comment "Metrics tracking podcast download rates, completion rates, and listener engagement."@en .
+
+cacontology-prevention:FAQUsageMetrics rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:CommunityEngagementMetrics ;
+    rdfs:label "FAQ Usage Metrics"@en ;
+    rdfs:comment "Metrics tracking FAQ access patterns, most searched questions, and help-seeking behaviors."@en .
+
+cacontology-prevention:InteractiveCourseMetrics rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:CommunityEngagementMetrics ;
+    rdfs:label "Interactive Course Metrics"@en ;
+    rdfs:comment "Metrics tracking course enrollment, completion rates, and learning effectiveness."@en .
+
+# =============================================================================
+# WISCONSIN-INSPIRED PROPERTIES (Data Properties)
+# =============================================================================
+
+# Email List Properties
+cacontology-prevention:emailListSubscriberCount rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-prevention:CommunityEmailList ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "email list subscriber count"@en ;
+    rdfs:comment "Number of active subscribers to community email list."@en .
+
+cacontology-prevention:emailOpenRate rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-prevention:EmailListEngagementMetrics ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "email open rate"@en ;
+    rdfs:comment "Email open rate percentage (0.0-1.0) for community communications."@en .
+
+cacontology-prevention:publicationArchiveSize rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-prevention:ArchivePublicationSystem ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "publication archive size"@en ;
+    rdfs:comment "Number of archived publications available in the system."@en .
+
+# Podcast Properties
+cacontology-prevention:podcastEpisodeCount rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-prevention:PodcastEducationSeries ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "podcast episode count"@en ;
+    rdfs:comment "Number of episodes in the podcast education series."@en .
+
+cacontology-prevention:podcastDownloadCount rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-prevention:PodcastEngagementMetrics ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "podcast download count"@en ;
+    rdfs:comment "Total number of podcast episode downloads."@en .
+
+cacontology-prevention:averageListeningDuration rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-prevention:PodcastEngagementMetrics ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "average listening duration"@en ;
+    rdfs:comment "Average listening duration in minutes per episode."@en .
+
+# Interactive Course Properties
+cacontology-prevention:courseModuleCount rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-prevention:InteractiveCourseSystem ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "course module count"@en ;
+    rdfs:comment "Number of interactive modules in the course system."@en .
+
+cacontology-prevention:courseCompletionRate rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-prevention:InteractiveCourseMetrics ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "course completion rate"@en ;
+    rdfs:comment "Course completion rate percentage (0.0-1.0) for interactive safety courses."@en .
+
+cacontology-prevention:activeParticipantCount rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-prevention:InteractiveCourseSystem ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "active participant count"@en ;
+    rdfs:comment "Number of currently active participants in interactive courses."@en .
+
+# FAQ Properties
+cacontology-prevention:faqItemCount rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-prevention:FAQKnowledgeBase ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "FAQ item count"@en ;
+    rdfs:comment "Number of frequently asked questions in the knowledge base."@en .
+
+cacontology-prevention:faqAccessCount rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-prevention:FAQUsageMetrics ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "FAQ access count"@en ;
+    rdfs:comment "Total number of accesses to the FAQ knowledge base."@en .
+
+cacontology-prevention:averageHelpSeekingTime rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-prevention:FAQUsageMetrics ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "average help seeking time"@en ;
+    rdfs:comment "Average time in minutes users spend accessing FAQ information."@en .
+
+# Affiliate Network Properties
+cacontology-prevention:affiliateOrganizationCount rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-prevention:ICACAffiliateNetwork ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "affiliate organization count"@en ;
+    rdfs:comment "Number of organizations in the CAC affiliate network."@en .
+
+cacontology-prevention:resourceSharingFrequency rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-prevention:AffiliateResourceSharing ;
+    rdfs:range xsd:string ;
+    rdfs:label "resource sharing frequency"@en ;
+    rdfs:comment "Frequency of resource sharing activities (daily, weekly, monthly, quarterly)."@en .
+
+cacontology-prevention:coordinationMeetingFrequency rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-prevention:AffiliateCoordination ;
+    rdfs:range xsd:string ;
+    rdfs:label "coordination meeting frequency"@en ;
+    rdfs:comment "Frequency of affiliate coordination meetings and activities."@en .
+
+# =============================================================================
+# WISCONSIN-INSPIRED PROPERTIES (Object Properties)
+# =============================================================================
+
+# Community Communication Relationships
+cacontology-prevention:maintainsEmailList rdf:type owl:ObjectProperty ;
+    rdfs:domain uco-identity:Organization ;
+    rdfs:range cacontology-prevention:CommunityEmailList ;
+    rdfs:label "maintains email list"@en ;
+    rdfs:comment "Organization maintains community email list for ongoing communication."@en .
+
+cacontology-prevention:accessesArchive rdf:type owl:ObjectProperty ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range cacontology-prevention:ArchivePublicationSystem ;
+    rdfs:label "accesses archive"@en ;
+    rdfs:comment "Community member accesses archived publication system."@en .
+
+cacontology-prevention:queriesFAQ rdf:type owl:ObjectProperty ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range cacontology-prevention:FAQKnowledgeBase ;
+    rdfs:label "queries FAQ"@en ;
+    rdfs:comment "Community member queries FAQ knowledge base for information."@en .
+
+# Educational Content Relationships
+cacontology-prevention:hostsContentOn rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-prevention:PodcastEducationSeries ;
+    rdfs:range cacontology-prevention:EducationPlatformIntegration ;
+    rdfs:label "hosts content on"@en ;
+    rdfs:comment "Podcast series hosts educational content on platform integration system."@en .
+
+cacontology-prevention:tracksProgressOf rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-prevention:CourseCompletionTracking ;
+    rdfs:range cacontology-prevention:InteractiveCourseSystem ;
+    rdfs:label "tracks progress of"@en ;
+    rdfs:comment "Tracking system monitors progress of interactive course participants."@en .
+
+cacontology-prevention:integratesToPlatform rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-prevention:MultimediaEducationContent ;
+    rdfs:range cacontology-prevention:EducationPlatformIntegration ;
+    rdfs:label "integrates to platform"@en ;
+    rdfs:comment "Multimedia content integrates with education platform systems."@en .
+
+# Affiliate Network Relationships
+cacontology-prevention:affiliatedWith rdf:type owl:ObjectProperty ;
+    rdfs:domain uco-identity:Organization ;
+    rdfs:range cacontology-prevention:ICACAffiliateNetwork ;
+    rdfs:label "affiliated with"@en ;
+    rdfs:comment "Organization is formally affiliated with CAC network."@en .
+
+cacontology-prevention:sharesResourcesWith rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-prevention:AffiliateResourceSharing ;
+    rdfs:range uco-identity:Organization ;
+    rdfs:label "shares resources with"@en ;
+    rdfs:comment "Resource sharing activity involves specific affiliate organization."@en .
+
+cacontology-prevention:coordinatesWith rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-prevention:AffiliateCoordination ;
+    rdfs:range uco-identity:Organization ;
+    rdfs:label "coordinates with"@en ;
+    rdfs:comment "Coordination activity involves specific affiliate organization."@en .
+
+# Content Production and Management Relationships
+cacontology-prevention:publishesToArchive rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-prevention:EducationalResource ;
+    rdfs:range cacontology-prevention:ArchivePublicationSystem ;
+    rdfs:label "publishes to archive"@en ;
+    rdfs:comment "Educational resource is published to archive publication system."@en .
+
+cacontology-prevention:distributedViaEmailList rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-prevention:EducationalResource ;
+    rdfs:range cacontology-prevention:CommunityEmailList ;
+    rdfs:label "distributed via email list"@en ;
+    rdfs:comment "Educational resource is distributed through community email list."@en .
+
+cacontology-prevention:enhancedBy rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-prevention:InteractiveCourseSystem ;
+    rdfs:range cacontology-prevention:MultimediaEducationContent ;
+    rdfs:label "enhanced by"@en ;
+    rdfs:comment "Interactive course system is enhanced by multimedia educational content."@en .
+
+# Metrics and Measurement Relationships
+cacontology-prevention:measuresEngagementOf rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-prevention:CommunityEngagementMetrics ;
+    rdfs:range cacontology-prevention:CommunityEmailList ;
+    rdfs:label "measures engagement of"@en ;
+    rdfs:comment "Engagement metrics measure effectiveness of community communication system."@en .
+
+cacontology-prevention:tracksPodcastMetrics rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-prevention:PodcastEngagementMetrics ;
+    rdfs:range cacontology-prevention:PodcastEducationSeries ;
+    rdfs:label "tracks podcast metrics"@en ;
+    rdfs:comment "Metrics system tracks engagement data for podcast education series."@en .
+
+cacontology-prevention:monitorsUsageOf rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-prevention:FAQUsageMetrics ;
+    rdfs:range cacontology-prevention:FAQKnowledgeBase ;
+    rdfs:label "monitors usage of"@en ;
+    rdfs:comment "Usage metrics monitor access patterns of FAQ knowledge base."@en .
+
+# =============================================================================
+# COMMUNITY OUTREACH EFFECTIVENESS (Operation Restore Justice Enhancement)
+# =============================================================================
+
+cacontology-prevention:CommunityOutreachEffectiveness rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:PreventionMetrics ;
+    rdfs:label "Community Outreach Effectiveness"@en ;
+    rdfs:comment "Measurement of community outreach program effectiveness in generating victim disclosures and arrests."@en .
+
+cacontology-prevention:SchoolPresentationProgram rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:EducationalOutreach ;
+    rdfs:label "School Presentation Program"@en ;
+    rdfs:comment "FBI school presentation program for child safety education and disclosure encouragement."@en .
+
+cacontology-prevention:VictimDisclosureTriggering rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:SafetyEducationEvent ;
+    rdfs:label "Victim Disclosure Triggering"@en ;
+    rdfs:comment "Safety education event that triggers victim disclosure of ongoing abuse."@en .
+
+cacontology-prevention:PostPresentationDisclosure rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:SupportEvent ;
+    rdfs:label "Post Presentation Disclosure"@en ;
+    rdfs:comment "Victim disclosure that occurs following a safety presentation or educational event."@en .
+
+cacontology-prevention:OutreachTriggeredInvestigation rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:InvestigativeAction ;
+    rdfs:label "Outreach Triggered Investigation"@en ;
+    rdfs:comment "Investigation initiated as direct result of community outreach presentation."@en .
+
+cacontology-prevention:RapidResponseDisclosureWorkflow rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:SupportEvent ;
+    rdfs:label "Rapid Response Disclosure Workflow"@en ;
+    rdfs:comment "Workflow enabling rapid response from victim disclosure to arrest (e.g., 8-hour timeline)."@en .
+
+# =============================================================================
+# PARENTAL VIGILANCE AND COMMUNITY ENGAGEMENT
+# =============================================================================
+
+cacontology-prevention:ParentalVigilanceProgram rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:CommunityOutreach ;
+    rdfs:label "Parental Vigilance Program"@en ;
+    rdfs:comment "Program educating parents on recognizing signs of child exploitation and reporting."@en .
+
+cacontology-prevention:CommunityPartnershipInitiative rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:CommunityOutreach ;
+    rdfs:label "Community Partnership Initiative"@en ;
+    rdfs:comment "Initiative building partnerships with community organizations for child protection."@en .
+
+cacontology-prevention:ChildAbusePreventionMonth rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:PreventionCampaign ;
+    rdfs:label "Child Abuse Prevention Month"@en ;
+    rdfs:comment "National Child Abuse Prevention Month coordinated awareness activities."@en .
+
+cacontology-prevention:NationwideAwarenessInitiative rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:PreventionCampaign ;
+    rdfs:label "Nationwide Awareness Initiative"@en ;
+    rdfs:comment "Nationwide coordinated awareness campaign involving multiple agencies and communities."@en .
+
+# =============================================================================
+# DISCLOSURE ENCOURAGEMENT AND SUPPORT
+# =============================================================================
+
+cacontology-prevention:DisclosureEncouragementStrategy rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:SafetyProtocol ;
+    rdfs:label "Disclosure Encouragement Strategy"@en ;
+    rdfs:comment "Strategy for encouraging victims to disclose abuse through education and support."@en .
+
+cacontology-prevention:SafeDisclosureEnvironment rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:SafetyProtocol ;
+    rdfs:label "Safe Disclosure Environment"@en ;
+    rdfs:comment "Creation of safe environment where victims feel comfortable disclosing abuse."@en .
+
+cacontology-prevention:TrustedAdultIdentification rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:DisclosureEncouragementStrategy ;
+    rdfs:label "Trusted Adult Identification"@en ;
+    rdfs:comment "Education helping children identify trusted adults for disclosure."@en .
+
+cacontology-prevention:DisclosureBarrierReduction rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-prevention:DisclosureEncouragementStrategy ;
+    rdfs:label "Disclosure Barrier Reduction"@en ;
+    rdfs:comment "Strategies to reduce barriers preventing victim disclosure."@en .
+
+# =============================================================================
+# ENHANCED OUTREACH PROPERTIES (Operation Restore Justice)
+# =============================================================================
+
+cacontology-prevention:disclosuresGenerated rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-prevention:CommunityOutreachEffectiveness ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "disclosures generated"@en ;
+    rdfs:comment "Number of victim disclosures generated by outreach program."@en .
+
+cacontology-prevention:arrestsFromDisclosures rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-prevention:CommunityOutreachEffectiveness ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "arrests from disclosures"@en ;
+    rdfs:comment "Number of arrests resulting from outreach-generated disclosures."@en .
+
+cacontology-prevention:averageDisclosureTime rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-prevention:PostPresentationDisclosure ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "average disclosure time"@en ;
+    rdfs:comment "Average time in hours from presentation to victim disclosure."@en .
+
+cacontology-prevention:rapidResponseCapability rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-prevention:RapidResponseDisclosureWorkflow ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "rapid response capability"@en ;
+    rdfs:comment "Whether rapid response (sub-24 hour) capability is available."@en .
+
+cacontology-prevention:presentationAttendance rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-prevention:SchoolPresentationProgram ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "presentation attendance"@en ;
+    rdfs:comment "Number of students attending safety presentation."@en .
+
+cacontology-prevention:parentalEngagementRate rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-prevention:ParentalVigilanceProgram ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "parental engagement rate"@en ;
+    rdfs:comment "Rate of parental engagement in vigilance program (0.0-1.0)."@en .
+
+cacontology-prevention:communityReportingIncrease rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-prevention:CommunityPartnershipInitiative ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "community reporting increase"@en ;
+    rdfs:comment "Percentage increase in community reporting following initiative."@en .
+
+cacontology-prevention:disclosureBarriersAddressed rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-prevention:DisclosureBarrierReduction ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "disclosure barriers addressed"@en ;
+    rdfs:comment "Number of disclosure barriers identified and addressed."@en .
+
+cacontology-prevention:trustedAdultsIdentified rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-prevention:TrustedAdultIdentification ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "trusted adults identified"@en ;
+    rdfs:comment "Number of trusted adults identified by children in program."@en .
+
+# =============================================================================
+# ENHANCED OUTREACH RELATIONSHIPS (Operation Restore Justice)
+# =============================================================================
+
+cacontology-prevention:triggersDisclosure rdf:type owl:ObjectProperty ;
+    rdfs:label "triggers disclosure"@en ;
+    rdfs:comment "Links outreach activity to victim disclosure it triggered."@en ;
+    rdfs:domain cacontology-prevention:VictimDisclosureTriggering ;
+    rdfs:range cacontology-prevention:PostPresentationDisclosure .
+
+cacontology-prevention:enablesRapidResponse rdf:type owl:ObjectProperty ;
+    rdfs:label "enables rapid response"@en ;
+    rdfs:comment "Links disclosure to rapid response capability."@en ;
+    rdfs:domain cacontology-prevention:PostPresentationDisclosure ;
+    rdfs:range cacontology-prevention:RapidResponseDisclosureWorkflow .
+
+cacontology-prevention:resultsInArrest rdf:type owl:ObjectProperty ;
+    rdfs:label "results in arrest"@en ;
+    rdfs:comment "Links outreach-triggered investigation to arrest."@en ;
+    rdfs:domain cacontology-prevention:OutreachTriggeredInvestigation ;
+    rdfs:range uco-action:Action .
+
+cacontology-prevention:engagesParents rdf:type owl:ObjectProperty ;
+    rdfs:label "engages parents"@en ;
+    rdfs:comment "Links vigilance program to parent participants."@en ;
+    rdfs:domain cacontology-prevention:ParentalVigilanceProgram ;
+    rdfs:range uco-identity:Person .
+
+cacontology-prevention:supportedBy rdf:type owl:ObjectProperty ;
+    rdfs:label "supported by"@en ;
+    rdfs:comment "Links disclosure to support system that enabled it."@en ;
+    rdfs:domain cacontology-prevention:PostPresentationDisclosure ;
+    rdfs:range cacontology-prevention:SafeDisclosureEnvironment .
+
+cacontology-prevention:coordinatedWith rdf:type owl:ObjectProperty ;
+    rdfs:label "coordinated with"@en ;
+    rdfs:comment "Links awareness initiative to coordinating agencies."@en ;
+    rdfs:domain cacontology-prevention:NationwideAwarenessInitiative ;
+    rdfs:range uco-identity:Organization .
+
+cacontology-prevention:reducesBarrier rdf:type owl:ObjectProperty ;
+    rdfs:label "reduces barrier"@en ;
+    rdfs:comment "Links strategy to disclosure barrier it addresses."@en ;
+    rdfs:domain cacontology-prevention:DisclosureBarrierReduction ;
+    rdfs:range uco-core:UcoObject .
+
+cacontology-prevention:identifiesTrustedAdult rdf:type owl:ObjectProperty ;
+    rdfs:label "identifies trusted adult"@en ;
+    rdfs:comment "Links program to trusted adult identification."@en ;
+    rdfs:domain cacontology-prevention:TrustedAdultIdentification ;
+    rdfs:range uco-identity:Person . 

@@ -1,0 +1,555 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
+@prefix case-investigation: <https://ontology.caseontology.org/case/investigation/> .
+@prefix gufo: <http://purl.org/nemo/gufo#> .
+@prefix cacontology-gufo: <https://cacontology.projectvic.org/gufo#> .
+@prefix cacontology-athletic: <https://cacontology.projectvic.org/athletic#> .
+@prefix cacontology-educational: <https://cacontology.projectvic.org/educational#> .
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+
+# Ontology Declaration
+<https://cacontology.projectvic.org/athletic> rdf:type owl:Ontology ;
+    rdfs:label "CAC Athletic Coaching Exploitation Ontology with gUFO Integration"@en ;
+    rdfs:comment "Specialized ontology for modeling athletic coaching exploitation patterns, physical training coercion, team dynamics abuse, and sports-specific authority exploitation in child sexual abuse cases, enhanced with comprehensive gUFO foundational modeling. Based on cases like Brooklyn DA v. Nicolas Morton (2024), featuring gUFO Events, Organizations, Objects, Roles, Phases, and Situations for enhanced semantic precision and anti-rigidity enforcement."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/athletic/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:issued "2025-01-28"^^xsd:date ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> ,
+                <https://ontology.caseontology.org/case/case/1.5.0> ,
+                <https://cacontology.projectvic.org/educational/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> ,
+                <https://cacontology.projectvic.org/core/3.1.0> .
+
+# =============================================================================
+# CORE ATHLETIC EXPLOITATION CLASSES ENHANCED AS gUFO EVENTS
+# =============================================================================
+
+cacontology-athletic:AthleticCoachingExploitation rdf:type owl:Class ;
+    rdfs:label "Athletic Coaching Exploitation"@en ;
+    rdfs:comment "Child sexual exploitation committed by athletic coaches using sports authority, team dynamics, and physical training as coercion mechanisms. Enhanced as gUFO Event for comprehensive temporal and causal modeling of exploitation patterns."@en ;
+    rdfs:subClassOf cacontology-educational:EducatorPerpetratedExploitation ,
+                    cac-core:Event ;
+    cacontology-gufo:hasTemporalProperty cacontology-gufo:exploitationBeginTime ,
+                                 cacontology-gufo:exploitationEndTime .
+
+cacontology-athletic:TravelTeamExploitation rdf:type owl:Class ;
+    rdfs:label "Travel Team Exploitation"@en ;
+    rdfs:comment "Exploitation within travel or club sports teams where coach has enhanced authority and access to players. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-athletic:AthleticCoachingExploitation ,
+                    cac-core:Event ;
+    cacontology-gufo:hasTemporalProperty cacontology-gufo:travelSeasonBeginTime .
+
+cacontology-athletic:SchoolAthleticExploitation rdf:type owl:Class ;
+    rdfs:label "School Athletic Exploitation"@en ;
+    rdfs:comment "Exploitation within school-based athletic programs leveraging institutional authority. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-athletic:AthleticCoachingExploitation ,
+                    cac-core:Event ;
+    cacontology-gufo:hasTemporalProperty cacontology-gufo:schoolSeasonBeginTime .
+
+cacontology-athletic:DualCoachingRoleExploitation rdf:type owl:Class ;
+    rdfs:label "Dual Coaching Role Exploitation"@en ;
+    rdfs:comment "Exploitation leveraging multiple coaching positions across different teams or institutions. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-athletic:AthleticCoachingExploitation ,
+                    cac-core:Event .
+
+cacontology-athletic:TeamBasedExploitation rdf:type owl:Class ;
+    rdfs:label "Team Based Exploitation"@en ;
+    rdfs:comment "Contextual situation in which exploitation occurs using team dynamics, group pressure, and collective team authority. Not an exploitation event itself."@en ;
+    rdfs:subClassOf cac-core:Situation .
+
+# =============================================================================
+# PHYSICAL TRAINING COERCION CLASSES AS gUFO EVENTS
+# =============================================================================
+
+cacontology-athletic:PhysicalTrainingCoercion rdf:type owl:Class ;
+    rdfs:label "Physical Training Coercion"@en ;
+    rdfs:comment "Use of physical training, conditioning, and exercise as coercion mechanism for sexual exploitation. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cac-core:ExploitationEvent ;
+    cacontology-gufo:hasTemporalProperty cacontology-gufo:coercionBeginTime ,
+                                 cacontology-gufo:coercionEndTime .
+
+cacontology-athletic:ConditioningCoercion rdf:type owl:Class ;
+    rdfs:label "Conditioning Coercion"@en ;
+    rdfs:comment "Use of physical conditioning exercises as coercion mechanism for sexual compliance. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-athletic:PhysicalTrainingCoercion ,
+                    cac-core:Event ;
+    cacontology-gufo:hasTemporalProperty cacontology-gufo:conditioningDuration .
+
+cacontology-athletic:ExhaustionBasedCoercion rdf:type owl:Class ;
+    rdfs:label "Exhaustion Based Coercion"@en ;
+    rdfs:comment "Physical exhaustion to reduce resistance and force compliance with sexual demands. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-athletic:PhysicalTrainingCoercion ,
+                    cac-core:Event ;
+    cacontology-gufo:hasTemporalProperty cacontology-gufo:exhaustionReachTime .
+
+cacontology-athletic:TrainingDrillCoercion rdf:type owl:Class ;
+    rdfs:label "Training Drill Coercion"@en ;
+    rdfs:comment "Use of training drills and exercises for exploitation demands and sexual compliance. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-athletic:PhysicalTrainingCoercion ,
+                    cac-core:Event .
+
+cacontology-athletic:PhysicalEnduranceExploitation rdf:type owl:Class ;
+    rdfs:label "Physical Endurance Exploitation"@en ;
+    rdfs:comment "Exploitation of physical endurance requirements and athletic performance demands. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-athletic:PhysicalTrainingCoercion ,
+                    cac-core:Event .
+
+cacontology-athletic:ExerciseComplianceCoercion rdf:type owl:Class ;
+    rdfs:label "Exercise Compliance Coercion"@en ;
+    rdfs:comment "Exercise continuation contingent on sexual compliance and exposure demands. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-athletic:PhysicalTrainingCoercion ,
+                    cac-core:Event .
+
+# =============================================================================
+# TEAM DYNAMICS AND AUTHORITY AS gUFO SITUATIONS
+# =============================================================================
+
+cacontology-athletic:TeamDynamicsExploitation rdf:type owl:Class ;
+    rdfs:label "Team Dynamics Exploitation"@en ;
+    rdfs:comment "Contextual situation in which exploitation occurs using team membership, group dynamics, and athletic authority structures. Not an exploitation event itself."@en ;
+    rdfs:subClassOf cac-core:Situation .
+
+cacontology-athletic:TeamMembershipCoercion rdf:type owl:Class ;
+    rdfs:label "Team Membership Coercion"@en ;
+    rdfs:comment "Threats to team membership and participation as coercion for sexual compliance. Enhanced as gUFO Situation."@en ;
+    rdfs:subClassOf cacontology-athletic:TeamDynamicsExploitation ,
+                    cac-core:Situation .
+
+cacontology-athletic:AthleticOpportunityThreats rdf:type owl:Class ;
+    rdfs:label "Athletic Opportunity Threats"@en ;
+    rdfs:comment "Threats to athletic opportunities, advancement, and sports career prospects. Enhanced as gUFO Situation."@en ;
+    rdfs:subClassOf cacontology-athletic:TeamDynamicsExploitation ,
+                    cac-core:Situation .
+
+cacontology-athletic:TeamSelectionCoercion rdf:type owl:Class ;
+    rdfs:label "Team Selection Coercion"@en ;
+    rdfs:comment "Use of team selection and roster decisions for sexual coercion and compliance. Enhanced as gUFO Situation."@en ;
+    rdfs:subClassOf cacontology-athletic:TeamDynamicsExploitation ,
+                    cac-core:Situation .
+
+cacontology-athletic:MaterialBenefitCoercion rdf:type owl:Class ;
+    rdfs:label "Material Benefit Coercion"@en ;
+    rdfs:comment "Athletic equipment, benefits, or opportunities offered as coercion for sexual compliance. Enhanced as gUFO Situation."@en ;
+    rdfs:subClassOf cacontology-athletic:TeamDynamicsExploitation ,
+                    cac-core:Situation .
+
+cacontology-athletic:GroupExploitationDynamics rdf:type owl:Class ;
+    rdfs:label "Group Exploitation Dynamics"@en ;
+    rdfs:comment "Exploitation using team group dynamics, peer pressure, and collective authority. Enhanced as gUFO Situation."@en ;
+    rdfs:subClassOf cacontology-athletic:TeamDynamicsExploitation ,
+                    cac-core:Situation .
+
+# =============================================================================
+# ATHLETIC FACILITY AND CONTEXT AS gUFO OBJECTS
+# =============================================================================
+
+cacontology-athletic:AthleticFacilityExploitation rdf:type owl:Class ;
+    rdfs:label "Athletic Facility Exploitation"@en ;
+    rdfs:comment "Exploitation occurring in athletic facilities and sports venues. Enhanced as gUFO Event occurring in gUFO Objects."@en ;
+    rdfs:subClassOf cac-core:ExploitationEvent .
+
+cacontology-athletic:AthleticFacility rdf:type owl:Class ;
+    rdfs:label "Athletic Facility"@en ;
+    rdfs:comment "Physical athletic facilities and sports venues where exploitation occurs. Enhanced as gUFO Object."@en ;
+    rdfs:subClassOf uco-location:Location ,
+                    cac-core:EnduringEntity .
+
+cacontology-athletic:GymExploitation rdf:type owl:Class ;
+    rdfs:label "Gym Exploitation"@en ;
+    rdfs:comment "Exploitation in gymnasium and indoor athletic facilities. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-athletic:AthleticFacilityExploitation ,
+                    cac-core:Event .
+
+cacontology-athletic:LockerRoomExploitation rdf:type owl:Class ;
+    rdfs:label "Locker Room Exploitation"@en ;
+    rdfs:comment "Exploitation in locker rooms and changing areas with privacy expectations. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-athletic:AthleticFacilityExploitation ,
+                    cac-core:Event .
+
+cacontology-athletic:AthleticFieldExploitation rdf:type owl:Class ;
+    rdfs:label "Athletic Field Exploitation"@en ;
+    rdfs:comment "Exploitation on outdoor athletic fields, courts, and sports venues. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-athletic:AthleticFacilityExploitation ,
+                    cac-core:Event .
+
+cacontology-athletic:PracticeSessionExploitation rdf:type owl:Class ;
+    rdfs:label "Practice Session Exploitation"@en ;
+    rdfs:comment "Exploitation during regular practice sessions and training activities. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-athletic:AthleticFacilityExploitation ,
+                    cac-core:Event ;
+    cacontology-gufo:hasTemporalProperty cacontology-gufo:practiceSessionBeginTime ,
+                                 cacontology-gufo:practiceSessionEndTime .
+
+cacontology-athletic:TrainingCampExploitation rdf:type owl:Class ;
+    rdfs:label "Training Camp Exploitation"@en ;
+    rdfs:comment "Exploitation during intensive training camps or extended athletic sessions. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-athletic:AthleticFacilityExploitation ,
+                    cac-core:Event ;
+    cacontology-gufo:hasTemporalProperty cacontology-gufo:trainingCampBeginTime ,
+                                 cacontology-gufo:trainingCampEndTime .
+
+# =============================================================================
+# ATHLETIC OPERATIONAL PHASES (Anti-Rigid gUFO Phases)
+# =============================================================================
+
+cacontology-athletic:GroomingPhase rdf:type owl:Class ;
+    rdfs:label "Grooming Phase"@en ;
+    rdfs:comment "Initial phase where coach establishes trust and authority before exploitation. Anti-rigid gUFO Phase supporting dynamic operational transitions."@en ;
+    rdfs:subClassOf cac-core:Phase ;
+    cacontology-gufo:hasAntiRigidityConstraint "Phase duration varies based on team dynamics and individual athlete characteristics" .
+
+cacontology-athletic:AuthorityEstablishmentPhase rdf:type owl:Class ;
+    rdfs:label "Authority Establishment Phase"@en ;
+    rdfs:comment "Phase during which coaching authority and control over athletes is established. Anti-rigid gUFO Phase."@en ;
+    rdfs:subClassOf cac-core:Phase ;
+    cacontology-gufo:hasAntiRigidityConstraint "Phase changes based on team structure and institutional authority levels" .
+
+cacontology-athletic:PhysicalCoercionPhase rdf:type owl:Class ;
+    rdfs:label "Physical Coercion Phase"@en ;
+    rdfs:comment "Phase involving physical training coercion and conditioning for compliance. Anti-rigid gUFO Phase."@en ;
+    rdfs:subClassOf cac-core:Phase ;
+    cacontology-gufo:hasAntiRigidityConstraint "Phase varies based on athlete resistance and training demands" .
+
+cacontology-athletic:ExploitationPhase rdf:type owl:Class ;
+    rdfs:label "Exploitation Phase"@en ;
+    rdfs:comment "Active exploitation phase using established authority and coercion mechanisms. Anti-rigid gUFO Phase."@en ;
+    rdfs:subClassOf cac-core:Phase ;
+    cacontology-gufo:hasAntiRigidityConstraint "Phase changes based on exploitation opportunities and detection risks" .
+
+cacontology-athletic:DiscoveryPhase rdf:type owl:Class ;
+    rdfs:label "Discovery Phase"@en ;
+    rdfs:comment "Phase during which exploitation is discovered through various reporting mechanisms. Anti-rigid gUFO Phase."@en ;
+    rdfs:subClassOf cac-core:Phase ;
+    cacontology-gufo:hasAntiRigidityConstraint "Phase varies based on reporting mechanisms and community awareness" .
+
+# =============================================================================
+# SEXUAL EDUCATION EXPLOITATION CLASSES AS gUFO EVENTS
+# =============================================================================
+
+cacontology-athletic:SexualEducationExploitation rdf:type owl:Class ;
+    rdfs:label "Sexual Education Exploitation"@en ;
+    rdfs:comment "Use of sexual topics and education as exploitation method within athletic context. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cac-core:ExploitationEvent .
+
+cacontology-athletic:InappropriateSexualEducation rdf:type owl:Class ;
+    rdfs:label "Inappropriate Sexual Education"@en ;
+    rdfs:comment "Use of sexual topics and education as exploitation method disguised as coaching. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-athletic:SexualEducationExploitation ,
+                    cac-core:Event .
+
+cacontology-athletic:AnatomyFocusedExploitation rdf:type owl:Class ;
+    rdfs:label "Anatomy Focused Exploitation"@en ;
+    rdfs:comment "Exploitation focused on body parts and anatomy under guise of athletic training. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-athletic:SexualEducationExploitation ,
+                    cac-core:Event .
+
+cacontology-athletic:SexualTopicGrooming rdf:type owl:Class ;
+    rdfs:label "Sexual Topic Grooming"@en ;
+    rdfs:comment "Grooming through inappropriate sexual discussions during athletic activities. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-athletic:SexualEducationExploitation ,
+                    cac-core:Event .
+
+cacontology-athletic:MasturbationDiscussionExploitation rdf:type owl:Class ;
+    rdfs:label "Masturbation Discussion Exploitation"@en ;
+    rdfs:comment "Exploitation through extensive masturbation discussions during athletic training. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-athletic:SexualEducationExploitation ,
+                    cac-core:Event .
+
+cacontology-athletic:PubicHairFocusedExploitation rdf:type owl:Class ;
+    rdfs:label "Pubic Hair Focused Exploitation"@en ;
+    rdfs:comment "Specific exploitation focused on pubic hair viewing and discussion. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-athletic:SexualEducationExploitation ,
+                    cac-core:Event .
+
+# =============================================================================
+# PHYSICAL CONTACT ESCALATION CLASSES AS gUFO EVENTS
+# =============================================================================
+
+cacontology-athletic:PhysicalContactEscalation rdf:type owl:Class ;
+    rdfs:label "Physical Contact Escalation"@en ;
+    rdfs:comment "Escalation of physical contact within athletic training context. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cac-core:ExploitationEvent ;
+    cacontology-gufo:hasTemporalProperty cacontology-gufo:escalationBeginTime ,
+                                 cacontology-gufo:escalationPeakTime .
+
+cacontology-athletic:AthleticContactEscalation rdf:type owl:Class ;
+    rdfs:label "Athletic Contact Escalation"@en ;
+    rdfs:comment "Escalation of physical contact within legitimate athletic training context. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-athletic:PhysicalContactEscalation ,
+                    cac-core:Event .
+
+cacontology-athletic:LegitimateContactExploitation rdf:type owl:Class ;
+    rdfs:label "Legitimate Contact Exploitation"@en ;
+    rdfs:comment "Exploitation of legitimate athletic physical contact for sexual purposes. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-athletic:PhysicalContactEscalation ,
+                    cac-core:Event .
+
+cacontology-athletic:OverClothingToUnderClothingEscalation rdf:type owl:Class ;
+    rdfs:label "Over Clothing to Under Clothing Escalation"@en ;
+    rdfs:comment "Progression from over-clothing to under-clothing contact during athletic activities. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-athletic:PhysicalContactEscalation ,
+                    cac-core:Event .
+
+cacontology-athletic:TrainingBasedTouching rdf:type owl:Class ;
+    rdfs:label "Training Based Touching"@en ;
+    rdfs:comment "Inappropriate touching disguised as athletic training and coaching instruction. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-athletic:PhysicalContactEscalation ,
+                    cac-core:Event .
+
+cacontology-athletic:SportsContextPhysicalAbuse rdf:type owl:Class ;
+    rdfs:label "Sports Context Physical Abuse"@en ;
+    rdfs:comment "Physical abuse within sports training context disguised as coaching. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-athletic:PhysicalContactEscalation ,
+                    cac-core:Event .
+
+# =============================================================================
+# DISCOVERY AND REPORTING CLASSES AS gUFO EVENTS
+# =============================================================================
+
+cacontology-athletic:AthleticExploitationDiscovery rdf:type owl:Class ;
+    rdfs:label "Athletic Exploitation Discovery"@en ;
+    rdfs:comment "Discovery of athletic coaching exploitation through various reporting mechanisms. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cac-core:ExploitationEvent ;
+    cacontology-gufo:hasTemporalProperty cacontology-gufo:discoveryBeginTime ,
+                                 cacontology-gufo:reportingTime .
+
+cacontology-athletic:ParentNetworkDiscovery rdf:type owl:Class ;
+    rdfs:label "Parent Network Discovery"@en ;
+    rdfs:comment "Discovery through parent community networks and team family communications. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-athletic:AthleticExploitationDiscovery ,
+                    cac-core:Event .
+
+cacontology-athletic:RumorCirculationDiscovery rdf:type owl:Class ;
+    rdfs:label "Rumor Circulation Discovery"@en ;
+    rdfs:comment "Discovery through rumor circulation among families and team communities. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-athletic:AthleticExploitationDiscovery ,
+                    cac-core:Event ;
+    cacontology-gufo:hasTemporalProperty cacontology-gufo:rumorCirculationDuration .
+
+cacontology-athletic:CommunityBasedReporting rdf:type owl:Class ;
+    rdfs:label "Community Based Reporting"@en ;
+    rdfs:comment "Reporting through community and parent networks rather than direct victim disclosure. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cacontology-athletic:AthleticExploitationDiscovery ,
+                    cac-core:Event .
+
+cacontology-athletic:InstitutionalEmploymentTermination rdf:type owl:Class ;
+    rdfs:label "Institutional Employment Termination"@en ;
+    rdfs:comment "Employment termination following discovery of athletic coaching exploitation. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf cac-core:ExploitationEvent ;
+    cacontology-gufo:hasTemporalProperty cacontology-gufo:terminationTime .
+
+cacontology-athletic:SchoolBasedInvestigation rdf:type owl:Class ;
+    rdfs:label "School Based Investigation"@en ;
+    rdfs:comment "Investigation initiated by educational institution following exploitation reports. Enhanced as gUFO Event."@en ;
+    rdfs:subClassOf case-investigation:Investigation ,
+                    cac-core:Event ;
+    cacontology-gufo:hasTemporalProperty cacontology-gufo:investigationBeginTime ,
+                                 cacontology-gufo:investigationEndTime .
+
+# =============================================================================
+# ATHLETIC COACHING ROLES AS ANTI-RIGID gUFO ROLES
+# =============================================================================
+
+cacontology-athletic:AthleticCoachRole rdf:type owl:Class ;
+    rdfs:label "Athletic Coach Role"@en ;
+    rdfs:comment "Athletic coaching role with authority over team members and training activities. Enhanced as anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cacontology-educational:CoachRole ,
+                    cac-core:Role ;
+    cacontology-gufo:hasAntiRigidityConstraint "Role assignment varies based on team needs and coaching specialization" .
+
+cacontology-athletic:TravelTeamCoachRole rdf:type owl:Class ;
+    rdfs:label "Travel Team Coach Role"@en ;
+    rdfs:comment "Coaching role for travel or club sports teams with enhanced authority and access. Enhanced as anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cacontology-athletic:AthleticCoachRole ,
+                    cac-core:Role ;
+    cacontology-gufo:hasAntiRigidityConstraint "Role varies based on travel team structure and competitive level" .
+
+cacontology-athletic:SchoolAthleticCoachRole rdf:type owl:Class ;
+    rdfs:label "School Athletic Coach Role"@en ;
+    rdfs:comment "Coaching role within school-based athletic programs with institutional authority. Enhanced as anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cacontology-athletic:AthleticCoachRole ,
+                    cac-core:Role ;
+    cacontology-gufo:hasAntiRigidityConstraint "Role changes based on school policies and institutional oversight" .
+
+cacontology-athletic:HeadCoachRole rdf:type owl:Class ;
+    rdfs:label "Head Coach Role"@en ;
+    rdfs:comment "Head coaching role with primary authority over team and training decisions. Enhanced as anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cacontology-athletic:AthleticCoachRole ,
+                    cac-core:Role ;
+    cacontology-gufo:hasAntiRigidityConstraint "Role authority varies based on team size and institutional support" .
+
+cacontology-athletic:AssistantCoachRole rdf:type owl:Class ;
+    rdfs:label "Assistant Coach Role"@en ;
+    rdfs:comment "Assistant coaching role with delegated authority over specific training aspects. Enhanced as anti-rigid gUFO Role."@en ;
+    rdfs:subClassOf cacontology-athletic:AthleticCoachRole ,
+                    cac-core:Role ;
+    cacontology-gufo:hasAntiRigidityConstraint "Role scope varies based on delegation and specialization areas" .
+
+# =============================================================================
+# gUFO TEMPORAL PROPERTIES FOR ATHLETIC EXPLOITATION
+# =============================================================================
+
+cacontology-gufo:exploitationBeginTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "exploitation begin time"@en ;
+    rdfs:comment "Temporal point when athletic exploitation begins using gUFO temporal framework."@en ;
+    rdfs:domain cacontology-athletic:AthleticCoachingExploitation ;
+    rdfs:range xsd:dateTime ;
+    cacontology-gufo:temporalConstraint "Must precede exploitation end time" .
+
+cacontology-gufo:exploitationEndTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "exploitation end time"@en ;
+    rdfs:comment "Temporal point when athletic exploitation ends using gUFO temporal framework."@en ;
+    rdfs:domain cacontology-athletic:AthleticCoachingExploitation ;
+    rdfs:range xsd:dateTime .
+
+cacontology-gufo:coercionBeginTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "coercion begin time"@en ;
+    rdfs:comment "Temporal point when physical training coercion begins using gUFO temporal framework."@en ;
+    rdfs:domain cacontology-athletic:PhysicalTrainingCoercion ;
+    rdfs:range xsd:dateTime .
+
+cacontology-gufo:coercionEndTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "coercion end time"@en ;
+    rdfs:comment "Temporal point when physical training coercion ends using gUFO temporal framework."@en ;
+    rdfs:domain cacontology-athletic:PhysicalTrainingCoercion ;
+    rdfs:range xsd:dateTime .
+
+cacontology-gufo:escalationBeginTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "escalation begin time"@en ;
+    rdfs:comment "Temporal point when physical contact escalation begins using gUFO temporal framework."@en ;
+    rdfs:domain cacontology-athletic:PhysicalContactEscalation ;
+    rdfs:range xsd:dateTime .
+
+cacontology-gufo:escalationPeakTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "escalation peak time"@en ;
+    rdfs:comment "Temporal point when physical contact escalation reaches peak using gUFO temporal framework."@en ;
+    rdfs:domain cacontology-athletic:PhysicalContactEscalation ;
+    rdfs:range xsd:dateTime .
+
+cacontology-gufo:discoveryBeginTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "discovery begin time"@en ;
+    rdfs:comment "Temporal point when exploitation discovery begins using gUFO temporal framework."@en ;
+    rdfs:domain cacontology-athletic:AthleticExploitationDiscovery ;
+    rdfs:range xsd:dateTime .
+
+cacontology-gufo:reportingTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "reporting time"@en ;
+    rdfs:comment "Temporal point when exploitation is officially reported using gUFO temporal framework."@en ;
+    rdfs:domain cacontology-athletic:AthleticExploitationDiscovery ;
+    rdfs:range xsd:dateTime .
+
+cacontology-gufo:practiceSessionBeginTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "practice session begin time"@en ;
+    rdfs:comment "Temporal point when practice session begins using gUFO temporal framework."@en ;
+    rdfs:domain cacontology-athletic:PracticeSessionExploitation ;
+    rdfs:range xsd:dateTime .
+
+cacontology-gufo:practiceSessionEndTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "practice session end time"@en ;
+    rdfs:comment "Temporal point when practice session ends using gUFO temporal framework."@en ;
+    rdfs:domain cacontology-athletic:PracticeSessionExploitation ;
+    rdfs:range xsd:dateTime .
+
+# =============================================================================
+# ENHANCED ATHLETIC EXPLOITATION PROPERTIES WITH gUFO INTEGRATION
+# =============================================================================
+
+# Athletic Context Properties Enhanced with gUFO Framework
+cacontology-athletic:sportType rdf:type owl:DatatypeProperty ;
+    rdfs:label "sport type"@en ;
+    rdfs:comment "Type of sport (baseball, basketball, soccer, football, tennis, etc.). Enhanced with gUFO Object classification."@en ;
+    rdfs:domain cacontology-athletic:AthleticCoachingExploitation ;
+    rdfs:range xsd:string ;
+    cacontology-gufo:hasValidationConstraint "Sport type must be verifiable and documented" .
+
+cacontology-athletic:teamType rdf:type owl:DatatypeProperty ;
+    rdfs:label "team type"@en ;
+    rdfs:comment "Type of team (travel, school, club, recreational, competitive). Enhanced with gUFO Organization classification."@en ;
+    rdfs:domain cacontology-athletic:AthleticCoachingExploitation ;
+    rdfs:range xsd:string ;
+    cacontology-gufo:hasValidationConstraint "Team type must correspond to verified organizational structure" .
+
+cacontology-athletic:practiceFrequency rdf:type owl:DatatypeProperty ;
+    rdfs:label "practice frequency"@en ;
+    rdfs:comment "Frequency of practice sessions per week. Enhanced with gUFO Event frequency modeling."@en ;
+    rdfs:domain cacontology-athletic:AthleticCoachingExploitation ;
+    rdfs:range xsd:decimal ;
+    cacontology-gufo:hasValidationConstraint "Practice frequency must be realistic for sport and age group" .
+
+# Coaching Authority Properties Enhanced with gUFO Role Modeling
+cacontology-athletic:coachingExperience rdf:type owl:DatatypeProperty ;
+    rdfs:label "coaching experience"@en ;
+    rdfs:comment "Years of coaching experience. Enhanced with gUFO Role temporal modeling."@en ;
+    rdfs:domain cacontology-athletic:AthleticCoachRole ;
+    rdfs:range xsd:decimal ;
+    cacontology-gufo:hasValidationConstraint "Coaching experience must be verifiable through records" .
+
+cacontology-athletic:multipleRoles rdf:type owl:DatatypeProperty ;
+    rdfs:label "multiple roles"@en ;
+    rdfs:comment "Number of coaching roles held simultaneously. Enhanced with gUFO Role multiplicity."@en ;
+    rdfs:domain cacontology-athletic:DualCoachingRoleExploitation ;
+    rdfs:range xsd:nonNegativeInteger ;
+    cacontology-gufo:hasValidationConstraint "Multiple roles must be documented and non-conflicting" .
+
+# gUFO Enhanced Relationship Properties
+cacontology-athletic:coachesTeam rdf:type owl:ObjectProperty ;
+    rdfs:label "coaches team"@en ;
+    rdfs:comment "Links coach to team they coach. Enhanced with gUFO Role-Organization relationships."@en ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range uco-identity:Organization ;
+    cacontology-gufo:hasRelationshipConstraint "Coaching relationship must be officially documented" .
+
+cacontology-athletic:playsOnTeam rdf:type owl:ObjectProperty ;
+    rdfs:label "plays on team"@en ;
+    rdfs:comment "Links player to team they participate in. Enhanced with gUFO participation modeling."@en ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range uco-identity:Organization ;
+    cacontology-gufo:hasRelationshipConstraint "Team participation must be verified through records" .
+
+cacontology-athletic:holdsCoachingRole rdf:type owl:ObjectProperty ;
+    rdfs:label "holds coaching role"@en ;
+    rdfs:comment "Links person to coaching role they hold. Enhanced with gUFO Role assignment."@en ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range cacontology-athletic:AthleticCoachRole ;
+    cacontology-gufo:hasRelationshipConstraint "Role assignment must be active and verified" .
+
+# gUFO Phase Relationships
+cacontology-athletic:currentPhase rdf:type owl:ObjectProperty ;
+    rdfs:label "current phase"@en ;
+    rdfs:comment "Links athletic exploitation to its current operational phase. gUFO Phase modeling for exploitation state management."@en ;
+    rdfs:domain cacontology-athletic:AthleticCoachingExploitation ;
+    rdfs:range cac-core:Phase .
+
+cacontology-athletic:hasPhaseTransition rdf:type owl:ObjectProperty ;
+    rdfs:label "has phase transition"@en ;
+    rdfs:comment "Links athletic exploitation to phase transition events."@en ;
+    rdfs:domain cacontology-athletic:AthleticCoachingExploitation ;
+    rdfs:range cac-core:Event .
+
+# gUFO Situation Participation
+cacontology-athletic:participatesInSituation rdf:type owl:ObjectProperty ;
+    rdfs:label "participates in situation"@en ;
+    rdfs:comment "Links entities to team dynamics situations they participate in."@en ;
+    rdfs:range cacontology-athletic:TeamDynamicsExploitation .
+
+# Facility Relationships Enhanced with gUFO Object Modeling
+cacontology-athletic:occursInFacility rdf:type owl:ObjectProperty ;
+    rdfs:label "occurs in facility"@en ;
+    rdfs:comment "Links exploitation to athletic facility where it occurs. Enhanced with gUFO Object location."@en ;
+    rdfs:domain cacontology-athletic:AthleticCoachingExploitation ;
+    rdfs:range uco-location:Location ;
+    cacontology-gufo:hasRelationshipConstraint "Facility must be verified and accessible" .
+
+cacontology-athletic:utilizesAthleticSpace rdf:type owl:ObjectProperty ;
+    rdfs:label "utilizes athletic space"@en ;
+    rdfs:comment "Links facility exploitation to specific athletic space used. Enhanced with gUFO Object utilization."@en ;
+    rdfs:domain cacontology-athletic:AthleticFacilityExploitation ;
+    rdfs:range uco-location:Location ;
+    cacontology-gufo:hasRelationshipConstraint "Athletic space must be documented and accessible" . 

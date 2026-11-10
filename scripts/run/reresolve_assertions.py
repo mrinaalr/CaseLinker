@@ -3,7 +3,8 @@
 Re-run CaseLinker 3.0 field resolution over stored assertions (no re-extraction).
 
 Reads each case's current-run assertions, adds any new human verdicts from
-config/victim_age_overrides.json as ``human`` assertions, appends fresh
+config/victim_age_overrides.json as ``human`` assertions and any assertions a
+detector added since the run (``cybertip_reporter``, #20), appends fresh
 field_resolutions / review_queue rows, and re-derives the legacy columns
 (perpetrator_age, victim ages, sentences, investigation_types) from the result.
 Stored assertions are never edited.
@@ -61,6 +62,18 @@ def _new_human(stored, text, case_id):
     return [a for a in fresh if (a["value"], a["role"], a["span_start"]) not in have]
 
 
+# Detectors added after a case's run; their assertions are appended to that run.
+_NEW_DETECTORS = ("cybertip_reporter",)
+
+
+def _new_detected(stored, text):
+    amod = processing.assertions_module
+    have = {(a["field"], a["value"], a["role"], a["span_start"]) for a in stored}
+    fresh = [amod.gate_assertion(text, a) for a in amod.patterns.cybertip_reporter_assertions(text)]
+    return [a for a in fresh if a["field"] in _NEW_DETECTORS
+            and (a["field"], a["value"], a["role"], a["span_start"]) not in have]
+
+
 def _rederive_case(case: dict, assertions: list, resolutions: dict) -> dict:
     """Legacy columns from a resolution. The returned dict does not carry assertion rows."""
     feats = case.get("extracted_features") if isinstance(case.get("extracted_features"), dict) else {}
@@ -71,6 +84,7 @@ def _rederive_case(case: dict, assertions: list, resolutions: dict) -> dict:
     merger._apply_resolved_ages(rebuilt, resolutions.get("age") or {})
     merger._apply_resolved_sentences(rebuilt, resolutions.get("sentence") or {})
     merger._apply_resolved_cybertip(rebuilt, resolutions.get("investigation_type") or {})
+    merger._apply_resolved_cybertip_reporter(rebuilt, resolutions.get("cybertip_reporter") or {})
     merger._apply_resolved_dates(rebuilt, resolutions.get("date") or {})
     rebuilt.pop("assertions", None)
     rebuilt.pop("resolutions", None)
@@ -105,7 +119,7 @@ def main() -> int:
             continue
         case = storage.get_case(cid) or {}
         text = case.get("case_text") or ""
-        human = _new_human(stored, text, cid)
+        human = _new_human(stored, text, cid) + _new_detected(stored, text)
         resolutions = amod.resolve(
             stored + human,
             batch_date=(case.get("date_range") or {}).get("start"),

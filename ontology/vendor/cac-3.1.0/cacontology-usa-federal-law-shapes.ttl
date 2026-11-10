@@ -1,0 +1,489 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix gufo: <http://purl.org/nemo/gufo#> .
+@prefix uco-observable: <https://ontology.unifiedcyberontology.org/uco/observable/> .
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology-usa-federal: <https://cacontology.projectvic.org/usa-federal-law#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+# Ontology Declaration
+<https://cacontology.projectvic.org/usa-federal-law/shapes> rdf:type owl:Ontology ;
+    rdfs:label "CAC USA Federal Law SHACL Shapes with gUFO Validation"@en ;
+    rdfs:comment "SHACL validation shapes for gUFO-enhanced CAC USA Federal Law ontology, including anti-rigidity constraints, temporal validation, and foundational type compliance."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/usa-federal-law/shapes/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://cacontology.projectvic.org/usa-federal-law/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> .
+
+# =============================================================================
+# gUFO TYPE CONSISTENCY VALIDATION
+# =============================================================================
+
+# Kinds (rigid sortals) validation
+cacontology-usa-federal:KindValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass gufo:Kind ;
+    sh:property [
+        sh:path rdf:type ;
+        sh:hasValue gufo:Kind ;
+        sh:minCount 1     ] ;
+    sh:message "Every Kind must be declared as rdf:type gufo:Kind"@en .
+
+# SubKinds validation (must specialize a Kind)
+cacontology-usa-federal:SubKindValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass gufo:SubKind ;
+    sh:property [
+        sh:path rdfs:subClassOf ;
+        sh:class gufo:Kind ;
+        sh:minCount 1     ] ;
+    sh:message "Every SubKind must be a subclass of a Kind"@en .
+
+# Phases validation (anti-rigid temporal stages)
+cacontology-usa-federal:PhaseValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cac-core:Phase ;
+    sh:not [
+        sh:property [
+            sh:path rdfs:subClassOf ;
+            sh:class gufo:Kind         ]     ] ;
+    sh:message "Phases are anti-rigid and cannot be subclasses of rigid Kinds"@en .
+
+# Roles validation (anti-rigid relationally dependent)
+cacontology-usa-federal:RoleValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cac-core:Role ;
+    sh:not [
+        sh:property [
+            sh:path rdfs:subClassOf ;
+            sh:class gufo:Kind         ]     ] ;
+    sh:message "Roles are anti-rigid and cannot be subclasses of rigid Kinds"@en .
+
+# Event Types validation
+cacontology-usa-federal:EventTypeValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass gufo:EventType ;
+    sh:message "Every EventType must extend gufo:Event"@en .
+
+# =============================================================================
+# FEDERAL PROSECUTION SHAPES
+# =============================================================================
+
+cacontology-usa-federal:FederalProsecutionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-usa-federal:FederalProsecution ;
+    sh:property [
+        sh:path cacontology-usa-federal:hasProsecutionBeginPoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Federal prosecution must have at most one begin point timestamp"@en     ] ;
+    sh:property [
+        sh:path cacontology-usa-federal:hasProsecutionEndPoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Federal prosecution must have at most one end point timestamp"@en     ] ;
+    sh:property [
+        sh:path cacontology-usa-federal:prosecutedBy ;
+        sh:class cacontology-usa-federal:FederalProsecutorRole ;
+        sh:minCount 1 ;
+        sh:message "Federal prosecution must have at least one prosecutor"@en     ] ;
+    sh:property [
+        sh:path cacontology-usa-federal:hasLegalPhase ;
+        sh:class cac-core:Phase ;
+        sh:minCount 1 ;
+        sh:message "Federal prosecution must have at least one legal phase"@en     ] ;
+    sh:property [
+        sh:path cacontology-usa-federal:prosecutionComplexity ;
+        sh:datatype xsd:string ;
+        sh:in ("simple" "moderate" "complex" "highly-complex") ;
+        sh:maxCount 1 ;
+        sh:message "Prosecution complexity must be simple, moderate, complex, or highly-complex"@en     ] ;
+    sh:property [
+        sh:path cacontology-usa-federal:prosecutionSeverity ;
+        sh:datatype xsd:string ;
+        sh:in ("misdemeanor" "felony" "aggravated-felony") ;
+        sh:maxCount 1 ;
+        sh:message "Prosecution severity must be misdemeanor, felony, or aggravated-felony"@en     ] ;
+    sh:property [
+        sh:path cacontology-usa-federal:prosecutionStatus ;
+        sh:datatype xsd:string ;
+        sh:in ("pending" "active" "resolved" "dismissed" "appealed") ;
+        sh:maxCount 1 ;
+        sh:message "Prosecution status must be pending, active, resolved, dismissed, or appealed"@en     ] .
+
+# =============================================================================
+# FEDERAL LEGAL PHASE SHAPES
+# =============================================================================
+
+cacontology-usa-federal:PreTrialPhaseShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-usa-federal:PreTrialPhase ;
+    sh:property [
+        sh:path cacontology-usa-federal:hasPhaseBeginPoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Pre-trial phase must have exactly one begin point"@en     ] ;
+    sh:property [
+        sh:path cacontology-usa-federal:hasPhaseEndPoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Pre-trial phase must have at most one end point"@en     ] ;
+    sh:property [
+        sh:path cacontology-usa-federal:isPhaseOf ;
+        sh:class cacontology-usa-federal:FederalProsecution ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Pre-trial phase must be part of exactly one federal prosecution"@en     ] .
+
+cacontology-usa-federal:TrialPhaseShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-usa-federal:TrialPhase ;
+    sh:property [
+        sh:path cacontology-usa-federal:hasPhaseBeginPoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Trial phase must have exactly one begin point"@en     ] ;
+    sh:property [
+        sh:path cacontology-usa-federal:hasPhaseEndPoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Trial phase must have at most one end point"@en     ] ;
+    sh:property [
+        sh:path cacontology-usa-federal:isPhaseOf ;
+        sh:class cacontology-usa-federal:FederalProsecution ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Trial phase must be part of exactly one federal prosecution"@en     ] .
+
+cacontology-usa-federal:SentencingPhaseShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-usa-federal:SentencingPhase ;
+    sh:property [
+        sh:path cacontology-usa-federal:hasPhaseBeginPoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Sentencing phase must have exactly one begin point"@en     ] ;
+    sh:property [
+        sh:path cacontology-usa-federal:hasPhaseEndPoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Sentencing phase must have at most one end point"@en     ] ;
+    sh:property [
+        sh:path cacontology-usa-federal:isPhaseOf ;
+        sh:class cacontology-usa-federal:FederalProsecution ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Sentencing phase must be part of exactly one federal prosecution"@en     ] .
+
+# =============================================================================
+# FEDERAL CRIME EVENT SHAPES
+# =============================================================================
+
+cacontology-usa-federal:ChildPornographyProductionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-usa-federal:ChildPornographyProduction ;
+    sh:property [
+        sh:path gufo:hasBeginPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Child pornography production must have exactly one begin timestamp"@en     ] ;
+    sh:property [
+        sh:path cacontology-usa-federal:mandatoryMinimumSentence ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 15 ;
+        sh:maxCount 1 ;
+        sh:message "Child pornography production has mandatory minimum of 15 years"@en     ] ;
+    sh:property [
+        sh:path cacontology-usa-federal:crimeSeverityLevel ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 4 ;
+        sh:maxInclusive 5 ;
+        sh:maxCount 1 ;
+        sh:message "Child pornography production severity level must be 4 or 5"@en     ] ;
+    sh:property [
+        sh:path cacontology-usa-federal:crimeJurisdiction ;
+        sh:datatype xsd:string ;
+        sh:in ("interstate-commerce" "foreign-commerce" "federal-jurisdiction") ;
+        sh:minCount 1 ;
+        sh:message "Must specify federal jurisdiction basis"@en     ] .
+
+cacontology-usa-federal:SexTraffickingOfMinorsShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-usa-federal:SexTraffickingOfMinors ;
+    sh:property [
+        sh:path gufo:hasBeginPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Sex trafficking must have exactly one begin timestamp"@en     ] ;
+    sh:property [
+        sh:path cacontology-usa-federal:mandatoryMinimumSentence ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 10 ;
+        sh:maxCount 1 ;
+        sh:message "Sex trafficking of minors has mandatory minimum of 10 years"@en     ] ;
+    sh:property [
+        sh:path cacontology-usa-federal:crimeSeverityLevel ;
+        sh:datatype xsd:integer ;
+        sh:hasValue 5 ;
+        sh:maxCount 1 ;
+        sh:message "Sex trafficking of minors has maximum severity level 5"@en     ] ;
+    sh:property [
+        sh:path cacontology-usa-federal:involvesMultipleStates ;
+        sh:datatype xsd:boolean ;
+        sh:maxCount 1 ;
+        sh:message "Must specify if trafficking involves multiple states"@en     ] .
+
+cacontology-usa-federal:ExtraterritorialCrimeShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-usa-federal:SexTourism, 
+                 cacontology-usa-federal:ForeignCommerceExploitation,
+                 cacontology-usa-federal:ExtraterritorialProduction,
+                 cacontology-usa-federal:TransportationForSexualExploitation ;
+    sh:property [
+        sh:path cacontology-usa-federal:involvesInternationalElements ;
+        sh:datatype xsd:boolean ;
+        sh:hasValue true ;
+        sh:minCount 1 ;
+        sh:message "Extraterritorial crimes must involve international elements"@en     ] ;
+    sh:property [
+        sh:path cacontology-usa-federal:foreignCountriesInvolved ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:message "Extraterritorial crimes must specify foreign countries involved"@en     ] .
+
+# =============================================================================
+# FEDERAL ROLE SHAPES
+# =============================================================================
+
+cacontology-usa-federal:FederalProsecutorRoleShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-usa-federal:FederalProsecutorRole ;
+    sh:property [
+        sh:path cacontology-usa-federal:hasRoleBeginPoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Federal prosecutor role must have exactly one begin point"@en     ] ;
+    sh:property [
+        sh:path cacontology-usa-federal:roleSpecialization ;
+        sh:datatype xsd:string ;
+        sh:in ("child-exploitation" "sex-trafficking" "cybercrime" "obscenity" "general") ;
+        sh:maxCount 1 ;
+        sh:message "Prosecutor specialization must be specified from valid options"@en     ] ;
+    sh:property [
+        sh:path cacontology-usa-federal:roleExperience ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 0 ;
+        sh:maxCount 1 ;
+        sh:message "Role experience must be non-negative integer"@en     ] .
+
+cacontology-usa-federal:CEOSAttorneyRoleShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-usa-federal:CEOSAttorneyRole ;
+    sh:property [
+        sh:path cacontology-usa-federal:roleSpecialization ;
+        sh:datatype xsd:string ;
+        sh:in ("child-exploitation" "obscenity") ;
+        sh:minCount 1 ;
+        sh:message "CEOS attorney must specialize in child-exploitation or obscenity"@en     ] ;
+    sh:property [
+        sh:path cacontology-usa-federal:roleExperience ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 2 ;
+        sh:maxCount 1 ;
+        sh:message "CEOS attorney must have at least 2 years experience"@en     ] .
+
+cacontology-usa-federal:FederalDefendantRoleShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-usa-federal:FederalDefendantRole ;
+    sh:property [
+        sh:path cacontology-usa-federal:hasRoleBeginPoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Federal defendant role must have exactly one begin point"@en     ] ;
+    sh:property [
+        sh:path cacontology-usa-federal:defendedBy ;
+        sh:class cac-core:ExploitationEvent ;
+        sh:minCount 1 ;
+        sh:message "Defendant role must be linked to at least one criminal event"@en     ] .
+
+cacontology-usa-federal:FederalVictimRoleShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-usa-federal:FederalVictimRole ;
+    sh:property [
+        sh:path cacontology-usa-federal:hasRoleBeginPoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Federal victim role must have exactly one begin point"@en     ] ;
+    sh:property [
+        sh:path cacontology-usa-federal:victimizedBy ;
+        sh:class cac-core:ExploitationEvent ;
+        sh:minCount 1 ;
+        sh:message "Victim role must be linked to at least one criminal event"@en     ] .
+
+# =============================================================================
+# FEDERAL INVESTIGATION SHAPES
+# =============================================================================
+
+cacontology-usa-federal:FederalInvestigationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-usa-federal:FederalInvestigation ;
+    sh:property [
+        sh:path gufo:hasBeginPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Federal investigation must have exactly one begin timestamp"@en     ] ;
+    sh:property [
+        sh:path cacontology-usa-federal:investigatedBy ;
+        sh:class cacontology-usa-federal:FederalInvestigatorRole ;
+        sh:minCount 1 ;
+        sh:message "Federal investigation must have at least one investigator"@en     ] ;
+    sh:property [
+        sh:path cacontology-usa-federal:collectsEvidence ;
+        sh:class uco-observable:ObservableObject ;
+        sh:minCount 1 ;
+        sh:message "Federal investigation must collect at least one piece of evidence"@en     ] ;
+    sh:property [
+        sh:path cacontology-usa-federal:involvesDigitalEvidence ;
+        sh:datatype xsd:boolean ;
+        sh:maxCount 1 ;
+        sh:message "Must specify if investigation involves digital evidence"@en     ] ;
+    sh:property [
+        sh:path cacontology-usa-federal:requiresForensicAnalysis ;
+        sh:datatype xsd:boolean ;
+        sh:maxCount 1 ;
+        sh:message "Must specify if investigation requires forensic analysis"@en     ] .
+
+# =============================================================================
+# gUFO TEMPORAL ORDERING CONSTRAINTS
+# =============================================================================
+
+cacontology-usa-federal:PhaseOrderingValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-usa-federal:FederalProsecution ;
+    sh:sparql [
+        sh:message "Pre-trial phase must precede trial phase in federal prosecution"@en ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "cacontology-usa-federal" ;
+                sh:namespace "https://cacontology.projectvic.org/usa-federal-law#"^^xsd:anyURI             ]         ] ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-usa-federal:hasLegalPhase ?preTrialPhase .
+                $this cacontology-usa-federal:hasLegalPhase ?trialPhase .
+                ?preTrialPhase rdf:type cacontology-usa-federal:PreTrialPhase .
+                ?trialPhase rdf:type cacontology-usa-federal:TrialPhase .
+                ?preTrialPhase cacontology-usa-federal:hasPhaseBeginPoint ?preTrialBegin .
+                ?trialPhase cacontology-usa-federal:hasPhaseBeginPoint ?trialBegin .
+                FILTER (?preTrialBegin >= ?trialBegin)
+            }
+        """     ] .
+
+cacontology-usa-federal:ProsecutionTemporalValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-usa-federal:FederalProsecution ;
+    sh:sparql [
+        sh:message "Prosecution end point must be after begin point"@en ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "cacontology-usa-federal" ;
+                sh:namespace "https://cacontology.projectvic.org/usa-federal-law#"^^xsd:anyURI             ]         ] ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-usa-federal:hasProsecutionBeginPoint ?beginPoint .
+                $this cacontology-usa-federal:hasProsecutionEndPoint ?endPoint .
+                FILTER (?endPoint <= ?beginPoint)
+            }
+        """     ] .
+
+# =============================================================================
+# gUFO PARTICIPATION CONSTRAINTS
+# =============================================================================
+
+cacontology-usa-federal:EventParticipationValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cac-core:Event ;
+    sh:property [
+        sh:path [ sh:alternativePath ( 
+            cacontology-usa-federal:prosecutedBy 
+            cacontology-usa-federal:investigatedBy 
+            cacontology-usa-federal:defendedBy 
+            cacontology-usa-federal:victimizedBy 
+        ) ] ;
+        sh:minCount 1 ;
+        sh:message "Every federal criminal event must have at least one participant"@en     ] .
+
+# =============================================================================
+# BUSINESS RULES AND CONSTRAINTS
+# =============================================================================
+
+# Mandatory Minimum Validation
+cacontology-usa-federal:MandatoryMinimumBusinessRule rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-usa-federal:ChildPornographyProduction ;
+    sh:sparql [
+        sh:message "Child pornography production with multiple victims requires enhanced sentence"@en ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "cacontology-usa-federal" ;
+                sh:namespace "https://cacontology.projectvic.org/usa-federal-law#"^^xsd:anyURI             ]         ] ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-usa-federal:victimizedBy ?victim1 .
+                $this cacontology-usa-federal:victimizedBy ?victim2 .
+                FILTER (?victim1 != ?victim2)
+                $this cacontology-usa-federal:mandatoryMinimumSentence ?sentence .
+                FILTER (?sentence < 25)
+            }
+        """     ] .
+
+# Interstate Commerce Requirement
+cacontology-usa-federal:InterstateCOmmerceBusinessRule rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-usa-federal:ChildPornographyDistribution ;
+    sh:property [
+        sh:path cacontology-usa-federal:hasInterstateNexus ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:message "Child pornography distribution must specify interstate commerce nexus"@en     ] .
+
+# Role Collaboration Requirements
+cacontology-usa-federal:ProsecutorCollaborationBusinessRule rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-usa-federal:CEOSAttorneyRole ;
+    sh:property [
+        sh:path cacontology-usa-federal:collaboratesWith ;
+        sh:class cacontology-usa-federal:FederalInvestigatorRole ;
+        sh:minCount 1 ;
+        sh:message "CEOS attorney must collaborate with at least one federal investigator"@en     ] .
+
+# Complex Case Requirements
+cacontology-usa-federal:ComplexCaseBusinessRule rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-usa-federal:FederalProsecution ;
+    sh:sparql [
+        sh:message "Complex prosecutions require experienced CEOS attorney"@en ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "cacontology-usa-federal" ;
+                sh:namespace "https://cacontology.projectvic.org/usa-federal-law#"^^xsd:anyURI             ]         ] ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-usa-federal:prosecutionComplexity "complex" .
+                $this cacontology-usa-federal:prosecutedBy ?prosecutor .
+                ?prosecutor rdf:type cacontology-usa-federal:CEOSAttorneyRole .
+                ?prosecutor cacontology-usa-federal:roleExperience ?experience .
+                FILTER (?experience < 5)
+            }
+        """     ] .
+
+# Digital Evidence Requirements
+cacontology-usa-federal:DigitalEvidenceBusinessRule rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-usa-federal:FederalInvestigation ;
+    sh:sparql [
+        sh:message "Investigations with digital evidence must require forensic analysis"@en ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "cacontology-usa-federal" ;
+                sh:namespace "https://cacontology.projectvic.org/usa-federal-law#"^^xsd:anyURI             ]         ] ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-usa-federal:involvesDigitalEvidence true .
+                $this cacontology-usa-federal:requiresForensicAnalysis false .
+            }
+        """     ] . 

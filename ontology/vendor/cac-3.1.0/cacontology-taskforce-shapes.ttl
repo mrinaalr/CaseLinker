@@ -1,0 +1,637 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+# Ontology Declaration
+<https://cacontology.projectvic.org/taskforce/shapes> rdf:type owl:Ontology ;
+    rdfs:label "CAC Task Force SHACL Shapes"@en ;
+    rdfs:comment "SHACL validation shapes for the CAC Task Force Ontology, providing validation for task force structures, specialized units, coordination mechanisms, resource sharing, and joint operations."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/taskforce/shapes/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://cacontology.projectvic.org/taskforce/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> .
+
+# =============================================================================
+# TASK FORCE SHAPES
+# =============================================================================
+
+cacontology-taskforce:TaskForceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-taskforce:TaskForce ;
+    rdfs:label "Task Force Shape"@en ;
+    rdfs:comment "Validation shape for task force instances."@en ;
+    sh:property [
+        sh:path cacontology-taskforce:taskForceType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "icac_task_force" "joint_task_force" "federal_task_force" "state_task_force" "regional_task_force" "specialized_unit" ) ;
+        sh:message "Task force must specify task force type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-taskforce:memberAgencyCount ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 2 ;
+        sh:maxInclusive 50 ;
+        sh:message "Task force must have between 2 and 50 member agencies."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-taskforce:operationalStatus ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "active" "inactive" "suspended" "disbanded" "forming" "transitioning" ) ;
+        sh:message "Task force must specify operational status from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-taskforce:fundingSource ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "federal_grant" "state_funding" "local_funding" "mixed_funding" "private_funding" "grant_combination" ) ;
+        sh:message "Task force must specify funding source from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-taskforce:establishmentDate ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Task force must specify establishment date."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-taskforce:jurisdictionCoverage ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "local" "county" "state" "regional" "multi_state" "national" ) ;
+        sh:message "Task force must specify jurisdiction coverage from the allowed list."@en
+    ] .
+
+cacontology-taskforce:IcacTaskForceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-taskforce:IcacTaskForce ;
+    rdfs:label "CAC Task Force Shape"@en ;
+    rdfs:comment "Validation shape for CAC task force instances."@en ;
+    sh:property [
+        sh:path cacontology-taskforce:icacRegion ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "northeast" "southeast" "midwest" "southwest" "west" "northwest" "central" "national" ) ;
+        sh:message "CAC task force must specify CAC region from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-taskforce:grantNumber ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 50 ;
+        sh:message "CAC task force must specify grant number (5-50 characters)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-taskforce:complianceStatus ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "compliant" "non_compliant" "conditional" "under_review" "probationary" "suspended" ) ;
+        sh:message "CAC task force must specify compliance status from the allowed list."@en
+    ] .
+
+# =============================================================================
+# TASK FORCE MEMBER SHAPES
+# =============================================================================
+
+cacontology-taskforce:TaskForceMemberShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-taskforce:TaskForceMember ;
+    rdfs:label "Task Force Member Shape"@en ;
+    rdfs:comment "Validation shape for task force member instances."@en ;
+    sh:property [
+        sh:path cacontology-taskforce:memberRole ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "commander" "supervisor" "investigator" "analyst" "technical_specialist" "prosecutor" "victim_advocate" "support_staff" ) ;
+        sh:message "Task force member must specify member role from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-taskforce:membershipType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "full_time" "part_time" "collateral_duty" "temporary" "consultant" "liaison" ) ;
+        sh:message "Task force member must specify membership type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-taskforce:securityClearance ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "none" "public_trust" "confidential" "secret" "top_secret" "sci_access" ) ;
+        sh:message "Security clearance must be from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-taskforce:trainingCompleted ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Task force member must specify if training is completed."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-taskforce:membershipStartDate ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Task force member must specify membership start date."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-taskforce:membershipEndDate ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Task force member may specify membership end date."@en
+    ] .
+
+cacontology-taskforce:TaskForceCommanderShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-taskforce:TaskForceCommander ;
+    rdfs:label "Task Force Commander Shape"@en ;
+    rdfs:comment "Validation shape for task force commander instances."@en ;
+    sh:property [
+        sh:path cacontology-taskforce:commandAuthority ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "operational" "administrative" "full_command" "tactical" "liaison" "advisory" ) ;
+        sh:message "Task force commander must specify command authority from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-taskforce:yearsExperience ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1.0 ;
+        sh:maxInclusive 40.0 ;
+        sh:message "Task force commander must have between 1 and 40 years experience."@en
+    ] .
+
+# =============================================================================
+# TASK FORCE OPERATION SHAPES
+# =============================================================================
+
+cacontology-taskforce:TaskForceOperationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-taskforce:TaskForceOperation ;
+    rdfs:label "Task Force Operation Shape"@en ;
+    rdfs:comment "Validation shape for task force operation instances."@en ;
+    sh:property [
+        sh:path cacontology-taskforce:operationType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "investigation" "enforcement_action" "training_exercise" "outreach_program" "prevention_initiative" "intelligence_gathering" ) ;
+        sh:message "Task force operation must specify operation type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-taskforce:operationScope ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "local" "regional" "statewide" "multi_state" "national" "international" ) ;
+        sh:message "Task force operation must specify operation scope from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-taskforce:participatingAgencies ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 25 ;
+        sh:message "Task force operation must have between 1 and 25 participating agencies."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-taskforce:operationDuration ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1.0 ;
+        sh:maxInclusive 365.0 ;
+        sh:message "Operation duration must be between 1 and 365 days."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Task force operation may have a start time."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:endTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Task force operation may have an end time."@en
+    ] .
+
+cacontology-taskforce:JointOperationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-taskforce:JointOperation ;
+    rdfs:label "Joint Operation Shape"@en ;
+    rdfs:comment "Validation shape for joint operation instances."@en ;
+    sh:property [
+        sh:path cacontology-taskforce:leadTaskForce ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 3 ;
+        sh:maxLength 100 ;
+        sh:message "Joint operation must specify lead task force (3-100 characters)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-taskforce:coordinationLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "minimal" "standard" "enhanced" "full_integration" "unified_command" ) ;
+        sh:message "Joint operation must specify coordination level from the allowed list."@en
+    ] .
+
+# =============================================================================
+# RESOURCE ALLOCATION SHAPES
+# =============================================================================
+
+cacontology-taskforce:ResourceAllocationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-taskforce:ResourceAllocation ;
+    rdfs:label "Resource Allocation Shape"@en ;
+    rdfs:comment "Validation shape for resource allocation instances."@en ;
+    sh:property [
+        sh:path cacontology-taskforce:resourceType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "personnel" "equipment" "funding" "facilities" "vehicles" "technology" "training" "support_services" ) ;
+        sh:message "Resource allocation must specify resource type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-taskforce:allocationAmount ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1.0 ;
+        sh:maxInclusive 10000000.0 ;
+        sh:message "Allocation amount must be between $1 and $10,000,000."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-taskforce:allocationPeriod ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "monthly" "quarterly" "annually" "project_based" "ongoing" "one_time" ) ;
+        sh:message "Resource allocation must specify allocation period from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-taskforce:fundingSource ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "federal_grant" "state_budget" "local_budget" "asset_forfeiture" "private_donation" "mixed_sources" ) ;
+        sh:message "Resource allocation must specify funding source from the allowed list."@en
+    ] .
+
+cacontology-taskforce:PersonnelAllocationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-taskforce:PersonnelAllocation ;
+    rdfs:label "Personnel Allocation Shape"@en ;
+    rdfs:comment "Validation shape for personnel allocation instances."@en ;
+    sh:property [
+        sh:path cacontology-taskforce:personnelCount ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 100 ;
+        sh:message "Personnel allocation must specify personnel count between 1 and 100."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-taskforce:personnelType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "sworn_officers" "civilian_analysts" "technical_specialists" "administrative_staff" "prosecutors" "victim_advocates" ) ;
+        sh:message "Personnel allocation must specify personnel type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-taskforce:fullTimeEquivalent ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.1 ;
+        sh:maxInclusive 100.0 ;
+        sh:message "Full-time equivalent must be between 0.1 and 100.0."@en
+    ] .
+
+# =============================================================================
+# TRAINING AND CERTIFICATION SHAPES
+# =============================================================================
+
+cacontology-taskforce:TrainingProgramShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-taskforce:TrainingProgram ;
+    rdfs:label "Training Program Shape"@en ;
+    rdfs:comment "Validation shape for training program instances."@en ;
+    sh:property [
+        sh:path cacontology-taskforce:trainingType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "basic_icac" "advanced_investigation" "digital_forensics" "undercover_operations" "legal_updates" "victim_services" "management" ) ;
+        sh:message "Training program must specify training type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-taskforce:trainingDuration ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 4.0 ;
+        sh:maxInclusive 160.0 ;
+        sh:message "Training duration must be between 4 and 160 hours."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-taskforce:certificationRequired ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Training program must specify if certification is required."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-taskforce:trainingProvider ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "ncmec" "icac_program" "fbi" "state_agency" "private_contractor" "academic_institution" ) ;
+        sh:message "Training program must specify training provider from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-taskforce:maxParticipants ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 5 ;
+        sh:maxInclusive 100 ;
+        sh:message "Training program must specify maximum participants between 5 and 100."@en
+    ] .
+
+cacontology-taskforce:CertificationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-taskforce:Certification ;
+    rdfs:label "Certification Shape"@en ;
+    rdfs:comment "Validation shape for certification instances."@en ;
+    sh:property [
+        sh:path cacontology-taskforce:certificationType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "basic_investigator" "advanced_investigator" "digital_forensics" "undercover_operator" "supervisor" "commander" ) ;
+        sh:message "Certification must specify certification type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-taskforce:certificationDate ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Certification must specify certification date."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-taskforce:expirationDate ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Certification must specify expiration date."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-taskforce:renewalRequired ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Certification must specify if renewal is required."@en
+    ] .
+
+# =============================================================================
+# PERFORMANCE METRICS SHAPES
+# =============================================================================
+
+cacontology-taskforce:PerformanceMetricsShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-taskforce:PerformanceMetrics ;
+    rdfs:label "Performance Metrics Shape"@en ;
+    rdfs:comment "Validation shape for performance metrics instances."@en ;
+    sh:property [
+        sh:path cacontology-taskforce:metricType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "case_clearance" "arrest_count" "conviction_rate" "response_time" "training_completion" "resource_utilization" ) ;
+        sh:message "Performance metrics must specify metric type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-taskforce:metricValue ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 100.0 ;
+        sh:message "Metric value must be between 0.0 and 100.0."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-taskforce:reportingPeriod ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "monthly" "quarterly" "semi_annually" "annually" "fiscal_year" "calendar_year" ) ;
+        sh:message "Performance metrics must specify reporting period from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-taskforce:benchmarkComparison ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "above_benchmark" "meets_benchmark" "below_benchmark" "no_benchmark" "exceeds_target" ) ;
+        sh:message "Benchmark comparison must be from the allowed list."@en
+    ] .
+
+# =============================================================================
+# OBJECT PROPERTY SHAPES
+# =============================================================================
+
+cacontology-taskforce:HasMemberShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-taskforce:hasMember ;
+    sh:name "has member" ;
+    sh:description "Links task force to its members" ;
+    sh:class cacontology-taskforce:TaskForceMember ;
+    sh:minCount 1 .
+
+cacontology-taskforce:ConductsOperationShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-taskforce:conductsOperation ;
+    sh:name "conducts operation" ;
+    sh:description "Links task force to operations conducted" ;
+    sh:class cacontology-taskforce:TaskForceOperation ;
+    sh:minCount 0 .
+
+cacontology-taskforce:AllocatesResourcesShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-taskforce:allocatesResources ;
+    sh:name "allocates resources" ;
+    sh:description "Links task force to resource allocations" ;
+    sh:class cacontology-taskforce:ResourceAllocation ;
+    sh:minCount 1 .
+
+cacontology-taskforce:ProvidesTrainingShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-taskforce:providesTraining ;
+    sh:name "provides training" ;
+    sh:description "Links task force to training programs" ;
+    sh:class cacontology-taskforce:TrainingProgram ;
+    sh:minCount 0 .
+
+cacontology-taskforce:ReportsMetricsShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-taskforce:reportsMetrics ;
+    sh:name "reports metrics" ;
+    sh:description "Links task force to performance metrics" ;
+    sh:class cacontology-taskforce:PerformanceMetrics ;
+    sh:minCount 1 .
+
+cacontology-taskforce:HoldsCertificationShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-taskforce:holdsCertification ;
+    sh:name "holds certification" ;
+    sh:description "Links member to certifications held" ;
+    sh:class cacontology-taskforce:Certification ;
+    sh:minCount 0 .
+
+# =============================================================================
+# CROSS-REFERENCE VALIDATION SHAPES
+# =============================================================================
+
+cacontology-taskforce:TaskForceCrossReferenceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-taskforce:TaskForce ;
+    rdfs:label "Task Force Cross Reference Shape"@en ;
+    rdfs:comment "Validates cross-references between task force and related entities."@en ;
+    sh:sparql [
+        sh:message "Task force must have at least one member and resource allocation."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-taskforce:TaskForce .
+                FILTER NOT EXISTS {
+                    $this cacontology-taskforce:hasMember ?member ;
+                          cacontology-taskforce:allocatesResources ?resource .
+                }
+            }
+        """
+    ] .
+
+cacontology-taskforce:MembershipValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-taskforce:TaskForceMember ;
+    rdfs:label "Membership Validation Shape"@en ;
+    rdfs:comment "Validates task force membership consistency."@en ;
+    sh:sparql [
+        sh:message "Full-time members should have completed training."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-taskforce:membershipType "full_time" ;
+                      cacontology-taskforce:trainingCompleted false .
+            }
+        """
+    ] .
+
+cacontology-taskforce:CommanderValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-taskforce:TaskForceCommander ;
+    rdfs:label "Commander Validation Shape"@en ;
+    rdfs:comment "Validates task force commander requirements."@en ;
+    sh:sparql [
+        sh:message "Task force commander should have significant experience."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-taskforce:yearsExperience ?experience .
+                FILTER (?experience < 5.0)
+            }
+        """
+    ] .
+
+# =============================================================================
+# TEMPORAL VALIDATION SHAPES
+# =============================================================================
+
+cacontology-taskforce:TemporalValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-taskforce:TaskForceMember ;
+    rdfs:label "Temporal Validation Shape"@en ;
+    rdfs:comment "Validates temporal consistency in task force memberships."@en ;
+    sh:sparql [
+        sh:message "Membership start date must be before end date when both are specified."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-taskforce:membershipStartDate ?start ;
+                      cacontology-taskforce:membershipEndDate ?end .
+                FILTER (?start >= ?end)
+            }
+        """
+    ] .
+
+cacontology-taskforce:CertificationValidityShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-taskforce:Certification ;
+    rdfs:label "Certification Validity Shape"@en ;
+    rdfs:comment "Validates certification date consistency."@en ;
+    sh:sparql [
+        sh:message "Certification date must be before expiration date."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-taskforce:certificationDate ?cert ;
+                      cacontology-taskforce:expirationDate ?exp .
+                FILTER (?cert >= ?exp)
+            }
+        """
+    ] .
+
+cacontology-taskforce:EstablishmentDateValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-taskforce:TaskForce ;
+    rdfs:label "Establishment Date Validation Shape"@en ;
+    rdfs:comment "Validates task force establishment date."@en ;
+    sh:sparql [
+        sh:message "Task force establishment date should not be in the future."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-taskforce:establishmentDate ?date .
+                FILTER (?date > NOW())
+            }
+        """
+    ] .
+
+# =============================================================================
+# DATA QUALITY SHAPES
+# =============================================================================
+
+cacontology-taskforce:DataQualityShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-taskforce:TaskForce ;
+    rdfs:label "Data Quality Shape"@en ;
+    rdfs:comment "Validates data quality for task forces."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Label should be between 5 and 200 characters when provided."@en
+    ] ;
+    sh:property [
+        sh:path rdfs:comment ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 10 ;
+        sh:maxLength 1000 ;
+        sh:message "Comment should be between 10 and 1000 characters when provided."@en
+    ] . 

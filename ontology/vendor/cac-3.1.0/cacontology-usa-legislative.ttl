@@ -1,0 +1,482 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix gufo: <http://purl.org/nemo/gufo#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology-legal: <https://cacontology.projectvic.org/legal-harmonization#> .
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
+@prefix cacontology-usa-leg: <https://cacontology.projectvic.org/usa-legislative#> .
+
+# =============================================================================
+# CAC USA LEGISLATIVE FRAMEWORK ONTOLOGY
+# Raven US Extensions - USA-Specific Legislative and Organizational Classes
+# =============================================================================
+
+<https://cacontology.projectvic.org/usa-legislative> rdf:type owl:Ontology ;
+    rdfs:label "CAC USA Legislative Framework Ontology"@en ;
+    rdfs:comment "USA-specific legislative framework ontology for modeling U.S. federal agencies, congressional committees, state organizations, legislative stages, and funding mechanisms. Extends CAC Legal Harmonization with gUFO integration."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/usa-legislative/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:created "2026-01-27"^^xsd:date ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <http://purl.org/nemo/gufo#/1.0.0> ,
+                <https://cacontology.projectvic.org/legal-harmonization/3.1.0> ,
+                <https://cacontology.projectvic.org/multi-jurisdiction/3.1.0> .
+
+# =============================================================================
+# ORGANIZATION METADATA PROPERTIES
+# =============================================================================
+
+cacontology-usa-leg:acronym rdf:type owl:DatatypeProperty ;
+    rdfs:label "Acronym"@en ;
+    rdfs:comment "Common acronym for an organization."@en ;
+    rdfs:domain uco-identity:Organization ;
+    rdfs:range xsd:string .
+
+cacontology-usa-leg:organizationType rdf:type owl:DatatypeProperty ;
+    rdfs:label "Organization Type"@en ;
+    rdfs:comment "Type of organization (federal, state, nonprofit, private)."@en ;
+    rdfs:domain uco-identity:Organization ;
+    rdfs:range xsd:string .
+
+# =============================================================================
+# U.S. FEDERAL ORGANIZATION CLASSES
+# Hierarchy: Cabinet Agency -> Sub-Cabinet Agency -> Directorate -> Office
+# =============================================================================
+
+cacontology-usa-leg:USCabinetAgency rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:OrganizationLikeEntity , uco-identity:Organization ;
+    rdfs:label "U.S. Cabinet Agency"@en ;
+    rdfs:comment "Cabinet-level department of the United States Federal Government."@en ;
+    cacontology-legal:jurisdictionScope "US" ;
+    cacontology-legal:countryCode "US" ;
+    cacontology-legal:isCountrySpecific true .
+
+cacontology-usa-leg:USSubCabinetAgency rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:OrganizationLikeEntity , uco-identity:Organization ;
+    rdfs:label "U.S. Sub-Cabinet Agency"@en ;
+    rdfs:comment "Sub-cabinet law enforcement agency within a cabinet department."@en ;
+    cacontology-legal:jurisdictionScope "US" ;
+    cacontology-legal:countryCode "US" ;
+    cacontology-legal:isCountrySpecific true .
+
+cacontology-usa-leg:USFederalDirectorate rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:OrganizationLikeEntity , uco-identity:Organization ;
+    rdfs:label "U.S. Federal Directorate"@en ;
+    rdfs:comment "Directorate or division within a sub-cabinet agency."@en ;
+    cacontology-legal:jurisdictionScope "US" ;
+    cacontology-legal:countryCode "US" ;
+    cacontology-legal:isCountrySpecific true .
+
+cacontology-usa-leg:USFederalAgencyOffice rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:OrganizationLikeEntity , uco-identity:Organization ;
+    rdfs:label "U.S. Federal Agency Office"@en ;
+    rdfs:comment "Office within a U.S. Federal Government agency."@en ;
+    cacontology-legal:jurisdictionScope "US" ;
+    cacontology-legal:countryCode "US" ;
+    cacontology-legal:isCountrySpecific true .
+
+# =============================================================================
+# U.S. FEDERAL ORGANIZATION HIERARCHY PROPERTIES
+# =============================================================================
+
+cacontology-usa-leg:parentAgency rdf:type owl:ObjectProperty ;
+    rdfs:label "Parent Agency"@en ;
+    rdfs:comment "Links an agency to its parent cabinet or sub-cabinet agency."@en ;
+    rdfs:domain uco-identity:Organization ;
+    rdfs:range uco-identity:Organization ;
+    rdfs:subPropertyOf gufo:isComponentOf .
+
+cacontology-usa-leg:hasSubAgency rdf:type owl:ObjectProperty ;
+    rdfs:label "Has Sub-Agency"@en ;
+    rdfs:comment "Links a cabinet agency to its sub-cabinet agencies."@en ;
+    rdfs:domain cacontology-usa-leg:USCabinetAgency ;
+    rdfs:range uco-identity:Organization ;
+    owl:inverseOf cacontology-usa-leg:parentAgency .
+
+# =============================================================================
+# U.S. FEDERAL ORGANIZATION INSTANCES
+# =============================================================================
+
+# Cabinet-Level Agencies
+cacontology-usa-leg:DOJ rdf:type cacontology-usa-leg:USCabinetAgency ;
+    rdfs:label "Department of Justice"@en ;
+    cacontology-usa-leg:acronym "DOJ" ;
+    cacontology-legal:jurisdictionScope "US" .
+
+cacontology-usa-leg:DHS rdf:type cacontology-usa-leg:USCabinetAgency ;
+    rdfs:label "Department of Homeland Security"@en ;
+    cacontology-usa-leg:acronym "DHS" ;
+    cacontology-legal:jurisdictionScope "US" .
+
+# Sub-Cabinet Agencies under DOJ
+cacontology-usa-leg:FBI rdf:type cacontology-usa-leg:USSubCabinetAgency ;
+    rdfs:label "Federal Bureau of Investigation"@en ;
+    cacontology-usa-leg:acronym "FBI" ;
+    cacontology-usa-leg:parentAgency cacontology-usa-leg:DOJ ;
+    cacontology-legal:jurisdictionScope "US" .
+
+cacontology-usa-leg:USMS rdf:type cacontology-usa-leg:USSubCabinetAgency ;
+    rdfs:label "United States Marshals Service"@en ;
+    cacontology-usa-leg:acronym "USMS" ;
+    cacontology-usa-leg:parentAgency cacontology-usa-leg:DOJ ;
+    cacontology-legal:jurisdictionScope "US" .
+
+# Sub-Cabinet Agencies under DHS
+cacontology-usa-leg:ICE rdf:type cacontology-usa-leg:USSubCabinetAgency ;
+    rdfs:label "U.S. Immigration and Customs Enforcement"@en ;
+    cacontology-usa-leg:acronym "ICE" ;
+    cacontology-usa-leg:parentAgency cacontology-usa-leg:DHS ;
+    rdfs:comment "Federal law enforcement component of DHS that handles customs and immigration enforcement."@en ;
+    cacontology-legal:jurisdictionScope "US" .
+
+# Directorates within Sub-Cabinet Agencies
+cacontology-usa-leg:HSI rdf:type cacontology-usa-leg:USFederalDirectorate ;
+    rdfs:label "Homeland Security Investigations"@en ;
+    cacontology-usa-leg:acronym "HSI" ;
+    cacontology-usa-leg:parentAgency cacontology-usa-leg:ICE ;
+    rdfs:comment "Principal criminal investigative arm of DHS, operating as a directorate within ICE."@en ;
+    cacontology-legal:jurisdictionScope "US" .
+
+# Offices within Agencies
+cacontology-usa-leg:OJJDP rdf:type cacontology-usa-leg:USFederalAgencyOffice ;
+    rdfs:label "Office of Juvenile Justice and Delinquency Prevention"@en ;
+    cacontology-usa-leg:acronym "OJJDP" ;
+    cacontology-usa-leg:parentAgency cacontology-usa-leg:DOJ ;
+    cacontology-legal:jurisdictionScope "US" .
+
+cacontology-usa-leg:USPS_OIG rdf:type uco-identity:Organization, cac-core:OrganizationLikeEntity ;
+    rdfs:label "USPS Office of Inspector General"@en ;
+    rdfs:comment "Independent oversight office of the United States Postal Service, an independent establishment of the executive branch."@en ;
+    cacontology-usa-leg:acronym "USPS-OIG" ;
+    cacontology-legal:jurisdictionScope "US" .
+
+# Nonprofit Organizations (Special Cases)
+cacontology-usa-leg:NCMEC rdf:type uco-identity:Organization ;
+    rdfs:label "National Center for Missing & Exploited Children"@en ;
+    cacontology-usa-leg:acronym "NCMEC" ;
+    cacontology-usa-leg:organizationType "nonprofit" ;
+    rdfs:comment "Nonprofit organization that serves as the national clearinghouse for missing and exploited children."@en ;
+    cacontology-legal:jurisdictionScope "US" ;
+    cacontology-legal:countryCode "US" .
+
+# =============================================================================
+# U.S. CONGRESSIONAL COMMITTEE CLASSES
+# =============================================================================
+
+cacontology-usa-leg:USCongressionalCommittee rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:OrganizationLikeEntity , uco-identity:Organization ;
+    rdfs:label "U.S. Congressional Committee"@en ;
+    rdfs:comment "Committee of the United States Congress."@en ;
+    cacontology-legal:jurisdictionScope "US" ;
+    cacontology-legal:countryCode "US" ;
+    cacontology-legal:isCountrySpecific true .
+
+cacontology-usa-leg:chamber rdf:type owl:DatatypeProperty ;
+    rdfs:label "Chamber"@en ;
+    rdfs:comment "Congressional chamber (house or senate)."@en ;
+    rdfs:domain cacontology-usa-leg:USCongressionalCommittee ;
+    rdfs:range xsd:string .
+
+cacontology-usa-leg:servesOn rdf:type owl:ObjectProperty ;
+    rdfs:label "Serves On"@en ;
+    rdfs:comment "Links a legislator to committees they serve on."@en ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range cacontology-usa-leg:USCongressionalCommittee ;
+    cacontology-legal:jurisdictionScope "US" .
+
+# Congressional Committee Instances
+cacontology-usa-leg:house_judiciary rdf:type cacontology-usa-leg:USCongressionalCommittee ;
+    rdfs:label "House Judiciary Committee"@en ;
+    cacontology-usa-leg:chamber "house" ;
+    cacontology-legal:jurisdictionScope "US" .
+
+cacontology-usa-leg:senate_judiciary rdf:type cacontology-usa-leg:USCongressionalCommittee ;
+    rdfs:label "Senate Judiciary Committee"@en ;
+    cacontology-usa-leg:chamber "senate" ;
+    cacontology-legal:jurisdictionScope "US" .
+
+cacontology-usa-leg:house_appropriations rdf:type cacontology-usa-leg:USCongressionalCommittee ;
+    rdfs:label "House Appropriations Committee"@en ;
+    cacontology-usa-leg:chamber "house" ;
+    cacontology-legal:jurisdictionScope "US" .
+
+cacontology-usa-leg:senate_appropriations rdf:type cacontology-usa-leg:USCongressionalCommittee ;
+    rdfs:label "Senate Appropriations Committee"@en ;
+    cacontology-usa-leg:chamber "senate" ;
+    cacontology-legal:jurisdictionScope "US" .
+
+cacontology-usa-leg:house_energy_commerce rdf:type cacontology-usa-leg:USCongressionalCommittee ;
+    rdfs:label "House Energy and Commerce Committee"@en ;
+    cacontology-usa-leg:chamber "house" ;
+    cacontology-legal:jurisdictionScope "US" .
+
+cacontology-usa-leg:senate_commerce rdf:type cacontology-usa-leg:USCongressionalCommittee ;
+    rdfs:label "Senate Commerce Committee"@en ;
+    cacontology-usa-leg:chamber "senate" ;
+    cacontology-legal:jurisdictionScope "US" .
+
+# =============================================================================
+# U.S. STATE-LEVEL ORGANIZATION CLASSES
+# =============================================================================
+
+cacontology-usa-leg:USStateAgency rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:OrganizationLikeEntity , uco-identity:Organization ;
+    rdfs:label "U.S. State Agency"@en ;
+    rdfs:comment "Agency of a U.S. state government."@en ;
+    cacontology-legal:jurisdictionScope "US" ;
+    cacontology-legal:countryCode "US" ;
+    cacontology-legal:isCountrySpecific true .
+
+cacontology-usa-leg:USStateAttorneyGeneral rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-usa-leg:USStateAgency ;
+    rdfs:label "U.S. State Attorney General"@en ;
+    rdfs:comment "Attorney General office of a U.S. state."@en ;
+    cacontology-legal:jurisdictionScope "US" ;
+    cacontology-legal:countryCode "US" ;
+    cacontology-legal:isCountrySpecific true .
+
+cacontology-usa-leg:USStateLegislature rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:OrganizationLikeEntity , uco-identity:Organization ;
+    rdfs:label "U.S. State Legislature"@en ;
+    rdfs:comment "Legislative body of a U.S. state."@en ;
+    cacontology-legal:jurisdictionScope "US" ;
+    cacontology-legal:countryCode "US" ;
+    cacontology-legal:isCountrySpecific true .
+
+cacontology-usa-leg:USStateICACtaskForce rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-taskforce:ICACtaskForce ;
+    rdfs:label "U.S. State CAC Task Force"@en ;
+    rdfs:comment "State-level CAC Task Force in the United States."@en ;
+    cacontology-legal:jurisdictionScope "US" ;
+    cacontology-legal:countryCode "US" ;
+    cacontology-legal:isCountrySpecific true .
+
+# =============================================================================
+# U.S. LEGISLATIVE STAGE CLASSES (gUFO: Phase)
+# =============================================================================
+
+cacontology-usa-leg:LegislativeStage rdf:type owl:Class, gufo:Phase ;
+    rdfs:subClassOf cac-core:Phase ;
+    rdfs:label "Legislative Stage"@en ;
+    rdfs:comment "Stage in the U.S. legislative process."@en ;
+    cacontology-legal:jurisdictionScope "US" ;
+    cacontology-legal:isCountrySpecific true .
+
+cacontology-usa-leg:stageOrder rdf:type owl:DatatypeProperty ;
+    rdfs:label "Stage Order"@en ;
+    rdfs:comment "Ordinal position of legislative stage in the process."@en ;
+    rdfs:domain cacontology-usa-leg:LegislativeStage ;
+    rdfs:range xsd:integer .
+
+cacontology-usa-leg:isFinal rdf:type owl:DatatypeProperty ;
+    rdfs:label "Is Final"@en ;
+    rdfs:comment "Whether this stage is a final/terminal stage."@en ;
+    rdfs:domain cacontology-usa-leg:LegislativeStage ;
+    rdfs:range xsd:boolean .
+
+# Legislative Stage Instances
+cacontology-usa-leg:introduced rdf:type cacontology-usa-leg:LegislativeStage ;
+    rdfs:label "Introduced"@en ;
+    cacontology-usa-leg:stageOrder 1 .
+
+cacontology-usa-leg:in_committee rdf:type cacontology-usa-leg:LegislativeStage ;
+    rdfs:label "In Committee"@en ;
+    cacontology-usa-leg:stageOrder 2 .
+
+cacontology-usa-leg:reported rdf:type cacontology-usa-leg:LegislativeStage ;
+    rdfs:label "Reported from Committee"@en ;
+    cacontology-usa-leg:stageOrder 3 .
+
+cacontology-usa-leg:passed_chamber rdf:type cacontology-usa-leg:LegislativeStage ;
+    rdfs:label "Passed Chamber"@en ;
+    cacontology-usa-leg:stageOrder 4 .
+
+cacontology-usa-leg:passed_both rdf:type cacontology-usa-leg:LegislativeStage ;
+    rdfs:label "Passed Both Chambers"@en ;
+    cacontology-usa-leg:stageOrder 5 .
+
+cacontology-usa-leg:conference rdf:type cacontology-usa-leg:LegislativeStage ;
+    rdfs:label "In Conference"@en ;
+    cacontology-usa-leg:stageOrder 6 .
+
+cacontology-usa-leg:enacted rdf:type cacontology-usa-leg:LegislativeStage ;
+    rdfs:label "Enacted"@en ;
+    cacontology-usa-leg:stageOrder 7 ;
+    cacontology-usa-leg:isFinal true .
+
+cacontology-usa-leg:vetoed rdf:type cacontology-usa-leg:LegislativeStage ;
+    rdfs:label "Vetoed"@en ;
+    cacontology-usa-leg:stageOrder 7 ;
+    cacontology-usa-leg:isFinal true .
+
+# =============================================================================
+# U.S. FUNDING AND APPROPRIATION CLASSES
+# =============================================================================
+
+cacontology-usa-leg:AppropriationType rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:EnduringEntity ;
+    rdfs:label "Appropriation Type"@en ;
+    rdfs:comment "Type of Congressional appropriation."@en ;
+    cacontology-legal:jurisdictionScope "US" .
+
+cacontology-usa-leg:FundingStream rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:EnduringEntity ;
+    rdfs:label "Funding Stream"@en ;
+    rdfs:comment "Source of funding for CAC programs."@en .
+
+cacontology-usa-leg:FundingNeed rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:EnduringEntity ;
+    rdfs:label "Funding Need"@en ;
+    rdfs:comment "Funding requirement from an CAC task force."@en .
+
+cacontology-usa-leg:Outcome rdf:type owl:Class ;
+    rdfs:subClassOf cac-core:AssessmentResult ;
+    rdfs:label "Outcome"@en ;
+    rdfs:comment "Result of advocacy efforts."@en .
+
+# Appropriation Type Instances
+cacontology-usa-leg:regular_appropriation rdf:type cacontology-usa-leg:AppropriationType ;
+    rdfs:label "Regular Appropriation"@en .
+
+cacontology-usa-leg:continuing_resolution rdf:type cacontology-usa-leg:AppropriationType ;
+    rdfs:label "Continuing Resolution"@en .
+
+cacontology-usa-leg:supplemental_appropriation rdf:type cacontology-usa-leg:AppropriationType ;
+    rdfs:label "Supplemental Appropriation"@en .
+
+# Funding Stream Instances
+cacontology-usa-leg:congressionally_directed rdf:type cacontology-usa-leg:FundingStream ;
+    rdfs:label "Congressionally Directed Spending"@en .
+
+cacontology-usa-leg:ojjdp_grants rdf:type cacontology-usa-leg:FundingStream ;
+    rdfs:label "OJJDP Grants"@en ;
+    rdfs:comment "Grants from the Office of Juvenile Justice and Delinquency Prevention."@en .
+
+cacontology-usa-leg:state_appropriations rdf:type cacontology-usa-leg:FundingStream ;
+    rdfs:label "State Appropriations"@en .
+
+cacontology-usa-leg:formula_grants rdf:type cacontology-usa-leg:FundingStream ;
+    rdfs:label "Formula Grants"@en .
+
+# Outcome Instances
+cacontology-usa-leg:bill_passed rdf:type cacontology-usa-leg:Outcome ;
+    rdfs:label "Bill Passed"@en ;
+    cacontology-usa-leg:isPositive true .
+
+cacontology-usa-leg:bill_failed rdf:type cacontology-usa-leg:Outcome ;
+    rdfs:label "Bill Failed"@en ;
+    cacontology-usa-leg:isPositive false .
+
+cacontology-usa-leg:grant_awarded rdf:type cacontology-usa-leg:Outcome ;
+    rdfs:label "Grant Awarded"@en ;
+    cacontology-usa-leg:isPositive true .
+
+cacontology-usa-leg:appropriation_enacted rdf:type cacontology-usa-leg:Outcome ;
+    rdfs:label "Appropriation Enacted"@en ;
+    cacontology-usa-leg:isPositive true .
+
+# Funding Properties
+cacontology-usa-leg:needDescription rdf:type owl:DatatypeProperty ;
+    rdfs:label "Need Description"@en ;
+    rdfs:domain cacontology-usa-leg:FundingNeed ;
+    rdfs:range xsd:string .
+
+cacontology-usa-leg:requestedAmount rdf:type owl:DatatypeProperty ;
+    rdfs:label "Requested Amount"@en ;
+    rdfs:domain cacontology-usa-leg:FundingNeed ;
+    rdfs:range xsd:decimal .
+
+cacontology-usa-leg:priorityLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "Priority Level"@en ;
+    rdfs:domain cacontology-usa-leg:FundingNeed ;
+    rdfs:range xsd:string .
+
+cacontology-usa-leg:isPositive rdf:type owl:DatatypeProperty ;
+    rdfs:label "Is Positive"@en ;
+    rdfs:domain cacontology-usa-leg:Outcome ;
+    rdfs:range xsd:boolean .
+
+cacontology-usa-leg:expressesFundingNeed rdf:type owl:ObjectProperty ;
+    rdfs:label "Expresses Funding Need"@en ;
+    rdfs:comment "Links a task force to its funding needs."@en ;
+    rdfs:domain cacontology-taskforce:ICACtaskForce ;
+    rdfs:range cacontology-usa-leg:FundingNeed .
+
+cacontology-usa-leg:addressedBy rdf:type owl:ObjectProperty ;
+    rdfs:label "Addressed By"@en ;
+    rdfs:comment "Links a funding need to legislation that addresses it."@en ;
+    rdfs:domain cacontology-usa-leg:FundingNeed ;
+    rdfs:range cacontology-legal:LegislativeInstrument .
+
+# =============================================================================
+# U.S.-SPECIFIC LEGISLATIVE PROCESSES (gUFO: EventType)
+# =============================================================================
+
+cacontology-usa-leg:USConferenceCommittee rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-legal:LegislativeProcess ;
+    rdf:type gufo:EventType ;
+    rdfs:label "U.S. Conference Committee"@en ;
+    rdfs:comment "Bicameral reconciliation process between House and Senate versions."@en ;
+    cacontology-legal:jurisdictionScope "US" ;
+    cacontology-legal:isCountrySpecific true .
+
+cacontology-usa-leg:USExecutiveAction rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-legal:LegislativeProcess ;
+    rdf:type gufo:EventType ;
+    rdfs:label "U.S. Executive Action"@en ;
+    rdfs:comment "Presidential signing or veto of legislation."@en ;
+    cacontology-legal:jurisdictionScope "US" ;
+    cacontology-legal:isCountrySpecific true .
+
+cacontology-usa-leg:USRulemakingProcess rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-legal:LegislativeProcess ;
+    rdf:type gufo:EventType ;
+    rdfs:label "U.S. Federal Rulemaking"@en ;
+    rdfs:comment "Administrative Procedure Act rulemaking process."@en ;
+    cacontology-legal:jurisdictionScope "US" ;
+    cacontology-legal:isCountrySpecific true .
+
+cacontology-usa-leg:USReconciliation rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-legal:LegislativeProcess ;
+    rdf:type gufo:EventType ;
+    rdfs:label "U.S. Budget Reconciliation"@en ;
+    rdfs:comment "Special budget reconciliation process in U.S. Congress."@en ;
+    cacontology-legal:jurisdictionScope "US" ;
+    cacontology-legal:isCountrySpecific true .
+
+# =============================================================================
+# U.S. STATE-FEDERAL ALIGNMENT PROPERTIES
+# =============================================================================
+
+cacontology-usa-leg:usStateFederalHarmonization rdf:type owl:DatatypeProperty ;
+    rdfs:label "U.S. State-Federal Harmonization Level"@en ;
+    rdfs:comment "Level of harmonization between state and federal law (full, partial, none)."@en ;
+    rdfs:domain cacontology-multi:Jurisdiction ;
+    rdfs:range xsd:string ;
+    cacontology-legal:jurisdictionScope "US" ;
+    cacontology-legal:isCountrySpecific true .
+
+cacontology-usa-leg:implementsUSModelLaw rdf:type owl:ObjectProperty ;
+    rdfs:label "Implements U.S. Model Law"@en ;
+    rdfs:comment "U.S. state law implementing a model law (e.g., NCSL model)."@en ;
+    rdfs:domain cacontology-legal:Statute ;
+    rdfs:range cacontology-legal:CSAMModelLaw ;
+    cacontology-legal:jurisdictionScope "US" ;
+    cacontology-legal:isCountrySpecific true .
+
+cacontology-usa-leg:alignedWithFederalLaw rdf:type owl:ObjectProperty ;
+    rdfs:label "Aligned With Federal Law"@en ;
+    rdfs:comment "U.S. state law aligned with federal legislation."@en ;
+    rdfs:domain cacontology-legal:Statute ;
+    rdfs:range cacontology-legal:Statute ;
+    cacontology-legal:jurisdictionScope "US" ;
+    cacontology-legal:isCountrySpecific true .

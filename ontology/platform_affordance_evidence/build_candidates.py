@@ -24,6 +24,7 @@ PLATFORM_TYPE = {
     "Telegram": "MessagingService",
     "Facebook Messenger": "MessagingService",
     "Skype": "MessagingService",
+    "FaceTime": "MessagingService",
     "IRC": "MessagingService",
     "MeWe": "MessagingService",
     "AOL Instant Messenger": "MessagingService",

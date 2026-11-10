@@ -1,0 +1,648 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix uco-observable: <https://ontology.unifiedcyberontology.org/uco/observable/> .
+@prefix uco-tool: <https://ontology.unifiedcyberontology.org/uco/tool/> .
+@prefix cacontology-forensics: <https://cacontology.projectvic.org/forensics#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+# Ontology Declaration
+<https://cacontology.projectvic.org/forensics/extended-shapes> rdf:type owl:Ontology ;
+    rdfs:label "CAC Forensics Extended SHACL Shapes"@en ;
+    rdfs:comment "Extended SHACL validation shapes for the CAC Forensics Ontology, providing comprehensive validation for digital evidence processing, analysis, and management."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/forensics/extended-shapes/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://cacontology.projectvic.org/forensics/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> .
+
+# =============================================================================
+# EXTENDED FORENSIC SHAPES FOR DIGITAL EVIDENCE
+# This file extends the basic cacontology-forensics-shapes.ttl with comprehensive
+# validation for digital evidence processing, analysis, and management
+# =============================================================================
+
+# =============================================================================
+# FORENSIC IMAGE AND DIGITAL EVIDENCE SHAPES
+# =============================================================================
+
+cacontology-forensics:ForensicImageExtendedShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-forensics:ForensicImage ;
+    rdfs:label "Forensic Image Extended Shape"@en ;
+    rdfs:comment "Extended validation shape for forensic image instances with comprehensive digital evidence requirements."@en ;
+    sh:property [
+        sh:path cacontology-forensics:acquisitionMethod ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "physical_imaging" "logical_imaging" "live_imaging" "chip_off" "jtag" "selective_imaging" ) ;
+        sh:message "Forensic image must specify acquisition method from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-forensics:writeBlockingUsed ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Forensic image must specify if write blocking was used."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:sizeInBytes ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1000000000000.0 ;
+        sh:message "Image size must be between 0 and 1TB (in bytes)."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:createdTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Forensic image must specify creation time."@en
+    ] .
+
+cacontology-forensics:RecoveredFileExtendedShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-forensics:RecoveredFile ;
+    rdfs:label "Recovered File Extended Shape"@en ;
+    rdfs:comment "Extended validation shape for recovered file instances."@en ;
+    sh:property [
+        sh:path cacontology-forensics:recoveryMethod ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "file_carving" "undelete_utility" "hex_editor" "specialized_software" "hardware_recovery" "manual_reconstruction" ) ;
+        sh:message "Recovered file must specify recovery method from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path uco-observable:fileName ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 1 ;
+        sh:maxLength 255 ;
+        sh:message "Recovered file must specify file name (1-255 characters)."@en
+    ] ;
+    sh:property [
+        sh:path uco-observable:filePath ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 1 ;
+        sh:maxLength 1000 ;
+        sh:message "Recovered file must specify file path (1-1000 characters)."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:createdTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Recovered file may specify creation time."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:modifiedTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Recovered file may specify modification time."@en
+    ] .
+
+# =============================================================================
+# MOBILE FORENSIC TOOL SHAPES
+# =============================================================================
+
+cacontology-forensics:MobileForensicToolExtendedShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-forensics:MobileForensicTool ;
+    rdfs:label "Mobile Forensic Tool Extended Shape"@en ;
+    rdfs:comment "Extended validation shape for mobile forensic tool instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 3 ;
+        sh:maxLength 100 ;
+        sh:message "Mobile forensic tool must specify name (3-100 characters)."@en
+    ] ;
+    sh:property [
+        sh:path uco-tool:version ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 1 ;
+        sh:maxLength 50 ;
+        sh:message "Tool version should be 1-50 characters when provided."@en
+    ] .
+
+# =============================================================================
+# FORENSIC ACQUISITION ACTION EXTENDED SHAPES
+# =============================================================================
+
+cacontology-forensics:ForensicAcquisitionActionExtendedShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-forensics:ForensicAcquisitionAction ;
+    rdfs:label "Forensic Acquisition Action Extended Shape"@en ;
+    rdfs:comment "Extended validation shape for forensic acquisition action instances."@en ;
+    sh:property [
+        sh:path cacontology-forensics:acquisitionMethod ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "physical" "logical" "live" "chip_off" "jtag" "selective" ) ;
+        sh:message "Forensic acquisition must specify acquisition method from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-forensics:writeBlockingUsed ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Forensic acquisition must specify if write blocking was used."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Forensic acquisition must specify start time."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:endTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Forensic acquisition may specify end time."@en
+    ] .
+
+# =============================================================================
+# EVIDENCE VERIFICATION ACTION EXTENDED SHAPES
+# =============================================================================
+
+cacontology-forensics:EvidenceVerificationActionExtendedShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-forensics:EvidenceVerificationAction ;
+    rdfs:label "Evidence Verification Action Extended Shape"@en ;
+    rdfs:comment "Extended validation shape for evidence verification action instances."@en ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Evidence verification must specify verification time."@en
+    ] ;
+    sh:property [
+        sh:path uco-action:usesTool ;
+        sh:class uco-tool:Tool ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Evidence verification must specify verification tool used."@en
+    ] .
+
+# =============================================================================
+# MASS DIGITAL EVIDENCE PROCESSING SHAPES
+# =============================================================================
+
+cacontology-forensics:MassDigitalEvidenceProcessingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-forensics:MassDigitalEvidenceProcessing ;
+    rdfs:label "Mass Digital Evidence Processing Shape"@en ;
+    rdfs:comment "Validation shape for mass digital evidence processing instances."@en ;
+    sh:property [
+        sh:path cacontology-forensics:evidenceVolumeTerabytes ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.001 ;
+        sh:maxInclusive 10000.0 ;
+        sh:message "Evidence volume must be between 0.001 and 10000 terabytes."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-forensics:filesProcessedMillions ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.001 ;
+        sh:maxInclusive 1000.0 ;
+        sh:message "Files processed must be between 0.001 and 1000 million."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-forensics:processingTimeframeDays ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 3650 ;
+        sh:message "Processing timeframe must be between 1 and 3650 days (10 years)."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Mass processing must specify start time."@en
+    ] .
+
+cacontology-forensics:AutomatedContentAnalysisShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-forensics:AutomatedContentAnalysis ;
+    rdfs:label "Automated Content Analysis Shape"@en ;
+    rdfs:comment "Validation shape for automated content analysis instances."@en ;
+    sh:property [
+        sh:path cacontology-forensics:automationPercentage ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 100.0 ;
+        sh:message "Automation percentage must be between 0.0 and 100.0."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-forensics:processingSpeed ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1.0 ;
+        sh:maxInclusive 1000000.0 ;
+        sh:message "Processing speed must be between 1.0 and 1000000.0 files per hour."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-forensics:falsePositiveRate ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:message "False positive rate must be between 0.0 and 1.0."@en
+    ] .
+
+cacontology-forensics:EvidenceTriageSystemShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-forensics:EvidenceTriageSystem ;
+    rdfs:label "Evidence Triage System Shape"@en ;
+    rdfs:comment "Validation shape for evidence triage system instances."@en ;
+    sh:property [
+        sh:path cacontology-forensics:triageAccuracy ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:message "Triage accuracy must be between 0.0 and 1.0."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-forensics:priorityClassification ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "critical" "high" "medium" "low" "unknown" ) ;
+        sh:message "Priority classification must be from the allowed list."@en
+    ] .
+
+cacontology-forensics:ScalableHashAnalysisShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-forensics:ScalableHashAnalysis ;
+    rdfs:label "Scalable Hash Analysis Shape"@en ;
+    rdfs:comment "Validation shape for scalable hash analysis instances."@en ;
+    sh:property [
+        sh:path cacontology-forensics:hashDatabaseSize ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.001 ;
+        sh:maxInclusive 10000.0 ;
+        sh:message "Hash database size must be between 0.001 and 10000 million entries."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-forensics:hashMatchesFound ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 10000000 ;
+        sh:message "Hash matches found must be between 0 and 10 million."@en
+    ] .
+
+# =============================================================================
+# VICTIM IDENTIFICATION PROCESS SHAPES
+# =============================================================================
+
+cacontology-forensics:VictimIdentificationProcessShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-forensics:VictimIdentificationProcess ;
+    rdfs:label "Victim Identification Process Shape"@en ;
+    rdfs:comment "Validation shape for victim identification process instances."@en ;
+    sh:property [
+        sh:path cacontology-forensics:victimsIdentifiedCount ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 10000 ;
+        sh:message "Victims identified count must be between 0 and 10000."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-forensics:victimGeographicOrigin ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 2 ;
+        sh:maxLength 100 ;
+        sh:message "Victim geographic origin should be 2-100 characters when provided."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-forensics:victimAgeRange ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "toddlers" "children" "teenagers" "toddlers_to_children" "children_to_teenagers" "toddlers_to_teenagers" "unknown" ) ;
+        sh:message "Victim age range must be from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Victim identification process must specify start time."@en
+    ] .
+
+cacontology-forensics:ImageAnalysisForVictimIDShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-forensics:ImageAnalysisForVictimID ;
+    rdfs:label "Image Analysis for Victim ID Shape"@en ;
+    rdfs:comment "Validation shape for image analysis for victim identification instances."@en ;
+    sh:property [
+        sh:path uco-action:usesTool ;
+        sh:class uco-tool:Tool ;
+        sh:minCount 1 ;
+        sh:message "Image analysis for victim ID must specify at least one analysis tool."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Image analysis must specify analysis time."@en
+    ] .
+
+# =============================================================================
+# SPECIALIZED DETECTION SHAPES
+# =============================================================================
+
+cacontology-forensics:K9AssistedForensicsShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-forensics:K9AssistedForensics ;
+    rdfs:label "K9 Assisted Forensics Shape"@en ;
+    rdfs:comment "Validation shape for K9 assisted forensics instances."@en ;
+    sh:property [
+        sh:path cacontology-forensics:k9AssistanceProvided ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "K9 assisted forensics must specify if K9 assistance was provided."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "K9 assisted forensics must specify start time."@en
+    ] .
+
+cacontology-forensics:ElectronicStorageDeviceDetectionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-forensics:ElectronicStorageDeviceDetection ;
+    rdfs:label "Electronic Storage Device Detection Shape"@en ;
+    rdfs:comment "Validation shape for electronic storage device detection instances."@en ;
+    sh:property [
+        sh:path cacontology-forensics:detectionMethod ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "k9_detection" "manual_search" "electronic_scanning" "x_ray_scanning" "metal_detection" "thermal_imaging" ) ;
+        sh:message "Detection method must be from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-forensics:detectionAccuracy ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:message "Detection accuracy must be between 0.0 and 1.0."@en
+    ] .
+
+cacontology-forensics:HiddenDeviceRecoveryShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-forensics:HiddenDeviceRecovery ;
+    rdfs:label "Hidden Device Recovery Shape"@en ;
+    rdfs:comment "Validation shape for hidden device recovery instances."@en ;
+    sh:property [
+        sh:path cacontology-forensics:devicesRecovered ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 1000 ;
+        sh:message "Devices recovered must be between 1 and 1000."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Hidden device recovery must specify start time."@en
+    ] .
+
+# =============================================================================
+# CORRELATION ANALYSIS SHAPES
+# =============================================================================
+
+cacontology-forensics:CrossPlatformCorrelationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-forensics:CrossPlatformCorrelation ;
+    rdfs:label "Cross Platform Correlation Shape"@en ;
+    rdfs:comment "Validation shape for cross platform correlation instances."@en ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Cross platform correlation must specify start time."@en
+    ] ;
+    sh:property [
+        sh:path uco-action:usesTool ;
+        sh:class uco-tool:Tool ;
+        sh:minCount 1 ;
+        sh:message "Cross platform correlation must specify at least one analysis tool."@en
+    ] .
+
+cacontology-forensics:TemporalPatternAnalysisShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-forensics:TemporalPatternAnalysis ;
+    rdfs:label "Temporal Pattern Analysis Shape"@en ;
+    rdfs:comment "Validation shape for temporal pattern analysis instances."@en ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Temporal pattern analysis must specify start time."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:endTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Temporal pattern analysis may specify end time."@en
+    ] .
+
+cacontology-forensics:BehavioralFingerprintingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-forensics:BehavioralFingerprinting ;
+    rdfs:label "Behavioral Fingerprinting Shape"@en ;
+    rdfs:comment "Validation shape for behavioral fingerprinting instances."@en ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Behavioral fingerprinting must specify start time."@en
+    ] .
+
+# =============================================================================
+# OBJECT PROPERTY SHAPES
+# =============================================================================
+
+cacontology-forensics:UsesForensicToolShape rdf:type sh:PropertyShape ;
+    sh:path uco-action:usesTool ;
+    sh:name "uses forensic tool" ;
+    sh:description "Links forensic actions to tools used" ;
+    sh:class uco-tool:Tool ;
+    sh:minCount 1 .
+
+cacontology-forensics:ProducesForensicImageShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-forensics:forensicCopy ;
+    sh:name "produces forensic image" ;
+    sh:description "Links acquisition to forensic image produced" ;
+    sh:class cacontology-forensics:ForensicImage ;
+    sh:minCount 1 .
+
+cacontology-forensics:HasVerificationHashShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-forensics:verificationHash ;
+    sh:name "has verification hash" ;
+    sh:description "Links forensic artifacts to verification hashes" ;
+    sh:class uco-core:UcoObject ;
+    sh:minCount 1 .
+
+# =============================================================================
+# CROSS-REFERENCE VALIDATION SHAPES
+# =============================================================================
+
+cacontology-forensics:ForensicAcquisitionCrossReferenceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-forensics:ForensicAcquisitionAction ;
+    rdfs:label "Forensic Acquisition Cross Reference Shape"@en ;
+    rdfs:comment "Validates cross-references between forensic acquisition and related entities."@en ;
+    sh:sparql [
+        sh:message "Forensic acquisition must have tool, evidence seized, and forensic copy."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-forensics:ForensicAcquisitionAction .
+                FILTER NOT EXISTS {
+                    $this uco-action:usesTool ?tool ;
+                          cacontology-forensics:evidenceSeized ?evidence ;
+                          cacontology-forensics:forensicCopy ?copy .
+                }
+            }
+        """
+    ] .
+
+cacontology-forensics:WriteBlockingValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-forensics:ForensicAcquisitionAction ;
+    rdfs:label "Write Blocking Validation Shape"@en ;
+    rdfs:comment "Validates write blocking usage in forensic acquisitions."@en ;
+    sh:sparql [
+        sh:message "Physical acquisitions should use write blocking."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-forensics:acquisitionMethod "physical" ;
+                      cacontology-forensics:writeBlockingUsed false .
+            }
+        """
+    ] .
+
+cacontology-forensics:MassProcessingValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-forensics:MassDigitalEvidenceProcessing ;
+    rdfs:label "Mass Processing Validation Shape"@en ;
+    rdfs:comment "Validates mass digital evidence processing consistency."@en ;
+    sh:sparql [
+        sh:message "Large evidence volumes should have reasonable processing timeframes."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-forensics:evidenceVolumeTerabytes ?volume ;
+                      cacontology-forensics:processingTimeframeDays ?days .
+                FILTER (?volume > 100.0 && ?days < 30)
+            }
+        """
+    ] .
+
+# =============================================================================
+# TEMPORAL VALIDATION SHAPES
+# =============================================================================
+
+cacontology-forensics:TemporalValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-forensics:ForensicAcquisitionAction ;
+    rdfs:label "Temporal Validation Shape"@en ;
+    rdfs:comment "Validates temporal consistency in forensic actions."@en ;
+    sh:sparql [
+        sh:message "Acquisition start time must be before end time when both are specified."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this uco-core:startTime ?start ;
+                      uco-core:endTime ?end .
+                FILTER (?start >= ?end)
+            }
+        """
+    ] .
+
+cacontology-forensics:VerificationTimingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-forensics:EvidenceVerificationAction ;
+    rdfs:label "Verification Timing Shape"@en ;
+    rdfs:comment "Validates evidence verification timing."@en ;
+    sh:sparql [
+        sh:message "Evidence verification should occur after acquisition."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                ?acquisition cacontology-forensics:forensicCopy ?image .
+                ?image cacontology-forensics:verificationHash ?hash .
+                $this uco-core:object ?hash ;
+                      uco-core:startTime ?verificationTime .
+                ?acquisition uco-core:startTime ?acquisitionTime .
+                FILTER (?verificationTime < ?acquisitionTime)
+            }
+        """
+    ] .
+
+# =============================================================================
+# DATA QUALITY SHAPES
+# =============================================================================
+
+cacontology-forensics:DataQualityShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-forensics:ForensicAcquisitionAction ,
+                   cacontology-forensics:ForensicImage ,
+                   cacontology-forensics:MassDigitalEvidenceProcessing ;
+    rdfs:label "Data Quality Shape"@en ;
+    rdfs:comment "Validates data quality for forensic entities."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Label should be between 5 and 200 characters when provided."@en
+    ] ;
+    sh:property [
+        sh:path rdfs:comment ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 10 ;
+        sh:maxLength 1000 ;
+        sh:message "Comment should be between 10 and 1000 characters when provided."@en
+    ] . 

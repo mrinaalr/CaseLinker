@@ -1,0 +1,98 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
+@prefix cacontology-analyst: <https://cacontology.projectvic.org/analyst-wellbeing#> .
+
+# Ontology Declaration
+<https://cacontology.projectvic.org/analyst-wellbeing> rdf:type owl:Ontology ;
+    rdfs:label "CAC Analyst Wellbeing & Exposure Mitigation Ontology"@en ;
+    rdfs:comment "An ontology for representing analyst/investigator exposure mitigation measures and occupational harms arising from reviewing traumatic CSEA material, supporting ethically designed detection-to-action pipelines while preserving evidentiary integrity."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/analyst-wellbeing/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:issued "2026-02-11"^^xsd:date ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/identity/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/action/1.5.0> ,
+                <https://cacontology.projectvic.org/detection/3.1.0> ,
+                <https://cacontology.projectvic.org/3.1.0> ,
+                <https://cacontology.projectvic.org/core/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> .
+
+# =============================================================================
+# CLASSES
+# =============================================================================
+
+cacontology-analyst:ExposureMitigationMeasure rdf:type owl:Class ;
+    rdfs:label "Exposure Mitigation Measure"@en ;
+    rdfs:comment "A measure, control, or workflow technique used to reduce human exposure to traumatic content while enabling effective review and classification (e.g., blur/previews, hash-only review, progressive reveal)."@en ;
+    dcterms:source "Community & Intelligence Beyond Detection (Global Emancipation Network), 2026-02-10."@en ;
+    rdfs:seeAlso <https://www.linkedin.com/pulse/community-intelligence-beyond-detection-global-emancipation-network-xvemc/> ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:EnduringEntity .
+
+cacontology-analyst:OccupationalHarm rdf:type owl:Class ;
+    rdfs:label "Occupational Harm"@en ;
+    rdfs:comment "Occupational harm experienced by investigators or content analysts arising from exposure to traumatic materials or sustained operational stressors."@en ;
+    dcterms:source "Community & Intelligence Beyond Detection (Global Emancipation Network), 2026-02-10."@en ;
+    rdfs:seeAlso <https://www.linkedin.com/pulse/community-intelligence-beyond-detection-global-emancipation-network-xvemc/> ;
+    rdfs:subClassOf cac-core:Situation .
+
+cacontology-analyst:VicariousTrauma rdf:type owl:Class ;
+    rdfs:label "Vicarious Trauma"@en ;
+    rdfs:comment "A form of occupational harm in which repeated exposure to traumatic material produces trauma-like impacts in the reviewer."@en ;
+    dcterms:source "Community & Intelligence Beyond Detection (Global Emancipation Network), 2026-02-10."@en ;
+    rdfs:seeAlso <https://www.linkedin.com/pulse/community-intelligence-beyond-detection-global-emancipation-network-xvemc/> ;
+    rdfs:subClassOf cacontology-analyst:OccupationalHarm .
+
+cacontology-analyst:SecondaryTraumaticStress rdf:type owl:Class ;
+    rdfs:label "Secondary Traumatic Stress"@en ;
+    rdfs:comment "Occupational stress reactions arising from indirect exposure to others' trauma, including exposure through content review and investigative materials."@en ;
+    dcterms:source "Community & Intelligence Beyond Detection (Global Emancipation Network), 2026-02-10."@en ;
+    rdfs:seeAlso <https://www.linkedin.com/pulse/community-intelligence-beyond-detection-global-emancipation-network-xvemc/> ;
+    rdfs:subClassOf cacontology-analyst:OccupationalHarm .
+
+# =============================================================================
+# PROPERTIES
+# =============================================================================
+
+cacontology-analyst:usesExposureMitigation rdf:type owl:ObjectProperty ;
+    rdfs:label "uses exposure mitigation"@en ;
+    rdfs:comment "Links a manual classification/review action to an exposure mitigation measure used to minimize traumatic exposure."@en ;
+    dcterms:source "Community & Intelligence Beyond Detection (Global Emancipation Network), 2026-02-10."@en ;
+    rdfs:seeAlso <https://www.linkedin.com/pulse/community-intelligence-beyond-detection-global-emancipation-network-xvemc/> ;
+    rdfs:domain cacontology-detection:ManualClassificationAction ;
+    rdfs:range cacontology-analyst:ExposureMitigationMeasure .
+
+cacontology-analyst:experiencesOccupationalHarm rdf:type owl:ObjectProperty ;
+    rdfs:label "experiences occupational harm"@en ;
+    rdfs:comment "Links a person (analyst/investigator) to an occupational harm situation they experience."@en ;
+    dcterms:source "Community & Intelligence Beyond Detection (Global Emancipation Network), 2026-02-10."@en ;
+    rdfs:seeAlso <https://www.linkedin.com/pulse/community-intelligence-beyond-detection-global-emancipation-network-xvemc/> ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range cacontology-analyst:OccupationalHarm .
+
+cacontology-analyst:mitigationType rdf:type owl:DatatypeProperty ;
+    rdfs:label "mitigation type"@en ;
+    rdfs:comment "Type/category of exposure mitigation measure (e.g., hash_only_review, blurred_preview, progressive_reveal, frame_sampling)."@en ;
+    dcterms:source "Community & Intelligence Beyond Detection (Global Emancipation Network), 2026-02-10."@en ;
+    rdfs:seeAlso <https://www.linkedin.com/pulse/community-intelligence-beyond-detection-global-emancipation-network-xvemc/> ;
+    rdfs:domain cacontology-analyst:ExposureMitigationMeasure ;
+    rdfs:range xsd:string .
+
+cacontology-analyst:harmSeverity rdf:type owl:DatatypeProperty ;
+    rdfs:label "harm severity"@en ;
+    rdfs:comment "Severity of occupational harm (low, medium, high) when captured."@en ;
+    dcterms:source "Community & Intelligence Beyond Detection (Global Emancipation Network), 2026-02-10."@en ;
+    rdfs:seeAlso <https://www.linkedin.com/pulse/community-intelligence-beyond-detection-global-emancipation-network-xvemc/> ;
+    rdfs:domain cacontology-analyst:OccupationalHarm ;
+    rdfs:range xsd:string .

@@ -1,0 +1,1135 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-observable: <https://ontology.unifiedcyberontology.org/uco/observable/> .
+@prefix uco-pattern: <https://ontology.unifiedcyberontology.org/uco/pattern/> .
+@prefix cacontology-grooming: <https://cacontology.projectvic.org/grooming#> .
+@prefix cacontology-educational: <https://cacontology.projectvic.org/educational#> .
+@prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
+@prefix gufo: <http://purl.org/nemo/gufo#> .
+@prefix cacontology-temporal: <https://cacontology.projectvic.org/temporal#> .
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+# Ontology Declaration
+<https://cacontology.projectvic.org/grooming> rdf:type owl:Ontology ;
+    rdfs:label "CAC Online Grooming & Enticement Ontology"@en ;
+    rdfs:comment "An ontology for representing online grooming behaviors, enticement patterns, and predatory communication tactics in Internet Crimes Against Children cases, extending UCO and CASE with gUFO foundational ontology enhancements."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/grooming/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:issued "2024-12-19"^^xsd:date ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/identity/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/observable/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/action/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/pattern/1.5.0> ,
+                <https://cacontology.projectvic.org/3.1.0> ,
+                <https://cacontology.projectvic.org/core/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> .
+
+# =============================================================================
+# GROOMING BEHAVIOR CLASSES (extending UCO Action with gUFO Event)
+# =============================================================================
+
+cacontology-grooming:GroomingBehavior rdf:type owl:Class ;
+    rdfs:label "Grooming Behavior"@en ;
+    rdfs:comment "Predatory behavior designed to prepare a child for abuse by building trust, isolating them, and normalizing inappropriate contact."@en ;
+    rdfs:subClassOf cac-core:ExploitationEvent .
+
+cacontology-grooming:TrustBuildingBehavior rdf:type owl:Class ;
+    rdfs:label "Trust Building Behavior"@en ;
+    rdfs:comment "Early grooming stage focused on establishing emotional connection with the child victim."@en ;
+    rdfs:subClassOf cacontology-grooming:ConditioningBehavior .
+
+cacontology-grooming:ConditioningBehavior rdf:type owl:Class ;
+    rdfs:label "Conditioning Behavior"@en ;
+    rdfs:comment "Offender behavior that shapes victim readiness, compliance, dependency, or situational constraints preparatory to direct exploitation."@en ;
+    rdfs:subClassOf cacontology-grooming:GroomingBehavior .
+
+cacontology-grooming:IsolationBehavior rdf:type owl:Class ;
+    rdfs:label "Isolation Behavior"@en ;
+    rdfs:comment "Attempts to separate child from parents, friends, or other support systems."@en ;
+    rdfs:subClassOf cacontology-grooming:ConditioningBehavior .
+
+cacontology-grooming:NormalizationBehavior rdf:type owl:Class ;
+    rdfs:label "Normalization Behavior"@en ;
+    rdfs:comment "Gradual introduction of sexual topics to normalize inappropriate behavior."@en ;
+    rdfs:subClassOf cacontology-grooming:ConditioningBehavior .
+
+cacontology-grooming:Enticement rdf:type owl:Class ;
+    rdfs:label "Enticement"@en ;
+    rdfs:comment "Direct solicitation of a child to engage in illegal sexual activity or meet for such purposes."@en ;
+    rdfs:subClassOf cacontology-grooming:GroomingBehavior .
+
+cacontology-grooming:SexualExploitation rdf:type owl:Class ;
+    rdfs:label "Sexual Exploitation"@en ;
+    rdfs:comment "Direct exploitation of child for sexual purposes including solicitation of images or performances."@en ;
+    rdfs:subClassOf cacontology-grooming:GroomingBehavior .
+
+cacontology-grooming:OnlineGrooming rdf:type owl:Class ;
+    rdfs:label "Online Grooming"@en ;
+    rdfs:comment "Grooming behavior conducted through online platforms and digital communication channels."@en ;
+    rdfs:subClassOf cacontology-grooming:GroomingBehavior .
+
+# =============================================================================
+# GROOMING PHASES (gUFO Phase anti-rigid modeling)
+# =============================================================================
+
+cacontology-grooming:GroomingPhase rdf:type owl:Class ;
+    rdfs:label "Grooming Phase"@en ;
+    rdfs:comment "A temporal phase within the grooming process."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+cacontology-grooming:InitialContactPhase rdf:type owl:Class ;
+    rdfs:label "Initial Contact Phase"@en ;
+    rdfs:comment "First phase of grooming involving initial contact and relationship establishment."@en ;
+    rdfs:subClassOf cacontology-grooming:GroomingPhase .
+
+cacontology-grooming:ConditioningPhase rdf:type owl:Class ;
+    rdfs:label "Conditioning Phase"@en ;
+    rdfs:comment "Grooming-process phase in which the offender conditions the victim or situation for exploitation — including rapport, isolation, normalization, and compliance shaping prior to the primary exploitation act."@en ;
+    rdfs:subClassOf cacontology-grooming:GroomingPhase ,
+                    cac-core:ConditioningPhase ;
+    skos:scopeNote "Canonical instance type for macro-level ConditioningPhase nodes in ICAC offense-trajectory state machines. Always dual-type cac-core:Phase on every instance. Set cac-core:conditioningMode on this macro node only — not on SexualizationPhase or IsolationPhase variant nodes."@en .
+
+cacontology-grooming:TrustBuildingPhase rdf:type owl:Class ;
+    rdfs:label "Trust Building Phase"@en ;
+    rdfs:comment "Phase focused on building emotional connection and trust with victim."@en ;
+    rdfs:subClassOf cacontology-grooming:ConditioningPhase ;
+    owl:deprecated true ;
+    rdfs:seeAlso cacontology-grooming:ConditioningPhase ;
+    skos:editorialNote "Deprecated offense-trajectory phase label. For new graphs, type as cacontology-grooming:ConditioningPhase and cac-core:Phase with cac-core:conditioningMode trust_rapport."@en .
+
+cacontology-grooming:IsolationPhase rdf:type owl:Class ;
+    rdfs:label "Isolation Phase"@en ;
+    rdfs:comment "Phase aimed at separating victim from support systems and creating dependency."@en ;
+    rdfs:subClassOf cacontology-grooming:ConditioningPhase ;
+    skos:scopeNote "Subclass of ConditioningPhase (conditioning mechanism). State-machine modeling conventions: docs/glossary.md (Offense-trajectory state machine)."@en .
+
+cacontology-grooming:SexualizationPhase rdf:type owl:Class ;
+    rdfs:label "Sexualization Phase"@en ;
+    rdfs:comment "Phase involving introduction of sexual content and normalization of inappropriate behavior."@en ;
+    rdfs:subClassOf cacontology-grooming:ConditioningPhase ;
+    skos:scopeNote "Subclass of ConditioningPhase (conditioning mechanism). State-machine modeling conventions: docs/glossary.md (Offense-trajectory state machine)."@en .
+
+cacontology-grooming:ExploitationPhase rdf:type owl:Class ;
+    rdfs:label "Exploitation Phase"@en ;
+    rdfs:comment "Final phase involving direct sexual exploitation and abuse."@en ;
+    rdfs:subClassOf cacontology-grooming:GroomingPhase .
+
+cacontology-grooming:MaintenancePhase rdf:type owl:Class ;
+    rdfs:label "Maintenance Phase"@en ;
+    rdfs:comment "Ongoing phase to maintain control and continue exploitation."@en ;
+    rdfs:subClassOf cacontology-grooming:GroomingPhase .
+
+# =============================================================================
+# GROOMING COMMUNICATION CLASSES (extending UCO Observable with gUFO Object)
+# =============================================================================
+
+cacontology-grooming:GroomingMessage rdf:type owl:Class ;
+    rdfs:label "Grooming Message"@en ;
+    rdfs:comment "Communication containing grooming behavior or inappropriate content directed at a child."@en ;
+    rdfs:subClassOf uco-observable:Message, cac-core:Artifact .
+
+cacontology-grooming:SexualSolicitation rdf:type owl:Class ;
+    rdfs:label "Sexual Solicitation"@en ;
+    rdfs:comment "Message explicitly requesting sexual activity, images, or meetings from a child."@en ;
+    rdfs:subClassOf cacontology-grooming:GroomingMessage .
+
+cacontology-grooming:InappropriateGift rdf:type owl:Class ;
+    rdfs:label "Inappropriate Gift"@en ;
+    rdfs:comment "Offer or provision of gifts, money, or favors as part of grooming process."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject, cac-core:EnduringEntity .
+
+cacontology-grooming:SecrecyRequest rdf:type owl:Class ;
+    rdfs:label "Secrecy Request"@en ;
+    rdfs:comment "Instruction to keep communication or relationship secret from parents or authorities."@en ;
+    rdfs:subClassOf cacontology-grooming:GroomingMessage .
+
+cacontology-grooming:VictimResponse rdf:type owl:Class ;
+    rdfs:label "Victim Response"@en ;
+    rdfs:comment "Child's response to grooming behavior, indicating compliance, resistance, or confusion."@en ;
+    rdfs:subClassOf uco-observable:Message, cac-core:Artifact .
+
+# =============================================================================
+# GROOMING PATTERN CLASSES (extending UCO Pattern with gUFO Situation)
+# =============================================================================
+
+cacontology-grooming:GroomingPattern rdf:type owl:Class ;
+    rdfs:label "Grooming Pattern"@en ;
+    rdfs:comment "Identifiable pattern of behavior across multiple communications or interactions that indicates grooming."@en ;
+    rdfs:subClassOf uco-pattern:Pattern, cac-core:Situation .
+
+cacontology-grooming:EscalationPattern rdf:type owl:Class ;
+    rdfs:label "Escalation Pattern"@en ;
+    rdfs:comment "Progressive increase in inappropriate content or requests over time."@en ;
+    rdfs:subClassOf cacontology-grooming:GroomingPattern .
+
+cacontology-grooming:ManipulationPattern rdf:type owl:Class ;
+    rdfs:label "Manipulation Pattern"@en ;
+    rdfs:comment "Systematic use of psychological manipulation techniques to control victim."@en ;
+    rdfs:subClassOf cacontology-grooming:GroomingPattern .
+
+cacontology-grooming:PreyBehaviorPattern rdf:type owl:Class ;
+    rdfs:label "Prey Behavior Pattern"@en ;
+    rdfs:comment "Pattern of targeting vulnerable children or specific victim characteristics."@en ;
+    rdfs:subClassOf cacontology-grooming:GroomingPattern .
+
+# =============================================================================
+# GROOMING SITUATIONS (gUFO Situation modeling)
+# =============================================================================
+
+cacontology-grooming:OnlineGroomingSituation rdf:type owl:Class ;
+    rdfs:label "Online Grooming Situation"@en ;
+    rdfs:comment "Overall situation encompassing the grooming relationship and interactions."@en ;
+    rdfs:subClassOf cac-core:Situation .
+
+cacontology-grooming:VictimVulnerabilitySituation rdf:type owl:Class ;
+    rdfs:label "Victim Vulnerability Situation"@en ;
+    rdfs:comment "Circumstances that make a child more susceptible to grooming."@en ;
+    rdfs:subClassOf cac-core:Situation .
+
+cacontology-grooming:OnlinePredationSituation rdf:type owl:Class ;
+    rdfs:label "Online Predation Situation"@en ;
+    rdfs:comment "Active situation where predator is engaging with potential victims."@en ;
+    rdfs:subClassOf cac-core:Situation .
+
+# =============================================================================
+# VICTIM AND OFFENDER CLASSES (extending UCO Identity with gUFO Role)
+# =============================================================================
+
+cacontology-grooming:ChildVictim rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Child Victim"@en ;
+    rdfs:comment "Minor child who is the target of grooming behavior. When analysis depends on the victim’s exact age at specific grooming events (e.g., 13-or-younger online grooming in 2025), that age SHOULD be represented using one or more cacontology-temporal:AgeAtTimeSituation instances linked to the underlying person."@en ;
+    rdfs:subClassOf uco-identity:Person , cac-core:Role .
+
+cacontology-grooming:OnlinePredator rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Online Predator"@en ;
+    rdfs:comment "Individual who engages in grooming behavior toward children online. Age-at-time for this offender MAY be captured via cacontology-temporal:AgeAtTimeSituation instances when age-gap and legal-capacity reasoning is required."@en ;
+    rdfs:subClassOf uco-identity:Person , cac-core:Role .
+
+cacontology-grooming:VictimVulnerability rdf:type owl:Class ;
+    rdfs:label "Victim Vulnerability"@en ;
+    rdfs:comment "Characteristics or circumstances that make a child more susceptible to grooming."@en ;
+    rdfs:subClassOf uco-core:UcoObject, gufo:IntrinsicMoment .
+
+# =============================================================================
+# gUFO TEMPORAL PROPERTIES
+# =============================================================================
+
+cacontology-grooming:hasGroomingPhaseBeginPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has grooming phase begin point"@en ;
+    rdfs:comment "Temporal begin point for grooming phase."@en ;
+    rdfs:subPropertyOf gufo:hasBeginPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-grooming:hasGroomingPhaseEndPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has grooming phase end point"@en ;
+    rdfs:comment "Temporal end point for grooming phase."@en ;
+    rdfs:subPropertyOf gufo:hasEndPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-grooming:hasRoleBeginPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has role begin point"@en ;
+    rdfs:comment "Temporal begin point for grooming role."@en ;
+    rdfs:subPropertyOf gufo:hasBeginPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Role ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-grooming:hasRoleEndPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has role end point"@en ;
+    rdfs:comment "Temporal end point for grooming role."@en ;
+    rdfs:subPropertyOf gufo:hasEndPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Role ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-grooming:groomingPhaseDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "grooming phase duration"@en ;
+    rdfs:comment "Duration of grooming phase."@en ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:duration .
+
+# =============================================================================
+# GROOMING BEHAVIOR PROPERTIES
+# =============================================================================
+
+# Grooming Stage Properties
+cacontology-grooming:groomingStage rdf:type owl:DatatypeProperty ;
+    rdfs:label "grooming stage"@en ;
+    rdfs:comment "Behavior-axis stage tag on GroomingBehavior instances (not the offense-trajectory phase class used in state machines)."@en ;
+    rdfs:domain cacontology-grooming:GroomingBehavior ;
+    rdfs:range xsd:string ;
+    skos:editorialNote "For offense-trajectory state machines, phase typing uses GroomingPhase subclasses and cac-core:conditioningMode on the macro ConditioningPhase node — not groomingStage. trust_building and sexual_introduction are legacy behavior-axis values retained for backward compatibility; prefer conditioning and sexualization in new behavior graphs."@en .
+
+cacontology-grooming:conditioningMode rdf:type owl:DatatypeProperty ;
+    rdfs:label "conditioning mode"@en ;
+    rdfs:comment "Dominant conditioning mechanism on a grooming ConditioningPhase instance or ConditioningBehavior instance."@en ;
+    rdfs:subPropertyOf cac-core:conditioningMode ;
+    rdfs:domain [
+        rdf:type owl:Class ;
+        owl:unionOf ( cac-core:ConditioningPhase cacontology-grooming:ConditioningBehavior )
+    ] ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "For conditioningMode value platform_confidence: offender models and develops operational confidence in a platform's affordances, detection characteristics, and community norms prior to exploitation — applicable to mainstream platforms, encrypted messaging apps, dark web forums, and generative AI tools. This mechanism is offender- and platform-directed, not victim-directed rapport or trust building."@en .
+
+cacontology-grooming:TrustBuilding rdf:type owl:Class ;
+    rdfs:label "Trust Building"@en ;
+    rdfs:comment "Trust-rapport conditioning behavior establishing emotional connection with the child victim."@en ;
+    rdfs:subClassOf cacontology-grooming:ConditioningBehavior .
+
+cacontology-grooming:trustBuildingMethod rdf:type owl:DatatypeProperty ;
+    rdfs:label "trust building method"@en ;
+    rdfs:comment "Method used to build trust during conditioning (active_listening, emotional_support, shared_interests, etc.)."@en ;
+    rdfs:domain cacontology-grooming:TrustBuilding ;
+    rdfs:range xsd:string .
+
+cacontology-grooming:trustLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "trust level"@en ;
+    rdfs:comment "Assessed level of trust established during trust-rapport conditioning."@en ;
+    rdfs:domain cacontology-grooming:TrustBuilding ;
+    rdfs:range xsd:string .
+
+cacontology-grooming:trustDevelopmentRate rdf:type owl:DatatypeProperty ;
+    rdfs:label "trust development rate"@en ;
+    rdfs:comment "Rate at which trust is developed during conditioning, typically between 0.0 and 1.0."@en ;
+    rdfs:domain cacontology-grooming:TrustBuilding ;
+    rdfs:range xsd:double .
+
+cacontology-grooming:IsolationTactics rdf:type owl:Class ;
+    rdfs:label "Isolation Tactics"@en ;
+    rdfs:comment "Isolation conditioning behavior separating the victim from support systems."@en ;
+    rdfs:subClassOf cacontology-grooming:ConditioningBehavior .
+
+cacontology-grooming:behaviorDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "behavior duration"@en ;
+    rdfs:comment "Length of time grooming behavior continued (in days)."@en ;
+    rdfs:domain cacontology-grooming:GroomingBehavior ;
+    rdfs:range xsd:integer .
+
+cacontology-grooming:targetsVictim rdf:type owl:ObjectProperty ;
+    rdfs:label "targets victim"@en ;
+    rdfs:comment "Links grooming behavior to the child victim being targeted."@en ;
+    rdfs:domain cacontology-grooming:GroomingBehavior ;
+    rdfs:range cacontology-grooming:ChildVictim .
+
+cacontology-grooming:exhibitsPattern rdf:type owl:ObjectProperty ;
+    rdfs:label "exhibits pattern"@en ;
+    rdfs:comment "Links grooming behavior to an identifiable pattern."@en ;
+    rdfs:domain cacontology-grooming:GroomingBehavior ;
+    rdfs:range cacontology-grooming:GroomingPattern .
+
+# Communication Properties
+cacontology-grooming:communicationFrequency rdf:type owl:DatatypeProperty ;
+    rdfs:label "communication frequency"@en ;
+    rdfs:comment "Frequency of contact with victim (daily, weekly, multiple_daily)."@en ;
+    rdfs:domain cacontology-grooming:GroomingMessage ;
+    rdfs:range xsd:string .
+
+cacontology-grooming:contentType rdf:type owl:DatatypeProperty ;
+    rdfs:label "content type"@en ;
+    rdfs:comment "Type of content in grooming message (text, image, video, audio)."@en ;
+    rdfs:domain cacontology-grooming:GroomingMessage ;
+    rdfs:range xsd:string .
+
+cacontology-grooming:explicitnessLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "explicitness level"@en ;
+    rdfs:comment "Level of sexual explicitness in content (none, suggestive, explicit, graphic)."@en ;
+    rdfs:domain cacontology-grooming:GroomingMessage ;
+    rdfs:range xsd:string .
+
+cacontology-grooming:emotionalTone rdf:type owl:DatatypeProperty ;
+    rdfs:label "emotional tone"@en ;
+    rdfs:comment "Emotional approach used in message (caring, threatening, manipulative, seductive)."@en ;
+    rdfs:domain cacontology-grooming:GroomingMessage ;
+    rdfs:range xsd:string .
+
+# Manipulation Tactics Properties
+cacontology-grooming:usesGifts rdf:type owl:DatatypeProperty ;
+    rdfs:label "uses gifts"@en ;
+    rdfs:comment "Whether grooming involves offering gifts or money."@en ;
+    rdfs:domain cacontology-grooming:GroomingBehavior ;
+    rdfs:range xsd:boolean .
+
+cacontology-grooming:requestsSecrecy rdf:type owl:DatatypeProperty ;
+    rdfs:label "requests secrecy"@en ;
+    rdfs:comment "Whether grooming involves requests to keep relationship secret."@en ;
+    rdfs:domain cacontology-grooming:GroomingBehavior ;
+    rdfs:range xsd:boolean .
+
+cacontology-grooming:usesThreats rdf:type owl:DatatypeProperty ;
+    rdfs:label "uses threats"@en ;
+    rdfs:comment "Whether grooming involves threats or intimidation."@en ;
+    rdfs:domain cacontology-grooming:GroomingBehavior ;
+    rdfs:range xsd:boolean .
+
+cacontology-grooming:rolePlayingTactic rdf:type owl:DatatypeProperty ;
+    rdfs:label "role playing tactic"@en ;
+    rdfs:comment "False role claimed by predator (peer, mentor, romantic_interest, authority_figure)."@en ;
+    rdfs:domain cacontology-grooming:GroomingBehavior ;
+    rdfs:range xsd:string .
+
+# Victim Response Properties
+cacontology-grooming:victimCompliance rdf:type owl:DatatypeProperty ;
+    rdfs:label "victim compliance"@en ;
+    rdfs:comment "Level of victim compliance with requests (resistant, hesitant, compliant, eager)."@en ;
+    rdfs:domain cacontology-grooming:VictimResponse ;
+    rdfs:range xsd:string .
+
+cacontology-grooming:distressIndicators rdf:type owl:DatatypeProperty ;
+    rdfs:label "distress indicators"@en ;
+    rdfs:comment "Signs of distress in victim's responses."@en ;
+    rdfs:domain cacontology-grooming:VictimResponse ;
+    rdfs:range xsd:string .
+
+cacontology-grooming:seekingHelp rdf:type owl:DatatypeProperty ;
+    rdfs:label "seeking help"@en ;
+    rdfs:comment "Whether victim attempted to seek help or report the contact."@en ;
+    rdfs:domain cacontology-grooming:VictimResponse ;
+    rdfs:range xsd:boolean .
+
+# Pattern Analysis Properties
+cacontology-grooming:patternConfidence rdf:type owl:DatatypeProperty ;
+    rdfs:label "pattern confidence"@en ;
+    rdfs:comment "Confidence level in pattern identification (0.0-1.0)."@en ;
+    rdfs:domain cacontology-grooming:GroomingPattern ;
+    rdfs:range xsd:decimal .
+
+cacontology-grooming:escalationRate rdf:type owl:DatatypeProperty ;
+    rdfs:label "escalation rate"@en ;
+    rdfs:comment "Speed of escalation from initial contact to explicit content (days)."@en ;
+    rdfs:domain cacontology-grooming:EscalationPattern ;
+    rdfs:range xsd:integer .
+
+cacontology-grooming:manipulationTechnique rdf:type owl:DatatypeProperty ;
+    rdfs:label "manipulation technique"@en ;
+    rdfs:comment "Specific psychological manipulation technique employed."@en ;
+    rdfs:domain cacontology-grooming:ManipulationPattern ;
+    rdfs:range xsd:string .
+
+# Vulnerability Properties
+cacontology-grooming:vulnerabilityType rdf:type owl:DatatypeProperty ;
+    rdfs:label "vulnerability type"@en ;
+    rdfs:comment "Type of vulnerability (social_isolation, family_problems, low_self_esteem, seeking_attention)."@en ;
+    rdfs:domain cacontology-grooming:VictimVulnerability ;
+    rdfs:range xsd:string .
+
+cacontology-grooming:hasVulnerability rdf:type owl:ObjectProperty ;
+    rdfs:label "has vulnerability"@en ;
+    rdfs:comment "Links child victim to specific vulnerabilities that may be exploited."@en ;
+    rdfs:domain cacontology-grooming:ChildVictim ;
+    rdfs:range cacontology-grooming:VictimVulnerability .
+
+# Platform and Context Properties
+cacontology-grooming:primaryPlatform rdf:type owl:ObjectProperty ;
+    rdfs:label "primary platform"@en ;
+    rdfs:comment "Main digital platform where grooming communication occurred."@en ;
+    rdfs:domain cacontology-grooming:GroomingBehavior ;
+    rdfs:range uco-observable:DigitalService .
+
+cacontology-grooming:timeOfContact rdf:type owl:DatatypeProperty ;
+    rdfs:label "time of contact"@en ;
+    rdfs:comment "Typical time of day when contact occurs (morning, afternoon, evening, late_night)."@en ;
+    rdfs:domain cacontology-grooming:GroomingBehavior ;
+    rdfs:range xsd:string .
+
+cacontology-grooming:contactFrequency rdf:type owl:DatatypeProperty ;
+    rdfs:label "contact frequency"@en ;
+    rdfs:comment "How often communication occurs (daily, several_times_daily, weekly)."@en ;
+    rdfs:domain cacontology-grooming:GroomingBehavior ;
+    rdfs:range xsd:string .
+
+# Evidence and Investigation Properties
+cacontology-grooming:evidenceValue rdf:type owl:DatatypeProperty ;
+    rdfs:label "evidence value"@en ;
+    rdfs:comment "Assessment of grooming behavior's value as evidence (high, medium, low)."@en ;
+    rdfs:domain cacontology-grooming:GroomingBehavior ;
+    rdfs:range xsd:string .
+
+cacontology-grooming:prosecutionRelevance rdf:type owl:DatatypeProperty ;
+    rdfs:label "prosecution relevance"@en ;
+    rdfs:comment "Relevance of grooming evidence to prosecution case."@en ;
+    rdfs:domain cacontology-grooming:GroomingBehavior ;
+    rdfs:range xsd:string .
+
+cacontology-grooming:victimImpact rdf:type owl:DatatypeProperty ;
+    rdfs:label "victim impact"@en ;
+    rdfs:comment "Assessment of psychological impact on victim (minimal, moderate, severe, extreme)."@en ;
+    rdfs:domain cacontology-grooming:GroomingBehavior ;
+    rdfs:range xsd:string .
+
+# =============================================================================
+# ANONYMOUS PLATFORM CONTACT (Buffalo/Vermont Case Enhancement)
+# =============================================================================
+
+cacontology-grooming:AnonymousPlatformContact rdf:type owl:Class ;
+    rdfs:label "Anonymous Platform Contact"@en ;
+    rdfs:comment "Initial contact made through platforms that allow anonymous messaging or minimal user verification."@en ;
+    rdfs:subClassOf cacontology-grooming:GroomingBehavior .
+
+cacontology-grooming:UnverifiedUserProfile rdf:type owl:Class ;
+    rdfs:label "Unverified User Profile"@en ;
+    rdfs:comment "User account with minimal or no identity verification enabling anonymous contact."@en ;
+    rdfs:subClassOf uco-observable:Account .
+
+cacontology-grooming:AnonymousInitiation rdf:type owl:Class ;
+    rdfs:label "Anonymous Initiation"@en ;
+    rdfs:comment "Starting contact without revealing true identity or personal information."@en ;
+    rdfs:subClassOf cacontology-grooming:AnonymousPlatformContact .
+
+cacontology-grooming:PlatformAnonymityFeature rdf:type owl:Class ;
+    rdfs:label "Platform Anonymity Feature"@en ;
+    rdfs:comment "Platform features that enable anonymous communication (guest messaging, temporary accounts, no profile requirements)."@en ;
+    rdfs:subClassOf uco-observable:DigitalServiceFeature .
+
+cacontology-grooming:TrustThroughAnonymity rdf:type owl:Class ;
+    rdfs:label "Trust Through Anonymity"@en ;
+    rdfs:comment "Building trust by appearing less threatening through anonymous contact."@en ;
+    rdfs:subClassOf cacontology-grooming:TrustBuildingBehavior .
+
+# =============================================================================
+# ONLINE-TO-OFFLINE PROGRESSION (Buffalo/Vermont Case Enhancement)
+# =============================================================================
+
+cacontology-grooming:OnlineToOfflineProgression rdf:type owl:Class ;
+    rdfs:label "Online to Offline Progression"@en ;
+    rdfs:comment "Escalation from online grooming to arranging physical meetings or contact."@en ;
+    rdfs:subClassOf cacontology-grooming:EscalationPattern .
+
+cacontology-grooming:PhysicalMeetingArrangement rdf:type owl:Class ;
+    rdfs:label "Physical Meeting Arrangement"@en ;
+    rdfs:comment "Coordination of in-person meeting between predator and victim."@en ;
+    rdfs:subClassOf cacontology-grooming:Enticement .
+
+cacontology-grooming:TravelArrangement rdf:type owl:Class ;
+    rdfs:label "Travel Arrangement"@en ;
+    rdfs:comment "Planning or facilitating travel for victim to meet predator."@en ;
+    rdfs:subClassOf cacontology-grooming:PhysicalMeetingArrangement .
+
+cacontology-grooming:InterstateTransportPlan rdf:type owl:Class ;
+    rdfs:label "Interstate Transport Plan"@en ;
+    rdfs:comment "Planning to transport victim across state lines for illegal purposes."@en ;
+    rdfs:subClassOf cacontology-grooming:TravelArrangement .
+
+cacontology-grooming:VictimComplianceInPhysicalMeeting rdf:type owl:Class ;
+    rdfs:label "Victim Compliance in Physical Meeting"@en ;
+    rdfs:comment "Victim's agreement or compliance with arranged physical meeting."@en ;
+    rdfs:subClassOf cacontology-grooming:VictimResponse .
+
+cacontology-grooming:LocationSpecificGrooming rdf:type owl:Class ;
+    rdfs:label "Location Specific Grooming"@en ;
+    rdfs:comment "Grooming that references or prepares for specific physical locations."@en ;
+    rdfs:subClassOf cacontology-grooming:GroomingBehavior .
+
+cacontology-grooming:OfflineControlEstablishment rdf:type owl:Class ;
+    rdfs:label "Offline Control Establishment"@en ;
+    rdfs:comment "Establishing control over victim in preparation for physical contact."@en ;
+    rdfs:subClassOf cacontology-grooming:ManipulationPattern .
+
+# Anonymous Platform Properties
+cacontology-grooming:platformAnonymityLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "platform anonymity level"@en ;
+    rdfs:comment "Level of anonymity provided by platform (full_anonymous, guest_allowed, minimal_verification, verified_only)."@en ;
+    rdfs:domain cacontology-grooming:AnonymousPlatformContact ;
+    rdfs:range xsd:string .
+
+cacontology-grooming:identityVerificationRequired rdf:type owl:DatatypeProperty ;
+    rdfs:label "identity verification required"@en ;
+    rdfs:comment "Whether platform requires identity verification for messaging."@en ;
+    rdfs:domain cacontology-grooming:AnonymousPlatformContact ;
+    rdfs:range xsd:boolean .
+
+cacontology-grooming:anonymousContactMethod rdf:type owl:DatatypeProperty ;
+    rdfs:label "anonymous contact method"@en ;
+    rdfs:comment "Method used for anonymous initial contact (random_messaging, response_to_post, platform_matching, profile_browsing)."@en ;
+    rdfs:domain cacontology-grooming:AnonymousInitiation ;
+    rdfs:range xsd:string .
+
+cacontology-grooming:initialContactPretense rdf:type owl:DatatypeProperty ;
+    rdfs:label "initial contact pretense"@en ;
+    rdfs:comment "False reason given for initial contact (shared_interests, age_misrepresentation, help_offering, casual_conversation)."@en ;
+    rdfs:domain cacontology-grooming:AnonymousInitiation ;
+    rdfs:range xsd:string .
+
+# Online-to-Offline Progression Properties
+cacontology-grooming:progressionDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "progression duration"@en ;
+    rdfs:comment "Duration in days from initial online contact to physical meeting arrangement."@en ;
+    rdfs:domain cacontology-grooming:OnlineToOfflineProgression ;
+    rdfs:range xsd:integer .
+
+cacontology-grooming:meetingLocationSpecified rdf:type owl:DatatypeProperty ;
+    rdfs:label "meeting location specified"@en ;
+    rdfs:comment "Whether specific physical meeting location was arranged."@en ;
+    rdfs:domain cacontology-grooming:PhysicalMeetingArrangement ;
+    rdfs:range xsd:boolean .
+
+cacontology-grooming:transportationProposed rdf:type owl:DatatypeProperty ;
+    rdfs:label "transportation proposed"@en ;
+    rdfs:comment "Type of transportation proposed for meeting (predator_travel, victim_travel, mutual_meeting_point)."@en ;
+    rdfs:domain cacontology-grooming:TravelArrangement ;
+    rdfs:range xsd:string .
+
+cacontology-grooming:crossesStateBoundaries rdf:type owl:DatatypeProperty ;
+    rdfs:label "crosses state boundaries"@en ;
+    rdfs:comment "Whether arranged meeting involves crossing state lines."@en ;
+    rdfs:domain cacontology-grooming:InterstateTransportPlan ;
+    rdfs:range xsd:boolean .
+
+# Object Properties for Buffalo/Vermont Enhancements
+cacontology-grooming:utilizesPlatformFeature rdf:type owl:ObjectProperty ;
+    rdfs:label "utilizes platform feature"@en ;
+    rdfs:comment "Links anonymous contact to specific platform features that enable anonymity."@en ;
+    rdfs:domain cacontology-grooming:AnonymousPlatformContact ;
+    rdfs:range cacontology-grooming:PlatformAnonymityFeature .
+
+cacontology-grooming:progressesToPhysicalMeeting rdf:type owl:ObjectProperty ;
+    rdfs:label "progresses to physical meeting"@en ;
+    rdfs:comment "Links online grooming to physical meeting arrangements."@en ;
+    rdfs:domain cacontology-grooming:GroomingBehavior ;
+    rdfs:range cacontology-grooming:PhysicalMeetingArrangement .
+
+cacontology-grooming:involvesInterstateTransport rdf:type owl:ObjectProperty ;
+    rdfs:label "involves interstate transport"@en ;
+    rdfs:comment "Links travel arrangement to interstate transportation planning."@en ;
+    rdfs:domain cacontology-grooming:TravelArrangement ;
+    rdfs:range cacontology-grooming:InterstateTransportPlan .
+
+# =============================================================================
+# EDUCATOR-SPECIFIC GROOMING PATTERNS (March 2025 Brooklyn Teacher Case)
+# =============================================================================
+
+cacontology-grooming:EducatorGrooming rdf:type owl:Class ;
+    rdfs:label "Educator Grooming"@en ;
+    rdfs:comment "Grooming behavior by educational personnel leveraging position of trust and authority."@en ;
+    rdfs:subClassOf cacontology-grooming:OnlineGrooming .
+
+cacontology-grooming:PositionOfTrustGrooming rdf:type owl:Class ;
+    rdfs:label "Position of Trust Grooming"@en ;
+    rdfs:comment "Grooming that exploits educator's position of trust and authority over students."@en ;
+    rdfs:subClassOf cacontology-grooming:EducatorGrooming .
+
+cacontology-grooming:PeerPersonaGrooming rdf:type owl:Class ;
+    rdfs:label "Peer Persona Grooming"@en ;
+    rdfs:comment "Grooming using false peer identity to establish rapport with victims."@en ;
+    rdfs:subClassOf cacontology-grooming:EducatorGrooming .
+
+cacontology-grooming:TeenageImpersonationGrooming rdf:type owl:Class ;
+    rdfs:label "Teenage Impersonation Grooming"@en ;
+    rdfs:comment "Grooming involving impersonation of teenage peer to gain victim trust."@en ;
+    rdfs:subClassOf cacontology-grooming:PeerPersonaGrooming .
+
+cacontology-grooming:MultipleAccountGrooming rdf:type owl:Class ;
+    rdfs:label "Multiple Account Grooming"@en ;
+    rdfs:comment "Grooming using multiple fake accounts to maintain deceptive identity."@en ;
+    rdfs:subClassOf cacontology-grooming:EducatorGrooming .
+
+cacontology-grooming:CrossInstitutionalGrooming rdf:type owl:Class ;
+    rdfs:label "Cross Institutional Grooming"@en ;
+    rdfs:comment "Grooming targeting students from multiple educational institutions."@en ;
+    rdfs:subClassOf cacontology-grooming:EducatorGrooming .
+
+# =============================================================================
+# FABRICATED PERSONA / CATFISHING TRADECRAFT — Issue #36
+# First-class modeling of fabricated minor personas used in grooming and
+# coercion, so persona attributes (claimed name, age, gender), platform
+# accounts, and the controlling offender are queryable with grooming-native
+# properties instead of generic identity/role relationships.
+# =============================================================================
+
+cacontology-grooming:FabricatedPersona rdf:type owl:Class ;
+    rdfs:label "Fabricated Persona"@en ;
+    rdfs:comment "A fabricated identity (e.g., a fictitious minor peer) created and controlled by an offender to contact, groom, lure, or coerce victims. The same persona may be reused across victims and platforms. Complements PeerPersonaGrooming / TeenageImpersonationGrooming behavior classes: the behavior classes type the grooming activity, while FabricatedPersona types the persona artifact itself. See also impersonatesRole / impersonatedRole for role-level alignment."@en ;
+    rdfs:subClassOf uco-identity:Identity .
+
+# Fabricated persona properties (Issue #36)
+cacontology-grooming:claimedDisplayName rdf:type owl:DatatypeProperty ;
+    rdfs:label "claimed display name"@en ;
+    rdfs:comment "Display name the fabricated persona presents to victims (e.g., 'Amy Jennings')."@en ;
+    rdfs:domain cacontology-grooming:FabricatedPersona ;
+    rdfs:range xsd:string .
+
+cacontology-grooming:claimedAge rdf:type owl:DatatypeProperty ;
+    rdfs:label "claimed age"@en ;
+    rdfs:comment "Age or age range the fabricated persona claims (e.g., '15', '15-16')."@en ;
+    rdfs:domain cacontology-grooming:FabricatedPersona ;
+    rdfs:range xsd:string .
+
+cacontology-grooming:claimedGender rdf:type owl:DatatypeProperty ;
+    rdfs:label "claimed gender"@en ;
+    rdfs:comment "Gender the fabricated persona claims to victims."@en ;
+    rdfs:domain cacontology-grooming:FabricatedPersona ;
+    rdfs:range xsd:string .
+
+cacontology-grooming:personaPlatformAccount rdf:type owl:ObjectProperty ;
+    rdfs:label "persona platform account"@en ;
+    rdfs:comment "Links a fabricated persona to a platform account observable operated under that persona."@en ;
+    rdfs:domain cacontology-grooming:FabricatedPersona ;
+    rdfs:range uco-observable:ObservableObject .
+
+cacontology-grooming:controlledBy rdf:type owl:ObjectProperty ;
+    rdfs:label "controlled by"@en ;
+    rdfs:comment "Links a fabricated persona to the offender (person) who creates and controls it."@en ;
+    rdfs:domain cacontology-grooming:FabricatedPersona ;
+    rdfs:range uco-identity:Person .
+
+cacontology-grooming:personaUsedIn rdf:type owl:ObjectProperty ;
+    rdfs:label "persona used in"@en ;
+    rdfs:comment "Links a fabricated persona to the grooming or coercion activity in which it was used (reusable across multiple victims)."@en ;
+    rdfs:domain cacontology-grooming:FabricatedPersona ;
+    rdfs:range uco-core:UcoObject .
+
+# =============================================================================
+# SEXUAL CONTENT EXCHANGE GROOMING
+# =============================================================================
+
+cacontology-grooming:SexualContentExchangeGrooming rdf:type owl:Class ;
+    rdfs:label "Sexual Content Exchange Grooming"@en ;
+    rdfs:comment "Grooming involving exchange of sexual content to normalize sexual behavior."@en ;
+    rdfs:subClassOf cacontology-grooming:OnlineGrooming .
+
+cacontology-grooming:InitiatorContentSending rdf:type owl:Class ;
+    rdfs:label "Initiator Content Sending"@en ;
+    rdfs:comment "Grooming phase where perpetrator sends sexual content to victim first."@en ;
+    rdfs:subClassOf cacontology-grooming:SexualContentExchangeGrooming .
+
+cacontology-grooming:ReciprocityGrooming rdf:type owl:Class ;
+    rdfs:label "Reciprocity Grooming"@en ;
+    rdfs:comment "Grooming technique encouraging victim to reciprocate with sexual content."@en ;
+    rdfs:subClassOf cacontology-grooming:SexualContentExchangeGrooming .
+
+cacontology-grooming:NormalizationGrooming rdf:type owl:Class ;
+    rdfs:label "Normalization Grooming"@en ;
+    rdfs:comment "Grooming technique to normalize sexual conversations and content sharing."@en ;
+    rdfs:subClassOf cacontology-grooming:SexualContentExchangeGrooming .
+
+cacontology-grooming:GraphicConversationGrooming rdf:type owl:Class ;
+    rdfs:label "Graphic Conversation Grooming"@en ;
+    rdfs:comment "Grooming involving progressively graphic sexual conversations."@en ;
+    rdfs:subClassOf cacontology-grooming:SexualContentExchangeGrooming .
+
+# =============================================================================
+# ELITE INSTITUTION TARGETING
+# =============================================================================
+
+cacontology-grooming:VictimTargeting rdf:type owl:Class ;
+    rdfs:label "Victim Targeting"@en ;
+    rdfs:comment "The process by which an offender identifies and selects a potential victim."@en ;
+    rdfs:subClassOf cac-core:ExploitationEvent .
+
+cacontology-grooming:EliteInstitutionTargeting rdf:type owl:Class ;
+    rdfs:label "Elite Institution Targeting"@en ;
+    rdfs:comment "Targeting of students from elite or prestigious educational institutions."@en ;
+    rdfs:subClassOf cacontology-grooming:VictimTargeting .
+
+cacontology-grooming:PrivilegedVictimTargeting rdf:type owl:Class ;
+    rdfs:label "Privileged Victim Targeting"@en ;
+    rdfs:comment "Targeting of victims from privileged backgrounds who may be less likely to report."@en ;
+    rdfs:subClassOf cacontology-grooming:EliteInstitutionTargeting .
+
+cacontology-grooming:ReputationBasedSilencing rdf:type owl:Class ;
+    rdfs:label "Reputation Based Silencing"@en ;
+    rdfs:comment "Exploitation of institutional reputation to discourage victim reporting."@en ;
+    rdfs:subClassOf cacontology-grooming:EliteInstitutionTargeting .
+
+# =============================================================================
+# EDUCATOR GROOMING PROPERTIES
+# =============================================================================
+
+cacontology-grooming:impersonatedRole rdf:type owl:DatatypeProperty ;
+    rdfs:label "impersonated role"@en ;
+    rdfs:comment "Role impersonated during grooming (student, peer, teenager)."@en ;
+    rdfs:domain cacontology-grooming:PeerPersonaGrooming ;
+    rdfs:range xsd:string .
+
+cacontology-grooming:accountsUsed rdf:type owl:DatatypeProperty ;
+    rdfs:label "accounts used"@en ;
+    rdfs:comment "Number of fake accounts used in grooming process."@en ;
+    rdfs:domain cacontology-grooming:MultipleAccountGrooming ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-grooming:institutionsTargeted rdf:type owl:DatatypeProperty ;
+    rdfs:label "institutions targeted"@en ;
+    rdfs:comment "Number of educational institutions from which victims were targeted."@en ;
+    rdfs:domain cacontology-grooming:CrossInstitutionalGrooming ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-grooming:contentType rdf:type owl:DatatypeProperty ;
+    rdfs:label "content type"@en ;
+    rdfs:comment "Type of sexual content exchanged (images, videos, text)."@en ;
+    rdfs:domain cacontology-grooming:SexualContentExchangeGrooming ;
+    rdfs:range xsd:string .
+
+cacontology-grooming:initiationMethod rdf:type owl:DatatypeProperty ;
+    rdfs:label "initiation method"@en ;
+    rdfs:comment "Method used to initiate sexual content exchange."@en ;
+    rdfs:domain cacontology-grooming:InitiatorContentSending ;
+    rdfs:range xsd:string .
+
+cacontology-grooming:institutionPrestige rdf:type owl:DatatypeProperty ;
+    rdfs:label "institution prestige"@en ;
+    rdfs:comment "Prestige level of targeted institution (elite, prestigious, standard)."@en ;
+    rdfs:domain cacontology-grooming:EliteInstitutionTargeting ;
+    rdfs:range xsd:string .
+
+# =============================================================================
+# EDUCATOR GROOMING RELATIONSHIPS
+# =============================================================================
+
+cacontology-grooming:leveragesPosition rdf:type owl:ObjectProperty ;
+    rdfs:label "leverages position"@en ;
+    rdfs:comment "Links grooming to educator position being leveraged."@en ;
+    rdfs:domain cacontology-grooming:PositionOfTrustGrooming ;
+    rdfs:range cacontology-educational:EducatorRole .
+
+cacontology-grooming:impersonatesRole rdf:type owl:ObjectProperty ;
+    rdfs:label "impersonates role"@en ;
+    rdfs:comment "Links grooming to role being impersonated."@en ;
+    rdfs:domain cacontology-grooming:PeerPersonaGrooming ;
+    rdfs:range uco-role:Role .
+
+cacontology-grooming:targetsInstitution rdf:type owl:ObjectProperty ;
+    rdfs:label "targets institution"@en ;
+    rdfs:comment "Links grooming to educational institution being targeted."@en ;
+    rdfs:domain cacontology-grooming:CrossInstitutionalGrooming ;
+    rdfs:range cacontology-educational:EducationalInstitution .
+
+cacontology-grooming:exchangesContent rdf:type owl:ObjectProperty ;
+    rdfs:label "exchanges content"@en ;
+    rdfs:comment "Links grooming to sexual content being exchanged."@en ;
+    rdfs:domain cacontology-grooming:SexualContentExchangeGrooming ;
+    rdfs:range uco-observable:ObservableObject .
+
+cacontology-grooming:exploitsReputation rdf:type owl:ObjectProperty ;
+    rdfs:label "exploits reputation"@en ;
+    rdfs:comment "Links grooming to institutional reputation being exploited."@en ;
+    rdfs:domain cacontology-grooming:ReputationBasedSilencing ;
+    rdfs:range cacontology-educational:EducationalInstitution .
+
+# =============================================================================
+# RAPID ESCALATION GROOMING PATTERNS (December 2024 Brooklyn Lee Case)
+# =============================================================================
+
+cacontology-grooming:RapidEscalationGrooming rdf:type owl:Class ;
+    rdfs:label "Rapid Escalation Grooming"@en ;
+    rdfs:comment "Grooming with accelerated timeline from initial contact to exploitation attempt, bypassing traditional relationship-building phases."@en ;
+    rdfs:subClassOf cacontology-grooming:GroomingBehavior .
+
+cacontology-grooming:SameDayProgression rdf:type owl:Class ;
+    rdfs:label "Same Day Progression"@en ;
+    rdfs:comment "Grooming progression from initial contact to sexual exploitation within the same day."@en ;
+    rdfs:subClassOf cacontology-grooming:RapidEscalationGrooming .
+
+cacontology-grooming:ImmediateExploitationAttempt rdf:type owl:Class ;
+    rdfs:label "Immediate Exploitation Attempt"@en ;
+    rdfs:comment "Attempt to immediately exploit victim without extended grooming or relationship building."@en ;
+    rdfs:subClassOf cacontology-grooming:RapidEscalationGrooming .
+
+cacontology-grooming:SkippedGroomingPhases rdf:type owl:Class ;
+    rdfs:label "Skipped Grooming Phases"@en ;
+    rdfs:comment "Grooming that bypasses traditional conditioning phases such as trust building, isolation, and normalization."@en ;
+    rdfs:subClassOf cacontology-grooming:RapidEscalationGrooming .
+
+cacontology-grooming:OpportunisticGrooming rdf:type owl:Class ;
+    rdfs:label "Opportunistic Grooming"@en ;
+    rdfs:comment "Grooming that exploits immediate opportunities rather than planned relationship development."@en ;
+    rdfs:subClassOf cacontology-grooming:RapidEscalationGrooming .
+
+cacontology-grooming:AcceleratedTrustExploitation rdf:type owl:Class ;
+    rdfs:label "Accelerated Trust Exploitation"@en ;
+    rdfs:comment "Rapid exploitation of minimal trust established through pretexts or assistance offers."@en ;
+    rdfs:subClassOf cacontology-grooming:RapidEscalationGrooming .
+
+# =============================================================================
+# DIRECT TRAFFICKING PROPOSITION GROOMING
+# =============================================================================
+
+cacontology-grooming:DirectTraffickingPropositionGrooming rdf:type owl:Class ;
+    rdfs:label "Direct Trafficking Proposition Grooming"@en ;
+    rdfs:comment "Grooming involving explicit, immediate propositions for commercial sexual activity without gradual normalization."@en ;
+    rdfs:subClassOf cacontology-grooming:SexualExploitation .
+
+cacontology-grooming:ExplicitCommercialOfferGrooming rdf:type owl:Class ;
+    rdfs:label "Explicit Commercial Offer Grooming"@en ;
+    rdfs:comment "Grooming involving direct offers of money in exchange for sexual services."@en ;
+    rdfs:subClassOf cacontology-grooming:DirectTraffickingPropositionGrooming .
+
+cacontology-grooming:EconomicIncentiveGrooming rdf:type owl:Class ;
+    rdfs:label "Economic Incentive Grooming"@en ;
+    rdfs:comment "Grooming that emphasizes financial benefits of commercial sexual activity."@en ;
+    rdfs:subClassOf cacontology-grooming:DirectTraffickingPropositionGrooming .
+
+cacontology-grooming:BluntRecruitmentGrooming rdf:type owl:Class ;
+    rdfs:label "Blunt Recruitment Grooming"@en ;
+    rdfs:comment "Direct, unsubtle recruitment for trafficking without gradual persuasion techniques."@en ;
+    rdfs:subClassOf cacontology-grooming:DirectTraffickingPropositionGrooming .
+
+cacontology-grooming:ImmediateMonetizationGrooming rdf:type owl:Class ;
+    rdfs:label "Immediate Monetization Grooming"@en ;
+    rdfs:comment "Grooming focused on immediate monetization of victim's sexuality."@en ;
+    rdfs:subClassOf cacontology-grooming:DirectTraffickingPropositionGrooming .
+
+# =============================================================================
+# SUBSTANCE-FACILITATED GROOMING
+# =============================================================================
+
+cacontology-grooming:SubstanceFacilitatedGrooming rdf:type owl:Class ;
+    rdfs:label "Substance Facilitated Grooming"@en ;
+    rdfs:comment "Grooming that uses alcohol or drugs to reduce victim resistance and facilitate exploitation."@en ;
+    rdfs:subClassOf cacontology-grooming:GroomingBehavior .
+
+cacontology-grooming:ImpairmentBasedGrooming rdf:type owl:Class ;
+    rdfs:label "Impairment Based Grooming"@en ;
+    rdfs:comment "Grooming that exploits victim impairment from substances to reduce resistance."@en ;
+    rdfs:subClassOf cacontology-grooming:SubstanceFacilitatedGrooming .
+
+cacontology-grooming:SubstanceInducedVulnerabilityGrooming rdf:type owl:Class ;
+    rdfs:label "Substance Induced Vulnerability Grooming"@en ;
+    rdfs:comment "Grooming that creates vulnerability through substance administration."@en ;
+    rdfs:subClassOf cacontology-grooming:SubstanceFacilitatedGrooming .
+
+cacontology-grooming:AlcoholFacilitatedGrooming rdf:type owl:Class ;
+    rdfs:label "Alcohol Facilitated Grooming"@en ;
+    rdfs:comment "Grooming using alcohol to impair victim judgment and reduce resistance."@en ;
+    rdfs:subClassOf cacontology-grooming:SubstanceFacilitatedGrooming .
+
+cacontology-grooming:MarijuanaFacilitatedGrooming rdf:type owl:Class ;
+    rdfs:label "Marijuana Facilitated Grooming"@en ;
+    rdfs:comment "Grooming using marijuana to reduce victim inhibitions and facilitate exploitation."@en ;
+    rdfs:subClassOf cacontology-grooming:SubstanceFacilitatedGrooming .
+
+# =============================================================================
+# PHYSICAL SPACE GROOMING PATTERNS
+# =============================================================================
+
+cacontology-grooming:PhysicalSpaceGrooming rdf:type owl:Class ;
+    rdfs:label "Physical Space Grooming"@en ;
+    rdfs:comment "Grooming that occurs in physical spaces rather than digital platforms."@en ;
+    rdfs:subClassOf cacontology-grooming:GroomingBehavior .
+
+cacontology-grooming:StreetBasedGrooming rdf:type owl:Class ;
+    rdfs:label "Street Based Grooming"@en ;
+    rdfs:comment "Grooming that begins with street-based contact and recruitment."@en ;
+    rdfs:subClassOf cacontology-grooming:PhysicalSpaceGrooming .
+
+cacontology-grooming:VehicleBasedGrooming rdf:type owl:Class ;
+    rdfs:label "Vehicle Based Grooming"@en ;
+    rdfs:comment "Grooming that uses vehicles for isolation and exploitation."@en ;
+    rdfs:subClassOf cacontology-grooming:PhysicalSpaceGrooming .
+
+cacontology-grooming:IsolationBasedGrooming rdf:type owl:Class ;
+    rdfs:label "Isolation Based Grooming"@en ;
+    rdfs:comment "Grooming that relies on physical isolation to reduce victim resistance."@en ;
+    rdfs:subClassOf cacontology-grooming:PhysicalSpaceGrooming .
+
+cacontology-grooming:PublicToPrivateGrooming rdf:type owl:Class ;
+    rdfs:label "Public to Private Grooming"@en ;
+    rdfs:comment "Grooming that transitions from public contact to private exploitation."@en ;
+    rdfs:subClassOf cacontology-grooming:PhysicalSpaceGrooming .
+
+cacontology-grooming:SexualConsequenceGameGrooming rdf:type owl:Class ;
+    rdfs:label "Sexual Consequence Game Grooming"@en ;
+    rdfs:comment "Physical-space grooming pattern where the perpetrator frames sexualized contact as part of a game with consequences, typically involving multiple juveniles in a group context (e.g., sleepovers, peer gatherings, family events)."@en ;
+    rdfs:subClassOf cacontology-grooming:PhysicalSpaceGrooming .
+
+# =============================================================================
+# RAPID ESCALATION PROPERTIES
+# =============================================================================
+
+cacontology-grooming:escalationTimeframe rdf:type owl:DatatypeProperty ;
+    rdfs:label "escalation timeframe"@en ;
+    rdfs:comment "Time from initial contact to exploitation attempt in hours."@en ;
+    rdfs:domain cacontology-grooming:RapidEscalationGrooming ;
+    rdfs:range xsd:decimal .
+
+cacontology-grooming:sameDayProgression rdf:type owl:DatatypeProperty ;
+    rdfs:label "same day progression"@en ;
+    rdfs:comment "Whether grooming progressed from contact to exploitation within same day."@en ;
+    rdfs:domain cacontology-grooming:SameDayProgression ;
+    rdfs:range xsd:boolean .
+
+cacontology-grooming:skippedPhases rdf:type owl:DatatypeProperty ;
+    rdfs:label "skipped phases"@en ;
+    rdfs:comment "Traditional conditioning phases that were bypassed (conditioning, trust_building, isolation, normalization)."@en ;
+    rdfs:domain cacontology-grooming:SkippedGroomingPhases ;
+    rdfs:range xsd:string .
+
+cacontology-grooming:opportunityType rdf:type owl:DatatypeProperty ;
+    rdfs:label "opportunity type"@en ;
+    rdfs:comment "Type of opportunity exploited (vulnerability, isolation, need_for_help)."@en ;
+    rdfs:domain cacontology-grooming:OpportunisticGrooming ;
+    rdfs:range xsd:string .
+
+cacontology-grooming:trustExploitationSpeed rdf:type owl:DatatypeProperty ;
+    rdfs:label "trust exploitation speed"@en ;
+    rdfs:comment "Speed of trust exploitation (immediate, rapid, accelerated)."@en ;
+    rdfs:domain cacontology-grooming:AcceleratedTrustExploitation ;
+    rdfs:range xsd:string .
+
+# Direct Trafficking Proposition Properties
+cacontology-grooming:propositionExplicitness rdf:type owl:DatatypeProperty ;
+    rdfs:label "proposition explicitness"@en ;
+    rdfs:comment "Level of explicitness in trafficking proposition (subtle, direct, explicit, blunt)."@en ;
+    rdfs:domain cacontology-grooming:DirectTraffickingPropositionGrooming ;
+    rdfs:range xsd:string .
+
+cacontology-grooming:commercialOfferType rdf:type owl:DatatypeProperty ;
+    rdfs:label "commercial offer type"@en ;
+    rdfs:comment "Type of commercial sexual activity offered (stripping, prostitution, escort_services)."@en ;
+    rdfs:domain cacontology-grooming:ExplicitCommercialOfferGrooming ;
+    rdfs:range xsd:string .
+
+cacontology-grooming:economicIncentiveAmount rdf:type owl:DatatypeProperty ;
+    rdfs:label "economic incentive amount"@en ;
+    rdfs:comment "Specific monetary amount mentioned in economic incentive."@en ;
+    rdfs:domain cacontology-grooming:EconomicIncentiveGrooming ;
+    rdfs:range xsd:decimal .
+
+cacontology-grooming:recruitmentDirectness rdf:type owl:DatatypeProperty ;
+    rdfs:label "recruitment directness"@en ;
+    rdfs:comment "Level of directness in recruitment approach (subtle, moderate, direct, blunt)."@en ;
+    rdfs:domain cacontology-grooming:BluntRecruitmentGrooming ;
+    rdfs:range xsd:string .
+
+cacontology-grooming:monetizationTimeframe rdf:type owl:DatatypeProperty ;
+    rdfs:label "monetization timeframe"@en ;
+    rdfs:comment "Proposed timeframe for monetization (immediate, same_day, within_week)."@en ;
+    rdfs:domain cacontology-grooming:ImmediateMonetizationGrooming ;
+    rdfs:range xsd:string .
+
+# Substance-Facilitated Properties
+cacontology-grooming:substanceType rdf:type owl:DatatypeProperty ;
+    rdfs:label "substance type"@en ;
+    rdfs:comment "Type of substance used to facilitate grooming (alcohol, marijuana, other_drugs)."@en ;
+    rdfs:domain cacontology-grooming:SubstanceFacilitatedGrooming ;
+    rdfs:range xsd:string .
+
+cacontology-grooming:impairmentLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "impairment level"@en ;
+    rdfs:comment "Level of victim impairment from substances (mild, moderate, severe)."@en ;
+    rdfs:domain cacontology-grooming:ImpairmentBasedGrooming ;
+    rdfs:range xsd:string .
+
+cacontology-grooming:administrationMethod rdf:type owl:DatatypeProperty ;
+    rdfs:label "administration method"@en ;
+    rdfs:comment "Method of substance administration (offered, forced, shared, deceptive)."@en ;
+    rdfs:domain cacontology-grooming:SubstanceInducedVulnerabilityGrooming ;
+    rdfs:range xsd:string .
+
+# Physical Space Properties
+cacontology-grooming:physicalLocation rdf:type owl:DatatypeProperty ;
+    rdfs:label "physical location"@en ;
+    rdfs:comment "Type of physical location used for grooming (street, vehicle, isolated_area)."@en ;
+    rdfs:domain cacontology-grooming:PhysicalSpaceGrooming ;
+    rdfs:range xsd:string .
+
+cacontology-grooming:isolationMethod rdf:type owl:DatatypeProperty ;
+    rdfs:label "isolation method"@en ;
+    rdfs:comment "Method used to isolate victim (vehicle_transport, location_change, privacy_creation)."@en ;
+    rdfs:domain cacontology-grooming:IsolationBasedGrooming ;
+    rdfs:range xsd:string .
+
+cacontology-grooming:transitionSpeed rdf:type owl:DatatypeProperty ;
+    rdfs:label "transition speed"@en ;
+    rdfs:comment "Speed of transition from public to private space (immediate, rapid, gradual)."@en ;
+    rdfs:domain cacontology-grooming:PublicToPrivateGrooming ;
+    rdfs:range xsd:string .
+
+cacontology-grooming:participantCount rdf:type owl:DatatypeProperty ;
+    rdfs:label "participant count"@en ;
+    rdfs:comment "Number of juvenile participants involved in the sexual consequence game."@en ;
+    rdfs:domain cacontology-grooming:SexualConsequenceGameGrooming ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-grooming:gameContext rdf:type owl:DatatypeProperty ;
+    rdfs:label "game context"@en ;
+    rdfs:comment "Context for the sexualized game (e.g., sleepover, peer_group, family_gathering, youth_activity)."@en ;
+    rdfs:domain cacontology-grooming:SexualConsequenceGameGrooming ;
+    rdfs:range xsd:string .
+
+cacontology-grooming:ruleStructureDescription rdf:type owl:DatatypeProperty ;
+    rdfs:label "rule structure description"@en ;
+    rdfs:comment "Short description of the rules and consequence mechanics used to structure the sexualized game."@en ;
+    rdfs:domain cacontology-grooming:SexualConsequenceGameGrooming ;
+    rdfs:range xsd:string .
+
+# =============================================================================
+# RAPID ESCALATION RELATIONSHIPS
+# =============================================================================
+
+cacontology-grooming:bypassesPhase rdf:type owl:ObjectProperty ;
+    rdfs:label "bypasses phase"@en ;
+    rdfs:comment "Links rapid escalation to traditional grooming phase being bypassed."@en ;
+    rdfs:domain cacontology-grooming:RapidEscalationGrooming ;
+    rdfs:range cacontology-grooming:GroomingPhase .
+
+cacontology-grooming:exploitsOpportunity rdf:type owl:ObjectProperty ;
+    rdfs:label "exploits opportunity"@en ;
+    rdfs:comment "Links opportunistic grooming to specific opportunity being exploited."@en ;
+    rdfs:domain cacontology-grooming:OpportunisticGrooming ;
+    rdfs:range uco-core:UcoObject .
+
+cacontology-grooming:acceleratesTrust rdf:type owl:ObjectProperty ;
+    rdfs:label "accelerates trust"@en ;
+    rdfs:comment "Links grooming to trust-building mechanism being accelerated."@en ;
+    rdfs:domain cacontology-grooming:AcceleratedTrustExploitation ;
+    rdfs:range cacontology-grooming:TrustBuildingBehavior .
+
+cacontology-grooming:facilitatesWithSubstance rdf:type owl:ObjectProperty ;
+    rdfs:label "facilitates with substance"@en ;
+    rdfs:comment "Links grooming to substance used for facilitation."@en ;
+    rdfs:domain cacontology-grooming:SubstanceFacilitatedGrooming ;
+    rdfs:range uco-observable:ObservableObject .
+
+cacontology-grooming:occursInSpace rdf:type owl:ObjectProperty ;
+    rdfs:label "occurs in space"@en ;
+    rdfs:comment "Links physical space grooming to location where it occurs."@en ;
+    rdfs:domain cacontology-grooming:PhysicalSpaceGrooming ;
+    rdfs:range uco-location:Location .
+
+cacontology-grooming:transitionsToLocation rdf:type owl:ObjectProperty ;
+    rdfs:label "transitions to location"@en ;
+    rdfs:comment "Links public-to-private grooming to exploitation location."@en ;
+    rdfs:domain cacontology-grooming:PublicToPrivateGrooming ;
+    rdfs:range uco-location:Location .
+
+# =============================================================================
+# ACCOUNT REPLACEMENT EVENT (ban evasion trajectory reset)
+# =============================================================================
+
+cacontology-grooming:AccountReplacementEvent rdf:type owl:Class ;
+    rdfs:label "Account Replacement Event"@en ;
+    rdfs:comment "Pattern where an offender whose account is banned or blocked creates a new account and returns to an earlier offense phase (typically initial contact). The lifecycle resets rather than terminates — structurally distinct from a coercion cycle."@en ;
+    rdfs:subClassOf cac-core:ExploitationEvent .
+
+cacontology-grooming:triggeredBy rdf:type owl:DatatypeProperty ;
+    rdfs:label "triggered by"@en ;
+    rdfs:comment "What triggered account replacement (victim_block, platform_ban, detection_risk, voluntary)."@en ;
+    rdfs:domain cacontology-grooming:AccountReplacementEvent ;
+    rdfs:range xsd:string .
+
+cacontology-grooming:resumesAt rdf:type owl:ObjectProperty ;
+    rdfs:label "resumes at"@en ;
+    rdfs:comment "Phase instance the offender returns to after account replacement (typically InitialContactPhase)."@en ;
+    rdfs:domain cacontology-grooming:AccountReplacementEvent ;
+    rdfs:range cacontology-grooming:GroomingPhase .
+
+cacontology-grooming:originalAccountId rdf:type owl:ObjectProperty ;
+    rdfs:label "original account id"@en ;
+    rdfs:comment "Reference to the banned or blocked account if known."@en ;
+    rdfs:domain cacontology-grooming:AccountReplacementEvent ;
+    rdfs:range uco-observable:Account .
+
+cacontology-grooming:replacementAccountId rdf:type owl:ObjectProperty ;
+    rdfs:label "replacement account id"@en ;
+    rdfs:comment "Reference to the new account used to resume contact if known."@en ;
+    rdfs:domain cacontology-grooming:AccountReplacementEvent ;
+    rdfs:range uco-observable:Account . 

@@ -1684,6 +1684,7 @@ _PLATFORM_SPECS: List[Tuple[str, str]] = [
     ("WhatsApp", r"\bWhatsApp\b"),
     ("Telegram", r"\bTelegram\b"),
     ("Skype", r"\bSkype\b"),
+    ("FaceTime", r"\bFace\s?Time\b"),
     ("Kik", r"\bKik\b"),
     ("Discord", r"\bDiscord\b"),
     # Dating / hookup surfaces
@@ -1715,6 +1716,7 @@ _PLATFORM_SPECS: List[Tuple[str, str]] = [
     ("YouNow", r"\bYouNow\b"),
     ("Dropbox", r"\bDropbox\b"),
     ("Google Drive", r"Google\s+Drive|\bGDrive\b"),
+    # Mixed-case "Mega" needs storage context (see _mega_mentioned); handled in extract_platforms.
     ("Mega.nz", r"\bmega\.nz\b|\bMEGA\b"),
     ("MediaFire", r"\bMediaFire\b"),
     ("OneDrive", r"\bOneDrive\b"),
@@ -1791,6 +1793,28 @@ _AGENCY_SOCIAL_FOOTER_RES: List[re.Pattern] = [
 ]
 
 
+# "Mega" is also a dog's name, a surname and an adjective ("mega church") (#58). The bare
+# capitalized word counts only beside file-hosting language; mega.nz and MEGA always count.
+_MEGA_STRICT_RE = re.compile(r"\bmega\.nz\b|\bMEGA\b|\b[Mm]ega\s+(?:folder|link|account|app|drive)s?\b")
+_MEGA_NAME_RE = re.compile(r"\bMega\b")
+_MEGA_CONTEXT_RE = re.compile(
+    r"\bcloud\b|\bstorage\b|\bfile[- ]?(?:shar|host)\w*|\bservers?\b|\baccounts?\b|\bapps?\b"
+    r"|\bapplications?\b|\bservices?\b|\blinks?\b|\bupload\w*|\bdownload\w*|\bencrypt\w*"
+    r"|\bfolders?\b|\bplatforms?\b|\bLtd\b|\bLimited\b",
+    re.IGNORECASE,
+)
+
+
+def _mega_mentioned(text: str) -> bool:
+    if _MEGA_STRICT_RE.search(text):
+        return True
+    for m in _MEGA_NAME_RE.finditer(text):
+        window = text[max(0, m.start() - 80) : m.start()] + " " + text[m.end() : m.end() + 80]
+        if _MEGA_CONTEXT_RE.search(window):
+            return True
+    return False
+
+
 def mask_agency_social_footers(text: str) -> str:
     """Blank out agency social-media footer sentences so their brand names are not matched."""
     for rx in _AGENCY_SOCIAL_FOOTER_RES:
@@ -1835,6 +1859,11 @@ def extract_platforms(case: Dict[str, Any]) -> List[str]:
         # Whisper app (case-sensitive — avoids prose "whisper").
         if label == "Whisper":
             if re.search(pattern, case_text):
+                found.append(label)
+                seen.add(label)
+            continue
+        if label == "Mega.nz":
+            if _mega_mentioned(case_text):
                 found.append(label)
                 seen.add(label)
             continue
@@ -2167,7 +2196,11 @@ _PROSECUTION_STATUS_PRECEDENCE: Tuple[Tuple[int, str, str], ...] = (
     (2, r'\bbooked\b', 'booked'),
     (3, r'\bcharged\b', 'charged'),
     (4, r'\bindicted\b', 'indicted'),
-    (5, r'\b(?:pleaded|pled)\s+guilty\b', 'pleaded_guilty'),
+    (
+        5,
+        r'\b(?:pleaded|pled|pleads|pleading)\s+(?:guilty|no\s+contest)\b',
+        'pleaded_guilty',
+    ),
     (6, r'\bconvicted\b', 'convicted'),
     (7, r'\bsentenced\b', 'sentenced'),
 )
@@ -2283,14 +2316,99 @@ def _sentence_match_is_statutory_exposure(
     return True
 
 
+# A stage word only counts when it states what happened in this case (#58). These do not:
+# a condition ("if convicted", "will be sentenced"), a class of people ("anyone convicted of"),
+# a label ("convicted sex offender"), or an earlier case ("previously convicted").
+_STATUS_NOT_YET_BEFORE = re.compile(
+    r"\b(?i:if|unless|until|should|could|can|may|might|must|would|will|shall|to|scheduled|expected|due|not|never)"
+    r"\s+(?:(?:(?i:he|she|they|it|is|are|was|were|be|been|being|ever|later|eventually|then|also)|[A-Z][\w'’\-]+)\s+){0,3}$"
+)
+_STATUS_CLASS_BEFORE = re.compile(
+    r"\b(?:anyone|someone|persons?|people|those|individuals|offenders)\s+(?:who\s+(?:is|are|has\s+been|have\s+been)\s+)?$",
+    re.IGNORECASE,
+)
+_STATUS_PRIOR_BEFORE = re.compile(
+    r"\b(?:previously|formerly|once|twice|had\s+(?:also\s+)?been|had)\s+(?:been\s+)?$",
+    re.IGNORECASE,
+)
+_STATUS_LABEL_AFTER = re.compile(
+    r"^\s+(?:sex(?:ual)?\s+offenders?|felons?|child\s+(?:molesters?|sex\s+offenders?|predators?|rapists?)"
+    r"|pedophiles?|paedophiles?|rapists?|murderers?|killers?|offenders?|criminals?|predators?)\b",
+    re.IGNORECASE,
+)
+# "a registered sex offender who was convicted in 2016" is the earlier case; a verdict in
+# this case ("convicted by a jury today") stays.
+_STATUS_PRIOR_SENTENCE = re.compile(
+    r"\bprior\s+(?:conviction|offen[cs]e|sentence|record)s?\b|\bprevious(?:ly)?\b|\bcriminal\s+(?:history|record)\b",
+    re.IGNORECASE,
+)
+_STATUS_PRIOR_RELATIVE_BEFORE = re.compile(
+    r"\b(?:who\s+(?:was|has\s+been|had\s+been)|having\s+been)\s+(?:also\s+)?$"
+)
+# A year beside the verb ("In 2009, he was convicted", "was convicted in 2016") is the earlier
+# case when it is at least two years before the release.
+_STATUS_YEAR_BEFORE = re.compile(r"\b((?:19|20)\d\d),[^.]{0,60}?\bwas\s+(?:also\s+|then\s+)?$")
+_STATUS_YEAR_AFTER = re.compile(r"^\s+in\s+((?:19|20)\d\d)\b")
+_PUBLICATION_YEAR_RE = re.compile(r"\bPublication date:\s*((?:19|20)\d\d)\b")
+_STATUS_VERDICT_SENTENCE = re.compile(
+    r"\bjur(?:y|ors)\b|\btrial\b|\bverdict\b|\bfound\s+guilty\b|\btoday\b|\byesterday\b|\bthis\s+week\b",
+    re.IGNORECASE,
+)
+# Text after the presumption-of-innocence paragraph is the next release's headline in a
+# multi-release PDF ("… proven guilty in a court of law.\n\n[Name] Pleads Guilty to …").
+_STATUS_AFTER_PRESUMPTION = re.compile(r"\bpresumed\s+innocent\b[^\n]*(?:\n[^\n]+)?\n\s*\n[^\n]*(?:\n[^\n]+)?$", re.IGNORECASE)
+# "when he returned to be sentenced on Tuesday" reports the hearing.
+_STATUS_HEARING_BEFORE = re.compile(r"\b(?:returned|appeared(?:\s+\w+){0,4})\s+to\s+be\s+$", re.IGNORECASE)
+
+
+def _status_mention_is_outcome(case_text: str, start: int, end: int, status: str) -> bool:
+    """True when a pleaded / convicted / sentenced mention reports this case's own outcome."""
+    line_start = max(case_text.rfind(".", 0, start), case_text.rfind("\n\n", 0, start), start - 160) + 1
+    before = re.sub(r"\s+", " ", case_text[line_start:start])
+    if _STATUS_CLASS_BEFORE.search(before):
+        return False
+    if _STATUS_NOT_YET_BEFORE.search(before) and not _STATUS_HEARING_BEFORE.search(before):
+        return False
+    after = case_text[end : end + 40]
+    published = _PUBLICATION_YEAR_RE.search(case_text)
+    if status == "pleaded_guilty":
+        # "had previously pleaded guilty" in a sentencing release is this case's plea. A plea
+        # dated two or more years before the release ("pleaded no contest in 2022") is not.
+        year = _STATUS_YEAR_AFTER.match(after)
+        if published and year and int(year.group(1)) <= int(published.group(1)) - 2:
+            return False
+        return not _STATUS_AFTER_PRESUMPTION.search(case_text[max(0, start - 400) : start])
+    if _STATUS_PRIOR_BEFORE.search(before):
+        return False
+    if status != "convicted":
+        return True
+    if _STATUS_LABEL_AFTER.match(after):
+        return False
+    stop = case_text.find(".", end)
+    sentence = before + case_text[start : stop if 0 <= stop - end < 240 else end + 240]
+    if _STATUS_VERDICT_SENTENCE.search(sentence):
+        return True
+    if _STATUS_PRIOR_SENTENCE.search(sentence) or _STATUS_PRIOR_RELATIVE_BEFORE.search(before):
+        return False
+    year = _STATUS_YEAR_BEFORE.search(before) or _STATUS_YEAR_AFTER.match(after)
+    if published and year and int(year.group(1)) <= int(published.group(1)) - 2:
+        return False
+    return True
+
+
 def _extract_prosecution_status(case_text: str) -> Optional[str]:
-    """Return the highest-precedence prosecution stage mentioned in the text."""
+    """Return the highest-precedence prosecution stage the text reports as having happened."""
     best_rank = 0
     best_status: Optional[str] = None
     for rank, pattern, status in _PROSECUTION_STATUS_PRECEDENCE:
-        if re.search(pattern, case_text, re.IGNORECASE) and rank > best_rank:
+        if rank <= best_rank:
+            continue
+        for match in re.finditer(pattern, case_text, re.IGNORECASE):
+            if rank >= 5 and not _status_mention_is_outcome(case_text, match.start(), match.end(), status):
+                continue
             best_rank = rank
             best_status = status
+            break
     return best_status
 
 

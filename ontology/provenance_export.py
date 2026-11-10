@@ -69,6 +69,35 @@ def assertion_label(assertion: Dict[str, Any]) -> str:
     return base
 
 
+def _used_by_resolution(field: str, res: Dict[str, Any], assertions: List[Dict[str, Any]]) -> Optional[set]:
+    """Row ids of the assertions a resolution's value rests on. None when the resolution
+    does not record them (callers that pass no ``winning_assertion_ids``).
+
+    Statutory and prior-case terms, and event dates, are kept in the value without being
+    winners, so an assertion whose role and value sit in one of those buckets also counts.
+    A candidate the resolver set aside ("nine-month" from "a nine-month investigation",
+    role unknown) is not a source of the resolution (#58).
+    """
+    if "winning_assertion_ids" not in res:
+        return None
+    used = {i for i in (res.get("winning_assertion_ids") or [])}
+    final = res.get("final_value")
+    buckets = {"sentence": ("exposure", "prior"), "date": ("event", "publication")}.get(field, ())
+    if isinstance(final, dict):
+        for bucket in buckets:
+            kept = final.get(bucket) or []
+            values = {str(v).strip().lower() for v in (kept if isinstance(kept, list) else [kept])}
+            for a in assertions:
+                if (
+                    a.get("field") == field
+                    and a.get("role") == bucket
+                    and str(a.get("value")).strip().lower() in values
+                    and a.get("id") is not None
+                ):
+                    used.add(a["id"])
+    return used
+
+
 def build_provenance_graph(
     case_id: str,
     assertions: List[Dict[str, Any]],
@@ -133,7 +162,7 @@ def build_provenance_graph(
     g.add((activity, RDFS.label, Literal(f"extraction · {run_id}")))
     g.add((narrative, RDFS.label, Literal(f"narrative · {case_id}")))
 
-    by_field: Dict[str, List[URIRef]] = {}
+    by_field: Dict[str, List[tuple]] = {}
     ordered = sorted(
         [a for a in assertions if a.get("span_start") is not None and a.get("span_end") is not None],
         key=lambda a: (a.get("field") or "", int(a["span_start"]), str(a.get("method"))),
@@ -142,7 +171,7 @@ def build_provenance_graph(
         node = _iri(case_id, "assertion", str(index))
         field = str(assertion.get("field") or "")
         role = _clean_role(assertion.get("role"))
-        by_field.setdefault(field, []).append(node)
+        by_field.setdefault(field, []).append((node, assertion.get("id")))
         g.add((node, RDF.type, OA.Annotation))
         g.add((node, RDF.type, CAC_CORE.AssessmentResult))
         g.add((node, RDFS.label, Literal(assertion_label(assertion))))
@@ -188,8 +217,10 @@ def build_provenance_graph(
         g.add((node, CL.resolutionStatus, Literal(status)))
         g.add((node, CL.ruleSetVersion, Literal(str(res.get("rule_set_version") or rule_set or "resolve_v3.0"))))
         g.add((node, PROV.wasGeneratedBy, activity))
-        for source in by_field.get(field, []):
-            g.add((node, PROV.wasDerivedFrom, source))
+        used = _used_by_resolution(field, res, assertions)
+        for source, row_id in by_field.get(field, []):
+            if used is None or row_id in used:
+                g.add((node, PROV.wasDerivedFrom, source))
 
     _add_location_grounds(g, case_id, activity, location_grounds or [])
     _add_agency_grounds(g, case_id, activity, agency_grounds or [])

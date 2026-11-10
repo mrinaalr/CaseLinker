@@ -209,6 +209,8 @@ def test_fixtures_use_made_up_names():
         text = path.read_text(encoding="utf-8")
         for s, e in PK.person_spans(text, ()):
             surname = text[s:e].split()[-1].strip(".,’'")
+            if surname.isupper():
+                surname = surname.capitalize()  # older releases print defendants in capitals
             if len(surname) > 2 and surname[:1].isupper() and surname not in FICTIONAL_SURNAMES:
                 offenders[path.name] = offenders.get(path.name, 0) + 1
     # Counts only: the failure message must not print the names it is guarding against.
@@ -278,3 +280,134 @@ def test_a_small_town_ner_calls_a_person_stays_unmasked():
     ner = [[text.index("Hollow"), text.index(" man")], [text.index("Rowan"), text.index(",25")]]
     public = PK.public_text(text, PK.person_spans(text, ner))
     assert public.count("Hollow Brook") == 3 and "Brambleton" not in public
+
+
+# --- names NER found that the masker used to let through -------------------------
+# Wording copied from live releases (nj_ag_2017_001, doj_ceos_2012_007 and others), names made up.
+
+def _public(text: str, *names: str, not_people=()) -> str:
+    """Public text when NER reports each of ``names`` as a PERSON span."""
+    ner = []
+    for name in names:
+        for m in re.finditer(re.escape(name), text):
+            ner.append([m.start(), m.end()])
+    return PK.public_text(text, PK.person_spans(text, ner, not_people))
+
+
+def test_a_title_before_a_name_is_not_an_organization():
+    text = ("TRENTON – Attorney General Corin Ashcombe today announced arrests. Sheriff Reese Thistlewood and "
+            "U.S. Marshal Hollis K. Wexley assisted. Suspects told police Ashcombe had been notified.")
+    public = _public(text, "Corin Ashcombe", "Reese Thistlewood", "Hollis K. Wexley")
+    assert public == ("TRENTON – Attorney General [PERSON] today announced arrests. Sheriff [PERSON] and "
+                      "U.S. Marshal [PERSON] assisted. Suspects told police [PERSON] had been notified.")
+
+
+def test_an_agency_named_with_of_or_a_possessive_is_still_not_a_person():
+    text = ("The Department of Internal Affairs and the Attorney General's Child Predator Unit worked "
+            "Operation Broken Heart with Corin Ashcombe.")
+    public = _public(text, "Internal Affairs", "Child Predator", "Broken Heart", "Corin Ashcombe")
+    assert public == text.replace("Corin Ashcombe", "[PERSON]")
+
+
+def test_a_name_wrapped_across_two_lines_is_masked_whole():
+    text = "He thanked Detectives Corin Ashcombe, Reese\nThistlewood, and Hollis K.\nWexley for their work."
+    public = _public(text, "Corin Ashcombe", "Reese\nThistlewood", "Hollis K.\nWexley")
+    assert public == "He thanked Detectives [PERSON], [PERSON], and [PERSON] for their work."
+
+
+def test_a_wrapped_name_with_an_accent_or_an_apostrophe_is_masked_whole():
+    text = "He thanked Reese\nThístlewood, José\nAshcombe Jr and Corin\nK. O’Wexley for their work."
+    public = _public(text, "Reese\nThístlewood", "José\nAshcombe Jr", "Corin\nK. O’Wexley")
+    for part in ("Reese", "Thístlewood", "José", "Ashcombe", "Corin", "Wexley"):
+        assert part not in public
+
+
+def test_a_name_that_is_also_a_rank_or_office_is_masked():
+    # "Bishop", "Major" and "Deacon" are names as often as titles: masked, never read as a title.
+    text = ("Hollis\nBishop was charged. A 22-year-old Bishop Corin Ashcombe was arrested. "
+            "Detectives interviewed Bishop on Tuesday.")
+    public = _public(text, "Hollis\nBishop", "Bishop Corin Ashcombe", "Bishop")
+    assert "Bishop" not in public and "Hollis" not in public and "Corin" not in public
+
+
+def test_a_name_on_the_map_is_masked_beside_or_after_the_rest_of_the_name():
+    # "Hartwell" and "Lincoln" are towns. NER split "Reese | Hartwell" and "Lincoln | and Corin Ashcombe",
+    # and "Lincoln" comes back alone after "Lincoln Wexley" was given in full.
+    text = ("District Judge Reese Hartwell found probable cause. An Ohio couple, Lincoln and Corin Ashcombe, "
+            "were sentenced. Lincoln Wexley, 34, was charged; staff would be making contact with Lincoln later.")
+    public = _public(text, "Reese", "Hartwell", "Lincoln", "Corin Ashcombe", "Lincoln Wexley")
+    assert "Hartwell" not in public and "Lincoln" not in public and "Reese" not in public
+    # A town NER calls a person, with no name beside it, stays readable.
+    town = "Corin Ashcombe, 41, of Hartwell, Georgia, was arrested in Hartwell on Monday."
+    assert _public(town, "Corin Ashcombe", "Hartwell") == town.replace("Corin Ashcombe", "[PERSON]")
+
+
+def test_a_name_ends_with_its_line_when_the_next_line_is_a_label():
+    text = "Contact Reese Thistlewood\nSource:\nNASHVILLE – An investigation led to an arrest."
+    public = _public(text, "Reese Thistlewood\nSource")
+    assert public == "Contact [PERSON]\nSource:\nNASHVILLE – An investigation led to an arrest."
+
+
+def test_a_suffix_or_office_after_a_name_is_not_a_state():
+    text = "Hollis K. Wexley, II, United States Attorney, and Reese Thistlewood, EU Commissioner, spoke."
+    public = _public(text, "Hollis K. Wexley", "Reese Thistlewood")
+    assert public == "[PERSON], II, United States Attorney, and [PERSON], EU Commissioner, spoke."
+
+
+def test_a_surname_that_is_also_a_town_is_masked_where_it_is_a_person():
+    # "Hartwell" is on the map (Hartwell, Georgia) and is also this official's surname.
+    person = "On July 21, Governor Hartwell signed a new law. Hartwell said it takes effect in February."
+    assert _public(person, "Hartwell") == ("On July 21, Governor [PERSON] signed a new law. "
+                                           "[PERSON] said it takes effect in February.")
+    town = "A Hartwell man was arrested Tuesday by Hartwell police, officials in Hartwell said."
+    assert _public(town, "Hartwell") == town
+
+
+def test_the_sentence_after_a_name_does_not_make_it_an_organization():
+    text = ("“We will find you,” said Director Corin Ashcombe. “Operation Broken Heart proves it.” "
+            "Ashcombe’s office, with a federal grant, runs the task force.")
+    public = _public(text, "Corin Ashcombe", "Ashcombe’s")
+    assert public.startswith("“We will find you,” said Director [PERSON]. “Operation Broken Heart proves it.” [PERSON]")
+    assert "Ashcombe" not in public
+
+
+def test_all_caps_defendant_names_are_masked_and_headlines_are_not():
+    text = ("PINECREST MAN ARRESTED ON CHILD PORNOGRAPHY CHARGES\nINDIANAPOLIS – A grand jury returned an indictment "
+            "charging ROWAN BRAMBLETON, age 27, of Pinecrest. BRAMBLETON was arrested by ICAC agents.")
+    public = _public(text, "PINECREST MAN", "INDIANAPOLIS", "ROWAN BRAMBLETON", "BRAMBLETON", "ICAC")
+    assert public == ("PINECREST MAN ARRESTED ON CHILD PORNOGRAPHY CHARGES\nINDIANAPOLIS – A grand jury returned an "
+                      "indictment charging [PERSON], age 27, of Pinecrest. [PERSON] was arrested by ICAC agents.")
+
+
+def test_the_defendant_block_is_masked_without_ner():
+    text = "Assistant U.S. Attorneys are in charge of the prosecution.\nThe Defendant:\nROWAN BRAMBLETON Age: 39 Springfield"
+    assert PK.public_text(text, PK.person_spans(text, ())).endswith("The Defendant:\n[PERSON] Age: 39 Springfield")
+
+
+def test_a_title_ner_took_with_the_name_stays_readable():
+    text = ("Former church Pastor Reese Thistlewood was indicted, said Special Agent in Charge Corin Ashcombe. "
+            "Contact Detective Wexley #4576 of the police department.")
+    public = _public(text, "Pastor Reese Thistlewood", "Charge Corin Ashcombe", "Wexley #4576")
+    assert public == ("Former church Pastor [PERSON] was indicted, said Special Agent in Charge [PERSON]. "
+                      "Contact Detective [PERSON] of the police department.")
+
+
+def test_initials_nicknames_and_particles_stay_inside_the_name():
+    text = ("Chief Judge R.L. Wexley. Wexley sentenced Reese “Rocky” Thistlewood, 33. "
+            "His lawyer, van Ashcombe added, will appeal.")
+    public = _public(text, "R.L. Wexley", "Reese “Rocky", "van Ashcombe")
+    assert "Wexley" not in public and "Reese" not in public and "Rocky" not in public and "Ashcombe" not in public
+    assert public.startswith("Chief Judge [PERSON]. [PERSON] sentenced [PERSON]")
+
+
+def test_placeholders_and_non_names_ner_calls_people_stay_readable():
+    text = ("Jane Doe 1 confided in a teacher. He was read his Miranda rights and gave up his Kik account. "
+            "Corin Ashcombe, 41, was charged.")
+    public = _public(text, "Jane Doe 1", "Miranda", "Kik", "Corin Ashcombe")
+    assert public == text.replace("Corin Ashcombe", "[PERSON]")
+
+
+def test_a_name_inside_an_email_address_is_masked_and_the_agency_domain_is_kept():
+    text = "Contact Public Affairs Officer Corin Ashcombe at corin.ashcombe@usdoj.gov or tips@usdoj.gov."
+    public = _public(text, "Corin Ashcombe")
+    assert public == "Contact Public Affairs Officer [PERSON] at [PERSON]@usdoj.gov or tips@usdoj.gov."

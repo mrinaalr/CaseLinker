@@ -361,3 +361,23 @@ def test_existing_case_graph_still_validates_and_still_has_roles():
 
 def mapper_has(types, local: str) -> bool:
     return any(str(t).endswith(local) or str(t).endswith("#" + local) for t in types)
+
+
+def test_resolution_is_derived_only_from_the_assertions_it_used():
+    from provenance_export import PROV, build_provenance_graph
+    from rdflib import URIRef
+
+    def a(row_id, value, role, start):
+        return {"id": row_id, "field": "sentence", "method": "regex", "method_version": "regex_3.0.2",
+                "family": "surface_pattern", "value": value, "role": role, "span_start": start,
+                "span_end": start + len(value), "span_text": value, "confidence": 0.8}
+
+    assertions = [a(1, "nine-month", "unknown", 10), a(2, "five to 10 years", "exposure", 40), a(3, "12 years", "imposed", 80)]
+    resolution = {"status": "resolved", "rule_set_version": "resolve_v3.0", "winning_assertion_ids": [3],
+                  "final_value": {"imposed": ["12 years"], "exposure": ["five to 10 years"], "prior": []}}
+    g = build_provenance_graph("prov_case", assertions, {"sentence": resolution}, run_id="run_x",
+                               issued_at="2026-11-09T00:00:00.000000Z")
+    base = "https://w3id.org/caselinker/resource/case/prov_case/"
+    sources = {str(o) for o in g.objects(URIRef(base + "resolution/sentence"), PROV.wasDerivedFrom)}
+    # Annotations are numbered in span order: 1 = nine-month, 2 = exposure, 3 = imposed.
+    assert sources == {base + "assertion/2", base + "assertion/3"}

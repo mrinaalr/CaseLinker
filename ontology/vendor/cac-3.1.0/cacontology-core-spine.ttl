@@ -1,0 +1,231 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix gufo: <http://purl.org/nemo/gufo#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix uco-observable: <https://ontology.unifiedcyberontology.org/uco/observable/> .
+@prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
+@prefix case-investigation: <https://ontology.caseontology.org/case/investigation/> .
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+
+# =============================================================================
+# Ontology Declaration
+# =============================================================================
+
+<https://cacontology.projectvic.org/core> rdf:type owl:Ontology ;
+    rdfs:label "CAC Ontology Semantic Spine"@en ;
+    rdfs:comment "The semantic spine is the stable, top-level CAC-facing class hierarchy that all CAC Ontology modules should anchor to. It is organized by ontological kind rather than by stakeholder workflow or module-local convenience. Every class in the CAC family should have one clear ontological home, one clear identity story, and one intended modeling pattern."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/core/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:issued "2026-03-16"^^xsd:date ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <http://purl.org/nemo/gufo#/1.0.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/action/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/observable/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/role/1.5.0> ,
+                <https://ontology.caseontology.org/case/investigation/1.5.0> .
+
+# =============================================================================
+# TOP-LEVEL ENTITY
+# =============================================================================
+
+cac-core:Entity a owl:Class ;
+    rdfs:label "Entity"@en ;
+    rdfs:comment "The most general class in the CAC semantic spine. All CAC domain concepts should anchor to one of its subclasses."@en ;
+    skos:scopeNote "Do not instantiate cac-core:Entity directly. Use the appropriate subclass: EnduringEntity, Occurrent, Situation, Role, or Phase."@en .
+
+# =============================================================================
+# ENDURING ENTITY BRANCH
+# =============================================================================
+
+cac-core:EnduringEntity a owl:Class ;
+    rdfs:label "Enduring Entity"@en ;
+    rdfs:comment "A thing that persists through time while potentially changing state. This is the CAC-facing root for all object-like entities including people, organizations, devices, artifacts, places, and assessment results."@en ;
+    rdfs:subClassOf cac-core:Entity , gufo:Object , uco-core:UcoObject ;
+    skos:scopeNote "Use when: the thing has a persistent identity across time. Do not use when: the concept is an event, situation, role, or phase."@en .
+
+cac-core:PersonLikeEntity a owl:Class ;
+    rdfs:label "Person-Like Entity"@en ;
+    rdfs:comment "An enduring entity that is person-like in the domain model. Use for natural persons and person-profile abstractions."@en ;
+    rdfs:subClassOf cac-core:EnduringEntity ;
+    skos:scopeNote "Use when: modeling a natural person or person-level abstraction. Do not use when: the concept is a temporary capacity such as victim, offender, or advocate — those belong under cac-core:Role."@en .
+
+cac-core:OrganizationLikeEntity a owl:Class ;
+    rdfs:label "Organization-Like Entity"@en ;
+    rdfs:comment "An enduring entity that represents an organization, institution, team, agency, or other collectively organized actor."@en ;
+    rdfs:subClassOf cac-core:EnduringEntity ;
+    skos:scopeNote "Use when: modeling NGOs, task forces, police departments, courts, companies, or platforms treated as organizations. Do not use when: modeling individual persons or system-level software resources."@en .
+
+cac-core:DigitalSystemEntity a owl:Class ;
+    rdfs:label "Digital System Entity"@en ;
+    rdfs:comment "An enduring entity representing a software or system-level resource such as an online service platform, moderation system, or digital environment."@en ;
+    rdfs:subClassOf cac-core:EnduringEntity ;
+    skos:scopeNote "Use when: modeling platforms, moderation systems, application services, or digital environments as system-level entities. Do not use when: more specific UCO observable, device, or software classes are already the right fit."@en .
+
+cac-core:Artifact a owl:Class ;
+    rdfs:label "Artifact"@en ;
+    rdfs:comment "An enduring entity that is inspectable, storable, transferable, or evidentiary. Aligned to UCO ObservableObject for digital evidence interoperability."@en ;
+    rdfs:subClassOf cac-core:EnduringEntity , uco-observable:ObservableObject ;
+    skos:scopeNote "Use when: modeling files, images, videos, reports, transcripts, cybertip messages, account exports, or other storable evidence. Do not use when: the concept is an assessment outcome — use cac-core:AssessmentResult instead."@en .
+
+cac-core:PlaceLikeEntity a owl:Class ;
+    rdfs:label "Place-Like Entity"@en ;
+    rdfs:comment "An enduring entity used to represent places, venues, virtual environments treated as locatable contexts, or place-like reference points."@en ;
+    rdfs:subClassOf cac-core:EnduringEntity ;
+    skos:scopeNote "Use when: modeling physical locations, jurisdictions, virtual environments, or other place-like reference points."@en .
+
+cac-core:AssessmentResult a owl:Class ;
+    rdfs:label "Assessment Result"@en ;
+    rdfs:comment "An output or conclusion of some evaluative, analytic, classification, or decision-making process. Intentionally not subclassed from uco-observable:ObservableObject because the semantic identity of a result is the assessment outcome, not the artifact that stores it."@en ;
+    rdfs:subClassOf cac-core:EnduringEntity ;
+    skos:scopeNote "Use when: the concept is the result of assessing something — a classification, risk score, age estimate, moderation decision, or authenticity determination. Do not use when: the concept is the artifact that stores the result — use cac-core:Artifact for that."@en .
+
+# =============================================================================
+# OCCURRENT / EVENT BRANCH
+# =============================================================================
+
+cac-core:Occurrent a owl:Class ;
+    rdfs:label "Occurrent"@en ;
+    rdfs:comment "A CAC organizing superclass for things that happen or unfold in time. This is a CAC-layer abstraction not directly mapped to a gUFO superclass in the base spine."@en ;
+    rdfs:subClassOf cac-core:Entity ;
+    skos:scopeNote "Do not instantiate directly. Use cac-core:Event or one of its subclasses."@en .
+
+cac-core:Event a owl:Class ;
+    rdfs:label "Event"@en ;
+    rdfs:comment "Something that happens or unfolds in time — an action, interaction, incident, hearing, or process step."@en ;
+    rdfs:subClassOf cac-core:Occurrent , gufo:Event ;
+    skos:scopeNote "Use when: something occurred, has a start/end time, or involves participants, inputs, outputs, or instruments. Do not use when: the concept is a persisting context or condition — use cac-core:Situation instead."@en .
+
+cac-core:ExploitationEvent a owl:Class ;
+    rdfs:label "Exploitation Event"@en ;
+    rdfs:comment "An event representing an act of exploitation, abuse, or victimization of a child."@en ;
+    rdfs:subClassOf cac-core:Event ;
+    skos:scopeNote "Use when: modeling grooming interactions, abuse incidents, trafficking transfer events, or other exploitation occurrences."@en .
+
+cac-core:DetectionEvent a owl:Class ;
+    rdfs:label "Detection Event"@en ;
+    rdfs:comment "An event representing the detection, identification, or flagging of content, behavior, or indicators relevant to child exploitation."@en ;
+    rdfs:subClassOf cac-core:Event ;
+    skos:scopeNote "Use when: modeling content detection, hash matching, AI-based flagging, or behavioral indicator identification."@en .
+
+cac-core:CoordinationEvent a owl:Class ;
+    rdfs:label "Coordination Event"@en ;
+    rdfs:comment "An event representing coordination, information sharing, or collaborative activity among stakeholders."@en ;
+    rdfs:subClassOf cac-core:Event ;
+    skos:scopeNote "Use when: modeling information sharing events, inter-agency coordination activities, or collaborative referrals. Do not use when: the event is specifically an investigative action — use cac-core:InvestigativeAction instead."@en .
+
+cac-core:SupportEvent a owl:Class ;
+    rdfs:label "Support Event"@en ;
+    rdfs:comment "An event representing victim support, advocacy, training, or welfare-related activity."@en ;
+    rdfs:subClassOf cac-core:Event ;
+    skos:scopeNote "Use when: modeling victim referral events, training sessions, advocacy activities, or support interventions."@en .
+
+cac-core:LegalEvent a owl:Class ;
+    rdfs:label "Legal Event"@en ;
+    rdfs:comment "An event representing a legal proceeding, judicial action, sentencing hearing, or other court-related occurrence."@en ;
+    rdfs:subClassOf cac-core:Event ;
+    skos:scopeNote "Use when: modeling judicial hearings, sentencing events, arraignments, or other legal proceedings."@en .
+
+cac-core:InvestigativeAction a owl:Class ;
+    rdfs:label "Investigative Action"@en ;
+    rdfs:comment "An event that is specifically an investigative action within a CAC investigation. Aligned to both CASE InvestigativeAction and UCO Action for investigation interoperability."@en ;
+    rdfs:subClassOf cac-core:Event , case-investigation:InvestigativeAction , uco-action:Action ;
+    skos:scopeNote "Use when: the event is a discrete investigative step such as evidence review, cybertip receipt, search warrant execution, or forensic examination. Do not use when: the event is broader coordination, support, or legal activity not specific to investigation workflow."@en .
+
+# =============================================================================
+# SITUATION BRANCH
+# =============================================================================
+
+cac-core:Situation a owl:Class ;
+    rdfs:label "Situation"@en ;
+    rdfs:comment "A context, state, or configuration that holds at a time and may involve multiple participants. Aligned to gUFO Situation."@en ;
+    rdfs:subClassOf cac-core:Entity , gufo:Situation ;
+    skos:scopeNote "Use when: the concept is a state rather than an occurrence, holds over some interval, and contextualizes participants or events. Do not use when: the concept is something that happens — use cac-core:Event instead."@en .
+
+# =============================================================================
+# ROLE BRANCH
+# =============================================================================
+
+cac-core:Role a owl:Class ;
+    rdfs:label "Role"@en ;
+    rdfs:comment "A non-rigid role borne by an enduring entity in a certain relational or contextual setting. A bearer can gain or lose a role without ceasing to exist. Aligned to both gUFO Role and UCO Role."@en ;
+    rdfs:subClassOf cac-core:Entity , gufo:Role , uco-role:Role ;
+    skos:scopeNote "Use when: the concept is a context-dependent function or capacity such as victim, offender, guardian, moderator, examiner, or advocate. Do not use when: the concept is a person — use cac-core:PersonLikeEntity for the bearer."@en .
+
+# =============================================================================
+# PHASE BRANCH
+# =============================================================================
+
+cac-core:Phase a owl:Class ;
+    rdfs:label "Phase"@en ;
+    rdfs:comment "A temporal stage of some enduring entity, process, or situation. The bearer remains the same entity while changing phase. Aligned to gUFO Phase."@en ;
+    rdfs:subClassOf cac-core:Entity , gufo:Phase ;
+    skos:scopeNote "Use when: the concept is a lifecycle stage such as grooming phase, escalation phase, active investigation phase, or recovery phase. Do not use when: the concept is an investigation — phases participate in investigations but are not investigations themselves."@en .
+
+cac-core:ConditioningPhase a owl:Class ;
+    rdfs:label "Conditioning Phase"@en ;
+    rdfs:comment "Temporal phase in which an offender shapes victim readiness, situational constraints, or compliance preparatory to the primary exploitation act — through rapport, deception, isolation, normalization, desensitization, dependency, or compliance training."@en ;
+    rdfs:subClassOf cac-core:Phase ;
+    skos:scopeNote "Offense-trajectory macro-phase between initial contact and exploitation in ICAC state-machine modeling (contact → conditioning → exploitation → maintenance). Denotes the macro-level preparatory phase instance — distinct from variant sub-stages such as SexualizationPhase, IsolationPhase, or platform transition events that may follow. Author state-machine instances as cacontology-grooming:ConditioningPhase and cac-core:Phase (dual-typed, always). Set cac-core:conditioningMode on the macro ConditioningPhase node. This structure supports cross-case offense-trajectory analysis. May be abbreviated, bypassed, or iterated."@en ;
+    skos:scopeNote "This class models the offense-trajectory preparatory phase in victim-contact crimes — the period in which an offender shapes victim compliance, readiness, or situational constraints before the primary exploitation act. It is unrelated to cacontology-athletic:ConditioningCoercion, which models physical conditioning as a coercion mechanism in athletic exploitation contexts."@en .
+
+cac-core:conditioningMode a owl:DatatypeProperty ;
+    rdfs:label "conditioning mode"@en ;
+    rdfs:comment "Dominant mechanism through which conditioning is accomplished in a documented offense phase instance."@en ;
+    rdfs:domain cac-core:ConditioningPhase ;
+    rdfs:range xsd:string ;
+    skos:scopeNote "For conditioningMode value platform_confidence: offender models and develops operational confidence in a platform's affordances, detection characteristics, and community norms prior to exploitation — applicable to mainstream platforms, encrypted messaging apps, dark web forums, and generative AI tools. This mechanism is offender- and platform-directed, not victim-directed rapport or trust building."@en .
+
+# =============================================================================
+# CORE OBJECT PROPERTIES
+# =============================================================================
+
+cac-core:hasPhase a owl:ObjectProperty ;
+    rdfs:label "has phase"@en ;
+    rdfs:comment "Links an enduring entity, process, or situation to one of its temporal phases."@en ;
+    rdfs:range cac-core:Phase .
+
+cac-core:isPhaseOf a owl:ObjectProperty ;
+    rdfs:label "is phase of"@en ;
+    rdfs:comment "Links a phase to the entity, process, or situation it is a temporal stage of."@en ;
+    rdfs:domain cac-core:Phase ;
+    owl:inverseOf cac-core:hasPhase .
+
+cac-core:precedes a owl:ObjectProperty ;
+    rdfs:label "precedes"@en ;
+    rdfs:comment "Asserts that one exploitation phase or event directly precedes another in the documented offense timeline. Used to build temporally ordered traversal graphs for state machine analysis of case lifecycles. The subject phase occurs before the object phase in the same investigation."@en ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range cac-core:Phase ;
+    rdfs:isDefinedBy <https://cacontology.projectvic.org#> .
+
+cac-core:assesses a owl:ObjectProperty ;
+    rdfs:label "assesses"@en ;
+    rdfs:comment "Links an assessment result to the entity it evaluates."@en ;
+    rdfs:domain cac-core:AssessmentResult .
+
+cac-core:generatedBy a owl:ObjectProperty ;
+    rdfs:label "generated by"@en ;
+    rdfs:comment "Links an assessment result to the event, action, tool, or process that produced it."@en ;
+    rdfs:domain cac-core:AssessmentResult .
+
+cac-core:usesMethod a owl:ObjectProperty ;
+    rdfs:label "uses method"@en ;
+    rdfs:comment "Links an assessment result or event to the method, algorithm, or technique used."@en .
+
+cac-core:hasConfidence a owl:DatatypeProperty ;
+    rdfs:label "has confidence"@en ;
+    rdfs:comment "A numeric confidence value associated with an assessment result, typically between 0 and 1."@en ;
+    rdfs:domain cac-core:AssessmentResult ;
+    rdfs:range xsd:decimal .
+
+cac-core:issuedAtTime a owl:DatatypeProperty ;
+    rdfs:label "issued at time"@en ;
+    rdfs:comment "The date-time at which an assessment result was issued or finalized."@en ;
+    rdfs:domain cac-core:AssessmentResult ;
+    rdfs:range xsd:dateTimeStamp .

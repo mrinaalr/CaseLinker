@@ -274,6 +274,7 @@ class MergeProcessing:
         merged = self._apply_resolved_ages(merged, resolutions.get("age") or {})
         merged = self._apply_resolved_sentences(merged, resolutions.get("sentence") or {})
         merged = self._apply_resolved_cybertip(merged, resolutions.get("investigation_type") or {})
+        merged = self._apply_resolved_cybertip_reporter(merged, resolutions.get("cybertip_reporter") or {})
         merged = self._apply_resolved_dates(merged, resolutions.get("date") or {})
 
         # Where the people are, never who: offsets every public surface redacts from.
@@ -425,6 +426,14 @@ class MergeProcessing:
             types.insert(0, "cybertip")
         merged["investigation_types"] = types
         merged["investigation_type"] = _pattern_processing()._primary_investigation_type(types)
+        return merged
+
+    def _apply_resolved_cybertip_reporter(self, merged: Dict[str, Any], res: Dict[str, Any]) -> Dict[str, Any]:
+        """Who sent the CyberTip (#20); absent when the case has no case-scoped tip."""
+        if isinstance(res.get("final_value"), dict):
+            merged["cybertip_reporter"] = res["final_value"]
+        else:
+            merged.pop("cybertip_reporter", None)
         return merged
 
     def _apply_resolved_ages(self, merged: Dict[str, Any], res: Dict[str, Any]) -> Dict[str, Any]:

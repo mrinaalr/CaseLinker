@@ -1,0 +1,76 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+
+@prefix cacontology-analyst: <https://cacontology.projectvic.org/analyst-wellbeing#> .
+@prefix cacontology-detection: <https://cacontology.projectvic.org/detection#> .
+
+# Ontology Declaration
+<https://cacontology.projectvic.org/analyst-wellbeing/shapes> rdf:type owl:Ontology ;
+    rdfs:label "CAC Analyst Wellbeing SHACL Shapes"@en ;
+    rdfs:comment "SHACL shapes for validating analyst wellbeing and exposure mitigation concepts used in manual review workflows."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/analyst-wellbeing/shapes/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:issued "2026-02-11"^^xsd:date ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://cacontology.projectvic.org/analyst-wellbeing/3.1.0> ,
+                <https://cacontology.projectvic.org/detection/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> .
+
+# =============================================================================
+# SHAPES
+# =============================================================================
+
+cacontology-analyst:ExposureMitigationMeasureShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-analyst:ExposureMitigationMeasure ;
+    rdfs:label "Exposure Mitigation Measure Shape"@en ;
+    rdfs:comment "Validates exposure mitigation measures with a controlled mitigationType vocabulary."@en ;
+    sh:property [
+        sh:path cacontology-analyst:mitigationType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "hash_only_review" "blurred_preview" "progressive_reveal" "frame_sampling" "audio_removed" "other" ) ;
+        sh:message "Exposure mitigation measure must have mitigationType from allowed list."@en
+    ] .
+
+cacontology-analyst:OccupationalHarmShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-analyst:OccupationalHarm ;
+    rdfs:label "Occupational Harm Shape"@en ;
+    rdfs:comment "Validates occupational harm situations with optional harmSeverity."@en ;
+    sh:property [
+        sh:path cacontology-analyst:harmSeverity ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "low" "medium" "high" "unknown" ) ;
+        sh:message "Occupational harm severity must be from allowed list when present."@en
+    ] .
+
+cacontology-analyst:ManualClassificationExposureMitigationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-detection:ManualClassificationAction ;
+    rdfs:label "Manual Classification Exposure Mitigation Shape"@en ;
+    rdfs:comment "Ensures that any exposure mitigation referenced from manual classification actions is properly typed."@en ;
+    sh:property [
+        sh:path cacontology-analyst:usesExposureMitigation ;
+        sh:class cacontology-analyst:ExposureMitigationMeasure ;
+        sh:minCount 0 ;
+        sh:message "usesExposureMitigation values must be ExposureMitigationMeasure instances."@en
+    ] .
+
+cacontology-analyst:PersonOccupationalHarmShape rdf:type sh:NodeShape ;
+    sh:targetClass uco-identity:Person ;
+    rdfs:label "Person Occupational Harm Shape"@en ;
+    rdfs:comment "Ensures that any occupational harm referenced from persons is properly typed."@en ;
+    sh:property [
+        sh:path cacontology-analyst:experiencesOccupationalHarm ;
+        sh:class cacontology-analyst:OccupationalHarm ;
+        sh:minCount 0 ;
+        sh:message "experiencesOccupationalHarm values must be OccupationalHarm instances."@en
+    ] .

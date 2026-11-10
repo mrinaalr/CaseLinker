@@ -1,0 +1,464 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-observable: <https://ontology.unifiedcyberontology.org/uco/observable/> .
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-us-ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
+
+# Ontology Declaration
+<https://cacontology.projectvic.org/us/ncmec> rdf:type owl:Ontology ;
+    rdfs:label "NCMEC Cybertip Report Ontology (US Extension)"@en ;
+    rdfs:comment "An ontology for representing concepts specific to NCMEC Cybertip reports as an extension to the core CAC ontology. Version 3.1.0."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/us/ncmec/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:issued "2024-03-20"^^xsd:date ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://cacontology.projectvic.org/3.1.0> .
+
+# NCMEC Report Structure
+cacontology-us-ncmec:NCMECCybertipReport rdf:type owl:Class ;
+    rdfs:label "NCMEC Cybertip Report"@en ;
+    rdfs:comment "A report submitted to NCMEC's CyberTipline. This class represents the root structure of a NCMEC report as defined in the NCMEC Cybertip API documentation."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject .
+
+# NCMEC Incident Types
+cacontology-us-ncmec:NCMECIncidentType rdf:type owl:Class ;
+    rdfs:label "NCMEC Incident Type"@en ;
+    rdfs:comment "Types of incidents as defined by NCMEC Cybertip API (Section B.1.1). This class represents the standardized incident categories used in NCMEC reporting."@en ;
+    rdfs:subClassOf cac-core:EnduringEntity .
+
+cacontology-us-ncmec:ChildSexTraffickingIncident rdf:type owl:Class ;
+    rdfs:label "Child Sex Trafficking Incident"@en ;
+    rdfs:comment "Incidents involving child sex trafficking. Source: NCMEC Cybertip API Section B.1.1, incidentType 'Child Sex Trafficking'."@en ;
+    rdfs:subClassOf cacontology-us-ncmec:NCMECIncidentType ;
+    skos:exactMatch "CST" ;
+    cacontology-us-ncmec:incidentCode "CST" .
+
+cacontology-us-ncmec:ChildSexTourismIncident rdf:type owl:Class ;
+    rdfs:label "Child Sex Tourism Incident"@en ;
+    rdfs:comment "Incidents involving child sex tourism. Source: NCMEC Cybertip API Section B.1.1, incidentType 'Child Sex Tourism'."@en ;
+    rdfs:subClassOf cacontology-us-ncmec:NCMECIncidentType ;
+    skos:exactMatch "CST" ;
+    cacontology-us-ncmec:incidentCode "CST" .
+
+cacontology-us-ncmec:OnlineEnticementIncident rdf:type owl:Class ;
+    rdfs:label "Online Enticement Incident"@en ;
+    rdfs:comment "Incidents involving online enticement of children for sexual acts. Source: NCMEC Cybertip API Section B.1.1, incidentType 'Online Enticement of Children for Sexual Acts'."@en ;
+    rdfs:subClassOf cacontology-us-ncmec:NCMECIncidentType ;
+    skos:exactMatch "OE" ;
+    cacontology-us-ncmec:incidentCode "OE" .
+
+# NCMEC Report Annotations
+cacontology-us-ncmec:NCMECReportAnnotation rdf:type owl:Class ;
+    rdfs:label "NCMEC Report Annotation"@en ;
+    rdfs:comment "Tags to describe the NCMEC report. Source: NCMEC Cybertip API Section B.1.1, reportAnnotations element."@en ;
+    rdfs:subClassOf cac-core:EnduringEntity .
+
+cacontology-us-ncmec:SextortionAnnotation rdf:type owl:Class ;
+    rdfs:label "Sextortion Annotation"@en ;
+    rdfs:comment "Annotation indicating the report is associated with sextortion. Source: NCMEC Cybertip API Section B.1.1, reportAnnotations/sextortion element."@en ;
+    rdfs:subClassOf cacontology-us-ncmec:NCMECReportAnnotation .
+
+cacontology-us-ncmec:CSAMSolicitationAnnotation rdf:type owl:Class ;
+    rdfs:label "CSAM Solicitation Annotation"@en ;
+    rdfs:comment "Annotation indicating the report is associated with solicitation of CSAM. Source: NCMEC Cybertip API Section B.1.1, reportAnnotations/csamSolicitation element."@en ;
+    rdfs:subClassOf cacontology-us-ncmec:NCMECReportAnnotation .
+
+cacontology-us-ncmec:MinorToMinorInteractionAnnotation rdf:type owl:Class ;
+    rdfs:label "Minor to Minor Interaction Annotation"@en ;
+    rdfs:comment "Annotation indicating the report is associated with an interaction between minors. Source: NCMEC Cybertip API Section B.1.1, reportAnnotations/minorToMinorInteraction element."@en ;
+    rdfs:subClassOf cacontology-us-ncmec:NCMECReportAnnotation .
+
+cacontology-us-ncmec:SpamAnnotation rdf:type owl:Class ;
+    rdfs:label "Spam Annotation"@en ;
+    rdfs:comment "Annotation indicating the report is associated with spam. Source: NCMEC Cybertip API Section B.1.1, reportAnnotations/spam element."@en ;
+    rdfs:subClassOf cacontology-us-ncmec:NCMECReportAnnotation .
+
+# NCMEC Report Properties
+cacontology-us-ncmec:hasNCMECIncidentType rdf:type owl:ObjectProperty ;
+    rdfs:label "has NCMEC incident type"@en ;
+    rdfs:comment "Links a NCMEC report to its incident type. Source: NCMEC Cybertip API Section B.1.1, incidentType element."@en ;
+    rdfs:domain cacontology-us-ncmec:NCMECCybertipReport ;
+    rdfs:range cacontology-us-ncmec:NCMECIncidentType .
+
+cacontology-us-ncmec:hasNCMECReportAnnotation rdf:type owl:ObjectProperty ;
+    rdfs:label "has NCMEC report annotation"@en ;
+    rdfs:comment "Links a NCMEC report to its annotations. Source: NCMEC Cybertip API Section B.1.1, reportAnnotations element."@en ;
+    rdfs:domain cacontology-us-ncmec:NCMECCybertipReport ;
+    rdfs:range cacontology-us-ncmec:NCMECReportAnnotation .
+
+# NCMEC Incident Code Property
+cacontology-us-ncmec:incidentCode rdf:type owl:DatatypeProperty ;
+    rdfs:label "incident code"@en ;
+    rdfs:comment "The official NCMEC incident type code. Source: NCMEC Cybertip API Section B.1.1, incidentType element."@en ;
+    rdfs:domain cacontology-us-ncmec:NCMECIncidentType ;
+    rdfs:range xsd:string .
+
+# =============================================================================
+# ENHANCED NCMEC TIP ANALYSIS CLASSES
+# =============================================================================
+
+cacontology-us-ncmec:CyberTipAnalysis rdf:type owl:Class ;
+    rdfs:label "CyberTip Analysis"@en ;
+    rdfs:comment "Analytical processing and assessment of NCMEC CyberTip reports by law enforcement."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject .
+
+cacontology-us-ncmec:PossessionIndicator rdf:type owl:Class ;
+    rdfs:label "Possession Indicator"@en ;
+    rdfs:comment "Evidence or indicators suggesting possession of child sexual abuse material."@en ;
+    rdfs:subClassOf cacontology-us-ncmec:CyberTipAnalysis .
+
+cacontology-us-ncmec:TransferDetection rdf:type owl:Class ;
+    rdfs:label "Transfer Detection"@en ;
+    rdfs:comment "Detection of transfer or sharing of child sexual abuse material."@en ;
+    rdfs:subClassOf cacontology-us-ncmec:CyberTipAnalysis .
+
+cacontology-us-ncmec:AccountLinking rdf:type owl:Class ;
+    rdfs:label "Account Linking"@en ;
+    rdfs:comment "Process of linking digital accounts to suspects through NCMEC tip analysis."@en ;
+    rdfs:subClassOf cacontology-us-ncmec:CyberTipAnalysis .
+
+cacontology-us-ncmec:PhoneNumberTrace rdf:type owl:Class ;
+    rdfs:label "Phone Number Trace"@en ;
+    rdfs:comment "Tracing of phone numbers linked to accounts in NCMEC tips."@en ;
+    rdfs:subClassOf cacontology-us-ncmec:CyberTipAnalysis .
+
+cacontology-us-ncmec:ContentIdentification rdf:type owl:Class ;
+    rdfs:label "Content Identification"@en ;
+    rdfs:comment "Identification and classification of illegal content in NCMEC tips."@en ;
+    rdfs:subClassOf cacontology-us-ncmec:CyberTipAnalysis .
+
+cacontology-us-ncmec:PlatformCooperation rdf:type owl:Class ;
+    rdfs:label "Platform Cooperation"@en ;
+    rdfs:comment "Cooperation from digital platforms in providing information for NCMEC tips."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject .
+
+# =============================================================================
+# INVESTIGATION TRIGGER CLASSES
+# =============================================================================
+
+cacontology-us-ncmec:InvestigationTrigger rdf:type owl:Class ;
+    rdfs:label "Investigation Trigger"@en ;
+    rdfs:comment "Event or information that triggers law enforcement investigation based on NCMEC tip."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject .
+
+cacontology-us-ncmec:TaskForceReferral rdf:type owl:Class ;
+    rdfs:label "Task Force Referral"@en ;
+    rdfs:comment "Referral of NCMEC tip to appropriate CAC task force for investigation."@en ;
+    rdfs:subClassOf cacontology-us-ncmec:InvestigationTrigger .
+
+cacontology-us-ncmec:LocalLawEnforcementReferral rdf:type owl:Class ;
+    rdfs:label "Local Law Enforcement Referral"@en ;
+    rdfs:comment "Referral of NCMEC tip to local law enforcement agency."@en ;
+    rdfs:subClassOf cacontology-us-ncmec:InvestigationTrigger .
+
+cacontology-us-ncmec:FederalReferral rdf:type owl:Class ;
+    rdfs:label "Federal Referral"@en ;
+    rdfs:comment "Referral of NCMEC tip to federal law enforcement agencies."@en ;
+    rdfs:subClassOf cacontology-us-ncmec:InvestigationTrigger .
+
+# =============================================================================
+# TIP PROCESSING CLASSES
+# =============================================================================
+
+cacontology-us-ncmec:TipProcessing rdf:type owl:Class ;
+    rdfs:label "Tip Processing"@en ;
+    rdfs:comment "Processing workflow for NCMEC tips from receipt to investigation referral."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject .
+
+cacontology-us-ncmec:TipPrioritization rdf:type owl:Class ;
+    rdfs:label "Tip Prioritization"@en ;
+    rdfs:comment "Priority assessment and ranking of NCMEC tips for investigation."@en ;
+    rdfs:subClassOf cacontology-us-ncmec:TipProcessing .
+
+cacontology-us-ncmec:TipValidation rdf:type owl:Class ;
+    rdfs:label "Tip Validation"@en ;
+    rdfs:comment "Validation and verification of information in NCMEC tips."@en ;
+    rdfs:subClassOf cacontology-us-ncmec:TipProcessing .
+
+cacontology-us-ncmec:TipEnrichment rdf:type owl:Class ;
+    rdfs:label "Tip Enrichment"@en ;
+    rdfs:comment "Enhancement of NCMEC tips with additional investigative information."@en ;
+    rdfs:subClassOf cacontology-us-ncmec:TipProcessing .
+
+# =============================================================================
+# ENHANCED NCMEC PROPERTIES
+# =============================================================================
+
+# Analysis Properties
+cacontology-us-ncmec:analysisConfidence rdf:type owl:DatatypeProperty ;
+    rdfs:label "analysis confidence"@en ;
+    rdfs:comment "Confidence level in tip analysis (high, medium, low)."@en ;
+    rdfs:domain cacontology-us-ncmec:CyberTipAnalysis ;
+    rdfs:range xsd:string .
+
+cacontology-us-ncmec:indicatorStrength rdf:type owl:DatatypeProperty ;
+    rdfs:label "indicator strength"@en ;
+    rdfs:comment "Strength of possession or transfer indicators (strong, moderate, weak)."@en ;
+    rdfs:domain cacontology-us-ncmec:PossessionIndicator ;
+    rdfs:range xsd:string .
+
+cacontology-us-ncmec:transferVolume rdf:type owl:DatatypeProperty ;
+    rdfs:label "transfer volume"@en ;
+    rdfs:comment "Volume of material transferred in megabytes."@en ;
+    rdfs:domain cacontology-us-ncmec:TransferDetection ;
+    rdfs:range xsd:decimal .
+
+cacontology-us-ncmec:transferFrequency rdf:type owl:DatatypeProperty ;
+    rdfs:label "transfer frequency"@en ;
+    rdfs:comment "Frequency of transfer activity (single, multiple, ongoing)."@en ;
+    rdfs:domain cacontology-us-ncmec:TransferDetection ;
+    rdfs:range xsd:string .
+
+cacontology-us-ncmec:accountConfidence rdf:type owl:DatatypeProperty ;
+    rdfs:label "account confidence"@en ;
+    rdfs:comment "Confidence level in account linking (verified, probable, possible)."@en ;
+    rdfs:domain cacontology-us-ncmec:AccountLinking ;
+    rdfs:range xsd:string .
+
+cacontology-us-ncmec:phoneVerificationStatus rdf:type owl:DatatypeProperty ;
+    rdfs:label "phone verification status"@en ;
+    rdfs:comment "Status of phone number verification (verified, unverified, disconnected)."@en ;
+    rdfs:domain cacontology-us-ncmec:PhoneNumberTrace ;
+    rdfs:range xsd:string .
+
+# Processing Properties
+cacontology-us-ncmec:processingTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "processing time"@en ;
+    rdfs:comment "Time taken to process tip in hours."@en ;
+    rdfs:domain cacontology-us-ncmec:TipProcessing ;
+    rdfs:range xsd:decimal .
+
+cacontology-us-ncmec:priorityLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "priority level"@en ;
+    rdfs:comment "Priority level assigned to tip (critical, high, medium, low)."@en ;
+    rdfs:domain cacontology-us-ncmec:TipPrioritization ;
+    rdfs:range xsd:string .
+
+cacontology-us-ncmec:validationStatus rdf:type owl:DatatypeProperty ;
+    rdfs:label "validation status"@en ;
+    rdfs:comment "Validation status of tip (validated, partially_validated, not_validated)."@en ;
+    rdfs:domain cacontology-us-ncmec:TipValidation ;
+    rdfs:range xsd:string .
+
+cacontology-us-ncmec:enrichmentType rdf:type owl:DatatypeProperty ;
+    rdfs:label "enrichment type"@en ;
+    rdfs:comment "Type of enrichment added (geographic, demographic, technical, behavioral)."@en ;
+    rdfs:domain cacontology-us-ncmec:TipEnrichment ;
+    rdfs:range xsd:string .
+
+# Trigger Properties
+cacontology-us-ncmec:triggerCriteria rdf:type owl:DatatypeProperty ;
+    rdfs:label "trigger criteria"@en ;
+    rdfs:comment "Criteria that triggered investigation (content_volume, suspect_profile, victim_age, repeat_offender)."@en ;
+    rdfs:domain cacontology-us-ncmec:InvestigationTrigger ;
+    rdfs:range xsd:string .
+
+cacontology-us-ncmec:urgencyLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "urgency level"@en ;
+    rdfs:comment "Urgency level for investigation (immediate, urgent, routine)."@en ;
+    rdfs:domain cacontology-us-ncmec:InvestigationTrigger ;
+    rdfs:range xsd:string .
+
+cacontology-us-ncmec:referralJurisdiction rdf:type owl:DatatypeProperty ;
+    rdfs:label "referral jurisdiction"@en ;
+    rdfs:comment "Jurisdiction to which tip is referred (federal, state, local)."@en ;
+    rdfs:domain cacontology-us-ncmec:InvestigationTrigger ;
+    rdfs:range xsd:string .
+
+# Platform Properties
+cacontology-us-ncmec:platformResponseTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "platform response time"@en ;
+    rdfs:comment "Time taken by platform to respond to information request in hours."@en ;
+    rdfs:domain cacontology-us-ncmec:PlatformCooperation ;
+    rdfs:range xsd:decimal .
+
+cacontology-us-ncmec:cooperationLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "cooperation level"@en ;
+    rdfs:comment "Level of platform cooperation (full, partial, limited, none)."@en ;
+    rdfs:domain cacontology-us-ncmec:PlatformCooperation ;
+    rdfs:range xsd:string .
+
+cacontology-us-ncmec:dataProvided rdf:type owl:DatatypeProperty ;
+    rdfs:label "data provided"@en ;
+    rdfs:comment "Type of data provided by platform (account_info, user_data, content, metadata)."@en ;
+    rdfs:domain cacontology-us-ncmec:PlatformCooperation ;
+    rdfs:range xsd:string .
+
+# =============================================================================
+# CYBERTIP IDENTIFIER EXTRACTION AND JURISDICTION ROUTING — Issue #31
+# First-class workflow concepts for extracting actionable identifiers from
+# CyberTipline report documents (OCR/document parsing) and the downstream
+# jurisdiction/routing determination that follows from that extraction.
+# =============================================================================
+
+cacontology-us-ncmec:CybertipIdentifierExtractionAction rdf:type owl:Class ;
+    rdfs:label "CyberTip Identifier Extraction Action"@en ;
+    rdfs:comment "A CAC-domain action that extracts structured identifiers (screen names, phone numbers, IP addresses, email addresses) from a CyberTipline report document, including by OCR or document parsing."@en ;
+    rdfs:subClassOf uco-action:Action .
+
+cacontology-us-ncmec:CybertipExtractedIdentifierSet rdf:type owl:Class ;
+    rdfs:label "CyberTip Extracted Identifier Set"@en ;
+    rdfs:comment "An information artifact representing the set of identifiers extracted from a CyberTipline report, used to support triage, enrichment, and routing."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject .
+
+cacontology-us-ncmec:CybertipJurisdictionRoutingAssessment rdf:type owl:Class ;
+    rdfs:label "CyberTip Jurisdiction Routing Assessment"@en ;
+    rdfs:comment "A triage assessment that uses extracted identifiers and enrichment results to recommend or determine the responsible jurisdiction or agency for routing or investigation."@en ;
+    rdfs:subClassOf cacontology-us-ncmec:CyberTipAnalysis .
+
+# Extraction and routing properties (Issue #31)
+cacontology-us-ncmec:extractsIdentifierFromCybertip rdf:type owl:ObjectProperty ;
+    rdfs:label "extracts identifier from cybertip"@en ;
+    rdfs:comment "Links an extraction action to the CyberTip report or report document it processes."@en ;
+    rdfs:domain cacontology-us-ncmec:CybertipIdentifierExtractionAction ;
+    rdfs:range cacontology-us-ncmec:NCMECCybertipReport .
+
+cacontology-us-ncmec:producedIdentifierSet rdf:type owl:ObjectProperty ;
+    rdfs:label "produced identifier set"@en ;
+    rdfs:comment "Links an extraction action to the identifier set it produced."@en ;
+    rdfs:domain cacontology-us-ncmec:CybertipIdentifierExtractionAction ;
+    rdfs:range cacontology-us-ncmec:CybertipExtractedIdentifierSet .
+
+cacontology-us-ncmec:hasExtractedScreenName rdf:type owl:ObjectProperty ;
+    rdfs:label "has extracted screen name"@en ;
+    rdfs:comment "Links an extracted identifier set to a screen name / account handle observable (e.g., a DigitalAccount or ApplicationAccount)."@en ;
+    rdfs:domain cacontology-us-ncmec:CybertipExtractedIdentifierSet ;
+    rdfs:range uco-observable:ObservableObject .
+
+cacontology-us-ncmec:hasExtractedPhoneNumber rdf:type owl:ObjectProperty ;
+    rdfs:label "has extracted phone number"@en ;
+    rdfs:comment "Links an extracted identifier set to a phone number observable."@en ;
+    rdfs:domain cacontology-us-ncmec:CybertipExtractedIdentifierSet ;
+    rdfs:range uco-observable:ObservableObject .
+
+cacontology-us-ncmec:hasExtractedIPAddress rdf:type owl:ObjectProperty ;
+    rdfs:label "has extracted IP address"@en ;
+    rdfs:comment "Links an extracted identifier set to an IP address observable."@en ;
+    rdfs:domain cacontology-us-ncmec:CybertipExtractedIdentifierSet ;
+    rdfs:range uco-observable:ObservableObject .
+
+cacontology-us-ncmec:usesExtractedIdentifierSet rdf:type owl:ObjectProperty ;
+    rdfs:label "uses extracted identifier set"@en ;
+    rdfs:comment "Links a jurisdiction routing assessment to the extracted identifier set (and enrichment results) it relies on."@en ;
+    rdfs:domain cacontology-us-ncmec:CybertipJurisdictionRoutingAssessment ;
+    rdfs:range cacontology-us-ncmec:CybertipExtractedIdentifierSet .
+
+cacontology-us-ncmec:recommendedJurisdiction rdf:type owl:ObjectProperty ;
+    rdfs:label "recommended jurisdiction"@en ;
+    rdfs:comment "Links a routing assessment to the jurisdiction or agency recommended for follow-up (e.g., a cacontology-multi:Jurisdiction instance or an Organization)."@en ;
+    rdfs:domain cacontology-us-ncmec:CybertipJurisdictionRoutingAssessment ;
+    rdfs:range uco-core:UcoObject .
+
+# =============================================================================
+# AGGREGATE TRANSPARENCY STATISTICS
+# =============================================================================
+
+cacontology-us-ncmec:AggregateReportStatistic rdf:type owl:Class ;
+    rdfs:label "Aggregate Report Statistic"@en ;
+    rdfs:comment "A single published aggregate statistic about CyberTipline reporting or related NCMEC program activity (e.g., annual report volume, category growth rate, cumulative hash counts), as stated in NCMEC public transparency data. Each instance carries exactly one primary numeric value; compound published claims should be decomposed into one instance per value. Instances are statistical claims about report populations, not individual report instances."@en ;
+    rdfs:subClassOf uco-core:Assertion .
+
+cacontology-us-ncmec:statisticValue rdf:type owl:DatatypeProperty ;
+    rdfs:label "statistic value"@en ;
+    rdfs:comment "The primary numeric value of the published statistic."@en ;
+    rdfs:domain cacontology-us-ncmec:AggregateReportStatistic ;
+    rdfs:range xsd:decimal .
+
+cacontology-us-ncmec:statisticUnit rdf:type owl:DatatypeProperty ;
+    rdfs:label "statistic unit"@en ;
+    rdfs:comment "The unit of the statistic value (e.g., 'reports', 'files', 'percent', 'hashes', 'days', 'organizations', 'reports per day')."@en ;
+    rdfs:domain cacontology-us-ncmec:AggregateReportStatistic ;
+    rdfs:range xsd:string .
+
+cacontology-us-ncmec:statisticQualifier rdf:type owl:DatatypeProperty ;
+    rdfs:label "statistic qualifier"@en ;
+    rdfs:comment "Qualifier applied to the statistic value in the published source (e.g., 'more than', 'approximately', 'just over', 'average')."@en ;
+    rdfs:domain cacontology-us-ncmec:AggregateReportStatistic ;
+    rdfs:range xsd:string .
+
+cacontology-us-ncmec:reportingPeriod rdf:type owl:DatatypeProperty ;
+    rdfs:label "reporting period"@en ;
+    rdfs:comment "The reporting period the statistic covers, as stated in the published source (e.g., '2025', 'as of 2025-12-31', '2023-2025 cumulative')."@en ;
+    rdfs:domain cacontology-us-ncmec:AggregateReportStatistic ;
+    rdfs:range xsd:string .
+
+cacontology-us-ncmec:percentChangeFromPriorPeriod rdf:type owl:DatatypeProperty ;
+    rdfs:label "percent change from prior period"@en ;
+    rdfs:comment "Published percentage change of this statistic relative to the prior reporting period (positive for increase, negative for decrease)."@en ;
+    rdfs:domain cacontology-us-ncmec:AggregateReportStatistic ;
+    rdfs:range xsd:decimal .
+
+cacontology-us-ncmec:statisticTopic rdf:type owl:ObjectProperty ;
+    rdfs:label "statistic topic"@en ;
+    rdfs:comment "Links an aggregate statistic to the reporting category, program, or concept it describes (e.g., an online enticement category node or the Take It Down service)."@en ;
+    rdfs:domain cacontology-us-ncmec:AggregateReportStatistic ;
+    rdfs:range uco-core:UcoObject .
+
+# =============================================================================
+# ENHANCED NCMEC RELATIONSHIPS
+# =============================================================================
+
+# Analysis Relationships
+cacontology-us-ncmec:analysisOf rdf:type owl:ObjectProperty ;
+    rdfs:label "analysis of"@en ;
+    rdfs:comment "Links analysis to the NCMEC tip being analyzed."@en ;
+    rdfs:domain cacontology-us-ncmec:CyberTipAnalysis ;
+    rdfs:range cacontology-us-ncmec:NCMECCybertipReport .
+
+cacontology-us-ncmec:linkedToAccount rdf:type owl:ObjectProperty ;
+    rdfs:label "linked to account"@en ;
+    rdfs:comment "Links account linking to digital account."@en ;
+    rdfs:domain cacontology-us-ncmec:AccountLinking ;
+    rdfs:range uco-observable:DigitalAccount .
+
+cacontology-us-ncmec:tracedToPhone rdf:type owl:ObjectProperty ;
+    rdfs:label "traced to phone"@en ;
+    rdfs:comment "Links phone trace to specific phone number."@en ;
+    rdfs:domain cacontology-us-ncmec:PhoneNumberTrace ;
+    rdfs:range uco-observable:PhoneNumber .
+
+cacontology-us-ncmec:identifiedContent rdf:type owl:ObjectProperty ;
+    rdfs:label "identified content"@en ;
+    rdfs:comment "Links content identification to identified digital content."@en ;
+    rdfs:domain cacontology-us-ncmec:ContentIdentification ;
+    rdfs:range uco-observable:DigitalArtifact .
+
+# Processing Relationships
+cacontology-us-ncmec:processedTip rdf:type owl:ObjectProperty ;
+    rdfs:label "processed tip"@en ;
+    rdfs:comment "Links processing activity to the tip being processed."@en ;
+    rdfs:domain cacontology-us-ncmec:TipProcessing ;
+    rdfs:range cacontology-us-ncmec:NCMECCybertipReport .
+
+cacontology-us-ncmec:triggeredBy rdf:type owl:ObjectProperty ;
+    rdfs:label "triggered by"@en ;
+    rdfs:comment "Links investigation trigger to the tip that triggered it."@en ;
+    rdfs:domain cacontology-us-ncmec:InvestigationTrigger ;
+    rdfs:range cacontology-us-ncmec:NCMECCybertipReport .
+
+cacontology-us-ncmec:resultedInInvestigation rdf:type owl:ObjectProperty ;
+    rdfs:label "resulted in investigation"@en ;
+    rdfs:comment "Links investigation trigger to the investigation it initiated."@en ;
+    rdfs:domain cacontology-us-ncmec:InvestigationTrigger ;
+    rdfs:range cacontology:CACInvestigation .
+
+# Cooperation Relationships
+cacontology-us-ncmec:involvesPlatform rdf:type owl:ObjectProperty ;
+    rdfs:label "involves platform"@en ;
+    rdfs:comment "Links platform cooperation to the digital platform involved."@en ;
+    rdfs:domain cacontology-us-ncmec:PlatformCooperation ;
+    rdfs:range uco-observable:DigitalService .
+
+cacontology-us-ncmec:supportedBy rdf:type owl:ObjectProperty ;
+    rdfs:label "supported by"@en ;
+    rdfs:comment "Links tip analysis to platform cooperation that supported it."@en ;
+    rdfs:domain cacontology-us-ncmec:CyberTipAnalysis ;
+    rdfs:range cacontology-us-ncmec:PlatformCooperation . 
