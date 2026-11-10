@@ -116,6 +116,8 @@ _TITLES = frozenset("""
 judge justice officer agent detective det sergeant sgt lieutenant lt captain capt deputy trooper special
 investigator inspector chief sheriff marshal attorney prosecutor commissioner director dr mr mrs ms miss
 senator governor mayor president secretary assistant acting senior supervisory u.s. us
+charge corporal cpl colonel col commander major superintendent pastor deacon bishop reverend rev coach
+teacher principal defendant ag da
 """.split())
 # Capitalized because they start a sentence, not because they are a name.
 _LEADING = frozenset("""
@@ -177,6 +179,12 @@ _PERSON_CUES = [
                r"stated|claimed|explained|allegedly|later|also|described|acknowledged|denied|agreed|used|sent|"
                r"posted|uploaded|downloaded|possessed|distributed|received|messaged|asked|met|traveled|travelled)\b"),
 ]
+
+
+# The defendant block newer DOJ releases end with: "The Defendant:\nROWAN BRAMBLETON Age: 39".
+_NAME_BEFORE_AGE_LABEL = re.compile(
+    r"(?<![A-Za-z])([A-Z][A-Za-z'’\-]+(?:[ \t]+[A-Z]\.?)?(?:[ \t]+[A-Z][A-Za-z'’\-]+){1,3})[ \t]*\n?[ \t]*Age:\s*\d"
+)
 
 
 def person_surnames(text: str) -> Set[str]:
@@ -358,17 +366,26 @@ _PLACE_AFTER = re.compile(r"^(?:['’]s)?\s{1,3}(?:police|county|sheriff|townshi
 
 
 # "of Hudson Falls, NY" / "a Hudson Falls man": what follows a town, never a person.
+# The two letters have to be a state: "Wexley, II," and "Wexley, EU Commissioner" are people.
+_USPS = (
+    "AL AK AZ AR CA CO CT DE DC FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND "
+    "OH OK OR PA PR RI SC SD TN TX UT VT VA WA WV WI WY"
+).replace(" ", "|")
 _TOWN_AFTER = re.compile(
-    r"^(?:,\s*(?:[A-Z]{2}|N\.\s?Y\.|Pa\.|Ky\.|Ga\.|Fla\.|Ohio|Texas|Calif\.)(?=[\s,.;)])"
+    rf"^(?:,\s*(?:(?:{_USPS})|N\.\s?Y\.|Pa\.|Ky\.|Ga\.|Fla\.|Ohio|Texas|Calif\.)(?=[\s,.;)])"
     r"|\s+(?:man|woman|men|women|teen|teenager|resident|residents|native|couple|area|-based)\b)"
 )
 
 
-def _reads_as_place(name: str, text: str, not_people: Set[str]) -> bool:
-    """A "name" that is a known place, a grounded place/agency here, or used as one in the text."""
+def _reads_as_place(name: str, text: str, not_people: Set[str], gazetteer: bool = True) -> bool:
+    """A "name" that is a known place, a grounded place/agency here, or used as one in the text.
+
+    ``gazetteer=False`` leaves out the bare gazetteer lookup, for callers that weigh it
+    against evidence that this mention is a person.
+    """
     name = _norm_name(name)  # "Spring Grove's police" is still Spring Grove
     low = name.lower()
-    if low in _places() or name in not_people:
+    if (gazetteer and low in _places()) or name in not_people:
         return True
     if any(re.search(re.escape(name) + r"\s+(?:" + "|".join(sorted(_INSTITUTION)) + r")\b", x or "", re.I)
            for x in not_people):
@@ -451,36 +468,117 @@ def scrub_people(value: Any, full: Set[str], surnames: Set[str]) -> Any:
 # full release with people masked and places, agencies and facts intact.
 
 # A span right after these is part of an organization's name ("Department of Internal Affairs",
-# "the Attorney General's Child Predator Unit", "Kentucky State Police Electronic Crimes Branch").
+# "the Attorney General's Child Predator Unit", "Operation Broken Heart"). The agency word has to
+# be joined to the span by "of" / "for" or a possessive: a bare one is a title or the end of the
+# previous phrase, and what follows is the person ("Attorney General Corin Ashcombe",
+# "Sheriff Reese Thistlewood", "told police Ashcombe had").
 _ORG_BEFORE = re.compile(
-    r"(?:department|office|bureau|ministry|division|unit|agency|service|services|police|sheriff'?s?|"
-    r"attorney\s+general(?:'s|’s)?|marshals?|ksp|icac|fbi|hsi|doj|task\s+force|commission|council|"
-    r"university|college|school|hospital|company|inc\.?|corp\.?|operation|project|labor\s+and|court|station|"
-    r"registry|church)"
-    r"\s*(?:of\s+(?:the\s+)?|for\s+(?:the\s+)?)?$",
+    r"(?:(?:department|office|bureau|ministry|division|unit|agency|service|services|police|sheriffs?|"
+    r"attorney\s+general|marshals?|ksp|icac|fbi|hsi|doj|commission|council|university|college|school|"
+    r"hospital|court|station|registry|church)(?:['’]s?\s+|\s+(?:of|for)\s+(?:the\s+)?)"
+    r"|(?:task\s+force|company|inc\.?|corp\.?|operation|project|labor\s+and)\s*(?:(?:of|for)\s+(?:the\s+)?)?)$",
     re.I,
 )
+# Same sentence only: "... Attorney Corin Ashcombe. “Crimes against children ..." is a person.
 _ORG_AFTER = re.compile(
-    r"^\W{0,3}(?:corporation|corp|inc|llc|ltd|company|unit|branch|section|division|team|office|bureau|agency|"
+    r"^(?:['’]s)?[\s,\-]{0,3}(?:corporation|corp|inc|llc|ltd|company|unit|branch|section|division|team|office|bureau|agency|"
     r"services?|crimes?|task|force|program|programme|initiative|operation|center|centre|institute|foundation|"
     r"association|network|group|inspectors?|investigations?|commission|council|department|act|law)\b",
     re.I,
 )
 
 
-def _span_is_person(text: str, s: int, e: int, not_people: Set[str] = frozenset()) -> bool:
-    if _ORG_BEFORE.search(re.sub(r"\s+", " ", text[max(0, s - 40):s])) or _ORG_AFTER.match(text[e:e + 20]):
+# A title right before a name settles that it is a person, whatever else the word can mean
+# ("Governor Lincoln signed", "Judge Madison").
+_PERSON_TITLE_BEFORE = re.compile(
+    r"\b(?:judge|justice|officer|agent|detective|det\.?|sergeant|sgt\.?|lieutenant|lt\.?|captain|capt\.?|trooper|"
+    r"investigator|inspector|chief|sheriff|marshal|commissioner|director|dr\.?|mr\.?|mrs\.?|ms\.?|miss|senator|"
+    r"governor|gov\.?|mayor|president|secretary|colonel|col\.?|superintendent|prosecutor|general|attorney|"
+    r"constable|corporal|cpl\.?|major|commander|deputy)\s+$",
+    re.I,
+)
+# What a person does, right after the name.
+_PERSON_VERB_AFTER = re.compile(
+    r"^(?:['’]s)?,?\s+(?:said|says|told|stated|added|was|is|has|had|will|would|could|did|also|allegedly|admitted|"
+    r"pleaded|pled|faces|testified|wrote|explained|noted|announced|thanked|sentenced|ordered|[a-z]{3,}ed)\b"
+)
+
+
+_AGE_AFTER = re.compile(r"^,?\s*(?:(?:age|aged)\s*:?\s*)?\d{1,2}\b", re.I)
+_HEADLINE_WORDS = frozenset("man woman men women teen teenager resident residents couple arrested charged sentenced".split())
+
+
+def _all_caps_name(text: str, s: int, e: int) -> bool:
+    """ "ROWAN Q. BRAMBLETON, age 27" in an older release is a name. A dateline, an acronym or a
+    headline ("TRENTON", "ICAC", "BOARDMAN MAN ARRESTED") is not: an all-caps run counts only
+    with a title before it, or an age or a verb after it."""
+    toks = text[s:e].split()
+    words = [t.strip(".,") for t in toks if len(t.strip(".,")) > 1]
+    if len(words) < 2 or len(toks) > 5 or not all(re.fullmatch(r"[A-Z][A-Z'’\-]*[.,]?", t) for t in toks):
         return False
+    if {w.lower() for w in words} & (_LEADING | _TITLES | _INSTITUTION | _HEADLINE_WORDS):
+        return False
+    after = text[e:e + 24]
+    before = re.sub(r"\s+", " ", text[max(0, s - 24):s])
+    return bool(_AGE_AFTER.match(after) or _PERSON_VERB_AFTER.match(after) or _PERSON_TITLE_BEFORE.search(before))
+
+
+def _span_is_person(text: str, s: int, e: int, not_people: Set[str] = frozenset()) -> bool:
     name = text[s:e].strip()
-    toks = [t.strip(".,’'") for t in name.split()]
-    if not toks or not toks[-1][:1].isupper() or all(t.isupper() for t in toks if t):
+    possessive = name.endswith(("'s", "’s"))  # "Ashcombe's office said" is still Ashcombe
+    if _ORG_BEFORE.search(re.sub(r"\s+", " ", text[max(0, s - 40):s])) or (
+        not possessive and _ORG_AFTER.match(text[e:e + 20])
+    ):
+        return False
+    toks = [t.strip(".,’'“”\"") for t in name.split()]  # a nickname in quotes is part of the name
+    while len(toks) > 1 and re.fullmatch(r"#\d+", toks[-1]):
+        toks.pop()  # "Detective Wexley #4576": a badge number after the name
+    if not toks or not toks[-1][:1].isupper():
+        return False
+    if all(t.isupper() for t in toks if t) and not _all_caps_name(text, s, e):
         return False
     low = {t.lower() for t in toks}
     if low & _INSTITUTION or (len(toks) == 1 and toks[0].lower() in _LEADING | _TITLES):
         return False
     if toks[-1].lower() in _ABBREV_TAIL - {"jr", "sr"}:
         return False  # "Boyd Co." is a county
-    return not _reads_as_place(name, text, set(not_people))
+    if _reads_as_place(name, text, set(not_people), gazetteer=False):
+        return False
+    if _norm_name(name).lower() not in _places():
+        return True
+    # A name that is also on the map ("Lincoln", "Jackson"): a person only where the text treats
+    # it as one, so a town NER mistook for a person stays readable.
+    before = re.sub(r"\s+", " ", text[max(0, s - 24):s])
+    return bool(_PERSON_TITLE_BEFORE.search(before) or _PERSON_VERB_AFTER.match(text[e:e + 24]))
+
+
+# NER sometimes takes the title with the name ("Pastor Reese Thistlewood", "Charge Corin Ashcombe"
+# from "Special Agent in Charge ..."). The title is a fact about the case and stays readable.
+def _after_titles(text: str, s: int, e: int) -> int:
+    """Start of the name inside ``text[s:e]``, past any leading title words."""
+    while True:
+        m = re.match(r"([A-Za-z.]+)\s+(?=\S)", text[s:e])
+        if not m or m.group(1).strip(".").lower() not in _TITLES:
+            return s
+        s += m.end()
+
+
+# "van Wexley said": a surname can start with a lowercase particle.
+_PARTICLE_FIRST = re.compile(r"(?:van|von|de|del|della|di|da|dos|du|la|le|bin|al|el|ter|ten|den|der)\s+[A-Z]")
+
+
+def _wrapped_name(text: str, newline: int, end: int) -> bool:
+    """A line wrap between two parts of one name ("Reese\\nThistlewood"), not the end of a line of text."""
+    left = re.search(r"([A-Z][A-Za-z'’\-]*\.?|[A-Z]\.),?[ \t]*$", text[max(0, newline - 30):newline])
+    right = re.match(r"[ \t]*([A-Z][A-Za-z'’\-]+|[A-Z]\.?(?=[ \t]+[A-Z][a-z]))(?![\w:])", text[newline + 1:])
+    if not left or not right:
+        return False  # a blank line, or a field label ("Source:") on the next one
+    nxt = right.group(1).strip(".")
+    if len(nxt) == 1:
+        return True  # a middle initial
+    if nxt.isupper():
+        return False  # the next line is a dateline or a heading
+    return nxt.lower() not in _TITLES | _INSTITUTION | _LEADING
 
 
 def _trim_span(text: str, s: int, e: int) -> List[List[int]]:
@@ -489,9 +587,20 @@ def _trim_span(text: str, s: int, e: int) -> List[List[int]]:
     for m in re.finditer(r"\n|[.!?;:](?=\s)", text[s:e]):
         before = re.search(r"(\S+)$", text[s:s + m.start()])
         word = before.group(1).strip(".") if before else ""
-        # Initials and abbreviations are inside a name ("Hollis K. Wexley", "Corin Ashcombe Jr. was").
-        if m.group(0) == "." and (len(word) <= 2 or word.lower() in ("jr", "sr", "dr", "mr", "mrs", "ms", "st")):
+        # Initials and abbreviations are inside a name ("Hollis K. Wexley", "R.L. Wexley",
+        # "Corin Ashcombe Jr. was").
+        if m.group(0) == "." and (
+            len(word) <= 2
+            or re.fullmatch(r"(?:[A-Z]\.)*[A-Z]", word)
+            or word.lower() in ("jr", "sr", "dr", "mr", "mrs", "ms", "st")
+        ):
             continue
+        if m.group(0) == "\n":
+            if _wrapped_name(text, s + m.start(), e):
+                continue
+            if text[seg_start:s + m.start()].strip():
+                e = s + m.start()  # the name ended with its line; the next line is something else
+                break
         seg_start = s + m.end()
     while seg_start < e and text[seg_start].isspace():
         seg_start += 1
@@ -499,9 +608,12 @@ def _trim_span(text: str, s: int, e: int) -> List[List[int]]:
     while end > seg_start and text[end - 1] in " \t\n,.;:":
         end -= 1
     name = text[seg_start:end]
-    if not name or not name[:1].isupper():
+    if not name or not (name[:1].isupper() or _PARTICLE_FIRST.match(name)):
         return []
     return [[seg_start, end]]
+
+
+_EMAIL_LOCAL = re.compile(r"(?<![\w.])([A-Za-z][A-Za-z0-9._%+\-]*)@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}")
 
 
 def person_spans(text: str, ner_person_spans: Iterable = (), not_people: Iterable[str] = ()) -> List[List[int]]:
@@ -516,7 +628,10 @@ def person_spans(text: str, ner_person_spans: Iterable = (), not_people: Iterabl
     spans: List[List[int]] = []
     for sp in ner_person_spans or ():
         s, e = int(sp[0]), int(sp[1])
-        if 0 <= s < e <= len(text) and _span_is_person(text, s, e, not_people):
+        if not 0 <= s < e <= len(text):
+            continue
+        s = _after_titles(text, s, e)
+        if _span_is_person(text, s, e, not_people):
             spans.append([s, e])
     # Age cues ("Smith, 32," / "32-year-old John Smith") name a person on their own.
     for pat in _PERSON_CUES[:2]:
@@ -527,6 +642,10 @@ def person_spans(text: str, ner_person_spans: Iterable = (), not_people: Iterabl
                 s += m.group(1).find(toks[0])
                 if _span_is_person(text, s, e, not_people):
                     spans.append([s, e])
+    for m in _NAME_BEFORE_AGE_LABEL.finditer(text):
+        s, e = m.span(1)
+        if _span_is_person(text, s, e, not_people):
+            spans.append([s, e])
     # A verb cue ("... said", "... admitted") only confirms someone NER or an age cue already found:
     # on its own it also fires on "Workforce Development said".
     known = {text[a:b].split()[-1].strip(".,’'") for a, b in spans if text[a:b].split()}
@@ -538,6 +657,9 @@ def person_spans(text: str, ner_person_spans: Iterable = (), not_people: Iterabl
             s += m.group(1).find(toks[0])
             if _span_is_person(text, s, e, not_people):
                 spans.append([s, e])
+    # Trim first: a surname is read off the end of a span, and a span that ran on into the
+    # next line ("Thistlewood\nSource:") would make "Source" one.
+    spans = [t for sp in spans for t in _trim_span(text, *sp)]
     surnames = set()
     for s, e in spans:
         core = [t.strip(".,’'") for t in text[s:e].split() if t.strip(".,").lower() not in NAME_SUFFIXES]
@@ -551,7 +673,11 @@ def person_spans(text: str, ner_person_spans: Iterable = (), not_people: Iterabl
             if _PLACE_AFTER.match(text[m.end():m.end() + 16]):
                 continue  # "Smith County" stays
             spans.append([m.start(), m.end()])
-    spans = [t for sp in spans for t in _trim_span(text, *sp)]
+    # "corin.ashcombe@usdoj.gov": the part before the @ is the person again. The domain stays.
+    lowered = {n.lower() for n in surnames if len(n) >= 4}
+    emails = [[m.start(1), m.end(1)] for m in _EMAIL_LOCAL.finditer(text)
+              if any(n in m.group(1).lower() for n in lowered)]
+    spans = [t for sp in spans for t in _trim_span(text, *sp)] + emails
     spans.sort()
     merged: List[List[int]] = []
     for s, e in spans:
