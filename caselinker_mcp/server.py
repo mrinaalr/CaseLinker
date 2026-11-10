@@ -731,6 +731,51 @@ async def get_cohort_members(
 
 
 @mcp.tool()
+async def filter_cases_by_jurisdiction(case_ids: list[str], jurisdiction: str = "") -> dict[str, Any]:
+    """Label each case federal / state / unknown and optionally keep one label (MCP-only, local DB).
+
+    Prosecuting jurisdiction, derived at read time (never stored) from the source and the
+    release's prosecutor, court and charging language (e.g. U.S. District Court, Assistant
+    U.S. Attorney, U.S.C. vs District Attorney, State's Attorney, Superior/Circuit Court).
+    Investigating agencies are not used. Both or neither signal, non-US sources and
+    courts-martial are "unknown"; unknown is never folded into federal or state. Returns
+    counts per label, each case's label and jurisdiction_basis (signal names), and case_ids
+    filtered to `jurisdiction` when given. Hard cap: 1000 case_ids.
+    """
+    try:
+        from case_jurisdiction import JURISDICTIONS, derive_jurisdiction
+        from caselinker_mcp.facet_local import CaseStorage, _db_path
+
+        ids = list(dict.fromkeys(c.strip() for c in case_ids or [] if c and c.strip()))
+        want = jurisdiction.strip().lower()
+        if not ids:
+            return {"error": "Provide case_ids (from filter or cohort tools)."}
+        if len(ids) > 1000:
+            return {"error": f"Too many case_ids ({len(ids)}); max 1000."}
+        if want and want not in JURISDICTIONS:
+            return {"error": f"jurisdiction must be one of {list(JURISDICTIONS)} or empty"}
+        db = _db_path()
+        if not db.exists():
+            return {"error": f"Database not found: {db}"}
+        cases = await asyncio.to_thread(
+            lambda: CaseStorage(str(db)).get_cases_by_ids(ids, include_raw_data=True) or []
+        )
+        found = {c["id"]: c for c in cases}
+        labels = {cid: derive_jurisdiction(found[cid]) for cid in ids if cid in found}
+        counts = {j: sum(1 for v in labels.values() if v["jurisdiction"] == j) for j in JURISDICTIONS}
+        return {
+            "counts": counts,
+            "not_found": [cid for cid in ids if cid not in found],
+            "cases": [{"case_id": cid, **v} for cid, v in labels.items()],
+            "case_ids": [cid for cid, v in labels.items() if not want or v["jurisdiction"] == want],
+            "jurisdiction_filter": want or None,
+        }
+    except Exception as e:
+        logger.exception("filter_cases_by_jurisdiction failed")
+        return {"error": f"{type(e).__name__}: {e}" if str(e) else type(e).__name__}
+
+
+@mcp.tool()
 async def tree_traversal(
     case_ids: list[str] | None = None,
     use_pacer_pool: bool = False,
