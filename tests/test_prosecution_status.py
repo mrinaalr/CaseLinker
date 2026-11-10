@@ -83,3 +83,24 @@ def test_stage_words_that_are_not_this_cases_outcome(text, expected):
 )
 def test_real_outcomes_are_kept(text, expected):
     assert status(text) == expected
+
+
+@pytest.mark.parametrize(
+    "text, expected",
+    [
+        # south_florida_icac_2024_017: the plea is the earlier case he was on probation for
+        ("Publication date: 2024-11-18 Prosecutors upgraded charges Monday against a man who was arrested in "
+         "October. Halvorsen was first arrested in 2020 and pleaded no contest in 2022 to the same crime.", "arrested"),
+        # nj_ag_2018_024: a registered offender's 2011 plea in a 2018 arrest release
+        ("Publication date: 2018-06-01 Marrowby was charged with endangering. Marrowby pleaded guilty in 2011 "
+         "to attempted endangering.", "charged"),
+        # nj_ag_2025_003: the next release's headline follows the presumption-of-innocence paragraph
+        ("Thane Corbridge was charged with possession.\nCharges are merely accusations, and the defendant is "
+         "presumed innocent unless and until proven guilty in a\ncourt of law.\n\nSecond Man Pleads Guilty to "
+         "Distributing Child Pornography on\nthe Internet - Defendant", "charged"),
+        # A plea dated last year is still this case's plea.
+        ("Publication date: 2024-03-02 Underhay pleaded guilty in 2023 and awaits sentencing.", "pleaded_guilty"),
+    ],
+)
+def test_a_plea_from_an_earlier_case_or_the_next_release_is_not_this_cases_plea(text, expected):
+    assert status(text) == expected

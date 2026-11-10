@@ -2354,6 +2354,9 @@ _STATUS_VERDICT_SENTENCE = re.compile(
     r"\bjur(?:y|ors)\b|\btrial\b|\bverdict\b|\bfound\s+guilty\b|\btoday\b|\byesterday\b|\bthis\s+week\b",
     re.IGNORECASE,
 )
+# Text after the presumption-of-innocence paragraph is the next release's headline in a
+# multi-release PDF ("… proven guilty in a court of law.\n\n[Name] Pleads Guilty to …").
+_STATUS_AFTER_PRESUMPTION = re.compile(r"\bpresumed\s+innocent\b[^\n]*(?:\n[^\n]+)?\n\s*\n[^\n]*(?:\n[^\n]+)?$", re.IGNORECASE)
 # "when he returned to be sentenced on Tuesday" reports the hearing.
 _STATUS_HEARING_BEFORE = re.compile(r"\b(?:returned|appeared(?:\s+\w+){0,4})\s+to\s+be\s+$", re.IGNORECASE)
 
@@ -2366,14 +2369,19 @@ def _status_mention_is_outcome(case_text: str, start: int, end: int, status: str
         return False
     if _STATUS_NOT_YET_BEFORE.search(before) and not _STATUS_HEARING_BEFORE.search(before):
         return False
+    after = case_text[end : end + 40]
+    published = _PUBLICATION_YEAR_RE.search(case_text)
     if status == "pleaded_guilty":
-        # "had previously pleaded guilty" in a sentencing release is this case's plea.
-        return True
+        # "had previously pleaded guilty" in a sentencing release is this case's plea. A plea
+        # dated two or more years before the release ("pleaded no contest in 2022") is not.
+        year = _STATUS_YEAR_AFTER.match(after)
+        if published and year and int(year.group(1)) <= int(published.group(1)) - 2:
+            return False
+        return not _STATUS_AFTER_PRESUMPTION.search(case_text[max(0, start - 400) : start])
     if _STATUS_PRIOR_BEFORE.search(before):
         return False
     if status != "convicted":
         return True
-    after = case_text[end : end + 40]
     if _STATUS_LABEL_AFTER.match(after):
         return False
     stop = case_text.find(".", end)
@@ -2382,7 +2390,6 @@ def _status_mention_is_outcome(case_text: str, start: int, end: int, status: str
         return True
     if _STATUS_PRIOR_SENTENCE.search(sentence) or _STATUS_PRIOR_RELATIVE_BEFORE.search(before):
         return False
-    published = _PUBLICATION_YEAR_RE.search(case_text)
     year = _STATUS_YEAR_BEFORE.search(before) or _STATUS_YEAR_AFTER.match(after)
     if published and year and int(year.group(1)) <= int(published.group(1)) - 2:
         return False
