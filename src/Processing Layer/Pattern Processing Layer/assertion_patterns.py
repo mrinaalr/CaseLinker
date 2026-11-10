@@ -31,7 +31,7 @@ _pp = importlib.util.module_from_spec(_spec)
 assert _spec.loader
 _spec.loader.exec_module(_pp)
 
-REGEX_VERSION = "regex_3.0.1"
+REGEX_VERSION = "regex_3.0.2"
 GATE_VERSION = "victim_age_gate_v2"
 
 # ---------------------------------------------------------------------------
@@ -188,6 +188,18 @@ _JUVENILE_DEFENDANT_RIGHT = re.compile(
     rf"(?:was|were|has\s+been|is|had\s+been)\s+(?:also\s+)?(?:{_DEFENDANT_VERBS})\b",
     re.I,
 )
+# "A 17-year-old student from Bergen County, whose name is not being released, was arrested
+# on Aug. 17 and charged": the subject of the charge, with a place or an aside in between (#58).
+_JUVENILE_DEFENDANT_SENTENCE = re.compile(
+    rf"^\W*(?:years?\W*olds?\W*)?(?:\w+\s+){{0,2}}?(?:boy|girl|teen|teenager|juvenile|male|female|youth|student)"
+    r"(?:\s+(?:from|of)\s+[A-Z][\w'’\- ]{1,40}?)?\s*(?:,[^.;]{0,120}?,)?\s+"
+    rf"(?:was|were|has\s+been|is|had\s+been)\s+(?:also\s+)?(?:{_DEFENDANT_VERBS})\b",
+    re.I,
+)
+_CONTACT_WITH_CHILD_LEFT = re.compile(
+    rf"\b(?:with|met|contacted|messaged|threatened|assaulted|abused|lured|enticed)\s+(?:an?|the)\s+(?:[\w-]+\s+)?(?:{VICTIM_NOUNS})\s*,\s*$",
+    re.I,
+)
 _NAME_BEFORE_COMMA = re.compile(
     rf"({_NAME_RE})(?:,?\s+(?:Jr|Sr|II|III|IV)\.?)?\s*(?:,|\()\s*(?:(?:then|now|age|aged)\s+)?$"
 )
@@ -331,6 +343,10 @@ def age_role_lexical(text: str, s: int, e: int, shape: str, defendants: Set[str]
             return "perpetrator", 0.85, extras
         return "unknown", 0.5, extras
 
+    # "exchanged sexual photos and texts with a girl, 14, including a photo": the child he was
+    # in contact with, not a child shown in the photos.
+    if shape == "noun_comma" and _CONTACT_WITH_CHILD_LEFT.search(left[-60:]):
+        return "victim", 0.8, extras
     if sg.is_depicted_material(text, s, e):
         return "depicted_in_material", 0.8, extras
     if sg.is_stated_preference(text, s, e):
@@ -357,7 +373,9 @@ def age_role_lexical(text: str, s: int, e: int, shape: str, defendants: Set[str]
         return "victim", 0.85, extras
     if _ARREST_OF_LEFT.search(left[-40:]):
         return "perpetrator", 0.8, extras
-    if _JUVENILE_DEFENDANT_RIGHT.match(right):
+    if _JUVENILE_DEFENDANT_RIGHT.match(right) or _JUVENILE_DEFENDANT_SENTENCE.match(
+        sg.normalize_surface(text[e : sg.sentence_at(text, s, e)[1]])[:260]
+    ):
         return "perpetrator", 0.85, extras
     if _ADULT_RIGHT.match(right):
         extras["entity"] = _ADULT_RIGHT.match(right).group(0).strip(" -,")

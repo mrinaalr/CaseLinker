@@ -55,6 +55,8 @@
     .prov-item { display: grid; grid-template-columns: 90px minmax(0,1fr) auto; gap: 14px; padding: 10px 8px; margin: 0 -8px; border-top: 1px solid var(--line); align-items: start; cursor: pointer; border-radius: 6px; }
     .prov-item:hover { background: var(--surface-2); }
     .prov-item.is-on { background: var(--accent-soft); }
+    .prov-item .aside { font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--ink-3); }
+    .prov-item.is-aside .cl-quote { color: var(--ink-3); }
     .prov-layout { display: grid; grid-template-columns: minmax(0,1fr) minmax(320px, 44%); gap: 18px; align-items: start; }
     .prov-layout .cl-narrative { position: sticky; top: calc(var(--nav-h) + 16px); }
     .prov-layout .cl-narrative__body { max-height: calc(100vh - var(--nav-h) - 100px); }
@@ -272,10 +274,19 @@
         conf: one(a, 'https://cacontology.projectvic.org/core#hasConfidence'), method: one(a, 'https://cacontology.projectvic.org/core#usesMethod'), role: one(a, 'https://w3id.org/caselinker/ns/provenance#assertionRole') };
     }).sort(function (a, b) { return (+a.start || 0) - (+b.start || 0); });
     var rest = others.filter(function (n) { return !/\/assertion\//.test(n['@id']); });
+    /* A resolution links only to the assertions its value rests on. An annotation its field's
+       resolution does not link to, and that no reader gave a role, was read and set aside. */
+    var used = {}, resolved = {};
+    rest.forEach(function (n) {
+      var m = /\/resolution\/([^\/]+)$/.exec(n['@id']); if (!m) return;
+      resolved[decodeURIComponent(m[1])] = 1;
+      (n['http://www.w3.org/ns/prov#wasDerivedFrom'] || []).forEach(function (v) { used[v['@id']] = 1; });
+    });
+    items.forEach(function (it) { it.aside = !it.role && !!resolved[it.subject] && !used[it.id]; });
     var html = '<section class="section"><h3>Annotations, in reading order <span class="n">' + items.length + '</span></h3><p>Click an annotation to see its passage in the released text.</p><div class="prov-layout"><div class="cl-card cl-card--pad" id="prov-list">' +
       (items.length ? items.map(function (it) {
         var subj = typeof it.subject === 'string' && it.subject.indexOf('http') === 0 ? curie(it.subject) : it.subject;
-        return '<div class="prov-item" data-span="' + CL.esc(it.id.split('/').slice(-2).join('-')) + '"><div class="pos">' + (it.start != null ? CL.esc(it.start + '–' + it.end) : '') + '</div><div><div class="subj">' + CL.esc(subj || '') + (it.role ? ' · ' + CL.esc(it.role) : '') + '</div>' +
+        return '<div class="prov-item' + (it.aside ? ' is-aside' : '') + '" data-span="' + CL.esc(it.id.split('/').slice(-2).join('-')) + '"><div class="pos">' + (it.start != null ? CL.esc(it.start + '–' + it.end) : '') + '</div><div><div class="subj">' + CL.esc(subj || '') + (it.role ? ' · ' + CL.esc(it.role) : '') + (it.aside ? ' <span class="aside">no role assigned, not in the resolved value</span>' : '') + '</div>' +
           (it.quote != null ? '<blockquote class="cl-quote">' + CL.esc(it.quote) + '</blockquote>' : '') + '<div class="cl-small cl-muted" style="margin-top:4px">value <code>' + CL.esc(it.value) + '</code></div></div>' +
           '<div class="meta">' + (it.method ? CL.esc(curie(it.method).replace('extractor/', '')) : '') + (it.conf != null ? ' · ' + CL.esc(it.conf) : '') + '<br><a href="/explore?iri=' + encodeURIComponent(it.id) + '" data-iri="' + CL.esc(it.id) + '" data-in="0">' + CL.esc(curie(it.id).split('/').slice(-2).join('/')) + '</a></div></div>';
       }).join('') : '<div class="cl-empty">No annotations in this provenance graph.</div>') + '</div><div id="prov-text"></div></div></section>';
@@ -286,7 +297,7 @@
 
   function mountNarrative(root, caseId, spans) {
     var host = root.querySelector('#prov-text'); if (!host) return;
-    var panel = CL.narrativePanel({ caseId: caseId, spans: spans, title: 'Released text', onReady: function (p) {
+    var panel = CL.narrativePanel({ caseId: caseId, spans: spans, title: 'Released text', collapsed: true, onReady: function (p) {
       Array.prototype.forEach.call(p.querySelectorAll('mark.cl-mark'), function (m) { m.addEventListener('click', function () { pick(m.getAttribute('data-span'), true); }); });
     } });
     host.appendChild(panel);
@@ -305,7 +316,7 @@
     root.appendChild(sec);
     CL.sparql(q).then(function (d) {
       var r = (d.results.bindings || [])[0]; if (!r) { sec.appendChild(CL.el('div', { class: 'cl-empty' }, 'No selector stored for this annotation.')); return; }
-      var panel = CL.narrativePanel({ caseId: caseId, spans: [{ id: 'one', quote: r.exact.value, start: +r.start.value, end: +r.end.value, label: r.subject.value + ' ' + r.value.value }], title: 'Released text', onReady: function (p) { p.jump('one'); } });
+      var panel = CL.narrativePanel({ caseId: caseId, spans: [{ id: 'one', quote: r.exact.value, start: +r.start.value, end: +r.end.value, label: r.subject.value + ' ' + r.value.value }], title: 'Released text', collapsed: true, openAt: 'one' });
       sec.appendChild(panel);
     }).catch(function (e) { sec.appendChild(CL.el('div', { class: 'cl-notice cl-notice--warn' }, 'Could not read the annotation: ' + e.message)); });
   }

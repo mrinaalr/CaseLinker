@@ -269,6 +269,52 @@ def match_international(mention: str) -> dict | None:
     return None
 
 
+_STATE_ABBREV_DOTTED = re.compile(r"\b([A-Z])\.\s?([A-Z])\.")
+# National bodies the federal table does not list yet. One node each is right.
+_NATIONAL_LABEL = re.compile(
+    r"\bU\.?\s?S\.?(?=\s|$)|\bUnited\s+States\b|\bFederal\b|\bNational\b|\bHomeland\s+Security\b"
+    r"|\bJustice\s+Department\b|^\s*(?:the\s+)?Department\s+of\s+Justice\b|\bSecret\s+Service\b"
+    r"|\bBureau\s+of\s+Prisons\b|\bPostal\b|\bMarshals\b|\bCustoms\b|\bImmigration\b",
+    re.IGNORECASE,
+)
+
+
+def _names_a_state(mention: str) -> bool:
+    """True when the label carries its own state ("Kentucky State Police", "S.C. Attorney General's Office")."""
+    from location_grounding import STATE_NAME_TO_USPS
+
+    low = f" {re.sub(r'[^a-z]+', ' ', mention.lower())} "
+    for name in STATE_NAME_TO_USPS:
+        # "Washington County Sheriff's Office" names a county, in any of thirty states.
+        if re.search(rf" {re.escape(name.lower())} (?!(?:county|parish|township|borough|city) )", low):
+            return True
+    codes = set(STATE_NAME_TO_USPS.values())
+    return any((a + b) in codes for a, b in _STATE_ABBREV_DOTTED.findall(mention))
+
+
+def ungrounded_agency_scope(mention: str, ground: Optional[Dict[str, Any]], *, federal: bool = False) -> str:
+    """How far an agency label that is not grounded may be shared across cases (#58).
+
+    ``shared``  one node for every case: federal and national bodies, international
+                agencies, and labels that name their own state.
+    ``state``   one node per source state, marked unverified: "Attorney General's Office"
+                or "Springfield Police Department" in an NJ release. The state is where
+                the release came from, not a checked fact about the agency.
+    ``case``    one node per case: the source has no state (federal and aggregate
+                releases), so nothing ties "Springfield Police Department" or
+                "Sheriff's Department" there to the same words in another case.
+    """
+    gnd = ground or {}
+    if federal or gnd.get("status") == "out_of_scope" or _NATIONAL_LABEL.search(mention) or _names_a_state(mention):
+        return "shared"
+    return "state" if (gnd.get("state_hint") or "").strip() else "case"
+
+
+def unverified_state_slug(slug: str, state_hint: str) -> str:
+    """``attorney-generals-office-nj-unverified``: never equal to a grounded ``{name}-{st}`` slug."""
+    return f"{slug}-{state_hint.strip().lower()}-unverified"
+
+
 def readable_agency_slug(
     *,
     agency_name: str,
