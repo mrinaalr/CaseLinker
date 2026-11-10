@@ -315,6 +315,21 @@ def test_a_name_wrapped_across_two_lines_is_masked_whole():
     assert public == "He thanked Detectives [PERSON], [PERSON], and [PERSON] for their work."
 
 
+def test_a_wrapped_name_with_an_accent_or_an_apostrophe_is_masked_whole():
+    text = "He thanked Reese\nThístlewood, José\nAshcombe Jr and Corin\nK. O’Wexley for their work."
+    public = _public(text, "Reese\nThístlewood", "José\nAshcombe Jr", "Corin\nK. O’Wexley")
+    for part in ("Reese", "Thístlewood", "José", "Ashcombe", "Corin", "Wexley"):
+        assert part not in public
+
+
+def test_a_name_that_is_also_a_rank_or_office_is_masked():
+    # "Bishop", "Major" and "Deacon" are names as often as titles: masked, never read as a title.
+    text = ("Hollis\nBishop was charged. A 22-year-old Bishop Corin Ashcombe was arrested. "
+            "Detectives interviewed Bishop on Tuesday.")
+    public = _public(text, "Hollis\nBishop", "Bishop Corin Ashcombe", "Bishop")
+    assert "Bishop" not in public and "Hollis" not in public and "Corin" not in public
+
+
 def test_a_name_ends_with_its_line_when_the_next_line_is_a_label():
     text = "Contact Reese Thistlewood\nSource:\nNASHVILLE – An investigation led to an arrest."
     public = _public(text, "Reese Thistlewood\nSource")

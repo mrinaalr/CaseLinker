@@ -116,9 +116,11 @@ _TITLES = frozenset("""
 judge justice officer agent detective det sergeant sgt lieutenant lt captain capt deputy trooper special
 investigator inspector chief sheriff marshal attorney prosecutor commissioner director dr mr mrs ms miss
 senator governor mayor president secretary assistant acting senior supervisory u.s. us
-charge corporal cpl colonel col commander major superintendent pastor deacon bishop reverend rev coach
+charge corporal cpl colonel col commander superintendent pastor reverend rev coach
 teacher principal defendant ag da
 """.split())
+# "Bishop", "Major" and "Deacon" are left out: they are names as often as titles, and a title
+# read off a name leaves the rest of that name in the public text.
 # Capitalized because they start a sentence, not because they are a name.
 _LEADING = frozenset("""
 the a an and but or if when while after before during since until as at in on of for from by with to into
@@ -569,10 +571,14 @@ _PARTICLE_FIRST = re.compile(r"(?:van|von|de|del|della|di|da|dos|du|la|le|bin|al
 
 def _wrapped_name(text: str, newline: int, end: int) -> bool:
     """A line wrap between two parts of one name ("Reese\\nThistlewood"), not the end of a line of text."""
-    left = re.search(r"([A-Z][A-Za-z'’\-]*\.?|[A-Z]\.),?[ \t]*$", text[max(0, newline - 30):newline])
-    right = re.match(r"[ \t]*([A-Z][A-Za-z'’\-]+|[A-Z]\.?(?=[ \t]+[A-Z][a-z]))(?![\w:])", text[newline + 1:])
-    if not left or not right:
-        return False  # a blank line, or a field label ("Source:") on the next one
+    # Letters are any script's letters: "José\nThístlewood" wraps like "Reese\nThistlewood".
+    left = re.search(r"((?:[^\W\d_]|['’\-])+\.?),?[ \t]*$", text[max(0, newline - 30):newline])
+    right = re.match(
+        r"[ \t]*([^\W\d_](?:[^\W\d_]|['’\-])+|[A-Z]\.?(?=[ \t]+[^\W\d_](?:[^\W\d_]|['’])))(?![\w:])",
+        text[newline + 1:],
+    )
+    if not left or not right or not left.group(1)[:1].isupper() or not right.group(1)[:1].isupper():
+        return False  # a blank line, lowercase text, or a field label ("Source:") on the next one
     nxt = right.group(1).strip(".")
     if len(nxt) == 1:
         return True  # a middle initial
