@@ -1,0 +1,33 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix temporal: <https://cacontology.projectvic.org/temporal#> .
+@prefix legal: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ncmec: <https://cacontology.projectvic.org/us/ncmec#> .
+@prefix hotlines: <https://cacontology.projectvic.org/hotlines#> .
+@prefix clcov: <https://w3id.org/caselinker/shapes/evidence-coverage#> .
+
+# Validated over a case graph and its provenance graph together (#73). Each node the
+# mapper mints from a resolved field must be the uco-core:object of an annotation.
+# Other case nodes (charges, platforms, agencies, events) have no span assertions yet
+# and are out of scope.
+
+clcov:AgeEvidence a sh:NodeShape ;
+    sh:targetClass temporal:AgeAtTimeSituation ;
+    sh:property [ sh:path [ sh:inversePath uco-core:object ] ; sh:minCount 1 ;
+        sh:message "Age node has no annotation pointing at it" ] .
+
+clcov:SentenceEvidence a sh:NodeShape ;
+    sh:targetClass legal:CriminalSentence ;
+    sh:property [ sh:path [ sh:inversePath uco-core:object ] ; sh:minCount 1 ;
+        sh:message "Sentence node has no annotation pointing at it" ] .
+
+clcov:CybertipEvidence a sh:NodeShape ;
+    sh:targetClass ncmec:NCMECCybertipReport ;
+    sh:property [ sh:path [ sh:inversePath uco-core:object ] ; sh:minCount 1 ;
+        sh:message "CyberTip report has no annotation pointing at it" ] .
+
+clcov:ReporterEvidence a sh:NodeShape ;
+    sh:targetClass hotlines:ReporterRole ;
+    sh:property [ sh:path [ sh:inversePath uco-core:object ] ; sh:minCount 1 ;
+        sh:message "Reporter role has no annotation pointing at it" ] .
