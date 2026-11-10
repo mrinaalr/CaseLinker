@@ -191,7 +191,7 @@ SOURCE_TO_STATE: dict[str, str] = {
     "Michigan ICAC": "MI",
     "SOUTH FLORIDA ICAC": "FL",
     "NOVA ICAC": "VA",
-    "SVICAC": "VA",
+    "SVICAC": "CA",  # Silicon Valley ICAC (San Jose)
     "AZICAC": "AZ",
     "TBI ICAC": "TN",
     "KY SP": "KY",

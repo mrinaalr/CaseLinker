@@ -124,3 +124,10 @@ def test_readable_slug_appends_geoid_on_collision(lg):
         collision_slugs=used,
     )
     assert slug == "springfield-ma-250670"
+
+
+def test_svicac_releases_default_to_california():
+    # Silicon Valley ICAC: 49 of its 84 releases name San Jose or California, 1 names Virginia.
+    from location_grounding import source_default_state
+
+    assert source_default_state("SVICAC") == "CA"
