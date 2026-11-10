@@ -1,0 +1,184 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix case-investigation: <https://ontology.caseontology.org/case/investigation/> .
+@prefix cacontology-recantation: <https://cacontology.projectvic.org/recantation#> .
+
+<https://cacontology.projectvic.org/recantation/shapes> rdf:type owl:Ontology ;
+    rdfs:label "CAC Victim Recantation SHACL Shapes"@en ;
+    rdfs:comment "SHACL validation shapes for the CAC Victim Recantation Ontology."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/recantation/shapes/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://cacontology.projectvic.org/recantation/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> .
+
+# =============================================================================
+# STATEMENT SHAPES
+# =============================================================================
+
+cacontology-recantation:VictimStatementShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-recantation:VictimStatement ;
+    rdfs:label "Victim Statement Shape"@en ;
+    rdfs:comment "Validation shape for victim statement instances."@en ;
+    sh:property [
+        sh:path cacontology-recantation:statementMadeBy ;
+        sh:class uco-identity:Person ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Victim statement must identify the person who made the statement."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-recantation:statementReceivedBy ;
+        sh:class uco-identity:Person ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Victim statement may identify the person who received the statement."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-recantation:statementAboutEvent ;
+        sh:class uco-action:Crime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Victim statement must identify the abuse or exploitation event it concerns."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-recantation:statementDate ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Victim statement must specify when the statement was made or recorded."@en
+    ] .
+
+cacontology-recantation:RecantationStatementShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-recantation:RecantationStatement ;
+    rdfs:label "Recantation Statement Shape"@en ;
+    rdfs:comment "Validation shape for recantation statement instances."@en ;
+    sh:property [
+        sh:path cacontology-recantation:retractsStatement ;
+        sh:class cacontology-recantation:DisclosureStatement ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Recantation statement must identify the earlier disclosure statement it retracts."@en
+    ] .
+
+cacontology-recantation:ReaffirmedDisclosureStatementShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-recantation:ReaffirmedDisclosureStatement ;
+    rdfs:label "Reaffirmed Disclosure Statement Shape"@en ;
+    rdfs:comment "Validation shape for reaffirmed disclosure statement instances."@en ;
+    sh:property [
+        sh:path cacontology-recantation:reaffirmsStatement ;
+        sh:class cacontology-recantation:DisclosureStatement ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Reaffirmed disclosure statement must identify the earlier disclosure it reaffirms."@en
+    ] .
+
+# =============================================================================
+# CONTEXT, RISK, AND PRESSURE SHAPES
+# =============================================================================
+
+cacontology-recantation:StatementChangeContextShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-recantation:StatementChangeContext ;
+    rdfs:label "Statement Change Context Shape"@en ;
+    rdfs:comment "Validation shape for statement change context instances."@en ;
+    sh:property [
+        sh:path cacontology-recantation:hasRecantationRiskFactor ;
+        sh:class cacontology-recantation:RecantationRiskFactor ;
+        sh:minCount 1 ;
+        sh:message "Statement change context should include at least one recantation risk factor."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-recantation:reportedThroughNotification ;
+        sh:class cacontology-recantation:RecantationNotification ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Statement change context may identify the notification through which the recantation was reported."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-recantation:assessedByAction ;
+        sh:class cacontology-recantation:RecantationAssessment ;
+        sh:minCount 1 ;
+        sh:message "Statement change context must link to a recantation assessment action."@en
+    ] .
+
+cacontology-recantation:RecantationRiskFactorShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-recantation:RecantationRiskFactor ;
+    rdfs:label "Recantation Risk Factor Shape"@en ;
+    rdfs:comment "Validation shape for recantation risk factor instances."@en ;
+    sh:property [
+        sh:path cacontology-recantation:riskFactorCategory ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "unsupportive_family" "offender_contact" "sibling_separation_concern" "system_intervention_fear" "community_pressure" "caregiver_instability" ) ;
+        sh:message "Recantation risk factor must specify a normalized category from the allowed list."@en
+    ] .
+
+cacontology-recantation:RecantationPressureShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-recantation:RecantationPressure ;
+    rdfs:label "Recantation Pressure Shape"@en ;
+    rdfs:comment "Validation shape for recantation pressure instances."@en ;
+    sh:property [
+        sh:path cacontology-recantation:pressureMethod ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "third_party_communication" "jail_call" "gift_or_inducement" "family_confrontation" "faith_community_shaming" "other_social_pressure" ) ;
+        sh:message "Recantation pressure must specify the pressure method from the allowed list."@en
+    ] .
+
+cacontology-recantation:RecantationNotificationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-recantation:RecantationNotification ;
+    rdfs:label "Recantation Notification Shape"@en ;
+    rdfs:comment "Validation shape for recantation notification instances."@en ;
+    sh:property [
+        sh:path cacontology-recantation:notificationChannel ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "caregiver_report" "family_report" "victim_report" "professional_report" "court_update" "school_report" ) ;
+        sh:message "Recantation notification must specify the channel from the allowed list."@en
+    ] .
+
+# =============================================================================
+# ASSESSMENT SHAPES
+# =============================================================================
+
+cacontology-recantation:RecantationAssessmentShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-recantation:RecantationAssessment ;
+    rdfs:label "Recantation Assessment Shape"@en ;
+    rdfs:comment "Validation shape for recantation assessment instances."@en ;
+    sh:property [
+        sh:path rdf:type ;
+        sh:hasValue case-investigation:InvestigativeAction ;
+        sh:message "Recantation assessment must be typed as a CASE investigative action."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-recantation:assessmentDisposition ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "continue_investigation" "seek_additional_forensic_interview" "strengthen_corroboration" "trial_preparation_adjustment" "defer_case_decision" ) ;
+        sh:message "Recantation assessment must specify the assessment disposition from the allowed list."@en
+    ] .
+
+cacontology-recantation:PostRecantationForensicInterviewShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-recantation:PostRecantationForensicInterview ;
+    rdfs:label "Post-Recantation Forensic Interview Shape"@en ;
+    rdfs:comment "Validation shape for post-recantation forensic interview instances."@en ;
+    sh:property [
+        sh:path cacontology-recantation:assessmentDisposition ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:hasValue "seek_additional_forensic_interview" ;
+        sh:message "Post-recantation forensic interview must carry the seek_additional_forensic_interview disposition."@en
+    ] .

@@ -1,0 +1,1066 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-observable: <https://ontology.unifiedcyberontology.org/uco/observable/> .
+@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
+@prefix cacontology-grooming: <https://cacontology.projectvic.org/grooming#> .
+@prefix gufo: <http://purl.org/nemo/gufo#> .
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+
+# Ontology Declaration
+<https://cacontology.projectvic.org/platforms> rdf:type owl:Ontology ;
+    rdfs:label "CAC Technology Platforms & Service Providers Ontology"@en ;
+    rdfs:comment "An ontology for representing technology platforms, digital services, and Electronic Service Provider (ESP) capabilities in the context of child protection with gUFO foundational ontology enhancements for improved semantic precision, temporal modeling, and validation capabilities, extending UCO and CASE. This ontology covers social media platforms, messaging services, content hosting, and service provider policies and capabilities."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/platforms/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:issued "2024-12-19"^^xsd:date ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/observable/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/identity/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/action/1.5.0> ,
+                <https://cacontology.projectvic.org/3.1.0> ,
+                <https://cacontology.projectvic.org/core/3.1.0> ,
+                <https://cacontology.projectvic.org/grooming/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> .
+
+# =============================================================================
+# PLATFORM SERVICE CLASSES (extending UCO Observable with gUFO Object)
+# =============================================================================
+
+# Platform Services as gUFO Objects
+cacontology-platforms:SocialMediaPlatform rdf:type owl:Class ;
+    rdfs:label "Social Media Platform"@en ;
+    rdfs:comment "A digital platform for social networking and content sharing (e.g., Facebook, Instagram, TikTok, Twitter, LinkedIn). Modeled as gUFO Object."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject, cac-core:DigitalSystemEntity .
+
+cacontology-platforms:MessagingService rdf:type owl:Class ;
+    rdfs:label "Messaging Service"@en ;
+    rdfs:comment "A digital service for real-time communication and messaging (e.g., WhatsApp, Telegram, Signal, Discord, Kik). Modeled as gUFO Object."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject, cac-core:DigitalSystemEntity .
+
+cacontology-platforms:VideoStreamingPlatform rdf:type owl:Class ;
+    rdfs:label "Video Streaming Platform"@en ;
+    rdfs:comment "A platform for video content streaming and sharing (e.g., YouTube, Twitch, OnlyFans, Periscope). Modeled as gUFO Object."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject, cac-core:DigitalSystemEntity .
+
+cacontology-platforms:FileHostingService rdf:type owl:Class ;
+    rdfs:label "File Hosting Service"@en ;
+    rdfs:comment "A service for storing and sharing files online (e.g., Google Drive, Dropbox, OneDrive, MEGA). Modeled as gUFO Object."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject, cac-core:DigitalSystemEntity .
+
+cacontology-platforms:GamePlatform rdf:type owl:Class ;
+    rdfs:label "Game Platform"@en ;
+    rdfs:comment "A digital platform for gaming with communication features (e.g., Xbox Live, PlayStation Network, Steam, Roblox, Minecraft). Modeled as gUFO Object."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject, cac-core:DigitalSystemEntity .
+
+cacontology-platforms:DarkWebService rdf:type owl:Class ;
+    rdfs:label "Dark Web Service"@en ;
+    rdfs:comment "A service accessible through anonymizing networks like Tor, often used for illegal activities. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject, cac-core:DigitalSystemEntity .
+
+cacontology-platforms:OnlineDatingPlatform rdf:type owl:Class ;
+    rdfs:label "Online Dating Platform"@en ;
+    rdfs:comment "A platform for meeting and dating online (e.g., Tinder, Bumble, Grindr, dating websites). Modeled as gUFO Object."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject, cac-core:DigitalSystemEntity .
+
+cacontology-platforms:CryptocurrencyService rdf:type owl:Class ;
+    rdfs:label "Cryptocurrency Service"@en ;
+    rdfs:comment "A service for cryptocurrency transactions and exchanges (e.g., Bitcoin, Coinbase, Binance). Modeled as gUFO Object."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject, cac-core:DigitalSystemEntity .
+
+# =============================================================================
+# SERVICE PROVIDER ORGANIZATION CLASSES (extending UCO Identity with gUFO Organization)
+# =============================================================================
+
+# Service Provider Organizations as gUFO Organizations
+cacontology-platforms:ElectronicServiceProvider rdf:type owl:Class ;
+    rdfs:label "Electronic Service Provider (ESP)"@en ;
+    rdfs:comment "An organization that provides digital services and platforms, with responsibilities for content moderation and law enforcement cooperation. Modeled as gUFO Organization."@en ;
+    rdfs:subClassOf uco-identity:Organization, cac-core:OrganizationLikeEntity .
+
+cacontology-platforms:TechnicalServiceProvider rdf:type owl:Class ;
+    rdfs:label "Technical Service Provider"@en ;
+    rdfs:comment "Organizations providing technical infrastructure (hosting, CDN, DNS, etc.) that may be involved in content distribution. Modeled as gUFO Organization."@en ;
+    rdfs:subClassOf uco-identity:Organization, cac-core:OrganizationLikeEntity .
+
+# =============================================================================
+# PLATFORM CAPABILITY CLASSES (gUFO Object modeling)
+# =============================================================================
+
+# Platform Capabilities as gUFO Objects
+cacontology-platforms:ContentModerationCapability rdf:type owl:Class ;
+    rdfs:label "Content Moderation Capability"@en ;
+    rdfs:comment "The ability and methods a platform uses to detect, review, and remove inappropriate content. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:DigitalSystemEntity .
+
+# =============================================================================
+# TRUST & SAFETY OPERATIONS AT SCALE (queues, backlogs, throughput)
+# =============================================================================
+
+cacontology-platforms:ContentModerationQueue rdf:type owl:Class ;
+    rdfs:label "Content Moderation Queue"@en ;
+    rdfs:comment "A queue/backlog of content items awaiting moderation review and operational handling at scale (e.g., large volumes of flagged CSAM candidates)."@en ;
+    dcterms:source "Community & Intelligence Beyond Detection (Global Emancipation Network), 2026-02-10."@en ;
+    rdfs:seeAlso <https://www.linkedin.com/pulse/community-intelligence-beyond-detection-global-emancipation-network-xvemc/> ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:DigitalSystemEntity .
+
+cacontology-platforms:ReviewBacklogSituation rdf:type owl:Class ;
+    rdfs:label "Review Backlog Situation"@en ;
+    rdfs:comment "Situation in which moderation review demand exceeds capacity, producing review backlog/latency risks."@en ;
+    dcterms:source "Community & Intelligence Beyond Detection (Global Emancipation Network), 2026-02-10."@en ;
+    rdfs:seeAlso <https://www.linkedin.com/pulse/community-intelligence-beyond-detection-global-emancipation-network-xvemc/> ;
+    rdfs:subClassOf cac-core:Situation .
+
+cacontology-platforms:ModerationThroughputMetrics rdf:type owl:Class ;
+    rdfs:label "Moderation Throughput Metrics"@en ;
+    rdfs:comment "Operational metrics describing moderation throughput and latency (e.g., queue size, review latency, flagged volume)."@en ;
+    dcterms:source "Community & Intelligence Beyond Detection (Global Emancipation Network), 2026-02-10."@en ;
+    rdfs:seeAlso <https://www.linkedin.com/pulse/community-intelligence-beyond-detection-global-emancipation-network-xvemc/> ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:AssessmentResult .
+
+cacontology-platforms:DataRetentionPolicy rdf:type owl:Class ;
+    rdfs:label "Data Retention Policy"@en ;
+    rdfs:comment "A platform's policy for how long they retain user data and content. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:Artifact .
+
+cacontology-platforms:LegalComplianceCapability rdf:type owl:Class ;
+    rdfs:label "Legal Compliance Capability"@en ;
+    rdfs:comment "A platform's ability to respond to legal requests and cooperate with law enforcement. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:EnduringEntity .
+
+cacontology-platforms:UserVerificationSystem rdf:type owl:Class ;
+    rdfs:label "User Verification System"@en ;
+    rdfs:comment "Systems used by platforms to verify user identity and age. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:DigitalSystemEntity .
+
+# =============================================================================
+# PLATFORM-SPECIFIC ACTION CLASSES (extending UCO Action with gUFO Event)
+# =============================================================================
+
+# Platform Actions as gUFO Events
+cacontology-platforms:ContentModerationAction rdf:type owl:Class ;
+    rdfs:label "Content Moderation Action"@en ;
+    rdfs:comment "An action taken by a platform to moderate content (review, remove, restrict, etc.). Modeled as gUFO Event."@en ;
+    rdfs:subClassOf cac-core:DetectionEvent .
+
+cacontology-platforms:AccountSuspensionAction rdf:type owl:Class ;
+    rdfs:label "Account Suspension Action"@en ;
+    rdfs:comment "An action to suspend or terminate a user account due to policy violations. Modeled as gUFO Event."@en ;
+    rdfs:subClassOf cac-core:DetectionEvent .
+
+cacontology-platforms:DataPreservationAction rdf:type owl:Class ;
+    rdfs:label "Data Preservation Action"@en ;
+    rdfs:comment "An action to preserve user data in response to legal requests. Modeled as gUFO Event."@en ;
+    rdfs:subClassOf cac-core:InvestigativeAction .
+
+cacontology-platforms:LegalDataDisclosureAction rdf:type owl:Class ;
+    rdfs:label "Legal Data Disclosure Action"@en ;
+    rdfs:comment "An action to disclose user data to law enforcement in response to legal process. Modeled as gUFO Event."@en ;
+    rdfs:subClassOf cac-core:InvestigativeAction .
+
+cacontology-platforms:EmergencyDisclosureRequest rdf:type owl:Class ;
+    rdfs:label "Emergency Disclosure Request"@en ;
+    rdfs:comment "Time-sensitive request by law enforcement/investigators to an electronic service provider for immediate disclosure of information based on an asserted emergency involving imminent danger (e.g., danger of death or serious physical injury). Modeled as gUFO Event."@en ;
+    rdfs:subClassOf cac-core:InvestigativeAction ;
+    dcterms:source "Police1 (Lexipol) article, \"How police are adapting to modern missing-child investigations\", 2026-01-30."@en ;
+    rdfs:seeAlso <https://www.police1.com/investigations/how-police-are-adapting-to-modern-missing-child-investigations> .
+
+cacontology-platforms:ContentHashingAction rdf:type owl:Class ;
+    rdfs:label "Content Hashing Action"@en ;
+    rdfs:comment "An action by a platform to generate hashes of content for detection and matching. Modeled as gUFO Event."@en ;
+    rdfs:subClassOf cac-core:DetectionEvent .
+
+# =============================================================================
+# LARGE-SCALE PLATFORM OPERATIONS (Kidflix/Europol Framework - gUFO Event modeling)
+# =============================================================================
+
+# Large-Scale Operations as gUFO Events
+cacontology-platforms:LargeScalePlatformTakedown rdf:type owl:Class ;
+    rdfs:label "Large Scale Platform Takedown"@en ;
+    rdfs:comment "Coordinated takedown of major exploitation platforms with user bases exceeding 1 million accounts, requiring specialized international coordination and mass forensic processing. Modeled as gUFO Event."@en ;
+    rdfs:subClassOf cac-core:InvestigativeAction .
+
+cacontology-platforms:PlatformOperation rdf:type owl:Class ;
+    rdfs:label "Platform Operation"@en ;
+    rdfs:comment "Coordinated law enforcement operation targeting specific platforms or services. Modeled as gUFO Event."@en ;
+    rdfs:subClassOf cac-core:InvestigativeAction .
+
+cacontology-platforms:MassUserBehaviorAnalysis rdf:type owl:Class ;
+    rdfs:label "Mass User Behavior Analysis"@en ;
+    rdfs:comment "Analysis of user behavior patterns across massive user bases for investigation prioritization and automated threat assessment. Modeled as gUFO Event."@en ;
+    rdfs:subClassOf cac-core:InvestigativeAction .
+
+# Mass User Database as gUFO Objects
+cacontology-platforms:MassUserDatabase rdf:type owl:Class ;
+    rdfs:label "Mass User Database"@en ;
+    rdfs:comment "User database analysis for platforms with massive user bases requiring specialized processing techniques and automated analysis tools. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject, cac-core:Artifact .
+
+cacontology-platforms:UserScaleClassification rdf:type owl:Class ;
+    rdfs:label "User Scale Classification"@en ;
+    rdfs:comment "Classification system for platform size based on user base: small (<1K), medium (1K-100K), large (100K-1M), massive (1M+). Modeled as gUFO Object."@en ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:AssessmentResult .
+
+cacontology-platforms:UserRiskClassification rdf:type owl:Class ;
+    rdfs:label "User Risk Classification"@en ;
+    rdfs:comment "Automated classification of user risk levels based on platform activity patterns, content sharing, and behavioral indicators. Modeled as gUFO Object."@en ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:AssessmentResult .
+
+# =============================================================================
+# PLATFORM OPERATIONAL PHASES (gUFO Phase anti-rigid modeling)
+# =============================================================================
+
+# Platform Phases (gUFO Phase anti-rigid modeling)
+cacontology-platforms:PlatformDeploymentPhase rdf:type owl:Class ;
+    rdfs:label "Platform Deployment Phase"@en ;
+    rdfs:comment "Phase when platform is deployed and becomes operational. Modeled as anti-rigid gUFO Phase."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+cacontology-platforms:PlatformGrowthPhase rdf:type owl:Class ;
+    rdfs:label "Platform Growth Phase"@en ;
+    rdfs:comment "Phase of platform expansion and user base growth. Modeled as anti-rigid gUFO Phase."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+cacontology-platforms:PlatformModerationPhase rdf:type owl:Class ;
+    rdfs:label "Platform Moderation Phase"@en ;
+    rdfs:comment "Phase of active content moderation and policy enforcement. Modeled as anti-rigid gUFO Phase."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+cacontology-platforms:PlatformInvestigationPhase rdf:type owl:Class ;
+    rdfs:label "Platform Investigation Phase"@en ;
+    rdfs:comment "Phase when platform is under law enforcement investigation. Modeled as anti-rigid gUFO Phase."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+cacontology-platforms:PlatformTakedownPhase rdf:type owl:Class ;
+    rdfs:label "Platform Takedown Phase"@en ;
+    rdfs:comment "Phase of platform takedown and shutdown operations. Modeled as anti-rigid gUFO Phase."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+# =============================================================================
+# PLATFORM SITUATIONS (gUFO Situation modeling)
+# =============================================================================
+
+# Platform Situations (gUFO Situation)
+cacontology-platforms:MassivePlatformSituation rdf:type owl:Class ;
+    rdfs:label "Massive Platform Situation"@en ;
+    rdfs:comment "Situation involving platforms with massive user bases requiring specialized investigation approaches. Modeled as gUFO Situation."@en ;
+    rdfs:subClassOf cac-core:Situation .
+
+cacontology-platforms:MultiPlatformSituation rdf:type owl:Class ;
+    rdfs:label "Multi-Platform Situation"@en ;
+    rdfs:comment "Situation involving coordination across multiple platforms and service providers. Modeled as gUFO Situation."@en ;
+    rdfs:subClassOf cac-core:Situation .
+
+cacontology-platforms:PlatformCooperationSituation rdf:type owl:Class ;
+    rdfs:label "Platform Cooperation Situation"@en ;
+    rdfs:comment "Situation involving cooperative efforts between platforms and law enforcement. Modeled as gUFO Situation."@en ;
+    rdfs:subClassOf cac-core:Situation .
+
+# =============================================================================
+# gUFO TEMPORAL PROPERTIES
+# =============================================================================
+
+# Platform Temporal Properties
+cacontology-platforms:hasPlatformBeginPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has platform begin point"@en ;
+    rdfs:comment "Temporal begin point for platform operation."@en ;
+    rdfs:subPropertyOf gufo:hasBeginPointInXSDDateTimeStamp ;
+    rdfs:domain cacontology-platforms:ElectronicServiceProvider ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-platforms:hasPlatformEndPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has platform end point"@en ;
+    rdfs:comment "Temporal end point for platform operation."@en ;
+    rdfs:subPropertyOf gufo:hasEndPointInXSDDateTimeStamp ;
+    rdfs:domain cacontology-platforms:ElectronicServiceProvider ;
+    rdfs:range xsd:dateTimeStamp .
+
+# Platform Phase Temporal Properties
+cacontology-platforms:hasPhaseBeginPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has phase begin point"@en ;
+    rdfs:comment "Temporal begin point for platform phase."@en ;
+    rdfs:subPropertyOf gufo:hasBeginPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-platforms:hasPhaseEndPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has phase end point"@en ;
+    rdfs:comment "Temporal end point for platform phase."@en ;
+    rdfs:subPropertyOf gufo:hasEndPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:dateTimeStamp .
+
+# Platform Action Temporal Properties
+cacontology-platforms:hasActionBeginPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has action begin point"@en ;
+    rdfs:comment "Temporal begin point for platform action."@en ;
+    rdfs:subPropertyOf gufo:hasBeginPointInXSDDateTimeStamp ;
+    rdfs:domain cacontology-platforms:ContentModerationAction ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-platforms:hasActionEndPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has action end point"@en ;
+    rdfs:comment "Temporal end point for platform action."@en ;
+    rdfs:subPropertyOf gufo:hasEndPointInXSDDateTimeStamp ;
+    rdfs:domain cacontology-platforms:ContentModerationAction ;
+    rdfs:range xsd:dateTimeStamp .
+
+# Duration Properties
+cacontology-platforms:platformDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "platform duration"@en ;
+    rdfs:comment "Duration of platform operation from launch to shutdown."@en ;
+    rdfs:domain cacontology-platforms:ElectronicServiceProvider ;
+    rdfs:range xsd:duration .
+
+cacontology-platforms:phaseDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "phase duration"@en ;
+    rdfs:comment "Duration of platform phase."@en ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:duration .
+
+cacontology-platforms:actionDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "action duration"@en ;
+    rdfs:comment "Duration of platform action."@en ;
+    rdfs:domain cacontology-platforms:ContentModerationAction ;
+    rdfs:range xsd:duration .
+
+# =============================================================================
+# PLATFORM PROPERTIES
+# =============================================================================
+
+# Platform Characteristics
+cacontology-platforms:operatedBy rdf:type owl:ObjectProperty ;
+    rdfs:label "operated by"@en ;
+    rdfs:comment "Links a platform or service to the organization that operates it."@en ;
+    rdfs:range cacontology-platforms:ElectronicServiceProvider .
+
+cacontology-platforms:platformType rdf:type owl:DatatypeProperty ;
+    rdfs:label "platform type"@en ;
+    rdfs:comment "The type or category of the platform (e.g., 'social media', 'messaging', 'file hosting')."@en ;
+    rdfs:range xsd:string .
+
+cacontology-platforms:primaryUserBase rdf:type owl:DatatypeProperty ;
+    rdfs:label "primary user base"@en ;
+    rdfs:comment "The primary demographic of platform users (e.g., 'adults', 'teens', 'children', 'all ages')."@en ;
+    rdfs:range xsd:string .
+
+cacontology-platforms:encryptionLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "encryption level"@en ;
+    rdfs:comment "The level of encryption used by the service (e.g., 'none', 'in-transit', 'end-to-end')."@en ;
+    rdfs:range xsd:string .
+
+cacontology-platforms:requiresRegistration rdf:type owl:DatatypeProperty ;
+    rdfs:label "requires registration"@en ;
+    rdfs:comment "Whether the platform requires user registration to access services."@en ;
+    rdfs:range xsd:boolean .
+
+# Content Moderation Properties
+cacontology-platforms:hasContentModerationCapability rdf:type owl:ObjectProperty ;
+    rdfs:label "has content moderation capability"@en ;
+    rdfs:comment "Links a platform to its content moderation capabilities."@en ;
+    rdfs:range cacontology-platforms:ContentModerationCapability .
+
+cacontology-platforms:enqueuedForModeration rdf:type owl:ObjectProperty ;
+    rdfs:label "enqueued for moderation"@en ;
+    rdfs:comment "Links a content item or moderation-relevant observable object to a moderation queue for review/processing."@en ;
+    dcterms:source "Community & Intelligence Beyond Detection (Global Emancipation Network), 2026-02-10."@en ;
+    rdfs:seeAlso <https://www.linkedin.com/pulse/community-intelligence-beyond-detection-global-emancipation-network-xvemc/> ;
+    rdfs:domain uco-observable:ObservableObject ;
+    rdfs:range cacontology-platforms:ContentModerationQueue .
+
+cacontology-platforms:queueOperatedBy rdf:type owl:ObjectProperty ;
+    rdfs:label "queue operated by"@en ;
+    rdfs:comment "Links a moderation queue to the electronic service provider operating the queue."@en ;
+    dcterms:source "Community & Intelligence Beyond Detection (Global Emancipation Network), 2026-02-10."@en ;
+    rdfs:seeAlso <https://www.linkedin.com/pulse/community-intelligence-beyond-detection-global-emancipation-network-xvemc/> ;
+    rdfs:domain cacontology-platforms:ContentModerationQueue ;
+    rdfs:range cacontology-platforms:ElectronicServiceProvider .
+
+cacontology-platforms:hasBacklogSituation rdf:type owl:ObjectProperty ;
+    rdfs:label "has backlog situation"@en ;
+    rdfs:comment "Links a moderation queue to a backlog situation indicating capacity constraints."@en ;
+    dcterms:source "Community & Intelligence Beyond Detection (Global Emancipation Network), 2026-02-10."@en ;
+    rdfs:seeAlso <https://www.linkedin.com/pulse/community-intelligence-beyond-detection-global-emancipation-network-xvemc/> ;
+    rdfs:domain cacontology-platforms:ContentModerationQueue ;
+    rdfs:range cacontology-platforms:ReviewBacklogSituation .
+
+cacontology-platforms:reportsThroughputMetrics rdf:type owl:ObjectProperty ;
+    rdfs:label "reports throughput metrics"@en ;
+    rdfs:comment "Links a moderation queue to operational throughput/latency metrics."@en ;
+    dcterms:source "Community & Intelligence Beyond Detection (Global Emancipation Network), 2026-02-10."@en ;
+    rdfs:seeAlso <https://www.linkedin.com/pulse/community-intelligence-beyond-detection-global-emancipation-network-xvemc/> ;
+    rdfs:domain cacontology-platforms:ContentModerationQueue ;
+    rdfs:range cacontology-platforms:ModerationThroughputMetrics .
+
+cacontology-platforms:moderationMethod rdf:type owl:DatatypeProperty ;
+    rdfs:label "moderation method"@en ;
+    rdfs:comment "The method used for content moderation (e.g., 'automated', 'human review', 'hybrid', 'user reporting')."@en ;
+    rdfs:domain cacontology-platforms:ContentModerationCapability ;
+    rdfs:range xsd:string .
+
+cacontology-platforms:queueSize rdf:type owl:DatatypeProperty ;
+    rdfs:label "queue size"@en ;
+    rdfs:comment "Number of items currently in a content moderation queue."@en ;
+    dcterms:source "Community & Intelligence Beyond Detection (Global Emancipation Network), 2026-02-10."@en ;
+    rdfs:seeAlso <https://www.linkedin.com/pulse/community-intelligence-beyond-detection-global-emancipation-network-xvemc/> ;
+    rdfs:domain cacontology-platforms:ContentModerationQueue ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-platforms:reviewLatencyHours rdf:type owl:DatatypeProperty ;
+    rdfs:label "review latency hours"@en ;
+    rdfs:comment "Latency from flagging/enqueue to human or automated review completion, expressed in hours."@en ;
+    dcterms:source "Community & Intelligence Beyond Detection (Global Emancipation Network), 2026-02-10."@en ;
+    rdfs:seeAlso <https://www.linkedin.com/pulse/community-intelligence-beyond-detection-global-emancipation-network-xvemc/> ;
+    rdfs:domain cacontology-platforms:ModerationThroughputMetrics ;
+    rdfs:range xsd:decimal .
+
+cacontology-platforms:throughputPerDay rdf:type owl:DatatypeProperty ;
+    rdfs:label "throughput per day"@en ;
+    rdfs:comment "Number of items reviewed/processed per day in the moderation pipeline."@en ;
+    dcterms:source "Community & Intelligence Beyond Detection (Global Emancipation Network), 2026-02-10."@en ;
+    rdfs:seeAlso <https://www.linkedin.com/pulse/community-intelligence-beyond-detection-global-emancipation-network-xvemc/> ;
+    rdfs:domain cacontology-platforms:ModerationThroughputMetrics ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-platforms:flagVolumePerMonth rdf:type owl:DatatypeProperty ;
+    rdfs:label "flag volume per month"@en ;
+    rdfs:comment "Volume of flagged items generated per month (e.g., potential CSAM files flagged)."@en ;
+    dcterms:source "Community & Intelligence Beyond Detection (Global Emancipation Network), 2026-02-10."@en ;
+    rdfs:seeAlso <https://www.linkedin.com/pulse/community-intelligence-beyond-detection-global-emancipation-network-xvemc/> ;
+    rdfs:domain cacontology-platforms:ModerationThroughputMetrics ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-platforms:csaiDetectionEnabled rdf:type owl:DatatypeProperty ;
+    rdfs:label "CSAI detection enabled"@en ;
+    rdfs:comment "Whether the platform has Child Sexual Abuse Imagery detection systems enabled."@en ;
+    rdfs:domain cacontology-platforms:ContentModerationCapability ;
+    rdfs:range xsd:boolean .
+
+cacontology-platforms:hashMatchingEnabled rdf:type owl:DatatypeProperty ;
+    rdfs:label "hash matching enabled"@en ;
+    rdfs:comment "Whether the platform uses hash matching against known CSAM databases."@en ;
+    rdfs:domain cacontology-platforms:ContentModerationCapability ;
+    rdfs:range xsd:boolean .
+
+# Data Retention Properties
+cacontology-platforms:hasDataRetentionPolicy rdf:type owl:ObjectProperty ;
+    rdfs:label "has data retention policy"@en ;
+    rdfs:comment "Links a platform to its data retention policy."@en ;
+    rdfs:range cacontology-platforms:DataRetentionPolicy .
+
+cacontology-platforms:userDataRetentionPeriod rdf:type owl:DatatypeProperty ;
+    rdfs:label "user data retention period"@en ;
+    rdfs:comment "How long user account data is retained (in days)."@en ;
+    rdfs:domain cacontology-platforms:DataRetentionPolicy ;
+    rdfs:range xsd:integer .
+
+cacontology-platforms:contentRetentionPeriod rdf:type owl:DatatypeProperty ;
+    rdfs:label "content retention period"@en ;
+    rdfs:comment "How long user-generated content is retained (in days)."@en ;
+    rdfs:domain cacontology-platforms:DataRetentionPolicy ;
+    rdfs:range xsd:integer .
+
+cacontology-platforms:logRetentionPeriod rdf:type owl:DatatypeProperty ;
+    rdfs:label "log retention period"@en ;
+    rdfs:comment "How long access and activity logs are retained (in days)."@en ;
+    rdfs:domain cacontology-platforms:DataRetentionPolicy ;
+    rdfs:range xsd:integer .
+
+# Legal Compliance Properties
+cacontology-platforms:hasLegalComplianceCapability rdf:type owl:ObjectProperty ;
+    rdfs:label "has legal compliance capability"@en ;
+    rdfs:comment "Links a platform to its legal compliance capabilities."@en ;
+    rdfs:range cacontology-platforms:LegalComplianceCapability .
+
+cacontology-platforms:acceptsLegalProcess rdf:type owl:DatatypeProperty ;
+    rdfs:label "accepts legal process"@en ;
+    rdfs:comment "Whether the platform accepts and responds to legal process requests."@en ;
+    rdfs:domain cacontology-platforms:LegalComplianceCapability ;
+    rdfs:range xsd:boolean .
+
+cacontology-platforms:legalProcessContactInfo rdf:type owl:DatatypeProperty ;
+    rdfs:label "legal process contact info"@en ;
+    rdfs:comment "Contact information for submitting legal process requests."@en ;
+    rdfs:domain cacontology-platforms:LegalComplianceCapability ;
+    rdfs:range xsd:string .
+
+cacontology-platforms:emergencyDisclosureCapable rdf:type owl:DatatypeProperty ;
+    rdfs:label "emergency disclosure capable"@en ;
+    rdfs:comment "Whether the platform can provide emergency disclosures for imminent threats."@en ;
+    rdfs:domain cacontology-platforms:LegalComplianceCapability ;
+    rdfs:range xsd:boolean .
+
+cacontology-platforms:responseTimeFrame rdf:type owl:DatatypeProperty ;
+    rdfs:label "response time frame"@en ;
+    rdfs:comment "Typical response time for legal process requests (in days)."@en ;
+    rdfs:domain cacontology-platforms:LegalComplianceCapability ;
+    rdfs:range xsd:integer .
+
+# User Verification Properties
+cacontology-platforms:hasUserVerificationSystem rdf:type owl:ObjectProperty ;
+    rdfs:label "has user verification system"@en ;
+    rdfs:comment "Links a platform to its user verification system."@en ;
+    rdfs:range cacontology-platforms:UserVerificationSystem .
+
+cacontology-platforms:ageVerificationMethod rdf:type owl:DatatypeProperty ;
+    rdfs:label "age verification method"@en ;
+    rdfs:comment "The method used for age verification (e.g., 'self-declaration', 'ID verification', 'credit card', 'none')."@en ;
+    rdfs:domain cacontology-platforms:UserVerificationSystem ;
+    rdfs:range xsd:string .
+
+cacontology-platforms:identityVerificationRequired rdf:type owl:DatatypeProperty ;
+    rdfs:label "identity verification required"@en ;
+    rdfs:comment "Whether identity verification is required for account creation."@en ;
+    rdfs:domain cacontology-platforms:UserVerificationSystem ;
+    rdfs:range xsd:boolean .
+
+# Action Properties
+cacontology-platforms:moderationDecision rdf:type owl:DatatypeProperty ;
+    rdfs:label "moderation decision"@en ;
+    rdfs:comment "The decision made during content moderation (e.g., 'approved', 'removed', 'restricted', 'flagged')."@en ;
+    rdfs:domain cacontology-platforms:ContentModerationAction ;
+    rdfs:range xsd:string .
+
+cacontology-platforms:suspensionReason rdf:type owl:DatatypeProperty ;
+    rdfs:label "suspension reason"@en ;
+    rdfs:comment "The reason for account suspension or termination."@en ;
+    rdfs:domain cacontology-platforms:AccountSuspensionAction ;
+    rdfs:range xsd:string .
+
+cacontology-platforms:suspensionDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "suspension duration"@en ;
+    rdfs:comment "Duration of account suspension (in days, or 'permanent')."@en ;
+    rdfs:domain cacontology-platforms:AccountSuspensionAction ;
+    rdfs:range xsd:string .
+
+cacontology-platforms:preservationPeriod rdf:type owl:DatatypeProperty ;
+    rdfs:label "preservation period"@en ;
+    rdfs:comment "How long data is preserved in response to legal requests (in days)."@en ;
+    rdfs:domain cacontology-platforms:DataPreservationAction ;
+    rdfs:range xsd:integer .
+
+cacontology-platforms:dataDisclosed rdf:type owl:ObjectProperty ;
+    rdfs:label "data disclosed"@en ;
+    rdfs:comment "Links a disclosure action to the specific data that was disclosed."@en ;
+    rdfs:domain cacontology-platforms:LegalDataDisclosureAction ;
+    rdfs:range uco-observable:ObservableObject .
+
+cacontology-platforms:legalAuthority rdf:type owl:ObjectProperty ;
+    rdfs:label "legal authority"@en ;
+    rdfs:comment "The legal authority (court, agency) that requested the data disclosure."@en ;
+    rdfs:domain cacontology-platforms:LegalDataDisclosureAction ;
+    rdfs:range uco-identity:Organization .
+
+# Geographic and Jurisdictional Properties
+cacontology-platforms:operatesInJurisdiction rdf:type owl:DatatypeProperty ;
+    rdfs:label "operates in jurisdiction"@en ;
+    rdfs:comment "Legal jurisdictions where the platform operates."@en ;
+    rdfs:domain cacontology-platforms:ElectronicServiceProvider ;
+    rdfs:range xsd:string .
+
+cacontology-platforms:headquarteredIn rdf:type owl:DatatypeProperty ;
+    rdfs:label "headquartered in"@en ;
+    rdfs:comment "Country or jurisdiction where the organization is headquartered."@en ;
+    rdfs:domain cacontology-platforms:ElectronicServiceProvider ;
+    rdfs:range xsd:string .
+
+cacontology-platforms:subsidiaryOf rdf:type owl:ObjectProperty ;
+    rdfs:label "subsidiary of"@en ;
+    rdfs:comment "Links a platform or organization to its parent company."@en ;
+    rdfs:range uco-identity:Organization .
+
+# =============================================================================
+# SOCIAL MEDIA EVIDENCE FRAMEWORK (Illinois Case Analysis)
+# =============================================================================
+
+cacontology-platforms:SocialMediaEvidence rdf:type owl:Class ;
+    rdfs:subClassOf uco-observable:ObservableObject ;
+    rdfs:label "Social Media Evidence"@en ;
+    rdfs:comment "Digital evidence collected from social media platforms, including posts, messages, and account information."@en .
+
+cacontology-platforms:SocialMediaAccount rdf:type owl:Class ;
+    rdfs:subClassOf uco-observable:Account ;
+    rdfs:label "Social Media Account"@en ;
+    rdfs:comment "User account on a social media platform potentially containing evidence."@en .
+
+cacontology-platforms:CrossPlatformEvidence rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-platforms:SocialMediaEvidence ;
+    rdfs:label "Cross-Platform Evidence"@en ;
+    rdfs:comment "Evidence found across multiple social media platforms by the same user."@en .
+
+cacontology-platforms:SocialMediaPost rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-platforms:SocialMediaEvidence ;
+    rdfs:label "Social Media Post"@en ;
+    rdfs:comment "Individual posts, updates, or content shared on social media platforms."@en .
+
+cacontology-platforms:PrivateMessage rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-platforms:SocialMediaEvidence ;
+    rdfs:label "Private Message"@en ;
+    rdfs:comment "Private messages or direct communications on social media platforms."@en .
+
+cacontology-platforms:AccountMetadata rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-platforms:SocialMediaEvidence ;
+    rdfs:label "Account Metadata"@en ;
+    rdfs:comment "Account-level metadata including creation date, profile information, and activity patterns."@en .
+
+# =============================================================================
+# ELECTRONIC DEVICE EVIDENCE INTEGRATION (Illinois Framework)  
+# =============================================================================
+
+cacontology-platforms:ElectronicDeviceEvidence rdf:type owl:Class ;
+    rdfs:subClassOf uco-observable:ObservableObject ;
+    rdfs:label "Electronic Device Evidence"@en ;
+    rdfs:comment "Digital evidence found on electronic devices including computers, phones, and storage media."@en .
+
+cacontology-platforms:DeviceSocialMediaCorrelation rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:AssessmentResult ;
+    rdfs:label "Device Social Media Correlation"@en ;
+    rdfs:comment "Correlation between evidence found on devices and social media accounts."@en .
+
+cacontology-platforms:StoredSocialMediaContent rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-platforms:ElectronicDeviceEvidence ;
+    rdfs:label "Stored Social Media Content"@en ;
+    rdfs:comment "Social media content downloaded and stored on electronic devices."@en .
+
+cacontology-platforms:SocialMediaAppData rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-platforms:ElectronicDeviceEvidence ;
+    rdfs:label "Social Media App Data"@en ;
+    rdfs:comment "Application data from social media apps stored on devices."@en .
+
+# =============================================================================
+# INVESTIGATION COORDINATION (Multi-Platform Analysis)
+# =============================================================================
+
+cacontology-platforms:PlatformInvestigationCoordination rdf:type owl:Class ;
+    rdfs:subClassOf uco-action:Action ;
+    rdfs:label "Platform Investigation Coordination"@en ;
+    rdfs:comment "Coordinated investigation across multiple platforms and devices."@en .
+
+cacontology-platforms:SimultaneousSearchWarrant rdf:type owl:Class ;
+    rdfs:subClassOf uco-action:Action ;
+    rdfs:label "Simultaneous Search Warrant"@en ;
+    rdfs:comment "Coordinated search warrant execution on devices and platform accounts."@en .
+
+cacontology-platforms:DigitalEvidenceCorrelation rdf:type owl:Class ;
+    rdfs:subClassOf uco-action:Action ;
+    rdfs:label "Digital Evidence Correlation"@en ;
+    rdfs:comment "Process of correlating evidence found across devices and platforms."@en .
+
+# =============================================================================
+# SOCIAL MEDIA EVIDENCE PROPERTIES (Illinois Case Framework)
+# =============================================================================
+
+# Evidence Location Properties
+cacontology-platforms:foundOnDevice rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-platforms:ElectronicDeviceEvidence ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "found on device"@en ;
+    rdfs:comment "Whether evidence was found on electronic device."@en .
+
+cacontology-platforms:foundOnSocialMedia rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-platforms:SocialMediaEvidence ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "found on social media"@en ;
+    rdfs:comment "Whether evidence was found on social media platform."@en .
+
+cacontology-platforms:deviceType rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-platforms:ElectronicDeviceEvidence ;
+    rdfs:range xsd:string ;
+    rdfs:label "device type"@en ;
+    rdfs:comment "Type of electronic device (computer, phone, tablet, storage media)."@en .
+
+cacontology-platforms:socialMediaPlatform rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-platforms:SocialMediaEvidence ;
+    rdfs:range xsd:string ;
+    rdfs:label "social media platform"@en ;
+    rdfs:comment "Name of social media platform where evidence was found."@en .
+
+# Evidence Characteristics Properties
+cacontology-platforms:contentType rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-platforms:SocialMediaEvidence ;
+    rdfs:range xsd:string ;
+    rdfs:label "content type"@en ;
+    rdfs:comment "Type of content (text, image, video, document)."@en .
+
+cacontology-platforms:evidenceCategory rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-platforms:SocialMediaEvidence ;
+    rdfs:range xsd:string ;
+    rdfs:label "evidence category"@en ;
+    rdfs:comment "Category of evidence (possession, distribution, production, communication)."@en .
+
+cacontology-platforms:accountUsername rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-platforms:SocialMediaAccount ;
+    rdfs:range xsd:string ;
+    rdfs:label "account username"@en ;
+    rdfs:comment "Username or handle for social media account."@en .
+
+cacontology-platforms:accountStatus rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-platforms:SocialMediaAccount ;
+    rdfs:range xsd:string ;
+    rdfs:label "account status"@en ;
+    rdfs:comment "Status of account (active, suspended, deleted, preserved)."@en .
+
+# Evidence Correlation Properties
+cacontology-platforms:correlatesWithDevice rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-platforms:SocialMediaEvidence ;
+    rdfs:range cacontology-platforms:ElectronicDeviceEvidence ;
+    rdfs:label "correlates with device"@en ;
+    rdfs:comment "Links social media evidence to related device evidence."@en .
+
+cacontology-platforms:correlatesWithAccount rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-platforms:ElectronicDeviceEvidence ;
+    rdfs:range cacontology-platforms:SocialMediaAccount ;
+    rdfs:label "correlates with account"@en ;
+    rdfs:comment "Links device evidence to related social media account."@en .
+
+cacontology-platforms:crossPlatformMatch rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-platforms:SocialMediaEvidence ;
+    rdfs:range cacontology-platforms:SocialMediaEvidence ;
+    rdfs:label "cross platform match"@en ;
+    rdfs:comment "Links evidence found on different platforms but from same user."@en .
+
+# Investigation Properties
+cacontology-platforms:discoveredDuring rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-platforms:SocialMediaEvidence ;
+    rdfs:range uco-action:Action ;
+    rdfs:label "discovered during"@en ;
+    rdfs:comment "Links evidence to the investigative action during which it was discovered."@en .
+
+cacontology-platforms:searchWarrantRequired rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-platforms:SocialMediaEvidence ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "search warrant required"@en ;
+    rdfs:comment "Whether search warrant was required to obtain this evidence."@en .
+
+cacontology-platforms:legalProcessUsed rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-platforms:SocialMediaEvidence ;
+    rdfs:range xsd:string ;
+    rdfs:label "legal process used"@en ;
+    rdfs:comment "Type of legal process used to obtain evidence (warrant, subpoena, court order)."@en .
+
+cacontology-platforms:evidenceTimestamp rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-platforms:SocialMediaEvidence ;
+    rdfs:range xsd:dateTime ;
+    rdfs:label "evidence timestamp"@en ;
+    rdfs:comment "Timestamp when evidence was created or posted."@en .
+
+cacontology-platforms:discoveryTimestamp rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-platforms:SocialMediaEvidence ;
+    rdfs:range xsd:dateTime ;
+    rdfs:label "discovery timestamp"@en ;
+    rdfs:comment "Timestamp when evidence was discovered by investigators."@en .
+
+# Multi-Agency Coordination Properties
+cacontology-platforms:coordinatedBy rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-platforms:PlatformInvestigationCoordination ;
+    rdfs:range uco-identity:Organization ;
+    rdfs:label "coordinated by"@en ;
+    rdfs:comment "Organization coordinating multi-platform investigation."@en .
+
+cacontology-platforms:platformsInvestigated rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-platforms:PlatformInvestigationCoordination ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "platforms investigated"@en ;
+    rdfs:comment "Number of platforms investigated in coordinated effort."@en .
+
+cacontology-platforms:devicesSearched rdf:type owl:DatatypeProperty ;    rdfs:domain cacontology-platforms:SimultaneousSearchWarrant ;    rdfs:range xsd:nonNegativeInteger ;    rdfs:label "devices searched"@en ;    rdfs:comment "Number of devices searched in simultaneous operation."@en .
+
+# =============================================================================
+# ANONYMOUS CHAT PLATFORM FRAMEWORK (Buffalo/Vermont Case Enhancement)
+# =============================================================================
+
+cacontology-platforms:AnonymousChatPlatform rdf:type owl:Class ;
+    rdfs:label "Anonymous Chat Platform"@en ;
+    rdfs:comment "Platform that allows anonymous or minimally verified communication, enabling contact without identity verification."@en ;
+    rdfs:subClassOf cacontology-platforms:MessagingService .
+
+cacontology-platforms:GuestChatFeature rdf:type owl:Class ;
+    rdfs:label "Guest Chat Feature"@en ;
+    rdfs:comment "Platform feature allowing users to chat without creating accounts or verifying identity."@en ;
+    rdfs:subClassOf uco-observable:DigitalServiceFeature .
+
+cacontology-platforms:TemporaryAccountSystem rdf:type owl:Class ;
+    rdfs:label "Temporary Account System"@en ;
+    rdfs:comment "System allowing creation of temporary accounts with minimal verification requirements."@en ;
+    rdfs:subClassOf uco-observable:DigitalServiceFeature .
+
+cacontology-platforms:MinimalVerificationRequirement rdf:type owl:Class ;
+    rdfs:label "Minimal Verification Requirement"@en ;
+    rdfs:comment "Verification requirements that are easily bypassed or minimal (email only, no identity check)."@en ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:EnduringEntity .
+
+cacontology-platforms:AnonymousContactOpportunity rdf:type owl:Class ;
+    rdfs:label "Anonymous Contact Opportunity"@en ;
+    rdfs:comment "Opportunities provided by platform for anonymous users to initiate contact with other users."@en ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:EnduringEntity .
+
+cacontology-platforms:RandomUserMatching rdf:type owl:Class ;
+    rdfs:label "Random User Matching"@en ;
+    rdfs:comment "Platform feature that randomly matches users for anonymous conversations."@en ;
+    rdfs:subClassOf cacontology-platforms:AnonymousContactOpportunity .
+
+cacontology-platforms:OpenChatRooms rdf:type owl:Class ;
+    rdfs:label "Open Chat Rooms"@en ;
+    rdfs:comment "Chat rooms open to anonymous users without verification or moderation."@en ;
+    rdfs:subClassOf cacontology-platforms:AnonymousContactOpportunity .
+
+cacontology-platforms:ProfileBrowsingAnonymous rdf:type owl:Class ;
+    rdfs:label "Profile Browsing Anonymous"@en ;
+    rdfs:comment "Ability to browse and contact user profiles anonymously without revealing identity."@en ;
+    rdfs:subClassOf cacontology-platforms:AnonymousContactOpportunity .
+
+cacontology-platforms:AnonymityProtectionLevel rdf:type owl:Class ;
+    rdfs:label "Anonymity Protection Level"@en ;
+    rdfs:comment "Level of anonymity protection provided by platform features and policies."@en ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:EnduringEntity .
+
+cacontology-platforms:IdentityDisclosurePolicy rdf:type owl:Class ;
+    rdfs:label "Identity Disclosure Policy"@en ;
+    rdfs:comment "Platform policy regarding when and how user identities may be disclosed to other users or authorities."@en ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:Artifact .
+
+# =============================================================================
+# ANONYMOUS CHAT PLATFORM PROPERTIES (Buffalo/Vermont Enhancement)
+# =============================================================================
+
+# Anonymity Features Properties
+cacontology-platforms:allowsAnonymousChat rdf:type owl:DatatypeProperty ;
+    rdfs:label "allows anonymous chat"@en ;
+    rdfs:comment "Whether platform allows anonymous chat without account creation."@en ;
+    rdfs:domain cacontology-platforms:AnonymousChatPlatform ;
+    rdfs:range xsd:boolean .
+
+cacontology-platforms:guestAccountsAllowed rdf:type owl:DatatypeProperty ;
+    rdfs:label "guest accounts allowed"@en ;
+    rdfs:comment "Whether platform allows guest accounts with minimal verification."@en ;
+    rdfs:domain cacontology-platforms:AnonymousChatPlatform ;
+    rdfs:range xsd:boolean .
+
+cacontology-platforms:verificationStrength rdf:type owl:DatatypeProperty ;
+    rdfs:label "verification strength"@en ;
+    rdfs:comment "Strength of identity verification (none, email_only, phone_optional, id_required)."@en ;
+    rdfs:domain cacontology-platforms:MinimalVerificationRequirement ;
+    rdfs:range xsd:string .
+
+cacontology-platforms:anonymityLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "anonymity level"@en ;
+    rdfs:comment "Level of anonymity provided (full_anonymous, pseudo_anonymous, semi_verified, fully_verified)."@en ;
+    rdfs:domain cacontology-platforms:AnonymityProtectionLevel ;
+    rdfs:range xsd:string .
+
+cacontology-platforms:contactInitiationMethod rdf:type owl:DatatypeProperty ;
+    rdfs:label "contact initiation method"@en ;
+    rdfs:comment "Method for anonymous contact initiation (random_matching, public_rooms, profile_search, interest_based)."@en ;
+    rdfs:domain cacontology-platforms:AnonymousContactOpportunity ;
+    rdfs:range xsd:string .
+
+cacontology-platforms:moderationPresence rdf:type owl:DatatypeProperty ;
+    rdfs:label "moderation presence"@en ;
+    rdfs:comment "Level of moderation in anonymous areas (none, minimal, moderate, heavy)."@en ;
+    rdfs:domain cacontology-platforms:AnonymousContactOpportunity ;
+    rdfs:range xsd:string .
+
+cacontology-platforms:ageVerificationRequired rdf:type owl:DatatypeProperty ;
+    rdfs:label "age verification required"@en ;
+    rdfs:comment "Whether age verification is required for anonymous features."@en ;
+    rdfs:domain cacontology-platforms:AnonymousChatPlatform ;
+    rdfs:range xsd:boolean .
+
+cacontology-platforms:crossPlatformAnonymity rdf:type owl:DatatypeProperty ;
+    rdfs:label "cross platform anonymity"@en ;
+    rdfs:comment "Whether anonymity is maintained across connected platforms or services."@en ;
+    rdfs:domain cacontology-platforms:AnonymityProtectionLevel ;
+    rdfs:range xsd:boolean .
+
+# Data Retention for Anonymous Users
+cacontology-platforms:anonymousUserDataRetention rdf:type owl:DatatypeProperty ;
+    rdfs:label "anonymous user data retention"@en ;
+    rdfs:comment "How long data from anonymous users is retained (in days)."@en ;
+    rdfs:domain cacontology-platforms:AnonymousChatPlatform ;
+    rdfs:range xsd:integer .
+
+cacontology-platforms:conversationLogging rdf:type owl:DatatypeProperty ;
+    rdfs:label "conversation logging"@en ;
+    rdfs:comment "Whether anonymous conversations are logged and stored."@en ;
+    rdfs:domain cacontology-platforms:AnonymousChatPlatform ;
+    rdfs:range xsd:boolean .
+
+cacontology-platforms:identityDisclosureCircumstances rdf:type owl:DatatypeProperty ;
+    rdfs:label "identity disclosure circumstances"@en ;
+    rdfs:comment "Circumstances under which anonymous user identity may be disclosed (never, legal_request, safety_violation, platform_choice)."@en ;
+    rdfs:domain cacontology-platforms:IdentityDisclosurePolicy ;
+    rdfs:range xsd:string .
+
+# =============================================================================
+# ANONYMOUS PLATFORM OBJECT PROPERTIES
+# =============================================================================
+
+cacontology-platforms:providesAnonymousFeature rdf:type owl:ObjectProperty ;
+    rdfs:label "provides anonymous feature"@en ;
+    rdfs:comment "Links anonymous chat platform to specific anonymity features provided."@en ;
+    rdfs:domain cacontology-platforms:AnonymousChatPlatform ;
+    rdfs:range cacontology-platforms:GuestChatFeature .
+
+cacontology-platforms:enablesTemporaryAccounts rdf:type owl:ObjectProperty ;
+    rdfs:label "enables temporary accounts"@en ;
+    rdfs:comment "Links platform to temporary account systems enabled."@en ;
+    rdfs:domain cacontology-platforms:AnonymousChatPlatform ;
+    rdfs:range cacontology-platforms:TemporaryAccountSystem .
+
+cacontology-platforms:offersContactOpportunity rdf:type owl:ObjectProperty ;
+    rdfs:label "offers contact opportunity"@en ;
+    rdfs:comment "Links platform to anonymous contact opportunities provided."@en ;
+    rdfs:domain cacontology-platforms:AnonymousChatPlatform ;
+    rdfs:range cacontology-platforms:AnonymousContactOpportunity .
+
+cacontology-platforms:maintainsAnonymityLevel rdf:type owl:ObjectProperty ;
+    rdfs:label "maintains anonymity level"@en ;
+    rdfs:comment "Links platform to anonymity protection levels maintained."@en ;
+    rdfs:domain cacontology-platforms:AnonymousChatPlatform ;
+    rdfs:range cacontology-platforms:AnonymityProtectionLevel .
+
+cacontology-platforms:governedByDisclosurePolicy rdf:type owl:ObjectProperty ;
+    rdfs:label "governed by disclosure policy"@en ;
+    rdfs:comment "Links platform to identity disclosure policies governing anonymous users."@en ;
+    rdfs:domain cacontology-platforms:AnonymousChatPlatform ;
+    rdfs:range cacontology-platforms:IdentityDisclosurePolicy .
+
+cacontology-platforms:facilitatesRandomMatching rdf:type owl:ObjectProperty ;
+    rdfs:label "facilitates random matching"@en ;
+    rdfs:comment "Links contact opportunity to random user matching systems."@en ;
+    rdfs:domain cacontology-platforms:AnonymousContactOpportunity ;
+    rdfs:range cacontology-platforms:RandomUserMatching .
+
+cacontology-platforms:providesOpenChatAccess rdf:type owl:ObjectProperty ;
+    rdfs:label "provides open chat access"@en ;
+    rdfs:comment "Links contact opportunity to open chat room access."@en ;
+    rdfs:domain cacontology-platforms:AnonymousContactOpportunity ;
+    rdfs:range cacontology-platforms:OpenChatRooms .
+
+# =============================================================================
+# PLATFORM AFFORDANCES (capability taxonomy for transition-level misuse)
+# =============================================================================
+
+cacontology-platforms:PlatformAffordance rdf:type owl:Class ;
+    rdfs:label "Platform Affordance"@en ;
+    rdfs:comment "A platform capability that offenders may misuse to advance an offense trajectory (anonymity, ephemerality, unmonitored communication, etc.)."@en ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:DigitalSystemEntity .
+
+cacontology-platforms:Anonymity rdf:type owl:Class ;
+    rdfs:label "Anonymity Affordance"@en ;
+    rdfs:comment "Platform affordance enabling pseudonymous or minimally verified contact."@en ;
+    rdfs:subClassOf cacontology-platforms:PlatformAffordance .
+
+cacontology-platforms:Ephemerality rdf:type owl:Class ;
+    rdfs:label "Ephemerality Affordance"@en ;
+    rdfs:comment "Platform affordance where messages or media auto-delete, reducing forensic retention on the platform."@en ;
+    rdfs:subClassOf cacontology-platforms:PlatformAffordance .
+
+cacontology-platforms:UnmonitoredCommunication rdf:type owl:Class ;
+    rdfs:label "Unmonitored Communication Affordance"@en ;
+    rdfs:comment "Platform affordance for private channels with limited proactive moderation or parental visibility."@en ;
+    rdfs:subClassOf cacontology-platforms:PlatformAffordance .
+
+cacontology-platforms:ContactDiscovery rdf:type owl:Class ;
+    rdfs:label "Contact Discovery Affordance"@en ;
+    rdfs:comment "Platform affordance for finding or matching with new contacts (search, suggestions, random matching)."@en ;
+    rdfs:subClassOf cacontology-platforms:PlatformAffordance .
+
+cacontology-platforms:DistributionInfrastructure rdf:type owl:Class ;
+    rdfs:label "Distribution Infrastructure Affordance"@en ;
+    rdfs:comment "Platform affordance for sharing or broadcasting content to audiences beyond direct dyadic chat."@en ;
+    rdfs:subClassOf cacontology-platforms:PlatformAffordance .
+
+cacontology-platforms:GenerativeSynthesis rdf:type owl:Class ;
+    rdfs:label "Generative Synthesis Affordance"@en ;
+    rdfs:comment "Platform affordance for AI-generated or synthetic media creation and manipulation."@en ;
+    rdfs:subClassOf cacontology-platforms:PlatformAffordance .
+
+cacontology-platforms:Coordination rdf:type owl:Class ;
+    rdfs:label "Coordination Affordance"@en ;
+    rdfs:comment "Platform affordance for group coordination, encrypted channels, or multi-party planning."@en ;
+    rdfs:subClassOf cacontology-platforms:PlatformAffordance .
+
+cacontology-platforms:CoercionLeverage rdf:type owl:Class ;
+    rdfs:label "Coercion Leverage Affordance"@en ;
+    rdfs:comment "Platform affordance that amplifies coercive leverage (screenshots, forwarding, contact export, payment rails)."@en ;
+    rdfs:subClassOf cacontology-platforms:PlatformAffordance .
+
+# =============================================================================
+# CHANNEL MIGRATION EVENT (cross-platform offense trajectory transition)
+# =============================================================================
+
+cacontology-platforms:ChannelMigrationEvent rdf:type owl:Class ;
+    rdfs:label "Channel Migration Event"@en ;
+    rdfs:comment "Documented offense pattern where contact is initiated on one platform and deliberately moved to a second platform before escalation, to access more capable channels and/or sever the evidence trail on the originating platform."@en ;
+    rdfs:subClassOf cac-core:ExploitationEvent .
+
+cacontology-platforms:fromPlatform rdf:type owl:ObjectProperty ;
+    rdfs:label "from platform"@en ;
+    rdfs:comment "Originating platform from which the offender migrated contact."@en ;
+    rdfs:domain cacontology-platforms:ChannelMigrationEvent ;
+    rdfs:range uco-observable:DigitalService .
+
+cacontology-platforms:toPlatform rdf:type owl:ObjectProperty ;
+    rdfs:label "to platform"@en ;
+    rdfs:comment "Destination platform to which contact was migrated."@en ;
+    rdfs:domain cacontology-platforms:ChannelMigrationEvent ;
+    rdfs:range uco-observable:DigitalService .
+
+cacontology-platforms:migrationRationale rdf:type owl:DatatypeProperty ;
+    rdfs:label "migration rationale"@en ;
+    rdfs:comment "Why the offender migrated channels (capability_upgrade, evidence_evasion, both)."@en ;
+    rdfs:domain cacontology-platforms:ChannelMigrationEvent ;
+    rdfs:range xsd:string .
+
+cacontology-platforms:occursBetween rdf:type owl:ObjectProperty ;
+    rdfs:label "occurs between"@en ;
+    rdfs:comment "Offense phase instances separated by this channel migration event (earlier phase, later phase)."@en ;
+    rdfs:domain cacontology-platforms:ChannelMigrationEvent ;
+    rdfs:range cac-core:Phase .
+
+# =============================================================================
+# AFFORDANCE MISUSE (transition-level affordance annotation)
+# =============================================================================
+
+cacontology-platforms:AffordanceMisuse rdf:type owl:Class ;
+    rdfs:label "Affordance Misuse"@en ;
+    rdfs:comment "Annotation linking a platform affordance to the phase transition it enabled — affordances on offense trajectory edges rather than platform nodes alone."@en ;
+    rdfs:subClassOf uco-core:Relationship .
+
+cacontology-platforms:affordanceClass rdf:type owl:ObjectProperty ;
+    rdfs:label "affordance class"@en ;
+    rdfs:comment "The platform affordance category misused to enable the transition."@en ;
+    rdfs:domain cacontology-platforms:AffordanceMisuse ;
+    rdfs:range cacontology-platforms:PlatformAffordance .
+
+cacontology-platforms:enablesTransitionFrom rdf:type owl:ObjectProperty ;
+    rdfs:label "enables transition from"@en ;
+    rdfs:comment "Phase instance from which the affordance-enabled transition originates."@en ;
+    rdfs:domain cacontology-platforms:AffordanceMisuse ;
+    rdfs:range cac-core:Phase .
+
+cacontology-platforms:enablesTransitionTo rdf:type owl:ObjectProperty ;
+    rdfs:label "enables transition to"@en ;
+    rdfs:comment "Phase instance to which the affordance-enabled transition leads."@en ;
+    rdfs:domain cacontology-platforms:AffordanceMisuse ;
+    rdfs:range cac-core:Phase .
+
+cacontology-platforms:platform rdf:type owl:ObjectProperty ;
+    rdfs:label "platform"@en ;
+    rdfs:comment "Optional platform instance that carried the misused affordance."@en ;
+    rdfs:domain cacontology-platforms:AffordanceMisuse ;
+    rdfs:range uco-observable:DigitalService .
+
+cacontology-platforms:misuseDescription rdf:type owl:DatatypeProperty ;
+    rdfs:label "misuse description"@en ;
+    rdfs:comment "Narrative description of how the affordance was misused to enable the phase transition."@en ;
+    rdfs:domain cacontology-platforms:AffordanceMisuse ;
+    rdfs:range xsd:string . 

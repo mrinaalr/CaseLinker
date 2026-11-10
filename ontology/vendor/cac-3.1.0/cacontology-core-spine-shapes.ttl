@@ -1,0 +1,219 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cac-core-shapes: <https://cacontology.projectvic.org/core/shapes#> .
+@prefix gufo: <http://purl.org/nemo/gufo#> .
+
+# =============================================================================
+# Ontology Declaration
+# =============================================================================
+
+<https://cacontology.projectvic.org/core/shapes> rdf:type owl:Ontology ;
+    rdfs:label "CAC Ontology Semantic Spine SHACL Shapes"@en ;
+    rdfs:comment "Starter SHACL shapes for the CAC semantic spine. These shapes define minimal interoperability constraints for each spine branch. Extended profile shapes for advanced applications should be defined in separate profile modules."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/core/shapes/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    owl:imports <https://cacontology.projectvic.org/core/3.1.0> ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:issued "2026-03-16"^^xsd:date ;
+    dcterms:modified "2026-08-09"^^xsd:date .
+
+# =============================================================================
+# ARTIFACT SHAPE
+# =============================================================================
+
+cac-core-shapes:ArtifactShape a sh:NodeShape ;
+    sh:targetClass cac-core:Artifact ;
+    rdfs:label "Artifact Shape"@en ;
+    rdfs:comment "Minimal interoperability shape for artifacts."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:name "label"@en ;
+        sh:description "Every artifact should have at least one human-readable label."@en     ] .
+
+# =============================================================================
+# EVENT SHAPE
+# =============================================================================
+
+cac-core-shapes:EventShape a sh:NodeShape ;
+    sh:targetClass cac-core:Event ;
+    rdfs:label "Event Shape"@en ;
+    rdfs:comment "Minimal interoperability shape for events."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:name "label"@en ;
+        sh:description "Every event should have at least one human-readable label."@en     ] ;
+    sh:property [
+        sh:path gufo:hasBeginPointInXSDDateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:name "begin time"@en ;
+        sh:description "Optional temporal begin point for the event."@en     ] ;
+    sh:property [
+        sh:path gufo:hasEndPointInXSDDateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:name "end time"@en ;
+        sh:description "Optional temporal end point for the event."@en     ] .
+
+# =============================================================================
+# INVESTIGATIVE ACTION SHAPE
+# =============================================================================
+
+cac-core-shapes:InvestigativeActionShape a sh:NodeShape ;
+    sh:targetClass cac-core:InvestigativeAction ;
+    rdfs:label "Investigative Action Shape"@en ;
+    rdfs:comment "Minimal interoperability shape for investigative actions."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:name "label"@en     ] ;
+    sh:property [
+        sh:path gufo:hasBeginPointInXSDDateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:name "begin time"@en     ] ;
+    sh:property [
+        sh:path gufo:hasEndPointInXSDDateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:name "end time"@en     ] .
+
+# =============================================================================
+# SITUATION SHAPE
+# =============================================================================
+
+cac-core-shapes:SituationShape a sh:NodeShape ;
+    sh:targetClass cac-core:Situation ;
+    rdfs:label "Situation Shape"@en ;
+    rdfs:comment "Minimal interoperability shape for situations."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:name "label"@en     ] .
+
+# =============================================================================
+# ROLE SHAPE
+# =============================================================================
+
+cac-core-shapes:RoleShape a sh:NodeShape ;
+    sh:targetClass cac-core:Role ;
+    rdfs:label "Role Shape"@en ;
+    rdfs:comment "Minimal interoperability shape for roles."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:name "label"@en     ] .
+
+# =============================================================================
+# PHASE SHAPE
+# =============================================================================
+
+cac-core-shapes:PhaseShape a sh:NodeShape ;
+    sh:targetClass cac-core:Phase ;
+    rdfs:label "Phase Shape"@en ;
+    rdfs:comment "Minimal interoperability shape for phases."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:name "label"@en     ] ;
+    sh:property [
+        sh:path gufo:hasBeginPointInXSDDateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:name "begin time"@en ;
+        sh:description "Optional temporal begin point for the phase."@en     ] ;
+    sh:property [
+        sh:path gufo:hasEndPointInXSDDateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:name "end time"@en ;
+        sh:description "Optional temporal end point for the phase."@en     ] .
+
+cac-core-shapes:ConditioningPhaseShape a sh:NodeShape ;
+    sh:targetClass cac-core:ConditioningPhase ;
+    rdfs:label "Conditioning Phase Shape"@en ;
+    rdfs:comment "Validation shape for offense-trajectory conditioning phase instances."@en ;
+    sh:property [
+        sh:path rdf:type ;
+        sh:hasValue cac-core:Phase ;
+        sh:minCount 1 ;
+        sh:message "ConditioningPhase instances must always be dual-typed with cac-core:Phase."@en     ] ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:minCount 1 ;
+        sh:message "Conditioning phase must have a human-readable label."@en     ] ;
+    sh:property [
+        sh:path cac-core:conditioningMode ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "trust_rapport" "deception" "isolation" "normalization" "desensitization" "compliance_shaping" "dependency_creation" "fear_priming" "platform_confidence" ) ;
+        sh:message "conditioningMode must be from the allowed offense-trajectory mechanism list."@en     ] .
+
+# =============================================================================
+# ASSESSMENT RESULT SHAPE
+# =============================================================================
+
+cac-core-shapes:AssessmentResultShape a sh:NodeShape ;
+    sh:targetClass cac-core:AssessmentResult ;
+    rdfs:label "Assessment Result Shape"@en ;
+    rdfs:comment "Minimal interoperability shape for assessment results."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:name "label"@en     ] ;
+    sh:property [
+        sh:path cac-core:assesses ;
+        sh:minCount 1 ;
+        sh:name "assesses"@en ;
+        sh:description "An assessment result must reference at least one entity it assesses."@en     ] ;
+    sh:property [
+        sh:path cac-core:hasConfidence ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 1 ;
+        sh:name "confidence"@en ;
+        sh:description "Optional confidence score between 0 and 1."@en     ] .
+
+# =============================================================================
+# PERSON-LIKE ENTITY SHAPE
+# =============================================================================
+
+cac-core-shapes:PersonLikeEntityShape a sh:NodeShape ;
+    sh:targetClass cac-core:PersonLikeEntity ;
+    rdfs:label "Person-Like Entity Shape"@en ;
+    rdfs:comment "Minimal interoperability shape for person-like entities."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:name "label"@en     ] .
+
+# =============================================================================
+# ORGANIZATION-LIKE ENTITY SHAPE
+# =============================================================================
+
+cac-core-shapes:OrganizationLikeEntityShape a sh:NodeShape ;
+    sh:targetClass cac-core:OrganizationLikeEntity ;
+    rdfs:label "Organization-Like Entity Shape"@en ;
+    rdfs:comment "Minimal interoperability shape for organization-like entities."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:minCount 1 ;
+        sh:datatype xsd:string ;
+        sh:name "label"@en     ] .

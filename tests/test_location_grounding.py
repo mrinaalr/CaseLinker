@@ -74,8 +74,8 @@ def test_international_source_not_ungrounded_failure(lg):
 
 def test_mapper_mints_readable_state_iri_when_grounds_present():
     sys.path.insert(0, str(ROOT / "ontology"))
-    from features_to_cac import BASE, CASELINKER_FIPS, CaseToCAC, GRAPH_DETERMINISTIC
-    from rdflib.namespace import RDFS
+    from features_to_cac import BASE, CaseToCAC, GRAPH_DETERMINISTIC
+    from rdflib.namespace import DCTERMS, RDFS
 
     mapper = CaseToCAC()
     case = {
@@ -107,7 +107,8 @@ def test_mapper_mints_readable_state_iri_when_grounds_present():
     g, _ = mapper.map_case(case)
     uri = BASE["location/cumberland-county-nj"]
     det = g.get_context(GRAPH_DETERMINISTIC)
-    assert {str(o) for o in det.objects(uri, CASELINKER_FIPS)} == {"34011"}
+    assert {str(o) for o in det.objects(uri, DCTERMS.identifier)} == {"fips:34011"}
+    assert not any("/vocab/" in str(p) for _, p, _ in det)
     assert "Cumberland County" in {str(x) for x in det.objects(uri, RDFS.label)}
     assert "cumberland-county-nj" in mapper._location_registry
     assert uri in list(det.subjects())

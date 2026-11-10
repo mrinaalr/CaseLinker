@@ -1,0 +1,428 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-role: <https://ontology.unifiedcyberontology.org/uco/role/> .
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-trafficking: <https://cacontology.projectvic.org/trafficking#> .
+@prefix cacontology-recruitment: <https://cacontology.projectvic.org/recruitment-networks#> .
+
+# Ontology Declaration
+<https://cacontology.projectvic.org/recruitment-networks> rdf:type owl:Ontology ;
+    rdfs:label "CAC Recruitment Networks Ontology"@en ;
+    rdfs:comment "An ontology for representing peer recruitment networks, classmate-mediated trafficking, educational institution reporting, and social recruitment patterns in child exploitation cases. Based on analysis of Brooklyn DA cases involving victim recruitment through existing trafficking victims."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/recruitment-networks/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:issued "2025-01-08"^^xsd:date ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/identity/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/observable/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/action/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/role/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/location/1.5.0> ,
+                <https://cacontology.projectvic.org/3.1.0> ,
+                <https://cacontology.projectvic.org/trafficking/3.1.0> ,
+                <https://cacontology.projectvic.org/core/3.1.0> .
+
+# =============================================================================
+# PEER RECRUITMENT NETWORK CLASSES (extending UCO Core)
+# =============================================================================
+
+cacontology-recruitment:PeerRecruitmentNetwork rdf:type owl:Class ;
+    rdfs:label "Peer Recruitment Network"@en ;
+    rdfs:comment "Network of traffickers utilizing existing victims to recruit new victims through peer relationships and social connections."@en ;
+    rdfs:subClassOf uco-core:UcoObject .
+
+cacontology-recruitment:ClassmateRecruitmentNetwork rdf:type owl:Class ;
+    rdfs:label "Classmate Recruitment Network"@en ;
+    rdfs:comment "Recruitment network operating within educational institutions using existing victims to recruit classmates."@en ;
+    rdfs:subClassOf cacontology-recruitment:PeerRecruitmentNetwork .
+
+cacontology-recruitment:SchoolBasedRecruitment rdf:type owl:Class ;
+    rdfs:label "School Based Recruitment"@en ;
+    rdfs:comment "Trafficking recruitment occurring within or through school environments and relationships."@en ;
+    rdfs:subClassOf cacontology-trafficking:VictimRecruitment .
+
+cacontology-recruitment:StudentNetworkExploitation rdf:type owl:Class ;
+    rdfs:label "Student Network Exploitation"@en ;
+    rdfs:comment "Exploitation of student social networks and peer relationships for trafficking recruitment."@en ;
+    rdfs:subClassOf cacontology-recruitment:SchoolBasedRecruitment .
+
+# =============================================================================
+# VICTIM-TO-VICTIM RECRUITMENT PATTERNS (extending UCO Action)
+# =============================================================================
+
+cacontology-recruitment:VictimMediatedRecruitment rdf:type owl:Class ;
+    rdfs:label "Victim Mediated Recruitment"@en ;
+    rdfs:comment "Recruitment of new victims through existing trafficking victims acting as intermediaries."@en ;
+    rdfs:subClassOf cacontology-trafficking:VictimRecruitment .
+
+cacontology-recruitment:ClassmateIntroduction rdf:type owl:Class ;
+    rdfs:label "Classmate Introduction"@en ;
+    rdfs:comment "Introduction of new victim to trafficker through existing victim who is a classmate."@en ;
+    rdfs:subClassOf cacontology-recruitment:VictimMediatedRecruitment .
+
+cacontology-recruitment:PeerInfluenceRecruitment rdf:type owl:Class ;
+    rdfs:label "Peer Influence Recruitment"@en ;
+    rdfs:comment "Recruitment leveraging peer pressure and social influence among minors."@en ;
+    rdfs:subClassOf cacontology-recruitment:VictimMediatedRecruitment .
+
+cacontology-recruitment:FriendshipExploitation rdf:type owl:Class ;
+    rdfs:label "Friendship Exploitation"@en ;
+    rdfs:comment "Exploitation of existing friendships and trust relationships between minors for recruitment."@en ;
+    rdfs:subClassOf cacontology-recruitment:PeerInfluenceRecruitment .
+
+cacontology-recruitment:SocialConnectionLeverage rdf:type owl:Class ;
+    rdfs:label "Social Connection Leverage"@en ;
+    rdfs:comment "Leveraging existing social connections between victims to facilitate new recruitment."@en ;
+    rdfs:subClassOf cacontology-recruitment:FriendshipExploitation .
+
+# =============================================================================
+# COERCED RECRUITMENT PATTERNS (extending UCO Action)
+# =============================================================================
+
+cacontology-recruitment:CoercedPeerRecruitment rdf:type owl:Class ;
+    rdfs:label "Coerced Peer Recruitment"@en ;
+    rdfs:comment "Recruitment where existing victims are forced or coerced to recruit their peers."@en ;
+    rdfs:subClassOf cacontology-recruitment:VictimMediatedRecruitment .
+
+cacontology-recruitment:RecruitmentQuota rdf:type owl:Class ;
+    rdfs:label "Recruitment Quota"@en ;
+    rdfs:comment "System where existing victims must recruit specified number of new victims."@en ;
+    rdfs:subClassOf cacontology-recruitment:CoercedPeerRecruitment .
+
+cacontology-recruitment:RecruitmentIncentive rdf:type owl:Class ;
+    rdfs:label "Recruitment Incentive"@en ;
+    rdfs:comment "Incentives offered to existing victims for successful recruitment of new victims."@en ;
+    rdfs:subClassOf cacontology-recruitment:CoercedPeerRecruitment .
+
+cacontology-recruitment:RecruitmentPunishment rdf:type owl:Class ;
+    rdfs:label "Recruitment Punishment"@en ;
+    rdfs:comment "Punishment threatened or applied to victims who fail to recruit new victims."@en ;
+    rdfs:subClassOf cacontology-recruitment:CoercedPeerRecruitment .
+
+# =============================================================================
+# EDUCATIONAL INSTITUTION CLASSES (extending UCO Identity)
+# =============================================================================
+
+cacontology-recruitment:EducationalInstitution rdf:type owl:Class ;
+    rdfs:label "Educational Institution"@en ;
+    rdfs:comment "School or educational facility where recruitment occurs or reporting takes place."@en ;
+    rdfs:subClassOf uco-identity:Organization .
+
+cacontology-recruitment:SchoolStaffMember rdf:type owl:Class ;
+    rdfs:label "School Staff Member"@en ;
+    rdfs:comment "Employee of educational institution involved in reporting or responding to trafficking."@en ;
+    rdfs:subClassOf uco-role:Role .
+
+cacontology-recruitment:SchoolSocialWorker rdf:type owl:Class ;
+    rdfs:label "School Social Worker"@en ;
+    rdfs:comment "Social worker employed by educational institution who receives victim reports."@en ;
+    rdfs:subClassOf cacontology-recruitment:SchoolStaffMember .
+
+cacontology-recruitment:SchoolCounselor rdf:type owl:Class ;
+    rdfs:label "School Counselor"@en ;
+    rdfs:comment "School counselor who may receive disclosures from trafficking victims."@en ;
+    rdfs:subClassOf cacontology-recruitment:SchoolStaffMember .
+
+cacontology-recruitment:TeacherReporter rdf:type owl:Class ;
+    rdfs:label "Teacher Reporter"@en ;
+    rdfs:comment "Teacher who identifies signs of trafficking or receives disclosures from students."@en ;
+    rdfs:subClassOf cacontology-recruitment:SchoolStaffMember .
+
+# =============================================================================
+# SCHOOL-BASED REPORTING MECHANISMS (extending UCO Action)
+# =============================================================================
+
+cacontology-recruitment:SchoolBasedReporting rdf:type owl:Class ;
+    rdfs:label "School Based Reporting"@en ;
+    rdfs:comment "Reporting of trafficking incidents through educational institution personnel."@en ;
+    rdfs:subClassOf cac-core:CoordinationEvent .
+
+cacontology-recruitment:SocialWorkerReport rdf:type owl:Class ;
+    rdfs:label "Social Worker Report"@en ;
+    rdfs:comment "Report made by school social worker to law enforcement regarding trafficking victim."@en ;
+    rdfs:subClassOf cacontology-recruitment:SchoolBasedReporting .
+
+cacontology-recruitment:VictimSchoolDisclosure rdf:type owl:Class ;
+    rdfs:label "Victim School Disclosure"@en ;
+    rdfs:comment "Disclosure by trafficking victim to school personnel about their situation."@en ;
+    rdfs:subClassOf cacontology-recruitment:SchoolBasedReporting .
+
+cacontology-recruitment:MandatoryReportingActivation rdf:type owl:Class ;
+    rdfs:label "Mandatory Reporting Activation"@en ;
+    rdfs:comment "Activation of mandatory reporting requirements by school personnel."@en ;
+    rdfs:subClassOf cacontology-recruitment:SchoolBasedReporting .
+
+cacontology-recruitment:SchoolPoliceContact rdf:type owl:Class ;
+    rdfs:label "School Police Contact"@en ;
+    rdfs:comment "Contact made by school personnel to law enforcement regarding trafficking concerns."@en ;
+    rdfs:subClassOf cacontology-recruitment:SchoolBasedReporting .
+
+# =============================================================================
+# EDUCATIONAL ENVIRONMENT VULNERABILITY (extending UCO Core)
+# =============================================================================
+
+cacontology-recruitment:SchoolVulnerabilityFactor rdf:type owl:Class ;
+    rdfs:label "School Vulnerability Factor"@en ;
+    rdfs:comment "Factors within educational environment that increase vulnerability to recruitment."@en ;
+    rdfs:subClassOf uco-core:UcoObject .
+
+cacontology-recruitment:SocialIsolationAtSchool rdf:type owl:Class ;
+    rdfs:label "Social Isolation at School"@en ;
+    rdfs:comment "Student isolation within school environment making them vulnerable to recruitment."@en ;
+    rdfs:subClassOf cacontology-recruitment:SchoolVulnerabilityFactor .
+
+cacontology-recruitment:AcademicStruggles rdf:type owl:Class ;
+    rdfs:label "Academic Struggles"@en ;
+    rdfs:comment "Academic difficulties creating vulnerability to recruitment offers."@en ;
+    rdfs:subClassOf cacontology-recruitment:SchoolVulnerabilityFactor .
+
+cacontology-recruitment:PeerPressureVulnerability rdf:type owl:Class ;
+    rdfs:label "Peer Pressure Vulnerability"@en ;
+    rdfs:comment "Susceptibility to peer pressure enabling recruitment through classmates."@en ;
+    rdfs:subClassOf cacontology-recruitment:SchoolVulnerabilityFactor .
+
+cacontology-recruitment:AttendanceProblems rdf:type owl:Class ;
+    rdfs:label "Attendance Problems"@en ;
+    rdfs:comment "School attendance issues that may indicate or facilitate trafficking involvement."@en ;
+    rdfs:subClassOf cacontology-recruitment:SchoolVulnerabilityFactor .
+
+# =============================================================================
+# RECRUITMENT TIMING AND PATTERNS (extending UCO Core)
+# =============================================================================
+
+cacontology-recruitment:RecruitmentTiming rdf:type owl:Class ;
+    rdfs:label "Recruitment Timing"@en ;
+    rdfs:comment "Temporal patterns and timing of recruitment activities within educational environments."@en ;
+    rdfs:subClassOf uco-core:UcoObject .
+
+cacontology-recruitment:SchoolHoursRecruitment rdf:type owl:Class ;
+    rdfs:label "School Hours Recruitment"@en ;
+    rdfs:comment "Recruitment occurring during regular school hours through peer interactions."@en ;
+    rdfs:subClassOf cacontology-recruitment:RecruitmentTiming .
+
+cacontology-recruitment:AfterSchoolRecruitment rdf:type owl:Class ;
+    rdfs:label "After School Recruitment"@en ;
+    rdfs:comment "Recruitment occurring after school hours when supervision is reduced."@en ;
+    rdfs:subClassOf cacontology-recruitment:RecruitmentTiming .
+
+cacontology-recruitment:LunchBreakRecruitment rdf:type owl:Class ;
+    rdfs:label "Lunch Break Recruitment"@en ;
+    rdfs:comment "Recruitment occurring during lunch breaks or between classes."@en ;
+    rdfs:subClassOf cacontology-recruitment:SchoolHoursRecruitment .
+
+cacontology-recruitment:ExtracurricularRecruitment rdf:type owl:Class ;
+    rdfs:label "Extracurricular Recruitment"@en ;
+    rdfs:comment "Recruitment occurring during extracurricular activities or school events."@en ;
+    rdfs:subClassOf cacontology-recruitment:AfterSchoolRecruitment .
+
+# =============================================================================
+# RECRUITMENT NETWORK PROPERTIES
+# =============================================================================
+
+# Network Structure Properties
+cacontology-recruitment:networkSize rdf:type owl:DatatypeProperty ;
+    rdfs:label "network size"@en ;
+    rdfs:comment "Number of participants in the recruitment network."@en ;
+    rdfs:domain cacontology-recruitment:PeerRecruitmentNetwork ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-recruitment:victimRecruitersCount rdf:type owl:DatatypeProperty ;
+    rdfs:label "victim recruiters count"@en ;
+    rdfs:comment "Number of existing victims being used as recruiters."@en ;
+    rdfs:domain cacontology-recruitment:PeerRecruitmentNetwork ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-recruitment:schoolsInvolved rdf:type owl:DatatypeProperty ;
+    rdfs:label "schools involved"@en ;
+    rdfs:comment "Number of educational institutions involved in recruitment network."@en ;
+    rdfs:domain cacontology-recruitment:ClassmateRecruitmentNetwork ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-recruitment:gradeLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "grade level"@en ;
+    rdfs:comment "School grade level where recruitment occurs (elementary, middle, high)."@en ;
+    rdfs:domain cacontology-recruitment:SchoolBasedRecruitment ;
+    rdfs:range xsd:string .
+
+# Recruitment Metrics Properties
+cacontology-recruitment:successfulRecruitments rdf:type owl:DatatypeProperty ;
+    rdfs:label "successful recruitments"@en ;
+    rdfs:comment "Number of successful recruitments achieved through network."@en ;
+    rdfs:domain cacontology-recruitment:VictimMediatedRecruitment ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-recruitment:recruitmentAttempts rdf:type owl:DatatypeProperty ;
+    rdfs:label "recruitment attempts"@en ;
+    rdfs:comment "Total number of recruitment attempts made through network."@en ;
+    rdfs:domain cacontology-recruitment:VictimMediatedRecruitment ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-recruitment:averageRecruitmentTime rdf:type owl:DatatypeProperty ;
+    rdfs:label "average recruitment time"@en ;
+    rdfs:comment "Average time from introduction to successful recruitment in days."@en ;
+    rdfs:domain cacontology-recruitment:ClassmateIntroduction ;
+    rdfs:range xsd:decimal .
+
+# School Environment Properties
+cacontology-recruitment:schoolType rdf:type owl:DatatypeProperty ;
+    rdfs:label "school type"@en ;
+    rdfs:comment "Type of educational institution (public, private, charter, alternative)."@en ;
+    rdfs:domain cacontology-recruitment:EducationalInstitution ;
+    rdfs:range xsd:string .
+
+cacontology-recruitment:studentPopulation rdf:type owl:DatatypeProperty ;
+    rdfs:label "student population"@en ;
+    rdfs:comment "Total number of students in educational institution."@en ;
+    rdfs:domain cacontology-recruitment:EducationalInstitution ;
+    rdfs:range xsd:nonNegativeInteger .
+
+cacontology-recruitment:socioeconomicLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "socioeconomic level"@en ;
+    rdfs:comment "Socioeconomic level of school community (low, middle, high, mixed)."@en ;
+    rdfs:domain cacontology-recruitment:EducationalInstitution ;
+    rdfs:range xsd:string .
+
+# Reporting Properties
+cacontology-recruitment:reportingDelay rdf:type owl:DatatypeProperty ;
+    rdfs:label "reporting delay"@en ;
+    rdfs:comment "Time delay between incident and reporting to authorities in days."@en ;
+    rdfs:domain cacontology-recruitment:SchoolBasedReporting ;
+    rdfs:range xsd:decimal .
+
+cacontology-recruitment:reportingStaffRole rdf:type owl:DatatypeProperty ;
+    rdfs:label "reporting staff role"@en ;
+    rdfs:comment "Role of school staff member making the report (social_worker, counselor, teacher, administrator)."@en ;
+    rdfs:domain cacontology-recruitment:SchoolBasedReporting ;
+    rdfs:range xsd:string .
+
+cacontology-recruitment:mandatoryReportingTrigger rdf:type owl:DatatypeProperty ;
+    rdfs:label "mandatory reporting trigger"@en ;
+    rdfs:comment "Whether report was triggered by mandatory reporting requirements."@en ;
+    rdfs:domain cacontology-recruitment:SchoolBasedReporting ;
+    rdfs:range xsd:boolean .
+
+# Vulnerability Assessment Properties
+cacontology-recruitment:vulnerabilityScore rdf:type owl:DatatypeProperty ;
+    rdfs:label "vulnerability score"@en ;
+    rdfs:comment "Numerical assessment of vulnerability factors (0.0-1.0)."@en ;
+    rdfs:domain cacontology-recruitment:SchoolVulnerabilityFactor ;
+    rdfs:range xsd:decimal .
+
+cacontology-recruitment:attendanceRate rdf:type owl:DatatypeProperty ;
+    rdfs:label "attendance rate"@en ;
+    rdfs:comment "School attendance rate as percentage (0.0-1.0)."@en ;
+    rdfs:domain cacontology-recruitment:AttendanceProblems ;
+    rdfs:range xsd:decimal .
+
+cacontology-recruitment:academicPerformanceLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "academic performance level"@en ;
+    rdfs:comment "Academic performance level (failing, below_average, average, above_average, excellent)."@en ;
+    rdfs:domain cacontology-recruitment:AcademicStruggles ;
+    rdfs:range xsd:string .
+
+# =============================================================================
+# RECRUITMENT NETWORK RELATIONSHIPS
+# =============================================================================
+
+# Network Structure Relationships
+cacontology-recruitment:operatesInNetwork rdf:type owl:ObjectProperty ;
+    rdfs:label "operates in network"@en ;
+    rdfs:comment "Links trafficking operation to recruitment network it utilizes."@en ;
+    rdfs:domain cacontology-trafficking:TraffickingOperation ;
+    rdfs:range cacontology-recruitment:PeerRecruitmentNetwork .
+
+cacontology-recruitment:includesRecruitingVictim rdf:type owl:ObjectProperty ;
+    rdfs:label "includes recruiting victim"@en ;
+    rdfs:comment "Links recruitment network to victim being used as recruiter."@en ;
+    rdfs:domain cacontology-recruitment:PeerRecruitmentNetwork ;
+    rdfs:range uco-identity:Person .
+
+cacontology-recruitment:targetsSchool rdf:type owl:ObjectProperty ;
+    rdfs:label "targets school"@en ;
+    rdfs:comment "Links recruitment network to educational institution being targeted."@en ;
+    rdfs:domain cacontology-recruitment:ClassmateRecruitmentNetwork ;
+    rdfs:range cacontology-recruitment:EducationalInstitution .
+
+# Recruitment Process Relationships
+cacontology-recruitment:recruitsVictim rdf:type owl:ObjectProperty ;
+    rdfs:label "recruits victim"@en ;
+    rdfs:comment "Links recruiting victim to new victim they recruit."@en ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range uco-identity:Person .
+
+cacontology-recruitment:introducesTo rdf:type owl:ObjectProperty ;
+    rdfs:label "introduces to"@en ;
+    rdfs:comment "Links classmate introduction to trafficker being introduced to."@en ;
+    rdfs:domain cacontology-recruitment:ClassmateIntroduction ;
+    rdfs:range uco-identity:Person .
+
+cacontology-recruitment:facilitatedBy rdf:type owl:ObjectProperty ;
+    rdfs:label "facilitated by"@en ;
+    rdfs:comment "Links recruitment to victim who facilitated the introduction."@en ;
+    rdfs:domain cacontology-recruitment:VictimMediatedRecruitment ;
+    rdfs:range uco-identity:Person .
+
+# School Relationships
+cacontology-recruitment:attendsSchool rdf:type owl:ObjectProperty ;
+    rdfs:label "attends school"@en ;
+    rdfs:comment "Links student to educational institution they attend."@en ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range cacontology-recruitment:EducationalInstitution .
+
+cacontology-recruitment:employedAt rdf:type owl:ObjectProperty ;
+    rdfs:label "employed at"@en ;
+    rdfs:comment "Links school staff member to educational institution where they work."@en ;
+    rdfs:domain cacontology-recruitment:SchoolStaffMember ;
+    rdfs:range cacontology-recruitment:EducationalInstitution .
+
+cacontology-recruitment:reportsToSchool rdf:type owl:ObjectProperty ;
+    rdfs:label "reports to school"@en ;
+    rdfs:comment "Links victim to school where they made disclosure."@en ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range cacontology-recruitment:EducationalInstitution .
+
+# Reporting Relationships
+cacontology-recruitment:receivesReport rdf:type owl:ObjectProperty ;
+    rdfs:label "receives report"@en ;
+    rdfs:comment "Links school staff member to report they receive from victim."@en ;
+    rdfs:domain cacontology-recruitment:SchoolStaffMember ;
+    rdfs:range cacontology-recruitment:VictimSchoolDisclosure .
+
+cacontology-recruitment:contactsLawEnforcement rdf:type owl:ObjectProperty ;
+    rdfs:label "contacts law enforcement"@en ;
+    rdfs:comment "Links school staff to law enforcement contact they make."@en ;
+    rdfs:domain cacontology-recruitment:SchoolStaffMember ;
+    rdfs:range cacontology-recruitment:SchoolPoliceContact .
+
+cacontology-recruitment:triggersInvestigation rdf:type owl:ObjectProperty ;
+    rdfs:label "triggers investigation"@en ;
+    rdfs:comment "Links school-based reporting to investigation it triggers."@en ;
+    rdfs:domain cacontology-recruitment:SchoolBasedReporting ;
+    rdfs:range cacontology:CACInvestigation .
+
+# Vulnerability Relationships
+cacontology-recruitment:exhibitsVulnerability rdf:type owl:ObjectProperty ;
+    rdfs:label "exhibits vulnerability"@en ;
+    rdfs:comment "Links victim to vulnerability factors they exhibit."@en ;
+    rdfs:domain uco-identity:Person ;
+    rdfs:range cacontology-recruitment:SchoolVulnerabilityFactor .
+
+cacontology-recruitment:exploitsVulnerability rdf:type owl:ObjectProperty ;
+    rdfs:label "exploits vulnerability"@en ;
+    rdfs:comment "Links recruitment to vulnerability factor being exploited."@en ;
+    rdfs:domain cacontology-recruitment:SchoolBasedRecruitment ;
+    rdfs:range cacontology-recruitment:SchoolVulnerabilityFactor .
+
+cacontology-recruitment:mitigatesVulnerability rdf:type owl:ObjectProperty ;
+    rdfs:label "mitigates vulnerability"@en ;
+    rdfs:comment "Links school intervention to vulnerability factor it addresses."@en ;
+    rdfs:domain cacontology-recruitment:SchoolBasedReporting ;
+    rdfs:range cacontology-recruitment:SchoolVulnerabilityFactor . 

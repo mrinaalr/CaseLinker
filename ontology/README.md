@@ -18,7 +18,7 @@ The repo README keeps the one-page method summary. This file is the working docu
 
 The [CAC Ontology](https://github.com/Project-VIC-International/CAC-Ontology) (Crimes Against Children, Project VIC) is the investigation vocabulary. It sits on the Linux Foundation [Cyber Domain Ontology](https://cyberdomainontology.org/) stack: [UCO](https://unifiedcyberontology.org/) (identity, role, core) and [CASE](https://caseontology.org/). CaseLinker does not invent predicates; it binds extracted features to CAC classes and UCO types so the same SPARQL and SHACL tools used in forensic workflows apply here.
 
-Pinned copies of core / grooming / platforms / sextortion modules and their SHACL shapes live in this folder (`cacontology-*.ttl`) — real Turtle files, not symlinks. Upstream pin is recorded in [`CAC_ONTOLOGY_VERSION`](CAC_ONTOLOGY_VERSION) (commit `b73b51b`, describe `v3.0.0-3-gb73b51b`, 2026-06-30). Override the search path with `CAC_ONTOLOGY_DIR` (directory containing `cacontology-core-shapes.ttl`); otherwise the mapper uses these pinned files. Missing or empty shapes raise; validation never reports `conforms=True` with zero shapes loaded. Bindings and class lookup: [CASE/UCO SDK](https://github.com/vulnmaster/CASE-UCO-SDK) with `CASE_UCO_EXTENSIONS=cac`.
+All 97 CAC v3.1.0 modules and shapes, UCO 1.5.0, CASE 1.5.0, gUFO 1.0.0 and the W3C Web Annotation vocabulary are vendored byte-for-byte in [`vendor/`](vendor/); the pins are recorded in [`CAC_ONTOLOGY_VERSION`](CAC_ONTOLOGY_VERSION). Every term a graph uses must be declared there or in `caselinker-provenance.ttl` (`term_resolution.py`, `tests/test_term_resolution.py`). Override the search path with `CAC_ONTOLOGY_DIR` (directory containing `cacontology-core-shapes.ttl`); otherwise the mapper uses these pinned files. Missing or empty shapes raise; validation never reports `conforms=True` with zero shapes loaded. Bindings and class lookup: [CASE/UCO SDK](https://github.com/vulnmaster/CASE-UCO-SDK) with `CASE_UCO_EXTENSIONS=cac`.
 
 **Prefixes used in instance graphs** (full list and SPARQL preamble: [docs/SPARQL.md](docs/SPARQL.md#namespaces)):
 
@@ -55,16 +55,16 @@ flowchart LR
   inv -->|hasPhase / currentPhase| phase
   inv -->|hasStep| event
   inv -->|involvesAgency| agency
-  event -->|usesChannel| plat
-  vRole -->|participatesInEvent| event
-  oRole -->|participatesInEvent| event
-  vRole --> person
-  oRole --> person
+  event -->|usesChannel, one event only| plat
+  vRole -->|participatesInEvent, one event only| event
+  oRole -->|participatesInEvent, one event only| event
+  person -->|Has_Role relationship| vRole
+  person -->|Has_Role relationship| oRole
   proc -->|hasCharge| charge
   inv -->|hasStep| proc
 ```
 
-Typical triples: investigation metadata (`dcterms:source`, `dcterms:created`), current prosecution phase, offense events (`cac:hasStep`), platform channels (`cac:usesChannel`), victim/offender roles on UCO `Person` nodes, and legal outcomes when the press release supports them. Mapping rules and unmappable gaps: [MAPPING_PLAN.md](MAPPING_PLAN.md).
+Typical triples: investigation metadata (`dcterms:source`, `dcterms:created`, `dcterms:date` at the precision stored), current prosecution phase, offense events (`cac:hasStep`), the case's platforms (nodes in the case graph; `cac:usesChannel` only when the case has one event), victim/offender/defendant roles played by UCO `Person` nodes through `Has_Role` relationships, ages as `AgeAtTimeSituation`, the CyberTip report and who sent it (`uco-core:object`, `hotlines:reportedBy`), and legal outcomes when the press release supports them. Every term is declared in `vendor/` (`tests/test_term_resolution.py`); nothing is added to satisfy a SHACL shape (`shacl_validation.py`). Mapping rules and unmappable gaps: [MAPPING_PLAN.md](MAPPING_PLAN.md).
 
 Example files: [`graph_output/nj_ag_2017_001.ttl`](graph_output/nj_ag_2017_001.ttl) (Turtle) and the matching `.jsonld`.
 

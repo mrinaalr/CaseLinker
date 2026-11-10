@@ -1,0 +1,981 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix cacontology-legal-outcomes: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix cacontology-registry: <https://cacontology.projectvic.org/sex-offender-registry#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+# Ontology Declaration
+<https://cacontology.projectvic.org/legal-outcomes/shapes> rdf:type owl:Ontology ;
+    rdfs:label "CAC Sentencing SHACL Shapes"@en ;
+    rdfs:comment "SHACL validation shapes for the CAC Sentencing Ontology, providing validation for legal outcomes, federal sentences, judicial proceedings, and punishment guidelines."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/legal-outcomes/shapes/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://cacontology.projectvic.org/legal-outcomes/3.1.0> ,
+                <https://cacontology.projectvic.org/sex-offender-registry/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> .
+
+# =============================================================================
+# SENTENCING OUTCOME SHAPES
+# =============================================================================
+
+cacontology-legal-outcomes:SentencingOutcomeShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal-outcomes:SentencingOutcome ;
+    rdfs:label "Sentencing Outcome Shape"@en ;
+    rdfs:comment "Validation shape for sentencing outcome instances."@en ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:sentenceType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "imprisonment" "probation" "suspended_sentence" "community_service" "fine" "restitution" "treatment_order" "mixed_sentence" ) ;
+        sh:message "Sentencing outcome must specify sentence type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:sentenceDuration ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 50.0 ;
+        sh:message "Sentence duration must be between 0 and 50 years."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:sentenceDate ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Sentencing outcome must specify sentence date."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:jurisdiction ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "federal" "state" "local" "military" "tribal" "international" ) ;
+        sh:message "Sentencing outcome must specify jurisdiction from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:appealStatus ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "no_appeal" "appeal_pending" "appeal_denied" "appeal_granted" "sentence_modified" "conviction_overturned" ) ;
+        sh:message "Appeal status must be from the allowed list."@en
+    ] .
+
+cacontology-legal-outcomes:ImprisonmentSentenceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal-outcomes:ImprisonmentSentence ;
+    rdfs:label "Imprisonment Sentence Shape"@en ;
+    rdfs:comment "Validation shape for imprisonment sentence instances."@en ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:facilityType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "federal_prison" "state_prison" "county_jail" "minimum_security" "medium_security" "maximum_security" "supermax" ) ;
+        sh:message "Imprisonment sentence must specify facility type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:paroleEligibility ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Imprisonment sentence must specify parole eligibility."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:minimumServed ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 50.0 ;
+        sh:message "Minimum time served must be between 0 and 50 years."@en
+    ] .
+
+cacontology-legal-outcomes:ProbationSentenceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal-outcomes:ProbationSentence ;
+    rdfs:label "Probation Sentence Shape"@en ;
+    rdfs:comment "Validation shape for probation sentence instances."@en ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:probationConditions ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 50 ;
+        sh:message "Probation sentence must have between 1 and 50 conditions."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:supervisionLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "unsupervised" "administrative" "standard" "intensive" "electronic_monitoring" "residential" ) ;
+        sh:message "Probation sentence must specify supervision level from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:reportingFrequency ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "monthly" "bi_weekly" "weekly" "daily" "as_directed" "none" ) ;
+        sh:message "Probation sentence must specify reporting frequency from the allowed list."@en
+    ] .
+
+# =============================================================================
+# LEGAL PROCEEDING AND SENTENCE STRUCTURE SHAPES
+# =============================================================================
+
+cacontology-legal-outcomes:LegalProceedingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal-outcomes:LegalProceeding ;
+    rdfs:label "Legal Proceeding Shape"@en ;
+    rdfs:comment "Validation shape for legal proceeding instances, including pretrial bail status (e.g., held without bail in the Utah Christensen case)."@en ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:bailStatus ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "released_on_bail" "held_without_bail" "released_on_own_recognizance" "bail_denied" "bail_revoked" ) ;
+        sh:message "Bail status, when provided, must be one of: released_on_bail, held_without_bail, released_on_own_recognizance, bail_denied, bail_revoked."@en
+    ] .
+
+# =============================================================================
+# APPELLATE REVIEW SHAPES (McCormack / appellate-opinion modeling)
+# =============================================================================
+
+cacontology-legal-outcomes:AppellateIssueShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal-outcomes:AppellateIssue ;
+    rdfs:label "Appellate Issue Shape"@en ;
+    rdfs:comment "Validation shape for appellate issues (issue → disposition, optional evidence-rule and standard-of-review links)."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:minCount 1 ;
+        sh:message "Appellate issue must have an rdfs:label."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:issueDisposition ;
+        sh:class cacontology-legal-outcomes:AppellateDisposition ;
+        sh:minCount 1 ;
+        sh:message "Appellate issue must link to at least one AppellateDisposition via issueDisposition."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:appliesStandardOfReview ;
+        sh:class cacontology-legal-outcomes:StandardOfReview ;
+        sh:minCount 0 ;
+        sh:message "appliesStandardOfReview must point to a StandardOfReview."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:citesEvidenceRule ;
+        sh:class cacontology-legal-outcomes:EvidenceRule ;
+        sh:minCount 0 ;
+        sh:message "citesEvidenceRule must point to an EvidenceRule."@en
+    ] .
+
+cacontology-legal-outcomes:AppellateDispositionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal-outcomes:AppellateDisposition ;
+    rdfs:label "Appellate Disposition Shape"@en ;
+    rdfs:comment "Validation shape for appellate dispositions."@en ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:dispositionType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "affirmed" "reversed" "vacated" "remanded" "affirmed_in_part_reversed_in_part" "dismissed" "other" ) ;
+        sh:message "Disposition type must be one of: affirmed, reversed, vacated, remanded, affirmed_in_part_reversed_in_part, dismissed, other."@en
+    ] ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:minCount 1 ;
+        sh:message "Appellate disposition should have an rdfs:label."@en
+    ] .
+
+cacontology-legal-outcomes:StandardOfReviewShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal-outcomes:StandardOfReview ;
+    rdfs:label "Standard of Review Shape"@en ;
+    rdfs:comment "Validation shape for standards of review."@en ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:standardOfReviewType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "abuse_of_discretion" "de_novo" "clear_error" "plain_error" "substantial_evidence" "reasonableness" "other" ) ;
+        sh:message "Standard of review type must be one of: abuse_of_discretion, de_novo, clear_error, plain_error, substantial_evidence, reasonableness, other."@en
+    ] ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:minCount 1 ;
+        sh:message "Standard of review should have an rdfs:label."@en
+    ] .
+
+cacontology-legal-outcomes:EvidenceRuleShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal-outcomes:EvidenceRule ;
+    rdfs:label "Evidence Rule Shape"@en ;
+    rdfs:comment "Validation shape for evidence rules cited in appellate issues."@en ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:ruleCitation ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Evidence rule must include a ruleCitation string (5-200 chars)."@en
+    ] ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:minCount 1 ;
+        sh:message "Evidence rule should have an rdfs:label."@en
+    ] .
+
+cacontology-legal-outcomes:CriminalSentenceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal-outcomes:CriminalSentence ;
+    rdfs:label "Criminal Sentence Shape"@en ;
+    rdfs:comment "Validation shape for criminal sentences, including concurrency semantics for concurrent jail/probation terms (as in the Utah Christensen 2021 sentences)."@en ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:sentenceConcurrency ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "concurrent" "consecutive" "mixed" ) ;
+        sh:message "Sentence concurrency, when provided, must be one of: concurrent, consecutive, mixed."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:concurrentWith ;
+        sh:class cacontology-legal-outcomes:CriminalSentence ;
+        sh:minCount 0 ;
+        sh:message "Sentences linked via concurrentWith must point to other CriminalSentence instances."@en
+    ] .
+
+cacontology-legal-outcomes:CriminalSentenceConcurrencyBusinessRule rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal-outcomes:CriminalSentence ;
+    rdfs:label "Criminal Sentence Concurrency Business Rule"@en ;
+    rdfs:comment "Business rule: a sentence MUST NOT be declared concurrent with itself."@en ;
+    sh:sparql [
+        sh:message "A criminal sentence cannot be concurrentWith itself."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-legal-outcomes:concurrentWith $this .
+            }
+        """
+    ] .
+
+# =============================================================================
+# LEGAL CHARGE SHAPES
+# =============================================================================
+
+cacontology-legal-outcomes:LegalChargeShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal-outcomes:LegalCharge ;
+    rdfs:label "Legal Charge Shape"@en ;
+    rdfs:comment "Validation shape for legal charge instances."@en ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:chargeType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "felony" "misdemeanor" "infraction" "violation" "contempt" "federal_crime" ) ;
+        sh:message "Legal charge must specify charge type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:chargeClass ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "class_a" "class_b" "class_c" "class_d" "class_e" "unclassified" "capital" ) ;
+        sh:message "Legal charge must specify charge class from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:statuteReference ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 100 ;
+        sh:message "Legal charge must specify statute reference (5-100 characters)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:maximumPenalty ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 99.0 ;
+        sh:message "Maximum penalty must be between 0 and 99 years."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:pleaEntered ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "guilty" "not_guilty" "no_contest" "alford_plea" "not_entered" ) ;
+        sh:message "Plea entered must be from the allowed list."@en
+    ] .
+
+cacontology-legal-outcomes:FelonyChargeShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal-outcomes:FelonyCharge ;
+    rdfs:label "Felony Charge Shape"@en ;
+    rdfs:comment "Validation shape for felony charge instances."@en ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:felonyLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "first_degree" "second_degree" "third_degree" "fourth_degree" "unclassified" "capital" ) ;
+        sh:message "Felony charge must specify felony level from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:violentCrime ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Felony charge must specify if it is a violent crime."@en
+    ] .
+
+# =============================================================================
+# GEORGIA STATE CHARGE SHAPES
+# Based on Georgia Attorney General press release (Hart County trafficking case)
+# =============================================================================
+
+cacontology-legal-outcomes:GeorgiaStateChargeShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal-outcomes:GeorgiaStateCharge ;
+    rdfs:label "Georgia State Charge Shape"@en ;
+    rdfs:comment "Validation shape for Georgia state charge instances in CAC cases."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:minCount 1 ;
+        sh:message "Georgia state charge should have an rdfs:label."@en
+    ] .
+
+cacontology-legal-outcomes:TraffickingOfPersonsForSexualServitudeChargeShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal-outcomes:TraffickingOfPersonsForSexualServitudeCharge ;
+    rdfs:label "Trafficking of Persons for Sexual Servitude (GA) Charge Shape"@en ;
+    rdfs:comment "Validation shape for Georgia trafficking-for-sexual-servitude charge instances."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:minCount 1 ;
+        sh:message "Charge instance should have an rdfs:label."@en
+    ] .
+
+cacontology-legal-outcomes:SexualExploitationOfMinorChargeShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal-outcomes:SexualExploitationOfMinorCharge ;
+    rdfs:label "Sexual Exploitation of a Minor (GA) Charge Shape"@en ;
+    rdfs:comment "Validation shape for Georgia sexual exploitation of a minor charge instances."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:minCount 1 ;
+        sh:message "Charge instance should have an rdfs:label."@en
+    ] .
+
+# =============================================================================
+# PLEA / SENTENCING CONDITION SHAPES
+# =============================================================================
+
+cacontology-legal-outcomes:ProfessionalLicenseSurrenderConditionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal-outcomes:ProfessionalLicenseSurrenderCondition ;
+    rdfs:label "Professional License Surrender Condition Shape"@en ;
+    rdfs:comment "Validation shape for conditions requiring surrender of a professional license."@en ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:requiresLicenseSurrender ;
+        sh:class cacontology-registry:ProfessionalLicense ;
+        sh:minCount 1 ;
+        sh:message "License surrender condition must reference at least one ProfessionalLicense via requiresLicenseSurrender."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:conditionAppliesToPerson ;
+        sh:class uco-identity:Person ;
+        sh:minCount 1 ;
+        sh:message "License surrender condition must specify the person it applies to via conditionAppliesToPerson."@en
+    ] .
+
+# =============================================================================
+# CONVICTION RECORD SHAPES
+# =============================================================================
+
+cacontology-legal-outcomes:ConvictionRecordShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal-outcomes:ConvictionRecord ;
+    rdfs:label "Conviction Record Shape"@en ;
+    rdfs:comment "Validation shape for conviction record instances."@en ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:convictionDate ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Conviction record must specify conviction date."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:convictionType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "jury_verdict" "bench_trial" "plea_agreement" "default_judgment" "summary_conviction" ) ;
+        sh:message "Conviction record must specify conviction type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:chargeCount ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 100 ;
+        sh:message "Conviction record must have between 1 and 100 charges."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:priorConvictions ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 50 ;
+        sh:message "Prior convictions must be between 0 and 50."@en
+    ] .
+
+# =============================================================================
+# SENTENCING GUIDELINES SHAPES
+# =============================================================================
+
+cacontology-legal-outcomes:SentencingGuidelinesShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal-outcomes:SentencingGuidelines ;
+    rdfs:label "Sentencing Guidelines Shape"@en ;
+    rdfs:comment "Validation shape for sentencing guidelines instances."@en ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:guidelineSystem ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "federal_guidelines" "state_guidelines" "advisory_guidelines" "mandatory_minimums" "judicial_discretion" ) ;
+        sh:message "Sentencing guidelines must specify guideline system from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:baseOffenseLevel ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 43 ;
+        sh:message "Base offense level must be between 1 and 43."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:criminalHistoryCategory ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "I" "II" "III" "IV" "V" "VI" ) ;
+        sh:message "Criminal history category must be from I to VI."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:adjustmentPoints ;
+        sh:datatype xsd:integer ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive -10 ;
+        sh:maxInclusive 20 ;
+        sh:message "Adjustment points must be between -10 and 20."@en
+    ] .
+
+cacontology-legal-outcomes:EnhancementFactorShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal-outcomes:EnhancementFactor ;
+    rdfs:label "Enhancement Factor Shape"@en ;
+    rdfs:comment "Validation shape for enhancement factor instances."@en ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:enhancementType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "victim_vulnerability" "leadership_role" "use_of_technology" "commercial_purpose" "distribution_scale" "repeat_offender" "violence_threat" ) ;
+        sh:message "Enhancement factor must specify enhancement type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:enhancementValue ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 10 ;
+        sh:message "Enhancement factor must have enhancement value between 1 and 10."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:enhancementJustification ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 10 ;
+        sh:maxLength 500 ;
+        sh:message "Enhancement justification must be between 10 and 500 characters."@en
+    ] .
+
+# =============================================================================
+# RESTITUTION AND FINES SHAPES
+# =============================================================================
+
+cacontology-legal-outcomes:RestitutionOrderShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal-outcomes:RestitutionOrder ;
+    rdfs:label "Restitution Order Shape"@en ;
+    rdfs:comment "Validation shape for restitution order instances."@en ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:restitutionAmount ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1.0 ;
+        sh:maxInclusive 10000000.0 ;
+        sh:message "Restitution amount must be between $1 and $10,000,000."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:paymentSchedule ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "lump_sum" "monthly_payments" "quarterly_payments" "annual_payments" "income_based" "deferred" ) ;
+        sh:message "Restitution order must specify payment schedule from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:victimCount ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 1000 ;
+        sh:message "Restitution order must specify victim count between 1 and 1000."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:paymentStatus ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "pending" "current" "delinquent" "completed" "defaulted" "modified" ) ;
+        sh:message "Payment status must be from the allowed list."@en
+    ] .
+
+cacontology-legal-outcomes:CriminalFineShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal-outcomes:CriminalFine ;
+    rdfs:label "Criminal Fine Shape"@en ;
+    rdfs:comment "Validation shape for criminal fine instances."@en ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:fineAmount ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1.0 ;
+        sh:maxInclusive 1000000.0 ;
+        sh:message "Fine amount must be between $1 and $1,000,000."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:fineType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "statutory_fine" "discretionary_fine" "alternative_fine" "cost_of_prosecution" "forfeiture" ) ;
+        sh:message "Criminal fine must specify fine type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:paymentDeadline ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Criminal fine may specify payment deadline."@en
+    ] .
+
+# =============================================================================
+# TREATMENT ORDER SHAPES
+# =============================================================================
+
+cacontology-legal-outcomes:TreatmentOrderShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal-outcomes:TreatmentOrder ;
+    rdfs:label "Treatment Order Shape"@en ;
+    rdfs:comment "Validation shape for treatment order instances."@en ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:treatmentType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "psychological_counseling" "sex_offender_treatment" "substance_abuse_treatment" "anger_management" "mental_health_treatment" "cognitive_behavioral_therapy" ) ;
+        sh:message "Treatment order must specify treatment type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:treatmentDuration ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1.0 ;
+        sh:maxInclusive 260.0 ;
+        sh:message "Treatment duration must be between 1 and 260 weeks (5 years)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:treatmentProvider ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "court_approved" "state_certified" "private_practice" "institutional" "community_based" ) ;
+        sh:message "Treatment order must specify treatment provider from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:complianceRequired ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Treatment order must specify if compliance is required."@en
+    ] .
+
+# =============================================================================
+# OBJECT PROPERTY SHAPES
+# =============================================================================
+
+cacontology-legal-outcomes:ResultsFromChargeShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-legal-outcomes:resultsFromCharge ;
+    sh:name "results from charge" ;
+    sh:description "Links sentencing outcome to legal charge" ;
+    sh:class cacontology-legal-outcomes:LegalCharge ;
+    sh:minCount 1 .
+
+cacontology-legal-outcomes:FollowsGuidelinesShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-legal-outcomes:followsGuidelines ;
+    sh:name "follows guidelines" ;
+    sh:description "Links sentencing to guidelines used" ;
+    sh:class cacontology-legal-outcomes:SentencingGuidelines ;
+    sh:minCount 0 .
+
+cacontology-legal-outcomes:IncludesRestitutionShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-legal-outcomes:includesRestitution ;
+    sh:name "includes restitution" ;
+    sh:description "Links sentencing to restitution order" ;
+    sh:class cacontology-legal-outcomes:RestitutionOrder ;
+    sh:minCount 0 .
+
+cacontology-legal-outcomes:IncludesFineShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-legal-outcomes:includesFine ;
+    sh:name "includes fine" ;
+    sh:description "Links sentencing to criminal fine" ;
+    sh:class cacontology-legal-outcomes:CriminalFine ;
+    sh:minCount 0 .
+
+cacontology-legal-outcomes:RequiresTreatmentShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-legal-outcomes:requiresTreatment ;
+    sh:name "requires treatment" ;
+    sh:description "Links sentencing to treatment order" ;
+    sh:class cacontology-legal-outcomes:TreatmentOrder ;
+    sh:minCount 0 .
+
+cacontology-legal-outcomes:AppliesEnhancementShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-legal-outcomes:appliesEnhancement ;
+    sh:name "applies enhancement" ;
+    sh:description "Links guidelines to enhancement factors" ;
+    sh:class cacontology-legal-outcomes:EnhancementFactor ;
+    sh:minCount 0 .
+
+# =============================================================================
+# CROSS-REFERENCE VALIDATION SHAPES
+# =============================================================================
+
+cacontology-legal-outcomes:SentencingCrossReferenceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal-outcomes:SentencingOutcome ;
+    rdfs:label "Sentencing Cross Reference Shape"@en ;
+    rdfs:comment "Validates cross-references between sentencing and related entities."@en ;
+    sh:sparql [
+        sh:message "Sentencing outcome must result from at least one legal charge."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-legal-outcomes:SentencingOutcome .
+                FILTER NOT EXISTS {
+                    $this cacontology-legal-outcomes:resultsFromCharge ?charge .
+                }
+            }
+        """
+    ] .
+
+cacontology-legal-outcomes:SentenceDurationValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal-outcomes:SentencingOutcome ;
+    rdfs:label "Sentence Duration Validation Shape"@en ;
+    rdfs:comment "Validates sentence duration consistency."@en ;
+    sh:sparql [
+        sh:message "Imprisonment sentences should have duration specified."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-legal-outcomes:sentenceType "imprisonment" .
+                FILTER NOT EXISTS {
+                    $this cacontology-legal-outcomes:sentenceDuration ?duration .
+                }
+            }
+        """
+    ] .
+
+cacontology-legal-outcomes:RestitutionValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal-outcomes:RestitutionOrder ;
+    rdfs:label "Restitution Validation Shape"@en ;
+    rdfs:comment "Validates restitution order consistency."@en ;
+    sh:sparql [
+        sh:message "Restitution amount should be reasonable for victim count."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-legal-outcomes:restitutionAmount ?amount ;
+                      cacontology-legal-outcomes:victimCount ?victims .
+                FILTER (?amount > (?victims * 100000))
+            }
+        """
+    ] .
+
+# =============================================================================
+# TEMPORAL VALIDATION SHAPES
+# =============================================================================
+
+cacontology-legal-outcomes:TemporalValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal-outcomes:ConvictionRecord ;
+    rdfs:label "Temporal Validation Shape"@en ;
+    rdfs:comment "Validates temporal consistency in conviction records."@en ;
+    sh:sparql [
+        sh:message "Conviction date must be before or equal to sentence date."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-legal-outcomes:convictionDate ?convictionDate .
+                ?sentence cacontology-legal-outcomes:resultsFromCharge ?charge ;
+                         cacontology-legal-outcomes:sentenceDate ?sentenceDate .
+                ?charge cacontology-legal-outcomes:convictionRecord $this .
+                FILTER (?convictionDate > ?sentenceDate)
+            }
+        """
+    ] .
+
+cacontology-legal-outcomes:PaymentDeadlineValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal-outcomes:CriminalFine ;
+    rdfs:label "Payment Deadline Validation Shape"@en ;
+    rdfs:comment "Validates payment deadline consistency."@en ;
+    sh:sparql [
+        sh:message "Payment deadline should be in the future when specified."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-legal-outcomes:paymentDeadline ?deadline .
+                FILTER (?deadline <= NOW())
+            }
+        """
+    ] .
+
+# =============================================================================
+# DATA QUALITY SHAPES
+# =============================================================================
+
+cacontology-legal-outcomes:DataQualityShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal-outcomes:SentencingOutcome ;
+    rdfs:label "Data Quality Shape"@en ;
+    rdfs:comment "Validates data quality for sentencing outcomes."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Label should be between 5 and 200 characters when provided."@en
+    ] ;
+    sh:property [
+        sh:path rdfs:comment ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 10 ;
+        sh:maxLength 1000 ;
+        sh:message "Comment should be between 10 and 1000 characters when provided."@en
+    ] .
+
+# =============================================================================
+# FLORIDA STATE CHARGE SHAPES (Miami CAC Case Enhancement)
+# =============================================================================
+
+cacontology-legal-outcomes:FloridaStateChargeShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal-outcomes:FloridaStateCharge ;
+    rdfs:label "Florida State Charge Shape"@en ;
+    rdfs:comment "Validation shape for Florida state criminal charges."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype rdf:langString ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Florida charge should have a label."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:floridaStatute ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:pattern "^F\\.S\\. [0-9]+\\.[0-9]+.*$" ;
+        sh:message "Florida statute should follow F.S. format (e.g., 'F.S. 847.0135')."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:chargeClassification ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "Capital Felony" "Life Felony" "First Degree Felony" "Second Degree Felony" "Third Degree Felony" "First Degree Misdemeanor" "Second Degree Misdemeanor" ) ;
+        sh:message "Charge classification must be from the allowed Florida list."@en
+    ] .
+
+cacontology-legal-outcomes:TravelingToMeetAfterComputerLureShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal-outcomes:TravelingToMeetAfterComputerLure ;
+    rdfs:label "Traveling to Meet After Computer Lure Shape"@en ;
+    rdfs:comment "Validation shape for Florida traveling to meet charges."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype rdf:langString ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Traveling charge should have a label."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:travelOccurred ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "May specify if travel to the location occurred."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:electronicCommunicationUsed ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "May specify if electronic communication was used."@en
+    ] .
+
+cacontology-legal-outcomes:DirectPromotionOfSexualPerformanceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal-outcomes:DirectPromotionOfSexualPerformance ;
+    rdfs:label "Direct Promotion of Sexual Performance Shape"@en ;
+    rdfs:comment "Validation shape for Florida direct promotion charges."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype rdf:langString ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Direct promotion charge should have a label."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:sexualPerformancePromotion ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "May specify if sexual performance promotion occurred."@en
+    ] .
+
+cacontology-legal-outcomes:ComputerSeduceSolicitLureShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal-outcomes:ComputerSeduceSolicitLure ;
+    rdfs:label "Computer Seduce Solicit Lure Shape"@en ;
+    rdfs:comment "Validation shape for Florida computer lure charges."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype rdf:langString ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Computer lure charge should have a label."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:computerLureMethod ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "messaging app" "social media" "email" "chat room" "gaming platform" "video chat" "other" ) ;
+        sh:message "Computer lure method should be from the allowed list."@en
+    ] .
+
+cacontology-legal-outcomes:ContributingToDelinquencyShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal-outcomes:ContributingToDelinquency ;
+    rdfs:label "Contributing to Delinquency Shape"@en ;
+    rdfs:comment "Validation shape for Florida contributing to delinquency charges."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype rdf:langString ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Contributing charge should have a label."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:childDelinquencyContribution ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "May specify if contribution to child delinquency occurred."@en
+    ] .
+
+# =============================================================================
+# CHARGING INSTRUMENT SHAPES — Issue #34
+# =============================================================================
+
+cacontology-legal-outcomes:ChargingInstrumentShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal-outcomes:ChargingInstrument ;
+    rdfs:label "Charging Instrument Shape"@en ;
+    rdfs:comment "Validates charging instruments (complaints, indictments, informations)."@en ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:chargingInstrumentCounts ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 1 ;
+        sh:maxCount 1 ;
+        sh:message "Charging instrument counts must be a positive integer when specified."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:filedDate ;
+        sh:datatype xsd:date ;
+        sh:maxCount 1 ;
+        sh:message "Filed date must be an xsd:date when specified."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:supersededBy ;
+        sh:nodeKind sh:IRI ;
+        sh:maxCount 1 ;
+        sh:message "A charging instrument may be superseded by at most one later instrument."@en
+    ] .
+
+# =============================================================================
+# SUPERVISED-RELEASE CONDITION AND PAYMENT SCHEDULE SHAPES — Issue #37
+# =============================================================================
+
+cacontology-legal-outcomes:SupervisedReleaseConditionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal-outcomes:SupervisedReleaseCondition ;
+    rdfs:label "Supervised Release Condition Shape"@en ;
+    rdfs:comment "Validates typed special conditions of supervised release."@en ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:conditionText ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:message "Condition text must be a string when specified."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:defendantPaysCost ;
+        sh:datatype xsd:boolean ;
+        sh:maxCount 1 ;
+        sh:message "defendantPaysCost must be boolean when specified."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:requiresProbationApproval ;
+        sh:datatype xsd:boolean ;
+        sh:maxCount 1 ;
+        sh:message "requiresProbationApproval must be boolean when specified."@en
+    ] .
+
+cacontology-legal-outcomes:PaymentScheduleShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-legal-outcomes:PaymentSchedule ;
+    rdfs:label "Payment Schedule Shape"@en ;
+    rdfs:comment "Validates criminal monetary payment schedules (AO 245B Schedule of Payments)."@en ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:totalAmountUSD ;
+        sh:or ( [ sh:datatype xsd:decimal ] [ sh:datatype xsd:integer ] ) ;
+        sh:minInclusive 0 ;
+        sh:maxCount 1 ;
+        sh:message "Total amount must be a non-negative number when specified."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:dueTiming ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:message "Due timing must be a string when specified (e.g., 'immediately', 'after_release')."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-legal-outcomes:includesPenalty ;
+        sh:nodeKind sh:IRI ;
+        sh:message "includesPenalty must reference monetary penalty nodes."@en
+    ] .

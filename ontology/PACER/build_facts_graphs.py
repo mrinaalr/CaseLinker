@@ -90,9 +90,8 @@ CURATED_ONTOLOGY_FILES = [
 ]
 
 CONTEXT = {
-    "@vocab": "http://example.org/local#",
     "case-investigation": "https://ontology.caseontology.org/case/investigation/",
-    "kb": "http://example.org/kb/",
+    "kb": "https://w3id.org/caselinker/resource/pacer/kb/",
     "uco-action": "https://ontology.unifiedcyberontology.org/uco/action/",
     "uco-core": "https://ontology.unifiedcyberontology.org/uco/core/",
     "uco-identity": "https://ontology.unifiedcyberontology.org/uco/identity/",
@@ -2494,7 +2493,7 @@ def validate_graph(output_path: Path) -> bool:
     cmd = [
         str(CASE_VALIDATE),
         "--built-version",
-        "case-1.4.0",
+        "case-1.5.0",
         "--inference",
         "rdfs",
         "--allow-info",

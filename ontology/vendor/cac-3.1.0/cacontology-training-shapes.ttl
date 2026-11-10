@@ -1,0 +1,863 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix cacontology-training: <https://cacontology.projectvic.org/training#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+# Ontology Declaration
+<https://cacontology.projectvic.org/training/shapes> rdf:type owl:Ontology ;
+    rdfs:label "CAC Training SHACL Shapes"@en ;
+    rdfs:comment "SHACL validation shapes for the CAC Training Ontology, providing validation for professional development, training programs, and capacity building initiatives."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/training/shapes/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://cacontology.projectvic.org/training/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> .
+
+# =============================================================================
+# TRAINING INFRASTRUCTURE SHAPES
+# =============================================================================
+
+cacontology-training:InternationalTrainingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:InternationalTraining ;
+    rdfs:label "International Training Shape"@en ;
+    rdfs:comment "Validation shape for international training instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "International training must have a name (5-200 characters)."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "International training must specify start time."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:endTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "International training may specify end time."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-training:trainingReachCount ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 100000 ;
+        sh:message "Training reach count must be between 1 and 100000 when specified."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-training:trainingDuration ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.5 ;
+        sh:maxInclusive 2000.0 ;
+        sh:message "Training duration must be between 0.5 and 2000 hours."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-training:participationRate ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:message "Participation rate must be between 0.0 and 1.0."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-training:completionRate ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:message "Completion rate must be between 0.0 and 1.0."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-training:trainingLanguage ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 10 ;
+        sh:minLength 2 ;
+        sh:maxLength 50 ;
+        sh:message "Training language should be 2-50 characters (up to 10 languages)."@en
+    ] .
+
+cacontology-training:CapacityBuildingProgramShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:CapacityBuildingProgram ;
+    rdfs:label "Capacity Building Program Shape"@en ;
+    rdfs:comment "Validation shape for capacity building program instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Capacity building program must have a name (5-200 characters)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-training:capacityLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "basic" "intermediate" "advanced" "expert" ) ;
+        sh:message "Capacity level must be from the allowed list."@en
+    ] .
+
+cacontology-training:ProfessionalCertificationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:ProfessionalCertification ;
+    rdfs:label "Professional Certification Shape"@en ;
+    rdfs:comment "Validation shape for professional certification instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Professional certification must have a name (5-200 characters)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-training:certificationStatus ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "active" "expired" "suspended" "revoked" "pending" ) ;
+        sh:message "Certification status must be from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-training:certificationValidityPeriod ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1.0 ;
+        sh:maxInclusive 120.0 ;
+        sh:message "Certification validity period must be between 1 and 120 months."@en
+    ] .
+
+cacontology-training:TrainingModuleShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:TrainingModule ;
+    rdfs:label "Training Module Shape"@en ;
+    rdfs:comment "Validation shape for training module instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Training module must have a name (5-200 characters)."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:description ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 10 ;
+        sh:maxLength 1000 ;
+        sh:message "Training module description should be 10-1000 characters when specified."@en
+    ] .
+
+cacontology-training:SkillsDevelopmentProgramShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:SkillsDevelopmentProgram ;
+    rdfs:label "Skills Development Program Shape"@en ;
+    rdfs:comment "Validation shape for skills development program instances."@en ;
+    sh:property [
+        sh:path cacontology-training:capacityLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "basic" "intermediate" "advanced" "expert" ) ;
+        sh:message "Skills development program must specify capacity level."@en
+    ] .
+
+cacontology-training:TrainingCurriculumShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:TrainingCurriculum ;
+    rdfs:label "Training Curriculum Shape"@en ;
+    rdfs:comment "Validation shape for training curriculum instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Training curriculum must have a name (5-200 characters)."@en
+    ] .
+
+# =============================================================================
+# TRAINING DELIVERY METHOD SHAPES
+# =============================================================================
+
+cacontology-training:OnlineTrainingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:OnlineTraining ;
+    rdfs:label "Online Training Shape"@en ;
+    rdfs:comment "Validation shape for online training instances."@en ;
+    sh:property [
+        sh:path cacontology-training:trainingReachCount ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 100000 ;
+        sh:message "Online training reach count must be between 1 and 100000 when specified."@en
+    ] .
+
+cacontology-training:InPersonTrainingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:InPersonTraining ;
+    rdfs:label "In-Person Training Shape"@en ;
+    rdfs:comment "Validation shape for in-person training instances."@en ;
+    sh:property [
+        sh:path cacontology-training:trainingReachCount ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 1000 ;
+        sh:message "In-person training reach count must be between 1 and 1000 when specified."@en
+    ] .
+
+cacontology-training:HybridTrainingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:HybridTraining ;
+    rdfs:label "Hybrid Training Shape"@en ;
+    rdfs:comment "Validation shape for hybrid training instances."@en ;
+    sh:property [
+        sh:path cacontology-training:trainingReachCount ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 10000 ;
+        sh:message "Hybrid training reach count must be between 1 and 10000 when specified."@en
+    ] .
+
+cacontology-training:MentorshipProgramShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:MentorshipProgram ;
+    rdfs:label "Mentorship Program Shape"@en ;
+    rdfs:comment "Validation shape for mentorship program instances."@en ;
+    sh:property [
+        sh:path cacontology-training:trainingReachCount ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 100 ;
+        sh:message "Mentorship program reach count must be between 1 and 100 when specified."@en
+    ] .
+
+# =============================================================================
+# SPECIALIZED TRAINING TYPE SHAPES
+# =============================================================================
+
+cacontology-training:CriminalJusticeTrainingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:CriminalJusticeTraining ;
+    rdfs:label "Criminal Justice Training Shape"@en ;
+    rdfs:comment "Validation shape for criminal justice training instances."@en ;
+    sh:property [
+        sh:path cacontology-training:capacityLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "intermediate" "advanced" "expert" ) ;
+        sh:message "Criminal justice training should be intermediate, advanced, or expert level."@en
+    ] .
+
+cacontology-training:ChildProtectionTrainingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:ChildProtectionTraining ;
+    rdfs:label "Child Protection Training Shape"@en ;
+    rdfs:comment "Validation shape for child protection training instances."@en ;
+    sh:property [
+        sh:path cacontology-training:trainingDuration ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 2.0 ;
+        sh:maxInclusive 200.0 ;
+        sh:message "Child protection training duration should be between 2 and 200 hours."@en
+    ] .
+
+cacontology-training:CommunityEducationTrainingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:CommunityEducationTraining ;
+    rdfs:label "Community Education Training Shape"@en ;
+    rdfs:comment "Validation shape for community education training instances."@en ;
+    sh:property [
+        sh:path cacontology-training:trainingDuration ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.5 ;
+        sh:maxInclusive 40.0 ;
+        sh:message "Community education training duration should be between 0.5 and 40 hours."@en
+    ] .
+
+cacontology-training:DigitalForensicsTrainingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:DigitalForensicsTraining ;
+    rdfs:label "Digital Forensics Training Shape"@en ;
+    rdfs:comment "Validation shape for digital forensics training instances."@en ;
+    sh:property [
+        sh:path cacontology-training:capacityLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "intermediate" "advanced" "expert" ) ;
+        sh:message "Digital forensics training must be intermediate, advanced, or expert level."@en
+    ] .
+
+cacontology-training:InvestigationTrainingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:InvestigationTraining ;
+    rdfs:label "Investigation Training Shape"@en ;
+    rdfs:comment "Validation shape for investigation training instances."@en ;
+    sh:property [
+        sh:path cacontology-training:trainingDuration ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 8.0 ;
+        sh:maxInclusive 400.0 ;
+        sh:message "Investigation training duration should be between 8 and 400 hours."@en
+    ] .
+
+cacontology-training:LegalTrainingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:LegalTraining ;
+    rdfs:label "Legal Training Shape"@en ;
+    rdfs:comment "Validation shape for legal training instances."@en ;
+    sh:property [
+        sh:path cacontology-training:capacityLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "basic" "intermediate" "advanced" "expert" ) ;
+        sh:message "Legal training capacity level must be from the allowed list."@en
+    ] .
+
+cacontology-training:JudicialEducationTrainingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:JudicialEducationTraining ;
+    rdfs:label "Judicial Education Training Shape"@en ;
+    rdfs:comment "Validation shape for judicial education training instances."@en ;
+    sh:property [
+        sh:path cacontology-training:capacityLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "intermediate" "advanced" "expert" ) ;
+        sh:message "Judicial education training should be intermediate, advanced, or expert level."@en
+    ] .
+
+cacontology-training:VictimServiceTrainingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:VictimServiceTraining ;
+    rdfs:label "Victim Service Training Shape"@en ;
+    rdfs:comment "Validation shape for victim service training instances."@en ;
+    sh:property [
+        sh:path cacontology-training:trainingDuration ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 4.0 ;
+        sh:maxInclusive 200.0 ;
+        sh:message "Victim service training duration should be between 4 and 200 hours."@en
+    ] .
+
+cacontology-training:RecantationResponseTrainingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:RecantationResponseTraining ;
+    rdfs:label "Recantation Response Training Shape"@en ;
+    rdfs:comment "Validation shape for recantation response training instances."@en ;
+    sh:property [
+        sh:path cacontology-training:trainingDuration ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1.0 ;
+        sh:maxInclusive 80.0 ;
+        sh:message "Recantation response training duration should be between 1 and 80 hours."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-training:capacityLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "intermediate" "advanced" "expert" ) ;
+        sh:message "Recantation response training should be intermediate, advanced, or expert level."@en
+    ] .
+
+cacontology-training:HotlineTrainingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:HotlineTraining ;
+    rdfs:label "Hotline Training Shape"@en ;
+    rdfs:comment "Validation shape for hotline training instances."@en ;
+    sh:property [
+        sh:path cacontology-training:trainingDuration ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 8.0 ;
+        sh:maxInclusive 100.0 ;
+        sh:message "Hotline training duration should be between 8 and 100 hours."@en
+    ] .
+
+# =============================================================================
+# TRAINING OUTCOMES AND ASSESSMENT SHAPES
+# =============================================================================
+
+cacontology-training:TrainingCertificateShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:TrainingCertificate ;
+    rdfs:label "Training Certificate Shape"@en ;
+    rdfs:comment "Validation shape for training certificate instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Training certificate must have a name (5-200 characters)."@en
+    ] .
+
+cacontology-training:CompetencyAssessmentShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:CompetencyAssessment ;
+    rdfs:label "Competency Assessment Shape"@en ;
+    rdfs:comment "Validation shape for competency assessment instances."@en ;
+    sh:property [
+        sh:path cacontology-training:competencyLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "novice" "competent" "proficient" "expert" ) ;
+        sh:message "Competency level must be from the allowed list."@en
+    ] .
+
+cacontology-training:SkillsValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:SkillsValidation ;
+    rdfs:label "Skills Validation Shape"@en ;
+    rdfs:comment "Validation shape for skills validation instances."@en ;
+    sh:property [
+        sh:path cacontology-training:skillsAcquired ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 10 ;
+        sh:maxLength 1000 ;
+        sh:message "Skills acquired must be described (10-1000 characters)."@en
+    ] .
+
+cacontology-training:ContinuingEducationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:ContinuingEducation ;
+    rdfs:label "Continuing Education Shape"@en ;
+    rdfs:comment "Validation shape for continuing education instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Continuing education must have a name (5-200 characters)."@en
+    ] .
+
+cacontology-training:ProfessionalDevelopmentShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:ProfessionalDevelopment ;
+    rdfs:label "Professional Development Shape"@en ;
+    rdfs:comment "Validation shape for professional development instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Professional development must have a name (5-200 characters)."@en
+    ] .
+
+# =============================================================================
+# TRAINING METRICS SHAPES
+# =============================================================================
+
+cacontology-training:TrainingMetricsShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:TrainingMetrics ;
+    rdfs:label "Training Metrics Shape"@en ;
+    rdfs:comment "Validation shape for training metrics instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Training metrics name should be 5-200 characters when specified."@en
+    ] .
+
+cacontology-training:GlobalTrainingReachShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:GlobalTrainingReach ;
+    rdfs:label "Global Training Reach Shape"@en ;
+    rdfs:comment "Validation shape for global training reach instances."@en ;
+    sh:property [
+        sh:path cacontology-training:professionalsTrained ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 1000000 ;
+        sh:message "Professionals trained must be between 1 and 1000000 when specified."@en
+    ] .
+
+cacontology-training:TrainingEffectivenessShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:TrainingEffectiveness ;
+    rdfs:label "Training Effectiveness Shape"@en ;
+    rdfs:comment "Validation shape for training effectiveness instances."@en ;
+    sh:property [
+        sh:path cacontology-training:trainingEffectiveness ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:message "Training effectiveness must be between 0.0 and 1.0."@en
+    ] .
+
+cacontology-training:CapacityImpactShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:CapacityImpact ;
+    rdfs:label "Capacity Impact Shape"@en ;
+    rdfs:comment "Validation shape for capacity impact instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Capacity impact name should be 5-200 characters when specified."@en
+    ] .
+
+cacontology-training:CommunityEngagementMetricsShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:CommunityEngagementMetrics ;
+    rdfs:label "Community Engagement Metrics Shape"@en ;
+    rdfs:comment "Validation shape for community engagement metrics instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Community engagement metrics name should be 5-200 characters when specified."@en
+    ] .
+
+cacontology-training:OutreachEventMetricsShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:OutreachEventMetrics ;
+    rdfs:label "Outreach Event Metrics Shape"@en ;
+    rdfs:comment "Validation shape for outreach event metrics instances."@en ;
+    sh:property [
+        sh:path cacontology-training:outreachEventsCount ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 10000 ;
+        sh:message "Outreach events count must be between 1 and 10000 when specified."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-training:totalAttendeesReached ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 1000000 ;
+        sh:message "Total attendees reached must be between 1 and 1000000 when specified."@en
+    ] .
+
+cacontology-training:ProfessionalTrainingMetricsShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:ProfessionalTrainingMetrics ;
+    rdfs:label "Professional Training Metrics Shape"@en ;
+    rdfs:comment "Validation shape for professional training metrics instances."@en ;
+    sh:property [
+        sh:path cacontology-training:professionalsTrainedCount ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 100000 ;
+        sh:message "Professionals trained count must be between 1 and 100000 when specified."@en
+    ] .
+
+cacontology-training:K9ProgramMetricsShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:K9ProgramMetrics ;
+    rdfs:label "K9 Program Metrics Shape"@en ;
+    rdfs:comment "Validation shape for K9 program metrics instances."@en ;
+    sh:property [
+        sh:path cacontology-training:k9SearchWarrantsAssisted ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 10000 ;
+        sh:message "K9 search warrants assisted must be between 1 and 10000 when specified."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-training:k9PublicPresentations ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 1000 ;
+        sh:message "K9 public presentations must be between 1 and 1000 when specified."@en
+    ] .
+
+cacontology-training:OperationalTrainingMetricsShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:OperationalTrainingMetrics ;
+    rdfs:label "Operational Training Metrics Shape"@en ;
+    rdfs:comment "Validation shape for operational training metrics instances."@en ;
+    sh:property [
+        sh:path cacontology-training:operationalDeploymentCount ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 10000 ;
+        sh:message "Operational deployment count must be between 1 and 10000 when specified."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-training:trainingToOperationEffectiveness ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:message "Training to operation effectiveness must be between 0.0 and 1.0."@en
+    ] .
+
+# =============================================================================
+# CROSS-REFERENCE VALIDATION SHAPES
+# =============================================================================
+
+cacontology-training:TrainingDeliveryValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:InternationalTraining ;
+    rdfs:label "Training Delivery Validation Shape"@en ;
+    rdfs:comment "Validates that training programs have delivery mechanisms."@en ;
+    sh:sparql [
+        sh:message "International training should have assigned trainers."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-training:InternationalTraining .
+                FILTER NOT EXISTS {
+                    $this cacontology-training:deliveredBy ?trainer .
+                    ?trainer a cacontology-training:InternationalTrainer .
+                }
+            }
+        """
+    ] .
+
+cacontology-training:CertificationValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:ProfessionalCertification ;
+    rdfs:label "Certification Validation Shape"@en ;
+    rdfs:comment "Validates that certifications have certifying bodies."@en ;
+    sh:sparql [
+        sh:message "Professional certification should have certifying body."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-training:ProfessionalCertification .
+                FILTER NOT EXISTS {
+                    $this cacontology-training:certifiedBy ?body .
+                    ?body a cacontology-training:CertificationBody .
+                }
+            }
+        """
+    ] .
+
+cacontology-training:CurriculumModuleValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:TrainingCurriculum ;
+    rdfs:label "Curriculum Module Validation Shape"@en ;
+    rdfs:comment "Validates that curricula include training modules."@en ;
+    sh:sparql [
+        sh:message "Training curriculum should include training modules."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-training:TrainingCurriculum .
+                FILTER NOT EXISTS {
+                    ?module cacontology-training:includedInCurriculum $this .
+                    ?module a cacontology-training:TrainingModule .
+                }
+            }
+        """
+    ] .
+
+cacontology-training:CapacityBuildingTargetValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:CapacityBuildingProgram ;
+    rdfs:label "Capacity Building Target Validation Shape"@en ;
+    rdfs:comment "Validates that capacity building programs have target organizations."@en ;
+    sh:sparql [
+        sh:message "Capacity building program should have target organizations."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-training:CapacityBuildingProgram .
+                FILTER NOT EXISTS {
+                    $this cacontology-training:buildsCapacityFor ?org .
+                    ?org a uco-identity:Organization .
+                }
+            }
+        """
+    ] .
+
+# =============================================================================
+# TEMPORAL VALIDATION SHAPES
+# =============================================================================
+
+cacontology-training:TemporalValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:InternationalTraining ;
+    rdfs:label "Temporal Validation Shape"@en ;
+    rdfs:comment "Validates temporal consistency for training programs."@en ;
+    sh:sparql [
+        sh:message "Start time must be before end time when both are specified."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this uco-core:startTime ?start ;
+                      uco-core:endTime ?end .
+                FILTER (?start >= ?end)
+            }
+        """
+    ] .
+
+cacontology-training:CertificationValidityValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:ProfessionalCertification ;
+    rdfs:label "Certification Validity Validation Shape"@en ;
+    rdfs:comment "Validates certification validity periods."@en ;
+    sh:sparql [
+        sh:message "Active certifications should have reasonable validity periods."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-training:certificationStatus "active" ;
+                      cacontology-training:certificationValidityPeriod ?period .
+                FILTER (?period < 6.0)
+            }
+        """
+    ] .
+
+# =============================================================================
+# DATA QUALITY SHAPES
+# =============================================================================
+
+cacontology-training:DataQualityShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:InternationalTraining ,
+                   cacontology-training:CapacityBuildingProgram ,
+                   cacontology-training:ProfessionalCertification ,
+                   cacontology-training:TrainingMetrics ;
+    rdfs:label "Data Quality Shape"@en ;
+    rdfs:comment "Validates data quality for training entities."@en ;
+    sh:property [
+        sh:path uco-core:createdTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Creation time should be specified when available."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:modifiedTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Modification time should be specified when available."@en
+    ] .
+
+cacontology-training:TrainingEffectivenessValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:InternationalTraining ;
+    rdfs:label "Training Effectiveness Validation Shape"@en ;
+    rdfs:comment "Validates training effectiveness metrics."@en ;
+    sh:sparql [
+        sh:message "Training programs should have reasonable completion rates."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-training:participationRate ?participation ;
+                      cacontology-training:completionRate ?completion .
+                FILTER (?completion > ?participation)
+            }
+        """
+    ] .
+
+cacontology-training:CapacityLevelValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:DigitalForensicsTraining ,
+                   cacontology-training:CriminalJusticeTraining ;
+    rdfs:label "Capacity Level Validation Shape"@en ;
+    rdfs:comment "Validates capacity level requirements for specialized training."@en ;
+    sh:sparql [
+        sh:message "Specialized training should have appropriate capacity levels."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a ?trainingType ;
+                      cacontology-training:capacityLevel "basic" .
+                FILTER (?trainingType IN (
+                    cacontology-training:DigitalForensicsTraining,
+                    cacontology-training:CriminalJusticeTraining
+                ))
+            }
+        """
+    ] .
+
+cacontology-training:TrainingReachValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:OnlineTraining ,
+                   cacontology-training:InPersonTraining ,
+                   cacontology-training:HybridTraining ;
+    rdfs:label "Training Reach Validation Shape"@en ;
+    rdfs:comment "Validates training reach consistency by delivery method."@en ;
+    sh:sparql [
+        sh:message "Training reach should be consistent with delivery method capabilities."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-training:InPersonTraining ;
+                      cacontology-training:trainingReachCount ?reach .
+                FILTER (?reach > 1000)
+            }
+        """
+    ] .
+
+cacontology-training:MetricsConsistencyValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:OutreachEventMetrics ;
+    rdfs:label "Metrics Consistency Validation Shape"@en ;
+    rdfs:comment "Validates consistency between related metrics."@en ;
+    sh:sparql [
+        sh:message "Total attendees should be reasonable relative to event count."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-training:outreachEventsCount ?events ;
+                      cacontology-training:totalAttendeesReached ?attendees .
+                FILTER (?attendees < ?events)
+            }
+        """
+    ] .
+
+cacontology-training:CertificationStatusValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-training:ProfessionalCertification ;
+    rdfs:label "Certification Status Validation Shape"@en ;
+    rdfs:comment "Validates certification status consistency."@en ;
+    sh:sparql [
+        sh:message "Expired certifications should not have active status."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-training:certificationStatus "active" ;
+                      uco-core:endTime ?endTime .
+                FILTER (?endTime < NOW())
+            }
+        """
+    ] . 

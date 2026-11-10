@@ -1,0 +1,920 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix cacontology-prevention: <https://cacontology.projectvic.org/prevention#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+# Ontology Declaration
+<https://cacontology.projectvic.org/prevention/shapes> rdf:type owl:Ontology ;
+    rdfs:label "CAC Prevention SHACL Shapes"@en ;
+    rdfs:comment "SHACL validation shapes for the CAC Prevention Ontology, providing validation for prevention programs, education initiatives, safety protocols, and community outreach efforts."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/prevention/shapes/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://cacontology.projectvic.org/prevention/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> .
+
+# =============================================================================
+# PREVENTION PROGRAM FRAMEWORK SHAPES
+# =============================================================================
+
+cacontology-prevention:PreventionProgramShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:PreventionProgram ;
+    rdfs:label "Prevention Program Shape"@en ;
+    rdfs:comment "Validation shape for prevention program instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Prevention program must have a name (5-200 characters)."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Prevention program must specify start time."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:endTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Prevention program may specify end time."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-prevention:programDuration ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.5 ;
+        sh:maxInclusive 120.0 ;
+        sh:message "Program duration must be between 0.5 and 120 months."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-prevention:participantCount ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 1000000 ;
+        sh:message "Participant count must be between 1 and 1000000 when specified."@en
+    ] .
+
+cacontology-prevention:EducationPortalShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:EducationPortal ;
+    rdfs:label "Education Portal Shape"@en ;
+    rdfs:comment "Validation shape for education portal instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Education portal must have a name (5-200 characters)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-prevention:educationPortalReach ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 10000000 ;
+        sh:message "Education portal reach must be between 1 and 10000000 when specified."@en
+    ] .
+
+cacontology-prevention:SchoolAllegationProtocolShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:SchoolAllegationProtocol ;
+    rdfs:label "School Allegation Protocol Shape"@en ;
+    rdfs:comment "Validation shape for school allegation protocol instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "School allegation protocol must have a name (5-200 characters)."@en
+    ] .
+
+cacontology-prevention:CommunityOutreachShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:CommunityOutreach ;
+    rdfs:label "Community Outreach Shape"@en ;
+    rdfs:comment "Validation shape for community outreach instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Community outreach must have a name (5-200 characters)."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Community outreach must specify start time."@en
+    ] .
+
+cacontology-prevention:PublicAwarenessShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:PublicAwareness ;
+    rdfs:label "Public Awareness Shape"@en ;
+    rdfs:comment "Validation shape for public awareness instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Public awareness campaign must have a name (5-200 characters)."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Public awareness campaign must specify start time."@en
+    ] .
+
+cacontology-prevention:RiskPreventionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:RiskPrevention ;
+    rdfs:label "Risk Prevention Shape"@en ;
+    rdfs:comment "Validation shape for risk prevention instances."@en ;
+    sh:property [
+        sh:path cacontology-prevention:participantCount ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 100000 ;
+        sh:message "Risk prevention participant count must be between 1 and 100000 when specified."@en
+    ] .
+
+# =============================================================================
+# EDUCATIONAL RESOURCES AND MATERIALS SHAPES
+# =============================================================================
+
+cacontology-prevention:EducationalResourceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:EducationalResource ;
+    rdfs:label "Educational Resource Shape"@en ;
+    rdfs:comment "Validation shape for educational resource instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Educational resource must have a name (5-200 characters)."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:description ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 10 ;
+        sh:maxLength 1000 ;
+        sh:message "Educational resource description should be 10-1000 characters when specified."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-prevention:languageAvailability ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 20 ;
+        sh:minLength 2 ;
+        sh:maxLength 50 ;
+        sh:message "Language availability should be 2-50 characters (up to 20 languages)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-prevention:targetAudience ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "children" "parents" "educators" "healthcare_providers" "community_members" "professionals" "general_public" ) ;
+        sh:message "Target audience must be from the allowed list."@en
+    ] .
+
+cacontology-prevention:PreventionMaterialShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:PreventionMaterial ;
+    rdfs:label "Prevention Material Shape"@en ;
+    rdfs:comment "Validation shape for prevention material instances."@en ;
+    sh:property [
+        sh:path cacontology-prevention:targetAudience ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "children" "parents" "educators" "healthcare_providers" "community_members" "professionals" "general_public" ) ;
+        sh:message "Prevention material must specify target audience."@en
+    ] .
+
+cacontology-prevention:SafetyProtocolShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:SafetyProtocol ;
+    rdfs:label "Safety Protocol Shape"@en ;
+    rdfs:comment "Validation shape for safety protocol instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Safety protocol must have a name (5-200 characters)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-prevention:implementationStatus ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "planned" "active" "completed" "suspended" "cancelled" ) ;
+        sh:message "Implementation status must be from the allowed list."@en
+    ] .
+
+cacontology-prevention:RiskAssessmentToolShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:RiskAssessmentTool ;
+    rdfs:label "Risk Assessment Tool Shape"@en ;
+    rdfs:comment "Validation shape for risk assessment tool instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Risk assessment tool must have a name (5-200 characters)."@en
+    ] .
+
+cacontology-prevention:SafetyGuidelineShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:SafetyGuideline ;
+    rdfs:label "Safety Guideline Shape"@en ;
+    rdfs:comment "Validation shape for safety guideline instances."@en ;
+    sh:property [
+        sh:path cacontology-prevention:targetAudience ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "children" "parents" "educators" "healthcare_providers" "community_members" "professionals" "general_public" ) ;
+        sh:message "Safety guideline must specify target audience."@en
+    ] .
+
+cacontology-prevention:PreventionCurriculumShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:PreventionCurriculum ;
+    rdfs:label "Prevention Curriculum Shape"@en ;
+    rdfs:comment "Validation shape for prevention curriculum instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Prevention curriculum must have a name (5-200 characters)."@en
+    ] .
+
+# =============================================================================
+# TARGET AUDIENCES AND TRAINING SHAPES
+# =============================================================================
+
+cacontology-prevention:EducatorTrainingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:EducatorTraining ;
+    rdfs:label "Educator Training Shape"@en ;
+    rdfs:comment "Validation shape for educator training instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Educator training must have a name (5-200 characters)."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Educator training must specify start time."@en
+    ] .
+
+cacontology-prevention:ParentEducationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:ParentEducation ;
+    rdfs:label "Parent Education Shape"@en ;
+    rdfs:comment "Validation shape for parent education instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Parent education must have a name (5-200 characters)."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Parent education must specify start time."@en
+    ] .
+
+cacontology-prevention:ChildSafetyEducationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:ChildSafetyEducation ;
+    rdfs:label "Child Safety Education Shape"@en ;
+    rdfs:comment "Validation shape for child safety education instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Child safety education must have a name (5-200 characters)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-prevention:ageGroup ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "preschool" "elementary" "middle_school" "high_school" "young_adult" "all_ages" ) ;
+        sh:message "Age group must be from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Child safety education must specify start time."@en
+    ] .
+
+cacontology-prevention:HealthcareProviderTrainingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:HealthcareProviderTraining ;
+    rdfs:label "Healthcare Provider Training Shape"@en ;
+    rdfs:comment "Validation shape for healthcare provider training instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Healthcare provider training must have a name (5-200 characters)."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Healthcare provider training must specify start time."@en
+    ] .
+
+cacontology-prevention:CommunityEducationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:CommunityEducation ;
+    rdfs:label "Community Education Shape"@en ;
+    rdfs:comment "Validation shape for community education instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Community education must have a name (5-200 characters)."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Community education must specify start time."@en
+    ] .
+
+# =============================================================================
+# PREVENTION STRATEGIES AND APPROACHES SHAPES
+# =============================================================================
+
+cacontology-prevention:PrimaryPreventionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:PrimaryPrevention ;
+    rdfs:label "Primary Prevention Shape"@en ;
+    rdfs:comment "Validation shape for primary prevention instances."@en ;
+    sh:property [
+        sh:path cacontology-prevention:participantCount ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 1000000 ;
+        sh:message "Primary prevention participant count must be between 1 and 1000000 when specified."@en
+    ] .
+
+cacontology-prevention:SecondaryPreventionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:SecondaryPrevention ;
+    rdfs:label "Secondary Prevention Shape"@en ;
+    rdfs:comment "Validation shape for secondary prevention instances."@en ;
+    sh:property [
+        sh:path cacontology-prevention:participantCount ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 100000 ;
+        sh:message "Secondary prevention participant count must be between 1 and 100000 when specified."@en
+    ] .
+
+cacontology-prevention:TertiaryPreventionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:TertiaryPrevention ;
+    rdfs:label "Tertiary Prevention Shape"@en ;
+    rdfs:comment "Validation shape for tertiary prevention instances."@en ;
+    sh:property [
+        sh:path cacontology-prevention:participantCount ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 10000 ;
+        sh:message "Tertiary prevention participant count must be between 1 and 10000 when specified."@en
+    ] .
+
+cacontology-prevention:EnvironmentalPreventionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:EnvironmentalPrevention ;
+    rdfs:label "Environmental Prevention Shape"@en ;
+    rdfs:comment "Validation shape for environmental prevention instances."@en ;
+    sh:property [
+        sh:path cacontology-prevention:programDuration ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1.0 ;
+        sh:maxInclusive 60.0 ;
+        sh:message "Environmental prevention duration should be between 1 and 60 months."@en
+    ] .
+
+cacontology-prevention:BehavioralPreventionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:BehavioralPrevention ;
+    rdfs:label "Behavioral Prevention Shape"@en ;
+    rdfs:comment "Validation shape for behavioral prevention instances."@en ;
+    sh:property [
+        sh:path cacontology-prevention:programDuration ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1.0 ;
+        sh:maxInclusive 36.0 ;
+        sh:message "Behavioral prevention duration should be between 1 and 36 months."@en
+    ] .
+
+# =============================================================================
+# SCHOOL-BASED PREVENTION SHAPES
+# =============================================================================
+
+cacontology-prevention:SchoolSafetyProgramShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:SchoolSafetyProgram ;
+    rdfs:label "School Safety Program Shape"@en ;
+    rdfs:comment "Validation shape for school safety program instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "School safety program must have a name (5-200 characters)."@en
+    ] .
+
+cacontology-prevention:SchoolPolicyShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:SchoolPolicy ;
+    rdfs:label "School Policy Shape"@en ;
+    rdfs:comment "Validation shape for school policy instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "School policy must have a name (5-200 characters)."@en
+    ] .
+
+cacontology-prevention:TeacherTrainingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:TeacherTraining ;
+    rdfs:label "Teacher Training Shape"@en ;
+    rdfs:comment "Validation shape for teacher training instances."@en ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Teacher training must specify start time."@en
+    ] .
+
+cacontology-prevention:StudentEducationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:StudentEducation ;
+    rdfs:label "Student Education Shape"@en ;
+    rdfs:comment "Validation shape for student education instances."@en ;
+    sh:property [
+        sh:path cacontology-prevention:ageGroup ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "elementary" "middle_school" "high_school" ) ;
+        sh:message "Student education must specify appropriate age group."@en
+    ] .
+
+cacontology-prevention:SchoolCounselorTrainingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:SchoolCounselorTraining ;
+    rdfs:label "School Counselor Training Shape"@en ;
+    rdfs:comment "Validation shape for school counselor training instances."@en ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "School counselor training must specify start time."@en
+    ] .
+
+# =============================================================================
+# TECHNOLOGY-BASED PREVENTION SHAPES
+# =============================================================================
+
+cacontology-prevention:DigitalSafetyShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:DigitalSafety ;
+    rdfs:label "Digital Safety Shape"@en ;
+    rdfs:comment "Validation shape for digital safety instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Digital safety program must have a name (5-200 characters)."@en
+    ] .
+
+cacontology-prevention:OnlineSafetyEducationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:OnlineSafetyEducation ;
+    rdfs:label "Online Safety Education Shape"@en ;
+    rdfs:comment "Validation shape for online safety education instances."@en ;
+    sh:property [
+        sh:path cacontology-prevention:ageGroup ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "preschool" "elementary" "middle_school" "high_school" "young_adult" "all_ages" ) ;
+        sh:message "Online safety education must specify age group."@en
+    ] .
+
+cacontology-prevention:ParentalControlShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:ParentalControl ;
+    rdfs:label "Parental Control Shape"@en ;
+    rdfs:comment "Validation shape for parental control instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Parental control must have a name (5-200 characters)."@en
+    ] .
+
+cacontology-prevention:PlatformSafetyShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:PlatformSafety ;
+    rdfs:label "Platform Safety Shape"@en ;
+    rdfs:comment "Validation shape for platform safety instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Platform safety must have a name (5-200 characters)."@en
+    ] .
+
+# =============================================================================
+# PREVENTION METRICS AND ASSESSMENT SHAPES
+# =============================================================================
+
+cacontology-prevention:PreventionMetricsShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:PreventionMetrics ;
+    rdfs:label "Prevention Metrics Shape"@en ;
+    rdfs:comment "Validation shape for prevention metrics instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Prevention metrics name should be 5-200 characters when specified."@en
+    ] .
+
+cacontology-prevention:PreventionEffectivenessShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:PreventionEffectiveness ;
+    rdfs:label "Prevention Effectiveness Shape"@en ;
+    rdfs:comment "Validation shape for prevention effectiveness instances."@en ;
+    sh:property [
+        sh:path cacontology-prevention:preventionEffectiveness ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:message "Prevention effectiveness must be between 0.0 and 1.0."@en
+    ] .
+
+cacontology-prevention:RiskReductionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:RiskReduction ;
+    rdfs:label "Risk Reduction Shape"@en ;
+    rdfs:comment "Validation shape for risk reduction instances."@en ;
+    sh:property [
+        sh:path cacontology-prevention:riskReductionLevel ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:message "Risk reduction level must be between 0.0 and 1.0."@en
+    ] .
+
+cacontology-prevention:CommunityEngagementShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:CommunityEngagement ;
+    rdfs:label "Community Engagement Shape"@en ;
+    rdfs:comment "Validation shape for community engagement instances."@en ;
+    sh:property [
+        sh:path cacontology-prevention:communityParticipation ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:message "Community participation must be between 0.0 and 1.0."@en
+    ] .
+
+# =============================================================================
+# SEXTORTION PREVENTION SHAPES
+# =============================================================================
+
+cacontology-prevention:SextortionAwarenessShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:SextortionAwareness ;
+    rdfs:label "Sextortion Awareness Shape"@en ;
+    rdfs:comment "Validation shape for sextortion awareness instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Sextortion awareness program must have a name (5-200 characters)."@en
+    ] .
+
+cacontology-prevention:SextortionEducationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:SextortionEducation ;
+    rdfs:label "Sextortion Education Shape"@en ;
+    rdfs:comment "Validation shape for sextortion education instances."@en ;
+    sh:property [
+        sh:path cacontology-prevention:ageGroup ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "middle_school" "high_school" "young_adult" ) ;
+        sh:message "Sextortion education must target appropriate age groups."@en
+    ] .
+
+cacontology-prevention:SextortionWarningSignShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:SextortionWarningSign ;
+    rdfs:label "Sextortion Warning Sign Shape"@en ;
+    rdfs:comment "Validation shape for sextortion warning sign instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Sextortion warning sign must have a name (5-200 characters)."@en
+    ] .
+
+cacontology-prevention:SextortionResponseShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:SextortionResponse ;
+    rdfs:label "Sextortion Response Shape"@en ;
+    rdfs:comment "Validation shape for sextortion response instances."@en ;
+    sh:property [
+        sh:path cacontology-prevention:implementationStatus ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "active" "planned" ) ;
+        sh:message "Sextortion response must be active or planned."@en
+    ] .
+
+# =============================================================================
+# CROSS-REFERENCE VALIDATION SHAPES
+# =============================================================================
+
+cacontology-prevention:PreventionProgramDeliveryValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:PreventionProgram ;
+    rdfs:label "Prevention Program Delivery Validation Shape"@en ;
+    rdfs:comment "Validates that prevention programs have delivery specialists."@en ;
+    sh:sparql [
+        sh:message "Prevention program should have assigned specialists."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-prevention:PreventionProgram .
+                FILTER NOT EXISTS {
+                    $this cacontology-prevention:deliveredBy ?specialist .
+                    ?specialist a cacontology-prevention:PreventionSpecialist .
+                }
+            }
+        """
+    ] .
+
+cacontology-prevention:EducationPortalResourceValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:EducationPortal ;
+    rdfs:label "Education Portal Resource Validation Shape"@en ;
+    rdfs:comment "Validates that education portals provide educational resources."@en ;
+    sh:sparql [
+        sh:message "Education portal should provide educational resources."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-prevention:EducationPortal .
+                FILTER NOT EXISTS {
+                    $this cacontology-prevention:providesResource ?resource .
+                    ?resource a cacontology-prevention:EducationalResource .
+                }
+            }
+        """
+    ] .
+
+cacontology-prevention:SafetyProtocolImplementationValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:SafetyProtocol ;
+    rdfs:label "Safety Protocol Implementation Validation Shape"@en ;
+    rdfs:comment "Validates that safety protocols are implemented by organizations."@en ;
+    sh:sparql [
+        sh:message "Safety protocol should be implemented by organizations."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-prevention:SafetyProtocol .
+                FILTER NOT EXISTS {
+                    ?org cacontology-prevention:implementsProtocol $this .
+                    ?org a uco-identity:Organization .
+                }
+            }
+        """
+    ] .
+
+cacontology-prevention:CommunityOutreachCoordinationValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:CommunityOutreach ;
+    rdfs:label "Community Outreach Coordination Validation Shape"@en ;
+    rdfs:comment "Validates that community outreach has coordinators."@en ;
+    sh:sparql [
+        sh:message "Community outreach should have assigned coordinators."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-prevention:CommunityOutreach .
+                FILTER NOT EXISTS {
+                    $this cacontology-prevention:coordinatedBy ?coordinator .
+                    ?coordinator a cacontology-prevention:SafetyCoordinator .
+                }
+            }
+        """
+    ] .
+
+# =============================================================================
+# TEMPORAL VALIDATION SHAPES
+# =============================================================================
+
+cacontology-prevention:TemporalValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:PreventionProgram ,
+                   cacontology-prevention:CommunityOutreach ,
+                   cacontology-prevention:PublicAwareness ,
+                   cacontology-prevention:EducatorTraining ,
+                   cacontology-prevention:ParentEducation ,
+                   cacontology-prevention:ChildSafetyEducation ,
+                   cacontology-prevention:HealthcareProviderTraining ,
+                   cacontology-prevention:CommunityEducation ;
+    rdfs:label "Temporal Validation Shape"@en ;
+    rdfs:comment "Validates temporal consistency for prevention activities."@en ;
+    sh:sparql [
+        sh:message "Start time must be before end time when both are specified."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this uco-core:startTime ?start ;
+                      uco-core:endTime ?end .
+                FILTER (?start >= ?end)
+            }
+        """
+    ] .
+
+# =============================================================================
+# DATA QUALITY SHAPES
+# =============================================================================
+
+cacontology-prevention:DataQualityShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:PreventionProgram ,
+                   cacontology-prevention:EducationPortal ,
+                   cacontology-prevention:EducationalResource ,
+                   cacontology-prevention:SafetyProtocol ,
+                   cacontology-prevention:PreventionMetrics ;
+    rdfs:label "Data Quality Shape"@en ;
+    rdfs:comment "Validates data quality for prevention entities."@en ;
+    sh:property [
+        sh:path uco-core:createdTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Creation time should be specified when available."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:modifiedTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Modification time should be specified when available."@en
+    ] .
+
+cacontology-prevention:PreventionEffectivenessValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:PreventionProgram ;
+    rdfs:label "Prevention Effectiveness Validation Shape"@en ;
+    rdfs:comment "Validates prevention program effectiveness metrics."@en ;
+    sh:sparql [
+        sh:message "Large prevention programs should have effectiveness metrics."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-prevention:participantCount ?count .
+                FILTER (?count > 1000)
+                FILTER NOT EXISTS {
+                    ?effectiveness a cacontology-prevention:PreventionEffectiveness ;
+                                   cacontology-prevention:preventionEffectiveness ?score .
+                }
+            }
+        """
+    ] .
+
+cacontology-prevention:TargetAudienceValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:ChildSafetyEducation ;
+    rdfs:label "Target Audience Validation Shape"@en ;
+    rdfs:comment "Validates target audience appropriateness for child safety education."@en ;
+    sh:sparql [
+        sh:message "Child safety education should have appropriate age groups."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-prevention:OnlineSafetyEducation ;
+                      cacontology-prevention:ageGroup "preschool" .
+            }
+        """
+    ] .
+
+cacontology-prevention:LanguageAvailabilityValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:EducationalResource ;
+    rdfs:label "Language Availability Validation Shape"@en ;
+    rdfs:comment "Validates language availability for educational resources."@en ;
+    sh:sparql [
+        sh:message "Educational resources for diverse communities should have multiple languages."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-prevention:targetAudience "community_members" .
+                FILTER NOT EXISTS {
+                    $this cacontology-prevention:languageAvailability ?lang1 .
+                    $this cacontology-prevention:languageAvailability ?lang2 .
+                    FILTER (?lang1 != ?lang2)
+                }
+            }
+        """
+    ] .
+
+cacontology-prevention:ProgramDurationValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-prevention:PreventionProgram ;
+    rdfs:label "Program Duration Validation Shape"@en ;
+    rdfs:comment "Validates program duration consistency."@en ;
+    sh:sparql [
+        sh:message "Long-term prevention programs should have appropriate participant counts."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-prevention:programDuration ?duration ;
+                      cacontology-prevention:participantCount ?count .
+                FILTER (?duration > 24.0 && ?count < 10)
+            }
+        """
+    ] . 

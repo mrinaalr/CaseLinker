@@ -103,8 +103,8 @@ def test_soft_prefix_no_longer_maps_jersey_state_to_jersey_city(ag):
 
 def test_mapper_mints_readable_agency_iri():
     sys.path.insert(0, str(ROOT / "ontology"))
-    from features_to_cac import BASE, CASELINKER_ORI, CaseToCAC, GRAPH_DETERMINISTIC
-    from rdflib.namespace import RDFS
+    from features_to_cac import BASE, CaseToCAC, GRAPH_DETERMINISTIC
+    from rdflib.namespace import DCTERMS, RDFS
 
     mapper = CaseToCAC()
     case = {
@@ -132,7 +132,9 @@ def test_mapper_mints_readable_agency_iri():
     g, _ = mapper.map_case(case)
     uri = BASE["agency/toms-river-police-department-nj"]
     det = g.get_context(GRAPH_DETERMINISTIC)
-    assert {str(o) for o in det.objects(uri, CASELINKER_ORI)} == {"NJ0152100"}
+    assert {str(o) for o in det.objects(uri, DCTERMS.identifier)} == {"ori:NJ0152100"}
+    # How it was grounded lives in the provenance graph, not on the shared node (#57).
+    assert not any("/vocab/" in str(p) for _, p, _ in det)
     assert "Toms River Police Department" in {str(x) for x in det.objects(uri, RDFS.label)}
 
 

@@ -6,7 +6,9 @@ import sys
 from pathlib import Path
 
 import pytest
-from rdflib import Dataset, Namespace, RDF, URIRef
+from decimal import Decimal
+
+from rdflib import Dataset, Literal, Namespace, RDF, URIRef
 
 REPO = Path(__file__).resolve().parents[1]
 ONTOLOGY = REPO / "ontology"
@@ -25,7 +27,7 @@ pytest.importorskip("pyshacl")
 
 def test_core_shapes_path_defaults_to_pinned_ontology_dir():
     path = get_core_shapes_path()
-    assert path == (ONTOLOGY / "cacontology-core-shapes.ttl").resolve()
+    assert path == (ONTOLOGY / "vendor" / "cac-3.1.0" / "cacontology-core-shapes.ttl").resolve()
     assert path.is_file()
 
 
@@ -54,15 +56,31 @@ def test_load_core_shapes_empty_raises(tmp_path, monkeypatch):
         load_core_shapes_graph()
 
 
-def test_canary_invalid_victim_role_fails_validation():
-    """VictimRole without required hasRoleBeginPoint must not conform."""
+def test_canary_wrong_value_fails_validation():
+    """A value CaseLinker got wrong fails, even when other gaps are only unstated."""
+    TEMPORAL = Namespace("https://cacontology.projectvic.org/temporal#")
     ds = Dataset()
     ctx = ds.graph(URIRef("https://example.org/graph/canary"))
-    role = URIRef("https://example.org/victimRole/canary-invalid")
-    ctx.add((role, RDF.type, CAC.VictimRole))
+    age = URIRef("https://example.org/age/canary-invalid")
+    person = URIRef("https://example.org/person/canary")
+    ctx.add((person, RDF.type, URIRef("https://ontology.unifiedcyberontology.org/uco/identity/Person")))
+    ctx.add((age, RDF.type, TEMPORAL.AgeAtTimeSituation))
+    ctx.add((age, TEMPORAL.ageSubject, person))
+    ctx.add((age, TEMPORAL.hasAgeInYears, Literal(Decimal(14))))
+    ctx.add((age, TEMPORAL.concernsAgeQuality, URIRef("https://example.org/not-age")))
 
     conforms, report = CaseToCAC().validate(ds)
     assert conforms is False
-    assert "Victim role must have begin point" in (report or "") or "MinCount" in (
-        report or ""
-    )
+    assert report.startswith("caselinker: 1 AgeAtTimeSituation, when specifying a quality type")
+
+
+def test_unstated_values_are_reported_not_invented():
+    """A victim role with no begin point passes (the release never states one) and is reported."""
+    ds = Dataset()
+    ctx = ds.graph(URIRef("https://example.org/graph/canary"))
+    role = URIRef("https://example.org/victimRole/no-begin-point")
+    ctx.add((role, RDF.type, CAC.VictimRole))
+
+    conforms, report = CaseToCAC().validate(ds)
+    assert conforms is True
+    assert "unstated: 1 Victim role must have begin point" in report

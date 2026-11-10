@@ -42,7 +42,7 @@ TTL_PREFIXES = {
     "rdf": RDF,
     "rdfs": Namespace("http://www.w3.org/2000/01/rdf-schema#"),
     "xsd": Namespace("http://www.w3.org/2001/XMLSchema#"),
-    "kb": Namespace("http://example.org/kb/"),
+    "kb": Namespace("https://w3id.org/caselinker/resource/pacer/kb/"),
     "case-investigation": Namespace("https://ontology.caseontology.org/case/investigation/"),
     "uco-action": Namespace("https://ontology.unifiedcyberontology.org/uco/action/"),
     "uco-core": Namespace("https://ontology.unifiedcyberontology.org/uco/core/"),

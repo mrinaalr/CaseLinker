@@ -1,0 +1,90 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+
+@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+
+@prefix cacontology-soe: <https://cacontology.projectvic.org/soe#> .
+
+# Ontology Declaration
+<https://cacontology.projectvic.org/soe/shapes> rdf:type owl:Ontology ;
+    rdfs:label "CAC SOE SHACL Shapes"@en ;
+    rdfs:comment "SHACL validation shapes for the CAC Sadistic Online Exploitation (SOE) Ontology."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/soe/shapes/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://cacontology.projectvic.org/soe/3.1.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> .
+
+# =============================================================================
+# SOE Network Shapes
+# =============================================================================
+
+cacontology-soe:SadisticOnlineExploitationNetworkShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-soe:SadisticOnlineExploitationNetwork ;
+    rdfs:label "Sadistic Online Exploitation Network Shape"@en ;
+    rdfs:comment "Validation shape for SOE network/community instances."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 3 ;
+        sh:maxLength 300 ;
+        sh:message "SOE network must have an rdfs:label (3-300 chars)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-soe:communitySlangTerm ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 5 ;
+        sh:minLength 1 ;
+        sh:maxLength 50 ;
+        sh:message "communitySlangTerm must be a short string (1-50 chars)."@en
+    ] .
+
+# =============================================================================
+# Livestreamed Coercion Show Shapes
+# =============================================================================
+
+cacontology-soe:LivestreamedCoercionShowShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-soe:LivestreamedCoercionShow ;
+    rdfs:label "Livestreamed Coercion Show Shape"@en ;
+    rdfs:comment "Validation shape for livestreamed coercion show event instances."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 3 ;
+        sh:maxLength 300 ;
+        sh:message "Livestreamed coercion show must have an rdfs:label (3-300 chars)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-soe:coercionShowType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "watch_party" "cut_show" "cut_stage" "stage" ) ;
+        sh:message "coercionShowType must be one of: watch_party, cut_show, cut_stage, stage."@en
+    ] ;
+    sh:property [
+        sh:path uco-action:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Livestreamed coercion show may have startTime."@en
+    ] .
+
+# =============================================================================
+# Relationship Shapes (optional, minimal)
+# =============================================================================
+
+cacontology-soe:HostsCoercionShowShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-soe:hostsCoercionShow ;
+    sh:name "hosts coercion show" ;
+    sh:description "Links an SOE network to a coercion show instance" ;
+    sh:class cacontology-soe:LivestreamedCoercionShow ;
+    sh:minCount 0 .

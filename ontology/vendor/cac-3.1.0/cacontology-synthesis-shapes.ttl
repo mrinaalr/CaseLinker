@@ -1,0 +1,354 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix uco-observable: <https://ontology.unifiedcyberontology.org/uco/observable/> .
+@prefix uco-types: <https://ontology.unifiedcyberontology.org/uco/types/> .
+@prefix investigation: <https://ontology.caseontology.org/case/investigation/> .
+
+@prefix cacontology-synthesis: <https://cacontology.projectvic.org/synthesis#> .
+@prefix cacontology-synthesis-shapes: <https://cacontology.projectvic.org/synthesis/shapes#> .
+
+# =============================================================================
+# CAC Knowledge Synthesis SHACL Shapes (minimal)
+# =============================================================================
+
+<https://cacontology.projectvic.org/synthesis/shapes> rdf:type owl:Ontology ;
+    rdfs:label "CAC Knowledge Synthesis SHACL Shapes"@en ;
+    rdfs:comment "Minimal SHACL shapes for validating report/claim/evidence-pointer patterns used in knowledge-synthesis example graphs."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/synthesis/shapes/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://cacontology.projectvic.org/synthesis/3.1.0> ,
+                <http://www.w3.org/ns/shacl#> .
+
+# Evidence pointers must be resolvable to a text artifact and EITHER a line range OR a page range.
+cacontology-synthesis-shapes:TextEvidencePointerShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-synthesis:TextEvidencePointer ;
+    rdfs:label "Text Evidence Pointer Shape"@en ;
+    sh:property [
+        sh:path cacontology-synthesis:referencesArtifact ;
+        sh:class uco-observable:ObservableObject ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "TextEvidencePointer must reference exactly one text artifact (ObservableObject)."@en
+    ] ;
+    sh:or (
+        # Option A: line range
+        [
+          sh:property [
+              sh:path cacontology-synthesis:lineStart ;
+              sh:datatype xsd:integer ;
+              sh:minCount 1 ;
+              sh:maxCount 1 ;
+              sh:minInclusive 1 ;
+              sh:message "If using lines, lineStart must be a positive integer."@en
+          ] ;
+          sh:property [
+              sh:path cacontology-synthesis:lineEnd ;
+              sh:datatype xsd:integer ;
+              sh:minCount 1 ;
+              sh:maxCount 1 ;
+              sh:minInclusive 1 ;
+              sh:message "If using lines, lineEnd must be a positive integer."@en
+          ] ;
+          sh:sparql [
+              sh:message "If using lines, lineEnd must be >= lineStart."@en ;
+              sh:severity sh:Violation ;
+              sh:select """
+                  SELECT $this
+                  WHERE {
+                    $this cacontology-synthesis:lineStart ?s ;
+                          cacontology-synthesis:lineEnd ?e .
+                    FILTER (?e < ?s)
+                  }
+              """
+          ]
+        ]
+        # Option B: page range
+        [
+          sh:property [
+              sh:path cacontology-synthesis:pageStart ;
+              sh:datatype xsd:integer ;
+              sh:minCount 1 ;
+              sh:maxCount 1 ;
+              sh:minInclusive 1 ;
+              sh:message "If using pages, pageStart must be a positive integer."@en
+          ] ;
+          sh:property [
+              sh:path cacontology-synthesis:pageEnd ;
+              sh:datatype xsd:integer ;
+              sh:minCount 1 ;
+              sh:maxCount 1 ;
+              sh:minInclusive 1 ;
+              sh:message "If using pages, pageEnd must be a positive integer."@en
+          ] ;
+          sh:sparql [
+              sh:message "If using pages, pageEnd must be >= pageStart."@en ;
+              sh:severity sh:Violation ;
+              sh:select """
+                  SELECT $this
+                  WHERE {
+                    $this cacontology-synthesis:pageStart ?s ;
+                          cacontology-synthesis:pageEnd ?e .
+                    FILTER (?e < ?s)
+                  }
+              """
+          ]
+        ]
+    ) ;
+    sh:message "TextEvidencePointer must include either a (lineStart,lineEnd) range or a (pageStart,pageEnd) range."@en .
+
+# Claims should point to at least one evidence pointer.
+cacontology-synthesis-shapes:ClaimEvidenceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-synthesis:Claim ;
+    rdfs:label "Claim Evidence Shape"@en ;
+    sh:property [
+        sh:path cacontology-synthesis:supportedByEvidencePointer ;
+        sh:class cacontology-synthesis:TextEvidencePointer ;
+        sh:minCount 1 ;
+        sh:message "Claim should link to at least one TextEvidencePointer."@en
+    ] .
+
+# About-links are optional but should resolve to UcoObjects when present.
+cacontology-synthesis-shapes:ClaimAboutShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-synthesis:Claim ;
+    rdfs:label "Claim Aboutness Shape"@en ;
+    sh:property [
+        sh:path cacontology-synthesis:about ;
+        sh:nodeKind sh:IRI ;
+        sh:severity sh:Warning ;
+        sh:message "When provided, claim about-links should reference IRI nodes."@en
+    ] .
+
+# If exactQuote exists, require either the UCO 1.5 ContentDataFacet hash pattern
+# (preferred) or legacy quoteHashSha256 + hashScope.
+cacontology-synthesis-shapes:TextEvidencePointerHashShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-synthesis:TextEvidencePointer ;
+    rdfs:label "Text Evidence Pointer Hash Shape"@en ;
+    sh:sparql [
+        sh:message "If exactQuote is present, include either (1) a UCO ContentDataFacet with uco-observable:hash, or (2) legacy quoteHashSha256 + hashScope."@en ;
+        sh:severity sh:Violation ;
+        sh:select """
+          SELECT $this
+          WHERE {
+            $this cacontology-synthesis:exactQuote ?q .
+
+            FILTER NOT EXISTS {
+              # Preferred UCO 1.5 path
+              $this uco-core:hasFacet ?facet .
+              ?facet a uco-observable:ContentDataFacet ;
+                     uco-observable:hash ?h .
+              ?h a uco-types:Hash .
+            }
+
+            FILTER NOT EXISTS {
+              # Legacy: inline hash + scope
+              $this cacontology-synthesis:quoteHashSha256 ?legacyHash ;
+                    cacontology-synthesis:hashScope ?scope .
+            }
+          }
+        """
+    ] ;
+    sh:sparql [
+        sh:message "When using a ContentDataFacet hash, hashMethod should indicate SHA-256 (common literal variants accepted)."@en ;
+        sh:severity sh:Warning ;
+        sh:select """
+          SELECT $this
+          WHERE {
+            $this cacontology-synthesis:exactQuote ?q ;
+                  uco-core:hasFacet ?facet .
+            ?facet a uco-observable:ContentDataFacet ;
+                   uco-observable:hash ?h .
+            ?h a uco-types:Hash ;
+               uco-types:hashMethod ?m .
+
+            FILTER (
+              isLiteral(?m) &&
+              !(LCASE(STR(?m)) IN ("sha-256","sha256","sha 256"))
+            )
+          }
+        """
+    ] .
+
+# Preserve action semantics for workflow/provenance actions.
+cacontology-synthesis-shapes:ActionSemanticsShape rdf:type sh:NodeShape ;
+    sh:targetClass uco-action:Action ;
+    sh:targetClass investigation:InvestigativeAction ;
+    rdfs:label "Action Semantics Shape"@en ;
+    sh:property [
+        sh:path uco-action:performer ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:nodeKind sh:IRI ;
+        sh:severity sh:Violation ;
+        sh:message "Action must have exactly one performer IRI."@en
+    ] ;
+    sh:property [
+        sh:path uco-action:object ;
+        sh:minCount 1 ;
+        sh:nodeKind sh:IRI ;
+        sh:severity sh:Violation ;
+        sh:message "Action must reference at least one object IRI."@en
+    ] ;
+    sh:property [
+        sh:path uco-action:startTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:dateTime ;
+        sh:severity sh:Warning ;
+        sh:message "Action must have exactly one startTime (xsd:dateTime)."@en
+    ] ;
+    sh:property [
+        sh:path uco-action:result ;
+        sh:nodeKind sh:IRI ;
+        sh:severity sh:Warning ;
+        sh:message "When present, action result values should be IRI nodes."@en
+    ] ;
+    sh:property [
+        sh:path uco-action:endTime ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:dateTime ;
+        sh:severity sh:Warning ;
+        sh:message "When present, action endTime should be at most one xsd:dateTime literal."@en
+    ] ;
+    sh:sparql [
+        sh:message "When endTime is present, it must be greater than or equal to startTime."@en ;
+        sh:severity sh:Warning ;
+        sh:select """
+            SELECT $this
+            WHERE {
+              $this <https://ontology.unifiedcyberontology.org/uco/action/startTime> ?s ;
+                    <https://ontology.unifiedcyberontology.org/uco/action/endTime> ?e .
+              FILTER (?e < ?s)
+            }
+        """
+    ] .
+
+# Recommendation evidence should be directly aligned with recommendation numbering.
+cacontology-synthesis-shapes:RecommendationEvidenceAlignmentShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-synthesis:Recommendation ;
+    rdfs:label "Recommendation Evidence Alignment Shape"@en ;
+    sh:property [
+        sh:path cacontology-synthesis:supportedByEvidencePointer ;
+        sh:minCount 1 ;
+        sh:class cacontology-synthesis:TextEvidencePointer ;
+        sh:severity sh:Violation ;
+        sh:message "Recommendation must link to at least one TextEvidencePointer."@en
+    ] ;
+    sh:sparql [
+        sh:message "Recommendation evidence quote should include the corresponding 'Recommendation N:' marker."@en ;
+        sh:severity sh:Warning ;
+        sh:select """
+            SELECT $this
+            WHERE {
+              $this <https://cacontology.projectvic.org/synthesis#recommendationNumber> ?n ;
+                    <https://cacontology.projectvic.org/synthesis#supportedByEvidencePointer> ?ep .
+              ?ep <https://cacontology.projectvic.org/synthesis#exactQuote> ?q .
+              BIND(CONCAT("recommendation ", STR(?n), ":") AS ?needle)
+              FILTER (!CONTAINS(LCASE(STR(?q)), ?needle))
+            }
+        """
+    ] .
+
+# Key findings should be numbered.
+cacontology-synthesis-shapes:KeyFindingNumberShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-synthesis:KeyFinding ;
+    rdfs:label "KeyFinding Number Shape"@en ;
+    sh:property [
+        sh:path cacontology-synthesis:findingNumber ;
+        sh:datatype xsd:integer ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:severity sh:Violation ;
+        sh:message "KeyFinding must have exactly one findingNumber (positive integer)."@en
+    ] .
+
+# Recommendations should be numbered.
+cacontology-synthesis-shapes:RecommendationNumberShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-synthesis:Recommendation ;
+    rdfs:label "Recommendation Number Shape"@en ;
+    sh:property [
+        sh:path cacontology-synthesis:recommendationNumber ;
+        sh:datatype xsd:integer ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:severity sh:Violation ;
+        sh:message "Recommendation must have exactly one recommendationNumber (positive integer)."@en
+    ] .
+
+# Distribution observations should be well-formed.
+cacontology-synthesis-shapes:DistributionObservationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-synthesis:DistributionObservation ;
+    rdfs:label "Distribution Observation Shape"@en ;
+    sh:property [
+        sh:path cacontology-synthesis:category ;
+        sh:minCount 1 ;
+        sh:nodeKind sh:IRI ;
+        sh:severity sh:Violation ;
+        sh:message "DistributionObservation must have a category (IRI)."@en
+    ] ;
+    sh:or (
+      [ sh:property [
+          sh:path cacontology-synthesis:count ;
+          sh:datatype xsd:integer ;
+          sh:minCount 1 ;
+          sh:minInclusive 0 ;
+          sh:severity sh:Violation ;
+          sh:message "If using count, count must be an integer >= 0."@en
+      ] ]
+      [ sh:property [
+          sh:path cacontology-synthesis:rank ;
+          sh:datatype xsd:integer ;
+          sh:minCount 1 ;
+          sh:minInclusive 1 ;
+          sh:severity sh:Violation ;
+          sh:message "If using rank, rank must be an integer >= 1."@en
+      ] ]
+    ) ;
+    sh:sparql [
+        sh:message "denominator should only be present when count is present."@en ;
+        sh:severity sh:Warning ;
+        sh:select """
+          SELECT $this
+          WHERE {
+            $this cacontology-synthesis:denominator ?d .
+            FILTER NOT EXISTS { $this cacontology-synthesis:count ?c . }
+          }
+        """
+    ] ;
+    sh:sparql [
+        sh:message "When denominator is present, it must be >= count."@en ;
+        sh:severity sh:Warning ;
+        sh:select """
+          SELECT $this
+          WHERE {
+            $this cacontology-synthesis:count ?c ;
+                  cacontology-synthesis:denominator ?d .
+            FILTER (?d < ?c)
+          }
+        """
+    ] .
+
+# Optional: recommended claim->report link for query ergonomics (disabled by default).
+cacontology-synthesis-shapes:ClaimInReportShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-synthesis:Claim ;
+    rdfs:label "Claim In-Report Shape"@en ;
+    sh:deactivated true ;
+    sh:property [
+        sh:path cacontology-synthesis:inReport ;
+        sh:class cacontology-synthesis:Report ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:severity sh:Warning ;
+        sh:message "Claims should link to the containing Report via inReport (recommended for query ergonomics)."@en
+    ] .
+

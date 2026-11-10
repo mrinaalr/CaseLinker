@@ -1,0 +1,44 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix cac-bridge-case: <https://cacontology.projectvic.org/bridge/case#> .
+
+# =============================================================================
+# Ontology Declaration
+# =============================================================================
+
+<https://cacontology.projectvic.org/bridge/case> rdf:type owl:Ontology ;
+    rdfs:label "CAC Ontology CASE Bridge Module"@en ;
+    rdfs:comment "Bridge module capturing alignment axioms between CAC Ontology classes and CASE Ontology investigation concepts. The core spine already aligns cac-core:InvestigativeAction to case-investigation:InvestigativeAction. This bridge module holds additional or extended CASE alignment statements for advanced reasoning."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/bridge/case/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:issued "2026-03-16"^^xsd:date ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://cacontology.projectvic.org/core/3.1.0> ,
+                <https://ontology.caseontology.org/case/investigation/1.5.0> .
+
+# =============================================================================
+# CASE ALIGNMENT NOTES
+# =============================================================================
+
+# The primary CASE alignment is already in the spine:
+#   cac-core:InvestigativeAction rdfs:subClassOf case-investigation:InvestigativeAction
+#
+# The following documents the relationship between CACInvestigation and
+# the CASE Investigation class.
+
+cac-bridge-case:CACInvestigationAlignment a owl:Axiom ;
+    rdfs:label "CACInvestigation CASE Alignment"@en ;
+    rdfs:comment "Documents the alignment between cacontology:CACInvestigation and case-investigation:Investigation. CACInvestigation retains its existing rdfs:subClassOf case-investigation:Investigation in the reference layer."@en ;
+    cac-bridge-case:disposition "retainInReferenceLayer" .
+
+# =============================================================================
+# BRIDGE DISPOSITION ANNOTATION PROPERTY
+# =============================================================================
+
+cac-bridge-case:disposition a owl:AnnotationProperty ;
+    rdfs:label "disposition"@en ;
+    rdfs:comment "Records the disposition decision for a CASE alignment axiom."@en .

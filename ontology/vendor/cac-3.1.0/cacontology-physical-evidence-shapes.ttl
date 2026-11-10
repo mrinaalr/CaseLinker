@@ -1,0 +1,1198 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix gufo: <http://purl.org/nemo/gufo#> .
+@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix cacontology-physical: <https://cacontology.projectvic.org/physical#> .
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix cacontology-physical-shapes: <https://cacontology.projectvic.org/physical/shapes#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+# =============================================================================
+# CAC PHYSICAL EVIDENCE SHACL SHAPES with gUFO INTEGRATION
+# Enhanced with comprehensive gUFO (gentle Unified Foundational Ontology) validation
+# =============================================================================
+
+<https://cacontology.projectvic.org/physical/shapes> rdf:type owl:Ontology ;
+    rdfs:label "CAC Physical Evidence SHACL Shapes with gUFO Integration"@en ;
+    rdfs:comment "SHACL shapes for validating physical evidence in CAC investigations with comprehensive gUFO foundational ontology integration for enhanced semantic precision and validation capabilities."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/physical/shapes/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://cacontology.projectvic.org/physical/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> .
+
+# =============================================================================
+# gUFO TYPE CONSISTENCY VALIDATION SHAPES
+# =============================================================================
+
+cacontology-physical-shapes:PhysicalEvidenceObjectTypeValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-physical:PhysicalEvidence ;
+    rdfs:label "Physical Evidence Object Type Validation Shape"@en ;
+    rdfs:comment "Validates gUFO Object type consistency for physical evidence."@en .
+
+cacontology-physical-shapes:SearchEventTypeValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-physical:PhysicalSearch ;
+    rdfs:label "Search Event Type Validation Shape"@en ;
+    rdfs:comment "Validates gUFO Event type consistency for search events."@en ;
+    sh:sparql [
+        sh:message "Search events must be properly typed as gUFO Event and extend UCO Action."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this rdf:type gufo:Event .
+                FILTER NOT EXISTS {
+                    $this rdf:type ?actionClass ;
+                    ?actionClass rdfs:subClassOf* uco-action:Action .
+                }
+            }
+        """
+    ] .
+
+cacontology-physical-shapes:ProcurementEventTypeValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-physical:CriminalProcurement ;
+    rdfs:label "Procurement Event Type Validation Shape"@en ;
+    rdfs:comment "Validates gUFO Event type consistency for procurement events."@en ;
+    sh:sparql [
+        sh:message "Procurement events must be properly typed as gUFO Event and extend UCO Action."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this rdf:type gufo:Event .
+                FILTER NOT EXISTS {
+                    $this rdf:type ?actionClass ;
+                    ?actionClass rdfs:subClassOf* uco-action:Action .
+                }
+            }
+        """
+    ] .
+
+cacontology-physical-shapes:EvidencePhaseTypeValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cac-core:Phase ;
+    rdfs:label "Evidence Phase Type Validation Shape"@en ;
+    rdfs:comment "Validates gUFO Phase type consistency for evidence phases."@en ;
+    sh:sparql [
+        sh:message "Evidence phases must be properly typed as gUFO Phase and extend evidence classes."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this rdf:type gufo:Phase .
+                FILTER NOT EXISTS {
+                    $this rdf:type ?phaseClass ;
+                    ?phaseClass rdfs:subClassOf* cacontology-physical:PhysicalEvidence .
+                }
+            }
+        """
+    ] .
+
+cacontology-physical-shapes:ForensicRoleTypeValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cac-core:Role ;
+    rdfs:label "Forensic Role Type Validation Shape"@en ;
+    rdfs:comment "Validates gUFO Role type consistency for forensic roles."@en ;
+    sh:sparql [
+        sh:message "Forensic roles must be properly typed as gUFO Role and extend cac-core:Role."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this rdf:type gufo:Role .
+                FILTER NOT EXISTS {
+                    $this rdfs:subClassOf* cac-core:Role .
+                }
+            }
+        """
+    ] .
+
+cacontology-physical-shapes:EvidenceSituationTypeValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cac-core:Situation ;
+    rdfs:label "Evidence Situation Type Validation Shape"@en ;
+    rdfs:comment "Validates gUFO Situation type consistency for evidence situations."@en .
+
+# =============================================================================
+# gUFO TEMPORAL CONSTRAINTS SHAPES
+# =============================================================================
+
+cacontology-physical-shapes:EvidenceTemporalShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-physical:PhysicalEvidence ;
+    rdfs:label "Evidence Temporal Shape"@en ;
+    rdfs:comment "Validates gUFO temporal constraints for physical evidence."@en ;
+    sh:property [
+        sh:path cacontology-physical:hasEvidenceBeginPoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Evidence may have begin point timestamp."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:hasEvidenceEndPoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Evidence may have end point timestamp."@en
+    ] ;
+    sh:sparql [
+        sh:message "Evidence end must be after begin when both are specified (gUFO temporal constraint)."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-physical:hasEvidenceBeginPoint ?start ;
+                      cacontology-physical:hasEvidenceEndPoint ?end .
+                FILTER (?end <= ?start)
+            }
+        """
+    ] .
+
+cacontology-physical-shapes:SearchEventTemporalShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-physical:PhysicalSearch ;
+    rdfs:label "Search Event Temporal Shape"@en ;
+    rdfs:comment "Validates gUFO temporal constraints for search events."@en ;
+    sh:sparql [
+        sh:message "gUFO Events must have consistent temporal boundaries with end after start."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-physical:hasSearchBeginPoint ?start ;
+                      cacontology-physical:hasSearchEndPoint ?end .
+                FILTER (?end <= ?start)
+            }
+        """
+    ] .
+
+cacontology-physical-shapes:ProcurementEventTemporalShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-physical:CriminalProcurement ;
+    rdfs:label "Procurement Event Temporal Shape"@en ;
+    rdfs:comment "Validates gUFO temporal constraints for procurement events."@en ;
+    sh:sparql [
+        sh:message "Procurement events must have consistent temporal boundaries with end after start."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-physical:hasProcurementBeginPoint ?start ;
+                      cacontology-physical:hasProcurementEndPoint ?end .
+                FILTER (?end <= ?start)
+            }
+        """
+    ] .
+
+cacontology-physical-shapes:EvidencePhaseTemporalShape rdf:type sh:NodeShape ;
+    sh:targetClass cac-core:Phase ;
+    rdfs:label "Evidence Phase Temporal Shape"@en ;
+    rdfs:comment "Validates gUFO temporal constraints for evidence phases."@en ;
+    sh:property [
+        sh:path cacontology-physical:hasPhaseBeginPoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Evidence phase may have begin point timestamp."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:hasPhaseEndPoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Evidence phase may have end point timestamp."@en
+    ] ;
+    sh:sparql [
+        sh:message "Phase end must be after begin when both are specified."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-physical:hasPhaseBeginPoint ?start ;
+                      cacontology-physical:hasPhaseEndPoint ?end .
+                FILTER (?end <= ?start)
+            }
+        """
+    ] .
+
+cacontology-physical-shapes:ForensicRoleTemporalShape rdf:type sh:NodeShape ;
+    sh:targetClass cac-core:Role ;
+    rdfs:label "Forensic Role Temporal Shape"@en ;
+    rdfs:comment "Validates gUFO temporal constraints for forensic roles."@en ;
+    sh:property [
+        sh:path cacontology-physical:hasRoleBeginPoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Forensic role may have begin point timestamp."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:hasRoleEndPoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Forensic role may have end point timestamp."@en
+    ] ;
+    sh:sparql [
+        sh:message "Role end must be after begin when both are specified."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-physical:hasRoleBeginPoint ?start ;
+                      cacontology-physical:hasRoleEndPoint ?end .
+                FILTER (?end <= ?start)
+            }
+        """
+    ] .
+
+# =============================================================================
+# PHYSICAL EVIDENCE SHAPES WITH gUFO QUALITY ASPECTS
+# =============================================================================
+
+cacontology-physical-shapes:PhysicalEvidenceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-physical:PhysicalEvidence ;
+    rdfs:label "Physical Evidence Shape"@en ;
+    rdfs:comment "Enhanced validation shape for physical evidence instances with gUFO quality aspects."@en ;
+    sh:property [
+        sh:path cacontology-physical:evidenceType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "digital_media" "documents" "photographs" "clothing" "biological_samples" "weapons" "contraband" "personal_items" ) ;
+        sh:message "Physical evidence must specify evidence type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:evidenceCategory ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "primary_evidence" "secondary_evidence" "corroborative_evidence" "circumstantial_evidence" "demonstrative_evidence" "real_evidence" ) ;
+        sh:message "Physical evidence must specify evidence category from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:collectionDate ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Physical evidence must specify collection date."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:collectionLocation ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Physical evidence must specify collection location (5-200 characters)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:evidenceCondition ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "excellent" "good" "fair" "poor" "damaged" "deteriorated" "contaminated" ) ;
+        sh:message "Physical evidence must specify evidence condition from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:evidenceStatus ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "collected" "processed" "analyzed" "stored" "returned" "destroyed" "missing" ) ;
+        sh:message "Physical evidence must specify evidence status from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:evidenceNumber ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 50 ;
+        sh:message "Physical evidence must specify evidence number (5-50 characters)."@en
+    ] ;
+    # gUFO Quality Aspects for Evidence
+    sh:property [
+        sh:path cacontology-physical:hasEvidenceIntegrity ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:in ( "compromised" "questionable" "good" "excellent" "pristine" ) ;
+        sh:message "Evidence integrity must be from allowed values (gUFO quality aspect)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:hasEvidenceReliability ;
+        sh:datatype xsd:double ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:message "Evidence reliability must be between 0.0 and 1.0 (gUFO quality aspect)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:hasPreservationQuality ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:in ( "poor" "fair" "good" "excellent" "optimal" ) ;
+        sh:message "Preservation quality must be from allowed values (gUFO quality aspect)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:hasForensicValue ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:in ( "minimal" "limited" "moderate" "high" "critical" ) ;
+        sh:message "Forensic value must be from allowed values (gUFO quality aspect)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:hasContaminationLevel ;
+        sh:datatype xsd:double ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:message "Contamination level must be between 0.0 and 1.0 (gUFO quality aspect)."@en
+    ] .
+
+cacontology-physical-shapes:ComputerEquipmentShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-physical:ComputerEquipment ;
+    rdfs:label "Computer Equipment Shape"@en ;
+    rdfs:comment "Enhanced validation shape for computer equipment instances."@en ;
+    sh:property [
+        sh:path cacontology-physical:deviceBrand ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 2 ;
+        sh:maxLength 50 ;
+        sh:message "Computer equipment must specify device brand (2-50 characters)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:deviceModel ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 2 ;
+        sh:maxLength 100 ;
+        sh:message "Computer equipment must specify device model (2-100 characters)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:encryptionStatus ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "unencrypted" "partially_encrypted" "fully_encrypted" "password_protected" "unknown" ) ;
+        sh:message "Computer equipment must specify encryption status from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:functionalStatus ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "working" "non_functional" "partially_functional" "unknown" ) ;
+        sh:message "Computer equipment must specify functional status from the allowed list."@en
+    ] .
+
+# =============================================================================
+# SEARCH AND SEIZURE SHAPES WITH gUFO QUALITY ASPECTS
+# =============================================================================
+
+cacontology-physical-shapes:PhysicalSearchShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-physical:PhysicalSearch ;
+    rdfs:label "Physical Search Shape"@en ;
+    rdfs:comment "Enhanced validation shape for physical search instances with gUFO quality aspects."@en ;
+    sh:property [
+        sh:path cacontology-physical:searchScope ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 10 ;
+        sh:maxLength 500 ;
+        sh:message "Physical search must specify search scope (10-500 characters)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:searchDuration ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.25 ;
+        sh:maxInclusive 72.0 ;
+        sh:message "Search duration must be between 0.25 and 72.0 hours."@en
+    ] ;
+    # gUFO Quality Aspects for Search
+    sh:property [
+        sh:path cacontology-physical:hasSearchThoroughness ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:in ( "superficial" "basic" "thorough" "comprehensive" "exhaustive" ) ;
+        sh:message "Search thoroughness must be from allowed values (gUFO quality aspect)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:hasSearchEfficiency ;
+        sh:datatype xsd:double ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:message "Search efficiency must be between 0.0 and 1.0 (gUFO quality aspect)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:hasSearchCompleteness ;
+        sh:datatype xsd:double ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:message "Search completeness must be between 0.0 and 1.0 (gUFO quality aspect)."@en
+    ] .
+
+# =============================================================================
+# PROCUREMENT SHAPES WITH gUFO QUALITY ASPECTS
+# =============================================================================
+
+cacontology-physical-shapes:CriminalProcurementShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-physical:CriminalProcurement ;
+    rdfs:label "Criminal Procurement Shape"@en ;
+    rdfs:comment "Enhanced validation shape for criminal procurement instances with gUFO quality aspects."@en ;
+    sh:property [
+        sh:path cacontology-physical:procurementMethod ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "online_purchase" "retail_store" "private_sale" "gift" "theft" "unknown" ) ;
+        sh:message "Criminal procurement must specify procurement method from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:procurementCost ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1000000.0 ;
+        sh:message "Procurement cost must be between $0.00 and $1,000,000.00."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:paymentMethod ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "credit_card" "cash" "digital_currency" "check" "money_order" "unknown" ) ;
+        sh:message "Payment method must be from the allowed list when specified."@en
+    ] ;
+    # gUFO Quality Aspects for Procurement
+    sh:property [
+        sh:path cacontology-physical:hasProcurementSuspicion ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:in ( "none" "low" "moderate" "high" "critical" ) ;
+        sh:message "Procurement suspicion must be from allowed values (gUFO quality aspect)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:hasTraceability ;
+        sh:datatype xsd:double ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:message "Traceability must be between 0.0 and 1.0 (gUFO quality aspect)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:hasAcquisitionRisk ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:in ( "low" "moderate" "high" "extreme" "unknown" ) ;
+        sh:message "Acquisition risk must be from allowed values (gUFO quality aspect)."@en
+    ] .
+
+# =============================================================================
+# FORENSIC ANALYSIS ROLES WITH gUFO QUALITY ASPECTS
+# =============================================================================
+
+cacontology-physical-shapes:ForensicAnalystRoleShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-physical:ForensicAnalystRole ;
+    rdfs:label "Forensic Analyst Role Shape"@en ;
+    rdfs:comment "Enhanced validation shape for forensic analyst role instances with gUFO quality aspects."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 100 ;
+        sh:message "Forensic analyst role label should be between 5 and 100 characters when provided."@en
+    ] ;
+    # gUFO Quality Aspects for Analysis
+    sh:property [
+        sh:path cacontology-physical:hasAnalysisAccuracy ;
+        sh:datatype xsd:double ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:message "Analysis accuracy must be between 0.0 and 1.0 (gUFO quality aspect)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:hasAnalysisReliability ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:in ( "unreliable" "questionable" "acceptable" "reliable" "highly_reliable" ) ;
+        sh:message "Analysis reliability must be from allowed values (gUFO quality aspect)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:hasMethodValidation ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:in ( "unvalidated" "partially_validated" "validated" "peer_reviewed" "certified" ) ;
+        sh:message "Method validation must be from allowed values (gUFO quality aspect)."@en
+    ] .
+
+cacontology-physical-shapes:EvidenceCustodianRoleShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-physical:EvidenceCustodianRole ;
+    rdfs:label "Evidence Custodian Role Shape"@en ;
+    rdfs:comment "Enhanced validation shape for evidence custodian role instances with gUFO quality aspects."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 100 ;
+        sh:message "Evidence custodian role label should be between 5 and 100 characters when provided."@en
+    ] ;
+    # gUFO Quality Aspects for Custody
+    sh:property [
+        sh:path cacontology-physical:hasCustodyIntegrity ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:in ( "compromised" "questionable" "acceptable" "secure" "pristine" ) ;
+        sh:message "Custody integrity must be from allowed values (gUFO quality aspect)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:hasDocumentationCompleteness ;
+        sh:datatype xsd:double ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:message "Documentation completeness must be between 0.0 and 1.0 (gUFO quality aspect)."@en
+    ] .
+
+# =============================================================================
+# gUFO PARTICIPATION CONSTRAINT SHAPES
+# =============================================================================
+
+cacontology-physical-shapes:EvidenceParticipationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-physical:PhysicalEvidence ;
+    rdfs:label "Evidence Participation Shape"@en ;
+    rdfs:comment "Validates gUFO participation constraints for physical evidence."@en ;
+    sh:sparql [
+        sh:message "Physical evidence must be associated with at least one search or procurement event (gUFO participation constraint)."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this rdf:type cacontology-physical:PhysicalEvidence .
+                FILTER NOT EXISTS {
+                    { $this cacontology-physical:seizedDuring ?search } UNION
+                    { $this cacontology-physical:procuredBy ?procurement }
+                }
+            }
+        """
+    ] .
+
+cacontology-physical-shapes:SearchParticipationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-physical:PhysicalSearch ;
+    rdfs:label "Search Participation Shape"@en ;
+    rdfs:comment "Validates gUFO participation constraints for search events."@en ;
+    sh:sparql [
+        sh:message "Search events must involve at least one searching officer (gUFO participation constraint)."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this rdf:type cacontology-physical:PhysicalSearch .
+                FILTER NOT EXISTS {
+                    $this cacontology-physical:searchingOfficer ?officer .
+                }
+            }
+        """
+    ] .
+
+cacontology-physical-shapes:ForensicRoleParticipationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-physical:ForensicAnalystRole ;
+    rdfs:label "Forensic Role Participation Shape"@en ;
+    rdfs:comment "Validates gUFO participation constraints for forensic roles."@en ;
+    sh:sparql [
+        sh:message "Forensic analyst roles must be associated with evidence analysis activities (gUFO participation constraint)."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this rdf:type cacontology-physical:ForensicAnalystRole .
+                FILTER NOT EXISTS {
+                    ?evidence cacontology-physical:forensicAnalysisRequired true ;
+                    ?evidence cacontology-physical:analyzedBy $this .
+                }
+            }
+        """
+    ] .
+
+# =============================================================================
+# gUFO PART-WHOLE RELATIONSHIP SHAPES
+# =============================================================================
+
+cacontology-physical-shapes:EvidenceCompositionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-physical:PhysicalEvidence ;
+    rdfs:label "Evidence Composition Shape"@en ;
+    rdfs:comment "Validates gUFO part-whole relationships for evidence composition."@en ;
+    sh:sparql [
+        sh:message "Evidence containment relationships must be consistent with gUFO part-whole constraints."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-physical:containsItem ?part ;
+                ?part cacontology-physical:containsItem $this .
+            }
+        """
+    ] .
+
+cacontology-physical-shapes:ComputerEquipmentCompositionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-physical:ComputerEquipment ;
+    rdfs:label "Computer Equipment Composition Shape"@en ;
+    rdfs:comment "Validates gUFO part-whole relationships for computer equipment composition."@en ;
+    sh:sparql [
+        sh:message "Computer equipment must have consistent component relationships (gUFO part-whole constraint)."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this rdf:type cacontology-physical:ComputerEquipment .
+                $this cacontology-physical:containsItem ?storage ;
+                ?storage rdf:type cacontology-physical:StorageMedia .
+                FILTER NOT EXISTS {
+                    ?storage cacontology-physical:storageCapacity ?capacity .
+                    FILTER (?capacity > 0)
+                }
+            }
+        """
+    ] .
+
+# =============================================================================
+# ADVANCED gUFO BUSINESS RULES
+# =============================================================================
+
+cacontology-physical-shapes:HighValueEvidenceRule rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-physical:PhysicalEvidence ;
+    rdfs:label "High Value Evidence Rule"@en ;
+    rdfs:comment "Advanced gUFO business rule: High forensic value evidence should have excellent integrity and preservation."@en ;
+    sh:sparql [
+        sh:message "Critical or high forensic value evidence must have excellent integrity and preservation quality (gUFO business rule)."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-physical:hasForensicValue ?value .
+                FILTER (?value IN ("critical", "high"))
+                {
+                    FILTER NOT EXISTS {
+                        $this cacontology-physical:hasEvidenceIntegrity ?integrity .
+                        FILTER (?integrity IN ("excellent", "pristine"))
+                    }
+                } UNION {
+                    FILTER NOT EXISTS {
+                        $this cacontology-physical:hasPreservationQuality ?preservation .
+                        FILTER (?preservation IN ("excellent", "optimal"))
+                    }
+                }
+            }
+        """
+    ] .
+
+cacontology-physical-shapes:ThoroughSearchRule rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-physical:PhysicalSearch ;
+    rdfs:label "Thorough Search Rule"@en ;
+    rdfs:comment "Advanced gUFO business rule: Comprehensive searches should have high efficiency and completeness."@en ;
+    sh:sparql [
+        sh:message "Comprehensive or exhaustive searches must have high efficiency and completeness ratings (gUFO business rule)."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-physical:hasSearchThoroughness ?thoroughness .
+                FILTER (?thoroughness IN ("comprehensive", "exhaustive"))
+                {
+                    FILTER NOT EXISTS {
+                        $this cacontology-physical:hasSearchEfficiency ?efficiency .
+                        FILTER (?efficiency >= 0.7)
+                    }
+                } UNION {
+                    FILTER NOT EXISTS {
+                        $this cacontology-physical:hasSearchCompleteness ?completeness .
+                        FILTER (?completeness >= 0.8)
+                    }
+                }
+            }
+        """
+    ] .
+
+cacontology-physical-shapes:SuspiciousProcurementRule rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-physical:CriminalProcurement ;
+    rdfs:label "Suspicious Procurement Rule"@en ;
+    rdfs:comment "Advanced gUFO business rule: High suspicion procurement should have enhanced traceability requirements."@en ;
+    sh:sparql [
+        sh:message "High or critical suspicion procurement must have good traceability and high acquisition risk (gUFO business rule)."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-physical:hasProcurementSuspicion ?suspicion .
+                FILTER (?suspicion IN ("high", "critical"))
+                {
+                    FILTER NOT EXISTS {
+                        $this cacontology-physical:hasTraceability ?traceability .
+                        FILTER (?traceability >= 0.6)
+                    }
+                } UNION {
+                    FILTER NOT EXISTS {
+                        $this cacontology-physical:hasAcquisitionRisk ?risk .
+                        FILTER (?risk IN ("high", "extreme"))
+                    }
+                }
+            }
+        """
+    ] .
+
+cacontology-physical-shapes:ReliableAnalysisRule rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-physical:ForensicAnalystRole ;
+    rdfs:label "Reliable Analysis Rule"@en ;
+    rdfs:comment "Advanced gUFO business rule: Highly reliable analysis requires validated methods and high accuracy."@en ;
+    sh:sparql [
+        sh:message "Highly reliable analysis must use validated methods and have high accuracy ratings (gUFO business rule)."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-physical:hasAnalysisReliability "highly_reliable" .
+                {
+                    FILTER NOT EXISTS {
+                        $this cacontology-physical:hasMethodValidation ?validation .
+                        FILTER (?validation IN ("validated", "peer_reviewed", "certified"))
+                    }
+                } UNION {
+                    FILTER NOT EXISTS {
+                        $this cacontology-physical:hasAnalysisAccuracy ?accuracy .
+                        FILTER (?accuracy >= 0.9)
+                    }
+                }
+            }
+        """
+    ] .
+
+cacontology-physical-shapes:SecureCustodyRule rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-physical:EvidenceCustodianRole ;
+    rdfs:label "Secure Custody Rule"@en ;
+    rdfs:comment "Advanced gUFO business rule: Pristine custody integrity requires complete documentation."@en ;
+    sh:sparql [
+        sh:message "Pristine custody integrity must have complete documentation (gUFO business rule)."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-physical:hasCustodyIntegrity "pristine" .
+                FILTER NOT EXISTS {
+                    $this cacontology-physical:hasDocumentationCompleteness ?completeness .
+                    FILTER (?completeness >= 0.95)
+                }
+            }
+        """
+    ] .
+
+cacontology-physical-shapes:ContaminationPreventionRule rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-physical:PhysicalEvidence ;
+    rdfs:label "Contamination Prevention Rule"@en ;
+    rdfs:comment "Advanced gUFO business rule: Low contamination requires excellent preservation and handling."@en ;
+    sh:sparql [
+        sh:message "Evidence with low contamination levels must have excellent preservation quality (gUFO business rule)."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-physical:hasContaminationLevel ?contamination .
+                FILTER (?contamination <= 0.2)
+                FILTER NOT EXISTS {
+                    $this cacontology-physical:hasPreservationQuality ?preservation .
+                    FILTER (?preservation IN ("excellent", "optimal"))
+                }
+            }
+        """
+    ] .
+
+# =============================================================================
+# ENHANCED DATA QUALITY VALIDATION SHAPES
+# =============================================================================
+
+cacontology-physical-shapes:EvidenceDataQualityShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-physical:PhysicalEvidence ;
+    rdfs:label "Evidence Data Quality Shape"@en ;
+    rdfs:comment "Enhanced data quality validation for physical evidence with gUFO quality consistency rules."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Evidence label should be between 5 and 200 characters when provided."@en
+    ] ;
+    sh:property [
+        sh:path rdfs:comment ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 10 ;
+        sh:maxLength 1000 ;
+        sh:message "Evidence comment should be between 10 and 1000 characters when provided."@en
+    ] ;
+    # gUFO Quality Consistency Rules
+    sh:sparql [
+        sh:message "Evidence integrity and reliability should be consistent (gUFO quality consistency)."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-physical:hasEvidenceIntegrity ?integrity ;
+                      cacontology-physical:hasEvidenceReliability ?reliability .
+                {
+                    FILTER (?integrity = "pristine" && ?reliability < 0.9)
+                } UNION {
+                    FILTER (?integrity = "excellent" && (?reliability < 0.7 || ?reliability > 0.95))
+                } UNION {
+                    FILTER (?integrity = "compromised" && ?reliability > 0.3)
+                }
+            }
+        """
+    ] ;
+    sh:sparql [
+        sh:message "Contamination level and preservation quality should be correlated (gUFO quality consistency)."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-physical:hasContaminationLevel ?contamination ;
+                      cacontology-physical:hasPreservationQuality ?preservation .
+                {
+                    FILTER (?contamination >= 0.8 && ?preservation NOT IN ("poor", "fair"))
+                } UNION {
+                    FILTER (?contamination <= 0.2 && ?preservation NOT IN ("excellent", "optimal"))
+                }
+            }
+        """
+    ] .
+
+# =============================================================================
+# TEMPORAL SEQUENCE VALIDATION SHAPES
+# =============================================================================
+
+cacontology-physical-shapes:EvidenceLifecycleTimingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-physical:PhysicalEvidence ;
+    rdfs:label "Evidence Lifecycle Timing Shape"@en ;
+    rdfs:comment "Validates temporal sequence consistency in evidence lifecycle."@en ;
+    sh:sparql [
+        sh:message "Evidence seizure date should be before analysis date when both are specified."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-physical:seizureDate ?seizureDate ;
+                      cacontology-physical:seizedDuring ?search .
+                ?analyst cacontology-physical:analyzedBy ?this ;
+                         cacontology-physical:hasRoleBeginPoint ?analysisDate .
+                FILTER (?seizureDate > ?analysisDate)
+            }
+        """
+    ] .
+
+cacontology-physical-shapes:SearchEventTimingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-physical:PhysicalSearch ;
+    rdfs:label "Search Event Timing Shape"@en ;
+    rdfs:comment "Validates search event timing consistency."@en ;
+    sh:sparql [
+        sh:message "Search events should occur after procurement events for the same evidence."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                ?evidence cacontology-physical:seizedDuring $this ;
+                         cacontology-physical:procuredBy ?procurement .
+                ?procurement cacontology-physical:procurementDate ?procurementDate .
+                $this cacontology-physical:hasSearchBeginPoint ?searchDate .
+                FILTER (?searchDate < ?procurementDate)
+            }
+        """
+    ] .
+
+# =============================================================================
+# CROSS-REFERENCE VALIDATION SHAPES
+# =============================================================================
+
+cacontology-physical-shapes:EvidenceCrossReferenceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-physical:PhysicalEvidence ;
+    rdfs:label "Evidence Cross Reference Shape"@en ;
+    rdfs:comment "Validates cross-references between evidence and related entities."@en ;
+    sh:sparql [
+        sh:message "Physical evidence must have either seizure or procurement information."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this rdf:type cacontology-physical:PhysicalEvidence .
+                FILTER NOT EXISTS {
+                    { $this cacontology-physical:seizedDuring ?search } UNION
+                    { $this cacontology-physical:procuredBy ?procurement }
+                }
+            }
+        """
+    ] .
+
+cacontology-physical-shapes:CustodyIntegrityShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-physical:EvidenceCustodianRole ;
+    rdfs:label "Custody Integrity Shape"@en ;
+    rdfs:comment "Validates evidence custody integrity."@en ;
+    sh:sparql [
+        sh:message "Compromised custody integrity should have documentation issues flagged."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-physical:hasCustodyIntegrity "compromised" ;
+                      cacontology-physical:hasDocumentationCompleteness ?completeness .
+                FILTER (?completeness > 0.8)
+            }
+        """
+    ] .
+
+# =============================================================================
+# SUSPECT VEHICLE SHAPES (Miami CAC Case Enhancement)
+# =============================================================================
+
+cacontology-physical-shapes:SuspectVehicleShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-physical:SuspectVehicle ;
+    rdfs:label "Suspect Vehicle Shape"@en ;
+    rdfs:comment "Validation shape for suspect vehicles used in CAC offenses."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype rdf:langString ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Suspect vehicle should have a label."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:vehicleMake ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 1 ;
+        sh:maxLength 50 ;
+        sh:message "Vehicle make should be between 1 and 50 characters."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:vehicleModel ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 1 ;
+        sh:maxLength 50 ;
+        sh:message "Vehicle model should be between 1 and 50 characters."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:vehicleYear ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1900 ;
+        sh:maxInclusive 2030 ;
+        sh:message "Vehicle year must be between 1900 and 2030."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:vehicleColor ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "May specify the vehicle color."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:vehicleLicensePlate ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 1 ;
+        sh:maxLength 20 ;
+        sh:message "License plate should be between 1 and 20 characters."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:vehicleVIN ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:pattern "^[A-HJ-NPR-Z0-9]{17}$" ;
+        sh:message "VIN must be exactly 17 alphanumeric characters (no I, O, Q)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:registeredToSuspect ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "May specify if vehicle is registered to suspect."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:usedInOffense ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "May specify if vehicle was used in offense."@en
+    ] .
+
+# =============================================================================
+# ABUSE FACILITATION ITEM SHAPES (Miami CAC Case Enhancement)
+# =============================================================================
+
+cacontology-physical-shapes:VapeDeviceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-physical:VapeDevice ;
+    rdfs:label "Vape Device Shape"@en ;
+    rdfs:comment "Validation shape for vape devices found as evidence."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype rdf:langString ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Vape device should have a label."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:vapeFlavor ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "May specify the vape flavor."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:vapeBrand ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "May specify the vape brand."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:foundInLocation ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "May specify where the vape was found."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:agreedToBring ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "May specify if suspect agreed to bring this item."@en
+    ] .
+
+cacontology-physical-shapes:CondomsShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-physical:Condoms ;
+    rdfs:label "Condoms Shape"@en ;
+    rdfs:comment "Validation shape for condoms found as evidence."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype rdf:langString ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Condoms evidence should have a label."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:condomBrand ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "May specify the condom brand."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:condomQuantity ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 100 ;
+        sh:message "Condom quantity should be between 1 and 100."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:foundInLocation ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "May specify where the condoms were found."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:agreedToBring ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "May specify if suspect agreed to bring this item."@en
+    ] .
+
+# =============================================================================
+# CONSENT SEARCH AUTHORIZATION SHAPES (Miami CAC Case Enhancement)
+# =============================================================================
+
+cacontology-physical-shapes:ConsentToSearchAuthorizationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-physical:ConsentToSearchAuthorization ;
+    rdfs:label "Consent to Search Authorization Shape"@en ;
+    rdfs:comment "Validation shape for consent-based search authorizations."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype rdf:langString ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Consent authorization should have a label."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:consentGiven ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "May specify if consent was given."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:consentType ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "verbal" "written" "implied" ) ;
+        sh:message "Consent type must be from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:consentScope ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "vehicle_only" "device_only" "full_search" "limited" ) ;
+        sh:message "Consent scope must be from the allowed list."@en
+    ] .
+
+cacontology-physical-shapes:VehicleConsentSearchShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-physical:VehicleConsentSearch ;
+    rdfs:label "Vehicle Consent Search Shape"@en ;
+    rdfs:comment "Validation shape for vehicle consent search authorizations."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype rdf:langString ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Vehicle consent search should have a label."@en
+    ] .
+
+cacontology-physical-shapes:DeviceConsentSearchShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-physical:DeviceConsentSearch ;
+    rdfs:label "Device Consent Search Shape"@en ;
+    rdfs:comment "Validation shape for device consent search authorizations."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype rdf:langString ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Device consent search should have a label."@en
+    ] .
+
+# =============================================================================
+# BODYCAM FOOTAGE SHAPES (Miami CAC Case Enhancement)
+# =============================================================================
+
+cacontology-physical-shapes:BodycamFootageShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-physical:BodycamFootage ;
+    rdfs:label "Bodycam Footage Shape"@en ;
+    rdfs:comment "Validation shape for bodycam footage evidence."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype rdf:langString ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Bodycam footage should have a label."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:recordingDate ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "May specify the recording date."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:usedForIdentification ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "May specify if used for suspect identification."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-physical:matchesSelfie ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "May specify if footage was matched to suspect selfies."@en
+    ] . 

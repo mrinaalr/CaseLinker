@@ -1,0 +1,939 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix gufo: <http://purl.org/nemo/gufo#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-observable: <https://ontology.unifiedcyberontology.org/uco/observable/> .
+@prefix cacontology-grooming: <https://cacontology.projectvic.org/grooming#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+
+# Ontology Declaration
+<https://cacontology.projectvic.org/grooming/shapes> rdf:type owl:Ontology ;
+    rdfs:label "CAC Grooming SHACL Shapes with gUFO Validation"@en ;
+    rdfs:comment "SHACL validation shapes for gUFO-enhanced CAC grooming ontology, including anti-rigidity constraints, temporal validation, phase transitions, and foundational type compliance."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/grooming/shapes/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://cacontology.projectvic.org/grooming/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> .
+
+# =============================================================================
+# gUFO TYPE CONSISTENCY VALIDATION
+# =============================================================================
+
+# Event Types validation for grooming behaviors
+cacontology-grooming:GroomingEventTypeValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass gufo:EventType ;
+    sh:message "Every grooming EventType must be declared as rdf:type gufo:EventType"@en .
+
+# Phases validation for grooming stages
+cacontology-grooming:GroomingPhaseValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-grooming:GroomingPhase ;
+    sh:not [
+        sh:property [
+            sh:path rdfs:subClassOf ;
+            sh:class gufo:Kind         ]     ] ;
+    sh:message "Grooming phases are anti-rigid and cannot be subclasses of rigid Kinds"@en .
+
+# Roles validation for grooming participants
+cacontology-grooming:GroomingRoleValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cac-core:Role ;
+    sh:not [
+        sh:property [
+            sh:path rdfs:subClassOf ;
+            sh:class gufo:Kind         ]     ] ;
+    sh:message "Grooming roles are anti-rigid and cannot be subclasses of rigid Kinds"@en .
+
+# Aspect validation for victim vulnerabilities  
+cacontology-grooming:VulnerabilityAspectValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass gufo:Aspect ;
+    sh:property [
+        sh:path rdf:type ;
+        sh:hasValue gufo:Aspect ;
+        sh:minCount 1     ] ;
+    sh:message "Victim vulnerabilities must be properly classified as gUFO Aspects"@en .
+
+# =============================================================================
+# gUFO TEMPORAL CONSTRAINTS FOR GROOMING BEHAVIORS
+# =============================================================================
+
+# Grooming Behavior Temporal Validation
+cacontology-grooming:GroomingBehaviorTemporalShape rdf:type sh:NodeShape ;
+    sh:targetClass cac-core:Event ;
+    sh:property [
+        sh:path gufo:hasBeginPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Grooming behavior must have at most one begin timestamp (gUFO temporal)"@en     ] ;
+    sh:property [
+        sh:path gufo:hasEndPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Grooming behavior must have at most one end timestamp (gUFO temporal)"@en     ] ;
+    sh:sparql [
+        sh:message "Grooming behavior end time must be after begin time (gUFO temporal ordering)"@en ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "gufo" ;
+                sh:namespace "http://purl.org/nemo/gufo#"^^xsd:anyURI             ]         ] ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this gufo:hasBeginPointInXSDDateTimeStamp ?beginTime .
+                $this gufo:hasEndPointInXSDDateTimeStamp ?endTime .
+                FILTER (?endTime <= ?beginTime)
+            }
+        """     ] .
+
+# =============================================================================
+# ENHANCED GROOMING BEHAVIOR SHAPES WITH gUFO INTEGRATION
+# =============================================================================
+
+cacontology-grooming:GroomingBehaviorShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-grooming:GroomingBehavior ;
+    rdfs:label "Grooming Behavior Shape"@en ;
+    rdfs:comment "Validation shape for grooming behavior instances with gUFO integration."@en ;
+    sh:property [
+        sh:path gufo:hasBeginPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Grooming behavior may have begin timestamp (gUFO temporal)"@en     ] ;
+    sh:property [
+        sh:path gufo:hasEndPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Grooming behavior may have end timestamp (gUFO temporal)"@en     ] ;
+    sh:property [
+        sh:path cacontology-grooming:groomingStage ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "initial_contact" "conditioning" "trust_building" "isolation" "dependency_creation" "sexualization" "sexual_introduction" "maintenance" "control" ) ;
+        sh:message "Grooming behavior must specify grooming stage from the allowed list (trust_building and sexual_introduction are legacy behavior-axis values)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-grooming:behaviorType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "attention_giving" "gift_giving" "special_treatment" "isolation_tactics" "boundary_testing" "sexual_content_introduction" "secrecy_enforcement" "threat_making" ) ;
+        sh:message "Grooming behavior must specify behavior type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-grooming:behaviorFrequency ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "single_occurrence" "occasional" "frequent" "daily" "multiple_daily" "constant" ) ;
+        sh:message "Behavior frequency must be from the allowed list (gUFO quality aspect)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-grooming:behaviorIntensity ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "low" "moderate" "high" "extreme" "overwhelming" ) ;
+        sh:message "Behavior intensity must be from the allowed list (gUFO quality aspect)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-grooming:groomingEffectiveness ;
+        sh:datatype xsd:double ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:maxCount 1 ;
+        sh:message "Grooming effectiveness must be between 0.0 and 1.0 (gUFO quality aspect)"@en     ] ;
+    sh:property [
+        sh:path cacontology-grooming:manipulationLevel ;
+        sh:datatype xsd:string ;
+        sh:in ( "subtle" "moderate" "obvious" "aggressive" "extreme" "coercive" ) ;
+        sh:maxCount 1 ;
+        sh:message "Manipulation level must be from allowed list (gUFO quality aspect)"@en     ] ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Grooming behavior may have a start time."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:endTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Grooming behavior may have an end time."@en
+    ] .
+
+cacontology-grooming:ConditioningPhaseShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-grooming:ConditioningPhase ;
+    rdfs:label "Conditioning Phase Shape"@en ;
+    rdfs:comment "Validation shape for grooming offense-trajectory conditioning phase instances."@en ;
+    sh:property [
+        sh:path rdf:type ;
+        sh:hasValue cac-core:Phase ;
+        sh:minCount 1 ;
+        sh:message "ConditioningPhase instances must always be dual-typed with cac-core:Phase."@en     ] ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:minCount 1 ;
+        sh:message "Conditioning phase must have a human-readable label."@en     ] ;
+    sh:property [
+        sh:path cac-core:conditioningMode ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "trust_rapport" "deception" "isolation" "normalization" "desensitization" "compliance_shaping" "dependency_creation" "fear_priming" "platform_confidence" ) ;
+        sh:message "conditioningMode must be from the allowed offense-trajectory mechanism list."@en     ] ;
+    sh:property [
+        sh:path cacontology-grooming:hasGroomingPhaseBeginPoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Conditioning phase may have begin timestamp."@en     ] ;
+    sh:property [
+        sh:path cacontology-grooming:hasGroomingPhaseEndPoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Conditioning phase may have end timestamp."@en     ] .
+
+cacontology-grooming:TrustBuildingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-grooming:TrustBuilding ;
+    rdfs:label "Trust Building Shape"@en ;
+    rdfs:comment "Validation shape for trust building behavior instances with gUFO integration."@en ;
+    sh:property [
+        sh:path gufo:hasBeginPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Trust building may have begin timestamp (gUFO temporal)"@en     ] ;
+    sh:property [
+        sh:path cacontology-grooming:trustBuildingMethod ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "active_listening" "emotional_support" "shared_interests" "special_attention" "gift_giving" "privilege_granting" "secret_sharing" "understanding_persona" ) ;
+        sh:message "Trust building must specify method from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-grooming:trustLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "minimal" "developing" "moderate" "strong" "complete" "absolute" ) ;
+        sh:message "Trust level must be from the allowed list (gUFO quality aspect)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-grooming:trustDevelopmentRate ;
+        sh:datatype xsd:double ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:maxCount 1 ;
+        sh:message "Trust development rate must be between 0.0 and 1.0 (gUFO quality aspect)"@en     ] .
+
+cacontology-grooming:IsolationTacticsShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-grooming:IsolationTactics ;
+    rdfs:label "Isolation Tactics Shape"@en ;
+    rdfs:comment "Validation shape for isolation tactics instances with gUFO integration."@en ;
+    sh:property [
+        sh:path gufo:hasBeginPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Isolation tactics may have begin timestamp (gUFO temporal)"@en     ] ;
+    sh:property [
+        sh:path cacontology-grooming:isolationMethod ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "physical_separation" "emotional_manipulation" "relationship_interference" "activity_restriction" "communication_control" "social_undermining" "dependency_creation" ) ;
+        sh:message "Isolation tactics must specify method from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-grooming:isolationEffectiveness ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "ineffective" "partially_effective" "effective" "highly_effective" "complete" ) ;
+        sh:message "Isolation effectiveness must be from the allowed list (gUFO quality aspect)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-grooming:isolationProgressRate ;
+        sh:datatype xsd:double ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:maxCount 1 ;
+        sh:message "Isolation progress rate must be between 0.0 and 1.0 (gUFO quality aspect)"@en     ] .
+
+cacontology-grooming:BoundaryTestingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-grooming:BoundaryTesting ;
+    rdfs:label "Boundary Testing Shape"@en ;
+    rdfs:comment "Validation shape for boundary testing behavior instances with gUFO integration."@en ;
+    sh:property [
+        sh:path gufo:hasBeginPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Boundary testing may have begin timestamp (gUFO temporal)"@en     ] ;
+    sh:property [
+        sh:path cacontology-grooming:boundaryType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "physical" "emotional" "sexual" "privacy" "authority" "social" "digital" ) ;
+        sh:message "Boundary testing must specify boundary type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-grooming:testingMethod ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "gradual_escalation" "sudden_violation" "repeated_testing" "permission_seeking" "normalization" "desensitization" ) ;
+        sh:message "Boundary testing must specify testing method from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-grooming:victimResponse ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "resistance" "acceptance" "confusion" "compliance" "withdrawal" "normalization" ) ;
+        sh:message "Victim response must be from the allowed list (gUFO quality aspect)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-grooming:boundaryViolationSeverity ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 10 ;
+        sh:maxCount 1 ;
+        sh:message "Boundary violation severity must be between 1 and 10 (gUFO quality aspect)"@en     ] .
+
+# =============================================================================
+# ENHANCED VICTIM VULNERABILITY SHAPES WITH gUFO INTEGRATION
+# =============================================================================
+
+cacontology-grooming:VictimVulnerabilityShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-grooming:VictimVulnerability ;
+    rdfs:label "Victim Vulnerability Shape"@en ;
+    rdfs:comment "Validation shape for victim vulnerability instances with gUFO integration."@en ;
+    sh:property [
+        sh:path gufo:hasBeginPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Vulnerability may have begin timestamp (gUFO temporal)"@en     ] ;
+    sh:property [
+        sh:path cacontology-grooming:vulnerabilityType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "emotional" "social" "economic" "physical" "psychological" "developmental" "situational" "digital" ) ;
+        sh:message "Victim vulnerability must specify vulnerability type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-grooming:vulnerabilityLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "low" "moderate" "high" "severe" "extreme" "critical" ) ;
+        sh:message "Victim vulnerability must specify vulnerability level from the allowed list (gUFO quality aspect)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-grooming:vulnerabilityDuration ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 20.0 ;
+        sh:message "Vulnerability duration must be between 0 and 20 years."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-grooming:exploitabilityScore ;
+        sh:datatype xsd:double ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:maxCount 1 ;
+        sh:message "Exploitability score must be between 0.0 and 1.0 (gUFO quality aspect)"@en     ] ;
+    sh:property [
+        sh:path cacontology-grooming:vulnerabilityStability ;
+        sh:datatype xsd:string ;
+        sh:in ( "stable" "fluctuating" "increasing" "decreasing" "episodic" ) ;
+        sh:maxCount 1 ;
+        sh:message "Vulnerability stability must be from allowed list (gUFO mode aspect)"@en     ] .
+
+cacontology-grooming:EmotionalVulnerabilityShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-grooming:EmotionalVulnerability ;
+    rdfs:label "Emotional Vulnerability Shape"@en ;
+    rdfs:comment "Validation shape for emotional vulnerability instances with gUFO integration."@en ;
+    sh:property [
+        sh:path cacontology-grooming:emotionalState ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "loneliness" "depression" "anxiety" "low_self_esteem" "anger" "confusion" "grief" "trauma_response" ) ;
+        sh:message "Emotional vulnerability must specify emotional state from the allowed list (gUFO quality aspect)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-grooming:emotionalNeed ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "attention" "validation" "acceptance" "love" "security" "understanding" "belonging" "control" ) ;
+        sh:message "Emotional need must be from the allowed list (gUFO quality aspect)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-grooming:emotionalIntensity ;
+        sh:datatype xsd:double ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:maxCount 1 ;
+        sh:message "Emotional intensity must be between 0.0 and 1.0 (gUFO quality aspect)"@en     ] .
+
+cacontology-grooming:SocialVulnerabilityShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-grooming:SocialVulnerability ;
+    rdfs:label "Social Vulnerability Shape"@en ;
+    rdfs:comment "Validation shape for social vulnerability instances with gUFO integration."@en ;
+    sh:property [
+        sh:path cacontology-grooming:socialIsolation ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "none" "mild" "moderate" "severe" "complete" "self_imposed" ) ;
+        sh:message "Social vulnerability must specify isolation level from the allowed list (gUFO quality aspect)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-grooming:socialSupport ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "strong" "adequate" "limited" "minimal" "absent" "dysfunctional" ) ;
+        sh:message "Social support must be from the allowed list (gUFO quality aspect)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-grooming:socialConnectedness ;
+        sh:datatype xsd:double ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:maxCount 1 ;
+        sh:message "Social connectedness must be between 0.0 and 1.0 (gUFO quality aspect)"@en     ] .
+
+# =============================================================================
+# ENHANCED ESCALATION PATTERN SHAPES WITH gUFO INTEGRATION
+# =============================================================================
+
+cacontology-grooming:EscalationPatternShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-grooming:EscalationPattern ;
+    rdfs:label "Escalation Pattern Shape"@en ;
+    rdfs:comment "Validation shape for escalation pattern instances with gUFO integration."@en ;
+    sh:property [
+        sh:path gufo:hasBeginPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Escalation pattern may have begin timestamp (gUFO temporal)"@en     ] ;
+    sh:property [
+        sh:path gufo:hasEndPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Escalation pattern may have end timestamp (gUFO temporal)"@en     ] ;
+    sh:property [
+        sh:path cacontology-grooming:escalationType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "gradual" "rapid" "stepped" "cyclical" "irregular" "sudden" "systematic" ) ;
+        sh:message "Escalation pattern must specify escalation type from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-grooming:escalationSpeed ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "very_slow" "slow" "moderate" "fast" "very_fast" "immediate" ) ;
+        sh:message "Escalation pattern must specify escalation speed from the allowed list (gUFO quality aspect)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-grooming:escalationDuration ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 365.0 ;
+        sh:message "Escalation duration must be between 0 and 365 days."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-grooming:patternConfidence ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:message "Pattern confidence must be between 0.0 and 1.0 (gUFO quality aspect)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-grooming:escalationPredictability ;
+        sh:datatype xsd:double ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:maxCount 1 ;
+        sh:message "Escalation predictability must be between 0.0 and 1.0 (gUFO quality aspect)"@en     ] .
+
+# =============================================================================
+# SEXUAL CONSEQUENCE GAME GROOMING SHAPES
+# =============================================================================
+
+cacontology-grooming:SexualConsequenceGameGroomingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-grooming:SexualConsequenceGameGrooming ;
+    rdfs:label "Sexual Consequence Game Grooming Shape"@en ;
+    rdfs:comment "Validation shape for physical-space 'sexual consequence game' grooming behaviors (Utah Christensen case), ensuring participant count and game context are captured for analytics."@en ;
+    sh:property [
+        sh:path cacontology-grooming:participantCount ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:message "Sexual consequence game grooming should record at least one juvenile participant when participantCount is provided."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-grooming:gameContext ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "sleepover" "peer_group" "family_gathering" "youth_activity" ) ;
+        sh:message "Game context, when provided, must be one of: sleepover, peer_group, family_gathering, youth_activity."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-grooming:ruleStructureDescription ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 10 ;
+        sh:maxLength 500 ;
+        sh:message "Rule structure description, when provided, should be between 10 and 500 characters."@en
+    ] .
+
+cacontology-grooming:SexualConsequenceGameBusinessRule rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-grooming:SexualConsequenceGameGrooming ;
+    rdfs:label "Sexual Consequence Game Business Rule"@en ;
+    rdfs:comment "Business rule: when multiple juveniles participate in a sexual consequence game, a gameContext SHOULD be recorded (Utah Christensen case modeling)."@en ;
+    sh:sparql [
+        sh:message "Sexual consequence games with more than one juvenile participant SHOULD specify a gameContext (e.g., sleepover, peer_group)."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-grooming:participantCount ?count .
+                FILTER (?count > 1)
+                FILTER NOT EXISTS {
+                    $this cacontology-grooming:gameContext ?ctx .
+                }
+            }
+        """
+    ] .
+
+cacontology-grooming:OnlineToOfflineProgressionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-grooming:OnlineToOfflineProgression ;
+    rdfs:label "Online to Offline Progression Shape"@en ;
+    rdfs:comment "Validation shape for online to offline progression instances with gUFO integration."@en ;
+    sh:property [
+        sh:path gufo:hasBeginPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Online to offline progression must have begin timestamp (gUFO temporal)"@en     ] ;
+    sh:property [
+        sh:path cacontology-grooming:progressionDuration ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 365 ;
+        sh:message "Online to offline progression duration must be between 1 and 365 days."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-grooming:progressionStages ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 2 ;
+        sh:maxInclusive 10 ;
+        sh:message "Progression stages must be between 2 and 10 when specified."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-grooming:transitionLikelihood ;
+        sh:datatype xsd:double ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:maxCount 1 ;
+        sh:message "Transition likelihood must be between 0.0 and 1.0 (gUFO quality aspect)"@en     ] .
+
+# =============================================================================
+# ENHANCED COMMUNICATION TACTICS SHAPES WITH gUFO INTEGRATION
+# =============================================================================
+
+cacontology-grooming:CommunicationTacticsShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-grooming:CommunicationTactics ;
+    rdfs:label "Communication Tactics Shape"@en ;
+    rdfs:comment "Validation shape for communication tactics instances with gUFO integration."@en ;
+    sh:property [
+        sh:path gufo:hasBeginPointInXSDDateTimeStamp ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Communication tactics may have begin timestamp (gUFO temporal)"@en     ] ;
+    sh:property [
+        sh:path cacontology-grooming:communicationMethod ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "text_messaging" "voice_calls" "video_calls" "social_media" "gaming_platforms" "email" "anonymous_chat" "encrypted_messaging" ) ;
+        sh:message "Communication tactics must specify method from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-grooming:communicationFrequency ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "sporadic" "weekly" "daily" "multiple_daily" "constant" "on_demand" ) ;
+        sh:message "Communication frequency must be from the allowed list (gUFO quality aspect)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-grooming:communicationTone ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "friendly" "caring" "romantic" "sexual" "threatening" "manipulative" "controlling" ) ;
+        sh:message "Communication tone must be from the allowed list (gUFO quality aspect)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-grooming:communicationEffectiveness ;
+        sh:datatype xsd:double ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:maxCount 1 ;
+        sh:message "Communication effectiveness must be between 0.0 and 1.0 (gUFO quality aspect)"@en     ] .
+
+# =============================================================================
+# gUFO PARTICIPATION CONSTRAINTS
+# =============================================================================
+
+# Grooming Event Participation Validation
+cacontology-grooming:GroomingEventParticipationShape rdf:type sh:NodeShape ;
+    sh:targetClass cac-core:Event ;
+    sh:property [
+        sh:path [ sh:alternativePath ( 
+            cacontology-grooming:targetsVictim 
+            cacontology-grooming:performedBy 
+            cacontology-grooming:witnessedBy 
+            cacontology-grooming:facilitatedBy 
+        ) ] ;
+        sh:minCount 1 ;
+        sh:message "Every grooming event must have at least one participant (gUFO participation)"@en     ] .
+
+# =============================================================================
+# gUFO PART-WHOLE RELATIONSHIP VALIDATION
+# =============================================================================
+
+# Grooming Process Composition Validation
+cacontology-grooming:GroomingProcessCompositionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-grooming:GroomingProcess ;
+    sh:property [
+        sh:path cacontology-grooming:hasGroomingBehavior ;
+        sh:class cac-core:Event ;
+        sh:minCount 1 ;
+        sh:message "Grooming process must have at least one grooming behavior (gUFO part-whole)"@en     ] .
+
+# =============================================================================
+# ADVANCED BUSINESS RULES AND CONSTRAINTS
+# =============================================================================
+
+# Escalation Consistency Business Rule
+cacontology-grooming:EscalationConsistencyBusinessRule rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-grooming:EscalationPattern ;
+    sh:sparql [
+        sh:message "Rapid escalation should have short duration and high predictability"@en ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "cacontology-grooming" ;
+                sh:namespace "https://cacontology.projectvic.org/grooming#"^^xsd:anyURI             ]         ] ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-grooming:escalationSpeed "very_fast" ;
+                      cacontology-grooming:escalationDuration ?duration ;
+                      cacontology-grooming:escalationPredictability ?predictability .
+                FILTER (?duration > 30.0 || ?predictability < 0.7)
+            }
+        """     ] .
+
+# Vulnerability Exploitation Business Rule
+cacontology-grooming:VulnerabilityExploitationBusinessRule rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-grooming:GroomingBehavior ;
+    sh:sparql [
+        sh:message "High manipulation grooming behaviors must target critical vulnerabilities"@en ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "cacontology-grooming" ;
+                sh:namespace "https://cacontology.projectvic.org/grooming#"^^xsd:anyURI             ]         ] ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-grooming:manipulationLevel "extreme" ;
+                      cacontology-grooming:exploitsVulnerability ?vulnerability .
+                ?vulnerability cacontology-grooming:vulnerabilityLevel ?level .
+                FILTER (?level NOT IN ("severe", "extreme", "critical"))
+            }
+        """     ] .
+
+# Trust Building Effectiveness Business Rule
+cacontology-grooming:TrustBuildingEffectivenessBusinessRule rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-grooming:TrustBuilding ;
+    sh:sparql [
+        sh:message "High trust development rate requires consistent communication tactics"@en ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "cacontology-grooming" ;
+                sh:namespace "https://cacontology.projectvic.org/grooming#"^^xsd:anyURI             ]         ] ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-grooming:trustDevelopmentRate ?rate ;
+                      cacontology-grooming:usesCommunication ?comm .
+                ?comm cacontology-grooming:communicationFrequency ?freq .
+                FILTER (?rate > 0.8 && ?freq IN ("sporadic", "weekly"))
+            }
+        """     ] .
+
+# Boundary Testing Progression Business Rule
+cacontology-grooming:BoundaryTestingProgressionBusinessRule rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-grooming:BoundaryTesting ;
+    sh:sparql [
+        sh:message "High severity boundary violations require victim compliance response"@en ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "cacontology-grooming" ;
+                sh:namespace "https://cacontology.projectvic.org/grooming#"^^xsd:anyURI             ]         ] ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-grooming:boundaryViolationSeverity ?severity ;
+                      cacontology-grooming:victimResponse ?response .
+                FILTER (?severity >= 8 && ?response = "resistance")
+            }
+        """     ] .
+
+# Online to Offline Transition Business Rule
+cacontology-grooming:OnlineOfflineTransitionBusinessRule rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-grooming:OnlineToOfflineProgression ;
+    sh:sparql [
+        sh:message "High transition likelihood requires completed trust building and isolation phases"@en ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "cacontology-grooming" ;
+                sh:namespace "https://cacontology.projectvic.org/grooming#"^^xsd:anyURI             ]         ] ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-grooming:transitionLikelihood ?likelihood .
+                FILTER (?likelihood > 0.8)
+                FILTER NOT EXISTS {
+                    ?trustBuilding rdf:type cacontology-grooming:TrustBuilding ;
+                                   cacontology-grooming:trustLevel "complete" .
+                    ?isolation rdf:type cacontology-grooming:IsolationTactics ;
+                               cacontology-grooming:isolationEffectiveness "highly_effective" .
+                }
+            }
+        """     ] .
+
+# =============================================================================
+# TEMPORAL VALIDATION SHAPES WITH gUFO INTEGRATION
+# =============================================================================
+
+cacontology-grooming:GroomingTemporalValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-grooming:GroomingBehavior ;
+    rdfs:label "Grooming Temporal Validation Shape"@en ;
+    rdfs:comment "Validates temporal consistency in grooming behaviors with gUFO integration."@en ;
+    sh:sparql [
+        sh:message "Start time must be before end time when both are specified (gUFO temporal consistency)"@en ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "uco-core" ;
+                sh:namespace "https://ontology.unifiedcyberontology.org/uco/core/"^^xsd:anyURI             ]         ] ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this uco-core:startTime ?start ;
+                      uco-core:endTime ?end .
+                FILTER (?start >= ?end)
+            }
+        """
+    ] ;
+    sh:sparql [
+        sh:message "gUFO temporal boundaries must be consistent with UCO temporal properties"@en ;
+        sh:prefixes [
+            sh:declare [
+                sh:prefix "gufo" ;
+                sh:namespace "http://purl.org/nemo/gufo#"^^xsd:anyURI             ] ;
+            sh:declare [
+                sh:prefix "uco-core" ;
+                sh:namespace "https://ontology.unifiedcyberontology.org/uco/core/"^^xsd:anyURI             ]         ] ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this gufo:hasBeginPointInXSDDateTimeStamp ?gufoBegin ;
+                      uco-core:startTime ?ucoStart .
+                FILTER (?gufoBegin != ?ucoStart)
+            }
+        """
+    ] .
+
+# =============================================================================
+# ENHANCED OBJECT PROPERTY SHAPES WITH gUFO INTEGRATION
+# =============================================================================
+
+cacontology-grooming:TargetsVictimShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-grooming:targetsVictim ;
+    sh:name "targets victim" ;
+    sh:description "Links grooming behavior to victim being targeted (gUFO participation)" ;
+    sh:class uco-identity:Person ;
+    sh:minCount 0 .
+
+cacontology-grooming:ExploitsVulnerabilityShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-grooming:exploitsVulnerability ;
+    sh:name "exploits vulnerability" ;
+    sh:description "Links grooming to victim vulnerability being exploited (gUFO aspect exploitation)" ;
+    sh:class cacontology-grooming:VictimVulnerability ;
+    sh:minCount 0 .
+
+cacontology-grooming:FollowsPatternShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-grooming:followsPattern ;
+    sh:name "follows pattern" ;
+    sh:description "Links grooming to escalation pattern followed (gUFO temporal pattern)" ;
+    sh:class cacontology-grooming:EscalationPattern ;
+    sh:minCount 0 .
+
+cacontology-grooming:UsesCommunicationShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-grooming:usesCommunication ;
+    sh:name "uses communication" ;
+    sh:description "Links grooming to communication tactics used (gUFO participation in communication event)" ;
+    sh:class cacontology-grooming:CommunicationTactics ;
+    sh:minCount 0 .
+
+cacontology-grooming:LeadsToMeetingShape rdf:type sh:PropertyShape ;
+    sh:path cacontology-grooming:leadsToMeeting ;
+    sh:name "leads to meeting" ;
+    sh:description "Links grooming to physical meeting arrangement (gUFO causal relationship)" ;
+    sh:class cacontology-grooming:PhysicalMeetingArrangement ;
+    sh:minCount 0 .
+
+# =============================================================================
+# DATA QUALITY SHAPES WITH gUFO INTEGRATION
+# =============================================================================
+
+cacontology-grooming:GroomingDataQualityShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-grooming:GroomingBehavior ;
+    rdfs:label "Grooming Data Quality Shape"@en ;
+    rdfs:comment "Validates data quality for grooming behaviors with gUFO quality aspects."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Label should be between 5 and 200 characters when provided."@en
+    ] ;
+    sh:property [
+        sh:path rdfs:comment ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 10 ;
+        sh:maxLength 1000 ;
+        sh:message "Comment should be between 10 and 1000 characters when provided."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-grooming:dataConfidence ;
+        sh:datatype xsd:double ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:maxCount 1 ;
+        sh:message "Data confidence must be between 0.0 and 1.0 (gUFO quality aspect)"@en     ] ;
+    sh:property [
+        sh:path cacontology-grooming:analysisCompleteness ;
+        sh:datatype xsd:double ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:maxCount 1 ;
+        sh:message "Analysis completeness must be between 0.0 and 1.0 (gUFO quality aspect)"@en     ] .
+
+# =============================================================================
+# ACCOUNT REPLACEMENT EVENT SHAPES (CaseLinker state machine)
+# =============================================================================
+
+cacontology-grooming:AccountReplacementEventShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-grooming:AccountReplacementEvent ;
+    rdfs:label "Account Replacement Event Shape"@en ;
+    rdfs:comment "Validation shape for account replacement after ban or block."@en ;
+    sh:property [
+        sh:path cacontology-grooming:triggeredBy ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "victim_block" "platform_ban" "detection_risk" "voluntary" ) ;
+        sh:message "Account replacement trigger must be victim_block, platform_ban, detection_risk, or voluntary."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-grooming:resumesAt ;
+        sh:class cac-core:Phase ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Account replacement must specify the phase resumed via resumesAt."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-grooming:originalAccountId ;
+        sh:class uco-observable:Account ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Original account may be specified at most once."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-grooming:replacementAccountId ;
+        sh:class uco-observable:Account ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Replacement account may be specified at most once."@en
+    ] .
+
+# =============================================================================
+# FABRICATED PERSONA SHAPE — Issue #36
+# =============================================================================
+
+cacontology-grooming:FabricatedPersonaShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-grooming:FabricatedPersona ;
+    rdfs:label "Fabricated Persona Shape"@en ;
+    rdfs:comment "Validates fabricated persona instances used in grooming/coercion modeling."@en ;
+    sh:property [
+        sh:path cacontology-grooming:claimedDisplayName ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:message "Claimed display name must be a string when specified."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-grooming:claimedAge ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:message "Claimed age must be a string (age or age range) when specified."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-grooming:claimedGender ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:message "Claimed gender must be a string when specified."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-grooming:controlledBy ;
+        sh:nodeKind sh:IRI ;
+        sh:maxCount 1 ;
+        sh:message "A fabricated persona is controlled by at most one offender person node."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-grooming:personaPlatformAccount ;
+        sh:nodeKind sh:IRI ;
+        sh:message "Persona platform accounts must be IRI references to account observables."@en
+    ] .

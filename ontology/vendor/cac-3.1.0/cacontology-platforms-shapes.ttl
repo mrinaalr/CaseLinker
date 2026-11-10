@@ -1,0 +1,860 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-observable: <https://ontology.unifiedcyberontology.org/uco/observable/> .
+@prefix cacontology-platforms: <https://cacontology.projectvic.org/platforms#> .
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+# Ontology Declaration
+<https://cacontology.projectvic.org/platforms/shapes> rdf:type owl:Ontology ;
+    rdfs:label "CAC Platforms SHACL Shapes"@en ;
+    rdfs:comment "SHACL validation shapes for the CAC Platforms Ontology, providing validation for technology platforms, digital services, and Electronic Service Provider capabilities."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/platforms/shapes/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://cacontology.projectvic.org/platforms/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> .
+
+# =============================================================================
+# SOCIAL MEDIA PLATFORM SHAPES
+# =============================================================================
+
+cacontology-platforms:SocialMediaPlatformShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-platforms:SocialMediaPlatform ;
+    rdfs:label "Social Media Platform Shape"@en ;
+    rdfs:comment "Validation shape for social media platform instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 2 ;
+        sh:maxLength 100 ;
+        sh:message "Social media platform must have a name (2-100 characters)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-platforms:platformType ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "social_media" "photo_sharing" "video_sharing" "microblogging" "professional_networking" ) ;
+        sh:message "Platform type must be from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-platforms:primaryUserBase ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "adults" "teens" "children" "all_ages" "professionals" ) ;
+        sh:message "Primary user base must be from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-platforms:requiresRegistration ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Registration requirement must be a boolean value."@en
+    ] .
+
+cacontology-platforms:MessagingServiceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-platforms:MessagingService ;
+    rdfs:label "Messaging Service Shape"@en ;
+    rdfs:comment "Validation shape for messaging service instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 2 ;
+        sh:maxLength 100 ;
+        sh:message "Messaging service must have a name (2-100 characters)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-platforms:encryptionLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "none" "in-transit" "end-to-end" "partial" ) ;
+        sh:message "Encryption level must be from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-platforms:allowsAnonymousChat ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Anonymous chat allowance must be a boolean value."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-platforms:conversationLogging ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Conversation logging must be a boolean value."@en
+    ] .
+
+cacontology-platforms:VideoStreamingPlatformShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-platforms:VideoStreamingPlatform ;
+    rdfs:label "Video Streaming Platform Shape"@en ;
+    rdfs:comment "Validation shape for video streaming platform instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 2 ;
+        sh:maxLength 100 ;
+        sh:message "Video streaming platform must have a name (2-100 characters)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-platforms:ageVerificationRequired ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Age verification requirement must be a boolean value."@en
+    ] .
+
+cacontology-platforms:GamePlatformShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-platforms:GamePlatform ;
+    rdfs:label "Game Platform Shape"@en ;
+    rdfs:comment "Validation shape for game platform instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 2 ;
+        sh:maxLength 100 ;
+        sh:message "Game platform must have a name (2-100 characters)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-platforms:guestAccountsAllowed ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Guest accounts allowance must be a boolean value."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-platforms:contactInitiationMethod ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "friend_request" "direct_message" "public_chat" "game_invite" "voice_chat" ) ;
+        sh:message "Contact initiation method must be from the allowed list."@en
+    ] .
+
+# =============================================================================
+# ELECTRONIC SERVICE PROVIDER SHAPES
+# =============================================================================
+
+cacontology-platforms:ElectronicServiceProviderShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-platforms:ElectronicServiceProvider ;
+    rdfs:label "Electronic Service Provider Shape"@en ;
+    rdfs:comment "Validation shape for electronic service provider instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 2 ;
+        sh:maxLength 200 ;
+        sh:message "Electronic service provider must have a name (2-200 characters)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-platforms:operatesInJurisdiction ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 10 ;
+        sh:minLength 2 ;
+        sh:maxLength 100 ;
+        sh:message "Jurisdiction must be 2-100 characters when specified."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-platforms:headquarteredIn ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 2 ;
+        sh:maxLength 100 ;
+        sh:message "Headquarters location must be 2-100 characters when specified."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-platforms:acceptsLegalProcess ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Legal process acceptance must be a boolean value."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-platforms:emergencyDisclosureCapable ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Emergency disclosure capability must be a boolean value."@en
+    ] .
+
+# =============================================================================
+# CONTENT MODERATION CAPABILITY SHAPES
+# =============================================================================
+
+cacontology-platforms:ContentModerationCapabilityShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-platforms:ContentModerationCapability ;
+    rdfs:label "Content Moderation Capability Shape"@en ;
+    rdfs:comment "Validation shape for content moderation capability instances."@en ;
+    sh:property [
+        sh:path cacontology-platforms:moderationMethod ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "automated" "human_review" "hybrid" "user_reporting" "ai_assisted" "none" ) ;
+        sh:message "Moderation method must be from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-platforms:csaiDetectionEnabled ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "CSAI detection enablement must be a boolean value."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-platforms:hashMatchingEnabled ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Hash matching enablement must be a boolean value."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-platforms:moderationPresence ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "24/7" "business_hours" "limited" "none" "automated_only" ) ;
+        sh:message "Moderation presence must be from the allowed list."@en
+    ] .
+
+# =============================================================================
+# DATA RETENTION POLICY SHAPES
+# =============================================================================
+
+cacontology-platforms:DataRetentionPolicyShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-platforms:DataRetentionPolicy ;
+    rdfs:label "Data Retention Policy Shape"@en ;
+    rdfs:comment "Validation shape for data retention policy instances."@en ;
+    sh:property [
+        sh:path cacontology-platforms:userDataRetentionPeriod ;
+        sh:datatype xsd:integer ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 3650 ;
+        sh:message "User data retention period must be between 0 and 3650 days (10 years)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-platforms:contentRetentionPeriod ;
+        sh:datatype xsd:integer ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 3650 ;
+        sh:message "Content retention period must be between 0 and 3650 days (10 years)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-platforms:logRetentionPeriod ;
+        sh:datatype xsd:integer ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 3650 ;
+        sh:message "Log retention period must be between 0 and 3650 days (10 years)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-platforms:anonymousUserDataRetention ;
+        sh:datatype xsd:integer ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 365 ;
+        sh:message "Anonymous user data retention must be between 0 and 365 days."@en
+    ] .
+
+# =============================================================================
+# USER VERIFICATION SYSTEM SHAPES
+# =============================================================================
+
+cacontology-platforms:UserVerificationSystemShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-platforms:UserVerificationSystem ;
+    rdfs:label "User Verification System Shape"@en ;
+    rdfs:comment "Validation shape for user verification system instances."@en ;
+    sh:property [
+        sh:path cacontology-platforms:ageVerificationMethod ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "none" "self_declaration" "credit_card" "id_verification" "parental_consent" "third_party" ) ;
+        sh:message "Age verification method must be from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-platforms:identityVerificationRequired ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Identity verification requirement must be a boolean value."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-platforms:verificationStrength ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "none" "weak" "moderate" "strong" "government_id" ) ;
+        sh:message "Verification strength must be from the allowed list."@en
+    ] .
+
+# =============================================================================
+# PLATFORM ACTION SHAPES
+# =============================================================================
+
+cacontology-platforms:ContentModerationActionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-platforms:ContentModerationAction ;
+    rdfs:label "Content Moderation Action Shape"@en ;
+    rdfs:comment "Validation shape for content moderation action instances."@en ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Content moderation action must specify start time."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-platforms:moderationDecision ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "approved" "removed" "restricted" "flagged" "escalated" "pending_review" ) ;
+        sh:message "Moderation decision must be from the allowed list."@en
+    ] .
+
+cacontology-platforms:AccountSuspensionActionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-platforms:AccountSuspensionAction ;
+    rdfs:label "Account Suspension Action Shape"@en ;
+    rdfs:comment "Validation shape for account suspension action instances."@en ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Account suspension action must specify start time."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-platforms:suspensionReason ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "policy_violation" "illegal_content" "harassment" "spam" "underage_user" "terms_violation" ) ;
+        sh:message "Suspension reason must be from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-platforms:suspensionDuration ;
+        sh:datatype xsd:integer ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 3650 ;
+        sh:message "Suspension duration must be between 1 and 3650 days."@en
+    ] .
+
+cacontology-platforms:DataPreservationActionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-platforms:DataPreservationAction ;
+    rdfs:label "Data Preservation Action Shape"@en ;
+    rdfs:comment "Validation shape for data preservation action instances."@en ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Data preservation action must specify start time."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-platforms:preservationPeriod ;
+        sh:datatype xsd:integer ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 30 ;
+        sh:maxInclusive 3650 ;
+        sh:message "Preservation period must be between 30 and 3650 days."@en
+    ] .
+
+cacontology-platforms:LegalDataDisclosureActionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-platforms:LegalDataDisclosureAction ;
+    rdfs:label "Legal Data Disclosure Action Shape"@en ;
+    rdfs:comment "Validation shape for legal data disclosure action instances."@en ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Legal data disclosure action must specify start time."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-platforms:responseTimeFrame ;
+        sh:datatype xsd:integer ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 365 ;
+        sh:message "Response time frame must be between 1 and 365 days."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-platforms:legalProcessUsed ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "search_warrant" "subpoena" "court_order" "emergency_request" "preservation_request" ) ;
+        sh:message "Legal process used must be from the allowed list."@en
+    ] .
+
+cacontology-platforms:EmergencyDisclosureRequestShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-platforms:EmergencyDisclosureRequest ;
+    rdfs:label "Emergency Disclosure Request Shape"@en ;
+    rdfs:comment "Validation shape for emergency disclosure request instances (EDR)."@en ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Emergency disclosure request must specify start time."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:description ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 10 ;
+        sh:maxLength 2000 ;
+        sh:message "Emergency disclosure request must include a grounded description (10-2000 chars)."@en
+    ] .
+
+# =============================================================================
+# LARGE-SCALE PLATFORM OPERATION SHAPES
+# =============================================================================
+
+cacontology-platforms:LargeScalePlatformTakedownShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-platforms:LargeScalePlatformTakedown ;
+    rdfs:label "Large Scale Platform Takedown Shape"@en ;
+    rdfs:comment "Validation shape for large scale platform takedown instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 100 ;
+        sh:message "Large scale platform takedown must have a name (5-100 characters)."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Large scale platform takedown must specify start time."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-platforms:operationScale ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "local" "national" "international" "global" ) ;
+        sh:message "Operation scale must be from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-platforms:countriesInvolved ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 200 ;
+        sh:message "Countries involved must be between 1 and 200."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-platforms:evidenceVolumeTerabytes ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.1 ;
+        sh:maxInclusive 10000.0 ;
+        sh:message "Evidence volume must be between 0.1 and 10000 terabytes."@en
+    ] .
+
+cacontology-platforms:MassUserDatabaseShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-platforms:MassUserDatabase ;
+    rdfs:label "Mass User Database Shape"@en ;
+    rdfs:comment "Validation shape for mass user database instances."@en ;
+    sh:property [
+        sh:path cacontology-platforms:userCount ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1000 ;
+        sh:maxInclusive 100000000 ;
+        sh:message "User count must be between 1000 and 100 million for mass databases."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-platforms:processingTimeframeDays ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 3650 ;
+        sh:message "Processing timeframe must be between 1 and 3650 days."@en
+    ] .
+
+cacontology-platforms:UserScaleClassificationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-platforms:UserScaleClassification ;
+    rdfs:label "User Scale Classification Shape"@en ;
+    rdfs:comment "Validation shape for user scale classification instances."@en ;
+    sh:property [
+        sh:path cacontology-platforms:platformScale ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "small" "medium" "large" "massive" ) ;
+        sh:message "Platform scale must be from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-platforms:millionPlusUsers ;
+        sh:datatype xsd:boolean ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Million plus users indicator must be a boolean value."@en
+    ] .
+
+cacontology-platforms:MassUserBehaviorAnalysisShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-platforms:MassUserBehaviorAnalysis ;
+    rdfs:label "Mass User Behavior Analysis Shape"@en ;
+    rdfs:comment "Validation shape for mass user behavior analysis instances."@en ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Mass user behavior analysis must specify start time."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-platforms:automatedProcessingPercentage ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 100.0 ;
+        sh:message "Automated processing percentage must be between 0.0 and 100.0."@en
+    ] .
+
+cacontology-platforms:UserRiskClassificationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-platforms:UserRiskClassification ;
+    rdfs:label "User Risk Classification Shape"@en ;
+    rdfs:comment "Validation shape for user risk classification instances."@en ;
+    sh:property [
+        sh:path cacontology-platforms:userRiskLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "low" "medium" "high" "critical" ) ;
+        sh:message "User risk level must be from the allowed list."@en
+    ] .
+
+# =============================================================================
+# CROSS-REFERENCE VALIDATION SHAPES
+# =============================================================================
+
+cacontology-platforms:PlatformOperatorCrossReferenceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-platforms:SocialMediaPlatform ,
+                   cacontology-platforms:MessagingService ,
+                   cacontology-platforms:VideoStreamingPlatform ,
+                   cacontology-platforms:FileHostingService ,
+                   cacontology-platforms:GamePlatform ;
+    rdfs:label "Platform Operator Cross Reference Shape"@en ;
+    rdfs:comment "Validates that platforms have associated operators."@en ;
+    sh:sparql [
+        sh:message "Platform should have an associated electronic service provider operator."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a ?platformType .
+                FILTER (?platformType IN (
+                    cacontology-platforms:SocialMediaPlatform,
+                    cacontology-platforms:MessagingService,
+                    cacontology-platforms:VideoStreamingPlatform,
+                    cacontology-platforms:FileHostingService,
+                    cacontology-platforms:GamePlatform
+                ))
+                FILTER NOT EXISTS {
+                    ?esp cacontology-platforms:operatedBy $this .
+                }
+            }
+        """
+    ] .
+
+cacontology-platforms:ContentModerationCrossReferenceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-platforms:SocialMediaPlatform ,
+                   cacontology-platforms:VideoStreamingPlatform ;
+    rdfs:label "Content Moderation Cross Reference Shape"@en ;
+    rdfs:comment "Validates that content platforms have moderation capabilities."@en ;
+    sh:sparql [
+        sh:message "Content platforms should have associated content moderation capabilities."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a ?platformType .
+                FILTER (?platformType IN (
+                    cacontology-platforms:SocialMediaPlatform,
+                    cacontology-platforms:VideoStreamingPlatform
+                ))
+                FILTER NOT EXISTS {
+                    $this cacontology-platforms:hasContentModerationCapability ?moderation .
+                }
+            }
+        """
+    ] .
+
+cacontology-platforms:DataRetentionCrossReferenceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-platforms:ElectronicServiceProvider ;
+    rdfs:label "Data Retention Cross Reference Shape"@en ;
+    rdfs:comment "Validates that service providers have data retention policies."@en ;
+    sh:sparql [
+        sh:message "Electronic service providers should have associated data retention policies."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-platforms:ElectronicServiceProvider .
+                FILTER NOT EXISTS {
+                    ?platform cacontology-platforms:operatedBy $this ;
+                              cacontology-platforms:hasDataRetentionPolicy ?policy .
+                }
+            }
+        """
+    ] .
+
+# =============================================================================
+# TEMPORAL VALIDATION SHAPES
+# =============================================================================
+
+cacontology-platforms:TemporalValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-platforms:ContentModerationAction ,
+                   cacontology-platforms:AccountSuspensionAction ,
+                   cacontology-platforms:DataPreservationAction ,
+                   cacontology-platforms:LegalDataDisclosureAction ,
+                   cacontology-platforms:LargeScalePlatformTakedown ,
+                   cacontology-platforms:MassUserBehaviorAnalysis ;
+    rdfs:label "Temporal Validation Shape"@en ;
+    rdfs:comment "Validates temporal consistency for platform actions."@en ;
+    sh:sparql [
+        sh:message "Start time must be before end time when both are specified."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this uco-core:startTime ?start ;
+                      uco-core:endTime ?end .
+                FILTER (?start >= ?end)
+            }
+        """
+    ] .
+
+cacontology-platforms:RetentionPeriodValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-platforms:DataRetentionPolicy ;
+    rdfs:label "Retention Period Validation Shape"@en ;
+    rdfs:comment "Validates logical consistency of retention periods."@en ;
+    sh:sparql [
+        sh:message "Anonymous user data retention should not exceed general user data retention."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-platforms:userDataRetentionPeriod ?userRetention ;
+                      cacontology-platforms:anonymousUserDataRetention ?anonRetention .
+                FILTER (?anonRetention > ?userRetention)
+            }
+        """
+    ] .
+
+# =============================================================================
+# DATA QUALITY SHAPES
+# =============================================================================
+
+cacontology-platforms:DataQualityShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-platforms:SocialMediaPlatform ,
+                   cacontology-platforms:MessagingService ,
+                   cacontology-platforms:VideoStreamingPlatform ,
+                   cacontology-platforms:FileHostingService ,
+                   cacontology-platforms:GamePlatform ,
+                   cacontology-platforms:ElectronicServiceProvider ;
+    rdfs:label "Data Quality Shape"@en ;
+    rdfs:comment "Validates data quality for platform entities."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 2 ;
+        sh:maxLength 200 ;
+        sh:message "Name must be between 2 and 200 characters."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:description ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 10 ;
+        sh:maxLength 1000 ;
+        sh:message "Description should be between 10 and 1000 characters when provided."@en
+    ] .
+
+cacontology-platforms:LegalComplianceValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-platforms:ElectronicServiceProvider ;
+    rdfs:label "Legal Compliance Validation Shape"@en ;
+    rdfs:comment "Validates legal compliance capabilities for service providers."@en ;
+    sh:sparql [
+        sh:message "Service providers that accept legal process should have contact information."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-platforms:acceptsLegalProcess true .
+                FILTER NOT EXISTS {
+                    $this cacontology-platforms:legalProcessContactInfo ?contact .
+                }
+            }
+        """
+    ] . 
+
+# =============================================================================
+# TRUST & SAFETY OPERATIONS AT SCALE SHAPES (queues, backlogs, throughput)
+# =============================================================================
+
+cacontology-platforms:ContentModerationQueueShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-platforms:ContentModerationQueue ;
+    rdfs:label "Content Moderation Queue Shape"@en ;
+    rdfs:comment "Validates moderation queue objects used for scaled content review operations."@en ;
+    sh:property [
+        sh:path cacontology-platforms:queueOperatedBy ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Content moderation queue must specify exactly one operator (Electronic Service Provider)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-platforms:queueSize ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Queue size must be a non-negative integer when present."@en
+    ] .
+
+cacontology-platforms:ModerationThroughputMetricsShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-platforms:ModerationThroughputMetrics ;
+    rdfs:label "Moderation Throughput Metrics Shape"@en ;
+    rdfs:comment "Validates moderation throughput/latency metrics used to quantify bottlenecks."@en ;
+    sh:property [
+        sh:path cacontology-platforms:reviewLatencyHours ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:message "Review latency hours must be a non-negative decimal when present."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-platforms:throughputPerDay ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Throughput per day must be a non-negative integer when present."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-platforms:flagVolumePerMonth ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Flag volume per month must be a non-negative integer when present."@en
+    ] .
+
+# =============================================================================
+# CHANNEL MIGRATION EVENT SHAPES (CaseLinker state machine)
+# =============================================================================
+
+cacontology-platforms:ChannelMigrationEventShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-platforms:ChannelMigrationEvent ;
+    rdfs:label "Channel Migration Event Shape"@en ;
+    rdfs:comment "Validation shape for cross-platform channel migration events."@en ;
+    sh:property [
+        sh:path cacontology-platforms:fromPlatform ;
+        sh:class uco-observable:DigitalService ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Channel migration must specify exactly one originating platform."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-platforms:toPlatform ;
+        sh:class uco-observable:DigitalService ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Channel migration must specify exactly one destination platform."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-platforms:migrationRationale ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "capability_upgrade" "evidence_evasion" "both" ) ;
+        sh:message "Migration rationale must be capability_upgrade, evidence_evasion, or both."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-platforms:occursBetween ;
+        sh:class cac-core:Phase ;
+        sh:minCount 2 ;
+        sh:message "Channel migration must separate at least two offense phases via occursBetween."@en
+    ] .
+
+# =============================================================================
+# AFFORDANCE MISUSE SHAPES (CaseLinker state machine)
+# =============================================================================
+
+cacontology-platforms:AffordanceMisuseShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-platforms:AffordanceMisuse ;
+    rdfs:label "Affordance Misuse Shape"@en ;
+    rdfs:comment "Validation shape for transition-level platform affordance misuse annotations."@en ;
+    sh:property [
+        sh:path cacontology-platforms:affordanceClass ;
+        sh:class cacontology-platforms:PlatformAffordance ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Affordance misuse must specify exactly one affordance class."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-platforms:enablesTransitionFrom ;
+        sh:class cac-core:Phase ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Affordance misuse must specify the source phase via enablesTransitionFrom."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-platforms:enablesTransitionTo ;
+        sh:class cac-core:Phase ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Affordance misuse must specify the target phase via enablesTransitionTo."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-platforms:misuseDescription ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 10 ;
+        sh:message "Affordance misuse must include a misuse description of at least 10 characters."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-platforms:platform ;
+        sh:class uco-observable:DigitalService ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Optional platform instance may be specified at most once."@en
+    ] .

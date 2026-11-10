@@ -44,10 +44,10 @@ def construct_query(iri: str) -> str:
 
 
 def is_hub_resource(iri: str) -> bool:
-    """Agency, platform, and location IRIs are hubs — cases link out to them."""
+    """Agency, platform, ESP and location IRIs are hubs — cases link out to them."""
     return bool(
         re.match(
-            rf"^{re.escape(RESOURCE_BASE)}(agency|platform|location)/[^/]+$",
+            rf"^{re.escape(RESOURCE_BASE)}(agency|platform|esp|location)/[^/]+$",
             iri.rstrip("/"),
         )
     )

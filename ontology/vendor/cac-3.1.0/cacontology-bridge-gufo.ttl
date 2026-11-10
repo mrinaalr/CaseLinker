@@ -1,0 +1,84 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix cac-bridge-gufo: <https://cacontology.projectvic.org/bridge/gufo#> .
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-gufo: <https://cacontology.projectvic.org/gufo#> .
+
+# =============================================================================
+# Ontology Declaration
+# =============================================================================
+
+<https://cacontology.projectvic.org/bridge/gufo> rdf:type owl:Ontology ;
+    rdfs:label "CAC Ontology gUFO Bridge Module"@en ;
+    rdfs:comment "Bridge module capturing alignment axioms between CAC Ontology classes and gUFO foundational ontology concepts. This module holds stronger or legacy alignment statements that were previously expressed as owl:equivalentClass axioms in domain modules. Importing this module enables advanced gUFO-based reasoning but is not required for basic CAC interoperability."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/bridge/gufo/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:issued "2026-03-16"^^xsd:date ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://cacontology.projectvic.org/core/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> .
+
+# =============================================================================
+# LEGACY EQUIVALENCE ALIGNMENTS (moved from domain modules in v3.1.0)
+#
+# These were previously owl:equivalentClass axioms scattered across domain
+# modules. They are preserved here for reasoning continuity but are no longer
+# part of the public reference layer. Each axiom is annotated with its
+# disposition status.
+# =============================================================================
+
+# --- CriminalEvent alignment ---
+# The legacy cacontology-gufo:CriminalEvent class was used as an equivalence
+# target for many event classes. In v3.1.0, those classes should instead
+# subclass cac-core:Event or its sub-branches. The equivalence is preserved
+# here for backward-compatible reasoning.
+
+cac-bridge-gufo:CriminalEventAlignment a owl:Axiom ;
+    rdfs:label "CriminalEvent Legacy Alignment"@en ;
+    rdfs:comment "Documents the legacy equivalence between cacontology:ChildSexualAbuseEvent and cacontology-gufo:CriminalEvent. This alignment is retained in the bridge layer for reasoning continuity."@en ;
+    cac-bridge-gufo:disposition "moveToBridgeLayer" ;
+    cac-bridge-gufo:migratedFrom "cacontology-core.ttl" ;
+    cac-bridge-gufo:previousAxiom "cacontology:ChildSexualAbuseEvent owl:equivalentClass cacontology-gufo:CriminalEvent" .
+
+cacontology:ChildSexualAbuseEvent skos:exactMatch cacontology-gufo:CriminalEvent .
+
+# --- VictimRole alignment ---
+cac-bridge-gufo:VictimRoleAlignment a owl:Axiom ;
+    rdfs:label "VictimRole Legacy Alignment"@en ;
+    rdfs:comment "Documents the legacy equivalence between cacontology:VictimRole and cacontology-gufo:VictimRole. This alignment is retained in the bridge layer for reasoning continuity."@en ;
+    cac-bridge-gufo:disposition "moveToBridgeLayer" ;
+    cac-bridge-gufo:migratedFrom "cacontology-core.ttl" ;
+    cac-bridge-gufo:previousAxiom "cacontology:VictimRole owl:equivalentClass cacontology-gufo:VictimRole" .
+
+cacontology:VictimRole skos:exactMatch cacontology-gufo:VictimRole .
+
+# --- OffenderRole alignment ---
+cac-bridge-gufo:OffenderRoleAlignment a owl:Axiom ;
+    rdfs:label "OffenderRole Legacy Alignment"@en ;
+    rdfs:comment "Documents the legacy equivalence between cacontology:OffenderRole and cacontology-gufo:OffenderRole. This alignment is retained in the bridge layer for reasoning continuity."@en ;
+    cac-bridge-gufo:disposition "moveToBridgeLayer" ;
+    cac-bridge-gufo:migratedFrom "cacontology-core.ttl" ;
+    cac-bridge-gufo:previousAxiom "cacontology:OffenderRole owl:equivalentClass cacontology-gufo:OffenderRole" .
+
+cacontology:OffenderRole skos:exactMatch cacontology-gufo:OffenderRole .
+
+# =============================================================================
+# BRIDGE DISPOSITION ANNOTATION PROPERTY
+# =============================================================================
+
+cac-bridge-gufo:disposition a owl:AnnotationProperty ;
+    rdfs:label "disposition"@en ;
+    rdfs:comment "Records the disposition decision for a legacy alignment axiom: retainInReferenceLayer, moveToBridgeLayer, deprecateAndReplace, or pendingReview."@en .
+
+cac-bridge-gufo:migratedFrom a owl:AnnotationProperty ;
+    rdfs:label "migrated from"@en ;
+    rdfs:comment "Records the source file from which this alignment was migrated."@en .
+
+cac-bridge-gufo:previousAxiom a owl:AnnotationProperty ;
+    rdfs:label "previous axiom"@en ;
+    rdfs:comment "Records the original axiom text before migration."@en .

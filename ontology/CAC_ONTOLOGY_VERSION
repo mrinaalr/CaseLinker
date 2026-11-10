@@ -1,22 +1,46 @@
-# Pinned CAC Ontology modules in this folder (cacontology-*.ttl).
-# Source: https://github.com/Project-VIC-International/CAC-Ontology
-#
-# Update this file whenever the pinned TTL copies are refreshed from upstream.
+# Pinned ontologies under ontology/vendor/. Files are byte-for-byte upstream copies.
+# Update this file whenever a vendored copy is refreshed.
 
-repo: https://github.com/Project-VIC-International/CAC-Ontology
-commit: b73b51bc3583b95cf6ef9a55dc798bb7b15dc2d5
-short: b73b51b
-describe: v3.0.0-3-gb73b51b
-date: 2026-06-30
-subject: feat: add spine-level ConditioningPhase macro-phase
+cac:
+  repo: https://github.com/Project-VIC-International/CAC-Ontology
+  commit: 93de063951b758dd68a27611638c177fcf910eab
+  describe: v3.1.0
+  date: 2026-08-09
+  path: vendor/cac-3.1.0/   (all 97 files from ontology/ at that commit)
+  license: Apache-2.0 (vendor/cac-3.1.0/LICENSE.md)
 
-# Files pinned from ontology/ at that commit:
-#   cacontology-core.ttl
-#   cacontology-core-shapes.ttl
-#   cacontology-core-spine.ttl
-#   cacontology-grooming.ttl
-#   cacontology-grooming-shapes.ttl
-#   cacontology-platforms.ttl
-#   cacontology-platforms-shapes.ttl
-#   cacontology-sextortion.ttl
-#   cacontology-sextortion-shapes.ttl
+uco:
+  repo: https://github.com/ucoProject/UCO
+  commit: 7ebb3957e9e9a2e1bb9c66cd1ede8c912a726344
+  describe: 1.5.0
+  path: vendor/uco-1.5.0/   (ontology/uco/**/*.ttl)
+
+case:
+  repo: https://github.com/casework/CASE
+  commit: 8073d5a0a4f8741799adfe0c494d58fd6472acaa
+  describe: 1.5.0
+  path: vendor/case-1.5.0/  (ontology/investigation, ontology/vocabulary)
+
+gufo:
+  iri: http://purl.org/nemo/gufo#/1.0.0   (the version CAC 3.1.0 imports)
+  path: vendor/gufo-1.0.0/gufo.ttl
+  sha256: bd85657d3fb1ef5893c6d7a29dd6387fca130ee5ab60921f5f8ebdc84cacfc49
+
+oa:
+  iri: http://www.w3.org/ns/oa   (W3C Web Annotation Vocabulary)
+  path: vendor/w3c/oa.ttl
+  sha256: f661e37d33bf29176390101687711734a7e33a716bdecfb66b90c732373d7af5
+
+oa-context:
+  iri: http://www.w3.org/ns/anno.jsonld   (JSON-LD context the PACER annotation files reference)
+  path: vendor/w3c/anno.jsonld
+  sha256: c10fd886c5c726fbfd51747b8677eb8f7d02c039357269622de7382e5c20d410
+
+legalproc:
+  repo: https://github.com/vulnmaster/CASE-UCO-SDK
+  commit: 1bb56674233fa8783d7109ea74ffdc11cc37ea61   (v1.31.2-2)
+  path: vendor/case-uco-sdk-1.31.2/legalproc.ttl   (extensions/legalproc/legalproc.ttl)
+  sha256: c0f8bfad091cd5c8b1ba586721728034f5e5bde49e9473f29f2140249b17c9c9
+  status: the SDK's implementation of the criminal-process namespace proposed to CASE
+          (casework/CASE#192-194). Only the PACER graphs use it. Drop this pin once CASE
+          publishes the namespace.

@@ -1,0 +1,1142 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-observable: <https://ontology.unifiedcyberontology.org/uco/observable/> .
+@prefix cacontology: <https://cacontology.projectvic.org#> .
+@prefix cacontology-taskforce: <https://cacontology.projectvic.org/taskforce#> .
+@prefix uco-location: <https://ontology.unifiedcyberontology.org/uco/location/> .
+@prefix gufo: <http://purl.org/nemo/gufo#> .
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+
+# Ontology Declaration
+<https://cacontology.projectvic.org/taskforce> rdf:type owl:Ontology ;
+    rdfs:label "CAC Task Force Organization Ontology"@en ;
+    rdfs:comment "An ontology for representing CAC task force structures, specialized units, coordination mechanisms, resource sharing, and joint operations in Internet Crimes Against Children investigations, extending UCO and CASE with gUFO foundational ontology enhancements."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/taskforce/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:issued "2024-12-19"^^xsd:date ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/identity/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/observable/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/action/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/role/1.5.0> ,
+                <https://cacontology.projectvic.org/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> .
+
+# =============================================================================
+# CAC TASK FORCE CLASSES (extending UCO Observable with gUFO Object)
+# =============================================================================
+
+cacontology-taskforce:ICACtaskForce rdf:type owl:Class ;
+    rdfs:label "CAC Task Force"@en ;
+    rdfs:comment "Internet Crimes Against Children task force unit specializing in child exploitation investigations."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject, cac-core:OrganizationLikeEntity .
+
+cacontology-taskforce:StateICACtaskForce rdf:type owl:Class ;
+    rdfs:label "State CAC Task Force"@en ;
+    rdfs:comment "State-level CAC task force coordinating regional investigations."@en ;
+    rdfs:subClassOf cacontology-taskforce:ICACtaskForce .
+
+cacontology-taskforce:LocalICACtaskForce rdf:type owl:Class ;
+    rdfs:label "Local CAC Task Force"@en ;
+    rdfs:comment "Local or regional CAC task force unit."@en ;
+    rdfs:subClassOf cacontology-taskforce:ICACtaskForce .
+
+cacontology-taskforce:FederalICACtaskForce rdf:type owl:Class ;
+    rdfs:label "Federal CAC Task Force"@en ;
+    rdfs:comment "Federal-level CAC task force for complex or multi-jurisdictional cases."@en ;
+    rdfs:subClassOf cacontology-taskforce:ICACtaskForce .
+
+cacontology-taskforce:SpecializedUnit rdf:type owl:Class ;
+    rdfs:label "Specialized Unit"@en ;
+    rdfs:comment "Specialized unit within CAC task force focused on specific aspects of investigations."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject, cac-core:OrganizationLikeEntity .
+
+# =============================================================================
+# TASK FORCE OPERATION PHASES (gUFO Phase anti-rigid modeling)
+# =============================================================================
+
+cacontology-taskforce:PlanningPhase rdf:type owl:Class ;
+    rdfs:label "Planning Phase"@en ;
+    rdfs:comment "Phase involving operational planning and resource allocation."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+cacontology-taskforce:ExecutionPhase rdf:type owl:Class ;
+    rdfs:label "Execution Phase"@en ;
+    rdfs:comment "Phase involving active execution of task force operations."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+cacontology-taskforce:CoordinationPhase rdf:type owl:Class ;
+    rdfs:label "Coordination Phase"@en ;
+    rdfs:comment "Phase focused on inter-agency coordination and resource sharing."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+cacontology-taskforce:DeploymentPhase rdf:type owl:Class ;
+    rdfs:label "Deployment Phase"@en ;
+    rdfs:comment "Phase involving deployment of personnel and resources."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+cacontology-taskforce:AssessmentPhase rdf:type owl:Class ;
+    rdfs:label "Assessment Phase"@en ;
+    rdfs:comment "Phase involving post-operation assessment and evaluation."@en ;
+    rdfs:subClassOf cac-core:Phase .
+
+# =============================================================================
+# SPECIALIZED UNIT CLASSES (extending UCO Observable with gUFO Object)
+# =============================================================================
+
+cacontology-taskforce:DigitalForensicsUnit rdf:type owl:Class ;
+    rdfs:label "Digital Forensics Unit"@en ;
+    rdfs:comment "Specialized unit focused on digital evidence acquisition and analysis."@en ;
+    rdfs:subClassOf cacontology-taskforce:SpecializedUnit .
+
+cacontology-taskforce:UndercoverUnit rdf:type owl:Class ;
+    rdfs:label "Undercover Unit"@en ;
+    rdfs:comment "Unit specializing in undercover operations and online investigations."@en ;
+    rdfs:subClassOf cacontology-taskforce:SpecializedUnit .
+
+cacontology-taskforce:VictimServiceUnit rdf:type owl:Class ;
+    rdfs:label "Victim Service Unit"@en ;
+    rdfs:comment "Unit providing specialized services and support to child victims."@en ;
+    rdfs:subClassOf cacontology-taskforce:SpecializedUnit .
+
+cacontology-taskforce:AnalyticsUnit rdf:type owl:Class ;
+    rdfs:label "Analytics Unit"@en ;
+    rdfs:comment "Unit specializing in data analysis and intelligence gathering."@en ;
+    rdfs:subClassOf cacontology-taskforce:SpecializedUnit .
+
+cacontology-taskforce:TacticalUnit rdf:type owl:Class ;
+    rdfs:label "Tactical Unit"@en ;
+    rdfs:comment "Unit handling high-risk arrests and tactical operations."@en ;
+    rdfs:subClassOf cacontology-taskforce:SpecializedUnit .
+
+cacontology-taskforce:TrainingUnit rdf:type owl:Class ;
+    rdfs:label "Training Unit"@en ;
+    rdfs:comment "Unit responsible for training and education of task force members."@en ;
+    rdfs:subClassOf cacontology-taskforce:SpecializedUnit .
+
+# =============================================================================
+# TASK FORCE MEMBER CLASSES (extending UCO Role with gUFO Role)
+# =============================================================================
+
+cacontology-taskforce:TaskForceMember rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Task Force Member"@en ;
+    rdfs:comment "Individual member of an CAC task force with specialized training."@en ;
+    rdfs:subClassOf cac-core:Role .
+
+cacontology-taskforce:TaskForceCommander rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Task Force Commander"@en ;
+    rdfs:comment "Command-level officer responsible for task force operations."@en ;
+    rdfs:subClassOf cacontology-taskforce:TaskForceMember .
+
+cacontology-taskforce:TaskForceCoordinator rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Task Force Coordinator"@en ;
+    rdfs:comment "Coordinator responsible for inter-agency cooperation and resource management."@en ;
+    rdfs:subClassOf cacontology-taskforce:TaskForceMember .
+
+cacontology-taskforce:TaskForceInvestigator rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Task Force Investigator"@en ;
+    rdfs:comment "Investigator specializing in CAC cases and child exploitation."@en ;
+    rdfs:subClassOf cacontology-taskforce:TaskForceMember .
+
+cacontology-taskforce:TaskForceAnalyst rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Task Force Analyst"@en ;
+    rdfs:comment "Analyst specializing in CAC intelligence and data analysis."@en ;
+    rdfs:subClassOf cacontology-taskforce:TaskForceMember .
+
+cacontology-taskforce:TaskForceForensicExaminer rdf:type owl:Class, gufo:Role ;
+    rdfs:label "Task Force Forensic Examiner"@en ;
+    rdfs:comment "Digital forensic examiner specializing in CAC evidence."@en ;
+    rdfs:subClassOf cacontology-taskforce:TaskForceMember .
+
+# =============================================================================
+# TASK FORCE OPERATION CLASSES (extending UCO Action with gUFO Event)
+# =============================================================================
+
+cacontology-taskforce:TaskForceOperation rdf:type owl:Class ;
+    rdfs:label "Task Force Operation"@en ;
+    rdfs:comment "Coordinated operation conducted by CAC task force."@en ;
+    rdfs:subClassOf cac-core:InvestigativeAction .
+
+cacontology-taskforce:JointOperation rdf:type owl:Class ;
+    rdfs:label "Joint Operation"@en ;
+    rdfs:comment "Operation involving multiple task forces or agencies."@en ;
+    rdfs:subClassOf cacontology-taskforce:TaskForceOperation .
+
+cacontology-taskforce:SweepOperation rdf:type owl:Class ;
+    rdfs:label "Sweep Operation"@en ;
+    rdfs:comment "Large-scale coordinated operation targeting multiple suspects."@en ;
+    rdfs:subClassOf cacontology-taskforce:TaskForceOperation .
+
+cacontology-taskforce:ProactiveOperation rdf:type owl:Class ;
+    rdfs:label "Proactive Operation"@en ;
+    rdfs:comment "Proactive operation to identify and investigate potential offenders."@en ;
+    rdfs:subClassOf cacontology-taskforce:TaskForceOperation .
+
+cacontology-taskforce:ReactiveOperation rdf:type owl:Class ;
+    rdfs:label "Reactive Operation"@en ;
+    rdfs:comment "Operation in response to specific tips or reports."@en ;
+    rdfs:subClassOf cacontology-taskforce:TaskForceOperation .
+
+# =============================================================================
+# RESOURCE SHARING CLASSES (extending UCO Observable with gUFO Situation)
+# =============================================================================
+
+cacontology-taskforce:ResourceSharing rdf:type owl:Class ;
+    rdfs:label "Resource Sharing"@en ;
+    rdfs:comment "Sharing of resources, personnel, or expertise between task forces."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject, cac-core:Situation .
+
+cacontology-taskforce:PersonnelSharing rdf:type owl:Class ;
+    rdfs:label "Personnel Sharing"@en ;
+    rdfs:comment "Sharing of specialized personnel between task forces."@en ;
+    rdfs:subClassOf cacontology-taskforce:ResourceSharing .
+
+cacontology-taskforce:EquipmentSharing rdf:type owl:Class ;
+    rdfs:label "Equipment Sharing"@en ;
+    rdfs:comment "Sharing of specialized equipment or technology."@en ;
+    rdfs:subClassOf cacontology-taskforce:ResourceSharing .
+
+cacontology-taskforce:ExpertiseSharing rdf:type owl:Class ;
+    rdfs:label "Expertise Sharing"@en ;
+    rdfs:comment "Sharing of specialized knowledge or technical expertise."@en ;
+    rdfs:subClassOf cacontology-taskforce:ResourceSharing .
+
+cacontology-taskforce:IntelligenceSharing rdf:type owl:Class ;
+    rdfs:label "Intelligence Sharing"@en ;
+    rdfs:comment "Sharing of intelligence and investigative information."@en ;
+    rdfs:subClassOf cacontology-taskforce:ResourceSharing .
+
+# =============================================================================
+# COORDINATION MECHANISM CLASSES (extending UCO Observable with gUFO Situation)
+# =============================================================================
+
+cacontology-taskforce:CoordinationMechanism rdf:type owl:Class ;
+    rdfs:label "Coordination Mechanism"@en ;
+    rdfs:comment "Formal mechanism for coordinating task force activities."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject, cac-core:Situation .
+
+cacontology-taskforce:TaskForceAlliance rdf:type owl:Class ;
+    rdfs:label "Task Force Alliance"@en ;
+    rdfs:comment "Formal alliance between multiple CAC task forces."@en ;
+    rdfs:subClassOf cacontology-taskforce:CoordinationMechanism .
+
+cacontology-taskforce:InterAgencyCoordination rdf:type owl:Class ;
+    rdfs:label "Inter Agency Coordination"@en ;
+    rdfs:comment "Coordination mechanism between different law enforcement agencies."@en ;
+    rdfs:subClassOf cacontology-taskforce:CoordinationMechanism .
+
+cacontology-taskforce:RegionalCoordination rdf:type owl:Class ;
+    rdfs:label "Regional Coordination"@en ;
+    rdfs:comment "Coordination mechanism for regional task force activities."@en ;
+    rdfs:subClassOf cacontology-taskforce:CoordinationMechanism .
+
+# =============================================================================
+# gUFO TEMPORAL PROPERTIES
+# =============================================================================
+
+cacontology-taskforce:hasOperationPhaseBeginPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has operation phase begin point"@en ;
+    rdfs:comment "Temporal begin point for operation phase."@en ;
+    rdfs:subPropertyOf gufo:hasBeginPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-taskforce:hasOperationPhaseEndPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has operation phase end point"@en ;
+    rdfs:comment "Temporal end point for operation phase."@en ;
+    rdfs:subPropertyOf gufo:hasEndPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-taskforce:hasRoleBeginPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has role begin point"@en ;
+    rdfs:comment "Temporal begin point for task force role."@en ;
+    rdfs:subPropertyOf gufo:hasBeginPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Role ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-taskforce:hasRoleEndPoint rdf:type owl:DatatypeProperty ;
+    rdfs:label "has role end point"@en ;
+    rdfs:comment "Temporal end point for task force role."@en ;
+    rdfs:subPropertyOf gufo:hasEndPointInXSDDateTimeStamp ;
+    rdfs:domain cac-core:Role ;
+    rdfs:range xsd:dateTimeStamp .
+
+cacontology-taskforce:operationPhaseDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "operation phase duration"@en ;
+    rdfs:comment "Duration of operation phase."@en ;
+    rdfs:domain cac-core:Phase ;
+    rdfs:range xsd:duration .
+
+cacontology-taskforce:coordinationDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "coordination duration"@en ;
+    rdfs:comment "Duration of coordination mechanism."@en ;
+    rdfs:domain cacontology-taskforce:CoordinationMechanism ;
+    rdfs:range xsd:duration .
+
+# =============================================================================
+# TASK FORCE PROPERTIES
+# =============================================================================
+
+# Task Force Structure Properties
+cacontology-taskforce:taskForceId rdf:type owl:DatatypeProperty ;
+    rdfs:label "task force ID"@en ;
+    rdfs:comment "Unique identifier for the CAC task force."@en ;
+    rdfs:domain cacontology-taskforce:ICACtaskForce ;
+    rdfs:range xsd:string .
+
+cacontology-taskforce:establishmentDate rdf:type owl:DatatypeProperty ;
+    rdfs:label "establishment date"@en ;
+    rdfs:comment "Date when the task force was established."@en ;
+    rdfs:domain cacontology-taskforce:ICACtaskForce ;
+    rdfs:range xsd:dateTime .
+
+cacontology-taskforce:coverageArea rdf:type owl:DatatypeProperty ;
+    rdfs:label "coverage area"@en ;
+    rdfs:comment "Geographic area covered by the task force."@en ;
+    rdfs:domain cacontology-taskforce:ICACtaskForce ;
+    rdfs:range xsd:string .
+
+cacontology-taskforce:memberCount rdf:type owl:DatatypeProperty ;
+    rdfs:label "member count"@en ;
+    rdfs:comment "Number of active members in the task force."@en ;
+    rdfs:domain cacontology-taskforce:ICACtaskForce ;
+    rdfs:range xsd:integer .
+
+cacontology-taskforce:agencyCount rdf:type owl:DatatypeProperty ;
+    rdfs:label "agency count"@en ;
+    rdfs:comment "Number of agencies participating in the task force."@en ;
+    rdfs:domain cacontology-taskforce:ICACtaskForce ;
+    rdfs:range xsd:integer .
+
+# Specialization Properties
+cacontology-taskforce:specializationArea rdf:type owl:DatatypeProperty ;
+    rdfs:label "specialization area"@en ;
+    rdfs:comment "Area of specialization (forensics, undercover, victim_services, analytics, tactical)."@en ;
+    rdfs:domain cacontology-taskforce:SpecializedUnit ;
+    rdfs:range xsd:string .
+
+cacontology-taskforce:capabilityLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "capability level"@en ;
+    rdfs:comment "Level of capability (basic, intermediate, advanced, expert)."@en ;
+    rdfs:domain cacontology-taskforce:SpecializedUnit ;
+    rdfs:range xsd:string .
+
+cacontology-taskforce:resourceCapacity rdf:type owl:DatatypeProperty ;
+    rdfs:label "resource capacity"@en ;
+    rdfs:comment "Available resource capacity (limited, moderate, high, extensive)."@en ;
+    rdfs:domain cacontology-taskforce:SpecializedUnit ;
+    rdfs:range xsd:string .
+
+# Member Properties
+cacontology-taskforce:memberRole rdf:type owl:DatatypeProperty ;
+    rdfs:label "member role"@en ;
+    rdfs:comment "Role within the task force (commander, coordinator, investigator, analyst, examiner)."@en ;
+    rdfs:domain cacontology-taskforce:TaskForceMember ;
+    rdfs:range xsd:string .
+
+cacontology-taskforce:experienceLevel rdf:type owl:DatatypeProperty ;
+    rdfs:label "experience level"@en ;
+    rdfs:comment "Experience level in CAC investigations (novice, experienced, expert, master)."@en ;
+    rdfs:domain cacontology-taskforce:TaskForceMember ;
+    rdfs:range xsd:string .
+
+cacontology-taskforce:certificationStatus rdf:type owl:DatatypeProperty ;
+    rdfs:label "certification status"@en ;
+    rdfs:comment "Certification status (certified, pending, expired, not_certified)."@en ;
+    rdfs:domain cacontology-taskforce:TaskForceMember ;
+    rdfs:range xsd:string .
+
+cacontology-taskforce:yearsOfService rdf:type owl:DatatypeProperty ;
+    rdfs:label "years of service"@en ;
+    rdfs:comment "Years of service in CAC task force work."@en ;
+    rdfs:domain cacontology-taskforce:TaskForceMember ;
+    rdfs:range xsd:integer .
+
+# Operation Properties
+cacontology-taskforce:operationType rdf:type owl:DatatypeProperty ;
+    rdfs:label "operation type"@en ;
+    rdfs:comment "Type of task force operation (joint, sweep, proactive, reactive)."@en ;
+    rdfs:domain cacontology-taskforce:TaskForceOperation ;
+    rdfs:range xsd:string .
+
+cacontology-taskforce:operationScale rdf:type owl:DatatypeProperty ;
+    rdfs:label "operation scale"@en ;
+    rdfs:comment "Scale of operation (local, regional, national, international)."@en ;
+    rdfs:domain cacontology-taskforce:TaskForceOperation ;
+    rdfs:range xsd:string .
+
+cacontology-taskforce:participatingUnits rdf:type owl:DatatypeProperty ;
+    rdfs:label "participating units"@en ;
+    rdfs:comment "Number of units participating in operation."@en ;
+    rdfs:domain cacontology-taskforce:TaskForceOperation ;
+    rdfs:range xsd:integer .
+
+cacontology-taskforce:operationDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "operation duration"@en ;
+    rdfs:comment "Duration of operation in days."@en ;
+    rdfs:domain cacontology-taskforce:TaskForceOperation ;
+    rdfs:range xsd:integer .
+
+cacontology-taskforce:operationOutcome rdf:type owl:DatatypeProperty ;
+    rdfs:label "operation outcome"@en ;
+    rdfs:comment "Outcome of operation (successful, partially_successful, unsuccessful)."@en ;
+    rdfs:domain cacontology-taskforce:TaskForceOperation ;
+    rdfs:range xsd:string .
+
+# Resource Sharing Properties
+cacontology-taskforce:sharingType rdf:type owl:DatatypeProperty ;
+    rdfs:label "sharing type"@en ;
+    rdfs:comment "Type of resource sharing (personnel, equipment, expertise, intelligence)."@en ;
+    rdfs:domain cacontology-taskforce:ResourceSharing ;
+    rdfs:range xsd:string .
+
+cacontology-taskforce:sharingDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "sharing duration"@en ;
+    rdfs:comment "Duration of resource sharing in months."@en ;
+    rdfs:domain cacontology-taskforce:ResourceSharing ;
+    rdfs:range xsd:integer .
+
+cacontology-taskforce:sharingAgreement rdf:type owl:DatatypeProperty ;
+    rdfs:label "sharing agreement"@en ;
+    rdfs:comment "Type of sharing agreement (formal, informal, emergency)."@en ;
+    rdfs:domain cacontology-taskforce:ResourceSharing ;
+    rdfs:range xsd:string .
+
+# Training Properties
+cacontology-taskforce:trainingType rdf:type owl:DatatypeProperty ;
+    rdfs:label "training type"@en ;
+    rdfs:comment "Type of training (basic, advanced, specialized, certification)."@en ;
+    rdfs:domain cacontology-taskforce:TaskForceTraining ;
+    rdfs:range xsd:string .
+
+cacontology-taskforce:trainingDuration rdf:type owl:DatatypeProperty ;
+    rdfs:label "training duration"@en ;
+    rdfs:comment "Duration of training in hours."@en ;
+    rdfs:domain cacontology-taskforce:TaskForceTraining ;
+    rdfs:range xsd:integer .
+
+cacontology-taskforce:completionRate rdf:type owl:DatatypeProperty ;
+    rdfs:label "completion rate"@en ;
+    rdfs:comment "Completion rate for training program (percentage)."@en ;
+    rdfs:domain cacontology-taskforce:TaskForceTraining ;
+    rdfs:range xsd:decimal .
+
+cacontology-taskforce:certificationValid rdf:type owl:DatatypeProperty ;
+    rdfs:label "certification valid"@en ;
+    rdfs:comment "Whether certification is currently valid."@en ;
+    rdfs:domain cacontology-taskforce:CertificationProgram ;
+    rdfs:range xsd:boolean .
+
+# =============================================================================
+# TASK FORCE RELATIONSHIPS
+# =============================================================================
+
+# Structure Relationships
+cacontology-taskforce:hasMember rdf:type owl:ObjectProperty ;
+    rdfs:label "has member"@en ;
+    rdfs:comment "Links task force to its members."@en ;
+    rdfs:domain cacontology-taskforce:ICACtaskForce ;
+    rdfs:range cacontology-taskforce:TaskForceMember .
+
+cacontology-taskforce:hasUnit rdf:type owl:ObjectProperty ;
+    rdfs:label "has unit"@en ;
+    rdfs:comment "Links task force to its specialized units."@en ;
+    rdfs:domain cacontology-taskforce:ICACtaskForce ;
+    rdfs:range cacontology-taskforce:SpecializedUnit .
+
+cacontology-taskforce:commandedBy rdf:type owl:ObjectProperty ;
+    rdfs:label "commanded by"@en ;
+    rdfs:comment "Links task force to its commander."@en ;
+    rdfs:domain cacontology-taskforce:ICACtaskForce ;
+    rdfs:range cacontology-taskforce:TaskForceCommander .
+
+cacontology-taskforce:coordinatedBy rdf:type owl:ObjectProperty ;
+    rdfs:label "coordinated by"@en ;
+    rdfs:comment "Links task force to its coordinator."@en ;
+    rdfs:domain cacontology-taskforce:ICACtaskForce ;
+    rdfs:range cacontology-taskforce:TaskForceCoordinator .
+
+# Unit Assignment Relationships
+cacontology-taskforce:assignedToUnit rdf:type owl:ObjectProperty ;
+    rdfs:label "assigned to unit"@en ;
+    rdfs:comment "Links task force member to their assigned unit."@en ;
+    rdfs:domain cacontology-taskforce:TaskForceMember ;
+    rdfs:range cacontology-taskforce:SpecializedUnit .
+
+cacontology-taskforce:leadsUnit rdf:type owl:ObjectProperty ;
+    rdfs:label "leads unit"@en ;
+    rdfs:comment "Links member to unit they lead."@en ;
+    rdfs:domain cacontology-taskforce:TaskForceMember ;
+    rdfs:range cacontology-taskforce:SpecializedUnit .
+
+# Operation Relationships
+cacontology-taskforce:conductedBy rdf:type owl:ObjectProperty ;
+    rdfs:label "conducted by"@en ;
+    rdfs:comment "Links operation to task force that conducted it."@en ;
+    rdfs:domain cacontology-taskforce:TaskForceOperation ;
+    rdfs:range cacontology-taskforce:ICACtaskForce .
+
+cacontology-taskforce:participatedIn rdf:type owl:ObjectProperty ;
+    rdfs:label "participated in"@en ;
+    rdfs:comment "Links task force member to operation they participated in."@en ;
+    rdfs:domain cacontology-taskforce:TaskForceMember ;
+    rdfs:range cacontology-taskforce:TaskForceOperation .
+
+cacontology-taskforce:involvedUnit rdf:type owl:ObjectProperty ;
+    rdfs:label "involved unit"@en ;
+    rdfs:comment "Links operation to specialized unit involved."@en ;
+    rdfs:domain cacontology-taskforce:TaskForceOperation ;
+    rdfs:range cacontology-taskforce:SpecializedUnit .
+
+# Cooperation Relationships
+cacontology-taskforce:collaboratesWith rdf:type owl:ObjectProperty ;
+    rdfs:label "collaborates with"@en ;
+    rdfs:comment "Links task force to other task forces they collaborate with."@en ;
+    rdfs:domain cacontology-taskforce:ICACtaskForce ;
+    rdfs:range cacontology-taskforce:ICACtaskForce .
+
+cacontology-taskforce:sharesResourcesWith rdf:type owl:ObjectProperty ;
+    rdfs:label "shares resources with"@en ;
+    rdfs:comment "Links task force to resource sharing arrangement."@en ;
+    rdfs:domain cacontology-taskforce:ICACtaskForce ;
+    rdfs:range cacontology-taskforce:ResourceSharing .
+
+cacontology-taskforce:coordinatedThrough rdf:type owl:ObjectProperty ;
+    rdfs:label "coordinated through"@en ;
+    rdfs:comment "Links task force to coordination mechanism used."@en ;
+    rdfs:domain cacontology-taskforce:ICACtaskForce ;
+    rdfs:range cacontology-taskforce:CoordinationMechanism .
+
+# Training Relationships
+cacontology-taskforce:receivedTraining rdf:type owl:ObjectProperty ;
+    rdfs:label "received training"@en ;
+    rdfs:comment "Links task force member to training received."@en ;
+    rdfs:domain cacontology-taskforce:TaskForceMember ;
+    rdfs:range cacontology-taskforce:TaskForceTraining .
+
+cacontology-taskforce:providesTraining rdf:type owl:ObjectProperty ;
+    rdfs:label "provides training"@en ;
+    rdfs:comment "Links task force to training programs it provides."@en ;
+    rdfs:domain cacontology-taskforce:ICACtaskForce ;
+    rdfs:range cacontology-taskforce:TaskForceTraining .
+
+cacontology-taskforce:certifiedIn rdf:type owl:ObjectProperty ;
+    rdfs:label "certified in"@en ;
+    rdfs:comment "Links task force member to certification programs completed."@en ;
+    rdfs:domain cacontology-taskforce:TaskForceMember ;
+    rdfs:range cacontology-taskforce:CertificationProgram .
+
+# Investigation Relationships
+cacontology-taskforce:handledInvestigation rdf:type owl:ObjectProperty ;
+    rdfs:label "handled investigation"@en ;
+    rdfs:comment "Links task force to investigation they handled."@en ;
+    rdfs:domain cacontology-taskforce:ICACtaskForce ;
+    rdfs:range cacontology:CACInvestigation .
+
+cacontology-taskforce:supportedInvestigation rdf:type owl:ObjectProperty ;
+    rdfs:label "supported investigation"@en ;
+    rdfs:comment "Links specialized unit to investigation they supported."@en ;
+    rdfs:domain cacontology-taskforce:SpecializedUnit ;
+    rdfs:range cacontology:CACInvestigation .
+
+# =============================================================================
+# CAC TASK FORCE PERFORMANCE METRICS (Illinois Analysis)
+# =============================================================================
+
+cacontology-taskforce:TaskForceMetrics rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:AssessmentResult ;
+    rdfs:label "Task Force Metrics"@en ;
+    rdfs:comment "Performance metrics and statistics for CAC task force operations."@en .
+
+cacontology-taskforce:HistoricalMetrics rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-taskforce:TaskForceMetrics ;
+    rdfs:label "Historical Metrics"@en ;
+    rdfs:comment "Long-term historical performance data for task force operations."@en .
+
+cacontology-taskforce:CyberTipMetrics rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-taskforce:TaskForceMetrics ;
+    rdfs:label "CyberTip Metrics"@en ;
+    rdfs:comment "Metrics tracking CyberTip processing and analysis by task force."@en .
+
+cacontology-taskforce:ArrestMetrics rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-taskforce:TaskForceMetrics ;
+    rdfs:label "Arrest Metrics"@en ;
+    rdfs:comment "Metrics tracking arrests made by task force operations."@en .
+
+cacontology-taskforce:AnnualPerformance rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-taskforce:TaskForceMetrics ;
+    rdfs:label "Annual Performance"@en ;
+    rdfs:comment "Year-specific performance metrics for task force operations."@en .
+
+cacontology-taskforce:NetworkPerformance rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-taskforce:TaskForceMetrics ;
+    rdfs:label "Network Performance"@en ;
+    rdfs:comment "Performance metrics for multi-agency network coordination."@en .
+
+cacontology-taskforce:TrainingReachMetrics rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-taskforce:TaskForceMetrics ;
+    rdfs:label "Training Reach Metrics"@en ;
+    rdfs:comment "Metrics tracking training and education reach to professionals and community."@en .
+
+# =============================================================================
+# ILLINOIS CAC TASK FORCE FRAMEWORK
+# =============================================================================
+
+cacontology-taskforce:IllinoisICACtaskForce rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-taskforce:StateICACtaskForce ;
+    rdfs:label "Illinois CAC Task Force"@en ;
+    rdfs:comment "Illinois state CAC task force with specialized capabilities and extensive network partnerships."@en .
+
+# =============================================================================
+# MARYLAND CAC TASK FORCE FRAMEWORK (Maryland Case Enhancement)
+# =============================================================================
+
+cacontology-taskforce:MarylandICACtaskForce rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-taskforce:StateICACtaskForce ;
+    rdfs:label "Maryland CAC Task Force"@en ;
+    rdfs:comment "Maryland state CAC task force coordinated by Maryland State Police Computer Crimes Unit with Governor's Office for Crime Prevention and Policy funding."@en .
+
+cacontology-taskforce:GovernorsOfficeCrimePreventionFunding rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:EnduringEntity ;
+    rdfs:label "Governor's Office Crime Prevention Funding"@en ;
+    rdfs:comment "State-level funding provided by Governor's Office for Crime Prevention and Policy for CAC task force operations."@en .
+
+cacontology-taskforce:StateLocalFundingCombination rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:EnduringEntity ;
+    rdfs:label "State Local Funding Combination"@en ;
+    rdfs:comment "Combined funding from state Governor's Office and federal DOJ grants for task force operations."@en .
+
+# =============================================================================
+# PERFORMANCE METRICS PROPERTIES (Illinois Framework)
+# =============================================================================
+
+# CyberTip Processing Metrics
+cacontology-taskforce:cyberTipsReceived rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-taskforce:CyberTipMetrics ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "cyber tips received"@en ;
+    rdfs:comment "Total number of CyberTips received by task force."@en .
+
+cacontology-taskforce:cyberTipsProcessed rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-taskforce:CyberTipMetrics ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "cyber tips processed"@en ;
+    rdfs:comment "Number of CyberTips successfully processed and analyzed."@en .
+
+cacontology-taskforce:cyberTipsSince2019 rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-taskforce:CyberTipMetrics ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "cyber tips since 2019"@en ;
+    rdfs:comment "Total CyberTips received since 2019 (Illinois: 35,000+)."@en .
+
+cacontology-taskforce:yearOverYearIncrease rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-taskforce:AnnualPerformance ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "year over year increase"@en ;
+    rdfs:comment "Percentage increase from previous year (Illinois 2022: 26%)."@en .
+
+# Arrest Performance Metrics
+cacontology-taskforce:arrestsSince2019 rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-taskforce:ArrestMetrics ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "arrests since 2019"@en ;
+    rdfs:comment "Total arrests made since 2019 (Illinois: 600+)."@en .
+
+cacontology-taskforce:arrestsSince2006 rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-taskforce:ArrestMetrics ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "arrests since 2006"@en ;
+    rdfs:comment "Total arrests made since 2006 (Illinois: 1,990+)."@en .
+
+cacontology-taskforce:sexualPredatorArrests rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-taskforce:ArrestMetrics ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "sexual predator arrests"@en ;
+    rdfs:comment "Number of sexual predator arrests made by task force."@en .
+
+# Network Coordination Metrics
+cacontology-taskforce:partnerAgencyCount rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-taskforce:NetworkPerformance ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "partner agency count"@en ;
+    rdfs:comment "Number of partner agencies in task force network (Illinois: 175+)."@en .
+
+cacontology-taskforce:coordinationLevel rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-taskforce:NetworkPerformance ;
+    rdfs:range xsd:string ;
+    rdfs:label "coordination level"@en ;
+    rdfs:comment "Level of coordination (local, county, state, federal)."@en .
+
+cacontology-taskforce:agencyType rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-taskforce:NetworkPerformance ;
+    rdfs:range xsd:string ;
+    rdfs:label "agency type"@en ;
+    rdfs:comment "Type of partner agency (local, county, state, federal)."@en .
+
+# Training and Education Metrics
+cacontology-taskforce:professionalsTrained rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-taskforce:TrainingReachMetrics ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "professionals trained"@en ;
+    rdfs:comment "Number of law enforcement professionals trained."@en .
+
+cacontology-taskforce:parentsEducated rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-taskforce:TrainingReachMetrics ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "parents educated"@en ;
+    rdfs:comment "Number of parents reached through safety education."@en .
+
+cacontology-taskforce:studentsEducated rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-taskforce:TrainingReachMetrics ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "students educated"@en ;
+    rdfs:comment "Number of students reached through safety education."@en .
+
+cacontology-taskforce:teachersEducated rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-taskforce:TrainingReachMetrics ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "teachers educated"@en ;
+    rdfs:comment "Number of teachers reached through safety education."@en .
+
+# Historical Timeline Properties
+cacontology-taskforce:reportingYear rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-taskforce:AnnualPerformance ;
+    rdfs:range xsd:gYear ;
+    rdfs:label "reporting year"@en ;
+    rdfs:comment "Year for which performance metrics are reported."@en .
+
+cacontology-taskforce:performancePeriod rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-taskforce:HistoricalMetrics ;
+    rdfs:range xsd:string ;
+    rdfs:label "performance period"@en ;
+    rdfs:comment "Time period covered by historical metrics (e.g., 'Since 2019', 'Since 2006')."@en .
+
+# =============================================================================
+# TASK FORCE METRICS RELATIONSHIPS
+# =============================================================================
+
+cacontology-taskforce:hasMetrics rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-taskforce:ICACtaskForce ;
+    rdfs:range cacontology-taskforce:TaskForceMetrics ;
+    rdfs:label "has metrics"@en ;
+    rdfs:comment "Links task force to its performance metrics."@en .
+
+cacontology-taskforce:measuresPerformance rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-taskforce:TaskForceMetrics ;
+    rdfs:range cacontology-taskforce:ICACtaskForce ;
+    rdfs:label "measures performance"@en ;
+    rdfs:comment "Links metrics to the task force they measure."@en .
+
+cacontology-taskforce:partnersWith rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-taskforce:ICACtaskForce ;
+    rdfs:range uco-identity:Organization ;
+    rdfs:label "partners with"@en ;
+    rdfs:comment "Links task force to partner organizations."@en .
+
+cacontology-taskforce:federalPartner rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-taskforce:ICACtaskForce ;
+    rdfs:range cacontology-taskforce:FederalLawEnforcementPartner ;
+    rdfs:label "federal partner"@en ;
+    rdfs:comment "Links task force to federal law enforcement partners."@en .
+
+cacontology-taskforce:localPartner rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-taskforce:ICACtaskForce ;
+    rdfs:range cacontology-taskforce:LocalLawEnforcementPartner ;
+    rdfs:label "local partner"@en ;
+    rdfs:comment "Links task force to local law enforcement partners."@en .
+
+# DOJ Grant and Funding Properties
+cacontology-taskforce:dojGrantFunded rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-taskforce:ICACtaskForce ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "DOJ grant funded"@en ;
+    rdfs:comment "Whether task force receives DOJ grant funding."@en .
+
+cacontology-taskforce:nationalTaskForceNetwork rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-taskforce:ICACtaskForce ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "national task force network"@en ;
+    rdfs:comment "Whether task force is part of national network (61 total)."@en .
+
+cacontology-taskforce:taskForceNumber rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-taskforce:ICACtaskForce ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "task force number"@en ;
+    rdfs:comment "Position within national network (e.g., '1 of 61')."@en .
+
+# =============================================================================
+# NATIONAL CAC TASK FORCE DIRECTORY FRAMEWORK (Based on icactaskforce.org)
+# =============================================================================
+
+cacontology-taskforce:NationalICACtaskForceDirectory rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:Artifact ;
+    rdfs:label "National CAC Task Force Directory"@en ;
+    rdfs:comment "Comprehensive directory of all 61 CAC task forces across the United States, territories, and military branches."@en .
+
+cacontology-taskforce:TaskForceHostOrganization rdf:type owl:Class ;
+    rdfs:subClassOf uco-identity:Organization ;
+    rdfs:label "Task Force Host Organization"@en ;
+    rdfs:comment "Organization that hosts and coordinates an CAC task force."@en .
+
+# =============================================================================
+# HOST ORGANIZATION TYPES (Based on icactaskforce.org Analysis)
+# =============================================================================
+
+cacontology-taskforce:StatePoliceHost rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-taskforce:TaskForceHostOrganization ;
+    rdfs:label "State Police Host"@en ;
+    rdfs:comment "State police agency hosting CAC task force (Maryland State Police, Connecticut State Police, etc.)."@en .
+
+cacontology-taskforce:LocalPoliceHost rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-taskforce:TaskForceHostOrganization ;
+    rdfs:label "Local Police Host"@en ;
+    rdfs:comment "Local police department hosting CAC task force (Phoenix PD, Los Angeles PD, San Jose PD, etc.)."@en .
+
+cacontology-taskforce:SheriffOfficeHost rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-taskforce:TaskForceHostOrganization ;
+    rdfs:label "Sheriff Office Host"@en ;
+    rdfs:comment "County sheriff's office hosting CAC task force (Fresno County SO, Broward County SO, etc.)."@en .
+
+cacontology-taskforce:StateBureauHost rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-taskforce:TaskForceHostOrganization ;
+    rdfs:label "State Bureau Host"@en ;
+    rdfs:comment "State bureau of investigation hosting CAC task force (Georgia BIA, North Carolina SBI, etc.)."@en .
+
+cacontology-taskforce:AttorneyGeneralHost rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-taskforce:TaskForceHostOrganization ;
+    rdfs:label "Attorney General Host"@en ;
+    rdfs:comment "State attorney general office hosting CAC task force (Idaho AG, Illinois AG, Texas AG, etc.)."@en .
+
+cacontology-taskforce:DistrictAttorneyHost rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-taskforce:TaskForceHostOrganization ;
+    rdfs:label "District Attorney Host"@en ;
+    rdfs:comment "District or county attorney office hosting CAC task force (Delaware County DA, Cook County SA, etc.)."@en .
+
+cacontology-taskforce:StateAgencyHost rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-taskforce:TaskForceHostOrganization ;
+    rdfs:label "State Agency Host"@en ;
+    rdfs:comment "Other state agency hosting CAC task force (Delaware DOJ, Hawaii DOA, etc.)."@en .
+
+cacontology-taskforce:MilitaryICACtaskForce rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-taskforce:ICACtaskForce ;
+    rdfs:label "Military CAC Task Force"@en ;
+    rdfs:comment "CAC task force for U.S. Armed Forces military branches with specialized military jurisdiction."@en .
+
+# =============================================================================
+# MULTI-REGIONAL STATE COORDINATION
+# =============================================================================
+
+cacontology-taskforce:MultiRegionalState rdf:type owl:Class ;
+    rdfs:subClassOf uco-location:Location ;
+    rdfs:label "Multi-Regional State"@en ;
+    rdfs:comment "State with multiple CAC task forces covering different geographic regions."@en .
+
+cacontology-taskforce:RegionalTaskForceCoordination rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-taskforce:CoordinationMechanism ;
+    rdfs:label "Regional Task Force Coordination"@en ;
+    rdfs:comment "Coordination mechanism between multiple task forces within the same state."@en .
+
+cacontology-taskforce:CaliforniaRegionalSystem rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-taskforce:MultiRegionalState ;
+    rdfs:label "California Regional System"@en ;
+    rdfs:comment "California's 5-region CAC system: Fresno, Los Angeles, Sacramento, San Diego, San Jose areas."@en .
+
+cacontology-taskforce:FloridaRegionalSystem rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-taskforce:MultiRegionalState ;
+    rdfs:label "Florida Regional System"@en ;
+    rdfs:comment "Florida's 3-region CAC system: Central, Northern, Southern regions."@en .
+
+cacontology-taskforce:TexasRegionalSystem rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-taskforce:MultiRegionalState ;
+    rdfs:label "Texas Regional System"@en ;
+    rdfs:comment "Texas's 3-region CAC system: Statewide, Dallas, Houston areas."@en .
+
+cacontology-taskforce:NewYorkRegionalSystem rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-taskforce:MultiRegionalState ;
+    rdfs:label "New York Regional System"@en ;
+    rdfs:comment "New York's 2-region CAC system: Statewide and New York City area."@en .
+
+# =============================================================================
+# GEOGRAPHIC COVERAGE MODELING
+# =============================================================================
+
+cacontology-taskforce:StatewideTaskForce rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-taskforce:StateICACtaskForce ;
+    rdfs:label "Statewide Task Force"@en ;
+    rdfs:comment "CAC task force with statewide jurisdiction and coordination responsibility."@en .
+
+cacontology-taskforce:RegionalTaskForce rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-taskforce:StateICACtaskForce ;
+    rdfs:label "Regional Task Force"@en ;
+    rdfs:comment "CAC task force covering specific geographic region within a state."@en .
+
+cacontology-taskforce:MetropolitanTaskForce rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-taskforce:RegionalTaskForce ;
+    rdfs:label "Metropolitan Task Force"@en ;
+    rdfs:comment "CAC task force covering major metropolitan area (Los Angeles, Dallas, Houston, NYC)."@en .
+
+cacontology-taskforce:CountyBasedTaskForce rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-taskforce:RegionalTaskForce ;
+    rdfs:label "County-Based Task Force"@en ;
+    rdfs:comment "CAC task force hosted by and primarily serving specific county jurisdiction."@en .
+
+# =============================================================================
+# CONTACT AND COMMUNICATION FRAMEWORK
+# =============================================================================
+
+cacontology-taskforce:TaskForceContactInformation rdf:type owl:Class ;
+    rdfs:subClassOf uco-core:UcoObject, cac-core:EnduringEntity ;
+    rdfs:label "Task Force Contact Information"@en ;
+    rdfs:comment "Contact information for CAC task force including phone, email, and website."@en .
+
+cacontology-taskforce:TaskForceHotline rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-taskforce:TaskForceContactInformation ;
+    rdfs:label "Task Force Hotline"@en ;
+    rdfs:comment "Dedicated phone line for CAC task force operations and reporting."@en .
+
+cacontology-taskforce:TaskForceWebsite rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-taskforce:TaskForceContactInformation ;
+    rdfs:label "Task Force Website"@en ;
+    rdfs:comment "Official website for CAC task force with resources and information."@en .
+
+cacontology-taskforce:NationalHotline rdf:type owl:Class ;
+    rdfs:subClassOf cacontology-taskforce:TaskForceContactInformation ;
+    rdfs:label "National Hotline"@en ;
+    rdfs:comment "National CAC hotline (877-798-7682) for general information and coordination."@en .
+
+# =============================================================================
+# NATIONAL CAC DIRECTORY PROPERTIES (Based on icactaskforce.org)
+# =============================================================================
+
+# National Directory Properties
+cacontology-taskforce:totalTaskForces rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-taskforce:NationalICACtaskForceDirectory ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "total task forces"@en ;
+    rdfs:comment "Total number of CAC task forces in national directory (61 total)."@en .
+
+cacontology-taskforce:statesWithMultipleTaskForces rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-taskforce:NationalICACtaskForceDirectory ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "states with multiple task forces"@en ;
+    rdfs:comment "Number of states with multiple regional task forces (CA, FL, TX, NY, VA, IL)."@en .
+
+cacontology-taskforce:nationalCoveragePercentage rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-taskforce:NationalICACtaskForceDirectory ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "national coverage percentage"@en ;
+    rdfs:comment "Percentage of US geographic coverage by CAC network (100%)."@en .
+
+# Host Organization Properties
+cacontology-taskforce:hostOrganizationType rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-taskforce:TaskForceHostOrganization ;
+    rdfs:range xsd:string ;
+    rdfs:label "host organization type"@en ;
+    rdfs:comment "Type of organization hosting task force (state_police, local_police, sheriff, state_bureau, attorney_general, district_attorney, state_agency, military)."@en .
+
+cacontology-taskforce:hostJurisdictionLevel rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-taskforce:TaskForceHostOrganization ;
+    rdfs:range xsd:string ;
+    rdfs:label "host jurisdiction level"@en ;
+    rdfs:comment "Jurisdiction level of host organization (federal, state, county, local, military)."@en .
+
+cacontology-taskforce:organizationName rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-taskforce:TaskForceHostOrganization ;
+    rdfs:range xsd:string ;
+    rdfs:label "organization name"@en ;
+    rdfs:comment "Official name of hosting organization."@en .
+
+# Multi-Regional State Properties
+cacontology-taskforce:regionalTaskForceCount rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-taskforce:MultiRegionalState ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "regional task force count"@en ;
+    rdfs:comment "Number of CAC task forces in multi-regional state (CA: 5, FL: 3, TX: 3, NY: 2)."@en .
+
+cacontology-taskforce:regionCovered rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-taskforce:RegionalTaskForce ;
+    rdfs:range xsd:string ;
+    rdfs:label "region covered"@en ;
+    rdfs:comment "Geographic region covered by task force (e.g., 'Central', 'Northern', 'Southern', 'Los Angeles Area')."@en .
+
+cacontology-taskforce:coordinationModel rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-taskforce:RegionalTaskForceCoordination ;
+    rdfs:range xsd:string ;
+    rdfs:label "coordination model"@en ;
+    rdfs:comment "Model for coordinating between regional task forces (hub_spoke, peer_to_peer, hierarchical)."@en .
+
+# Geographic Coverage Properties
+cacontology-taskforce:coverageType rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-taskforce:ICACtaskForce ;
+    rdfs:range xsd:string ;
+    rdfs:label "coverage type"@en ;
+    rdfs:comment "Type of geographic coverage (statewide, regional, metropolitan, county)."@en .
+
+cacontology-taskforce:jurisdictionPopulation rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-taskforce:ICACtaskForce ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "jurisdiction population"@en ;
+    rdfs:comment "Population covered by task force jurisdiction."@en .
+
+cacontology-taskforce:metropolitanArea rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-taskforce:MetropolitanTaskForce ;
+    rdfs:range xsd:string ;
+    rdfs:label "metropolitan area"@en ;
+    rdfs:comment "Name of metropolitan area covered (e.g., 'Los Angeles', 'Dallas-Fort Worth', 'Houston')."@en .
+
+cacontology-taskforce:countyName rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-taskforce:CountyBasedTaskForce ;
+    rdfs:range xsd:string ;
+    rdfs:label "county name"@en ;
+    rdfs:comment "Name of primary county served by task force."@en .
+
+# Contact Information Properties
+cacontology-taskforce:phoneNumber rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-taskforce:TaskForceContactInformation ;
+    rdfs:range xsd:string ;
+    rdfs:label "phone number"@en ;
+    rdfs:comment "Contact phone number for task force."@en .
+
+cacontology-taskforce:emailAddress rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-taskforce:TaskForceContactInformation ;
+    rdfs:range xsd:string ;
+    rdfs:label "email address"@en ;
+    rdfs:comment "Contact email address for task force."@en .
+
+cacontology-taskforce:websiteURL rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-taskforce:TaskForceWebsite ;
+    rdfs:range xsd:anyURI ;
+    rdfs:label "website URL"@en ;
+    rdfs:comment "Official website URL for task force."@en .
+
+cacontology-taskforce:hotlineType rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-taskforce:TaskForceHotline ;
+    rdfs:range xsd:string ;
+    rdfs:label "hotline type"@en ;
+    rdfs:comment "Type of hotline service (tip_line, general_contact, emergency, referral)."@en .
+
+cacontology-taskforce:nationalHotlineNumber rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-taskforce:NationalHotline ;
+    rdfs:range xsd:string ;
+    rdfs:label "national hotline number"@en ;
+    rdfs:comment "National CAC hotline number (877-798-7682)."@en .
+
+# Military CAC Properties
+cacontology-taskforce:militaryBranches rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-taskforce:MilitaryICACtaskForce ;
+    rdfs:range xsd:string ;
+    rdfs:label "military branches"@en ;
+    rdfs:comment "Military branches covered by task force (Army, Navy, Air Force, Marines, Coast Guard, Space Force)."@en .
+
+cacontology-taskforce:militaryJurisdiction rdf:type owl:DatatypeProperty ;
+    rdfs:domain cacontology-taskforce:MilitaryICACtaskForce ;
+    rdfs:range xsd:string ;
+    rdfs:label "military jurisdiction"@en ;
+    rdfs:comment "Type of military jurisdiction (worldwide, conus, oconus, base_specific)."@en .
+
+# =============================================================================
+# NATIONAL CAC DIRECTORY RELATIONSHIPS (Based on icactaskforce.org)
+# =============================================================================
+
+# National Directory Relationships
+cacontology-taskforce:includesTaskForce rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-taskforce:NationalICACtaskForceDirectory ;
+    rdfs:range cacontology-taskforce:ICACtaskForce ;
+    rdfs:label "includes task force"@en ;
+    rdfs:comment "Links national directory to all CAC task forces in the network."@en .
+
+cacontology-taskforce:hostedBy rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-taskforce:ICACtaskForce ;
+    rdfs:range cacontology-taskforce:TaskForceHostOrganization ;
+    rdfs:label "hosted by"@en ;
+    rdfs:comment "Links task force to its hosting organization."@en .
+
+cacontology-taskforce:hostsTaskForce rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-taskforce:TaskForceHostOrganization ;
+    rdfs:range cacontology-taskforce:ICACtaskForce ;
+    rdfs:label "hosts task force"@en ;
+    rdfs:comment "Links hosting organization to its CAC task force."@en .
+
+# Multi-Regional State Relationships
+cacontology-taskforce:hasRegionalTaskForce rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-taskforce:MultiRegionalState ;
+    rdfs:range cacontology-taskforce:RegionalTaskForce ;
+    rdfs:label "has regional task force"@en ;
+    rdfs:comment "Links multi-regional state to its regional task forces."@en .
+
+cacontology-taskforce:coordinatesWith rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-taskforce:RegionalTaskForce ;
+    rdfs:range cacontology-taskforce:RegionalTaskForce ;
+    rdfs:label "coordinates with"@en ;
+    rdfs:comment "Links regional task forces that coordinate within the same state."@en .
+
+cacontology-taskforce:managedByCoordination rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-taskforce:RegionalTaskForce ;
+    rdfs:range cacontology-taskforce:RegionalTaskForceCoordination ;
+    rdfs:label "managed by coordination"@en ;
+    rdfs:comment "Links regional task force to coordination mechanism."@en .
+
+# Geographic Coverage Relationships
+cacontology-taskforce:providesRegionalCoverage rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-taskforce:RegionalTaskForce ;
+    rdfs:range uco-location:Location ;
+    rdfs:label "provides regional coverage"@en ;
+    rdfs:comment "Links regional task force to geographic area it covers."@en .
+
+cacontology-taskforce:servesMetropolitanArea rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-taskforce:MetropolitanTaskForce ;
+    rdfs:range uco-location:Location ;
+    rdfs:label "serves metropolitan area"@en ;
+    rdfs:comment "Links metropolitan task force to metropolitan area served."@en .
+
+cacontology-taskforce:servesCounty rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-taskforce:CountyBasedTaskForce ;
+    rdfs:range uco-location:Location ;
+    rdfs:label "serves county"@en ;
+    rdfs:comment "Links county-based task force to county served."@en .
+
+# Contact Information Relationships
+cacontology-taskforce:hasContactInformation rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-taskforce:ICACtaskForce ;
+    rdfs:range cacontology-taskforce:TaskForceContactInformation ;
+    rdfs:label "has contact information"@en ;
+    rdfs:comment "Links task force to its contact information."@en .
+
+cacontology-taskforce:operatesHotline rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-taskforce:ICACtaskForce ;
+    rdfs:range cacontology-taskforce:TaskForceHotline ;
+    rdfs:label "operates hotline"@en ;
+    rdfs:comment "Links task force to hotline it operates."@en .
+
+cacontology-taskforce:maintainsWebsite rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-taskforce:ICACtaskForce ;
+    rdfs:range cacontology-taskforce:TaskForceWebsite ;
+    rdfs:label "maintains website"@en ;
+    rdfs:comment "Links task force to website it maintains."@en .
+
+cacontology-taskforce:accessibleVia rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-taskforce:ICACtaskForce ;
+    rdfs:range cacontology-taskforce:NationalHotline ;
+    rdfs:label "accessible via"@en ;
+    rdfs:comment "Links task force to national hotline for general access."@en .
+
+# Military CAC Relationships
+cacontology-taskforce:servesMilitaryBranch rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-taskforce:MilitaryICACtaskForce ;
+    rdfs:range uco-identity:Organization ;
+    rdfs:label "serves military branch"@en ;
+    rdfs:comment "Links military task force to military branch it serves."@en .
+
+cacontology-taskforce:coordinatesWithCivilian rdf:type owl:ObjectProperty ;
+    rdfs:domain cacontology-taskforce:MilitaryICACtaskForce ;
+    rdfs:range cacontology-taskforce:ICACtaskForce ;
+    rdfs:label "coordinates with civilian"@en ;
+    rdfs:comment "Links military task force to civilian task forces for coordination."@en . 

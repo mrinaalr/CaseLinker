@@ -967,7 +967,7 @@
         if (inv) {
             const src = firstLiteral(inv['http://purl.org/dc/terms/source']);
             const id  = firstLiteral(inv['http://purl.org/dc/terms/identifier']);
-            const yr  = firstLiteral(inv['https://cacontology.projectvic.org#hasPhaseBeginPoint']);
+            const yr  = firstLiteral(inv['http://purl.org/dc/terms/date']);
             if (src || id) {
                 const year = (yr || '').slice(0, 4);
                 label = src ? src + (year ? ' ' + year : '') : (id || caseId);
@@ -1557,11 +1557,11 @@
 
     const SPARQL_EXAMPLES = {
         platforms: SPARQL_PREFIX + [
-            'SELECT ?platform ?label (COUNT(DISTINCT ?case) AS ?cases)',
+            'PREFIX cac-core: <https://cacontology.projectvic.org/core#>',
+            'SELECT ?platform ?label (COUNT(DISTINCT ?g) AS ?cases)',
             'WHERE {',
-            '  ?event cac:usesChannel ?platform .',
-            '  ?platform rdfs:label ?label .',
-            '  ?case a cac:CACInvestigation ; cac:hasStep ?event .',
+            '  GRAPH ?g { ?platform a cac-core:DigitalSystemEntity ; rdfs:label ?label . }',
+            '  FILTER(STRSTARTS(STR(?g), "https://w3id.org/caselinker/resource/case/") && !STRENDS(STR(?g), "/provenance"))',
             '}',
             'GROUP BY ?platform ?label',
             'ORDER BY DESC(?cases)',
@@ -1589,11 +1589,13 @@
         ask: SPARQL_PREFIX + 'ASK { ?s a cac:CACInvestigation }',
         cybertip: SPARQL_PREFIX + [
             'PREFIX ncmec: <https://cacontology.projectvic.org/us/ncmec#>',
-            'SELECT ?label (COUNT(DISTINCT ?case) AS ?cases)',
+            'PREFIX hotlines: <https://cacontology.projectvic.org/hotlines#>',
+            'PREFIX uco-core: <https://ontology.unifiedcyberontology.org/uco/core/>',
+            'SELECT ?label (COUNT(DISTINCT ?tip) AS ?cases)',
             'WHERE {',
-            '  ?case a cac:CACInvestigation ; cac:hasStep ?tip ; cac:hasStep ?ev .',
-            '  ?tip a ncmec:NCMECCybertipReport .',
-            '  ?ev cac:usesChannel ?platform . ?platform rdfs:label ?label .',
+            '  ?case a cac:CACInvestigation ; uco-core:object ?tip .',
+            '  ?tip a ncmec:NCMECCybertipReport ; hotlines:reportedBy ?role .',
+            '  ?rel uco-core:target ?role ; uco-core:source ?esp . ?esp rdfs:label ?label .',
             '}',
             'GROUP BY ?label',
             'ORDER BY DESC(?cases)',

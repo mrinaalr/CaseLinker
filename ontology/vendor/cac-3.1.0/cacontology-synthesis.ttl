@@ -1,0 +1,350 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-observable: <https://ontology.unifiedcyberontology.org/uco/observable/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+
+
+@prefix cacontology-multi: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix cacontology-synthesis: <https://cacontology.projectvic.org/synthesis#> .
+
+# =============================================================================
+# CAC Knowledge Synthesis Ontology
+# For modeling reports, structured claims, and resolvable evidence pointers.
+# =============================================================================
+
+<https://cacontology.projectvic.org/synthesis> rdf:type owl:Ontology ;
+    rdfs:label "CAC Knowledge Synthesis Ontology"@en ;
+    rdfs:comment "An ontology for representing structured knowledge extracted from research reports (sections, figures, claims, distributions, and evidence pointers) to support queryable synthesis across CAC-related sources."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/synthesis/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/action/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/observable/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/identity/1.5.0> ,
+                <https://ontology.caseontology.org/case/investigation/1.5.0> ,
+                <https://cacontology.projectvic.org/3.1.0> ,
+                <https://cacontology.projectvic.org/multi-jurisdiction/3.1.0> ,
+                <https://cacontology.projectvic.org/legal-harmonization/3.1.0> .
+
+# =============================================================================
+# DOCUMENT STRUCTURE (report/section/figure)
+# =============================================================================
+
+cacontology-synthesis:Report rdf:type owl:Class ;
+    rdfs:label "Report"@en ;
+    rdfs:comment "A report or publication treated as a collected source document (an intellectual work), distinct from the concrete artifact(s) that realize it."@en ;
+    rdfs:subClassOf uco-core:UcoObject .
+
+cacontology-synthesis:ReportArtifact rdf:type owl:Class ;
+    rdfs:label "Report Artifact"@en ;
+    rdfs:comment "A concrete artifact that realizes a Report (e.g., a PDF file). Use this when you want a report-as-file node that is separate from the report-as-intellectual-work."@en ;
+    rdfs:subClassOf uco-observable:ObservableObject .
+
+cacontology-synthesis:realizedIn rdf:type owl:ObjectProperty ;
+    rdfs:label "realized in"@en ;
+    rdfs:comment "Links a report-as-intellectual-work to a concrete artifact (e.g., a PDF file observable) that realizes it."@en ;
+    rdfs:domain cacontology-synthesis:Report ;
+    rdfs:range uco-observable:ObservableObject .
+
+cacontology-synthesis:doi rdf:type owl:DatatypeProperty ;
+    rdfs:label "DOI"@en ;
+    rdfs:comment "Digital Object Identifier for a report (if known)."@en ;
+    rdfs:domain cacontology-synthesis:Report ;
+    rdfs:range xsd:string .
+
+cacontology-synthesis:ReportSection rdf:type owl:Class ;
+    rdfs:label "Report Section"@en ;
+    rdfs:comment "A logical section of a report (e.g., Synopsis, Methods, Findings)."@en ;
+    rdfs:subClassOf uco-core:UcoObject .
+
+cacontology-synthesis:ReportFigure rdf:type owl:Class ;
+    rdfs:label "Report Figure"@en ;
+    rdfs:comment "A figure within a report (e.g., PRISMA diagram, distribution charts)."@en ;
+    rdfs:subClassOf uco-core:UcoObject .
+
+cacontology-synthesis:hasSection rdf:type owl:ObjectProperty ;
+    rdfs:label "has section"@en ;
+    rdfs:comment "Links a report to its sections."@en ;
+    rdfs:domain cacontology-synthesis:Report ;
+    rdfs:range cacontology-synthesis:ReportSection .
+
+cacontology-synthesis:hasFigure rdf:type owl:ObjectProperty ;
+    rdfs:label "has figure"@en ;
+    rdfs:comment "Links a report to its figures."@en ;
+    rdfs:domain cacontology-synthesis:Report ;
+    rdfs:range cacontology-synthesis:ReportFigure .
+
+cacontology-synthesis:mentionsOrganization rdf:type owl:ObjectProperty ;
+    rdfs:label "mentions organization"@en ;
+    rdfs:comment "Links a report to an organization mentioned in the report text."@en ;
+    rdfs:domain cacontology-synthesis:Report ;
+    rdfs:range uco-identity:Organization .
+
+# =============================================================================
+# CLAIMS (findings, recommendations, gaps, questions, scope)
+# =============================================================================
+
+cacontology-synthesis:Claim rdf:type owl:Class ;
+    rdfs:label "Claim"@en ;
+    rdfs:comment "A first-class, queryable claim extracted from a report (finding, recommendation, distribution, gap, or scope constraint)."@en ;
+    rdfs:subClassOf uco-core:UcoObject .
+
+cacontology-synthesis:KeyFinding rdf:type owl:Class ;
+    rdfs:label "Key Finding"@en ;
+    rdfs:comment "A numbered key finding stated by a report."@en ;
+    rdfs:subClassOf cacontology-synthesis:Claim .
+
+cacontology-synthesis:Recommendation rdf:type owl:Class ;
+    rdfs:label "Recommendation"@en ;
+    rdfs:comment "A numbered recommendation stated by a report."@en ;
+    rdfs:subClassOf cacontology-synthesis:Claim .
+
+cacontology-synthesis:EvidenceGap rdf:type owl:Class ;
+    rdfs:label "Evidence Gap"@en ;
+    rdfs:comment "A stated gap, limitation, or missing intervention area identified by a report."@en ;
+    rdfs:subClassOf cacontology-synthesis:Claim .
+
+cacontology-synthesis:ScopeConstraint rdf:type owl:Class ;
+    rdfs:label "Scope Constraint"@en ;
+    rdfs:comment "A stated boundary on what the report includes/excludes (e.g., out-of-scope topics)."@en ;
+    rdfs:subClassOf cacontology-synthesis:Claim .
+
+cacontology-synthesis:ResearchQuestion rdf:type owl:Class ;
+    rdfs:label "Research Question"@en ;
+    rdfs:comment "A research question posed by a report."@en ;
+    rdfs:subClassOf cacontology-synthesis:Claim .
+
+cacontology-synthesis:MethodologyStatement rdf:type owl:Class ;
+    rdfs:label "Methodology Statement"@en ;
+    rdfs:comment "A structured statement about methodology (e.g., PRISMA, date range, databases, inclusion criteria)."@en ;
+    rdfs:subClassOf cacontology-synthesis:Claim .
+
+cacontology-synthesis:assertedInSection rdf:type owl:ObjectProperty ;
+    rdfs:label "asserted in section"@en ;
+    rdfs:comment "Links a claim to the report section where it is asserted."@en ;
+    rdfs:domain cacontology-synthesis:Claim ;
+    rdfs:range cacontology-synthesis:ReportSection .
+
+cacontology-synthesis:inReport rdf:type owl:ObjectProperty ;
+    rdfs:label "in report"@en ;
+    rdfs:comment "Optional direct link from a claim/observation to the report containing it."@en ;
+    rdfs:domain cacontology-synthesis:Claim ;
+    rdfs:range cacontology-synthesis:Report .
+
+cacontology-synthesis:about rdf:type owl:ObjectProperty ;
+    rdfs:label "about"@en ;
+    rdfs:comment "Links a claim to entities/concepts it is about."@en ;
+    rdfs:domain cacontology-synthesis:Claim ;
+    rdfs:range uco-core:UcoObject .
+
+cacontology-synthesis:derivedFromFigure rdf:type owl:ObjectProperty ;
+    rdfs:label "derived from figure"@en ;
+    rdfs:comment "Links an object to a figure that reports it (intended subjects include Claim, DistributionObservation, OffendingChain, and OffendingChainStage)."@en ;
+    rdfs:domain uco-core:UcoObject ;
+    rdfs:range cacontology-synthesis:ReportFigure .
+
+cacontology-synthesis:findingNumber rdf:type owl:DatatypeProperty ;
+    rdfs:label "finding number"@en ;
+    rdfs:comment "Ordinal number for a key finding."@en ;
+    rdfs:domain cacontology-synthesis:KeyFinding ;
+    rdfs:range xsd:integer .
+
+cacontology-synthesis:recommendationNumber rdf:type owl:DatatypeProperty ;
+    rdfs:label "recommendation number"@en ;
+    rdfs:comment "Ordinal number for a recommendation."@en ;
+    rdfs:domain cacontology-synthesis:Recommendation ;
+    rdfs:range xsd:integer .
+
+# =============================================================================
+# EVIDENCE POINTERS (resolvable text locations)
+# =============================================================================
+
+cacontology-synthesis:TextEvidencePointer rdf:type owl:Class ;
+    rdfs:label "Text Evidence Pointer"@en ;
+    rdfs:comment "A resolvable pointer to a location in a text artifact (e.g., normalized.txt lines), optionally with quote and quote hash."@en ;
+    rdfs:subClassOf uco-core:UcoObject .
+
+cacontology-synthesis:supportedByEvidencePointer rdf:type owl:ObjectProperty ;
+    rdfs:label "supported by evidence pointer"@en ;
+    rdfs:comment "Links a claim (or other assertion-like node) to the text evidence pointer supporting it."@en ;
+    rdfs:domain cacontology-synthesis:Claim ;
+    rdfs:range cacontology-synthesis:TextEvidencePointer .
+
+cacontology-synthesis:referencesArtifact rdf:type owl:ObjectProperty ;
+    rdfs:label "references artifact"@en ;
+    rdfs:comment "Links a text evidence pointer to the text artifact it references (e.g., normalized.txt ObservableObject)."@en ;
+    rdfs:domain cacontology-synthesis:TextEvidencePointer ;
+    rdfs:range uco-observable:ObservableObject .
+
+cacontology-synthesis:lineStart rdf:type owl:DatatypeProperty ;
+    rdfs:label "line start"@en ;
+    rdfs:comment "Starting 1-indexed line number in the referenced text artifact."@en ;
+    rdfs:domain cacontology-synthesis:TextEvidencePointer ;
+    rdfs:range xsd:integer .
+
+cacontology-synthesis:lineEnd rdf:type owl:DatatypeProperty ;
+    rdfs:label "line end"@en ;
+    rdfs:comment "Ending 1-indexed line number in the referenced text artifact."@en ;
+    rdfs:domain cacontology-synthesis:TextEvidencePointer ;
+    rdfs:range xsd:integer .
+
+cacontology-synthesis:pageStart rdf:type owl:DatatypeProperty ;
+    rdfs:label "page start"@en ;
+    rdfs:comment "Starting page number in the source PDF (when applicable)."@en ;
+    rdfs:domain cacontology-synthesis:TextEvidencePointer ;
+    rdfs:range xsd:integer .
+
+cacontology-synthesis:pageEnd rdf:type owl:DatatypeProperty ;
+    rdfs:label "page end"@en ;
+    rdfs:comment "Ending page number in the source PDF (when applicable)."@en ;
+    rdfs:domain cacontology-synthesis:TextEvidencePointer ;
+    rdfs:range xsd:integer .
+
+cacontology-synthesis:exactQuote rdf:type owl:DatatypeProperty ;
+    rdfs:label "exact quote"@en ;
+    rdfs:comment "Exact quoted text used to support a claim (optional)."@en ;
+    rdfs:domain cacontology-synthesis:TextEvidencePointer ;
+    rdfs:range xsd:string .
+
+cacontology-synthesis:lineNumbering rdf:type owl:DatatypeProperty ;
+    rdfs:label "line numbering"@en ;
+    rdfs:comment "Line numbering convention used by TextEvidencePointer lineStart/lineEnd (e.g., '1-based')."@en ;
+    rdfs:domain uco-observable:ObservableObject ;
+    rdfs:range xsd:string .
+
+cacontology-synthesis:lineNumberStart rdf:type owl:DatatypeProperty ;
+    rdfs:label "line number start"@en ;
+    rdfs:comment "First line number used by TextEvidencePointer lineStart/lineEnd for the referenced artifact (typically 1)."@en ;
+    rdfs:domain uco-observable:ObservableObject ;
+    rdfs:range xsd:integer .
+
+cacontology-synthesis:quoteHashSha256 rdf:type owl:DatatypeProperty ;
+    rdfs:label "quote hash (SHA-256)"@en ;
+    rdfs:comment "Legacy inline SHA-256 hash of the exactQuote literal string only (optional). For operational data, attach a uco-observable:ContentDataFacet to the TextEvidencePointer with uco-observable:hash referencing a uco-types:Hash."@en ;
+    rdfs:domain cacontology-synthesis:TextEvidencePointer ;
+    rdfs:range xsd:string .
+
+cacontology-synthesis:hashScope rdf:type owl:DatatypeProperty ;
+    rdfs:label "hash scope"@en ;
+    rdfs:comment "Machine-readable statement of what text was hashed for an evidence pointer (e.g., 'exactQuote:unicode:verbatim' meaning the exactQuote literal string hashed as-is, without trimming or normalization)."@en ;
+    rdfs:domain cacontology-synthesis:TextEvidencePointer ;
+    rdfs:range xsd:string .
+
+# =============================================================================
+# DISTRIBUTIONS (queryable counts / ranks)
+# =============================================================================
+
+cacontology-synthesis:InterventionType rdf:type owl:Class ;
+    rdfs:label "Intervention Type"@en ;
+    rdfs:comment "A category of TF-CSEA intervention (e.g., technological tools and protocols)."@en ;
+    rdfs:subClassOf uco-core:UcoObject .
+
+cacontology-synthesis:InterventionOperation rdf:type owl:Class ;
+    rdfs:label "Intervention Operation"@en ;
+    rdfs:comment "A domain of operation for an intervention (e.g., online, hybrid)."@en ;
+    rdfs:subClassOf uco-core:UcoObject .
+
+cacontology-synthesis:InterventionObjective rdf:type owl:Class ;
+    rdfs:label "Intervention Objective"@en ;
+    rdfs:comment "An objective an intervention serves (e.g., CSAM detection, improve policing effectiveness)."@en ;
+    rdfs:subClassOf uco-core:UcoObject .
+
+cacontology-synthesis:InterventionLocus rdf:type owl:Class ;
+    rdfs:label "Intervention Locus"@en ;
+    rdfs:comment "A locus within the TF-CSEA ecosystem/offending chain that an intervention targets (e.g., grooming, payment systems)."@en ;
+    rdfs:subClassOf uco-core:UcoObject .
+
+cacontology-synthesis:DistributionObservation rdf:type owl:Class ;
+    rdfs:label "Distribution Observation"@en ;
+    rdfs:comment "A structured observation about a distribution (count/denominator and/or rank) reported by a report."@en ;
+    rdfs:subClassOf cacontology-synthesis:Claim .
+
+cacontology-synthesis:hasObservation rdf:type owl:ObjectProperty ;
+    rdfs:label "has observation"@en ;
+    rdfs:comment "Optional direct link from a report to distribution observations it contains."@en ;
+    rdfs:domain cacontology-synthesis:Report ;
+    rdfs:range cacontology-synthesis:DistributionObservation .
+
+cacontology-synthesis:hasClaim rdf:type owl:ObjectProperty ;
+    rdfs:label "has claim"@en ;
+    rdfs:comment "Optional direct link from a report to claims it contains (findings, recommendations, gaps, scope constraints, etc.)."@en ;
+    rdfs:domain cacontology-synthesis:Report ;
+    rdfs:range cacontology-synthesis:Claim .
+
+cacontology-synthesis:category rdf:type owl:ObjectProperty ;
+    rdfs:label "category"@en ;
+    rdfs:comment "Links a distribution observation to its category (type/operation/objective/locus)."@en ;
+    rdfs:domain cacontology-synthesis:DistributionObservation ;
+    rdfs:range uco-core:UcoObject .
+
+cacontology-synthesis:count rdf:type owl:DatatypeProperty ;
+    rdfs:label "count"@en ;
+    rdfs:comment "Count value reported for a category."@en ;
+    rdfs:domain cacontology-synthesis:DistributionObservation ;
+    rdfs:range xsd:integer .
+
+cacontology-synthesis:denominator rdf:type owl:DatatypeProperty ;
+    rdfs:label "denominator"@en ;
+    rdfs:comment "Denominator / total coded occurrences for the distribution context."@en ;
+    rdfs:domain cacontology-synthesis:DistributionObservation ;
+    rdfs:range xsd:integer .
+
+cacontology-synthesis:rank rdf:type owl:DatatypeProperty ;
+    rdfs:label "rank"@en ;
+    rdfs:comment "Rank order when only relative ordering is reported."@en ;
+    rdfs:domain cacontology-synthesis:DistributionObservation ;
+    rdfs:range xsd:integer .
+
+# =============================================================================
+# OFFENDING CHAIN (structured stages)
+# =============================================================================
+
+cacontology-synthesis:OffendingChain rdf:type owl:Class ;
+    rdfs:label "Offending Chain"@en ;
+    rdfs:comment "A conceptual chain of activities in TF-CSEA used to locate interventions."@en ;
+    rdfs:subClassOf uco-core:UcoObject .
+
+cacontology-synthesis:OffendingChainStage rdf:type owl:Class ;
+    rdfs:label "Offending Chain Stage"@en ;
+    rdfs:comment "A stage within an offending chain."@en ;
+    rdfs:subClassOf uco-core:UcoObject .
+
+cacontology-synthesis:stageOrder rdf:type owl:DatatypeProperty ;
+    rdfs:label "stage order"@en ;
+    rdfs:comment "1-indexed order of a stage within an offending chain."@en ;
+    rdfs:domain cacontology-synthesis:OffendingChainStage ;
+    rdfs:range xsd:integer .
+
+cacontology-synthesis:hasOffendingChain rdf:type owl:ObjectProperty ;
+    rdfs:label "has offending chain"@en ;
+    rdfs:domain cacontology-synthesis:Report ;
+    rdfs:range cacontology-synthesis:OffendingChain .
+
+cacontology-synthesis:hasStage rdf:type owl:ObjectProperty ;
+    rdfs:label "has stage"@en ;
+    rdfs:domain cacontology-synthesis:OffendingChain ;
+    rdfs:range cacontology-synthesis:OffendingChainStage .
+
+cacontology-synthesis:nextStage rdf:type owl:ObjectProperty ;
+    rdfs:label "next stage"@en ;
+    rdfs:comment "Links a stage to the next stage in the chain."@en ;
+    rdfs:domain cacontology-synthesis:OffendingChainStage ;
+    rdfs:range cacontology-synthesis:OffendingChainStage .
+
+# =============================================================================
+# LEGAL INSTRUMENT → JURISDICTION LINKAGE (for harmonization effects)
+# =============================================================================
+
+cacontology-synthesis:influencedJurisdiction rdf:type owl:ObjectProperty ;
+    rdfs:label "influenced jurisdiction"@en ;
+    rdfs:comment "Links a legal instrument to a jurisdiction where it influenced national law or practice (as reported)."@en ;
+    rdfs:domain uco-core:UcoObject ;
+    rdfs:range cacontology-multi:Jurisdiction .
+

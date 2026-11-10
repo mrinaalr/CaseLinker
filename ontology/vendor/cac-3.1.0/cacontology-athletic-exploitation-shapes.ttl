@@ -1,0 +1,811 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix gufo: <http://purl.org/nemo/gufo#> .
+@prefix cacontology-gufo: <https://cacontology.projectvic.org/gufo#> .
+@prefix cacontology-athletic: <https://cacontology.projectvic.org/athletic#> .
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+
+# Enhanced Ontology Declaration with gUFO Integration
+<https://cacontology.projectvic.org/athletic/shapes> rdf:type owl:Ontology ;
+    rdfs:label "CAC Athletic Coaching Exploitation SHACL Shapes with gUFO Integration"@en ;
+    rdfs:comment "SHACL validation shapes for the CAC Athletic Coaching Exploitation Ontology, enhanced with comprehensive gUFO foundational modeling validation. Provides +385% validation coverage through gUFO Events, Organizations, Objects, Roles, Phases, Situations constraint validation with anti-rigidity enforcement, temporal modeling, and athletic exploitation-specific validation rules."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/athletic/shapes/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:issued "2025-01-28"^^xsd:date ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://cacontology.projectvic.org/athletic/3.1.0>,
+                <http://purl.org/nemo/gufo#/1.0.0> .
+
+# =============================================================================
+# ENHANCED ATHLETIC COACHING EXPLOITATION SHAPES WITH gUFO EVENT VALIDATION
+# =============================================================================
+
+cacontology-athletic:AthleticCoachingExploitationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-athletic:AthleticCoachingExploitation ;
+    rdfs:label "Athletic Coaching Exploitation Shape"@en ;
+    rdfs:comment "Enhanced validation shape for athletic coaching exploitation with comprehensive gUFO Event validation."@en ;
+    # Temporal validation using gUFO framework
+    sh:property [
+        sh:path cacontology-gufo:exploitationBeginTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Athletic coaching exploitation must specify begin time using gUFO temporal framework"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-gufo:exploitationEndTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Athletic coaching exploitation may specify end time using gUFO temporal framework"@en
+    ] ;
+    # Sport type validation with gUFO constraints
+    sh:property [
+        sh:path cacontology-athletic:sportType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "baseball" "basketball" "soccer" "football" "tennis" "swimming" "track" "volleyball" "wrestling" "gymnastics" "hockey" "lacrosse" "softball" "golf" "cross_country" "other" ) ;
+        sh:message "Athletic coaching exploitation must specify exactly one sport type from the allowed list."@en
+    ] ;
+    # Team type validation with gUFO Organization modeling
+    sh:property [
+        sh:path cacontology-athletic:teamType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "travel" "school" "club" "recreational" "competitive" "elite" "youth_league" "select" ) ;
+        sh:message "Athletic coaching exploitation must specify exactly one team type from the allowed list."@en
+    ] ;
+    # Team size validation
+    sh:property [
+        sh:path cacontology-athletic:teamSize ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 50 ;
+        sh:message "Team size must be between 1 and 50 players."@en
+    ] ;
+    # Coaching role validation
+    sh:property [
+        sh:path cacontology-athletic:holdsCoachingRole ;
+        sh:class cacontology-athletic:AthleticCoachRole ;
+        sh:minCount 1 ;
+        sh:message "Athletic coaching exploitation must involve at least one coaching role"@en
+    ] ;
+    # Current phase validation
+    sh:property [
+        sh:path cacontology-athletic:currentPhase ;
+        sh:class cac-core:Phase ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Athletic coaching exploitation may specify current operational phase"@en
+    ] ;
+    # gUFO Event temporal consistency
+    sh:rule [
+        a sh:SPARQLRule ;
+        sh:severity sh:Violation ;
+        sh:message "Exploitation end time must be after begin time"@en ;
+        sh:prefixes cacontology-athletic: ;
+        sh:construct """
+            INSERT { $this a cacontology-athletic:TemporalInconsistencyError . }
+            WHERE {
+                $this cacontology-gufo:exploitationBeginTime ?begin .
+                $this cacontology-gufo:exploitationEndTime ?end .
+                FILTER(?end <= ?begin)
+            }
+        """
+    ] .
+
+cacontology-athletic:TravelTeamExploitationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-athletic:TravelTeamExploitation ;
+    rdfs:label "Travel Team Exploitation Shape"@en ;
+    rdfs:comment "Enhanced validation shape for travel team exploitation with gUFO Event validation and enhanced authority modeling."@en ;
+    # Travel team specific validation
+    sh:property [
+        sh:path cacontology-athletic:teamType ;
+        sh:hasValue "travel" ;
+        sh:message "Travel team exploitation must specify 'travel' as team type"@en
+    ] ;
+    # Enhanced authority validation
+    sh:rule [
+        a sh:SPARQLRule ;
+        sh:severity sh:Violation ;
+        sh:message "Travel team exploitation should have enhanced coach authority documentation"@en ;
+        sh:prefixes cacontology-athletic: ;
+        sh:construct """
+            INSERT { $this a cacontology-athletic:AuthorityDocumentationWarning . }
+            WHERE {
+                $this a cacontology-athletic:TravelTeamExploitation .
+                FILTER NOT EXISTS { 
+                    $this cacontology-athletic:holdsCoachingRole ?role ;
+                    ?role cacontology-athletic:authorityLevel "enhanced" .
+                }
+            }
+        """
+    ] .
+
+cacontology-athletic:DualCoachingRoleExploitationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-athletic:DualCoachingRoleExploitation ;
+    rdfs:label "Dual Coaching Role Exploitation Shape"@en ;
+    rdfs:comment "Enhanced validation shape for dual coaching role exploitation with gUFO Role multiplicity validation."@en ;
+    # Multiple roles validation
+    sh:property [
+        sh:path cacontology-athletic:multipleRoles ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 2 ;
+        sh:maxInclusive 10 ;
+        sh:message "Dual coaching role exploitation must specify between 2 and 10 roles."@en
+    ] ;
+    # Dual role validation with gUFO
+    sh:rule [
+        a sh:SPARQLRule ;
+        sh:severity sh:Violation ;
+        sh:message "Dual coaching role exploitation must involve at least 2 different coaching roles"@en ;
+        sh:prefixes cacontology-athletic: ;
+        sh:construct """
+            INSERT { $this a cacontology-athletic:DualRoleValidationError . }
+            WHERE {
+                $this a cacontology-athletic:DualCoachingRoleExploitation .
+                {
+                    SELECT $this (COUNT(DISTINCT ?role) AS ?roleCount)
+                    WHERE {
+                        $this cacontology-athletic:holdsCoachingRole ?role .
+                    }
+                    GROUP BY $this
+                }
+                FILTER (?roleCount < 2)
+            }
+        """
+    ] .
+
+# =============================================================================
+# ENHANCED PHYSICAL TRAINING COERCION SHAPES WITH gUFO EVENT VALIDATION
+# =============================================================================
+
+cacontology-athletic:PhysicalTrainingCoercionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-athletic:PhysicalTrainingCoercion ;
+    rdfs:label "Physical Training Coercion Shape"@en ;
+    rdfs:comment "Enhanced validation shape for physical training coercion with comprehensive gUFO Event validation."@en ;
+    # Temporal validation using gUFO framework
+    sh:property [
+        sh:path cacontology-gufo:coercionBeginTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Physical training coercion must specify begin time using gUFO temporal framework"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-gufo:coercionEndTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Physical training coercion may specify end time using gUFO temporal framework"@en
+    ] .
+
+cacontology-athletic:ConditioningCoercionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-athletic:ConditioningCoercion ;
+    rdfs:label "Conditioning Coercion Shape"@en ;
+    rdfs:comment "Enhanced validation shape for conditioning coercion with gUFO Event validation."@en ;
+    # Conditioning type validation
+    sh:property [
+        sh:path cacontology-athletic:conditioningType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "running_drills" "endurance_training" "strength_training" "agility_drills" "conditioning_circuits" "sprint_training" "cardio_exercises" "fitness_tests" "other" ) ;
+        sh:message "Conditioning coercion must specify exactly one conditioning type from the allowed list."@en
+    ] .
+
+cacontology-athletic:ExhaustionBasedCoercionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-athletic:ExhaustionBasedCoercion ;
+    rdfs:label "Exhaustion Based Coercion Shape"@en ;
+    rdfs:comment "Enhanced validation shape for exhaustion-based coercion with gUFO Event validation."@en ;
+    # Exhaustion level validation
+    sh:property [
+        sh:path cacontology-athletic:exhaustionLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "mild" "moderate" "severe" "extreme" ) ;
+        sh:message "Exhaustion level must be one of: mild, moderate, severe, extreme."@en
+    ] .
+
+# =============================================================================
+# ENHANCED TEAM DYNAMICS EXPLOITATION SHAPES WITH gUFO SITUATION VALIDATION
+# =============================================================================
+
+cacontology-athletic:TeamBasedExploitationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-athletic:TeamBasedExploitation ;
+    rdfs:label "Team Based Exploitation Shape"@en ;
+    rdfs:comment "Enhanced validation shape for team-based exploitation with comprehensive gUFO Situation validation."@en ;
+    # Team participation validation
+    sh:rule [
+        a sh:SPARQLRule ;
+        sh:severity sh:Violation ;
+        sh:message "Team based exploitation must involve multiple team members"@en ;
+        sh:prefixes cacontology-athletic: ;
+        sh:construct """
+            INSERT { $this a cacontology-athletic:TeamParticipationError . }
+            WHERE {
+                $this a cacontology-athletic:TeamBasedExploitation .
+                {
+                    SELECT $this (COUNT(?member) AS ?memberCount) WHERE {
+                        $this cacontology-athletic:participatesInSituation ?member .
+                    } GROUP BY $this
+                }
+                FILTER(?memberCount < 2)
+            }
+        """
+    ] .
+
+cacontology-athletic:TeamMembershipCoercionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-athletic:TeamMembershipCoercion ;
+    rdfs:label "Team Membership Coercion Shape"@en ;
+    rdfs:comment "Enhanced validation shape for team membership coercion with gUFO Situation validation."@en ;
+    # Threat specificity validation
+    sh:property [
+        sh:path cacontology-athletic:threatSpecificity ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "vague" "specific" "detailed" "explicit" ) ;
+        sh:message "Threat specificity must be one of: vague, specific, detailed, explicit."@en
+    ] .
+
+cacontology-athletic:MaterialBenefitCoercionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-athletic:MaterialBenefitCoercion ;
+    rdfs:label "Material Benefit Coercion Shape"@en ;
+    rdfs:comment "Enhanced validation shape for material benefit coercion with gUFO Situation validation."@en ;
+    # Material benefit type validation
+    sh:property [
+        sh:path cacontology-athletic:materialBenefitType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "equipment" "uniforms" "opportunities" "privileges" "scholarships" "awards" "recognition" "travel" "training" "other" ) ;
+        sh:message "Material benefit type must be from the allowed list."@en
+    ] .
+
+# =============================================================================
+# ENHANCED ATHLETIC FACILITY SHAPES WITH gUFO OBJECT VALIDATION
+# =============================================================================
+
+cacontology-athletic:AthleticFacilityExploitationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-athletic:AthleticFacilityExploitation ;
+    rdfs:label "Athletic Facility Exploitation Shape"@en ;
+    rdfs:comment "Enhanced validation shape for athletic facility exploitation with gUFO Event validation and facility Object modeling."@en ;
+    # Facility type validation
+    sh:property [
+        sh:path cacontology-athletic:facilityType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "gym" "field" "court" "pool" "track" "locker_room" "training_room" "weight_room" "other" ) ;
+        sh:message "Facility type must be from the allowed list."@en
+    ] ;
+    # Facility access validation
+    sh:rule [
+        a sh:SPARQLRule ;
+        sh:severity sh:Violation ;
+        sh:message "Athletic facility exploitation must occur in verified and accessible facilities"@en ;
+        sh:prefixes cacontology-athletic: ;
+        sh:construct """
+            INSERT { $this a cacontology-athletic:FacilityAccessError . }
+            WHERE {
+                $this a cacontology-athletic:AthleticFacilityExploitation .
+                $this cacontology-athletic:occursInFacility ?facility .
+                FILTER NOT EXISTS { 
+                    ?facility a gufo:Object ;
+                    ?facility cacontology-athletic:facilityStatus "accessible" .
+                }
+            }
+        """
+    ] .
+
+cacontology-athletic:AthleticFacilityShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-athletic:AthleticFacility ;
+    rdfs:label "Athletic Facility Shape"@en ;
+    rdfs:comment "Enhanced validation shape for athletic facilities with gUFO Object validation."@en ;
+    # Facility identity validation
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 3 ;
+        sh:maxLength 100 ;
+        sh:message "Athletic facility must have a name (3-100 characters)"@en
+    ] .
+
+# =============================================================================
+# gUFO PHASE VALIDATION SHAPES FOR ATHLETIC EXPLOITATION
+# =============================================================================
+
+cacontology-athletic:GroomingPhaseShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-athletic:GroomingPhase ;
+    rdfs:label "Grooming Phase Shape"@en ;
+    rdfs:comment "SHACL shape for grooming phases with anti-rigid gUFO Phase validation."@en ;
+    # Phase temporal validation
+    sh:property [
+        sh:path cacontology-gufo:phaseTransitionTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:message "Phase may specify transition times"@en
+    ] ;
+    # Anti-rigidity validation
+    sh:rule [
+        a sh:SPARQLRule ;
+        sh:severity sh:Violation ;
+        sh:message "Grooming phases must demonstrate anti-rigidity (duration varies based on team dynamics)"@en ;
+        sh:prefixes cacontology-athletic: ;
+        sh:construct """
+            INSERT { $this a cacontology-athletic:AntiRigidityError . }
+            WHERE {
+                $this a cacontology-athletic:GroomingPhase .
+                FILTER NOT EXISTS { 
+                    $this cacontology-gufo:hasAntiRigidityConstraint ?constraint .
+                }
+            }
+        """
+    ] .
+
+cacontology-athletic:AuthorityEstablishmentPhaseShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-athletic:AuthorityEstablishmentPhase ;
+    rdfs:label "Authority Establishment Phase Shape"@en ;
+    rdfs:comment "SHACL shape for authority establishment phases with anti-rigid gUFO Phase validation."@en ;
+    # Phase sequence validation
+    sh:rule [
+        a sh:SPARQLRule ;
+        sh:severity sh:Violation ;
+        sh:message "Authority establishment phase should follow grooming phase"@en ;
+        sh:prefixes cacontology-athletic: ;
+        sh:construct """
+            INSERT { $this a cacontology-athletic:PhaseSequenceError . }
+            WHERE {
+                $this a cacontology-athletic:AuthorityEstablishmentPhase ;
+                ?exploitation cacontology-athletic:currentPhase $this .
+                FILTER NOT EXISTS { 
+                    ?exploitation cacontology-athletic:previousPhase ?prev ;
+                    ?prev a cacontology-athletic:GroomingPhase .
+                }
+            }
+        """
+    ] .
+
+cacontology-athletic:PhysicalCoercionPhaseShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-athletic:PhysicalCoercionPhase ;
+    rdfs:label "Physical Coercion Phase Shape"@en ;
+    rdfs:comment "SHACL shape for physical coercion phases with anti-rigid gUFO Phase validation."@en ;
+    # Physical coercion validation
+    sh:rule [
+        a sh:SPARQLRule ;
+        sh:severity sh:Violation ;
+        sh:message "Physical coercion phase must involve documented physical training coercion"@en ;
+        sh:prefixes cacontology-athletic: ;
+        sh:construct """
+            INSERT { $this a cacontology-athletic:CoercionDocumentationError . }
+            WHERE {
+                $this a cacontology-athletic:PhysicalCoercionPhase ;
+                ?exploitation cacontology-athletic:currentPhase $this .
+                FILTER NOT EXISTS { 
+                    ?exploitation cacontology-athletic:employsTrainingCoercion ?coercion ;
+                    ?coercion a cacontology-athletic:PhysicalTrainingCoercion .
+                }
+            }
+        """
+    ] .
+
+cacontology-athletic:ExploitationPhaseShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-athletic:ExploitationPhase ;
+    rdfs:label "Exploitation Phase Shape"@en ;
+    rdfs:comment "SHACL shape for exploitation phases with anti-rigid gUFO Phase validation."@en ;
+    # Active exploitation validation
+    sh:rule [
+        a sh:SPARQLRule ;
+        sh:severity sh:Violation ;
+        sh:message "Exploitation phase must have established authority and coercion mechanisms"@en ;
+        sh:prefixes cacontology-athletic: ;
+        sh:construct """
+            INSERT { $this a cacontology-athletic:ExploitationReadinessError . }
+            WHERE {
+                $this a cacontology-athletic:ExploitationPhase ;
+                ?exploitation cacontology-athletic:currentPhase $this .
+                FILTER NOT EXISTS { 
+                    ?exploitation cacontology-athletic:previousPhase ?authPhase ;
+                    ?authPhase a cacontology-athletic:AuthorityEstablishmentPhase ;
+                    ?authPhase cacontology-athletic:phaseStatus "completed" .
+                }
+            }
+        """
+    ] .
+
+cacontology-athletic:DiscoveryPhaseShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-athletic:DiscoveryPhase ;
+    rdfs:label "Discovery Phase Shape"@en ;
+    rdfs:comment "SHACL shape for discovery phases with anti-rigid gUFO Phase validation."@en ;
+    # Discovery mechanism validation
+    sh:rule [
+        a sh:SPARQLRule ;
+        sh:severity sh:Violation ;
+        sh:message "Discovery phase must involve documented discovery mechanism"@en ;
+        sh:prefixes cacontology-athletic: ;
+        sh:construct """
+            INSERT { $this a cacontology-athletic:DiscoveryMechanismError . }
+            WHERE {
+                $this a cacontology-athletic:DiscoveryPhase ;
+                ?exploitation cacontology-athletic:currentPhase $this .
+                FILTER NOT EXISTS { 
+                    ?exploitation cacontology-athletic:hasDiscoveryEvent ?discovery ;
+                    ?discovery a cacontology-athletic:AthleticExploitationDiscovery .
+                }
+            }
+        """
+    ] .
+
+# =============================================================================
+# gUFO ROLE VALIDATION SHAPES FOR ATHLETIC COACHING
+# =============================================================================
+
+cacontology-athletic:AthleticCoachRoleShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-athletic:AthleticCoachRole ;
+    rdfs:label "Athletic Coach Role Shape"@en ;
+    rdfs:comment "Enhanced validation shape for athletic coach roles with anti-rigid gUFO Role validation."@en ;
+    # Coaching experience validation
+    sh:property [
+        sh:path cacontology-athletic:coachingExperience ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 50.0 ;
+        sh:message "Coaching experience must be between 0 and 50 years."@en
+    ] ;
+    # Age group coached validation
+    sh:property [
+        sh:path cacontology-athletic:ageGroupCoached ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:pattern "^[0-9]+-[0-9]+$|^[0-9]+$|^under_[0-9]+$|^over_[0-9]+$" ;
+        sh:message "Age group coached must be in format like '12-14', '15', 'under_18', or 'over_21'."@en
+    ] ;
+    # Institutional affiliation validation
+    sh:property [
+        sh:path cacontology-athletic:institutionalAffiliation ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 1 ;
+        sh:maxLength 200 ;
+        sh:message "Institutional affiliation must be between 1 and 200 characters."@en
+    ] ;
+    # Role competency validation
+    sh:rule [
+        a sh:SPARQLRule ;
+        sh:severity sh:Violation ;
+        sh:message "Athletic coach roles must have appropriate training and certification"@en ;
+        sh:prefixes cacontology-athletic: ;
+        sh:construct """
+            INSERT { $this a cacontology-athletic:CoachCompetencyError . }
+            WHERE {
+                $this a cacontology-athletic:AthleticCoachRole .
+                FILTER NOT EXISTS { 
+                    $this cacontology-athletic:hasCompetency ?competency ;
+                    ?competency cacontology-athletic:competencyType "athletic_coaching" .
+                }
+            }
+        """
+    ] .
+
+cacontology-athletic:TravelTeamCoachRoleShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-athletic:TravelTeamCoachRole ;
+    rdfs:label "Travel Team Coach Role Shape"@en ;
+    rdfs:comment "Enhanced validation shape for travel team coach roles with specialized gUFO Role validation."@en ;
+    # Travel team experience validation
+    sh:rule [
+        a sh:SPARQLRule ;
+        sh:severity sh:Warning ;
+        sh:message "Travel team coaches should have appropriate travel team experience"@en ;
+        sh:prefixes cacontology-athletic: ;
+        sh:construct """
+            INSERT { $this a cacontology-athletic:TravelExperienceRecommendation . }
+            WHERE {
+                $this a cacontology-athletic:TravelTeamCoachRole .
+                $this cacontology-athletic:coachingExperience ?experience .
+                FILTER(?experience < 2.0)
+                FILTER NOT EXISTS { 
+                    $this cacontology-athletic:hasTravelTeamExperience ?travelExp ;
+                    ?travelExp cacontology-athletic:experienceLevel "sufficient" .
+                }
+            }
+        """
+    ] .
+
+cacontology-athletic:HeadCoachRoleShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-athletic:HeadCoachRole ;
+    rdfs:label "Head Coach Role Shape"@en ;
+    rdfs:comment "Enhanced validation shape for head coach roles with leadership gUFO Role validation."@en ;
+    # Leadership competency validation
+    sh:rule [
+        a sh:SPARQLRule ;
+        sh:severity sh:Violation ;
+        sh:message "Head coach roles must demonstrate leadership competency"@en ;
+        sh:prefixes cacontology-athletic: ;
+        sh:construct """
+            INSERT { $this a cacontology-athletic:LeadershipCompetencyError . }
+            WHERE {
+                $this a cacontology-athletic:HeadCoachRole .
+                FILTER NOT EXISTS { 
+                    $this cacontology-athletic:hasCompetency ?competency ;
+                    ?competency cacontology-athletic:competencyType "team_leadership" .
+                }
+            }
+        """
+    ] .
+
+# =============================================================================
+# ENHANCED DISCOVERY AND REPORTING SHAPES WITH gUFO EVENT VALIDATION
+# =============================================================================
+
+cacontology-athletic:AthleticExploitationDiscoveryShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-athletic:AthleticExploitationDiscovery ;
+    rdfs:label "Athletic Exploitation Discovery Shape"@en ;
+    rdfs:comment "Enhanced validation shape for athletic exploitation discovery with gUFO Event validation."@en ;
+    # Discovery temporal validation
+    sh:property [
+        sh:path cacontology-gufo:discoveryBeginTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Athletic exploitation discovery must specify begin time"@en
+    ] ;
+    sh:property [
+        sh:path cacontology-gufo:reportingTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Athletic exploitation discovery may specify reporting time"@en
+    ] .
+
+cacontology-athletic:ParentNetworkDiscoveryShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-athletic:ParentNetworkDiscovery ;
+    rdfs:label "Parent Network Discovery Shape"@en ;
+    rdfs:comment "Enhanced validation shape for parent network discovery with gUFO Event validation."@en ;
+    # Parent network size validation
+    sh:property [
+        sh:path cacontology-athletic:parentNetworkSize ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 100 ;
+        sh:message "Parent network size must be between 1 and 100."@en
+    ] .
+
+cacontology-athletic:RumorCirculationDiscoveryShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-athletic:RumorCirculationDiscovery ;
+    rdfs:label "Rumor Circulation Discovery Shape"@en ;
+    rdfs:comment "Enhanced validation shape for rumor circulation discovery with gUFO Event validation."@en ;
+    # Rumor circulation duration validation
+    sh:property [
+        sh:path cacontology-athletic:rumorCirculationDuration ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1.0 ;
+        sh:maxInclusive 365.0 ;
+        sh:message "Rumor circulation duration must be between 1 and 365 days."@en
+    ] .
+
+# =============================================================================
+# ENHANCED CROSS-REFERENCE VALIDATION SHAPES WITH gUFO
+# =============================================================================
+
+cacontology-athletic:AthleticExploitationCrossReferenceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-athletic:AthleticCoachingExploitation ;
+    rdfs:label "Athletic Exploitation Cross Reference Shape"@en ;
+    rdfs:comment "Enhanced validation that athletic coaching exploitation involves appropriate gUFO foundational entities."@en ;
+    sh:sparql [
+        sh:message "Athletic coaching exploitation should involve gUFO Role coaches and occur in gUFO Object facilities."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-athletic:AthleticCoachingExploitation .
+                FILTER NOT EXISTS {
+                    { $this cacontology-athletic:holdsCoachingRole ?role . ?role a gufo:Role . } UNION
+                    { $this cacontology-athletic:occursInFacility ?facility . ?facility a gufo:Object . }
+                }
+            }
+        """
+    ] .
+
+cacontology-athletic:TeamDynamicsValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-athletic:TeamBasedExploitation ;
+    rdfs:label "Team Dynamics Validation Shape"@en ;
+    rdfs:comment "Enhanced validation that team-based exploitation involves appropriate gUFO Situation coordination."@en ;
+    sh:sparql [
+        sh:message "Team based exploitation must involve gUFO Situation coordination with multiple participants."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-athletic:TeamBasedExploitation .
+                $this a gufo:Situation .
+                {
+                    SELECT $this (COUNT(?participant) AS ?participantCount)
+                    WHERE {
+                        $this cacontology-athletic:participatesInSituation ?participant .
+                    }
+                    GROUP BY $this
+                }
+                FILTER (?participantCount < 2)
+            }
+        """
+    ] .
+
+# =============================================================================
+# ENHANCED TEMPORAL VALIDATION SHAPES WITH gUFO FRAMEWORK
+# =============================================================================
+
+cacontology-athletic:GUFOTemporalValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-athletic:AthleticCoachingExploitation ,
+                   cacontology-athletic:PhysicalTrainingCoercion ,
+                   cacontology-athletic:PhysicalContactEscalation ,
+                   cacontology-athletic:AthleticExploitationDiscovery ;
+    rdfs:label "gUFO Temporal Validation Shape"@en ;
+    rdfs:comment "Enhanced temporal consistency validation for athletic exploitation gUFO Events using gUFO temporal framework."@en ;
+    sh:sparql [
+        sh:message "gUFO Events must maintain temporal consistency with begin/end timepoints."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a gufo:Event .
+                {
+                    { $this cacontology-gufo:exploitationBeginTime ?begin . $this cacontology-gufo:exploitationEndTime ?end . } UNION
+                    { $this cacontology-gufo:coercionBeginTime ?begin . $this cacontology-gufo:coercionEndTime ?end . } UNION
+                    { $this cacontology-gufo:escalationBeginTime ?begin . $this cacontology-gufo:escalationPeakTime ?end . } UNION
+                    { $this cacontology-gufo:discoveryBeginTime ?begin . $this cacontology-gufo:reportingTime ?end . }
+                }
+                FILTER (?begin >= ?end)
+            }
+        """
+    ] .
+
+cacontology-athletic:PhaseSequenceValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-athletic:AthleticCoachingExploitation ;
+    rdfs:label "Phase Sequence Validation Shape"@en ;
+    rdfs:comment "Enhanced validation that athletic exploitation gUFO Events follow logical phase sequences."@en ;
+    sh:sparql [
+        sh:message "Athletic exploitation should follow logical phase sequences with proper temporal ordering."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-athletic:AthleticCoachingExploitation .
+                $this cacontology-athletic:currentPhase ?currentPhase .
+                $this cacontology-athletic:previousPhase ?prevPhase ;
+                ?currentPhase cacontology-gufo:phaseTransitionTime ?currentTime ;
+                ?prevPhase cacontology-gufo:phaseTransitionTime ?prevTime .
+                FILTER (?currentTime <= ?prevTime)
+            }
+        """
+    ] .
+
+# =============================================================================
+# ENHANCED DATA QUALITY SHAPES WITH gUFO VALIDATION
+# =============================================================================
+
+cacontology-athletic:GUFODataQualityShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-athletic:AthleticCoachingExploitation ,
+                   cacontology-athletic:AthleticCoachRole ,
+                   cacontology-athletic:AthleticFacility ,
+                   cacontology-athletic:TeamBasedExploitation ;
+    rdfs:label "gUFO Data Quality Shape"@en ;
+    rdfs:comment "Enhanced data quality validation for athletic exploitation gUFO entities with foundational ontology compliance."@en ;
+    # gUFO foundational type validation
+    sh:rule [
+        a sh:SPARQLRule ;
+        sh:severity sh:Violation ;
+        sh:message "Athletic exploitation entities must be properly typed as gUFO foundational entities"@en ;
+        sh:prefixes cacontology-athletic: ;
+        sh:construct """
+            INSERT { $this a cacontology-athletic:FoundationalTypeError . }
+            WHERE {
+                {
+                    $this a ?exploitationType ;
+                    ?exploitationType rdfs:subClassOf* cacontology-athletic:AthleticCoachingExploitation .
+                    FILTER NOT EXISTS { $this a gufo:Event . }
+                } UNION {
+                    $this a ?roleType ;
+                    ?roleType rdfs:subClassOf* cacontology-athletic:AthleticCoachRole .
+                    FILTER NOT EXISTS { $this a gufo:Role . }
+                } UNION {
+                    $this a ?facilityType ;
+                    ?facilityType rdfs:subClassOf* cacontology-athletic:AthleticFacility .
+                    FILTER NOT EXISTS { $this a gufo:Object . }
+                } UNION {
+                    $this a ?situationType ;
+                    ?situationType rdfs:subClassOf* cacontology-athletic:TeamBasedExploitation .
+                    FILTER NOT EXISTS { $this a gufo:Situation . }
+                }
+            }
+        """
+    ] .
+
+cacontology-athletic:AntiRigidityValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-athletic:GroomingPhase ,
+                   cacontology-athletic:AuthorityEstablishmentPhase ,
+                   cacontology-athletic:PhysicalCoercionPhase ,
+                   cacontology-athletic:ExploitationPhase ,
+                   cacontology-athletic:DiscoveryPhase ;
+    rdfs:label "Anti-Rigidity Validation Shape"@en ;
+    rdfs:comment "Validation of anti-rigidity constraints for gUFO Phases in athletic exploitation contexts."@en ;
+    sh:sparql [
+        sh:message "Anti-rigid phases must demonstrate changeability based on athletic exploitation context"@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a gufo:Phase .
+                {
+                    { $this a cacontology-athletic:GroomingPhase . } UNION
+                    { $this a cacontology-athletic:AuthorityEstablishmentPhase . } UNION
+                    { $this a cacontology-athletic:PhysicalCoercionPhase . } UNION
+                    { $this a cacontology-athletic:ExploitationPhase . } UNION
+                    { $this a cacontology-athletic:DiscoveryPhase . }
+                }
+                FILTER NOT EXISTS { 
+                    $this cacontology-gufo:hasAntiRigidityConstraint ?constraint .
+                }
+            }
+        """
+    ] .
+
+# =============================================================================
+# ATHLETIC EXPLOITATION INTEGRITY VALIDATION SHAPES
+# =============================================================================
+
+cacontology-athletic:CoachingIntegrityValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-athletic:AthleticCoachingExploitation ;
+    rdfs:label "Coaching Integrity Validation Shape"@en ;
+    rdfs:comment "Validation of coaching integrity for athletic exploitation cases."@en ;
+    sh:sparql [
+        sh:message "Athletic coaching exploitation involving multiple athletes must have enhanced documentation"@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-athletic:AthleticCoachingExploitation .
+                $this cacontology-athletic:teamSize ?size .
+                FILTER(?size > 10)
+                FILTER NOT EXISTS {
+                    $this cacontology-athletic:hasEnhancedDocumentation ?documentation ;
+                    ?documentation cacontology-athletic:documentationType "multi_victim_analysis" .
+                }
+            }
+        """
+    ] .
+
+cacontology-athletic:InstitutionalOversightValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-athletic:SchoolAthleticExploitation ;
+    rdfs:label "Institutional Oversight Validation Shape"@en ;
+    rdfs:comment "Validation of institutional oversight for school-based athletic exploitation."@en ;
+    sh:sparql [
+        sh:message "School athletic exploitation must involve appropriate institutional oversight evaluation"@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-athletic:SchoolAthleticExploitation .
+                FILTER NOT EXISTS {
+                    $this cacontology-athletic:hasInstitutionalReview ?review ;
+                    ?review cacontology-athletic:reviewType "oversight_evaluation" .
+                }
+            }
+        """
+    ] . 

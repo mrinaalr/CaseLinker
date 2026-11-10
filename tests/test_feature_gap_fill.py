@@ -308,15 +308,12 @@ class TestLocationNerMapping(unittest.TestCase):
                 break
         self.assertIsNotNone(inv)
         spatial = set()
-        mentions = set()
         for ctx in graph.graphs():
             spatial.update(ctx.objects(inv, cac.DCTERMS.spatial))
-            mentions.update(ctx.objects(inv, cac.CASELINKER_MENTIONS_LOCATION))
         self.assertIn(loc, spatial)
-        self.assertIn(loc, mentions)
 
-    def test_stored_district_slugs_without_rereading_the_article(self):
-        """NER already stored the state. The mapper only slugs that string."""
+    def test_ungrounded_mention_stays_in_its_case(self):
+        """An ungrounded mention is a node of this case only, so it joins no other case (#57)."""
         mapper = cac.CaseToCAC()
         case = {
             **cac.AZICAC_2011_006_FIXTURE,
@@ -324,8 +321,10 @@ class TestLocationNerMapping(unittest.TestCase):
             "locations": ["Southern District of Texas"],
             "case_text": "No district is named in this text.",
         }
-        mapper.map_case(case)
-        self.assertIn("southern-district-of-texas", mapper._location_registry)
+        graph, _ = mapper.map_case(case)
+        self.assertNotIn("southern-district-of-texas", mapper._location_registry)
+        local = cac.BASE["case/dist_tx/location/southern-district-of-texas"]
+        self.assertTrue(any((local, cac.RDF.type, cac.UCO_LOCATION.Location) in ctx for ctx in graph.graphs()))
 
     def test_shared_singleton_across_cases(self):
         mapper = cac.CaseToCAC()

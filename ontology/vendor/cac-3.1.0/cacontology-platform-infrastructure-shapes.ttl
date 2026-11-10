@@ -1,0 +1,1404 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix gufo: <http://purl.org/nemo/gufo#> .
+@prefix uco-core: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix uco-identity: <https://ontology.unifiedcyberontology.org/uco/identity/> .
+@prefix uco-observable: <https://ontology.unifiedcyberontology.org/uco/observable/> .
+@prefix uco-action: <https://ontology.unifiedcyberontology.org/uco/action/> .
+@prefix cacontology-infrastructure: <https://cacontology.projectvic.org/infrastructure#> .
+@prefix cacontology-infrastructure-shapes: <https://cacontology.projectvic.org/infrastructure/shapes#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix cac-core: <https://cacontology.projectvic.org/core#> .
+
+# =============================================================================
+# CAC PLATFORM INFRASTRUCTURE SHACL SHAPES with gUFO INTEGRATION
+# Enhanced with comprehensive gUFO (gentle Unified Foundational Ontology) validation
+# =============================================================================
+
+<https://cacontology.projectvic.org/infrastructure/shapes> rdf:type owl:Ontology ;
+    rdfs:label "CAC Platform Infrastructure SHACL Shapes with gUFO Integration"@en ;
+    rdfs:comment "SHACL shapes for validating platform infrastructure in CAC investigations with comprehensive gUFO foundational ontology integration for enhanced semantic precision and validation capabilities."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/infrastructure/shapes/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://cacontology.projectvic.org/infrastructure/3.1.0> ,
+                <http://purl.org/nemo/gufo#/1.0.0> .
+
+cacontology-infrastructure:PlatformInfrastructureShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:PlatformInfrastructure ;
+    rdfs:label "Platform Infrastructure Shape"@en ;
+    rdfs:comment "Validation shape for platform infrastructure instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 2 ;
+        sh:maxLength 200 ;
+        sh:message "Infrastructure name should be 2-200 characters when specified."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:description ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 10 ;
+        sh:maxLength 1000 ;
+        sh:message "Infrastructure description should be 10-1000 characters when specified."@en
+    ] .
+
+cacontology-infrastructure:ServerInfrastructureShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:ServerInfrastructure ;
+    rdfs:label "Server Infrastructure Shape"@en ;
+    rdfs:comment "Validation shape for server infrastructure instances."@en ;
+    sh:property [
+        sh:path cacontology-infrastructure:serverCount ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 10000 ;
+        sh:message "Server count must be between 1 and 10000 when specified."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-infrastructure:cloudPlatform ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "AWS" "Azure" "GCP" "private_cloud" "dedicated_servers" "hybrid" "unknown" ) ;
+        sh:message "Cloud platform must be from the allowed list."@en
+    ] .
+
+cacontology-infrastructure:ContentDeliveryNetworkShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:ContentDeliveryNetwork ;
+    rdfs:label "Content Delivery Network Shape"@en ;
+    rdfs:comment "Validation shape for CDN instances."@en ;
+    sh:property [
+        sh:path cacontology-infrastructure:bandwidthCapacity ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.1 ;
+        sh:maxInclusive 10000.0 ;
+        sh:message "Bandwidth capacity must be between 0.1 and 10000 Gbps."@en
+    ] .
+
+cacontology-infrastructure:DatabaseInfrastructureShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:DatabaseInfrastructure ;
+    rdfs:label "Database Infrastructure Shape"@en ;
+    rdfs:comment "Validation shape for database infrastructure instances."@en ;
+    sh:property [
+        sh:path cacontology-infrastructure:storageCapacity ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.1 ;
+        sh:maxInclusive 100000.0 ;
+        sh:message "Storage capacity must be between 0.1 and 100000 terabytes."@en
+    ] .
+
+cacontology-infrastructure:NetworkInfrastructureShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:NetworkInfrastructure ;
+    rdfs:label "Network Infrastructure Shape"@en ;
+    rdfs:comment "Validation shape for network infrastructure instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 2 ;
+        sh:maxLength 100 ;
+        sh:message "Network infrastructure name should be 2-100 characters when specified."@en
+    ] .
+
+# =============================================================================
+# PAYMENT AND MONETIZATION SHAPES
+# =============================================================================
+
+cacontology-infrastructure:PaymentProcessingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:PaymentProcessing ;
+    rdfs:label "Payment Processing Shape"@en ;
+    rdfs:comment "Validation shape for payment processing instances."@en ;
+    sh:property [
+        sh:path cacontology-infrastructure:paymentMethods ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 10 ;
+        sh:in ( "credit_cards" "cryptocurrency" "digital_wallets" "bank_transfers" "prepaid_cards" "gift_cards" "cash_equivalents" ) ;
+        sh:message "Payment methods must be from the allowed list."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-infrastructure:monthlyRevenue ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 100000000.0 ;
+        sh:message "Monthly revenue must be between 0 and 100 million USD."@en
+    ] .
+
+cacontology-infrastructure:CryptocurrencyInfrastructureShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:CryptocurrencyInfrastructure ;
+    rdfs:label "Cryptocurrency Infrastructure Shape"@en ;
+    rdfs:comment "Validation shape for cryptocurrency infrastructure instances."@en ;
+    sh:property [
+        sh:path cacontology-infrastructure:cryptoCurrencyTypes ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 10 ;
+        sh:in ( "Bitcoin" "Monero" "Ethereum" "Litecoin" "Zcash" "Dash" "Ripple" "Tether" "other" ) ;
+        sh:message "Cryptocurrency types must be from the allowed list."@en
+    ] .
+
+cacontology-infrastructure:SubscriptionManagementShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:SubscriptionManagement ;
+    rdfs:label "Subscription Management Shape"@en ;
+    rdfs:comment "Validation shape for subscription management instances."@en ;
+    sh:property [
+        sh:path cacontology-infrastructure:subscriptionTiers ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 20 ;
+        sh:message "Subscription tiers must be between 1 and 20."@en
+    ] .
+
+cacontology-infrastructure:FinancialObfuscationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:FinancialObfuscation ;
+    rdfs:label "Financial Obfuscation Shape"@en ;
+    rdfs:comment "Validation shape for financial obfuscation instances."@en ;
+    sh:property [
+        sh:path uco-core:description ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 10 ;
+        sh:maxLength 500 ;
+        sh:message "Financial obfuscation description should be 10-500 characters when specified."@en
+    ] .
+
+# =============================================================================
+# HOSTING AND DOMAIN SHAPES
+# =============================================================================
+
+cacontology-infrastructure:HostingProviderShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:HostingProvider ;
+    rdfs:label "Hosting Provider Shape"@en ;
+    rdfs:comment "Validation shape for hosting provider instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:minLength 2 ;
+        sh:maxLength 200 ;
+        sh:message "Hosting provider must have a name (2-200 characters)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-infrastructure:hostingProvider ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 2 ;
+        sh:maxLength 200 ;
+        sh:message "Hosting provider name should be 2-200 characters when specified."@en
+    ] .
+
+cacontology-infrastructure:DomainInfrastructureShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:DomainInfrastructure ;
+    rdfs:label "Domain Infrastructure Shape"@en ;
+    rdfs:comment "Validation shape for domain infrastructure instances."@en ;
+    sh:property [
+        sh:path cacontology-infrastructure:domainCount ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 10000 ;
+        sh:message "Domain count must be between 1 and 10000 when specified."@en
+    ] .
+
+cacontology-infrastructure:ProxyInfrastructureShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:ProxyInfrastructure ;
+    rdfs:label "Proxy Infrastructure Shape"@en ;
+    rdfs:comment "Validation shape for proxy infrastructure instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 2 ;
+        sh:maxLength 100 ;
+        sh:message "Proxy infrastructure name should be 2-100 characters when specified."@en
+    ] .
+
+cacontology-infrastructure:LoadBalancerShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:LoadBalancer ;
+    rdfs:label "Load Balancer Shape"@en ;
+    rdfs:comment "Validation shape for load balancer instances."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 2 ;
+        sh:maxLength 100 ;
+        sh:message "Load balancer name should be 2-100 characters when specified."@en
+    ] .
+
+# =============================================================================
+# SECURITY AND OBFUSCATION SHAPES
+# =============================================================================
+
+cacontology-infrastructure:SecurityInfrastructureShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:SecurityInfrastructure ;
+    rdfs:label "Security Infrastructure Shape"@en ;
+    rdfs:comment "Validation shape for security infrastructure instances."@en ;
+    sh:property [
+        sh:path cacontology-infrastructure:obfuscationMethods ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 10 ;
+        sh:in ( "proxies" "VPNs" "Tor" "domain_fronting" "CDN_masking" "traffic_obfuscation" "protocol_tunneling" ) ;
+        sh:message "Obfuscation methods must be from the allowed list."@en
+    ] .
+
+cacontology-infrastructure:EncryptionInfrastructureShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:EncryptionInfrastructure ;
+    rdfs:label "Encryption Infrastructure Shape"@en ;
+    rdfs:comment "Validation shape for encryption infrastructure instances."@en ;
+    sh:property [
+        sh:path cacontology-infrastructure:encryptionStrength ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "AES-128" "AES-256" "RSA-2048" "RSA-4096" "ChaCha20" "Blowfish" "3DES" "custom" ) ;
+        sh:message "Encryption strength must be from the allowed list."@en
+    ] .
+
+cacontology-infrastructure:AnonymityInfrastructureShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:AnonymityInfrastructure ;
+    rdfs:label "Anonymity Infrastructure Shape"@en ;
+    rdfs:comment "Validation shape for anonymity infrastructure instances."@en ;
+    sh:property [
+        sh:path cacontology-infrastructure:anonymityLevel ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "basic" "enhanced" "military-grade" "custom" ) ;
+        sh:message "Anonymity level must be from the allowed list."@en
+    ] .
+
+cacontology-infrastructure:GeographicDistributionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:GeographicDistribution ;
+    rdfs:label "Geographic Distribution Shape"@en ;
+    rdfs:comment "Validation shape for geographic distribution instances."@en ;
+    sh:property [
+        sh:path cacontology-infrastructure:geographicLocations ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 200 ;
+        sh:message "Geographic locations must be between 1 and 200 when specified."@en
+    ] .
+
+# =============================================================================
+# INFRASTRUCTURE TAKEDOWN SHAPES
+# =============================================================================
+
+cacontology-infrastructure:InfrastructureTakedownShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:InfrastructureTakedown ;
+    rdfs:label "Infrastructure Takedown Shape"@en ;
+    rdfs:comment "Validation shape for infrastructure takedown instances."@en ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Infrastructure takedown must specify start time."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:endTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Infrastructure takedown may specify end time."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-infrastructure:takedownDuration ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.1 ;
+        sh:maxInclusive 8760.0 ;
+        sh:message "Takedown duration must be between 0.1 and 8760 hours (1 year)."@en
+    ] .
+
+cacontology-infrastructure:ServerSeizureShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:ServerSeizure ;
+    rdfs:label "Server Seizure Shape"@en ;
+    rdfs:comment "Validation shape for server seizure instances."@en ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Server seizure must specify start time."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-infrastructure:serversSeized ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 10000 ;
+        sh:message "Servers seized must be between 1 and 10000 when specified."@en
+    ] .
+
+cacontology-infrastructure:DomainSinkholingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:DomainSinkholing ;
+    rdfs:label "Domain Sinkholing Shape"@en ;
+    rdfs:comment "Validation shape for domain sinkholing instances."@en ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Domain sinkholing must specify start time."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-infrastructure:domainsSinkholed ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 10000 ;
+        sh:message "Domains sinkholed must be between 1 and 10000 when specified."@en
+    ] .
+
+cacontology-infrastructure:AccountFreezingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:AccountFreezing ;
+    rdfs:label "Account Freezing Shape"@en ;
+    rdfs:comment "Validation shape for account freezing instances."@en ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Account freezing must specify start time."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-infrastructure:accountsFrozen ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 100000 ;
+        sh:message "Accounts frozen must be between 1 and 100000 when specified."@en
+    ] .
+
+cacontology-infrastructure:DataMirrorCreationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:DataMirrorCreation ;
+    rdfs:label "Data Mirror Creation Shape"@en ;
+    rdfs:comment "Validation shape for data mirror creation instances."@en ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Data mirror creation must specify start time."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-infrastructure:dataVolumeMirrored ;
+        sh:datatype xsd:decimal ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.001 ;
+        sh:maxInclusive 100000.0 ;
+        sh:message "Data volume mirrored must be between 0.001 and 100000 terabytes."@en
+    ] .
+
+# =============================================================================
+# INFRASTRUCTURE ANALYSIS SHAPES
+# =============================================================================
+
+cacontology-infrastructure:InfrastructureAnalysisShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:InfrastructureAnalysis ;
+    rdfs:label "Infrastructure Analysis Shape"@en ;
+    rdfs:comment "Validation shape for infrastructure analysis instances."@en ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Infrastructure analysis must specify start time."@en
+    ] ;
+    sh:property [
+        sh:path uco-action:performer ;
+        sh:class uco-identity:Person ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Infrastructure analysis must specify performing analyst."@en
+    ] .
+
+cacontology-infrastructure:NetworkTopologyAnalysisShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:NetworkTopologyAnalysis ;
+    rdfs:label "Network Topology Analysis Shape"@en ;
+    rdfs:comment "Validation shape for network topology analysis instances."@en ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Network topology analysis must specify start time."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-infrastructure:networkComplexity ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "simple" "moderate" "complex" "highly_complex" ) ;
+        sh:message "Network complexity must be from the allowed list."@en
+    ] .
+
+cacontology-infrastructure:FinancialFlowAnalysisShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:FinancialFlowAnalysis ;
+    rdfs:label "Financial Flow Analysis Shape"@en ;
+    rdfs:comment "Validation shape for financial flow analysis instances."@en ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "Financial flow analysis must specify start time."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-infrastructure:financialComplexity ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:in ( "basic" "intermediate" "sophisticated" "highly_sophisticated" ) ;
+        sh:message "Financial complexity must be from the allowed list."@en
+    ] .
+
+cacontology-infrastructure:UserAccessPatternAnalysisShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:UserAccessPatternAnalysis ;
+    rdfs:label "User Access Pattern Analysis Shape"@en ;
+    rdfs:comment "Validation shape for user access pattern analysis instances."@en ;
+    sh:property [
+        sh:path uco-core:startTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "User access pattern analysis must specify start time."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-infrastructure:userGeographicSpread ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minInclusive 1 ;
+        sh:maxInclusive 200 ;
+        sh:message "User geographic spread must be between 1 and 200 countries."@en
+    ] .
+
+# =============================================================================
+# CROSS-REFERENCE VALIDATION SHAPES
+# =============================================================================
+
+cacontology-infrastructure:InfrastructureHostingCrossReferenceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:PlatformInfrastructure ;
+    rdfs:label "Infrastructure Hosting Cross Reference Shape"@en ;
+    rdfs:comment "Validates that platform infrastructure has hosting relationships."@en ;
+    sh:sparql [
+        sh:message "Platform infrastructure should have hosting provider relationships."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-infrastructure:PlatformInfrastructure .
+                FILTER NOT EXISTS {
+                    $this cacontology-infrastructure:hostedBy ?provider ;
+                    ?provider a cacontology-infrastructure:HostingProvider .
+                }
+            }
+        """
+    ] .
+
+cacontology-infrastructure:TakedownTargetCrossReferenceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:InfrastructureTakedown ;
+    rdfs:label "Takedown Target Cross Reference Shape"@en ;
+    rdfs:comment "Validates that takedown operations target infrastructure."@en ;
+    sh:sparql [
+        sh:message "Infrastructure takedown should target specific infrastructure."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-infrastructure:InfrastructureTakedown .
+                FILTER NOT EXISTS {
+                    $this cacontology-infrastructure:targetsInfrastructure ?infrastructure ;
+                    ?infrastructure a cacontology-infrastructure:PlatformInfrastructure .
+                }
+            }
+        """
+    ] .
+
+cacontology-infrastructure:AnalysisSubjectCrossReferenceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:InfrastructureAnalysis ;
+    rdfs:label "Analysis Subject Cross Reference Shape"@en ;
+    rdfs:comment "Validates that infrastructure analysis has subject infrastructure."@en ;
+    sh:sparql [
+        sh:message "Infrastructure analysis should analyze specific infrastructure."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-infrastructure:InfrastructureAnalysis .
+                FILTER NOT EXISTS {
+                    $this cacontology-infrastructure:analysesInfrastructure ?infrastructure ;
+                    ?infrastructure a cacontology-infrastructure:PlatformInfrastructure .
+                }
+            }
+        """
+    ] .
+
+cacontology-infrastructure:PaymentSystemCrossReferenceShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:PlatformInfrastructure ;
+    rdfs:label "Payment System Cross Reference Shape"@en ;
+    rdfs:comment "Validates payment system relationships for monetized platforms."@en ;
+    sh:sparql [
+        sh:message "Monetized platform infrastructure should have payment processing systems."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-infrastructure:PlatformInfrastructure ;
+                ?payment cacontology-infrastructure:monthlyRevenue ?revenue .
+                FILTER (?revenue > 0)
+                FILTER NOT EXISTS {
+                    $this cacontology-infrastructure:usesPaymentSystem ?payment .
+                }
+            }
+        """
+    ] .
+
+# =============================================================================
+# TEMPORAL VALIDATION SHAPES
+# =============================================================================
+
+cacontology-infrastructure:TemporalValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:InfrastructureTakedown ,
+                   cacontology-infrastructure:ServerSeizure ,
+                   cacontology-infrastructure:DomainSinkholing ,
+                   cacontology-infrastructure:AccountFreezing ,
+                   cacontology-infrastructure:DataMirrorCreation ,
+                   cacontology-infrastructure:InfrastructureAnalysis ,
+                   cacontology-infrastructure:NetworkTopologyAnalysis ,
+                   cacontology-infrastructure:FinancialFlowAnalysis ,
+                   cacontology-infrastructure:UserAccessPatternAnalysis ;
+    rdfs:label "Temporal Validation Shape"@en ;
+    rdfs:comment "Validates temporal consistency for infrastructure operations."@en ;
+    sh:sparql [
+        sh:message "Start time must be before end time when both are specified."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this uco-core:startTime ?start ;
+                      uco-core:endTime ?end .
+                FILTER (?start >= ?end)
+            }
+        """
+    ] .
+
+cacontology-infrastructure:TakedownSequenceValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:InfrastructureAnalysis ;
+    rdfs:label "Takedown Sequence Validation Shape"@en ;
+    rdfs:comment "Validates that infrastructure analysis occurs after takedown operations."@en ;
+    sh:sparql [
+        sh:message "Infrastructure analysis should occur after takedown operations when analyzing seized infrastructure."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-infrastructure:InfrastructureAnalysis ;
+                      uco-core:startTime ?analysisTime ;
+                      cacontology-infrastructure:analysesInfrastructure ?infrastructure .
+                ?takedown cacontology-infrastructure:targetsInfrastructure ?infrastructure ;
+                          uco-core:startTime ?takedownTime .
+                FILTER (?analysisTime < ?takedownTime)
+            }
+        """
+    ] .
+
+# =============================================================================
+# DATA QUALITY SHAPES
+# =============================================================================
+
+cacontology-infrastructure:DataQualityShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:PlatformInfrastructure ,
+                   cacontology-infrastructure:PaymentProcessing ,
+                   cacontology-infrastructure:HostingProvider ,
+                   cacontology-infrastructure:InfrastructureTakedown ,
+                   cacontology-infrastructure:InfrastructureAnalysis ;
+    rdfs:label "Data Quality Shape"@en ;
+    rdfs:comment "Validates data quality for infrastructure entities."@en ;
+    sh:property [
+        sh:path uco-core:createdTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Creation time should be specified when available."@en
+    ] ;
+    sh:property [
+        sh:path uco-core:modifiedTime ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:message "Modification time should be specified when available."@en
+    ] .
+
+cacontology-infrastructure:CapacityValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:ServerInfrastructure ,
+                   cacontology-infrastructure:ContentDeliveryNetwork ,
+                   cacontology-infrastructure:DatabaseInfrastructure ;
+    rdfs:label "Capacity Validation Shape"@en ;
+    rdfs:comment "Validates infrastructure capacity specifications."@en ;
+    sh:sparql [
+        sh:message "Large-scale infrastructure should have appropriate capacity specifications."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a ?infraType .
+                FILTER (?infraType IN (
+                    cacontology-infrastructure:ServerInfrastructure,
+                    cacontology-infrastructure:ContentDeliveryNetwork,
+                    cacontology-infrastructure:DatabaseInfrastructure
+                ))
+                FILTER NOT EXISTS {
+                    { $this cacontology-infrastructure:serverCount ?count } UNION
+                    { $this cacontology-infrastructure:bandwidthCapacity ?bandwidth } UNION
+                    { $this cacontology-infrastructure:storageCapacity ?storage }
+                }
+            }
+        """
+    ] .
+
+cacontology-infrastructure:SecurityConsistencyValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:SecurityInfrastructure ;
+    rdfs:label "Security Consistency Validation Shape"@en ;
+    rdfs:comment "Validates security infrastructure consistency."@en ;
+    sh:sparql [
+        sh:message "High-anonymity infrastructure should use appropriate obfuscation methods."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this a cacontology-infrastructure:AnonymityInfrastructure ;
+                      cacontology-infrastructure:anonymityLevel "military-grade" .
+                FILTER NOT EXISTS {
+                    $this cacontology-infrastructure:obfuscationMethods ?method .
+                    FILTER (?method IN ("Tor", "VPNs", "domain_fronting"))
+                }
+            }
+        """
+    ] .
+
+cacontology-infrastructure:FinancialConsistencyValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:PaymentProcessing ;
+    rdfs:label "Financial Consistency Validation Shape"@en ;
+    rdfs:comment "Validates financial processing consistency."@en ;
+    sh:sparql [
+        sh:message "High-revenue platforms should have multiple payment methods."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-infrastructure:monthlyRevenue ?revenue .
+                FILTER (?revenue > 100000)
+                FILTER NOT EXISTS {
+                    $this cacontology-infrastructure:paymentMethods ?method1 .
+                    $this cacontology-infrastructure:paymentMethods ?method2 .
+                    FILTER (?method1 != ?method2)
+                }
+            }
+        """
+    ] .
+
+cacontology-infrastructure:TakedownEffectivenessValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:InfrastructureTakedown ;
+    rdfs:label "Takedown Effectiveness Validation Shape"@en ;
+    rdfs:comment "Validates takedown operation effectiveness metrics."@en ;
+    sh:sparql [
+        sh:message "Large-scale takedown operations should have significant seizure metrics."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-infrastructure:takedownDuration ?duration .
+                FILTER (?duration > 24)
+                FILTER NOT EXISTS {
+                    { ?seizure a cacontology-infrastructure:ServerSeizure ;
+                              cacontology-infrastructure:serversSeized ?servers .
+                      FILTER (?servers > 10) } UNION
+                    { ?sinkhole a cacontology-infrastructure:DomainSinkholing ;
+                                cacontology-infrastructure:domainsSinkholed ?domains .
+                      FILTER (?domains > 5) }
+                }
+            }
+        """
+    ] .
+
+# =============================================================================
+# gUFO TYPE CONSISTENCY VALIDATION SHAPES
+# =============================================================================
+
+cacontology-infrastructure-shapes:InfrastructureObjectTypeValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:PlatformInfrastructure ;
+    rdfs:label "Infrastructure Object Type Validation Shape"@en ;
+    rdfs:comment "Validates gUFO Object type consistency for platform infrastructure."@en ;
+    sh:sparql [
+        sh:message "Infrastructure objects must be properly typed as gUFO Object and extend UCO Observable."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this rdf:type gufo:Object .
+                FILTER NOT EXISTS {
+                    $this rdf:type ?obsClass ;
+                    ?obsClass rdfs:subClassOf* uco-observable:ObservableObject .
+                }
+            }
+        """
+    ] .
+
+cacontology-infrastructure-shapes:TakedownEventTypeValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:InfrastructureTakedown ;
+    rdfs:label "Takedown Event Type Validation Shape"@en ;
+    rdfs:comment "Validates gUFO Event type consistency for takedown events."@en ;
+    sh:sparql [
+        sh:message "Takedown events must be properly typed as gUFO Event and extend UCO Action."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this rdf:type gufo:Event .
+                FILTER NOT EXISTS {
+                    $this rdf:type ?actionClass ;
+                    ?actionClass rdfs:subClassOf* uco-action:Action .
+                }
+            }
+        """
+    ] .
+
+cacontology-infrastructure-shapes:AnalysisEventTypeValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:InfrastructureAnalysis ;
+    rdfs:label "Analysis Event Type Validation Shape"@en ;
+    rdfs:comment "Validates gUFO Event type consistency for analysis events."@en ;
+    sh:sparql [
+        sh:message "Analysis events must be properly typed as gUFO Event and extend UCO Action."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this rdf:type gufo:Event .
+                FILTER NOT EXISTS {
+                    $this rdf:type ?actionClass ;
+                    ?actionClass rdfs:subClassOf* uco-action:Action .
+                }
+            }
+        """
+    ] .
+
+cacontology-infrastructure-shapes:InfrastructurePhaseTypeValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cac-core:Phase ;
+    rdfs:label "Infrastructure Phase Type Validation Shape"@en ;
+    rdfs:comment "Validates gUFO Phase type consistency for infrastructure phases."@en ;
+    sh:sparql [
+        sh:message "Infrastructure phases must be properly typed as gUFO Phase and extend infrastructure classes."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this rdf:type gufo:Phase .
+                FILTER NOT EXISTS {
+                    $this rdf:type/rdfs:subClassOf* cacontology-infrastructure:PlatformInfrastructure .
+                }
+            }
+        """
+    ] .
+
+cacontology-infrastructure-shapes:TechnicalRoleTypeValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cac-core:Role ;
+    rdfs:label "Technical Role Type Validation Shape"@en ;
+    rdfs:comment "Validates gUFO Role type consistency for technical roles."@en ;
+    sh:sparql [
+        sh:message "Technical roles must be properly typed as gUFO Role and extend UCO Identity."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this rdf:type gufo:Role .
+                FILTER NOT EXISTS {
+                    $this rdf:type/rdfs:subClassOf* cac-core:Role .
+                }
+            }
+        """
+    ] .
+
+cacontology-infrastructure-shapes:InfrastructureSituationTypeValidationShape rdf:type sh:NodeShape ;
+    sh:targetClass cac-core:Situation ;
+    rdfs:label "Infrastructure Situation Type Validation Shape"@en ;
+    rdfs:comment "Validates gUFO Situation type consistency for infrastructure situations."@en .
+
+# =============================================================================
+# gUFO TEMPORAL CONSTRAINTS SHAPES
+# =============================================================================
+
+cacontology-infrastructure-shapes:InfrastructureTemporalShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:PlatformInfrastructure ;
+    rdfs:label "Infrastructure Temporal Shape"@en ;
+    rdfs:comment "Validates gUFO temporal constraints for platform infrastructure."@en ;
+    sh:property [
+        sh:path cacontology-infrastructure:hasInfrastructureBeginPoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Infrastructure may have begin point timestamp."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-infrastructure:hasInfrastructureEndPoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Infrastructure may have end point timestamp."@en
+    ] ;
+    sh:sparql [
+        sh:message "Infrastructure end must be after begin when both are specified (gUFO temporal constraint)."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-infrastructure:hasInfrastructureBeginPoint ?start ;
+                      cacontology-infrastructure:hasInfrastructureEndPoint ?end .
+                FILTER (?end <= ?start)
+            }
+        """
+    ] .
+
+cacontology-infrastructure-shapes:TakedownEventTemporalShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:InfrastructureTakedown ;
+    rdfs:label "Takedown Event Temporal Shape"@en ;
+    rdfs:comment "Validates gUFO temporal constraints for takedown events."@en ;
+    sh:sparql [
+        sh:message "gUFO Events must have consistent temporal boundaries with end after start."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-infrastructure:hasTakedownBeginPoint ?start ;
+                      cacontology-infrastructure:hasTakedownEndPoint ?end .
+                FILTER (?end <= ?start)
+            }
+        """
+    ] .
+
+cacontology-infrastructure-shapes:AnalysisEventTemporalShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:InfrastructureAnalysis ;
+    rdfs:label "Analysis Event Temporal Shape"@en ;
+    rdfs:comment "Validates gUFO temporal constraints for analysis events."@en ;
+    sh:sparql [
+        sh:message "Analysis events must have consistent temporal boundaries with end after start."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-infrastructure:hasAnalysisBeginPoint ?start ;
+                      cacontology-infrastructure:hasAnalysisEndPoint ?end .
+                FILTER (?end <= ?start)
+            }
+        """
+    ] .
+
+cacontology-infrastructure-shapes:InfrastructurePhaseTemporalShape rdf:type sh:NodeShape ;
+    sh:targetClass cac-core:Phase ;
+    rdfs:label "Infrastructure Phase Temporal Shape"@en ;
+    rdfs:comment "Validates gUFO temporal constraints for infrastructure phases."@en ;
+    sh:property [
+        sh:path cacontology-infrastructure:hasPhaseBeginPoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Infrastructure phase may have begin point timestamp."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-infrastructure:hasPhaseEndPoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Infrastructure phase may have end point timestamp."@en
+    ] ;
+    sh:sparql [
+        sh:message "Phase end must be after begin when both are specified."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-infrastructure:hasPhaseBeginPoint ?start ;
+                      cacontology-infrastructure:hasPhaseEndPoint ?end .
+                FILTER (?end <= ?start)
+            }
+        """
+    ] .
+
+cacontology-infrastructure-shapes:TechnicalRoleTemporalShape rdf:type sh:NodeShape ;
+    sh:targetClass cac-core:Role ;
+    rdfs:label "Technical Role Temporal Shape"@en ;
+    rdfs:comment "Validates gUFO temporal constraints for technical roles."@en ;
+    sh:property [
+        sh:path cacontology-infrastructure:hasRoleBeginPoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Technical role may have begin point timestamp."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-infrastructure:hasRoleEndPoint ;
+        sh:datatype xsd:dateTimeStamp ;
+        sh:maxCount 1 ;
+        sh:message "Technical role may have end point timestamp."@en
+    ] ;
+    sh:sparql [
+        sh:message "Role end must be after begin when both are specified."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-infrastructure:hasRoleBeginPoint ?start ;
+                      cacontology-infrastructure:hasRoleEndPoint ?end .
+                FILTER (?end <= ?start)
+            }
+        """
+    ] .
+
+# =============================================================================
+# ENHANCED INFRASTRUCTURE SHAPES WITH gUFO QUALITY ASPECTS
+# =============================================================================
+
+cacontology-infrastructure-shapes:EnhancedPlatformInfrastructureShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:PlatformInfrastructure ;
+    rdfs:label "Enhanced Platform Infrastructure Shape"@en ;
+    rdfs:comment "Enhanced validation shape for platform infrastructure with gUFO quality aspects."@en ;
+    sh:property [
+        sh:path uco-core:name ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 2 ;
+        sh:maxLength 200 ;
+        sh:message "Infrastructure name should be 2-200 characters when specified."@en
+    ] ;
+    # gUFO Quality Aspects for Infrastructure
+    sh:property [
+        sh:path cacontology-infrastructure:hasInfrastructureReliability ;
+        sh:datatype xsd:double ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:message "Infrastructure reliability must be between 0.0 and 1.0 (gUFO quality aspect)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-infrastructure:hasInfrastructurePerformance ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:in ( "poor" "fair" "good" "excellent" "optimal" ) ;
+        sh:message "Infrastructure performance must be from allowed values (gUFO quality aspect)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-infrastructure:hasInfrastructureScalability ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:in ( "limited" "moderate" "high" "unlimited" "unknown" ) ;
+        sh:message "Infrastructure scalability must be from allowed values (gUFO quality aspect)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-infrastructure:hasInfrastructureVulnerability ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:in ( "minimal" "low" "moderate" "high" "critical" ) ;
+        sh:message "Infrastructure vulnerability must be from allowed values (gUFO quality aspect)."@en
+    ] .
+
+cacontology-infrastructure-shapes:EnhancedSecurityInfrastructureShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:SecurityInfrastructure ;
+    rdfs:label "Enhanced Security Infrastructure Shape"@en ;
+    rdfs:comment "Enhanced validation shape for security infrastructure with gUFO quality aspects."@en ;
+    # gUFO Quality Aspects for Security
+    sh:property [
+        sh:path cacontology-infrastructure:hasSecurityStrength ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:in ( "weak" "basic" "standard" "strong" "military_grade" ) ;
+        sh:message "Security strength must be from allowed values (gUFO quality aspect)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-infrastructure:hasAnonymityEffectiveness ;
+        sh:datatype xsd:double ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:message "Anonymity effectiveness must be between 0.0 and 1.0 (gUFO quality aspect)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-infrastructure:hasObfuscationComplexity ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:in ( "basic" "intermediate" "advanced" "sophisticated" "cutting_edge" ) ;
+        sh:message "Obfuscation complexity must be from allowed values (gUFO quality aspect)."@en
+    ] .
+
+cacontology-infrastructure-shapes:EnhancedTakedownShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:InfrastructureTakedown ;
+    rdfs:label "Enhanced Takedown Shape"@en ;
+    rdfs:comment "Enhanced validation shape for takedown operations with gUFO quality aspects."@en ;
+    # gUFO Quality Aspects for Takedown
+    sh:property [
+        sh:path cacontology-infrastructure:hasTakedownEffectiveness ;
+        sh:datatype xsd:double ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:message "Takedown effectiveness must be between 0.0 and 1.0 (gUFO quality aspect)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-infrastructure:hasTakedownCompleteness ;
+        sh:datatype xsd:double ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:message "Takedown completeness must be between 0.0 and 1.0 (gUFO quality aspect)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-infrastructure:hasTakedownSpeed ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:in ( "slow" "moderate" "fast" "rapid" "instantaneous" ) ;
+        sh:message "Takedown speed must be from allowed values (gUFO quality aspect)."@en
+    ] .
+
+cacontology-infrastructure-shapes:EnhancedAnalysisShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:InfrastructureAnalysis ;
+    rdfs:label "Enhanced Analysis Shape"@en ;
+    rdfs:comment "Enhanced validation shape for infrastructure analysis with gUFO quality aspects."@en ;
+    # gUFO Quality Aspects for Analysis
+    sh:property [
+        sh:path cacontology-infrastructure:hasAnalysisDepth ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:in ( "superficial" "basic" "thorough" "comprehensive" "exhaustive" ) ;
+        sh:message "Analysis depth must be from allowed values (gUFO quality aspect)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-infrastructure:hasAnalysisAccuracy ;
+        sh:datatype xsd:double ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:message "Analysis accuracy must be between 0.0 and 1.0 (gUFO quality aspect)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-infrastructure:hasAnalysisTimeliness ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:in ( "delayed" "slow" "timely" "fast" "real_time" ) ;
+        sh:message "Analysis timeliness must be from allowed values (gUFO quality aspect)."@en
+    ] .
+
+cacontology-infrastructure-shapes:EnhancedPaymentProcessingShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:PaymentProcessing ;
+    rdfs:label "Enhanced Payment Processing Shape"@en ;
+    rdfs:comment "Enhanced validation shape for payment processing with gUFO quality aspects."@en ;
+    # gUFO Quality Aspects for Financial
+    sh:property [
+        sh:path cacontology-infrastructure:hasFinancialComplexity ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:in ( "simple" "basic" "intermediate" "sophisticated" "highly_sophisticated" ) ;
+        sh:message "Financial complexity must be from allowed values (gUFO quality aspect)."@en
+    ] ;
+    sh:property [
+        sh:path cacontology-infrastructure:hasFinancialTraceability ;
+        sh:datatype xsd:double ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0.0 ;
+        sh:maxInclusive 1.0 ;
+        sh:message "Financial traceability must be between 0.0 and 1.0 (gUFO quality aspect)."@en
+    ] .
+
+# =============================================================================
+# gUFO PARTICIPATION CONSTRAINT SHAPES
+# =============================================================================
+
+cacontology-infrastructure-shapes:InfrastructureParticipationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:PlatformInfrastructure ;
+    rdfs:label "Infrastructure Participation Shape"@en ;
+    rdfs:comment "Validates gUFO participation constraints for platform infrastructure."@en ;
+    sh:sparql [
+        sh:message "Platform infrastructure must be associated with hosting providers or management roles (gUFO participation constraint)."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this rdf:type cacontology-infrastructure:PlatformInfrastructure .
+                FILTER NOT EXISTS {
+                    { $this cacontology-infrastructure:hostedBy ?provider } UNION
+                    { ?role a gufo:Role ; cacontology-infrastructure:manages $this }
+                }
+            }
+        """
+    ] .
+
+cacontology-infrastructure-shapes:TakedownParticipationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:InfrastructureTakedown ;
+    rdfs:label "Takedown Participation Shape"@en ;
+    rdfs:comment "Validates gUFO participation constraints for takedown operations."@en ;
+    sh:sparql [
+        sh:message "Takedown operations must involve takedown operators (gUFO participation constraint)."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this rdf:type cacontology-infrastructure:InfrastructureTakedown .
+                FILTER NOT EXISTS {
+                    ?operator a cacontology-infrastructure:TakedownOperatorRole ;
+                             uco-action:performer ?person .
+                }
+            }
+        """
+    ] .
+
+cacontology-infrastructure-shapes:AnalysisParticipationShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:InfrastructureAnalysis ;
+    rdfs:label "Analysis Participation Shape"@en ;
+    rdfs:comment "Validates gUFO participation constraints for analysis operations."@en ;
+    sh:sparql [
+        sh:message "Analysis operations must involve analyst roles (gUFO participation constraint)."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this rdf:type cacontology-infrastructure:InfrastructureAnalysis .
+                FILTER NOT EXISTS {
+                    ?analyst a cacontology-infrastructure:AnalystRole ;
+                            uco-action:performer ?person .
+                }
+            }
+        """
+    ] .
+
+# =============================================================================
+# gUFO PART-WHOLE RELATIONSHIP SHAPES
+# =============================================================================
+
+cacontology-infrastructure-shapes:InfrastructureCompositionShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:PlatformInfrastructure ;
+    rdfs:label "Infrastructure Composition Shape"@en ;
+    rdfs:comment "Validates gUFO part-whole relationships for infrastructure composition."@en ;
+    sh:sparql [
+        sh:message "Infrastructure containment relationships must be consistent with gUFO part-whole constraints."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-infrastructure:containsComponent ?part ;
+                ?part cacontology-infrastructure:containsComponent $this .
+            }
+        """
+    ] .
+
+# =============================================================================
+# ADVANCED gUFO BUSINESS RULES
+# =============================================================================
+
+cacontology-infrastructure-shapes:HighPerformanceInfrastructureRule rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:PlatformInfrastructure ;
+    rdfs:label "High Performance Infrastructure Rule"@en ;
+    rdfs:comment "Advanced gUFO business rule: High performance infrastructure should have excellent reliability and low vulnerability."@en ;
+    sh:sparql [
+        sh:message "Excellent or optimal performance infrastructure must have high reliability and low vulnerability (gUFO business rule)."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-infrastructure:hasInfrastructurePerformance ?performance .
+                FILTER (?performance IN ("excellent", "optimal"))
+                {
+                    FILTER NOT EXISTS {
+                        $this cacontology-infrastructure:hasInfrastructureReliability ?reliability .
+                        FILTER (?reliability >= 0.8)
+                    }
+                } UNION {
+                    FILTER NOT EXISTS {
+                        $this cacontology-infrastructure:hasInfrastructureVulnerability ?vulnerability .
+                        FILTER (?vulnerability IN ("minimal", "low"))
+                    }
+                }
+            }
+        """
+    ] .
+
+cacontology-infrastructure-shapes:StrongSecurityRule rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:SecurityInfrastructure ;
+    rdfs:label "Strong Security Rule"@en ;
+    rdfs:comment "Advanced gUFO business rule: Strong security requires advanced obfuscation and high anonymity effectiveness."@en ;
+    sh:sparql [
+        sh:message "Strong or military-grade security must have advanced obfuscation and high anonymity effectiveness (gUFO business rule)."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-infrastructure:hasSecurityStrength ?strength .
+                FILTER (?strength IN ("strong", "military_grade"))
+                {
+                    FILTER NOT EXISTS {
+                        $this cacontology-infrastructure:hasObfuscationComplexity ?complexity .
+                        FILTER (?complexity IN ("advanced", "sophisticated", "cutting_edge"))
+                    }
+                } UNION {
+                    FILTER NOT EXISTS {
+                        $this cacontology-infrastructure:hasAnonymityEffectiveness ?effectiveness .
+                        FILTER (?effectiveness >= 0.7)
+                    }
+                }
+            }
+        """
+    ] .
+
+cacontology-infrastructure-shapes:EffectiveTakedownRule rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:InfrastructureTakedown ;
+    rdfs:label "Effective Takedown Rule"@en ;
+    rdfs:comment "Advanced gUFO business rule: Highly effective takedowns should have high completeness and fast speed."@en ;
+    sh:sparql [
+        sh:message "Highly effective takedowns must have high completeness and appropriate speed (gUFO business rule)."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-infrastructure:hasTakedownEffectiveness ?effectiveness .
+                FILTER (?effectiveness >= 0.9)
+                {
+                    FILTER NOT EXISTS {
+                        $this cacontology-infrastructure:hasTakedownCompleteness ?completeness .
+                        FILTER (?completeness >= 0.8)
+                    }
+                } UNION {
+                    FILTER NOT EXISTS {
+                        $this cacontology-infrastructure:hasTakedownSpeed ?speed .
+                        FILTER (?speed IN ("fast", "rapid", "instantaneous"))
+                    }
+                }
+            }
+        """
+    ] .
+
+cacontology-infrastructure-shapes:ComprehensiveAnalysisRule rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:InfrastructureAnalysis ;
+    rdfs:label "Comprehensive Analysis Rule"@en ;
+    rdfs:comment "Advanced gUFO business rule: Comprehensive analysis requires high accuracy and appropriate timeliness."@en ;
+    sh:sparql [
+        sh:message "Comprehensive or exhaustive analysis must have high accuracy and good timeliness (gUFO business rule)."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-infrastructure:hasAnalysisDepth ?depth .
+                FILTER (?depth IN ("comprehensive", "exhaustive"))
+                {
+                    FILTER NOT EXISTS {
+                        $this cacontology-infrastructure:hasAnalysisAccuracy ?accuracy .
+                        FILTER (?accuracy >= 0.85)
+                    }
+                } UNION {
+                    FILTER NOT EXISTS {
+                        $this cacontology-infrastructure:hasAnalysisTimeliness ?timeliness .
+                        FILTER (?timeliness IN ("timely", "fast", "real_time"))
+                    }
+                }
+            }
+        """
+    ] .
+
+cacontology-infrastructure-shapes:SophisticatedFinancialRule rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:PaymentProcessing ;
+    rdfs:label "Sophisticated Financial Rule"@en ;
+    rdfs:comment "Advanced gUFO business rule: Sophisticated financial systems should have low traceability."@en ;
+    sh:sparql [
+        sh:message "Sophisticated or highly sophisticated financial systems must have low traceability (gUFO business rule)."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-infrastructure:hasFinancialComplexity ?complexity .
+                FILTER (?complexity IN ("sophisticated", "highly_sophisticated"))
+                FILTER NOT EXISTS {
+                    $this cacontology-infrastructure:hasFinancialTraceability ?traceability .
+                    FILTER (?traceability <= 0.3)
+                }
+            }
+        """
+    ] .
+
+cacontology-infrastructure-shapes:VulnerabilityAssessmentRule rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:PlatformInfrastructure ;
+    rdfs:label "Vulnerability Assessment Rule"@en ;
+    rdfs:comment "Advanced gUFO business rule: High vulnerability infrastructure should have enhanced security measures."@en ;
+    sh:sparql [
+        sh:message "High or critical vulnerability infrastructure must be protected by strong security systems (gUFO business rule)."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-infrastructure:hasInfrastructureVulnerability ?vulnerability .
+                FILTER (?vulnerability IN ("high", "critical"))
+                FILTER NOT EXISTS {
+                    $this cacontology-infrastructure:protectedBy ?security ;
+                    ?security cacontology-infrastructure:hasSecurityStrength ?strength .
+                    FILTER (?strength IN ("strong", "military_grade"))
+                }
+            }
+        """
+    ] .
+
+# =============================================================================
+# ENHANCED DATA QUALITY VALIDATION SHAPES
+# =============================================================================
+
+cacontology-infrastructure-shapes:InfrastructureDataQualityShape rdf:type sh:NodeShape ;
+    sh:targetClass cacontology-infrastructure:PlatformInfrastructure ;
+    rdfs:label "Infrastructure Data Quality Shape"@en ;
+    rdfs:comment "Enhanced data quality validation for infrastructure with gUFO quality consistency rules."@en ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 5 ;
+        sh:maxLength 200 ;
+        sh:message "Infrastructure label should be between 5 and 200 characters when provided."@en
+    ] ;
+    sh:property [
+        sh:path rdfs:comment ;
+        sh:datatype xsd:string ;
+        sh:minCount 0 ;
+        sh:maxCount 1 ;
+        sh:minLength 10 ;
+        sh:maxLength 1000 ;
+        sh:message "Infrastructure comment should be between 10 and 1000 characters when provided."@en
+    ] ;
+    # gUFO Quality Consistency Rules
+    sh:sparql [
+        sh:message "Infrastructure performance and reliability should be correlated (gUFO quality consistency)."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-infrastructure:hasInfrastructurePerformance ?performance ;
+                      cacontology-infrastructure:hasInfrastructureReliability ?reliability .
+                {
+                    FILTER (?performance = "optimal" && ?reliability < 0.9)
+                } UNION {
+                    FILTER (?performance = "excellent" && (?reliability < 0.7 || ?reliability > 0.95))
+                } UNION {
+                    FILTER (?performance = "poor" && ?reliability > 0.4)
+                }
+            }
+        """
+    ] ;
+    sh:sparql [
+        sh:message "Infrastructure vulnerability and security should be inversely correlated (gUFO quality consistency)."@en ;
+        sh:select """
+            SELECT $this
+            WHERE {
+                $this cacontology-infrastructure:hasInfrastructureVulnerability ?vulnerability ;
+                      cacontology-infrastructure:protectedBy ?security .
+                ?security cacontology-infrastructure:hasSecurityStrength ?strength .
+                {
+                    FILTER (?vulnerability = "critical" && ?strength NOT IN ("strong", "military_grade"))
+                } UNION {
+                    FILTER (?vulnerability = "minimal" && ?strength NOT IN ("weak", "basic"))
+                }
+            }
+        """
+    ] . 

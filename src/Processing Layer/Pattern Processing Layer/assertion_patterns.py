@@ -549,3 +549,220 @@ def cybertip_assertions(text: str) -> List[Dict]:
             role, conf = "unscoped", 0.5
         out.append(_raw("investigation_type", "cybertip", role, m.start(), m.end(), conf, pattern="cybertip_scope"))
     return out
+
+
+# ---------------------------------------------------------------------------
+# CyberTip reporter (#20): who sent the tip, when the release says so
+# ---------------------------------------------------------------------------
+
+# Electronic service providers as releases name them: (value, pattern). The value is
+# the name CaseLinker stores; the mapper links it to a platform node when one exists.
+_ESPS: Tuple[Tuple[str, str], ...] = (
+    ("Google", r"Google(?:,?\s+(?:Inc|LLC)\.?)?"),
+    ("YouTube", r"YouTube"),
+    ("Kik", r"Kik(?:\s+Interactive|\s+Messenger)?"),
+    ("Snapchat", r"Snap(?:chat|\s+Inc\.?)"),
+    ("Facebook", r"Facebook(?:\s*/\s*Meta(?:\s+Platforms)?(?:,?\s+Inc\.?)?)?"),
+    ("Meta", r"Meta(?:\s+Platforms)?(?:,?\s+Inc\.?)?"),
+    ("Instagram", r"Instagram"),
+    ("WhatsApp", r"WhatsApp"),
+    ("Microsoft", r"Microsoft(?:\s+Corporation)?"),
+    ("Skype", r"Skype"),
+    ("OneDrive", r"OneDrive"),
+    ("Dropbox", r"Dropbox"),
+    ("Discord", r"Discord"),
+    ("Twitter / X", r"Twitter|X\s+Corp\.?"),
+    ("Yahoo", r"Yahoo!?"),
+    ("AOL", r"AOL|America\s+Online"),
+    ("Tumblr", r"Tumblr"),
+    ("Reddit", r"Reddit"),
+    ("TikTok", r"TikTok|ByteDance"),
+    ("iCloud", r"iCloud"),
+    ("Apple", r"Apple(?:,?\s+Inc\.?)?"),
+    ("Synchronoss", r"Synchronoss(?:\s+Technologies)?"),
+    ("Verizon", r"Verizon"),
+    ("Comcast", r"Comcast"),
+    ("MeetMe", r"MeetMe"),
+    ("Imgur", r"Imgur"),
+    ("Roblox", r"Roblox"),
+    ("Omegle", r"Omegle"),
+    ("Telegram", r"Telegram"),
+    ("Twitch", r"Twitch"),
+    ("Grindr", r"Grindr"),
+    ("Yubo", r"Yubo"),
+    ("Mega.nz", r"MEGA(?:\.nz)?"),
+    ("MediaFire", r"MediaFire"),
+    ("Pinterest", r"Pinterest"),
+    ("Amazon", r"Amazon(?:\.com)?"),
+    ("Zoom", r"Zoom\s+Video"),
+    ("Tagged", r"Tagged(?:,?\s+Inc\.?)"),
+)
+_ESP_RE = "(?:" + "|".join(f"(?P<esp{i}>{p})" for i, (_, p) in enumerate(_ESPS)) + ")"
+_REPORT_VERB = r"(?:submitted|filed|sent|made|generated|reported|flagged|forwarded|provided|created)"
+_ARTICLE = (
+    r"(?:(?:the|a|an)\s+)?(?:(?:social\s+media|messaging|instant\s+messaging|cloud\s+storage|electronic\s+service|online|video|chat)\s+)?"
+    r"(?:app(?:lication)?|platform|company|provider|service|site)?\s*(?:\(ESP\)\s*)?,?\s*"
+)
+# "{ESP} submitted a CyberTip", "Kik, a messaging app, reported … to NCMEC"
+_ESP_SUBJECT = re.compile(
+    rf"(?<![\w-]){_ESP_RE}\b(?:,[^,.]{{0,60}},)?\s+(?:had\s+|has\s+|later\s+)?(?:{_REPORT_VERB}\b[^.]{{0,80}}?"
+    r"(?:cyber\s*tip|tip(?:line)?\b|report|NCMEC|National\s+Center)|reported\s+(?:that|to)\b)",
+    re.IGNORECASE,
+)
+# "a CyberTip sent by Microsoft", "CyberTips from Google", "CyberTipline reports from the app Kik"
+_ESP_AFTER_TIP = re.compile(
+    rf"(?:cyber\s*tip(?:line)?s?|tips?|reports?)(?:\s+reports?)?(?:\s+\w+){{0,4}}?\s+"
+    rf"(?:from|by|sent\s+by|submitted\s+by|made\s+by|generated\s+by|filed\s+by|via)\s+{_ARTICLE}{_ESP_RE}\b",
+    re.IGNORECASE,
+)
+# "NCMEC received [a CyberTip] from Google", "that NCMEC received from Google"
+_ESP_TO_NCMEC = re.compile(
+    rf"(?:NCMEC|National\s+Center\s+for\s+Missing\s+(?:and|&)\s+Exploited\s+Children)\b[^.]{{0,40}}?"
+    rf"\breceived\b[^.]{{0,60}}?\bfrom\s+{_ARTICLE}{_ESP_RE}\b",
+    re.IGNORECASE,
+)
+# Next sentence: "AOL had discovered an e-mail …", "Google detected the upload"
+_ESP_DISCOVERED = re.compile(
+    rf"^\W*{_ESP_RE}\b\s+(?:had\s+|has\s+)?(?:discovered|detected|identified|flagged|located|found|observed|notified)\b",
+    re.IGNORECASE,
+)
+# The ESP named only as where content sat: "uploaded to a Facebook account" (not a reporter).
+_CONTENT_PLACE_AFTER = re.compile(r"^\s*(?:accounts?|users?|profiles?|usernames?|messages?|chats?|servers?|groups?)\b", re.IGNORECASE)
+
+_CATEGORY_BODY = (
+    r"(?:online\s+)?social\s+media(?:\s+and\s+messaging)?\s+(?:platforms?|compan(?:y|ies)|app(?:lication)?s?|sites?|providers?)"
+    r"|(?:instant\s+)?messaging\s+(?:apps?|applications?|platforms?|services?)"
+    r"|cloud\s+storage\s+(?:providers?|services?|compan(?:y|ies))"
+    r"|electronic\s+service\s+providers?|internet\s+service\s+providers?"
+    r"|file[- ]sharing\s+(?:services?|sites?|platforms?)|online\s+platforms?|video\s+(?:sharing\s+)?platforms?"
+)
+_CATEGORY_RE = re.compile(
+    rf"\b(?:an?|the|multiple|several|two|three|various)\s+(?P<cat>{_CATEGORY_BODY})\b", re.IGNORECASE
+)
+# A category is the reporter only as the source of the tip ("a CyberTip from a social media
+# platform", "reported to NCMEC by a cloud storage provider") or the subject of a reporting
+# verb. "Account information from the ESP" is a subpoena return, not a report.
+_CATEGORY_SOURCE = re.compile(
+    rf"(?:cyber\s*tip\w*|tips?|reports?|CTRs?)\b[^.]{{0,60}}?\b(?:from|by)\s+$|\b{_REPORT_VERB}\s+(?:by|from)\s+$"
+    r"|\breported\s+to\b[^.]{0,110}?\bby\s+$",
+    re.IGNORECASE,
+)
+_CATEGORY_VERB_AFTER = re.compile(
+    rf"\s*(?:,[^,.]{{0,40}},\s*)?(?:had\s+|has\s+)?(?:{_REPORT_VERB}|notified|alerted)\b", re.IGNORECASE
+)
+_CONTENT_GAP = re.compile(
+    r"upload|download|shar|post|distribut|transferr|obtain|informat|gather|identif|subpoena|stor|discover", re.IGNORECASE
+)
+_INCLUDING = re.compile(r"^[^.]{0,20}?\bincluding\b(?P<list>[^.]*)", re.IGNORECASE)
+_PUBLIC_RE = re.compile(
+    r"\b(?:a|an|the\s+(?:child|victim)'?s?)\s+(?:concerned\s+)?"
+    r"(?P<who>citizen|parent|mother|father|relative|family\s+member|member\s+of\s+the\s+public|witness|neighbor|teacher|tipster)\b"
+    rf"[^.]{{0,40}}\b(?:submitted|made|filed|reported)\b[^.]{{0,40}}cyber\s*tip",
+    re.IGNORECASE,
+)
+
+
+def _category_slug(text: str) -> str:
+    t = re.sub(r"\s+", " ", text.lower())
+    for key, slug in (("social media", "social_media"), ("messaging", "messaging_app"),
+                      ("cloud storage", "cloud_storage"), ("internet service", "internet_service_provider"),
+                      ("electronic service", "electronic_service_provider"), ("file", "file_sharing"),
+                      ("video", "video_platform"), ("online platform", "online_platform")):
+        if key in t:
+            return slug
+    return "electronic_service_provider"
+
+
+def _esp_hits(m: re.Match) -> Tuple[str, int, int]:
+    for i, (value, _) in enumerate(_ESPS):
+        if m.group(f"esp{i}"):
+            return value, m.start(f"esp{i}"), m.end(f"esp{i}")
+    raise ValueError("no ESP group matched")
+
+
+def reporter_span_supports(span: str, role, value) -> bool:
+    """The span gate for ``cybertip_reporter``: the span is exactly the ESP, category or person named."""
+    span = span.strip()
+    if role == "named_esp":
+        m = re.fullmatch(_ESP_RE, span, re.IGNORECASE)
+        return bool(m) and _esp_hits(m)[0] == value
+    if role == "category":
+        return bool(re.fullmatch(_CATEGORY_BODY, span, re.IGNORECASE)) and _category_slug(span) == value
+    if role == "public":
+        return value == "public" and bool(span)
+    return False
+
+
+def cybertip_reporter_assertions(text: str) -> List[Dict]:
+    """Who sent a case-scoped CyberTip, read from the tip sentence and the one after it.
+
+    NCMEC receives every CyberTip, so NCMEC, ICAC and the agencies that relay a
+    tip are never the reporter. An ESP named only as where the content was
+    ("uploaded to a Snapchat account") is not one either. Roles: ``named_esp``
+    (value = the ESP), ``category`` (value = the kind of provider), ``public``.
+    No assertion means the release does not say who reported.
+    """
+    out: List[Dict] = []
+    seen: Set[Tuple[int, int]] = set()
+    spans = sg.sentence_spans(text)
+    for m in _TIP_TOKEN_RE.finditer(text):
+        ss, se = sg.sentence_at(text, m.start(), m.end())
+        sentence = text[ss:se]
+        if _TIP_BOILERPLATE.search(sentence) or not _TIP_CASE_ACTION.search(sentence):
+            continue
+        following = next(((s, e) for s, e in spans if s >= se), None)
+        named_patterns = (_ESP_SUBJECT, _ESP_AFTER_TIP, _ESP_TO_NCMEC)
+        windows = [(ss, sentence, named_patterns)]
+        if following:
+            windows.append((following[0], text[following[0]:following[1]], named_patterns + (_ESP_DISCOVERED,)))
+        named = False
+        for base, chunk, patterns in windows:
+            for pat in patterns:
+                for hit in pat.finditer(chunk):
+                    value, s, e = _esp_hits(hit)
+                    if _CONTENT_PLACE_AFTER.match(chunk[e:]):
+                        continue
+                    key = (base + s, base + e)
+                    if key in seen:
+                        continue
+                    seen.add(key)
+                    named = True
+                    out.append(_raw("cybertip_reporter", value, "named_esp", base + s, base + e, 0.9,
+                                    pattern="cybertip_reporter"))
+        if named:
+            continue
+        for base, chunk, _patterns in windows:
+            for hit in _CATEGORY_RE.finditer(chunk):
+                before, after = chunk[max(0, hit.start() - 140):hit.start()], chunk[hit.end():]
+                source = _CATEGORY_SOURCE.search(before)
+                if source and _CONTENT_GAP.search(source.group(0)):
+                    source = None
+                if not (source or _CATEGORY_VERB_AFTER.match(after)):
+                    continue
+                appositive = re.match(rf"\s*,\s*{_ESP_RE}\b", after, re.IGNORECASE)
+                if appositive:
+                    value, s, e = _esp_hits(appositive)
+                    out.append(_raw("cybertip_reporter", value, "named_esp", base + hit.end() + s,
+                                    base + hit.end() + e, 0.9, pattern="cybertip_reporter"))
+                    continue
+                listed = _INCLUDING.match(after)
+                if listed:
+                    offset = base + hit.end() + listed.start("list")
+                    names = [(m, *_esp_hits(m)) for m in re.finditer(_ESP_RE, listed.group("list"), re.IGNORECASE)]
+                    for _m, value, s, e in names:
+                        out.append(_raw("cybertip_reporter", value, "named_esp", offset + s, offset + e, 0.85,
+                                        pattern="cybertip_reporter_list"))
+                    if names:
+                        continue
+                key = (base + hit.start("cat"), base + hit.end("cat"))
+                if key not in seen:
+                    seen.add(key)
+                    out.append(_raw("cybertip_reporter", _category_slug(hit.group("cat")), "category",
+                                    key[0], key[1], 0.7, pattern="cybertip_reporter"))
+        for hit in _PUBLIC_RE.finditer(sentence):
+            key = (ss + hit.start("who"), ss + hit.end("who"))
+            if key not in seen:
+                seen.add(key)
+                out.append(_raw("cybertip_reporter", "public", "public", key[0], key[1], 0.7,
+                                pattern="cybertip_reporter"))
+    return out

@@ -1,0 +1,51 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix cac-bridge-uco: <https://cacontology.projectvic.org/bridge/uco#> .
+
+# =============================================================================
+# Ontology Declaration
+# =============================================================================
+
+<https://cacontology.projectvic.org/bridge/uco> rdf:type owl:Ontology ;
+    rdfs:label "CAC Ontology UCO Bridge Module"@en ;
+    rdfs:comment "Bridge module capturing alignment axioms between CAC Ontology classes and Unified Cyber Ontology (UCO) concepts. The core spine already aligns cac-core:EnduringEntity to uco-core:UcoObject, cac-core:Artifact to uco-observable:ObservableObject, cac-core:Role to uco-role:Role, and cac-core:InvestigativeAction to uco-action:Action. This bridge module holds additional or extended UCO alignment statements for advanced reasoning."@en ;
+    owl:versionIRI <https://cacontology.projectvic.org/bridge/uco/3.1.0> ;
+    owl:versionInfo "3.1.0" ;
+    dcterms:creator "CAC Ontology Team" ;
+    dcterms:issued "2026-03-16"^^xsd:date ;
+    dcterms:modified "2026-08-09"^^xsd:date ;
+    owl:imports <https://cacontology.projectvic.org/core/3.1.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/core/1.5.0> ,
+                <https://ontology.unifiedcyberontology.org/uco/action/1.5.0> .
+
+# =============================================================================
+# UCO ALIGNMENT NOTES
+# =============================================================================
+
+# The primary UCO alignments are already in the spine:
+#   cac-core:EnduringEntity rdfs:subClassOf uco-core:UcoObject
+#   cac-core:Artifact rdfs:subClassOf uco-observable:ObservableObject
+#   cac-core:Role rdfs:subClassOf uco-role:Role
+#   cac-core:InvestigativeAction rdfs:subClassOf uco-action:Action
+#
+# The following documents the ReceiveCybertipAction legacy equivalence
+# which was previously set to cacontology-gufo:CriminalEvent. That
+# equivalence has been moved to the gUFO bridge. The ReceiveCybertipAction
+# now anchors to cac-core:InvestigativeAction which inherits from
+# uco-action:Action through the spine.
+
+cac-bridge-uco:ReceiveCybertipActionAlignment a owl:Axiom ;
+    rdfs:label "ReceiveCybertipAction UCO Alignment"@en ;
+    rdfs:comment "Documents the alignment path for ReceiveCybertipAction. It now subclasses cac-core:InvestigativeAction (which inherits from uco-action:Action). Its former owl:equivalentClass to cacontology-gufo:CriminalEvent has been moved to the gUFO bridge."@en ;
+    cac-bridge-uco:disposition "retainInReferenceLayer" .
+
+# =============================================================================
+# BRIDGE DISPOSITION ANNOTATION PROPERTY
+# =============================================================================
+
+cac-bridge-uco:disposition a owl:AnnotationProperty ;
+    rdfs:label "disposition"@en ;
+    rdfs:comment "Records the disposition decision for a UCO alignment axiom."@en .
