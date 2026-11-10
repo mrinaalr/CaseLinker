@@ -536,6 +536,37 @@ async def get_field_disagreements(
 
 
 @mcp.tool()
+async def get_sentencing_stats(case_ids: list[str]) -> dict[str, Any]:
+    """Imposed-only sentencing summary for a case_id list (MCP-only, reads the local DB).
+
+    Uses the persisted sentence-kind buckets (imposed / exposure / supervised_release /
+    probation / fine), never the flat prosecution_outcome.sentences strings. Each case gets
+    one outcome: custodial (longest single imposed term, months), life, or non_custodial
+    (an imposed probation term or fine); or one drop reason: not_found, kind_unknown (resolver
+    left a span unlabelled or under review), unparseable_term, doubtful_imposed_context (span
+    has no sentencing context, or is a plea term, recommendation, what the law provides, an
+    earlier sentence, restitution or a payment), multi_defendant_suspected,
+    split_or_suspended_term, indeterminate_term, statutory_max (exposure or statutory fine
+    only), pending (pre-sentence booking_status, heuristic) or no_sentence. Returns n_used, n_dropped, the
+    count per drop reason, custodial_months {n, median, mean, min, max}, per-case results
+    and interpretation_kind "imposed_sentence_summary". Descriptive only; not a validated
+    disparity claim. Hard cap: 1000 case_ids.
+    """
+    try:
+        ids = [c.strip() for c in case_ids or [] if c and c.strip()]
+        if not ids:
+            return {"error": "Provide case_ids (from filter or cohort tools).", "n_requested": 0}
+        if len(ids) > 1000:
+            return {"error": f"Too many case_ids ({len(ids)}); max 1000.", "n_requested": len(ids)}
+        from caselinker_mcp.sentencing_stats import sentencing_stats_payload
+
+        return await asyncio.to_thread(sentencing_stats_payload, ids)
+    except Exception as e:
+        logger.exception("get_sentencing_stats failed")
+        return {"error": f"{type(e).__name__}: {e}" if str(e) else type(e).__name__}
+
+
+@mcp.tool()
 async def get_cases_page(limit: int = 50, offset: int = 0) -> dict[str, Any]:
     """Return a paginated page of case summaries (slim fields, no full narratives). limit capped at 500."""
     try:
