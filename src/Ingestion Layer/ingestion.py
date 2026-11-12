@@ -68,7 +68,7 @@ def detect_source_from_content(text: str, filename: str) -> str:
         
     Returns:
         Source organization name ('NCMEC', 'AZICAC', 'Idaho ICAC', 'Michigan ICAC', 'GBI', 'Texas AG', 'SVICAC',
-        'TBI ICAC', 'SCAG ICAC', 'WCSO', 'FRESNO SO', 'OSCEOLA SO', 'ANCHORAGE PD', 'SEDGWICK SO', 'LAPD', 'CSPD', 'SPD', 'SDPD', 'SOUTH FLORIDA ICAC', 'NJ AG', 'PA AG', 'VT AG', 'OHIO AG', 'DE AG', 'UT AG',
+        'TBI ICAC', 'SCAG ICAC', 'WCSO', 'FRESNO SO', 'OSCEOLA SO', 'ANCHORAGE PD', 'NASHVILLE PD', 'SEDGWICK SO', 'LAPD', 'CSPD', 'SPD', 'SDPD', 'SOUTH FLORIDA ICAC', 'NJ AG', 'PA AG', 'VT AG', 'OHIO AG', 'DE AG', 'UT AG',
         'WA AG', 'OREGON DOJ', 'MS AG', 'MT DOJ', 'NM AG', 'NC SBI', 'LA AG', 'HI AG', 'CCSAO', 'IA DCI', 'WY DCI', 'SD AG', 'RI AG', 'FL AG', 'KY SP', 'NE SP', 'ARMY CID', 'USSS', 'ICE', 'LVMPD', 'SJPD', 'ALEA', 'FBI', 'Other', or defaults to Other).
     """
     text_sample = text[:5000]  # Check first 5000 chars for efficiency
@@ -119,6 +119,8 @@ def detect_source_from_content(text: str, filename: str) -> str:
         return 'SEDGWICK SO'
     elif ('anchoragepd' in filename_lower or 'anchorage_pd' in filename_lower) and 'icac' in filename_lower:
         return 'ANCHORAGE PD'
+    elif ('nashvillepd' in filename_lower or 'nashville_pd' in filename_lower) and 'icac' in filename_lower:
+        return 'NASHVILLE PD'
     elif 'lapd' in filename_lower:
         return 'LAPD'
     elif ('cspd' in filename_lower or 'colorado_springs' in filename_lower) and 'icac' in filename_lower:
@@ -410,6 +412,14 @@ def detect_source_from_content(text: str, filename: str) -> str:
         re.I,
     ):
         return 'ANCHORAGE PD'
+
+    # Metropolitan Nashville Police Department news (nashville.gov; MNPD ICAC unit, TN ICAC affiliate).
+    if re.search(r'nashville\.gov/departments/police', text_sample, re.I) and re.search(
+        r'Nashville|\bMNPD\b|Internet\s+Crimes|\bICAC\b|\bminor\b|\bCSAM\b|child\s+sex|child\s+exploitation',
+        text_sample,
+        re.I,
+    ):
+        return 'NASHVILLE PD'
 
     # Sedgwick County District Attorney criminal media releases (merged scrape; source key SEDGWICK SO for KS TF).
     if re.search(r'sedgwickcounty\.org', text_sample, re.I) and re.search(
@@ -860,6 +870,8 @@ def _load_source_url_fallbacks_from_sources_html() -> Dict[str, str]:
             mapping["OSCEOLA SO"] = url_clean
         elif "anchorag" in n and "police" in n:
             mapping["ANCHORAGE PD"] = url_clean
+        elif "nashville police" in n:
+            mapping["NASHVILLE PD"] = url_clean
         elif "sedgwick county sheriff" in n:
             mapping["SEDGWICK SO"] = url_clean
         elif "los angeles police department" in n:

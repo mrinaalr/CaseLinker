@@ -140,7 +140,7 @@ def _dispatch_case_batching(text: str, org_name: str = "case", source: str = Non
     - AZICAC: Split by month patterns ("In [Month]" or "[Month] [Year],")
     - GBI: Georgia Bureau of Investigation press releases split on "# # # # #" then by release date lines
     - Texas AG: Texas Attorney General CEU releases split by date-line starts and "Back to Top"
-    - SVICAC / TBI ICAC / SCAG ICAC / NEWYORK SP / ILLINOIS AG / NJ AG / PA AG / VT AG / OHIO AG / DE AG / UT AG / WA AG / OREGON DOJ / MS AG / MT DOJ / NM AG / NC SBI / LA AG / HI AG / CCSAO / IA DCI / WY DCI / SD AG / RI AG / FL AG / KY SP / NE SP / ARMY CID / USSS / ICE / LVMPD / SJPD / ARKANSAS DPS / ALEA / DOJ CEOS / DOJ ARCHIVES / DOJ SAFE CHILDHOOD / WCSO / FRESNO SO / OSCEOLA SO / SEDGWICK SO / ANCHORAGE PD / LAPD / CSPD / SPD / SDPD / SOUTH FLORIDA ICAC / MICHIGAN ICAC / same-layout merged scrapes: split on ``Source: https://`` per article
+    - SVICAC / TBI ICAC / SCAG ICAC / NEWYORK SP / ILLINOIS AG / NJ AG / PA AG / VT AG / OHIO AG / DE AG / UT AG / WA AG / OREGON DOJ / MS AG / MT DOJ / NM AG / NC SBI / LA AG / HI AG / CCSAO / IA DCI / WY DCI / SD AG / RI AG / FL AG / KY SP / NE SP / ARMY CID / USSS / ICE / LVMPD / SJPD / ARKANSAS DPS / ALEA / DOJ CEOS / DOJ ARCHIVES / DOJ SAFE CHILDHOOD / WCSO / FRESNO SO / OSCEOLA SO / SEDGWICK SO / ANCHORAGE PD / NASHVILLE PD / LAPD / CSPD / SPD / SDPD / SOUTH FLORIDA ICAC / MICHIGAN ICAC / same-layout merged scrapes: split on ``Source: https://`` per article
     - Other / External: Delimited narratives: "Case 1 : ... Case 2 : ..." (news scrapes, LinkedIn, international, misc.)
     - Default: If text matches ``Case N :`` markers, falls back to external batching; otherwise AZICAC month-splitting
     
@@ -174,6 +174,7 @@ def _dispatch_case_batching(text: str, org_name: str = "case", source: str = Non
     is_osceola_so = False
     is_sedgwick_so = False
     is_anchorage_pd = False
+    is_nashville_pd = False
     is_lapd = False
     is_cspd = False
     is_spd = False
@@ -267,6 +268,8 @@ def _dispatch_case_batching(text: str, org_name: str = "case", source: str = Non
             is_sedgwick_so = True
         elif source_upper == 'ANCHORAGE PD':
             is_anchorage_pd = True
+        elif source_upper == 'NASHVILLE PD':
+            is_nashville_pd = True
         elif source_upper == 'LAPD':
             is_lapd = True
         elif source_upper == 'CSPD':
@@ -423,6 +426,8 @@ def _dispatch_case_batching(text: str, org_name: str = "case", source: str = Non
         return _batch_merged_icac_news_cases(text, org_name, source_file, "SEDGWICK SO")
     elif is_anchorage_pd:
         return _batch_merged_icac_news_cases(text, org_name, source_file, "ANCHORAGE PD")
+    elif is_nashville_pd:
+        return _batch_merged_icac_news_cases(text, org_name, source_file, "NASHVILLE PD")
     elif is_lapd:
         return _batch_merged_icac_news_cases(text, org_name, source_file, "LAPD")
     elif is_cspd:
@@ -1486,6 +1491,7 @@ _MERGED_ICAC_NEWS_PDF_CANDIDATES: Dict[str, List[str]] = {
         "ANCHORAGEPD_ICAC_All.pdf",
         "anchorage_pd/ANCHORAGEPD_ICAC_All.pdf",
     ],
+    "NASHVILLE PD": ["NASHVILLEPD_ICAC_All.pdf", "nashville_pd/NASHVILLEPD_ICAC_All.pdf"],
     "LAPD": ["LAPD_ICAC_ALL.pdf", "LAPD_ICAC_All.pdf", "lapd/LAPD_ICAC_All.pdf"],
     "CSPD": [
         "CSPD_ICAC_All.pdf",

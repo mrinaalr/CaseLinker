@@ -209,6 +209,7 @@ SOURCE_TO_STATE: dict[str, str] = {
     "GBI": "GA",
     "ALEA": "AL",
     "ANCHORAGE PD": "AK",
+    "NASHVILLE PD": "TN",
     "FRESNO SO": "CA",
     "LAPD": "CA",
     "SJPD": "CA",

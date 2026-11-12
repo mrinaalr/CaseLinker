@@ -193,6 +193,7 @@ ICAC_LIKE_SOURCES = frozenset(
         "SCAG ICAC",
         "SD AG",
         "ANCHORAGE PD",
+        "NASHVILLE PD",
         "ARMY CID",
         "SEDGWICK SO",
         "SOUTH FLORIDA ICAC",
