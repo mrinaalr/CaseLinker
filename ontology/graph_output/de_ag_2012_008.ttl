@@ -2,23 +2,25 @@
 @prefix ns1: <https://cacontology.projectvic.org#> .
 @prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns4: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns5: <https://cacontology.projectvic.org/core#> .
-@prefix ns6: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/de_ag_2012_008> a ns1:CACInvestigation,
-        ns5:EnduringEntity ;
-    dcterms:created "2026-10-18 01:01:29.636544" ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case de_ag_2012_008" ;
+    dcterms:created "2026-11-10T18:11:09.218841"^^xsd:dateTime ;
+    dcterms:date "2012-01-10"^^xsd:date ;
     dcterms:identifier "de_ag_2012_008" ;
-    dcterms:modified "2026-10-18 01:01:29.636544" ;
+    dcterms:modified "2026-11-10T18:11:09.218841"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/de_ag_2012_008/provenance> ;
     dcterms:source <https://news.delaware.gov/2012/01/09/laurel-man-arrested-for-dealing-child-pornography>,
         "DE AG" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/delaware>,
-        <https://w3id.org/caselinker/resource/location/georgetown>,
-        <https://w3id.org/caselinker/resource/location/laurel>,
-        <https://w3id.org/caselinker/resource/location/millsboro> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/delaware-de>,
+        <https://w3id.org/caselinker/resource/location/georgetown-town-de>,
+        <https://w3id.org/caselinker/resource/location/laurel-town-de>,
+        <https://w3id.org/caselinker/resource/location/millsboro-town-de> ;
     ns1:currentPhase <https://w3id.org/caselinker/resource/case/de_ag_2012_008/phase/arrested> ;
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/de_ag_2012_008/phase/arrested> ;
     ns1:hasStep <https://w3id.org/caselinker/resource/case/de_ag_2012_008/event/csam>,
@@ -30,103 +32,118 @@
     ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/delaware-child-predator-task-force>,
         <https://w3id.org/caselinker/resource/agency/delaware-state-police-department>,
         <https://w3id.org/caselinker/resource/agency/department-of-homeland-security>,
+        <https://w3id.org/caselinker/resource/agency/doj>,
         <https://w3id.org/caselinker/resource/agency/icac>,
-        <https://w3id.org/caselinker/resource/agency/maryland-task-force>,
-        <https://w3id.org/caselinker/resource/agency/us-department-of-justice> ;
-    ns4:mentionsLocation <https://w3id.org/caselinker/resource/location/delaware>,
-        <https://w3id.org/caselinker/resource/location/georgetown>,
-        <https://w3id.org/caselinker/resource/location/laurel>,
-        <https://w3id.org/caselinker/resource/location/millsboro> .
+        <https://w3id.org/caselinker/resource/agency/maryland-task-force> .
 
-<https://w3id.org/caselinker/resource/case/de_ag_2012_008/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2012-01-10T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/de_ag_2012_008/event/csam>,
-        <https://w3id.org/caselinker/resource/case/de_ag_2012_008/event/online-only> ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/de_ag_2012_008/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/de_ag_2012_008/role/offender/1/has-role> a ns4:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns4:isDirectional true ;
+    ns4:kindOfRelationship "Has_Role" ;
+    ns4:source <https://w3id.org/caselinker/resource/case/de_ag_2012_008/person/offender/1> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/de_ag_2012_008/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/de_ag_2012_008/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2012-01-10T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/de_ag_2012_008/event/csam>,
-        <https://w3id.org/caselinker/resource/case/de_ag_2012_008/event/online-only> ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/de_ag_2012_008/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/agency/delaware-child-predator-task-force> a ns2:LocalAgency .
-
-<https://w3id.org/caselinker/resource/agency/delaware-state-police-department> a ns2:StateAgency .
-
-<https://w3id.org/caselinker/resource/agency/department-of-homeland-security> a ns2:LocalAgency .
-
-<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> .
-
-<https://w3id.org/caselinker/resource/agency/maryland-task-force> a ns5:OrganizationLikeEntity,
+<https://w3id.org/caselinker/resource/agency/delaware-child-predator-task-force> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
         ns2:LocalAgency ;
-    rdfs:label "Maryland Task Force" .
+    rdfs:label "Delaware Child Predator Task Force" ;
+    ns4:name "Delaware Child Predator Task Force" .
 
-<https://w3id.org/caselinker/resource/agency/us-department-of-justice> a ns2:LocalAgency .
+<https://w3id.org/caselinker/resource/agency/delaware-state-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns2:StateAgency ;
+    rdfs:label "Delaware State Police Department" ;
+    ns4:name "Delaware State Police Department" .
+
+<https://w3id.org/caselinker/resource/agency/department-of-homeland-security> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns2:LocalAgency ;
+    rdfs:label "Department of Homeland Security" ;
+    ns4:name "Department of Homeland Security" .
+
+<https://w3id.org/caselinker/resource/agency/doj> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns2:LocalAgency ;
+    rdfs:label "U.S. Department of Justice" ;
+    ns4:name "U.S. Department of Justice" .
+
+<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns4:name "ICAC Task Force" .
+
+<https://w3id.org/caselinker/resource/agency/maryland-task-force> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns2:LocalAgency ;
+    rdfs:label "Maryland Task Force" ;
+    ns4:name "Maryland Task Force" .
 
 <https://w3id.org/caselinker/resource/case/de_ag_2012_008/charge/1> a ns3:CSAM_Possession,
         ns3:CriminalCharge ;
-    rdfs:label "dealing in child pornography on Friday" ;
-    ns3:indictmentCounts 51 .
+    rdfs:label "dealing in child pornography on Friday" .
 
 <https://w3id.org/caselinker/resource/case/de_ag_2012_008/charge/2> a ns3:CSAM_Distribution,
         ns3:CriminalCharge ;
     rdfs:label "distribution of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/de_ag_2012_008/event/distribution> a ns5:Event,
-        ns3:CSAM_Distribution .
-
-<https://w3id.org/caselinker/resource/case/de_ag_2012_008/event/multi-jurisdiction> a ns5:Event,
-        ns2:MultiJurisdictionalInvestigation .
-
-<https://w3id.org/caselinker/resource/case/de_ag_2012_008/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/de_ag_2012_008/legal-proceeding> a ns5:Event,
-        ns5:LegalEvent,
-        ns3:LegalProceeding ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/de_ag_2012_008/charge/1>,
-        <https://w3id.org/caselinker/resource/case/de_ag_2012_008/charge/2> ;
-    ns3:hasProceedingBeginPoint "2012-01-10T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/de_ag_2012_008/operation> a ns5:Event,
-        <https://cacontology.projectvic.org/taskforce#UndercoverUnit> .
-
-<https://w3id.org/caselinker/resource/case/de_ag_2012_008/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/de_ag_2012_008/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/de_ag_2012_008/phase/arrested> a ns1:InitialPhase,
-        ns5:Phase ;
-    ns1:hasPhaseBeginPoint "2012-01-10T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/delaware> a ns5:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Delaware" ;
-    ns6:name "Delaware" .
-
-<https://w3id.org/caselinker/resource/location/georgetown> a ns5:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Georgetown" ;
-    ns6:name "Georgetown" .
-
-<https://w3id.org/caselinker/resource/location/laurel> a ns5:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Laurel" ;
-    ns6:name "Laurel" .
-
-<https://w3id.org/caselinker/resource/location/millsboro> a ns5:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Millsboro" ;
-    ns6:name "Millsboro" .
-
 <https://w3id.org/caselinker/resource/case/de_ag_2012_008/event/csam> a ns1:CSAMIncident,
-        ns5:Event ;
-    ns6:hasFacet <https://w3id.org/caselinker/resource/case/de_ag_2012_008/facet/csam> .
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/csam" .
+
+<https://w3id.org/caselinker/resource/case/de_ag_2012_008/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
+        ns3:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
+
+<https://w3id.org/caselinker/resource/case/de_ag_2012_008/event/multi-jurisdiction> a <https://cacontology.projectvic.org/core#Event>,
+        ns2:MultiJurisdictionalInvestigation ;
+    rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" .
 
 <https://w3id.org/caselinker/resource/case/de_ag_2012_008/event/online-only> a ns1:ChildSexualAbuseEvent,
-        ns5:Event .
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "Child Sexual Abuse Event · event/online-only" .
 
+<https://w3id.org/caselinker/resource/case/de_ag_2012_008/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        ns3:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns3:chargeCount "52"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/de_ag_2012_008/charge/1>,
+        <https://w3id.org/caselinker/resource/case/de_ag_2012_008/charge/2> .
 
-<https://w3id.org/caselinker/resource/case/de_ag_2012_008> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/de_ag_2012_008/provenance> .
+<https://w3id.org/caselinker/resource/case/de_ag_2012_008/operation> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/undercover#UndercoverOperation> ;
+    rdfs:label "Undercover Operation · operation" .
+
+<https://w3id.org/caselinker/resource/case/de_ag_2012_008/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/de_ag_2012_008/role/offender/1> a ns3:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" .
+
+<https://w3id.org/caselinker/resource/location/delaware-de> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Delaware" ;
+    dcterms:identifier "fips:10" ;
+    ns4:name "Delaware" .
+
+<https://w3id.org/caselinker/resource/location/georgetown-town-de> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Georgetown town" ;
+    dcterms:identifier "fips:1029090" ;
+    skos:altLabel "Georgetown" ;
+    ns4:name "Georgetown town" .
+
+<https://w3id.org/caselinker/resource/location/laurel-town-de> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Laurel town" ;
+    dcterms:identifier "fips:1041310" ;
+    skos:altLabel "Laurel" ;
+    ns4:name "Laurel town" .
+
+<https://w3id.org/caselinker/resource/location/millsboro-town-de> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Millsboro town" ;
+    dcterms:identifier "fips:1047940" ;
+    skos:altLabel "Millsboro" ;
+    ns4:name "Millsboro town" .
+
+<https://w3id.org/caselinker/resource/case/de_ag_2012_008/phase/arrested> a ns1:InitialPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Initial Phase · phase/arrested" .
+

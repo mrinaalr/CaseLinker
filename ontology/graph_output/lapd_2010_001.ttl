@@ -1,155 +1,185 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns4: <https://cacontology.projectvic.org/custodial#> .
-@prefix ns5: <https://cacontology.projectvic.org/core#> .
+@prefix ns1: <https://cacontology.projectvic.org/core#> .
+@prefix ns2: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns3: <https://cacontology.projectvic.org#> .
+@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns7: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/lapd_2010_001/admission/1/extraction-confidence> a ns5:AssessmentResult ;
-    ns5:assesses <https://w3id.org/caselinker/resource/case/lapd_2010_001/admission/1> ;
-    ns5:generatedBy <https://w3id.org/caselinker/resource/case/lapd_2010_001> ;
-    ns5:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/lapd_2010_001/admission/2/extraction-confidence> a ns5:AssessmentResult ;
-    ns5:assesses <https://w3id.org/caselinker/resource/case/lapd_2010_001/admission/2> ;
-    ns5:generatedBy <https://w3id.org/caselinker/resource/case/lapd_2010_001> ;
-    ns5:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/agency/district-attorneys-office> a ns6:StateAgency .
-
-<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> .
-
-<https://w3id.org/caselinker/resource/agency/los-angeles-police-department> a ns6:LocalAgency .
-
-<https://w3id.org/caselinker/resource/case/lapd_2010_001/charge/1> a ns7:CSAM_Possession,
-        ns7:CriminalCharge ;
-    rdfs:label "possession of child pornography" ;
-    ns7:indictmentCounts 2 .
-
-<https://w3id.org/caselinker/resource/case/lapd_2010_001/event/distribution> a ns5:Event,
-        ns7:CSAM_Distribution ;
-    ns1:severityLevel 3 .
-
-<https://w3id.org/caselinker/resource/case/lapd_2010_001/event/trust-violation> a ns4:AuthorityAbuse,
-        ns4:TrustViolation ;
-    ns4:violatesRelationship <https://w3id.org/caselinker/resource/case/lapd_2010_001/relationship/teacher> .
-
-<https://w3id.org/caselinker/resource/case/lapd_2010_001/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/lapd_2010_001/legal-proceeding> a ns5:Event,
-        ns5:LegalEvent,
-        ns7:LegalProceeding ;
-    ns7:hasCharge <https://w3id.org/caselinker/resource/case/lapd_2010_001/charge/1> ;
-    ns7:hasProceedingBeginPoint "2010-12-08T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/lapd_2010_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/lapd_2010_001/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/lapd_2010_001/relationship/teacher> a ns4:CustodialRelationship,
-        ns4:Teacher ;
-    ns4:involvesChild <https://w3id.org/caselinker/resource/case/lapd_2010_001/role/victim/1> ;
-    ns4:involvesCustodian <https://w3id.org/caselinker/resource/case/lapd_2010_001/role/offender/1> ;
-    ns4:relationshipType "teacher" .
-
-<https://w3id.org/caselinker/resource/case/lapd_2010_001/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2010-12-08T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/lapd_2010_001/event/possession> ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/lapd_2010_001/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/case/lapd_2010_001> a ns1:CACInvestigation,
-        ns5:EnduringEntity ;
-    dcterms:created "2026-10-18 05:32:21.852597" ;
+<https://w3id.org/caselinker/resource/case/lapd_2010_001> a ns3:CACInvestigation,
+        ns1:EnduringEntity ;
+    rdfs:label "Case lapd_2010_001" ;
+    dcterms:created "2026-11-11T15:34:22.263992"^^xsd:dateTime ;
+    dcterms:date "2010-12-08"^^xsd:date ;
     dcterms:identifier "lapd_2010_001" ;
-    dcterms:modified "2026-10-18 05:32:21.852597" ;
+    dcterms:modified "2026-11-11T15:34:22.263992"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/lapd_2010_001/provenance> ;
     dcterms:source <https://www.lapdonline.org/newsroom/lausd-teacher-arrested-for-possession-of-child-pornography-detectives-seek-possible-additional-victims-nr10570rf/>,
         "LAPD" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/calif>,
-        <https://w3id.org/caselinker/resource/location/carson>,
-        <https://w3id.org/caselinker/resource/location/los-angeles>,
-        <https://w3id.org/caselinker/resource/location/los-angeles-county> ;
-    ns1:currentPhase <https://w3id.org/caselinker/resource/case/lapd_2010_001/phase/arrested> ;
-    ns1:hasPhase <https://w3id.org/caselinker/resource/case/lapd_2010_001/phase/arrested> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/lapd_2010_001/admission/1>,
-        <https://w3id.org/caselinker/resource/case/lapd_2010_001/admission/2>,
-        <https://w3id.org/caselinker/resource/case/lapd_2010_001/event/distribution>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/california-ca>,
+        <https://w3id.org/caselinker/resource/location/carson-city-ca>,
+        <https://w3id.org/caselinker/resource/location/los-angeles-city-ca>,
+        <https://w3id.org/caselinker/resource/location/los-angeles-county-ca> ;
+    ns3:currentPhase <https://w3id.org/caselinker/resource/case/lapd_2010_001/phase/arrested> ;
+    ns3:hasPhase <https://w3id.org/caselinker/resource/case/lapd_2010_001/phase/arrested> ;
+    ns3:hasStep <https://w3id.org/caselinker/resource/case/lapd_2010_001/event/distribution>,
         <https://w3id.org/caselinker/resource/case/lapd_2010_001/event/possession>,
         <https://w3id.org/caselinker/resource/case/lapd_2010_001/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/lapd_2010_001/legal-proceeding> ;
-    ns1:investigationStatus "unknown" ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/district-attorneys-office>,
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/district-attorneys-office-ca-unverified>,
         <https://w3id.org/caselinker/resource/agency/icac>,
-        <https://w3id.org/caselinker/resource/agency/los-angeles-police-department> ;
-    ns3:mentionsLocation <https://w3id.org/caselinker/resource/location/calif>,
-        <https://w3id.org/caselinker/resource/location/carson>,
-        <https://w3id.org/caselinker/resource/location/los-angeles>,
-        <https://w3id.org/caselinker/resource/location/los-angeles-county> .
+        <https://w3id.org/caselinker/resource/agency/los-angeles-police-department-ca> ;
+    ns4:object <https://w3id.org/caselinker/resource/case/lapd_2010_001/admission/1>,
+        <https://w3id.org/caselinker/resource/case/lapd_2010_001/admission/2> .
 
-<https://w3id.org/caselinker/resource/case/lapd_2010_001/phase/arrested> a ns1:InitialPhase,
-        ns5:Phase ;
-    ns1:hasPhaseBeginPoint "2010-12-08T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/lapd_2010_001/admission/1/extraction-confidence> a ns1:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/lapd_2010_001/admission/1> ;
+    ns1:hasConfidence 0.65 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/location/calif> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/lapd_2010_001/admission/2/extraction-confidence> a ns1:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/2/extraction-confidence" ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/lapd_2010_001/admission/2> ;
+    ns1:hasConfidence 0.65 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+
+<https://w3id.org/caselinker/resource/case/lapd_2010_001/assessment/semantic/evidence-seizure> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · evidence_seizure" ;
+    dcterms:subject <https://cacontology.projectvic.org/production#ProducedContent> ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/lapd_2010_001/narrative> ;
+    ns1:hasConfidence 0.5047 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/lapd_2010_001/assessment/semantic/possession-csam> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns3:CSAMIncident ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/lapd_2010_001/narrative> ;
+    ns1:hasConfidence 0.509 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/lapd_2010_001/role/offender/1/has-role> a ns4:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns4:isDirectional true ;
+    ns4:kindOfRelationship "Has_Role" ;
+    ns4:source <https://w3id.org/caselinker/resource/case/lapd_2010_001/person/offender/1> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/lapd_2010_001/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/lapd_2010_001/role/victim/1/has-role> a ns4:Relationship ;
+    rdfs:label "Relationship · role/victim/1/has-role" ;
+    ns4:isDirectional true ;
+    ns4:kindOfRelationship "Has_Role" ;
+    ns4:source <https://w3id.org/caselinker/resource/case/lapd_2010_001/person/victim/1> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/lapd_2010_001/role/victim/1> .
+
+<https://w3id.org/caselinker/resource/agency/district-attorneys-office-ca-unverified> a ns1:OrganizationLikeEntity,
+        ns6:StateAgency ;
+    rdfs:label "District Attorney's Office" ;
+    ns4:name "District Attorney's Office" .
+
+<https://w3id.org/caselinker/resource/agency/icac> a ns1:OrganizationLikeEntity,
+        <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns4:name "ICAC Task Force" .
+
+<https://w3id.org/caselinker/resource/agency/los-angeles-police-department-ca> a ns1:OrganizationLikeEntity,
+        ns6:LocalAgency ;
+    rdfs:label "Los Angeles Police Department" ;
+    dcterms:identifier "ori:CA0194200" ;
+    ns4:name "Los Angeles Police Department" .
+
+<https://w3id.org/caselinker/resource/case/lapd_2010_001/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
+    rdfs:label "possession of child pornography" .
+
+<https://w3id.org/caselinker/resource/case/lapd_2010_001/event/distribution> a ns1:Event,
+        ns5:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
+
+<https://w3id.org/caselinker/resource/case/lapd_2010_001/event/trust-violation> a ns2:AuthorityAbuse,
+        ns2:TrustViolation ;
+    rdfs:label "Authority Abuse · event/trust-violation" ;
+    ns2:perpetratedBy <https://w3id.org/caselinker/resource/case/lapd_2010_001/role/offender/1> ;
+    ns2:violatesRelationship <https://w3id.org/caselinker/resource/case/lapd_2010_001/relationship/teacher> .
+
+<https://w3id.org/caselinker/resource/case/lapd_2010_001/legal-proceeding> a ns1:Event,
+        ns1:LegalEvent,
+        ns5:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns5:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/lapd_2010_001/charge/1> .
+
+<https://w3id.org/caselinker/resource/case/lapd_2010_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/lapd_2010_001/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
+
+<https://w3id.org/caselinker/resource/case/lapd_2010_001/relationship/teacher> a ns2:CustodialRelationship,
+        ns2:Teacher ;
+    rdfs:label "Custodial Relationship · relationship/teacher" ;
+    ns2:involvesChild <https://w3id.org/caselinker/resource/case/lapd_2010_001/role/victim/1> ;
+    ns2:involvesCustodian <https://w3id.org/caselinker/resource/case/lapd_2010_001/role/offender/1> ;
+    ns2:relationshipType "teacher" ;
+    ns4:isDirectional true ;
+    ns4:source <https://w3id.org/caselinker/resource/case/lapd_2010_001/role/offender/1> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/lapd_2010_001/role/victim/1> .
+
+<https://w3id.org/caselinker/resource/location/california-ca> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Calif" ;
-    ns2:name "Calif" .
+    rdfs:label "California" ;
+    dcterms:identifier "fips:06" ;
+    skos:altLabel "Calif" ;
+    ns4:name "California" .
 
-<https://w3id.org/caselinker/resource/location/carson> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/carson-city-ca> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Carson" ;
-    ns2:name "Carson" .
+    rdfs:label "Carson city" ;
+    dcterms:identifier "fips:0611530" ;
+    skos:altLabel "Carson" ;
+    ns4:name "Carson city" .
 
-<https://w3id.org/caselinker/resource/location/los-angeles> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/los-angeles-city-ca> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Los Angeles" ;
-    ns2:name "Los Angeles" .
+    rdfs:label "Los Angeles city" ;
+    dcterms:identifier "fips:0644000" ;
+    skos:altLabel "Los Angeles" ;
+    ns4:name "Los Angeles city" .
 
-<https://w3id.org/caselinker/resource/location/los-angeles-county> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/los-angeles-county-ca> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Los Angeles County" ;
-    ns2:name "Los Angeles County" .
+    dcterms:identifier "fips:06037" ;
+    ns4:name "Los Angeles County" .
 
 <https://w3id.org/caselinker/resource/case/lapd_2010_001/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "viewing and downloading images of child pornography" ;
     dcterms:source <https://www.lapdonline.org/newsroom/lausd-teacher-arrested-for-possession-of-child-pornography-detectives-seek-possible-additional-victims-nr10570rf/> ;
-    ns3:admissionContext "the 1100 block of Dimondale Street in Carson, Calif. Fifty-three-year-old Ela was at the location when the warrant was served, and he adm..." ;
-    ns3:admissionFrame "admitted_to" ;
-    ns3:admissionTheme "harm_conduct",
-        "tech_use" ;
-    ns3:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/lapd_2010_001/role/offender/1> ;
-    ns3:evidenceTier "press_release_stated" ;
-    ns3:quoteType "paraphrase" ;
-    ns2:description "viewing and downloading images of child pornography" .
+    ns4:description "viewing and downloading images of child pornography" .
 
 <https://w3id.org/caselinker/resource/case/lapd_2010_001/admission/2> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "to viewing and downloading images of child pornography" ;
     dcterms:source <https://www.lapdonline.org/newsroom/lausd-teacher-arrested-for-possession-of-child-pornography-detectives-seek-possible-additional-victims-nr10570rf/> ;
-    ns3:admissionContext "son, Calif. Fifty-three-year-old Ela was at the location when the warrant was served, and he admitted to viewing and downloading images o..." ;
-    ns3:admissionFrame "he_admitted_paraphrase" ;
-    ns3:admissionTheme "harm_conduct",
-        "tech_use" ;
-    ns3:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/lapd_2010_001/role/offender/1> ;
-    ns3:evidenceTier "press_release_stated" ;
-    ns3:quoteType "paraphrase" ;
-    ns2:description "to viewing and downloading images of child pornography" .
+    ns4:description "to viewing and downloading images of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/lapd_2010_001/event/possession> a ns1:CSAMIncident,
-        ns5:Event ;
-    ns1:producesArtifact <https://w3id.org/caselinker/resource/case/lapd_2010_001/admission/1>,
-        <https://w3id.org/caselinker/resource/case/lapd_2010_001/admission/2> ;
-    ns1:severityLevel 3 ;
-    ns2:hasFacet <https://w3id.org/caselinker/resource/case/lapd_2010_001/facet/possession> .
+<https://w3id.org/caselinker/resource/case/lapd_2010_001/phase/arrested> a ns3:InitialPhase,
+        ns1:Phase ;
+    rdfs:label "Initial Phase · phase/arrested" .
 
-<https://w3id.org/caselinker/resource/case/lapd_2010_001/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2010-12-08T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/lapd_2010_001/event/possession> ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/lapd_2010_001/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/lapd_2010_001/event/possession> a ns3:CSAMIncident,
+        ns1:Event ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns3:severityLevel 3 .
 
+<https://w3id.org/caselinker/resource/case/lapd_2010_001/role/victim/1> a ns3:VictimRole ;
+    rdfs:label "Victim Role · role/victim/1" ;
+    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/lapd_2010_001/event/possession> .
 
-<https://w3id.org/caselinker/resource/case/lapd_2010_001> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/lapd_2010_001/provenance> .
+<https://w3id.org/caselinker/resource/case/lapd_2010_001/role/offender/1> a ns5:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/lapd_2010_001/event/possession> .
+

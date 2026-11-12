@@ -1,75 +1,72 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/core#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns5: <https://w3id.org/caselinker/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_041> a ns1:CACInvestigation,
-        ns2:EnduringEntity ;
-    dcterms:created "2026-10-17 22:21:28.093193" ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case ncmec_2023_041" ;
+    dcterms:created "2026-11-10T10:02:42.848904"^^xsd:dateTime ;
+    dcterms:date "2023-01-13"^^xsd:date ;
     dcterms:identifier "ncmec_2023_041" ;
-    dcterms:modified "2026-10-17 22:21:28.093193" ;
+    dcterms:modified "2026-11-10T10:02:42.848904"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2023_041/provenance> ;
     dcterms:source <https://www.news8000.com/news/crime/onalaska-man-accused-in-child-porn-charges-out-on-bond/article_040a86e2-938d-11ed-94d5-4733669cb47f.html>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/onalaska> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2023_041/location/onalaska> ;
     ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_041/phase/charged> ;
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_041/phase/charged> ;
     ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_041/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_041/event/possession>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2023_041/legal-proceeding> ;
-    ns5:mentionsLocation <https://w3id.org/caselinker/resource/location/onalaska> .
+        <https://w3id.org/caselinker/resource/case/ncmec_2023_041/legal-proceeding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_041/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2023-01-13T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_041/event/possession> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_041/person/offender/1> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_041/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2023-01-13T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_041/event/possession> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_041/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_041/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2023_041/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2023_041/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_041/charge/1> a ns3:CSAM_Possession,
         ns3:CriminalCharge ;
-    rdfs:label "child pornography" ;
-    ns3:indictmentCounts 2 .
+    rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_041/event/distribution> a ns2:Event,
-        ns3:CSAM_Distribution .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_041/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
+        ns3:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_041/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_041/legal-proceeding> a ns2:Event,
-        ns2:LegalEvent,
+<https://w3id.org/caselinker/resource/case/ncmec_2023_041/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
         ns3:LegalProceeding ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_041/charge/1> ;
-    ns3:hasProceedingBeginPoint "2023-01-13T00:00:00Z"^^xsd:dateTimeStamp .
+    rdfs:label "Event · legal-proceeding" ;
+    ns3:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_041/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_041/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_041/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "social media" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_041/phase/charged> a ns1:LegalProcessPhase,
-        ns2:Phase ;
-    ns1:hasPhaseBeginPoint "2023-01-13T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/onalaska> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2023_041/location/onalaska> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Onalaska" ;
-    ns4:name "Onalaska" .
+    ns2:name "Onalaska" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_041/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_041/role/offender/1> a ns3:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_041/event/possession> .
+
+<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "social media" ;
+    ns2:name "social media" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_041/event/possession> a ns1:CSAMIncident,
-        ns2:Event ;
-    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/social-media> ;
-    ns4:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2023_041/facet/possession> .
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/social-media> .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2023_041/phase/charged> a ns1:LegalProcessPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Legal Process Phase · phase/charged" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_041> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2023_041/provenance> .

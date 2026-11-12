@@ -4,9 +4,9 @@
 
 | At a glance | |
 |---|---|
-| Corpus | **10,711** case reports from **70** public sources, 2002–2026: ICAC task forces, state attorneys general, state police, NCMEC, DOJ, federal and international agencies |
-| Extracted | **131,332** structured features; **4,000+** distinct law-enforcement agencies (live count on [`/sources`](https://caselinker.up.railway.app/sources)) |
-| Graphs | 10,711 CAC/UCO case graphs + 10,711 provenance graphs in a public SPARQL store, plus 297 PACER court-record graphs |
+| Corpus | **10,802** case reports from **76** public sources, 2002–2026: ICAC task forces, state attorneys general, state police, NCMEC, DOJ, federal and international agencies |
+| Extracted | **131,910** structured features; **4,000+** distinct law-enforcement agencies (live count on [`/sources`](https://caselinker.up.railway.app/sources)) |
+| Graphs | 10,802 CAC/UCO case graphs + 10,802 provenance graphs in a public SPARQL store, plus 297 PACER court-record graphs |
 | Lifecycles | 30 federal cases modeled as CAC phase state machines with L\* trajectories |
 | Analysis | Platform harm (Q1 affordance → misuse → harm evidence), similarity clusters and automated insights, rule and model triage, 11-dimension facet cohorts |
 | Agents | 54 MCP tools locally, 44 hosted, over stdio, SSE and Streamable HTTP |
@@ -661,5 +661,6 @@ CaseLinker/
 | Aug 2026 | Contributor provenance capture and claim-snapshot drift (PRs #6, #7); public SPARQL on Oxigraph; 41 PACER investigations as 297 CASE-UCO graphs |
 | Sep 2026 | Ontology & Graphs explorer, LLM-assisted SPARQL, 10,000 cases. **Phase 2.5**: 10,282 cases, PyMuPDF ingest, crash course. Collector MCP tools, international sources with local translation, duplicate-URL gate |
 | Oct 2026 | **Phase 3**: four-layer extractor with span gate and `resolve_v3.0`, provenance graphs, w3id IRIs with dereferencing, content-locked case ids, Census and CDE grounding, snapshot freshness disclosure. 10,711 cases, 131,332 features |
+| Nov 2026 | Six new sources (Metro Nashville PD, Louisiana SP, Ocean County Prosecutor, Kentucky AG, Maricopa County Attorney, Sacramento SO) for 76 in all; full re-ingest, SQLite, graph and SPARQL rebuild. 10,802 cases, 131,910 features |
 
 Research outputs: five technical reports (listed in the [README](README.md#technical-reports)) and the companion paper *Affordances for Harm* ([DOI](https://doi.org/10.5281/zenodo.21347781)), whose questions CaseLinker was built to answer.

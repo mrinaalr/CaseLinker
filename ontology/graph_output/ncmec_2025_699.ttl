@@ -1,79 +1,77 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns5: <https://cacontology.projectvic.org/core#> .
+@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_699> a ns1:CACInvestigation,
-        ns5:EnduringEntity ;
-    dcterms:created "2026-10-18 00:01:23.024211" ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case ncmec_2025_699" ;
+    dcterms:created "2026-11-10T16:36:50.905904"^^xsd:dateTime ;
+    dcterms:date "2025-08-18"^^xsd:date ;
     dcterms:identifier "ncmec_2025_699" ;
-    dcterms:modified "2026-10-18 00:01:23.024211" ;
+    dcterms:modified "2026-11-12T02:06:39.092391"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2025_699/provenance> ;
     dcterms:source <https://www.valleynewslive.com/2025/08/18/man-facing-child-porn-charges-was-volunteer-american-gold-gymnastics-gym-responds/>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/fargo>,
-        <https://w3id.org/caselinker/resource/location/nd> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2025_699/location/fargo>,
+        <https://w3id.org/caselinker/resource/location/north-dakota-nd> ;
     ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_699/phase/charged> ;
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_699/phase/charged> ;
     ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_699/event/possession>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_699/legal-proceeding> ;
-    ns2:mentionsLocation <https://w3id.org/caselinker/resource/location/fargo>,
-        <https://w3id.org/caselinker/resource/location/nd> .
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_699/legal-proceeding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_699/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2025-08-18T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_699/event/possession> ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2025_699/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_699/role/offender/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2025_699/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2025_699/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_699/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2025-08-18T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_699/event/possession> ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2025_699/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_699/charge/1> a ns2:CSAM_Possession,
+        ns2:CriminalCharge ;
+    rdfs:label "child sexual abuse material" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_699/charge/1> a ns3:CSAM_Possession,
-        ns3:CriminalCharge ;
-    rdfs:label "child sexual abuse material" ;
-    ns3:indictmentCounts 2 .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_699/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        ns2:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns2:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_699/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_699/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_699/legal-proceeding> a ns5:Event,
-        ns5:LegalEvent,
-        ns3:LegalProceeding ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_699/charge/1> ;
-    ns3:hasProceedingBeginPoint "2025-08-18T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_699/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_699/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/platform/facebook> a <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "Facebook" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_699/phase/charged> a ns1:LegalProcessPhase,
-        ns5:Phase ;
-    ns1:hasPhaseBeginPoint "2025-08-18T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/fargo> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2025_699/location/fargo> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Fargo" ;
-    ns4:name "Fargo" .
+    ns3:name "Fargo" .
 
-<https://w3id.org/caselinker/resource/location/nd> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2025_699/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_699/role/offender/1> a ns2:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_699/event/possession> .
+
+<https://w3id.org/caselinker/resource/location/north-dakota-nd> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "N.d." ;
-    ns4:name "N.d." .
+    rdfs:label "North Dakota" ;
+    dcterms:identifier "fips:38" ;
+    skos:altLabel "N.d." ;
+    ns3:name "North Dakota" .
+
+<https://w3id.org/caselinker/resource/platform/facebook> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "Facebook" ;
+    ns3:name "Facebook" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_699/event/possession> a ns1:CSAMIncident,
-        ns5:Event ;
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/possession" ;
     ns1:severityLevel 3 ;
-    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/facebook> ;
-    ns4:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2025_699/facet/possession> .
+    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/facebook> .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2025_699/phase/charged> a ns1:LegalProcessPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Legal Process Phase · phase/charged" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_699> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2025_699/provenance> .

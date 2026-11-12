@@ -1,112 +1,114 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://w3id.org/caselinker/resource/vocab/> .
+@prefix ns1: <https://cacontology.projectvic.org/hotlines#> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns4: <https://cacontology.projectvic.org/us/ncmec#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns5: <https://cacontology.projectvic.org/core#> .
-@prefix ns6: <https://cacontology.projectvic.org/detection#> .
+@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns7: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns8: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_313/admission/1/extraction-confidence> a ns5:AssessmentResult ;
-    ns5:assesses <https://w3id.org/caselinker/resource/case/ncmec_2022_313/admission/1> ;
-    ns5:generatedBy <https://w3id.org/caselinker/resource/case/ncmec_2022_313> ;
-    ns5:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_313/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2022-04-08T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_313/event/hands-on>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_313/event/possession> ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_313/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_313> a ns2:CACInvestigation,
         ns5:EnduringEntity ;
-    dcterms:created "2026-10-17 21:51:23.116760" ;
+    rdfs:label "Case ncmec_2022_313" ;
+    dcterms:created "2026-11-10T09:18:50.186860"^^xsd:dateTime ;
+    dcterms:date "2022-04-08"^^xsd:date ;
     dcterms:identifier "ncmec_2022_313" ;
-    dcterms:modified "2026-10-17 21:51:23.116760" ;
+    dcterms:modified "2026-11-10T09:18:50.186860"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2022_313/provenance> ;
     dcterms:source <https://www.positivelyosceola.com/47-year-old-osceola-man-charged-with-10-counts-of-possession-of-photos-videos-of-child-pornography/>,
         "NCMEC" ;
     ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_313/phase/charged> ;
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_313/phase/charged> ;
-    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_313/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_313/cybertip>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_313/event/hands-on>,
+    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_313/event/hands-on>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_313/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_313/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_313/operation> ;
     ns7:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
-        <https://w3id.org/caselinker/resource/agency/ncmec> .
+        <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2022_313/admission/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2022_313/cybertip> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_313/charge/1> a ns3:CSAM_Possession,
-        ns3:CriminalCharge ;
-    rdfs:label "child pornography" ;
-    ns3:indictmentCounts 21 .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_313/admission/1/extraction-confidence> a ns5:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns5:assesses <https://w3id.org/caselinker/resource/case/ncmec_2022_313/admission/1> ;
+    ns5:hasConfidence 0.65 ;
+    ns5:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_313/cybertip> a ns4:NCMECCybertipReport ;
-    ns4:supportedBy <https://w3id.org/caselinker/resource/agency/ncmec> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_313/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2022_313/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 47.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_313/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_313/role/offender/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2022_313/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2022_313/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_313/legal-proceeding> a ns5:Event,
-        ns5:LegalEvent,
-        ns3:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): booked into the Osceola County Jail" ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_313/charge/1> ;
-    ns3:hasProceedingBeginPoint "2022-04-08T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/platform/chat> a ns5:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
+    rdfs:label "chat" ;
+    ns3:name "chat" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_313/operation> a ns5:Event,
-        <https://cacontology.projectvic.org/taskforce#ReactiveOperation> .
+<https://w3id.org/caselinker/resource/agency/icac> a ns5:OrganizationLikeEntity,
+        <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns3:name "ICAC Task Force" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_313/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns6:ageEstimate 47 .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_313/charge/1> a ns6:CSAM_Possession,
+        ns6:CriminalCharge ;
+    rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_313/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_313/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2022-04-08T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_313/event/hands-on>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_313/event/possession> ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_313/person/offender/1> .
-
-<https://w3id.org/caselinker/resource/agency/ncmec> a ns7:FederalAgency .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_313/phase/charged> a ns2:LegalProcessPhase,
-        ns5:Phase ;
-    ns2:hasPhaseBeginPoint "2022-04-08T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
-    rdfs:label "chat" .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_313/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
+    rdfs:label "CyberTipline report" ;
+    ns1:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns3:name "observe" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_313/event/hands-on> a ns2:ChildSexualAbuseEvent,
         ns5:Event ;
-    ns2:producesArtifact <https://w3id.org/caselinker/resource/case/ncmec_2022_313/admission/1> ;
-    ns2:severityLevel 3 ;
-    ns2:usesChannel <https://w3id.org/caselinker/resource/platform/chat> .
+    rdfs:label "Child Sexual Abuse Event · event/hands-on" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_313/event/possession> a ns2:CSAMIncident,
         ns5:Event ;
-    ns2:producesArtifact <https://w3id.org/caselinker/resource/case/ncmec_2022_313/admission/1> ;
-    ns2:severityLevel 3 ;
-    ns2:usesChannel <https://w3id.org/caselinker/resource/platform/chat> ;
-    ns8:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2022_313/facet/possession> .
+    rdfs:label "CSAMIncident · event/possession" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_313/legal-proceeding> a ns5:Event,
+        ns5:LegalEvent,
+        ns6:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    rdfs:comment "Pretrial detention facility (not a sentence): booked into the Osceola County Jail" ;
+    ns6:chargeCount "21"^^xsd:nonNegativeInteger ;
+    ns6:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_313/charge/1> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_313/operation> a ns5:Event,
+        <https://cacontology.projectvic.org/taskforce#ReactiveOperation> ;
+    rdfs:label "Reactive Operation · operation" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_313/role/offender/1> a ns6:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" .
+
+<https://w3id.org/caselinker/resource/agency/ncmec> a ns5:OrganizationLikeEntity,
+        ns1:HotlineOrganization,
+        ns7:FederalAgency ;
+    rdfs:label "National Center for Missing and Exploited Children" ;
+    skos:altLabel "NCMEC" ;
+    ns3:name "National Center for Missing and Exploited Children" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_313/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "possessing child pornography, however denied sexually abusing any children" ;
     dcterms:source <https://www.positivelyosceola.com/47-year-old-osceola-man-charged-with-10-counts-of-possession-of-photos-videos-of-child-pornography/> ;
-    ns1:admissionContext "EC) saying he he had numerous files of child abuse material and videos in his possession. Draper was interviewed by deputies and admitted..." ;
-    ns1:admissionFrame "admitted_to" ;
-    ns1:admissionTheme "harm_conduct",
-        "minimization" ;
-    ns1:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/ncmec_2022_313/role/offender/1> ;
-    ns1:evidenceTier "press_release_stated" ;
-    ns1:quoteType "paraphrase" ;
-    ns8:description "possessing child pornography, however denied sexually abusing any children" .
+    ns3:description "possessing child pornography, however denied sexually abusing any children" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2022_313/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_313> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2022_313/provenance> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_313/phase/charged> a ns2:LegalProcessPhase,
+        ns5:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
+

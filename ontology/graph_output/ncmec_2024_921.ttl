@@ -1,98 +1,119 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns1: <https://cacontology.projectvic.org#> .
 @prefix ns2: <https://cacontology.projectvic.org/core#> .
-@prefix ns3: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns5: <https://cacontology.projectvic.org#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/platforms#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_921/admission/1/extraction-confidence> a ns2:AssessmentResult ;
-    ns2:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_921/admission/1> ;
-    ns2:generatedBy <https://w3id.org/caselinker/resource/case/ncmec_2024_921> ;
-    ns2:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_921/role/victim/1> a ns5:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns5:hasRoleBeginPoint "2024-03-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns5:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_921/event/possession> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_921/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_921> a ns5:CACInvestigation,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_921> a ns1:CACInvestigation,
         ns2:EnduringEntity ;
-    dcterms:created "2026-10-17 23:04:35.877214" ;
+    rdfs:label "Case ncmec_2024_921" ;
+    dcterms:created "2026-11-10T21:28:39.492862"^^xsd:dateTime ;
+    dcterms:date "2024-03"^^xsd:gYearMonth ;
     dcterms:identifier "ncmec_2024_921" ;
-    dcterms:modified "2026-10-17 23:04:35.877214" ;
+    dcterms:modified "2026-11-12T00:54:33.629896"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_921/provenance> ;
     dcterms:source <https://m.bartlesvilleradio.com/pages/news/408762024/bartlesville-man-arrested-on-possession-of-child-pornography>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/bartlesville> ;
-    ns5:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_921/phase/arrested> ;
-    ns5:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_921/phase/arrested> ;
-    ns5:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_921/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_921/event/distribution>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2024_921/location/bartlesville> ;
+    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_921/phase/arrested> ;
+    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_921/phase/arrested> ;
+    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_921/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_921/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_921/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_921/operation> ;
-    ns3:mentionsLocation <https://w3id.org/caselinker/resource/location/bartlesville> .
+    ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2024_921/admission/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_921/cybertip> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_921/charge/1> a ns1:CSAM_Possession,
-        ns1:CriminalCharge ;
-    rdfs:label "possession of child pornography" ;
-    ns1:indictmentCounts 2 .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_921/admission/1/extraction-confidence> a ns2:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_921/admission/1> ;
+    ns2:hasConfidence 0.65 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_921/assessment/semantic/exploitive-positions> a ns2:AssessmentResult ;
+    rdfs:label "semantic similarity · exploitive_positions" ;
+    dcterms:subject <https://cacontology.projectvic.org/custodial#PositionOfTrust> ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_921/narrative> ;
+    ns2:hasConfidence 0.4513 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_921/assessment/semantic/possession-csam> a ns2:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns1:CSAMIncident ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_921/narrative> ;
+    ns2:hasConfidence 0.5517 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_921/assessment/semantic/sextortion> a ns2:AssessmentResult ;
+    rdfs:label "semantic similarity · sextortion" ;
+    dcterms:subject <https://cacontology.projectvic.org/sextortion#SextortionIncident> ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_921/narrative> ;
+    ns2:hasConfidence 0.4512 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_921/role/offender/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2024_921/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2024_921/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_921/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
+    rdfs:label "possession of child pornography" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_921/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
+    rdfs:label "CyberTipline report" ;
+    ns3:name "observe" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_921/event/distribution> a ns2:Event,
-        ns1:CSAM_Distribution .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_921/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+        ns4:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_921/legal-proceeding> a ns2:Event,
         ns2:LegalEvent,
-        ns1:LegalProceeding ;
+        ns4:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): Washington County Jail" ;
-    ns1:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_921/charge/1> ;
-    ns1:hasProceedingBeginPoint "2024-03-01T00:00:00Z"^^xsd:dateTimeStamp .
+    ns4:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_921/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_921/operation> a ns2:Event,
-        <https://cacontology.projectvic.org/taskforce#ReactiveOperation> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_921/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_921/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_921/role/offender/1> a ns5:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns5:hasRoleBeginPoint "2024-03-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns5:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_921/event/possession> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_921/person/offender/1> .
-
-<https://w3id.org/caselinker/resource/platform/snapchat> a <https://cacontology.projectvic.org/platforms#MessagingService> ;
-    rdfs:label "Snapchat" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_921/phase/arrested> a ns5:InitialPhase,
-        ns2:Phase ;
-    ns5:hasPhaseBeginPoint "2024-03-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/bartlesville> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_921/location/bartlesville> a ns2:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Bartlesville" ;
-    ns4:name "Bartlesville" .
+    ns3:name "Bartlesville" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_921/operation> a ns2:Event,
+        <https://cacontology.projectvic.org/taskforce#ReactiveOperation> ;
+    rdfs:label "Reactive Operation · operation" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_921/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_921/role/offender/1> a ns4:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_921/event/possession> .
+
+<https://w3id.org/caselinker/resource/platform/snapchat> a ns2:DigitalSystemEntity,
+        ns5:MessagingService ;
+    rdfs:label "Snapchat" ;
+    ns5:encryptionLevel "end-to-end" ;
+    ns3:name "Snapchat" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_921/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "had been banned from Snapchat but did not provide the details as to why" ;
     dcterms:source <https://m.bartlesvilleradio.com/pages/news/408762024/bartlesville-man-arrested-on-possession-of-child-pornography> ;
-    ns3:admissionContext "pchat containing the explicit videos. Pendergraft was interviewed on January 30th by OSBI agents and admitted he had been banned from Sna..." ;
-    ns3:admissionFrame "admitted_he_she" ;
-    ns3:admissionTheme "tech_use" ;
-    ns3:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/ncmec_2024_921/role/offender/1> ;
-    ns3:evidenceTier "press_release_stated" ;
-    ns3:quoteType "paraphrase" ;
-    ns4:description "had been banned from Snapchat but did not provide the details as to why" .
+    ns3:description "had been banned from Snapchat but did not provide the details as to why" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_921/event/possession> a ns5:CSAMIncident,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_921/event/possession> a ns1:CSAMIncident,
         ns2:Event ;
-    ns5:producesArtifact <https://w3id.org/caselinker/resource/case/ncmec_2024_921/admission/1> ;
-    ns5:usesChannel <https://w3id.org/caselinker/resource/platform/snapchat> ;
-    ns4:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2024_921/facet/possession> .
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/snapchat> .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2024_921/phase/arrested> a ns1:InitialPhase,
+        ns2:Phase ;
+    rdfs:label "Initial Phase · phase/arrested" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_921> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2024_921/provenance> .

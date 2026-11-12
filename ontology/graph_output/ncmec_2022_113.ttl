@@ -1,105 +1,113 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/core#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns7: <https://cacontology.projectvic.org/detection#> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_113> a ns2:CACInvestigation,
-        ns1:EnduringEntity ;
-    dcterms:created "2026-10-17 21:51:20.776397" ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case ncmec_2022_113" ;
+    dcterms:created "2026-11-10T09:17:43.986801"^^xsd:dateTime ;
+    dcterms:date "2022-05-04"^^xsd:date ;
     dcterms:identifier "ncmec_2022_113" ;
-    dcterms:modified "2026-10-17 21:51:20.776397" ;
+    dcterms:modified "2026-11-10T09:17:43.986801"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2022_113/provenance> ;
     dcterms:source <https://www.kjct8.com/2022/05/04/clifton-man-charged-multiple-counts-sexual-exploitation-child/>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/clifton>,
-        <https://w3id.org/caselinker/resource/location/colo>,
-        <https://w3id.org/caselinker/resource/location/grand-junction> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2022_113/location/clifton>,
+        <https://w3id.org/caselinker/resource/location/colorado-co>,
+        <https://w3id.org/caselinker/resource/location/grand-junction-city-co> ;
     ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_113/phase/charged> ;
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_113/phase/charged> ;
     ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_113/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_113/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_113/legal-proceeding> ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/mesa-county-sheriffs-office> ;
-    ns4:mentionsLocation <https://w3id.org/caselinker/resource/location/clifton>,
-        <https://w3id.org/caselinker/resource/location/colo>,
-        <https://w3id.org/caselinker/resource/location/grand-junction> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2022_113/agency/mesa-county-sheriffs-office> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_113/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2022-05-04T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_113/event/possession> ;
-    ns1:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_113/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_113/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2022_113/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 25.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_113/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2022-05-04T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_113/event/possession> ;
-    ns1:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_113/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_113/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2022_113/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2022_113/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/mesa-county-sheriffs-office> a ns6:LocalAgency .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_113/agency/mesa-county-sheriffs-office> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns5:LocalAgency ;
+    rdfs:label "Mesa County Sheriff's Office" ;
+    ns1:name "Mesa County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_113/charge/1> a ns5:CriminalCharge,
-        ns5:StateCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_113/charge/1> a ns3:CriminalCharge,
+        ns3:StateCharge ;
     rdfs:label "sexual exploitation of a child" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_113/charge/2> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_113/charge/2> a ns3:CSAM_Possession,
+        ns3:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_113/charge/3> a ns5:CriminalCharge ;
-    rdfs:label "sexual exploitation" ;
-    ns4:chargeCluster "sexual_exploitation_unspecified" .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_113/charge/3> a ns3:CriminalCharge ;
+    rdfs:label "sexual exploitation" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_113/event/distribution> a ns1:Event,
-        ns5:CSAM_Distribution .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_113/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
+        ns3:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_113/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_113/legal-proceeding> a ns1:Event,
-        ns1:LegalEvent,
-        ns5:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_113/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        ns3:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): booked him into the Mesa County Detention Facility" ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_113/charge/1>,
+    ns3:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_113/charge/1>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_113/charge/2>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_113/charge/3> ;
-    ns5:hasProceedingBeginPoint "2022-05-04T00:00:00Z"^^xsd:dateTimeStamp .
+        <https://w3id.org/caselinker/resource/case/ncmec_2022_113/charge/3> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_113/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns7:ageEstimate 25 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_113/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "social media" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_113/phase/charged> a ns2:LegalProcessPhase,
-        ns1:Phase ;
-    ns2:hasPhaseBeginPoint "2022-05-04T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/clifton> a ns1:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2022_113/location/clifton> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Clifton" ;
-    ns3:name "Clifton" .
+    ns1:name "Clifton" .
 
-<https://w3id.org/caselinker/resource/location/colo> a ns1:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Colo." ;
-    ns3:name "Colo." .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_113/role/offender/1> a ns3:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_113/event/possession> .
 
-<https://w3id.org/caselinker/resource/location/grand-junction> a ns1:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/colorado-co> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Grand Junction" ;
-    ns3:name "Grand Junction" .
+    rdfs:label "Colorado" ;
+    dcterms:identifier "fips:08" ;
+    skos:altLabel "Colo." ;
+    ns1:name "Colorado" .
+
+<https://w3id.org/caselinker/resource/location/grand-junction-city-co> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Grand Junction city" ;
+    dcterms:identifier "fips:0831660" ;
+    skos:altLabel "Grand Junction" ;
+    ns1:name "Grand Junction city" .
+
+<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "social media" ;
+    ns1:name "social media" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_113/event/possession> a ns2:CSAMIncident,
-        ns1:Event ;
-    ns2:usesChannel <https://w3id.org/caselinker/resource/platform/social-media> ;
-    ns3:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2022_113/facet/possession> .
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns2:usesChannel <https://w3id.org/caselinker/resource/platform/social-media> .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2022_113/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_113> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2022_113/provenance> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_113/phase/charged> a ns2:LegalProcessPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Legal Process Phase · phase/charged" .
+

@@ -1,75 +1,72 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://cacontology.projectvic.org/core#> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns6: <https://w3id.org/caselinker/resource/vocab/> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_073> a ns2:CACInvestigation,
-        ns4:EnduringEntity ;
-    dcterms:created "2026-10-17 23:04:25.087248" ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case ncmec_2024_073" ;
+    dcterms:created "2026-11-10T15:50:32.238347"^^xsd:dateTime ;
+    dcterms:date "2024-06-22"^^xsd:date ;
     dcterms:identifier "ncmec_2024_073" ;
-    dcterms:modified "2026-10-17 23:04:25.087248" ;
+    dcterms:modified "2026-11-12T00:13:51.022896"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_073/provenance> ;
     dcterms:source <https://www.cbsnews.com/sanfrancisco/news/petaluma-man-arrested-for-alleged-possession-of-child-pornography/>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/petaluma> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/petaluma-city> ;
     ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_073/phase/booked> ;
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_073/phase/booked> ;
     ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_073/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_073/legal-proceeding> ;
-    ns2:investigationStatus "unknown" ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/northern-california-computer-crimes-task-force> ;
-    ns6:mentionsLocation <https://w3id.org/caselinker/resource/location/petaluma> .
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/northern-california-computer-crimes-task-force> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_073/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2024-06-22T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_073/event/possession> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_073/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_073/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_073/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_073/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_073/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2024-06-22T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_073/event/possession> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_073/person/victim/1> .
+<https://w3id.org/caselinker/resource/agency/northern-california-computer-crimes-task-force> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns3:LocalAgency ;
+    rdfs:label "Northern California Computer Crimes Task Force" ;
+    ns1:name "Northern California Computer Crimes Task Force" .
 
-<https://w3id.org/caselinker/resource/agency/northern-california-computer-crimes-task-force> a ns4:OrganizationLikeEntity,
-        ns5:LocalAgency ;
-    rdfs:label "Northern California Computer Crimes Task Force" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_073/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
+    rdfs:label "possession of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_073/charge/1> a ns1:CSAM_Possession,
-        ns1:CriminalCharge ;
-    rdfs:label "possession of child pornography" ;
-    ns1:indictmentCounts 3 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_073/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_073/legal-proceeding> a ns4:Event,
-        ns4:LegalEvent,
-        ns1:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_073/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        ns4:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): booked in the Sonoma County Jail" ;
-    ns1:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_073/charge/1> ;
-    ns1:hasProceedingBeginPoint "2024-06-22T00:00:00Z"^^xsd:dateTimeStamp .
+    ns4:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_073/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_073/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_073/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_073/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_073/role/offender/1> a ns4:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_073/event/possession> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_073/phase/booked> a ns2:InitialPhase,
-        ns4:Phase ;
-    ns2:hasPhaseBeginPoint "2024-06-22T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/petaluma> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/petaluma-city> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Petaluma" ;
-    ns3:name "Petaluma" .
+    rdfs:label "Petaluma city" ;
+    dcterms:identifier "fips:0656784" ;
+    skos:altLabel "Petaluma" ;
+    ns1:name "Petaluma city" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_073/event/possession> a ns2:CSAMIncident,
-        ns4:Event ;
-    ns3:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2024_073/facet/possession> .
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/possession" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2024_073/phase/booked> a ns2:InitialPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Initial Phase · phase/booked" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_073> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2024_073/provenance> .

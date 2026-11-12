@@ -1,78 +1,99 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/core#> .
+@prefix ns1: <https://cacontology.projectvic.org/core#> .
+@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://cacontology.projectvic.org/detection#> .
-@prefix ns5: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_462> a ns1:CACInvestigation,
-        ns2:EnduringEntity ;
-    dcterms:created "2026-10-17 21:51:24.997279" ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_462> a ns5:CACInvestigation,
+        ns1:EnduringEntity ;
+    rdfs:label "Case ncmec_2022_462" ;
+    dcterms:created "2026-11-10T09:19:40.411098"^^xsd:dateTime ;
+    dcterms:date "2022-01"^^xsd:gYearMonth ;
     dcterms:identifier "ncmec_2022_462" ;
-    dcterms:modified "2026-10-17 21:51:24.997279" ;
+    dcterms:modified "2026-11-10T09:19:40.411098"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2022_462/provenance> ;
     dcterms:source <https://brooklyn.news12.com/police-73-year-old-west-islip-man-arrested-for-possession-of-child-porn>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/west-islip> ;
-    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_462/phase/charged> ;
-    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_462/phase/charged> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_462/event/possession>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_462/legal-proceeding> ;
-    ns5:mentionsLocation <https://w3id.org/caselinker/resource/location/west-islip> .
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/west-islip-cdp> ;
+    ns5:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_462/phase/charged> ;
+    ns5:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_462/phase/charged> ;
+    ns5:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_462/event/possession>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2022_462/legal-proceeding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_462/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_462/event/possession> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_462/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_462/assessment/semantic/exploitive-positions> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · exploitive_positions" ;
+    dcterms:subject <https://cacontology.projectvic.org/custodial#PositionOfTrust> ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/ncmec_2022_462/narrative> ;
+    ns1:hasConfidence 0.5337 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_462/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_462/event/possession> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_462/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_462/assessment/semantic/possession-csam> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns5:CSAMIncident ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/ncmec_2022_462/narrative> ;
+    ns1:hasConfidence 0.5435 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_462/charge/1> a ns6:CSAM_Possession,
-        ns6:CriminalCharge ;
-    rdfs:label "child pornography" ;
-    ns6:indictmentCounts 2 .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_462/person/offender/1/age> a ns2:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns2:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2022_462/person/offender/1> ;
+    ns2:concernsAgeQuality ns2:Age ;
+    ns2:hasAgeInYears 73.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_462/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_462/role/offender/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2022_462/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2022_462/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_462/legal-proceeding> a ns2:Event,
-        ns2:LegalEvent,
-        ns6:LegalProceeding ;
-    ns6:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_462/charge/1> ;
-    ns6:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_462/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
+    rdfs:label "child pornography" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_462/legal-proceeding> a ns1:Event,
+        ns1:LegalEvent,
+        ns4:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns4:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_462/charge/1> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_462/role/offender/1> a ns4:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns5:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_462/event/possession> .
+
+<https://w3id.org/caselinker/resource/location/west-islip-cdp> a ns1:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "West Islip CDP" ;
+    dcterms:identifier "fips:3680302" ;
+    skos:altLabel "West Islip" ;
+    ns3:name "West Islip CDP" .
+
+<https://w3id.org/caselinker/resource/platform/facebook> a ns1:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "Facebook" ;
+    ns3:name "Facebook" .
+
+<https://w3id.org/caselinker/resource/platform/social-media> a ns1:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "social media" ;
+    ns3:name "social media" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_462/event/possession> a ns5:CSAMIncident,
+        ns1:Event ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns5:severityLevel 3 ;
+    ns5:usesChannel <https://w3id.org/caselinker/resource/platform/facebook>,
+        <https://w3id.org/caselinker/resource/platform/social-media> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_462/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns4:ageEstimate 73 .
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_462/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_462/phase/charged> a ns5:LegalProcessPhase,
+        ns1:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
 
-<https://w3id.org/caselinker/resource/platform/facebook> a <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "Facebook" .
-
-<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "social media" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_462/phase/charged> a ns1:LegalProcessPhase,
-        ns2:Phase ;
-    ns1:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/west-islip> a ns2:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "West Islip" ;
-    ns3:name "West Islip" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_462/event/possession> a ns1:CSAMIncident,
-        ns2:Event ;
-    ns1:severityLevel 3 ;
-    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/facebook>,
-        <https://w3id.org/caselinker/resource/platform/social-media> ;
-    ns3:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2022_462/facet/possession> .
-
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_462> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2022_462/provenance> .

@@ -1,24 +1,27 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns6: <https://cacontology.projectvic.org/core#> .
-@prefix ns7: <https://cacontology.projectvic.org/detection#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/core#> .
+@prefix ns6: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_267> a ns1:CACInvestigation,
-        ns6:EnduringEntity ;
-    dcterms:created "2026-10-18 00:01:18.303368" ;
+        ns5:EnduringEntity ;
+    rdfs:label "Case ncmec_2025_267" ;
+    dcterms:created "2026-11-10T16:33:36.210697"^^xsd:dateTime ;
+    dcterms:date "2025-06-04"^^xsd:date ;
     dcterms:identifier "ncmec_2025_267" ;
-    dcterms:modified "2026-10-18 00:01:18.303368" ;
+    dcterms:modified "2026-11-12T01:45:58.458949"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2025_267/provenance> ;
     dcterms:source <https://www.ag.idaho.gov/newsroom/ag-labrador-announces-conviction-of-meridian-man-for-possession-of-child-pornography/>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/ada-county>,
-        <https://w3id.org/caselinker/resource/location/boise>,
-        <https://w3id.org/caselinker/resource/location/idaho> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/ada-county-id>,
+        <https://w3id.org/caselinker/resource/location/boise-city-city-id>,
+        <https://w3id.org/caselinker/resource/location/idaho-id> ;
     ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_267/phase/sentenced> ;
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_267/phase/sentenced> ;
     ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_267/event/distribution>,
@@ -26,113 +29,141 @@
         <https://w3id.org/caselinker/resource/case/ncmec_2025_267/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_267/legal-step/sentenced>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_267/operation> ;
-    ns1:usesMethod <https://w3id.org/caselinker/resource/case/ncmec_2025_267/tech/cybertipline> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/boise-police-department>,
-        <https://w3id.org/caselinker/resource/agency/hsi>,
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/hsi>,
         <https://w3id.org/caselinker/resource/agency/icac>,
-        <https://w3id.org/caselinker/resource/agency/meridian-police-department>,
-        <https://w3id.org/caselinker/resource/agency/office-of-the-attorney-general> ;
-    ns2:mentionsLocation <https://w3id.org/caselinker/resource/location/ada-county>,
-        <https://w3id.org/caselinker/resource/location/boise>,
-        <https://w3id.org/caselinker/resource/location/idaho> .
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_267/agency/boise-police-department>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_267/agency/meridian-police-department>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_267/agency/office-of-the-attorney-general> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2025_267/cybertip> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_267/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2025-06-04T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_267/event/possession> ;
-    ns6:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2025_267/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_267/assessment/semantic/possession-csam> a ns5:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns1:CSAMIncident ;
+    ns5:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_267/narrative> ;
+    ns5:hasConfidence 0.5131 ;
+    ns5:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_267/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2025-06-04T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_267/event/possession> ;
-    ns6:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2025_267/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_267/person/offender/1/age> a ns6:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns6:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2025_267/person/offender/1> ;
+    ns6:concernsAgeQuality ns6:Age ;
+    ns6:hasAgeInYears 54.0 .
 
-<https://w3id.org/caselinker/resource/agency/boise-police-department> a ns4:LocalAgency .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_267/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2025_267/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2025_267/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/hsi> a ns4:FederalAgency .
+<https://w3id.org/caselinker/resource/agency/hsi> a ns5:OrganizationLikeEntity,
+        ns3:FederalAgency ;
+    rdfs:label "Homeland Security Investigations" ;
+    ns2:name "Homeland Security Investigations" .
 
-<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> .
+<https://w3id.org/caselinker/resource/agency/icac> a ns5:OrganizationLikeEntity,
+        <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns2:name "ICAC Task Force" .
 
-<https://w3id.org/caselinker/resource/agency/meridian-police-department> a ns4:LocalAgency .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_267/agency/boise-police-department> a ns5:OrganizationLikeEntity,
+        ns3:LocalAgency ;
+    rdfs:label "Boise Police Department" ;
+    ns2:name "Boise Police Department" .
 
-<https://w3id.org/caselinker/resource/agency/office-of-the-attorney-general> a ns4:StateAgency .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_267/agency/meridian-police-department> a ns5:OrganizationLikeEntity,
+        ns3:LocalAgency ;
+    rdfs:label "Meridian Police Department" ;
+    ns2:name "Meridian Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_267/charge/1> a ns3:CriminalCharge,
-        ns3:StateCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_267/agency/office-of-the-attorney-general> a ns5:OrganizationLikeEntity,
+        ns3:StateAgency ;
+    rdfs:label "Office of the Attorney General" ;
+    ns2:name "Office of the Attorney General" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_267/charge/1> a ns4:CriminalCharge,
+        ns4:StateCharge ;
     rdfs:label "sexual exploitation of a child" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_267/charge/2> a ns3:CSAM_Possession,
-        ns3:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_267/charge/2> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_267/charge/3> a ns3:CriminalCharge ;
-    rdfs:label "sexual exploitation" ;
-    ns2:chargeCluster "sexual_exploitation_unspecified" .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_267/charge/3> a ns4:CriminalCharge ;
+    rdfs:label "sexual exploitation" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_267/event/distribution> a ns6:Event,
-        ns3:CSAM_Distribution ;
-    ns1:severityLevel 3 .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_267/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
+    rdfs:label "CyberTipline report" ;
+    ns2:name "observe" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_267/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_267/event/distribution> a ns5:Event,
+        ns4:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_267/legal-proceeding> a ns6:Event,
-        ns6:LegalEvent,
-        ns3:LegalProceeding ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_267/charge/1>,
+<https://w3id.org/caselinker/resource/case/ncmec_2025_267/legal-proceeding> a ns5:Event,
+        ns5:LegalEvent,
+        ns4:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns4:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_267/charge/1>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_267/charge/2>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_267/charge/3> ;
-    ns3:hasProceedingBeginPoint "2025-06-04T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:resultsSentence <https://w3id.org/caselinker/resource/case/ncmec_2025_267/sentence/1> .
+    ns4:resultsSentence <https://w3id.org/caselinker/resource/case/ncmec_2025_267/sentence/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_267/legal-step/sentenced> a ns6:Event,
-        ns6:LegalEvent,
-        ns3:LegalProceeding,
-        ns3:SentencingHearing ;
-    ns3:hasProceedingBeginPoint "2025-06-04T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_267/legal-step/sentenced> a ns5:Event,
+        ns5:LegalEvent,
+        ns4:LegalProceeding,
+        ns4:SentencingHearing ;
+    rdfs:label "Sentencing Hearing · legal-step/sentenced" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_267/operation> a ns6:Event,
-        <https://cacontology.projectvic.org/taskforce#TaskForceOperation> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_267/operation> a ns5:Event,
+        <https://cacontology.projectvic.org/taskforce#TaskForceOperation> ;
+    rdfs:label "Task Force Operation · operation" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_267/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns7:ageEstimate 54 .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_267/sentence/1> a ns4:CriminalSentence,
+        ns4:PrisonSentence ;
+    rdfs:label "20 years" ;
+    ns5:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_267/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_267/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_267/sentence/1> a ns3:CriminalSentence,
-        ns3:PrisonSentence ;
-    rdfs:label "20 years" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_267/tech/cybertipline> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
-    rdfs:label "CyberTipline" .
-
-<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
-    rdfs:label "chat" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_267/phase/sentenced> a ns6:Phase,
-        ns3:SentencingPhase ;
-    ns1:hasPhaseBeginPoint "2025-06-04T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/ada-county> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/ada-county-id> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Ada County" ;
-    ns5:name "Ada County" .
+    dcterms:identifier "fips:16001" ;
+    ns2:name "Ada County" .
 
-<https://w3id.org/caselinker/resource/location/boise> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/boise-city-city-id> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Boise" ;
-    ns5:name "Boise" .
+    rdfs:label "Boise City city" ;
+    dcterms:identifier "fips:1608830" ;
+    skos:altLabel "Boise" ;
+    ns2:name "Boise City city" .
 
-<https://w3id.org/caselinker/resource/location/idaho> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/idaho-id> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Idaho" ;
-    ns5:name "Idaho" .
+    dcterms:identifier "fips:16" ;
+    ns2:name "Idaho" .
+
+<https://w3id.org/caselinker/resource/platform/chat> a ns5:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
+    rdfs:label "chat" ;
+    ns2:name "chat" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_267/event/possession> a ns1:CSAMIncident,
-        ns6:Event ;
+        ns5:Event ;
+    rdfs:label "CSAMIncident · event/possession" ;
     ns1:severityLevel 3 ;
-    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/chat> ;
-    ns5:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2025_267/facet/possession> .
+    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/chat> .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2025_267/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_267> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2025_267/provenance> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_267/phase/sentenced> a ns5:Phase,
+        ns4:SentencingPhase ;
+    rdfs:label "Sentencing Phase · phase/sentenced" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_267/role/offender/1> a ns1:OffenderRole ;
+    rdfs:label "Offender Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_267/event/possession> .
+

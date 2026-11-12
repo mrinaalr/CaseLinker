@@ -1,75 +1,83 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/core#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns5: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/tbi_icac_2021_005> a ns1:CACInvestigation,
-        ns2:EnduringEntity ;
-    dcterms:created "2026-10-18 07:19:08.978676" ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case tbi_icac_2021_005" ;
+    dcterms:created "2026-11-11T18:03:47.129677"^^xsd:dateTime ;
+    dcterms:date "2021-04"^^xsd:gYearMonth ;
     dcterms:identifier "tbi_icac_2021_005" ;
-    dcterms:modified "2026-10-18 07:19:08.978676" ;
+    dcterms:modified "2026-11-11T18:03:47.129677"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/tbi_icac_2021_005/provenance> ;
     dcterms:source <https://tbinewsroom.com/2021/04/01/smithville-man-arrested-charged-with-rape-of-a-child/>,
         "TBI ICAC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/dekalb-county>,
-        <https://w3id.org/caselinker/resource/location/smithville> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/dekalb-county-tn>,
+        <https://w3id.org/caselinker/resource/location/smithville-city-tn> ;
     ns1:currentPhase <https://w3id.org/caselinker/resource/case/tbi_icac_2021_005/phase/charged> ;
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/tbi_icac_2021_005/phase/charged> ;
     ns1:hasStep <https://w3id.org/caselinker/resource/case/tbi_icac_2021_005/event/hands-on>,
         <https://w3id.org/caselinker/resource/case/tbi_icac_2021_005/legal-proceeding> ;
-    ns1:investigationStatus "unknown" ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/dekalb-county-sheriffs-department>,
-        <https://w3id.org/caselinker/resource/agency/tennessee-bureau-of-investigation> ;
-    ns5:mentionsLocation <https://w3id.org/caselinker/resource/location/dekalb-county>,
-        <https://w3id.org/caselinker/resource/location/smithville> .
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/dekalb-county-sheriff-s-office-tn>,
+        <https://w3id.org/caselinker/resource/agency/tennessee-bureau-of-investigation-tn> .
 
-<https://w3id.org/caselinker/resource/case/tbi_icac_2021_005/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2021-04-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/tbi_icac_2021_005/event/hands-on> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/tbi_icac_2021_005/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/tbi_icac_2021_005/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/tbi_icac_2021_005/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/tbi_icac_2021_005/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/tbi_icac_2021_005/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2021-04-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/tbi_icac_2021_005/event/hands-on> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/tbi_icac_2021_005/person/victim/1> .
+<https://w3id.org/caselinker/resource/agency/dekalb-county-sheriff-s-office-tn> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns3:LocalAgency ;
+    rdfs:label "DeKalb County Sheriff's Office" ;
+    dcterms:identifier "ori:TN0210000" ;
+    skos:altLabel "DeKalb County Sheriff's Department" ;
+    ns2:name "DeKalb County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/agency/dekalb-county-sheriffs-department> a ns4:LocalAgency .
+<https://w3id.org/caselinker/resource/agency/tennessee-bureau-of-investigation-tn> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns3:StateAgency ;
+    rdfs:label "Tennessee Bureau of Investigation" ;
+    dcterms:identifier "ori:TNTBI0000" ;
+    ns2:name "Tennessee Bureau of Investigation" .
 
-<https://w3id.org/caselinker/resource/agency/tennessee-bureau-of-investigation> a ns4:StateAgency .
+<https://w3id.org/caselinker/resource/case/tbi_icac_2021_005/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        <https://cacontology.projectvic.org/legal-outcomes#LegalProceeding> ;
+    rdfs:label "Event · legal-proceeding" ;
+    rdfs:comment "Pretrial detention facility (not a sentence): booked into the DeKalb County Jail; held without bond" .
 
-<https://w3id.org/caselinker/resource/case/tbi_icac_2021_005/legal-proceeding> a ns2:Event,
-        ns2:LegalEvent,
-        ns6:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): booked into the DeKalb County Jail; held without bond" ;
-    ns6:hasProceedingBeginPoint "2021-04-01T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/tbi_icac_2021_005/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/tbi_icac_2021_005/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/tbi_icac_2021_005/role/offender/1> a <https://cacontology.projectvic.org/legal-outcomes#DefendantRole> ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/tbi_icac_2021_005/event/hands-on> .
 
-<https://w3id.org/caselinker/resource/case/tbi_icac_2021_005/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/tbi_icac_2021_005/phase/charged> a ns1:LegalProcessPhase,
-        ns2:Phase ;
-    ns1:hasPhaseBeginPoint "2021-04-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/dekalb-county> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/dekalb-county-tn> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Dekalb County" ;
-    ns3:name "Dekalb County" .
+    rdfs:label "DeKalb County" ;
+    dcterms:identifier "fips:47041" ;
+    skos:altLabel "Dekalb County" ;
+    ns2:name "DeKalb County" .
 
-<https://w3id.org/caselinker/resource/location/smithville> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/smithville-city-tn> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Smithville" ;
-    ns3:name "Smithville" .
+    rdfs:label "Smithville city" ;
+    dcterms:identifier "fips:4769320" ;
+    skos:altLabel "Smithville" ;
+    ns2:name "Smithville city" .
 
 <https://w3id.org/caselinker/resource/case/tbi_icac_2021_005/event/hands-on> a ns1:ChildSexualAbuseEvent,
-        ns2:Event ;
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "Child Sexual Abuse Event · event/hands-on" ;
     ns1:severityLevel 3 .
 
+<https://w3id.org/caselinker/resource/case/tbi_icac_2021_005/phase/charged> a ns1:LegalProcessPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Legal Process Phase · phase/charged" .
 
-<https://w3id.org/caselinker/resource/case/tbi_icac_2021_005> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/tbi_icac_2021_005/provenance> .

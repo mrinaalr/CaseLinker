@@ -1,17 +1,19 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/core#> .
+@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/wi_doj_2019_003> a ns1:CACInvestigation,
-        ns2:EnduringEntity ;
-    dcterms:created "2026-10-18 13:52:59.886008" ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case wi_doj_2019_003" ;
+    dcterms:created "2026-11-11T18:42:39.891527"^^xsd:dateTime ;
+    dcterms:date "2019-06-21"^^xsd:date ;
     dcterms:identifier "wi_doj_2019_003" ;
-    dcterms:modified "2026-10-18 13:52:59.886008" ;
+    dcterms:modified "2026-11-11T18:42:39.891527"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/wi_doj_2019_003/provenance> ;
     dcterms:source <https://www.wisdoj.gov/PressReleases/6.21.2019_Weber_Beloit.pdf>,
         "WI DOJ" ;
@@ -19,62 +21,71 @@
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/wi_doj_2019_003/phase/booked> ;
     ns1:hasStep <https://w3id.org/caselinker/resource/case/wi_doj_2019_003/event/possession>,
         <https://w3id.org/caselinker/resource/case/wi_doj_2019_003/legal-proceeding> ;
-    ns1:investigationStatus "unknown" ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/beloit-police-department>,
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/beloit-police-department-wi>,
+        <https://w3id.org/caselinker/resource/agency/doj>,
         <https://w3id.org/caselinker/resource/agency/icac>,
-        <https://w3id.org/caselinker/resource/agency/rock-county-sheriffs-office>,
-        <https://w3id.org/caselinker/resource/agency/us-department-of-justice>,
+        <https://w3id.org/caselinker/resource/agency/rock-county-sheriff-s-office-wi>,
         <https://w3id.org/caselinker/resource/agency/wisconsin-department-of-justice> .
 
-<https://w3id.org/caselinker/resource/case/wi_doj_2019_003/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2019-06-21T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/wi_doj_2019_003/event/possession> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/wi_doj_2019_003/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/wi_doj_2019_003/role/offender/1/has-role> a ns4:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns4:isDirectional true ;
+    ns4:kindOfRelationship "Has_Role" ;
+    ns4:source <https://w3id.org/caselinker/resource/case/wi_doj_2019_003/person/offender/1> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/wi_doj_2019_003/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/wi_doj_2019_003/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2019-06-21T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/wi_doj_2019_003/event/possession> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/wi_doj_2019_003/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/agency/beloit-police-department> a ns2:OrganizationLikeEntity,
+<https://w3id.org/caselinker/resource/agency/beloit-police-department-wi> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
         ns3:LocalAgency ;
-    rdfs:label "Beloit Police Department" .
+    rdfs:label "Beloit Police Department" ;
+    dcterms:identifier "ori:WI0540100" ;
+    ns4:name "Beloit Police Department" .
 
-<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> .
-
-<https://w3id.org/caselinker/resource/agency/rock-county-sheriffs-office> a ns2:OrganizationLikeEntity,
+<https://w3id.org/caselinker/resource/agency/doj> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
         ns3:LocalAgency ;
-    rdfs:label "Rock County Sheriff's Office" .
+    rdfs:label "U.S. Department of Justice" ;
+    ns4:name "U.S. Department of Justice" .
 
-<https://w3id.org/caselinker/resource/agency/us-department-of-justice> a ns3:LocalAgency .
+<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns4:name "ICAC Task Force" .
 
-<https://w3id.org/caselinker/resource/agency/wisconsin-department-of-justice> a ns3:StateAgency .
+<https://w3id.org/caselinker/resource/agency/rock-county-sheriff-s-office-wi> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns3:LocalAgency ;
+    rdfs:label "Rock County Sheriff's Office" ;
+    dcterms:identifier "ori:WI0540000" ;
+    ns4:name "Rock County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/case/wi_doj_2019_003/charge/1> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
-    rdfs:label "possession of child pornography" ;
-    ns4:indictmentCounts 2 .
+<https://w3id.org/caselinker/resource/agency/wisconsin-department-of-justice> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns3:StateAgency ;
+    rdfs:label "Wisconsin Department of Justice" ;
+    ns4:name "Wisconsin Department of Justice" .
 
-<https://w3id.org/caselinker/resource/case/wi_doj_2019_003/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/wi_doj_2019_003/charge/1> a ns2:CSAM_Possession,
+        ns2:CriminalCharge ;
+    rdfs:label "possession of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/wi_doj_2019_003/legal-proceeding> a ns2:Event,
-        ns2:LegalEvent,
-        ns4:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/wi_doj_2019_003/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        ns2:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): booked in the Rock County Jail" ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/wi_doj_2019_003/charge/1> ;
-    ns4:hasProceedingBeginPoint "2019-06-21T00:00:00Z"^^xsd:dateTimeStamp .
+    ns2:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns2:hasCharge <https://w3id.org/caselinker/resource/case/wi_doj_2019_003/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/wi_doj_2019_003/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/wi_doj_2019_003/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/wi_doj_2019_003/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/wi_doj_2019_003/phase/booked> a ns1:InitialPhase,
-        ns2:Phase ;
-    ns1:hasPhaseBeginPoint "2019-06-21T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/wi_doj_2019_003/role/offender/1> a ns2:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/wi_doj_2019_003/event/possession> .
 
 <https://w3id.org/caselinker/resource/case/wi_doj_2019_003/event/possession> a ns1:CSAMIncident,
-        ns2:Event ;
-    ns5:hasFacet <https://w3id.org/caselinker/resource/case/wi_doj_2019_003/facet/possession> .
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/possession" .
+
+<https://w3id.org/caselinker/resource/case/wi_doj_2019_003/phase/booked> a ns1:InitialPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Initial Phase · phase/booked" .
 

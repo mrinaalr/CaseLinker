@@ -1,88 +1,91 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns3: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns5: <https://cacontology.projectvic.org/core#> .
-@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_057> a ns1:CACInvestigation,
-        ns5:EnduringEntity ;
-    dcterms:created "2026-10-18 00:01:15.992531" ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case ncmec_2025_057" ;
+    dcterms:created "2026-11-10T16:32:08.895404"^^xsd:dateTime ;
+    dcterms:date "2025-03-03"^^xsd:date ;
     dcterms:identifier "ncmec_2025_057" ;
-    dcterms:modified "2026-10-18 00:01:15.992531" ;
+    dcterms:modified "2026-11-12T01:35:29.373416"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2025_057/provenance> ;
     dcterms:source <https://katv.com/news/local/pulaski-county-sheriffs-office-arrests-sherwood-man-on-child-pornography-charges-arkansas-little-rock-north-little-rock-crime-child-sexual-abuse-material>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/pulaski>,
-        <https://w3id.org/caselinker/resource/location/sherwood> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/pulaski-county-ar>,
+        <https://w3id.org/caselinker/resource/location/sherwood-city-ar> ;
     ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_057/phase/charged> ;
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_057/phase/charged> ;
     ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_057/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_057/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_057/legal-proceeding> ;
-    ns1:investigationStatus "unknown" ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/pulaski-county-sheriffs-office> ;
-    ns3:mentionsLocation <https://w3id.org/caselinker/resource/location/pulaski>,
-        <https://w3id.org/caselinker/resource/location/sherwood> .
+    ns2:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2025_057/agency/pulaski-county-sheriffs-office> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_057/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2025-03-03T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_057/event/possession> ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2025_057/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_057/role/offender/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2025_057/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2025_057/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_057/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2025-03-03T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_057/event/possession> ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2025_057/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_057/agency/pulaski-county-sheriffs-office> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns2:LocalAgency ;
+    rdfs:label "Pulaski County Sheriff's Office" ;
+    ns3:name "Pulaski County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/agency/pulaski-county-sheriffs-office> a ns6:LocalAgency .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_057/charge/1> a ns2:CSAM_Possession,
-        ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_057/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
     rdfs:label "child sexual abuse material" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_057/event/distribution> a ns5:Event,
-        ns2:CSAM_Distribution ;
-    ns1:severityLevel 3 .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_057/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
+        ns4:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_057/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_057/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        ns4:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns4:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_057/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_057/legal-proceeding> a ns5:Event,
-        ns5:LegalEvent,
-        ns2:LegalProceeding ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_057/charge/1> ;
-    ns2:hasProceedingBeginPoint "2025-03-03T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_057/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_057/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_057/role/offender/1> a ns4:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_057/event/possession> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_057/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/platform/kik> a <https://cacontology.projectvic.org/platforms#MessagingService> ;
-    rdfs:label "Kik" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_057/phase/charged> a ns1:LegalProcessPhase,
-        ns5:Phase ;
-    ns1:hasPhaseBeginPoint "2025-03-03T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/pulaski> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/pulaski-county-ar> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Pulaski" ;
-    ns4:name "Pulaski" .
+    rdfs:label "Pulaski County" ;
+    dcterms:identifier "fips:05119" ;
+    skos:altLabel "Pulaski" ;
+    ns3:name "Pulaski County" .
 
-<https://w3id.org/caselinker/resource/location/sherwood> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/sherwood-city-ar> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Sherwood" ;
-    ns4:name "Sherwood" .
+    rdfs:label "Sherwood city" ;
+    dcterms:identifier "fips:0563800" ;
+    skos:altLabel "Sherwood" ;
+    ns3:name "Sherwood city" .
+
+<https://w3id.org/caselinker/resource/platform/kik> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#MessagingService> ;
+    rdfs:label "Kik" ;
+    ns3:name "Kik" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_057/event/possession> a ns1:CSAMIncident,
-        ns5:Event ;
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/possession" ;
     ns1:severityLevel 3 ;
-    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/kik> ;
-    ns4:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2025_057/facet/possession> .
+    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/kik> .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2025_057/phase/charged> a ns1:LegalProcessPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Legal Process Phase · phase/charged" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_057> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2025_057/provenance> .

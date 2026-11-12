@@ -1,87 +1,97 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://cacontology.projectvic.org/core#> .
-@prefix ns5: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns6: <https://cacontology.projectvic.org/detection#> .
+@prefix ns4: <https://cacontology.projectvic.org#> .
+@prefix ns5: <https://cacontology.projectvic.org/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_987> a ns1:CACInvestigation,
-        ns4:EnduringEntity ;
-    dcterms:created "2026-10-18 00:01:26.649932" ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_987> a ns4:CACInvestigation,
+        ns5:EnduringEntity ;
+    rdfs:label "Case ncmec_2025_987" ;
+    dcterms:created "2026-11-10T16:39:00.533080"^^xsd:dateTime ;
+    dcterms:date "2025-06-25"^^xsd:date ;
     dcterms:identifier "ncmec_2025_987" ;
-    dcterms:modified "2026-10-18 00:01:26.649932" ;
+    dcterms:modified "2026-11-12T02:20:13.724076"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2025_987/provenance> ;
     dcterms:source <https://www.wvva.com/2025/06/25/man-arrested-child-porn-charges-claims-it-was-drunken-mistake-police-say/>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/montcalm>,
-        <https://w3id.org/caselinker/resource/location/west-virginia>,
-        <https://w3id.org/caselinker/resource/location/wva> ;
-    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_987/phase/charged> ;
-    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_987/phase/charged> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_987/event/distribution>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2025_987/location/wva>,
+        <https://w3id.org/caselinker/resource/location/montcalm-cdp>,
+        <https://w3id.org/caselinker/resource/location/west-virginia-wv> ;
+    ns4:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_987/phase/charged> ;
+    ns4:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_987/phase/charged> ;
+    ns4:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_987/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_987/event/possession>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_987/legal-proceeding> ;
-    ns1:investigationStatus "unknown" ;
-    ns5:mentionsLocation <https://w3id.org/caselinker/resource/location/montcalm>,
-        <https://w3id.org/caselinker/resource/location/west-virginia>,
-        <https://w3id.org/caselinker/resource/location/wva> .
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_987/legal-proceeding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_987/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2025-06-25T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_987/event/possession> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2025_987/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_987/assessment/semantic/possession-csam> a ns5:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns4:CSAMIncident ;
+    ns5:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_987/narrative> ;
+    ns5:hasConfidence 0.5175 ;
+    ns5:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_987/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2025-06-25T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_987/event/possession> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2025_987/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_987/person/offender/1/age> a ns2:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns2:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2025_987/person/offender/1> ;
+    ns2:concernsAgeQuality ns2:Age ;
+    ns2:hasAgeInYears 63.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_987/charge/1> a ns2:CSAM_Possession,
-        ns2:CriminalCharge ;
-    rdfs:label "possession of child pornography" ;
-    ns2:indictmentCounts 2 .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_987/role/offender/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2025_987/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2025_987/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_987/event/distribution> a ns4:Event,
-        ns2:CSAM_Distribution .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_987/charge/1> a ns1:CSAM_Possession,
+        ns1:CriminalCharge ;
+    rdfs:label "possession of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_987/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_987/event/distribution> a ns5:Event,
+        ns1:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_987/legal-proceeding> a ns4:Event,
-        ns4:LegalEvent,
-        ns2:LegalProceeding ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_987/charge/1> ;
-    ns2:hasProceedingBeginPoint "2025-06-25T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_987/legal-proceeding> a ns5:Event,
+        ns5:LegalEvent,
+        ns1:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns1:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns1:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_987/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_987/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns6:ageEstimate 63 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_987/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_987/phase/charged> a ns1:LegalProcessPhase,
-        ns4:Phase ;
-    ns1:hasPhaseBeginPoint "2025-06-25T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/montcalm> a ns4:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Montcalm" ;
-    ns3:name "Montcalm" .
-
-<https://w3id.org/caselinker/resource/location/west-virginia> a ns4:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "West Virginia" ;
-    ns3:name "West Virginia" .
-
-<https://w3id.org/caselinker/resource/location/wva> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2025_987/location/wva> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "W.va." ;
     ns3:name "W.va." .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_987/event/possession> a ns1:CSAMIncident,
-        ns4:Event ;
-    ns3:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2025_987/facet/possession> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_987/role/offender/1> a ns1:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_987/event/possession> .
+
+<https://w3id.org/caselinker/resource/location/montcalm-cdp> a ns5:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Montcalm CDP" ;
+    dcterms:identifier "fips:5455372" ;
+    skos:altLabel "Montcalm" ;
+    ns3:name "Montcalm CDP" .
+
+<https://w3id.org/caselinker/resource/location/west-virginia-wv> a ns5:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "West Virginia" ;
+    dcterms:identifier "fips:54" ;
+    ns3:name "West Virginia" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_987/event/possession> a ns4:CSAMIncident,
+        ns5:Event ;
+    rdfs:label "CSAMIncident · event/possession" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_987/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_987/phase/charged> a ns4:LegalProcessPhase,
+        ns5:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
 

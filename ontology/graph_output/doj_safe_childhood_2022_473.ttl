@@ -1,202 +1,204 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://w3id.org/caselinker/resource/vocab/> .
+@prefix ns1: <https://cacontology.projectvic.org/core#> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/core#> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns7: <https://cacontology.projectvic.org/detection#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns6: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/admission/1/extraction-confidence> a ns3:AssessmentResult ;
-    ns3:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/admission/1> ;
-    ns3:generatedBy <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473> ;
-    ns3:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/admission/2/extraction-confidence> a ns3:AssessmentResult ;
-    ns3:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/admission/2> ;
-    ns3:generatedBy <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473> ;
-    ns3:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2022-02-24T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/event/possession>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/offense-event/charge-2> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/agency/child-exploitation-task-force> a ns6:LocalAgency .
-
-<https://w3id.org/caselinker/resource/agency/fbi> a ns6:FederalAgency .
-
-<https://w3id.org/caselinker/resource/agency/hsi> a ns6:FederalAgency .
-
-<https://w3id.org/caselinker/resource/agency/new-york-state-police-department> a ns6:StateAgency .
-
-<https://w3id.org/caselinker/resource/agency/usao> a ns6:FederalAgency .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
-    rdfs:label "child pornography" .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/charge/2> a ns5:CriminalCharge ;
-    rdfs:label "child exploitation" ;
-    rdfs:seeAlso <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/offense-event/charge-2> ;
-    ns1:chargeCluster "child_exploitation" ;
-    ns1:chargeOffenseEvent <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/offense-event/charge-2> .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/event/distribution> a ns3:Event,
-        ns5:CSAM_Distribution ;
-    ns2:severityLevel 3 .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/event/multi-jurisdiction> a ns3:Event,
-        ns6:MultiJurisdictionalInvestigation ;
-    ns2:severityLevel 3 .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/event/project-safe-childhood> a ns3:Event,
-        ns6:ProjectSafeChildhoodOperation ;
-    ns2:severityLevel 3 .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/legal-proceeding> a ns3:Event,
-        ns3:LegalEvent,
-        ns5:LegalProceeding ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/charge/1>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/charge/2> ;
-    ns5:hasProceedingBeginPoint "2022-02-24T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns5:resultsSentence <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/sentence/1>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/sentence/2> .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/legal-step/sentenced> a ns3:Event,
-        ns3:LegalEvent,
-        ns5:LegalProceeding,
-        ns5:SentencingHearing ;
-    ns5:hasProceedingBeginPoint "2022-02-24T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns7:ageEstimate 38 .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/sentence/1> a ns5:CriminalSentence,
-        ns5:PrisonSentence ;
-    rdfs:label "192 Months" .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/sentence/2> a ns5:CriminalSentence,
-        ns5:SupervisedRelease ;
-    rdfs:label "30-year supervised release" .
-
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473> a ns2:CACInvestigation,
-        ns3:EnduringEntity ;
-    dcterms:created "2026-10-18 02:38:37.628401" ;
+        ns1:EnduringEntity ;
+    rdfs:label "Case doj_safe_childhood_2022_473" ;
+    dcterms:created "2026-11-11T11:19:31.678263"^^xsd:dateTime ;
+    dcterms:date "2022-02-24"^^xsd:date ;
     dcterms:identifier "doj_safe_childhood_2022_473" ;
-    dcterms:modified "2026-10-18 12:55:02.369956" ;
+    dcterms:modified "2026-11-11T11:19:31.678263"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/provenance> ;
     dcterms:source <https://www.justice.gov/usao-ndny/pr/washington-county-man-sentenced-192-months-possessing-and-distributing-child>,
         "DOJ SAFE CHILDHOOD" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/albany>,
-        <https://w3id.org/caselinker/resource/location/granville>,
-        <https://w3id.org/caselinker/resource/location/new-york>,
-        <https://w3id.org/caselinker/resource/location/united-states>,
-        <https://w3id.org/caselinker/resource/location/washington-county> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/location/albany>,
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/location/granville>,
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/location/united-states>,
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/location/washington-county>,
+        <https://w3id.org/caselinker/resource/location/new-york-ny> ;
     ns2:currentPhase <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/phase/sentenced> ;
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/phase/sentenced> ;
-    ns2:hasStep <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/admission/1>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/admission/2>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/event/distribution>,
+    ns2:hasStep <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/event/distribution>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/event/multi-jurisdiction>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/event/possession>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/event/project-safe-childhood>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/legal-proceeding>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/legal-step/sentenced>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/offense-event/charge-2> ;
-    ns2:investigationStatus "unknown" ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/child-exploitation-task-force>,
-        <https://w3id.org/caselinker/resource/agency/fbi>,
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/legal-step/sentenced> ;
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/fbi>,
         <https://w3id.org/caselinker/resource/agency/hsi>,
         <https://w3id.org/caselinker/resource/agency/new-york-state-police-department>,
-        <https://w3id.org/caselinker/resource/agency/usao> ;
-    ns1:mentionsLocation <https://w3id.org/caselinker/resource/location/albany>,
-        <https://w3id.org/caselinker/resource/location/granville>,
-        <https://w3id.org/caselinker/resource/location/new-york>,
-        <https://w3id.org/caselinker/resource/location/united-states>,
-        <https://w3id.org/caselinker/resource/location/washington-county> .
+        <https://w3id.org/caselinker/resource/agency/usao>,
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/agency/child-exploitation-task-force> ;
+    ns3:object <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/admission/1>,
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/admission/2> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/phase/sentenced> a ns3:Phase,
-        ns5:SentencingPhase ;
-    ns2:hasPhaseBeginPoint "2022-02-24T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/admission/1/extraction-confidence> a ns1:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/admission/1> ;
+    ns1:hasConfidence 0.65 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2022-02-24T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/event/possession>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/offense-event/charge-2> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/admission/2/extraction-confidence> a ns1:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/2/extraction-confidence" ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/admission/2> ;
+    ns1:hasConfidence 0.65 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/location/albany> a ns3:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/assessment/semantic/sextortion> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · sextortion" ;
+    dcterms:subject <https://cacontology.projectvic.org/sextortion#SextortionIncident> ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/narrative> ;
+    ns1:hasConfidence 0.4706 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/person/offender/1/age> a ns6:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns6:ageSubject <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/person/offender/1> ;
+    ns6:concernsAgeQuality ns6:Age ;
+    ns6:hasAgeInYears 38.0 .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/role/offender/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/agency/fbi> a ns1:OrganizationLikeEntity,
+        ns5:FederalAgency ;
+    rdfs:label "Federal Bureau of Investigation" ;
+    skos:altLabel "FBI" ;
+    ns3:name "Federal Bureau of Investigation" .
+
+<https://w3id.org/caselinker/resource/agency/hsi> a ns1:OrganizationLikeEntity,
+        ns5:FederalAgency ;
+    rdfs:label "Homeland Security Investigations" ;
+    ns3:name "Homeland Security Investigations" .
+
+<https://w3id.org/caselinker/resource/agency/new-york-state-police-department> a ns1:OrganizationLikeEntity,
+        ns5:StateAgency ;
+    rdfs:label "New York State Police Department" ;
+    ns3:name "New York State Police Department" .
+
+<https://w3id.org/caselinker/resource/agency/usao> a ns1:OrganizationLikeEntity,
+        ns5:FederalAgency ;
+    rdfs:label "U.S. Attorney's Office" ;
+    ns3:name "U.S. Attorney's Office" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/agency/child-exploitation-task-force> a ns1:OrganizationLikeEntity,
+        ns5:LocalAgency ;
+    rdfs:label "Child Exploitation Task Force" ;
+    ns3:name "Child Exploitation Task Force" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
+    rdfs:label "child pornography" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/charge/2> a ns4:CriminalCharge ;
+    rdfs:label "child exploitation" ;
+    dcterms:subject ns2:ChildSexualAbuseEvent .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/event/distribution> a ns1:Event,
+        ns4:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/event/multi-jurisdiction> a ns1:Event,
+        ns5:MultiJurisdictionalInvestigation ;
+    rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/event/project-safe-childhood> a ns1:Event,
+        ns5:ProjectSafeChildhoodOperation ;
+    rdfs:label "Project Safe Childhood Operation · event/project-safe-childhood" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/legal-proceeding> a ns1:Event,
+        ns1:LegalEvent,
+        ns4:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns4:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/charge/1>,
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/charge/2> ;
+    ns4:resultsSentence <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/sentence/1>,
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/sentence/2> .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/legal-step/sentenced> a ns1:Event,
+        ns1:LegalEvent,
+        ns4:LegalProceeding,
+        ns4:SentencingHearing ;
+    rdfs:label "Sentencing Hearing · legal-step/sentenced" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/location/albany> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Albany" ;
-    ns4:name "Albany" .
+    ns3:name "Albany" .
 
-<https://w3id.org/caselinker/resource/location/granville> a ns3:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/location/granville> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Granville" ;
-    ns4:name "Granville" .
+    ns3:name "Granville" .
 
-<https://w3id.org/caselinker/resource/location/new-york> a ns3:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "New York" ;
-    ns4:name "New York" .
-
-<https://w3id.org/caselinker/resource/location/united-states> a ns3:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/location/united-states> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "United States" ;
-    ns4:name "United States" .
+    ns3:name "United States" .
 
-<https://w3id.org/caselinker/resource/location/washington-county> a ns3:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/location/washington-county> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Washington County" ;
-    ns4:name "Washington County" .
+    ns3:name "Washington County" .
 
-<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
-    rdfs:label "chat" .
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/sentence/1> a ns4:CriminalSentence,
+        ns4:PrisonSentence ;
+    rdfs:label "192 Months" ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/sentence/2> a ns4:CriminalSentence,
+        ns4:SupervisedRelease ;
+    rdfs:label "30-year supervised release" ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/location/new-york-ny> a ns1:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "New York" ;
+    dcterms:identifier "fips:36" ;
+    ns3:name "New York" .
+
+<https://w3id.org/caselinker/resource/platform/chat> a ns1:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
+    rdfs:label "chat" ;
+    ns3:name "chat" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "possessing and distributing images and videos of child pornography to members of a private chat group" ;
     dcterms:source <https://www.justice.gov/usao-ndny/pr/washington-county-man-sentenced-192-months-possessing-and-distributing-child> ;
-    ns4:description "possessing and distributing images and videos of child pornography to members of a private chat group" ;
-    ns1:admissionContext "Agent in Charge of the Albany Field Office of the Federal Bureau of Investigation (FBI). Eckrote pled guilty on June 3, 2021, admitting t..." ;
-    ns1:admissionFrame "admitted_to" ;
-    ns1:admissionTheme "harm_conduct",
-        "tech_use" ;
-    ns1:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/role/offender/1> ;
-    ns1:evidenceTier "press_release_stated" ;
-    ns1:quoteType "paraphrase" .
+    ns3:description "possessing and distributing images and videos of child pornography to members of a private chat group" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/admission/2> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "possessing additional images and videos of child pornography on his cell phone, including depictions involving the se..." ;
     dcterms:source <https://www.justice.gov/usao-ndny/pr/washington-county-man-sentenced-192-months-possessing-and-distributing-child> ;
-    ns4:description "possessing additional images and videos of child pornography on his cell phone, including depictions involving the sexual abuse and exploitation of toddlers" ;
-    ns1:admissionContext "change for other child pornography, and to gain acceptance within the private chat group. Eckrote also admitted to possessing additional..." ;
-    ns1:admissionFrame "admitted_to" ;
-    ns1:admissionTheme "harm_conduct" ;
-    ns1:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/role/offender/1> ;
-    ns1:evidenceTier "press_release_stated" ;
-    ns1:quoteType "paraphrase" .
+    ns3:description "possessing additional images and videos of child pornography on his cell phone, including depictions involving the sexual abuse and exploitation of toddlers" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/event/possession> a ns2:CSAMIncident,
-        ns3:Event ;
-    ns2:producesArtifact <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/admission/1>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/admission/2> ;
+        ns1:Event ;
+    rdfs:label "CSAMIncident · event/possession" ;
     ns2:severityLevel 3 ;
-    ns2:usesChannel <https://w3id.org/caselinker/resource/platform/chat> ;
-    ns4:hasFacet <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/facet/possession> .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/offense-event/charge-2> a ns2:ChildSexualAbuseEvent,
-        ns3:Event,
-        <https://ontology.unifiedcyberontology.org/uco/action/Crime> ;
-    rdfs:label "Inferred offense from charge: child exploitation" ;
     ns2:usesChannel <https://w3id.org/caselinker/resource/platform/chat> .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/phase/sentenced> a ns1:Phase,
+        ns4:SentencingPhase ;
+    rdfs:label "Sentencing Phase · phase/sentenced" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/role/offender/1> a ns2:OffenderRole ;
+    rdfs:label "Offender Role · role/offender/1" ;
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_473/event/possession> .
 

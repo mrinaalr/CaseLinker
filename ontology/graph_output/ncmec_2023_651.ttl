@@ -1,99 +1,102 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns4: <https://cacontology.projectvic.org/core#> .
-@prefix ns5: <https://cacontology.projectvic.org/detection#> .
+@prefix ns1: <https://cacontology.projectvic.org#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/core#> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns7: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_651> a ns2:CACInvestigation,
-        ns4:EnduringEntity ;
-    dcterms:created "2026-10-17 22:21:36.073892" ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_651> a ns1:CACInvestigation,
+        ns3:EnduringEntity ;
+    rdfs:label "Case ncmec_2023_651" ;
+    dcterms:created "2026-11-10T10:06:11.158488"^^xsd:dateTime ;
+    dcterms:date "2023-03-17"^^xsd:date ;
     dcterms:identifier "ncmec_2023_651" ;
-    dcterms:modified "2026-10-17 22:21:36.073892" ;
+    dcterms:modified "2026-11-10T10:06:11.158488"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2023_651/provenance> ;
     dcterms:source <https://abc17news.com/news/crime/2023/03/17/columbia-man-charged-with-statutory-rape-multiple-child-porn-charges/>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/columbia>,
-        <https://w3id.org/caselinker/resource/location/mo> ;
-    ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_651/phase/charged> ;
-    ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_651/phase/charged> ;
-    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_651/event/hands-on>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2023_651/location/columbia>,
+        <https://w3id.org/caselinker/resource/location/missouri-mo> ;
+    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_651/phase/charged> ;
+    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_651/phase/charged> ;
+    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_651/event/hands-on>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_651/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_651/event/production>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_651/legal-proceeding> ;
-    ns7:involvesAgency <https://w3id.org/caselinker/resource/agency/boone-county-sheriffs-office> ;
-    ns3:mentionsLocation <https://w3id.org/caselinker/resource/location/columbia>,
-        <https://w3id.org/caselinker/resource/location/mo> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2023_651/agency/boone-county-sheriffs-office> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_651/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2023-03-17T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_651/event/hands-on>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2023_651/event/possession>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2023_651/event/production> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_651/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_651/assessment/semantic/possession-csam> a ns3:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns1:CSAMIncident ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2023_651/narrative> ;
+    ns3:hasConfidence 0.5065 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_651/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2023-03-17T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_651/event/hands-on>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2023_651/event/possession>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2023_651/event/production> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_651/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_651/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2023_651/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 51.0 .
 
-<https://w3id.org/caselinker/resource/agency/boone-county-sheriffs-office> a ns7:LocalAgency .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_651/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2023_651/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2023_651/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_651/agency/boone-county-sheriffs-office> a ns3:OrganizationLikeEntity,
+        ns5:LocalAgency ;
+    rdfs:label "Boone County Sheriff's Office" ;
+    ns2:name "Boone County Sheriff's Office" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_651/charge/1> a ns6:CSAM_Possession,
         ns6:CriminalCharge ;
-    rdfs:label "possession of child pornography" ;
-    ns6:indictmentCounts 2 .
+    rdfs:label "possession of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_651/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_651/event/hands-on> a ns1:ChildSexualAbuseEvent,
+        ns3:Event ;
+    rdfs:label "Child Sexual Abuse Event · event/hands-on" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_651/facet/production> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_651/event/possession> a ns1:CSAMIncident,
+        ns3:Event ;
+    rdfs:label "CSAMIncident · event/possession" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_651/legal-proceeding> a ns4:Event,
-        ns4:LegalEvent,
+<https://w3id.org/caselinker/resource/case/ncmec_2023_651/event/production> a ns3:Event,
+        <https://cacontology.projectvic.org/production#ProductionOffense> ;
+    rdfs:label "Production Offense · event/production" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_651/legal-proceeding> a ns3:Event,
+        ns3:LegalEvent,
         ns6:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): held without bond at the Boone County Jail" ;
-    ns6:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_651/charge/1> ;
-    ns6:hasProceedingBeginPoint "2023-03-17T00:00:00Z"^^xsd:dateTimeStamp .
+    ns6:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns6:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_651/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_651/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns5:ageEstimate 51 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_651/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_651/phase/charged> a ns2:LegalProcessPhase,
-        ns4:Phase ;
-    ns2:hasPhaseBeginPoint "2023-03-17T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/columbia> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2023_651/location/columbia> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Columbia" ;
-    ns1:name "Columbia" .
+    ns2:name "Columbia" .
 
-<https://w3id.org/caselinker/resource/location/mo> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2023_651/role/offender/1> a ns6:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" .
+
+<https://w3id.org/caselinker/resource/location/missouri-mo> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Mo." ;
-    ns1:name "Mo." .
+    rdfs:label "Missouri" ;
+    dcterms:identifier "fips:29" ;
+    skos:altLabel "Mo." ;
+    ns2:name "Missouri" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_651/event/hands-on> a ns2:ChildSexualAbuseEvent,
-        ns4:Event ;
-    ns2:severityLevel 3 .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_651/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_651/event/possession> a ns2:CSAMIncident,
-        ns4:Event ;
-    ns2:severityLevel 3 ;
-    ns1:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2023_651/facet/possession> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_651/phase/charged> a ns1:LegalProcessPhase,
+        ns3:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_651/event/production> a ns4:Event,
-        <https://cacontology.projectvic.org/production#ProductionOffense> ;
-    ns2:severityLevel 3 ;
-    ns1:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2023_651/facet/production> .
-
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_651> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2023_651/provenance> .

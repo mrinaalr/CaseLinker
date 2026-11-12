@@ -151,11 +151,13 @@ LIMIT 50
 
 | Fact | How to read it |
 |---|---|
-| Relational case count | `GET https://caselinker.up.railway.app/api/case-count` (local sqlite / live Postgres **10,711**) |
-| Extracted features / agencies | `GET /api/stats` → `unique_features` **131,332**, `unique_organizations` **4,428** distinct LE agencies after ingest normalize plus LE-only filter (`source_count` **70** = 68 non-DOJ + `DOJ CEOS` + `DOJ SAFE CHILDHOOD`; `DOJ ARCHIVES` folds into CEOS; `DOJ AI CSAM` folds into Safe Childhood) |
-| Graph case count | `SELECT (COUNT(DISTINCT ?s) AS ?n) WHERE { GRAPH ?g { ?s a cac:CACInvestigation } FILTER(STRSTARTS(STR(?g), "https://w3id.org/caselinker/resource/case/")) }` (live store **10,711**; hosted SPARQL matches after Oxigraph load) |
-| Graph case count | `SELECT (COUNT(DISTINCT ?s) AS ?n) WHERE { GRAPH ?g { ?s a cac:CACInvestigation } FILTER(STRSTARTS(STR(?g), "https://w3id.org/caselinker/resource/case/") && !STRENDS(STR(?g), "/provenance")) }` (live store **10,711**; hosted SPARQL matches after Oxigraph load) |
-| Named graphs (press release) | one per case + one provenance graph; **10,711** cases live |
+| Relational case count | `GET https://caselinker.up.railway.app/api/case-count` (local sqlite / live Postgres **10,802**) |
+| Extracted features / agencies | `GET /api/stats` → `unique_features` **131,910**, `unique_organizations` **4,462** distinct LE agencies after ingest normalize plus LE-only filter (`source_count` **76** = 74 non-DOJ + `DOJ CEOS` + `DOJ SAFE CHILDHOOD`; `DOJ ARCHIVES` folds into CEOS; `DOJ AI CSAM` folds into Safe Childhood) |
+| Graph case count | `SELECT (COUNT(DISTINCT ?s) AS ?n) WHERE { GRAPH ?g { ?s a cac:CACInvestigation } FILTER(STRSTARTS(STR(?g), "https://w3id.org/caselinker/resource/case/")) }` (live store **10,802**) |
+| Graph case count | `SELECT (COUNT(DISTINCT ?s) AS ?n) WHERE { GRAPH ?g { ?s a cac:CACInvestigation } FILTER(STRSTARTS(STR(?g), "https://w3id.org/caselinker/resource/case/") && !STRENDS(STR(?g), "/provenance")) }` (live store **10,802**) |
+| Named graphs (press release) | one per case + one provenance graph; **10,802** cases live |
+| Triples (statements in named graphs) | `SELECT (COUNT(*) AS ?n) WHERE { GRAPH ?g { ?s ?p ?o } }` (live store **6,043,604** across **21,901** named graphs: 10,802 case + 10,802 provenance + 297 PACER) |
+| Distinct triples (graph ignored) | **5,531,457**, counted from the N-Quads export; a triple asserted in more than one named graph counts once |
 | Graph generation time | `dcterms:created` / `dcterms:modified` on the investigation (remap time, not offense date) |
 | Public source | `dcterms:source` (press-release URL and/or source label) |
 | Reload | wholesale `python3 scripts/rebuild_oxigraph.py` (not incremental) |

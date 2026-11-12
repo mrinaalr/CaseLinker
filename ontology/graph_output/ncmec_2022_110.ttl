@@ -1,91 +1,102 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns2: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns6: <https://cacontology.projectvic.org/core#> .
+@prefix ns1: <https://cacontology.projectvic.org#> .
+@prefix ns2: <https://cacontology.projectvic.org/core#> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_110> a ns3:CACInvestigation,
-        ns6:EnduringEntity ;
-    dcterms:created "2026-10-17 21:51:20.727962" ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_110> a ns1:CACInvestigation,
+        ns2:EnduringEntity ;
+    rdfs:label "Case ncmec_2022_110" ;
+    dcterms:created "2026-11-10T09:17:42.900982"^^xsd:dateTime ;
+    dcterms:date "2022-09-11"^^xsd:date ;
     dcterms:identifier "ncmec_2022_110" ;
-    dcterms:modified "2026-10-17 21:51:20.727962" ;
+    dcterms:modified "2026-11-10T09:17:42.900982"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2022_110/provenance> ;
     dcterms:source <https://www.winknews.com/2022/09/09/fort-myers-police-arrest-man-accused-of-possessing-transmitting-child-pornography/>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/fort-myers> ;
-    ns3:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_110/phase/arrested> ;
-    ns3:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_110/phase/arrested> ;
-    ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_110/event/distribution>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/fort-myers-city> ;
+    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_110/phase/arrested> ;
+    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_110/phase/arrested> ;
+    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_110/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_110/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_110/legal-proceeding> ;
-    ns3:investigationStatus "unknown" ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/fort-myers-police-department>,
-        <https://w3id.org/caselinker/resource/agency/hsi> ;
-    ns2:mentionsLocation <https://w3id.org/caselinker/resource/location/fort-myers> .
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/hsi>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2022_110/agency/fort-myers-police-department> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_110/role/offender/1> a ns3:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns3:hasRoleBeginPoint "2022-09-11T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_110/event/possession> ;
-    ns6:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_110/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_110/assessment/semantic/possession-csam> a ns2:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns1:CSAMIncident ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/ncmec_2022_110/narrative> ;
+    ns2:hasConfidence 0.5394 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_110/role/victim/1> a ns3:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns3:hasRoleBeginPoint "2022-09-11T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_110/event/possession> ;
-    ns6:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_110/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_110/role/offender/1/has-role> a ns5:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns5:isDirectional true ;
+    ns5:kindOfRelationship "Has_Role" ;
+    ns5:source <https://w3id.org/caselinker/resource/case/ncmec_2022_110/person/offender/1> ;
+    ns5:target <https://w3id.org/caselinker/resource/case/ncmec_2022_110/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/fort-myers-police-department> a ns6:OrganizationLikeEntity,
-        ns5:LocalAgency ;
-    rdfs:label "Fort Myers Police Department" .
+<https://w3id.org/caselinker/resource/agency/hsi> a ns2:OrganizationLikeEntity,
+        ns3:FederalAgency ;
+    rdfs:label "Homeland Security Investigations" ;
+    ns5:name "Homeland Security Investigations" .
 
-<https://w3id.org/caselinker/resource/agency/hsi> a ns5:FederalAgency .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_110/agency/fort-myers-police-department> a ns2:OrganizationLikeEntity,
+        ns3:LocalAgency ;
+    rdfs:label "Fort Myers Police Department" ;
+    ns5:name "Fort Myers Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_110/charge/1> a ns1:CSAM_Possession,
-        ns1:CriminalCharge ;
-    rdfs:label "possession of child pornography and two" ;
-    ns1:indictmentCounts 13 .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_110/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
+    rdfs:label "possession of child pornography and two" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_110/charge/2> a ns1:CSAM_Distribution,
-        ns1:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_110/charge/2> a ns4:CSAM_Distribution,
+        ns4:CriminalCharge ;
     rdfs:label "transmission of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_110/event/distribution> a ns6:Event,
-        ns1:CSAM_Distribution .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_110/event/distribution> a ns2:Event,
+        ns4:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_110/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_110/legal-proceeding> a ns6:Event,
-        ns6:LegalEvent,
-        ns1:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_110/legal-proceeding> a ns2:Event,
+        ns2:LegalEvent,
+        ns4:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): remains in Lee County Jail" ;
-    ns1:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_110/charge/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_110/charge/2> ;
-    ns1:hasProceedingBeginPoint "2022-09-11T00:00:00Z"^^xsd:dateTimeStamp .
+    ns4:chargeCount "14"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_110/charge/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2022_110/charge/2> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_110/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_110/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_110/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_110/role/offender/1> a ns4:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_110/event/possession> .
 
-<https://w3id.org/caselinker/resource/platform/kik> a <https://cacontology.projectvic.org/platforms#MessagingService> ;
-    rdfs:label "Kik" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_110/phase/arrested> a ns3:InitialPhase,
-        ns6:Phase ;
-    ns3:hasPhaseBeginPoint "2022-09-11T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/fort-myers> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/fort-myers-city> a ns2:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Fort Myers" ;
-    ns4:name "Fort Myers" .
+    rdfs:label "Fort Myers city" ;
+    dcterms:identifier "fips:1224125" ;
+    skos:altLabel "Fort Myers" ;
+    ns5:name "Fort Myers city" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_110/event/possession> a ns3:CSAMIncident,
-        ns6:Event ;
-    ns3:usesChannel <https://w3id.org/caselinker/resource/platform/kik> ;
-    ns4:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2022_110/facet/possession> .
+<https://w3id.org/caselinker/resource/platform/kik> a ns2:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#MessagingService> ;
+    rdfs:label "Kik" ;
+    ns5:name "Kik" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2022_110/event/possession> a ns1:CSAMIncident,
+        ns2:Event ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/kik> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_110> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2022_110/provenance> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_110/phase/arrested> a ns1:InitialPhase,
+        ns2:Phase ;
+    rdfs:label "Initial Phase · phase/arrested" .
+

@@ -1,106 +1,120 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://cacontology.projectvic.org/us/ncmec#> .
-@prefix ns7: <https://cacontology.projectvic.org/core#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/core#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns6: <https://cacontology.projectvic.org/hotlines#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_137> a ns1:CACInvestigation,
-        ns7:EnduringEntity ;
-    dcterms:created "2026-10-18 00:01:16.981548" ;
+        ns3:EnduringEntity ;
+    rdfs:label "Case ncmec_2025_137" ;
+    dcterms:created "2026-11-10T16:32:43.566620"^^xsd:dateTime ;
+    dcterms:date "2025-08-15"^^xsd:date ;
     dcterms:identifier "ncmec_2025_137" ;
-    dcterms:modified "2026-10-18 00:01:16.981548" ;
+    dcterms:modified "2026-11-12T01:39:24.348537"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2025_137/provenance> ;
     dcterms:source <https://www.wtnh.com/news/connecticut/fairfield/police-21-year-old-stamford-man-arrested-for-child-pornography-possession/>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/california>,
-        <https://w3id.org/caselinker/resource/location/conn>,
-        <https://w3id.org/caselinker/resource/location/stamford> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/california-ca>,
+        <https://w3id.org/caselinker/resource/location/connecticut-ct>,
+        <https://w3id.org/caselinker/resource/location/stamford-city-ct> ;
     ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_137/phase/charged> ;
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_137/phase/charged> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_137/cybertip>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_137/event/distribution>,
+    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_137/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_137/event/multi-jurisdiction>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_137/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_137/legal-proceeding> ;
-    ns1:investigationStatus "unknown" ;
-    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec> ;
-    ns4:mentionsLocation <https://w3id.org/caselinker/resource/location/california>,
-        <https://w3id.org/caselinker/resource/location/conn>,
-        <https://w3id.org/caselinker/resource/location/stamford> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2025_137/cybertip> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_137/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2025-08-15T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_137/event/possession> ;
-    ns7:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2025_137/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_137/assessment/semantic/possession-csam> a ns3:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns1:CSAMIncident ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_137/narrative> ;
+    ns3:hasConfidence 0.523 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_137/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2025-08-15T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_137/event/possession> ;
-    ns7:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2025_137/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_137/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2025_137/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2025_137/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_137/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
-    rdfs:label "child pornography" ;
-    ns5:indictmentCounts 2 .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_137/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
+    rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_137/cybertip> a ns6:NCMECCybertipReport ;
-    ns6:supportedBy <https://w3id.org/caselinker/resource/agency/ncmec> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_137/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
+    rdfs:label "CyberTipline report" ;
+    ns6:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns2:name "observe" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_137/event/distribution> a ns7:Event,
-        ns5:CSAM_Distribution ;
-    ns1:severityLevel 3 .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_137/event/distribution> a ns3:Event,
+        ns4:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_137/event/multi-jurisdiction> a ns7:Event,
-        ns2:MultiJurisdictionalInvestigation ;
-    ns1:severityLevel 3 .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_137/event/multi-jurisdiction> a ns3:Event,
+        ns5:MultiJurisdictionalInvestigation ;
+    rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_137/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_137/legal-proceeding> a ns3:Event,
+        ns3:LegalEvent,
+        ns4:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns4:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_137/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_137/legal-proceeding> a ns7:Event,
-        ns7:LegalEvent,
-        ns5:LegalProceeding ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_137/charge/1> ;
-    ns5:hasProceedingBeginPoint "2025-08-15T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_137/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_137/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_137/role/offender/1> a ns4:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_137/event/possession> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_137/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/platform/kik> a <https://cacontology.projectvic.org/platforms#MessagingService> ;
-    rdfs:label "Kik" .
-
-<https://w3id.org/caselinker/resource/agency/ncmec> a ns2:FederalAgency .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_137/phase/charged> a ns1:LegalProcessPhase,
-        ns7:Phase ;
-    ns1:hasPhaseBeginPoint "2025-08-15T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/california> a ns7:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/california-ca> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "California" ;
-    ns3:name "California" .
+    dcterms:identifier "fips:06" ;
+    ns2:name "California" .
 
-<https://w3id.org/caselinker/resource/location/conn> a ns7:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/connecticut-ct> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Conn." ;
-    ns3:name "Conn." .
+    rdfs:label "Connecticut" ;
+    dcterms:identifier "fips:09" ;
+    skos:altLabel "Conn." ;
+    ns2:name "Connecticut" .
 
-<https://w3id.org/caselinker/resource/location/stamford> a ns7:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/stamford-city-ct> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Stamford" ;
-    ns3:name "Stamford" .
+    rdfs:label "Stamford city" ;
+    dcterms:identifier "fips:0973000" ;
+    skos:altLabel "Stamford" ;
+    ns2:name "Stamford city" .
+
+<https://w3id.org/caselinker/resource/platform/kik> a ns3:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#MessagingService> ;
+    rdfs:label "Kik" ;
+    ns2:name "Kik" .
+
+<https://w3id.org/caselinker/resource/agency/ncmec> a ns3:OrganizationLikeEntity,
+        ns6:HotlineOrganization,
+        ns5:FederalAgency ;
+    rdfs:label "National Center for Missing and Exploited Children" ;
+    skos:altLabel "NCMEC" ;
+    ns2:name "National Center for Missing and Exploited Children" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_137/event/possession> a ns1:CSAMIncident,
-        ns7:Event ;
+        ns3:Event ;
+    rdfs:label "CSAMIncident · event/possession" ;
     ns1:severityLevel 3 ;
-    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/kik> ;
-    ns3:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2025_137/facet/possession> .
+    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/kik> .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2025_137/phase/charged> a ns1:LegalProcessPhase,
+        ns3:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_137> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2025_137/provenance> .

@@ -1,80 +1,79 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/core#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/cbp_2026_063> a ns2:CACInvestigation,
-        ns1:EnduringEntity ;
-    dcterms:created "2026-10-18 00:55:14.326994" ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case cbp_2026_063" ;
+    dcterms:created "2026-11-10T18:04:23.828133"^^xsd:dateTime ;
+    dcterms:date "2026-01"^^xsd:gYearMonth ;
     dcterms:identifier "cbp_2026_063" ;
-    dcterms:modified "2026-10-18 00:55:14.326994" ;
+    dcterms:modified "2026-11-10T18:04:23.828133"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/cbp_2026_063/provenance> ;
     dcterms:source <https://www.cbp.gov/newsroom/local-media-release/customs-and-border-protection-officers-brownsville-port-entry-arrest-3>,
         "CBP" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/brownsville>,
-        <https://w3id.org/caselinker/resource/location/cameron-county>,
-        <https://w3id.org/caselinker/resource/location/olmito>,
-        <https://w3id.org/caselinker/resource/location/texas>,
-        <https://w3id.org/caselinker/resource/location/united-states> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/cbp_2026_063/location/cameron-county>,
+        <https://w3id.org/caselinker/resource/case/cbp_2026_063/location/united-states>,
+        <https://w3id.org/caselinker/resource/location/brownsville-city-tx>,
+        <https://w3id.org/caselinker/resource/location/olmito-cdp-tx>,
+        <https://w3id.org/caselinker/resource/location/texas-tx> ;
     ns2:currentPhase <https://w3id.org/caselinker/resource/case/cbp_2026_063/phase/arrested> ;
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/cbp_2026_063/phase/arrested> ;
-    ns2:hasStep <https://w3id.org/caselinker/resource/case/cbp_2026_063/event/multi-jurisdiction> ;
-    ns3:mentionsLocation <https://w3id.org/caselinker/resource/location/brownsville>,
-        <https://w3id.org/caselinker/resource/location/cameron-county>,
-        <https://w3id.org/caselinker/resource/location/olmito>,
-        <https://w3id.org/caselinker/resource/location/texas>,
-        <https://w3id.org/caselinker/resource/location/united-states> .
+    ns2:hasStep <https://w3id.org/caselinker/resource/case/cbp_2026_063/event/multi-jurisdiction> .
 
-<https://w3id.org/caselinker/resource/case/cbp_2026_063/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:hasRole <https://w3id.org/caselinker/resource/case/cbp_2026_063/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/cbp_2026_063/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/cbp_2026_063/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/cbp_2026_063/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/cbp_2026_063/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:hasRole <https://w3id.org/caselinker/resource/case/cbp_2026_063/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/cbp_2026_063/event/multi-jurisdiction> a <https://cacontology.projectvic.org/core#Event>,
+        ns3:MultiJurisdictionalInvestigation ;
+    rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" ;
+    ns3:crossesBorders true .
 
-<https://w3id.org/caselinker/resource/case/cbp_2026_063/event/multi-jurisdiction> a ns1:Event,
-        ns4:MultiJurisdictionalInvestigation ;
-    ns2:severityLevel 3 ;
-    ns4:crossesBorders true .
-
-<https://w3id.org/caselinker/resource/case/cbp_2026_063/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/cbp_2026_063/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/cbp_2026_063/phase/arrested> a ns2:InitialPhase,
-        ns1:Phase ;
-    ns2:hasPhaseBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/brownsville> a ns1:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Brownsville" ;
-    ns5:name "Brownsville" .
-
-<https://w3id.org/caselinker/resource/location/cameron-county> a ns1:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/cbp_2026_063/location/cameron-county> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Cameron County" ;
-    ns5:name "Cameron County" .
+    ns1:name "Cameron County" .
 
-<https://w3id.org/caselinker/resource/location/olmito> a ns1:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Olmito" ;
-    ns5:name "Olmito" .
-
-<https://w3id.org/caselinker/resource/location/texas> a ns1:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Texas" ;
-    ns5:name "Texas" .
-
-<https://w3id.org/caselinker/resource/location/united-states> a ns1:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/cbp_2026_063/location/united-states> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "United States" ;
-    ns5:name "United States" .
+    ns1:name "United States" .
 
+<https://w3id.org/caselinker/resource/case/cbp_2026_063/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/cbp_2026_063> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/cbp_2026_063/provenance> .
+<https://w3id.org/caselinker/resource/case/cbp_2026_063/role/offender/1> a <https://cacontology.projectvic.org/legal-outcomes#DefendantRole> ;
+    rdfs:label "Defendant Role · role/offender/1" .
+
+<https://w3id.org/caselinker/resource/location/brownsville-city-tx> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Brownsville city" ;
+    dcterms:identifier "fips:4810768" ;
+    skos:altLabel "Brownsville" ;
+    ns1:name "Brownsville city" .
+
+<https://w3id.org/caselinker/resource/location/olmito-cdp-tx> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Olmito CDP" ;
+    dcterms:identifier "fips:4853964" ;
+    skos:altLabel "Olmito" ;
+    ns1:name "Olmito CDP" .
+
+<https://w3id.org/caselinker/resource/location/texas-tx> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Texas" ;
+    dcterms:identifier "fips:48" ;
+    ns1:name "Texas" .
+
+<https://w3id.org/caselinker/resource/case/cbp_2026_063/phase/arrested> a ns2:InitialPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Initial Phase · phase/arrested" .
+

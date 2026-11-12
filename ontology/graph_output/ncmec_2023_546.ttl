@@ -1,70 +1,60 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/core#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_546> a ns1:CACInvestigation,
-        ns2:EnduringEntity ;
-    dcterms:created "2026-10-17 22:21:34.655928" ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case ncmec_2023_546" ;
+    dcterms:created "2026-11-10T10:05:34.974739"^^xsd:dateTime ;
+    dcterms:date "2023-06-10"^^xsd:date ;
     dcterms:identifier "ncmec_2023_546" ;
-    dcterms:modified "2026-10-17 22:21:34.655928" ;
+    dcterms:modified "2026-11-10T10:05:34.974739"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2023_546/provenance> ;
     dcterms:source <https://www.shawlocal.com/mywebtimes/2023/06/09/wedron-man-arrested-on-child-porn-charges/>,
         "NCMEC" ;
-    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_546/phase/convicted> ;
-    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_546/phase/convicted> ;
+    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_546/phase/arrested> ;
+    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_546/phase/arrested> ;
     ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_546/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_546/event/possession>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2023_546/legal-proceeding>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2023_546/legal-step/convicted> .
+        <https://w3id.org/caselinker/resource/case/ncmec_2023_546/legal-proceeding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_546/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2023-06-10T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_546/event/possession> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_546/person/offender/1> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_546/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2023-06-10T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_546/event/possession> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_546/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_546/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2023_546/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2023_546/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_546/charge/1> a ns3:CSAM_Possession,
         ns3:CriminalCharge ;
-    rdfs:label "child pornography" ;
-    ns3:indictmentCounts 2 .
+    rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_546/event/distribution> a ns2:Event,
-        ns3:CSAM_Distribution .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_546/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
+        ns3:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_546/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_546/legal-proceeding> a ns2:Event,
-        ns2:LegalEvent,
+<https://w3id.org/caselinker/resource/case/ncmec_2023_546/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
         ns3:LegalProceeding ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_546/charge/1> ;
-    ns3:hasProceedingBeginPoint "2023-06-10T00:00:00Z"^^xsd:dateTimeStamp .
+    rdfs:label "Event · legal-proceeding" ;
+    ns3:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_546/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_546/legal-step/convicted> a ns2:Event,
-        ns2:LegalEvent,
-        ns3:LegalProceeding,
-        ns3:SentencingHearing ;
-    ns3:hasProceedingBeginPoint "2023-06-10T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_546/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_546/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_546/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_546/phase/convicted> a ns2:Phase,
-        ns3:SentencingPhase ;
-    ns1:hasPhaseBeginPoint "2023-06-10T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_546/role/offender/1> a ns3:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_546/event/possession> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_546/event/possession> a ns1:CSAMIncident,
-        ns2:Event ;
-    ns4:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2023_546/facet/possession> .
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/possession" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2023_546/phase/arrested> a ns1:InitialPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Initial Phase · phase/arrested" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_546> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2023_546/provenance> .

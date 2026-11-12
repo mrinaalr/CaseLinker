@@ -290,7 +290,7 @@ The population is the people in these 30 cases, who were already moving through 
 
 The graphs abstract away victim experience and offender psychology. They map capability to phase progression and nothing else. Nothing here models why people offend or how they choose; the value function is a summary of recorded paths, not a model of decision-making (AfH Appendix Y).
 
-The 10,711 press-release graphs under [`ontology/graph_output/`](../ontology/graph_output/) are a separate layer, queried at corpus scale over SPARQL. The 30 state machines here are built from court records and cover phase order and blocking only. They do not replace the press-release graphs.
+The 10,802 press-release graphs under [`ontology/graph_output/`](../ontology/graph_output/) are a separate layer, queried at corpus scale over SPARQL. The 30 state machines here are built from court records and cover phase order and blocking only. They do not replace the press-release graphs.
 
 ## External references
 

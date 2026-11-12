@@ -1,91 +1,94 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/core#> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://cacontology.projectvic.org/detection#> .
-@prefix ns6: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns7: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://cacontology.projectvic.org#> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_097> a ns1:CACInvestigation,
-        ns2:EnduringEntity ;
-    dcterms:created "2026-10-17 22:21:28.975898" ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_097> a ns3:CACInvestigation,
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case ncmec_2023_097" ;
+    dcterms:created "2026-11-10T10:03:02.172943"^^xsd:dateTime ;
+    dcterms:date "2023-12-21"^^xsd:date ;
     dcterms:identifier "ncmec_2023_097" ;
-    dcterms:modified "2026-10-17 22:21:28.975898" ;
+    dcterms:modified "2026-11-10T10:03:02.172943"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2023_097/provenance> ;
     dcterms:source <https://whky.com/alexander-county-man-jailed-in-case-involving-child-pornography/>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/hiddenite>,
-        <https://w3id.org/caselinker/resource/location/taylorsville> ;
-    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_097/phase/charged> ;
-    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_097/phase/charged> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_097/event/csam>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2023_097/location/taylorsville>,
+        <https://w3id.org/caselinker/resource/location/hiddenite-cdp> ;
+    ns3:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_097/phase/charged> ;
+    ns3:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_097/phase/charged> ;
+    ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_097/event/csam>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_097/legal-proceeding> ;
-    ns1:investigationStatus "unknown" ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/alexander-county-sheriffs-office> ;
-    ns6:mentionsLocation <https://w3id.org/caselinker/resource/location/hiddenite>,
-        <https://w3id.org/caselinker/resource/location/taylorsville> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2023_097/agency/alexander-county-sheriffs-office> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_097/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2023-12-21T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_097/event/csam> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_097/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_097/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2023_097/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 23.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_097/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2023-12-21T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_097/event/csam> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_097/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_097/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2023_097/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2023_097/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/alexander-county-sheriffs-office> a ns3:LocalAgency .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_097/agency/alexander-county-sheriffs-office> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns5:LocalAgency ;
+    rdfs:label "Alexander County Sheriff's Office" ;
+    ns1:name "Alexander County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_097/charge/1> a ns4:CriminalCharge,
-        ns4:StateCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_097/charge/1> a ns2:CriminalCharge,
+        ns2:StateCharge ;
     rdfs:label "sexual exploitation of a minor" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_097/charge/2> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_097/charge/2> a ns2:CSAM_Possession,
+        ns2:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_097/charge/3> a ns4:CriminalCharge ;
-    rdfs:label "sexual exploitation" ;
-    ns6:chargeCluster "sexual_exploitation_unspecified" .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_097/charge/3> a ns2:CriminalCharge ;
+    rdfs:label "sexual exploitation" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_097/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_097/legal-proceeding> a ns2:Event,
-        ns2:LegalEvent,
-        ns4:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_097/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        ns2:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): remained in jail" ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_097/charge/1>,
+    ns2:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_097/charge/1>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_097/charge/2>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2023_097/charge/3> ;
-    ns4:hasProceedingBeginPoint "2023-12-21T00:00:00Z"^^xsd:dateTimeStamp .
+        <https://w3id.org/caselinker/resource/case/ncmec_2023_097/charge/3> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_097/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns5:ageEstimate 23 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_097/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_097/phase/charged> a ns1:LegalProcessPhase,
-        ns2:Phase ;
-    ns1:hasPhaseBeginPoint "2023-12-21T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/hiddenite> a ns2:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Hiddenite" ;
-    ns7:name "Hiddenite" .
-
-<https://w3id.org/caselinker/resource/location/taylorsville> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2023_097/location/taylorsville> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Taylorsville" ;
-    ns7:name "Taylorsville" .
+    ns1:name "Taylorsville" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_097/event/csam> a ns1:CSAMIncident,
-        ns2:Event ;
-    ns7:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2023_097/facet/csam> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_097/role/offender/1> a ns2:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_097/event/csam> .
 
+<https://w3id.org/caselinker/resource/location/hiddenite-cdp> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Hiddenite CDP" ;
+    dcterms:identifier "fips:3731260" ;
+    skos:altLabel "Hiddenite" ;
+    ns1:name "Hiddenite CDP" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_097> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2023_097/provenance> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_097/event/csam> a ns3:CSAMIncident,
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/csam" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_097/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_097/phase/charged> a ns3:LegalProcessPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Legal Process Phase · phase/charged" .
+

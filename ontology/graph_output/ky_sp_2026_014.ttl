@@ -1,102 +1,35 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://cacontology.projectvic.org/core#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns7: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns1: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/core#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns6: <https://cacontology.projectvic.org#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ky_sp_2026_014/admission/1/extraction-confidence> a ns4:AssessmentResult ;
-    ns4:assesses <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/admission/1> ;
-    ns4:generatedBy <https://w3id.org/caselinker/resource/case/ky_sp_2026_014> ;
-    ns4:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/ky_sp_2026_014/admission/2/extraction-confidence> a ns4:AssessmentResult ;
-    ns4:assesses <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/admission/2> ;
-    ns4:generatedBy <https://w3id.org/caselinker/resource/case/ky_sp_2026_014> ;
-    ns4:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> .
-
-<https://w3id.org/caselinker/resource/agency/kentucky-state-police-department> a ns6:StateAgency .
-
-<https://w3id.org/caselinker/resource/case/ky_sp_2026_014/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
-    rdfs:label "child pornography" .
-
-<https://w3id.org/caselinker/resource/case/ky_sp_2026_014/event/distribution> a ns4:Event,
-        ns5:CSAM_Distribution ;
-    ns1:severityLevel 3 .
-
-<https://w3id.org/caselinker/resource/case/ky_sp_2026_014/event/trust-violation> a ns7:AuthorityAbuse,
-        ns7:TrustViolation ;
-    ns7:violatesRelationship <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/relationship/coach> .
-
-<https://w3id.org/caselinker/resource/case/ky_sp_2026_014/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/ky_sp_2026_014/facet/production> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/ky_sp_2026_014/legal-proceeding> a ns4:Event,
-        ns4:LegalEvent,
-        ns5:LegalProceeding ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/charge/1> ;
-    ns5:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns5:resultsSentence <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/sentence/1> .
-
-<https://w3id.org/caselinker/resource/case/ky_sp_2026_014/legal-step/sentenced> a ns4:Event,
-        ns4:LegalEvent,
-        ns5:LegalProceeding,
-        ns5:SentencingHearing ;
-    ns5:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/ky_sp_2026_014/operation> a ns4:Event,
-        <https://cacontology.projectvic.org/taskforce#ProactiveOperation> .
-
-<https://w3id.org/caselinker/resource/case/ky_sp_2026_014/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ky_sp_2026_014/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ky_sp_2026_014/relationship/coach> a ns7:Coach,
-        ns7:CustodialRelationship ;
-    ns7:involvesChild <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/role/victim/1> ;
-    ns7:involvesCustodian <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/role/offender/1> ;
-    ns7:relationshipType "coach" .
-
-<https://w3id.org/caselinker/resource/case/ky_sp_2026_014/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/event/hands-on>,
-        <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/event/possession>,
-        <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/event/production> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/case/ky_sp_2026_014/sentence/1> a ns5:CriminalSentence,
-        ns5:PrisonSentence ;
-    rdfs:label "25 years" .
-
-<https://w3id.org/caselinker/resource/case/ky_sp_2026_014> a ns1:CACInvestigation,
-        ns4:EnduringEntity ;
-    dcterms:created "2026-10-18 05:15:32.713424" ;
+<https://w3id.org/caselinker/resource/case/ky_sp_2026_014> a ns6:CACInvestigation,
+        ns3:EnduringEntity ;
+    rdfs:label "Case ky_sp_2026_014" ;
+    dcterms:created "2026-11-11T15:07:36.250332"^^xsd:dateTime ;
+    dcterms:date "2026-01"^^xsd:gYearMonth ;
     dcterms:identifier "ky_sp_2026_014" ;
-    dcterms:modified "2026-10-18 05:15:32.713424" ;
+    dcterms:modified "2026-11-11T15:07:36.250332"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/provenance> ;
     dcterms:source <https://www.kentuckystatepolice.ky.gov/news/12-24-20-kentucky-state-police-assist-with-114-arrests-of-child-internet-predators/>,
         "KY SP" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/clark-county>,
-        <https://w3id.org/caselinker/resource/location/frankfort>,
-        <https://w3id.org/caselinker/resource/location/joplin>,
-        <https://w3id.org/caselinker/resource/location/kentucky>,
-        <https://w3id.org/caselinker/resource/location/ky>,
-        <https://w3id.org/caselinker/resource/location/lexington>,
-        <https://w3id.org/caselinker/resource/location/missouri>,
-        <https://w3id.org/caselinker/resource/location/springfield> ;
-    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/phase/sentenced> ;
-    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/phase/sentenced> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/admission/2>,
-        <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/event/distribution>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/location/joplin>,
+        <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/location/lexington>,
+        <https://w3id.org/caselinker/resource/location/clark-county-ky>,
+        <https://w3id.org/caselinker/resource/location/frankfort-city-ky>,
+        <https://w3id.org/caselinker/resource/location/kentucky-ky>,
+        <https://w3id.org/caselinker/resource/location/kentucky-ky-21>,
+        <https://w3id.org/caselinker/resource/location/missouri-mo>,
+        <https://w3id.org/caselinker/resource/location/springfield-city-mo> ;
+    ns6:currentPhase <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/phase/sentenced> ;
+    ns6:hasPhase <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/phase/sentenced> ;
+    ns6:hasStep <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/event/hands-on>,
         <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/event/possession>,
         <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/event/production>,
@@ -104,116 +37,184 @@
         <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/legal-step/sentenced>,
         <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/operation> ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/kentucky-state-police-department> ;
-    ns2:mentionsLocation <https://w3id.org/caselinker/resource/location/clark-county>,
-        <https://w3id.org/caselinker/resource/location/frankfort>,
-        <https://w3id.org/caselinker/resource/location/joplin>,
-        <https://w3id.org/caselinker/resource/location/kentucky>,
-        <https://w3id.org/caselinker/resource/location/ky>,
-        <https://w3id.org/caselinker/resource/location/lexington>,
-        <https://w3id.org/caselinker/resource/location/missouri>,
-        <https://w3id.org/caselinker/resource/location/springfield> .
+    ns2:object <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/admission/1>,
+        <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/admission/2> .
 
-<https://w3id.org/caselinker/resource/case/ky_sp_2026_014/phase/sentenced> a ns4:Phase,
-        ns5:SentencingPhase ;
-    ns1:hasPhaseBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ky_sp_2026_014/admission/1/extraction-confidence> a ns3:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/admission/1> ;
+    ns3:hasConfidence 0.65 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/location/clark-county> a ns4:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Clark County" ;
-    ns3:name "Clark County" .
+<https://w3id.org/caselinker/resource/case/ky_sp_2026_014/admission/2/extraction-confidence> a ns3:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/2/extraction-confidence" ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/admission/2> ;
+    ns3:hasConfidence 0.65 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/location/frankfort> a ns4:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Frankfort" ;
-    ns3:name "Frankfort" .
+<https://w3id.org/caselinker/resource/case/ky_sp_2026_014/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/location/joplin> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ky_sp_2026_014/role/victim/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/victim/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/person/victim/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/role/victim/1> .
+
+<https://w3id.org/caselinker/resource/platform/social-media> a ns3:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "social media" ;
+    ns2:name "social media" .
+
+<https://w3id.org/caselinker/resource/agency/icac> a ns3:OrganizationLikeEntity,
+        <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns2:name "ICAC Task Force" .
+
+<https://w3id.org/caselinker/resource/agency/kentucky-state-police-department> a ns3:OrganizationLikeEntity,
+        ns5:StateAgency ;
+    rdfs:label "Kentucky State Police Department" ;
+    ns2:name "Kentucky State Police Department" .
+
+<https://w3id.org/caselinker/resource/case/ky_sp_2026_014/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
+    rdfs:label "child pornography" .
+
+<https://w3id.org/caselinker/resource/case/ky_sp_2026_014/event/distribution> a ns3:Event,
+        ns4:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
+
+<https://w3id.org/caselinker/resource/case/ky_sp_2026_014/event/hands-on> a ns6:ChildSexualAbuseEvent,
+        ns3:Event ;
+    rdfs:label "Child Sexual Abuse Event · event/hands-on" .
+
+<https://w3id.org/caselinker/resource/case/ky_sp_2026_014/event/possession> a ns6:CSAMIncident,
+        ns3:Event ;
+    rdfs:label "CSAMIncident · event/possession" .
+
+<https://w3id.org/caselinker/resource/case/ky_sp_2026_014/event/production> a ns3:Event,
+        <https://cacontology.projectvic.org/production#ProductionOffense> ;
+    rdfs:label "Production Offense · event/production" .
+
+<https://w3id.org/caselinker/resource/case/ky_sp_2026_014/event/trust-violation> a ns1:AuthorityAbuse,
+        ns1:TrustViolation ;
+    rdfs:label "Authority Abuse · event/trust-violation" ;
+    ns1:perpetratedBy <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/role/offender/1> ;
+    ns1:violatesRelationship <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/relationship/coach> .
+
+<https://w3id.org/caselinker/resource/case/ky_sp_2026_014/legal-proceeding> a ns3:Event,
+        ns3:LegalEvent,
+        ns4:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns4:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/charge/1> ;
+    ns4:resultsSentence <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/sentence/1> .
+
+<https://w3id.org/caselinker/resource/case/ky_sp_2026_014/legal-step/sentenced> a ns3:Event,
+        ns3:LegalEvent,
+        ns4:LegalProceeding,
+        ns4:SentencingHearing ;
+    rdfs:label "Sentencing Hearing · legal-step/sentenced" .
+
+<https://w3id.org/caselinker/resource/case/ky_sp_2026_014/location/joplin> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Joplin" ;
-    ns3:name "Joplin" .
+    ns2:name "Joplin" .
 
-<https://w3id.org/caselinker/resource/location/kentucky> a ns4:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Kentucky" ;
-    ns3:name "Kentucky" .
-
-<https://w3id.org/caselinker/resource/location/ky> a ns4:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Ky." ;
-    ns3:name "Ky." .
-
-<https://w3id.org/caselinker/resource/location/lexington> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ky_sp_2026_014/location/lexington> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Lexington" ;
-    ns3:name "Lexington" .
+    ns2:name "Lexington" .
 
-<https://w3id.org/caselinker/resource/location/missouri> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ky_sp_2026_014/operation> a ns3:Event,
+        <https://cacontology.projectvic.org/taskforce#ProactiveOperation> ;
+    rdfs:label "Proactive Operation · operation" .
+
+<https://w3id.org/caselinker/resource/case/ky_sp_2026_014/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/ky_sp_2026_014/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
+
+<https://w3id.org/caselinker/resource/case/ky_sp_2026_014/relationship/coach> a ns1:Coach,
+        ns1:CustodialRelationship ;
+    rdfs:label "Coach · relationship/coach" ;
+    ns1:involvesChild <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/role/victim/1> ;
+    ns1:involvesCustodian <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/role/offender/1> ;
+    ns1:relationshipType "coach" ;
+    ns2:isDirectional true ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/role/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/role/victim/1> .
+
+<https://w3id.org/caselinker/resource/case/ky_sp_2026_014/sentence/1> a ns4:CriminalSentence,
+        ns4:PrisonSentence ;
+    rdfs:label "25 years" ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/location/clark-county-ky> a ns3:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Clark County" ;
+    dcterms:identifier "fips:21049" ;
+    ns2:name "Clark County" .
+
+<https://w3id.org/caselinker/resource/location/frankfort-city-ky> a ns3:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Frankfort city" ;
+    dcterms:identifier "fips:2128900" ;
+    skos:altLabel "Frankfort" ;
+    ns2:name "Frankfort city" .
+
+<https://w3id.org/caselinker/resource/location/kentucky-ky> a ns3:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Kentucky" ;
+    dcterms:identifier "fips:21" ;
+    ns2:name "Kentucky" .
+
+<https://w3id.org/caselinker/resource/location/kentucky-ky-21> a ns3:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Kentucky" ;
+    dcterms:identifier "fips:21" ;
+    skos:altLabel "Ky." ;
+    ns2:name "Kentucky" .
+
+<https://w3id.org/caselinker/resource/location/missouri-mo> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Missouri" ;
-    ns3:name "Missouri" .
+    dcterms:identifier "fips:29" ;
+    ns2:name "Missouri" .
 
-<https://w3id.org/caselinker/resource/location/springfield> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/springfield-city-mo> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Springfield" ;
-    ns3:name "Springfield" .
-
-<https://w3id.org/caselinker/resource/case/ky_sp_2026_014/event/hands-on> a ns1:ChildSexualAbuseEvent,
-        ns4:Event ;
-    ns1:producesArtifact <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/admission/2> ;
-    ns1:severityLevel 3 ;
-    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/social-media> .
-
-<https://w3id.org/caselinker/resource/case/ky_sp_2026_014/event/possession> a ns1:CSAMIncident,
-        ns4:Event ;
-    ns1:producesArtifact <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/admission/2> ;
-    ns1:severityLevel 3 ;
-    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/social-media> ;
-    ns3:hasFacet <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/facet/possession> .
-
-<https://w3id.org/caselinker/resource/case/ky_sp_2026_014/event/production> a ns4:Event,
-        <https://cacontology.projectvic.org/production#ProductionOffense> ;
-    ns1:producesArtifact <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/admission/2> ;
-    ns1:severityLevel 3 ;
-    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/social-media> ;
-    ns3:hasFacet <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/facet/production> .
-
-<https://w3id.org/caselinker/resource/case/ky_sp_2026_014/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/event/hands-on>,
-        <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/event/possession>,
-        <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/event/production> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/person/offender/1> .
-
-<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "social media" .
+    rdfs:label "Springfield city" ;
+    dcterms:identifier "fips:2970000" ;
+    skos:altLabel "Springfield" ;
+    ns2:name "Springfield city" .
 
 <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "had sexually abused a young child and made videos of the abuse while in Joplin, MO, and three videos of the abuse whi..." ;
     dcterms:source <https://www.kentuckystatepolice.ky.gov/news/12-24-20-kentucky-state-police-assist-with-114-arrests-of-child-internet-predators/> ;
-    ns2:admissionContext "mages from Cagle over various messaging applications. Through an intensive investigation, Cagle admitted that she had sexually abused a y..." ;
-    ns2:admissionFrame "admitted_paraphrase" ;
-    ns2:admissionTheme "harm_conduct" ;
-    ns2:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/role/offender/1> ;
-    ns2:evidenceTier "press_release_stated" ;
-    ns2:quoteType "paraphrase" ;
-    ns3:description "had sexually abused a young child and made videos of the abuse while in Joplin, MO, and three videos of the abuse while in Clark County, KY" .
+    ns2:description "had sexually abused a young child and made videos of the abuse while in Joplin, MO, and three videos of the abuse while in Clark County, KY" .
 
 <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/admission/2> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
-    rdfs:label "received and possessed child pornography on his cell phone, having received images from Cagle over various messaging ..." ;
+    rdfs:label "received and possessed child pornography on his cell phone, having received images from [PERSON] over various messagi..." ;
     dcterms:source <https://www.kentuckystatepolice.ky.gov/news/12-24-20-kentucky-state-police-assist-with-114-arrests-of-child-internet-predators/> ;
-    ns2:admissionContext "for producing child pornography. The investigation began last year when a Springfield, MO man confessed that he received and possessed ch..." ;
-    ns2:admissionFrame "confessed_paraphrase" ;
-    ns2:admissionTheme "harm_conduct" ;
-    ns2:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/role/offender/1> ;
-    ns2:evidenceTier "press_release_stated" ;
-    ns2:quoteType "paraphrase" ;
-    ns3:description "received and possessed child pornography on his cell phone, having received images from Cagle over various messaging applications" .
+    ns2:description "received and possessed child pornography on his cell phone, having received images from [PERSON] over various messaging applications" .
 
+<https://w3id.org/caselinker/resource/case/ky_sp_2026_014/phase/sentenced> a ns3:Phase,
+        ns4:SentencingPhase ;
+    rdfs:label "Sentencing Phase · phase/sentenced" .
 
-<https://w3id.org/caselinker/resource/case/ky_sp_2026_014> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ky_sp_2026_014/provenance> .
+<https://w3id.org/caselinker/resource/case/ky_sp_2026_014/role/victim/1> a ns6:VictimRole ;
+    rdfs:label "Victim Role · role/victim/1" .
+
+<https://w3id.org/caselinker/resource/case/ky_sp_2026_014/role/offender/1> a ns6:OffenderRole ;
+    rdfs:label "Offender Role · role/offender/1" .
+

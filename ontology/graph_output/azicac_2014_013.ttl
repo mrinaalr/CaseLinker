@@ -1,104 +1,133 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org/core#> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/azicac_2014_013/admission/1/extraction-confidence> a ns1:AssessmentResult ;
-    ns1:assesses <https://w3id.org/caselinker/resource/case/azicac_2014_013/admission/1> ;
-    ns1:generatedBy <https://w3id.org/caselinker/resource/case/azicac_2014_013> ;
-    ns1:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/azicac_2014_013/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2014-12-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/azicac_2014_013/event/hands-on>,
-        <https://w3id.org/caselinker/resource/case/azicac_2014_013/event/possession> ;
-    ns1:hasRole <https://w3id.org/caselinker/resource/case/azicac_2014_013/person/victim/1> .
-
 <https://w3id.org/caselinker/resource/case/azicac_2014_013> a ns2:CACInvestigation,
         ns1:EnduringEntity ;
-    dcterms:created "2026-10-17 21:42:21.617936" ;
+    rdfs:label "Case azicac_2014_013" ;
+    dcterms:created "2026-11-10T09:14:06.702116"^^xsd:dateTime ;
+    dcterms:date "2014-12"^^xsd:gYearMonth ;
     dcterms:identifier "azicac_2014_013" ;
-    dcterms:modified "2026-10-17 21:42:21.617936" ;
+    dcterms:modified "2026-11-10T09:14:06.702116"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/azicac_2014_013/provenance> ;
     dcterms:source <https://www.azicac.org/cases-and-arrests/>,
         "AZICAC" ;
     ns2:currentPhase <https://w3id.org/caselinker/resource/case/azicac_2014_013/phase/booked> ;
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/azicac_2014_013/phase/booked> ;
-    ns2:hasStep <https://w3id.org/caselinker/resource/case/azicac_2014_013/admission/1>,
-        <https://w3id.org/caselinker/resource/case/azicac_2014_013/event/distribution>,
+    ns2:hasStep <https://w3id.org/caselinker/resource/case/azicac_2014_013/event/distribution>,
         <https://w3id.org/caselinker/resource/case/azicac_2014_013/event/hands-on>,
         <https://w3id.org/caselinker/resource/case/azicac_2014_013/event/possession>,
         <https://w3id.org/caselinker/resource/case/azicac_2014_013/event/trafficking>,
         <https://w3id.org/caselinker/resource/case/azicac_2014_013/legal-proceeding>,
-        <https://w3id.org/caselinker/resource/case/azicac_2014_013/operation> .
+        <https://w3id.org/caselinker/resource/case/azicac_2014_013/operation> ;
+    ns3:object <https://w3id.org/caselinker/resource/case/azicac_2014_013/admission/1> .
 
-<https://w3id.org/caselinker/resource/case/azicac_2014_013/charge/1> a ns5:CriminalCharge,
-        ns5:StateCharge ;
-    rdfs:label "sexual exploitation of a minor C2F" ;
-    ns5:indictmentCounts 11 .
+<https://w3id.org/caselinker/resource/case/azicac_2014_013/admission/1/extraction-confidence> a ns1:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/azicac_2014_013/admission/1> ;
+    ns1:hasConfidence 0.65 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/case/azicac_2014_013/charge/2> a ns5:CriminalCharge ;
-    rdfs:label "sexual exploitation" ;
-    ns3:chargeCluster "sexual_exploitation_unspecified" .
+<https://w3id.org/caselinker/resource/case/azicac_2014_013/assessment/semantic/dissemination> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · dissemination" ;
+    dcterms:subject ns4:CSAM_Distribution ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/azicac_2014_013/narrative> ;
+    ns1:hasConfidence 0.4537 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/azicac_2014_013/assessment/semantic/evidence-seizure> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · evidence_seizure" ;
+    dcterms:subject <https://cacontology.projectvic.org/production#ProducedContent> ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/azicac_2014_013/narrative> ;
+    ns1:hasConfidence 0.5211 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/azicac_2014_013/assessment/semantic/exploitive-positions> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · exploitive_positions" ;
+    dcterms:subject <https://cacontology.projectvic.org/custodial#PositionOfTrust> ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/azicac_2014_013/narrative> ;
+    ns1:hasConfidence 0.6268 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/azicac_2014_013/assessment/semantic/possession-csam> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns2:CSAMIncident ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/azicac_2014_013/narrative> ;
+    ns1:hasConfidence 0.625 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/azicac_2014_013/assessment/semantic/production-csam> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · production_csam" ;
+    dcterms:subject <https://cacontology.projectvic.org/production#ProductionOffense> ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/azicac_2014_013/narrative> ;
+    ns1:hasConfidence 0.5363 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/azicac_2014_013/assessment/semantic/sextortion> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · sextortion" ;
+    dcterms:subject <https://cacontology.projectvic.org/sextortion#SextortionIncident> ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/azicac_2014_013/narrative> ;
+    ns1:hasConfidence 0.5027 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/azicac_2014_013/role/offender/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/azicac_2014_013/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/azicac_2014_013/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/azicac_2014_013/charge/1> a ns4:CriminalCharge,
+        ns4:StateCharge ;
+    rdfs:label "sexual exploitation of a minor C2F" .
+
+<https://w3id.org/caselinker/resource/case/azicac_2014_013/charge/2> a ns4:CriminalCharge ;
+    rdfs:label "sexual exploitation" .
 
 <https://w3id.org/caselinker/resource/case/azicac_2014_013/event/distribution> a ns1:Event,
-        ns5:CSAM_Distribution ;
-    ns2:severityLevel 3 .
+        ns4:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
+
+<https://w3id.org/caselinker/resource/case/azicac_2014_013/event/hands-on> a ns2:ChildSexualAbuseEvent,
+        ns1:Event ;
+    rdfs:label "Child Sexual Abuse Event · event/hands-on" .
+
+<https://w3id.org/caselinker/resource/case/azicac_2014_013/event/possession> a ns2:CSAMIncident,
+        ns1:Event ;
+    rdfs:label "CSAMIncident · event/possession" .
 
 <https://w3id.org/caselinker/resource/case/azicac_2014_013/event/trafficking> a ns1:Event,
-        ns5:SexTrafficking ;
-    ns2:severityLevel 3 .
-
-<https://w3id.org/caselinker/resource/case/azicac_2014_013/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+        ns4:SexTrafficking ;
+    rdfs:label "Sex Trafficking · event/trafficking" .
 
 <https://w3id.org/caselinker/resource/case/azicac_2014_013/legal-proceeding> a ns1:Event,
         ns1:LegalEvent,
-        ns5:LegalProceeding ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/azicac_2014_013/charge/1>,
-        <https://w3id.org/caselinker/resource/case/azicac_2014_013/charge/2> ;
-    ns5:hasProceedingBeginPoint "2014-12-01T00:00:00Z"^^xsd:dateTimeStamp .
+        ns4:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns4:chargeCount "12"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/azicac_2014_013/charge/1>,
+        <https://w3id.org/caselinker/resource/case/azicac_2014_013/charge/2> .
 
 <https://w3id.org/caselinker/resource/case/azicac_2014_013/operation> a ns1:Event,
-        <https://cacontology.projectvic.org/taskforce#UndercoverUnit> .
+        <https://cacontology.projectvic.org/undercover#UndercoverOperation> ;
+    rdfs:label "Undercover Operation · operation" .
 
-<https://w3id.org/caselinker/resource/case/azicac_2014_013/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/azicac_2014_013/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/azicac_2014_013/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/azicac_2014_013/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2014-12-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/azicac_2014_013/event/hands-on>,
-        <https://w3id.org/caselinker/resource/case/azicac_2014_013/event/possession> ;
-    ns1:hasRole <https://w3id.org/caselinker/resource/case/azicac_2014_013/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/azicac_2014_013/role/offender/1> a ns4:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/azicac_2014_013/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "the images and videos" ;
     dcterms:source <https://www.azicac.org/cases-and-arrests/> ;
-    ns3:admissionContext "rge quantity of images and videos of young children being sexually abused mostly infants. The suspect admitted to the images and videos" ;
-    ns3:admissionFrame "admitted_to" ;
-    ns3:admissionTheme "other" ;
-    ns3:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/azicac_2014_013/role/offender/1> ;
-    ns3:evidenceTier "press_release_stated" ;
-    ns3:quoteType "paraphrase" ;
-    ns4:description "the images and videos" .
+    ns3:description "the images and videos" .
 
 <https://w3id.org/caselinker/resource/case/azicac_2014_013/phase/booked> a ns2:InitialPhase,
         ns1:Phase ;
-    ns2:hasPhaseBeginPoint "2014-12-01T00:00:00Z"^^xsd:dateTimeStamp .
+    rdfs:label "Initial Phase · phase/booked" .
 
-<https://w3id.org/caselinker/resource/case/azicac_2014_013/event/hands-on> a ns2:ChildSexualAbuseEvent,
-        ns1:Event ;
-    ns2:severityLevel 3 .
-
-<https://w3id.org/caselinker/resource/case/azicac_2014_013/event/possession> a ns2:CSAMIncident,
-        ns1:Event ;
-    ns2:severityLevel 3 ;
-    ns4:hasFacet <https://w3id.org/caselinker/resource/case/azicac_2014_013/facet/possession> .
-
-
-<https://w3id.org/caselinker/resource/case/azicac_2014_013> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/azicac_2014_013/provenance> .

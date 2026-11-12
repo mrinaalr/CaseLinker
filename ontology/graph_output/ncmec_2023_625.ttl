@@ -1,51 +1,67 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
 @prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns3: <https://cacontology.projectvic.org/core#> .
-@prefix ns4: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns6: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_625> a ns1:CACInvestigation,
-        ns3:EnduringEntity ;
-    dcterms:created "2026-10-17 22:21:35.820281" ;
+        ns5:EnduringEntity ;
+    rdfs:label "Case ncmec_2023_625" ;
+    dcterms:created "2026-11-10T10:06:02.193916"^^xsd:dateTime ;
+    dcterms:date "2023-06-12"^^xsd:date ;
     dcterms:identifier "ncmec_2023_625" ;
-    dcterms:modified "2026-10-17 22:21:35.820281" ;
+    dcterms:modified "2026-11-10T10:06:02.193916"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2023_625/provenance> ;
     dcterms:source <https://www.witn.com/2023/06/12/craven-county-sex-offender-arrested-having-sharing-child-porn/>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/craven-county>,
-        <https://w3id.org/caselinker/resource/location/nc>,
-        <https://w3id.org/caselinker/resource/location/new-bern> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/craven-county-nc>,
+        <https://w3id.org/caselinker/resource/location/new-bern-city>,
+        <https://w3id.org/caselinker/resource/location/north-carolina-nc> ;
     ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_625/phase/charged> ;
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_625/phase/charged> ;
     ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_625/event/csam>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_625/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_625/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_625/operation> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/craven-county-sheriffs-office>,
-        <https://w3id.org/caselinker/resource/agency/icac> ;
-    ns4:mentionsLocation <https://w3id.org/caselinker/resource/location/craven-county>,
-        <https://w3id.org/caselinker/resource/location/nc>,
-        <https://w3id.org/caselinker/resource/location/new-bern> .
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2023_625/agency/craven-county-sheriffs-office> ;
+    ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2023_625/cybertip> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_625/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2023-06-12T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_625/event/csam> ;
-    ns1:perpetratorRegisteredSexOffender true ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_625/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_625/assessment/semantic/registered-sex-offender> a ns5:AssessmentResult ;
+    rdfs:label "semantic similarity · registered_sex_offender" ;
+    dcterms:subject <https://cacontology.projectvic.org/sex-offender-registry#RegisteredSexOffender> ;
+    ns5:assesses <https://w3id.org/caselinker/resource/case/ncmec_2023_625/narrative> ;
+    ns5:hasConfidence 0.4509 ;
+    ns5:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_625/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2023-06-12T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_625/event/csam> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_625/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_625/role/offender/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2023_625/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2023_625/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/craven-county-sheriffs-office> a ns5:LocalAgency .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_625/role/registered-sex-offender/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/registered-sex-offender/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2023_625/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2023_625/role/registered-sex-offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> .
+<https://w3id.org/caselinker/resource/agency/icac> a ns5:OrganizationLikeEntity,
+        <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns3:name "ICAC Task Force" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_625/agency/craven-county-sheriffs-office> a ns5:OrganizationLikeEntity,
+        ns4:LocalAgency ;
+    rdfs:label "Craven County Sheriff's Office" ;
+    ns3:name "Craven County Sheriff's Office" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_625/charge/1> a ns2:CriminalCharge,
         ns2:StateCharge ;
@@ -56,51 +72,64 @@
     rdfs:label "child porn" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_625/charge/3> a ns2:CriminalCharge ;
-    rdfs:label "sexual exploitation" ;
-    ns4:chargeCluster "sexual_exploitation_unspecified" .
+    rdfs:label "sexual exploitation" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_625/event/distribution> a ns3:Event,
-        ns2:CSAM_Distribution .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_625/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
+    rdfs:label "CyberTipline report" ;
+    ns3:name "observe" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_625/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_625/event/distribution> a ns5:Event,
+        ns2:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_625/legal-proceeding> a ns3:Event,
-        ns3:LegalEvent,
+<https://w3id.org/caselinker/resource/case/ncmec_2023_625/legal-proceeding> a ns5:Event,
+        ns5:LegalEvent,
         ns2:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns2:chargeCount "3"^^xsd:nonNegativeInteger ;
     ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_625/charge/1>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_625/charge/2>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2023_625/charge/3> ;
-    ns2:hasProceedingBeginPoint "2023-06-12T00:00:00Z"^^xsd:dateTimeStamp .
+        <https://w3id.org/caselinker/resource/case/ncmec_2023_625/charge/3> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_625/operation> a ns3:Event,
-        <https://cacontology.projectvic.org/taskforce#ReactiveOperation> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_625/operation> a ns5:Event,
+        <https://cacontology.projectvic.org/taskforce#ReactiveOperation> ;
+    rdfs:label "Reactive Operation · operation" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_625/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_625/role/offender/1> a ns2:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_625/event/csam> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_625/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_625/role/registered-sex-offender/1> a <https://cacontology.projectvic.org/sex-offender-registry#RegisteredSexOffender> ;
+    rdfs:label "Registered Sex Offender · role/registered-sex-offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_625/phase/charged> a ns1:LegalProcessPhase,
-        ns3:Phase ;
-    ns1:hasPhaseBeginPoint "2023-06-12T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/craven-county> a ns3:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/craven-county-nc> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Craven County" ;
-    ns6:name "Craven County" .
+    dcterms:identifier "fips:37049" ;
+    ns3:name "Craven County" .
 
-<https://w3id.org/caselinker/resource/location/nc> a ns3:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/new-bern-city> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "N.c." ;
-    ns6:name "N.c." .
+    rdfs:label "New Bern city" ;
+    dcterms:identifier "fips:3746340" ;
+    skos:altLabel "New Bern" ;
+    ns3:name "New Bern city" .
 
-<https://w3id.org/caselinker/resource/location/new-bern> a ns3:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/north-carolina-nc> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "New Bern" ;
-    ns6:name "New Bern" .
+    rdfs:label "North Carolina" ;
+    dcterms:identifier "fips:37" ;
+    skos:altLabel "N.c." ;
+    ns3:name "North Carolina" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_625/event/csam> a ns1:CSAMIncident,
-        ns3:Event ;
-    ns6:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2023_625/facet/csam> .
+        ns5:Event ;
+    rdfs:label "CSAMIncident · event/csam" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2023_625/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_625> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2023_625/provenance> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_625/phase/charged> a ns1:LegalProcessPhase,
+        ns5:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
+

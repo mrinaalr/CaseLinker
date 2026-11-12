@@ -1,105 +1,107 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/core#> .
-@prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns1: <https://cacontology.projectvic.org#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/core#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns6: <https://cacontology.projectvic.org/us/ncmec#> .
-@prefix ns7: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_199/admission/1/extraction-confidence> a ns1:AssessmentResult ;
-    ns1:assesses <https://w3id.org/caselinker/resource/case/ncmec_2023_199/admission/1> ;
-    ns1:generatedBy <https://w3id.org/caselinker/resource/case/ncmec_2023_199> ;
-    ns1:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_199/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2023-06-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_199/event/possession> ;
-    ns1:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_199/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/agency/arkansas-state-police-department> a ns5:StateAgency .
-
-<https://w3id.org/caselinker/resource/agency/judicial-drug-task-force> a ns1:OrganizationLikeEntity,
-        ns5:LocalAgency ;
-    rdfs:label "Judicial Drug Task Force" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_199> a ns2:CACInvestigation,
-        ns1:EnduringEntity ;
-    dcterms:created "2026-10-17 22:21:30.238283" ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_199> a ns1:CACInvestigation,
+        ns3:EnduringEntity ;
+    rdfs:label "Case ncmec_2023_199" ;
+    dcterms:created "2026-11-10T10:03:35.008877"^^xsd:dateTime ;
+    dcterms:date "2023-06"^^xsd:gYearMonth ;
     dcterms:identifier "ncmec_2023_199" ;
-    dcterms:modified "2026-10-17 22:21:30.238283" ;
+    dcterms:modified "2026-11-10T10:03:35.008877"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2023_199/provenance> ;
     dcterms:source <https://www.camdenarknews.com/news/2023/jun/01/camden-man-charged-with-possession-of-child/>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/camden> ;
-    ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_199/phase/charged> ;
-    ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_199/phase/charged> ;
-    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_199/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2023_199/cybertip>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2023_199/event/distribution>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2023_199/location/camden> ;
+    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_199/phase/charged> ;
+    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_199/phase/charged> ;
+    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_199/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_199/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_199/legal-proceeding> ;
     ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/arkansas-state-police-department>,
-        <https://w3id.org/caselinker/resource/agency/judicial-drug-task-force>,
-        <https://w3id.org/caselinker/resource/agency/ncmec> ;
-    ns3:mentionsLocation <https://w3id.org/caselinker/resource/location/camden> .
+        <https://w3id.org/caselinker/resource/agency/ncmec>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2023_199/agency/judicial-drug-task-force> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2023_199/admission/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_199/charge/1> a ns7:CSAM_Possession,
-        ns7:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_199/admission/1/extraction-confidence> a ns3:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2023_199/admission/1> ;
+    ns3:hasConfidence 0.65 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_199/assessment/semantic/possession-csam> a ns3:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns1:CSAMIncident ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2023_199/narrative> ;
+    ns3:hasConfidence 0.5112 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_199/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2023_199/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2023_199/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/agency/arkansas-state-police-department> a ns3:OrganizationLikeEntity,
+        ns5:StateAgency ;
+    rdfs:label "Arkansas State Police Department" ;
+    ns2:name "Arkansas State Police Department" .
+
+<https://w3id.org/caselinker/resource/agency/ncmec> a ns3:OrganizationLikeEntity,
+        ns5:FederalAgency ;
+    rdfs:label "National Center for Missing and Exploited Children" ;
+    skos:altLabel "NCMEC" ;
+    ns2:name "National Center for Missing and Exploited Children" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_199/agency/judicial-drug-task-force> a ns3:OrganizationLikeEntity,
+        ns5:LocalAgency ;
+    rdfs:label "Judicial Drug Task Force" ;
+    ns2:name "Judicial Drug Task Force" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_199/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_199/cybertip> a ns6:NCMECCybertipReport ;
-    ns6:supportedBy <https://w3id.org/caselinker/resource/agency/ncmec> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_199/event/distribution> a ns3:Event,
+        ns4:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_199/event/distribution> a ns1:Event,
-        ns7:CSAM_Distribution .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_199/legal-proceeding> a ns3:Event,
+        ns3:LegalEvent,
+        ns4:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns4:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_199/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_199/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_199/legal-proceeding> a ns1:Event,
-        ns1:LegalEvent,
-        ns7:LegalProceeding ;
-    ns7:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_199/charge/1> ;
-    ns7:hasProceedingBeginPoint "2023-06-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_199/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_199/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_199/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2023-06-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_199/event/possession> ;
-    ns1:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_199/person/offender/1> .
-
-<https://w3id.org/caselinker/resource/agency/ncmec> a ns5:FederalAgency .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_199/phase/charged> a ns2:LegalProcessPhase,
-        ns1:Phase ;
-    ns2:hasPhaseBeginPoint "2023-06-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/camden> a ns1:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2023_199/location/camden> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Camden" ;
-    ns4:name "Camden" .
+    ns2:name "Camden" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_199/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_199/role/offender/1> a ns4:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_199/event/possession> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_199/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "used his laptop to access child pornography several times over the years" ;
     dcterms:source <https://www.camdenarknews.com/news/2023/jun/01/camden-man-charged-with-possession-of-child/> ;
-    ns3:admissionContext "otos on several occasions but could not give an exact number of the times he had done so. Investigators stated Queen said he used his lap..." ;
-    ns3:admissionFrame "said_paraphrase" ;
-    ns3:admissionTheme "harm_conduct" ;
-    ns3:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/ncmec_2023_199/role/offender/1> ;
-    ns3:evidenceTier "press_release_stated" ;
-    ns3:quoteType "paraphrase" ;
-    ns4:description "used his laptop to access child pornography several times over the years" .
+    ns2:description "used his laptop to access child pornography several times over the years" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_199/event/possession> a ns2:CSAMIncident,
-        ns1:Event ;
-    ns2:producesArtifact <https://w3id.org/caselinker/resource/case/ncmec_2023_199/admission/1> ;
-    ns4:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2023_199/facet/possession> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_199/event/possession> a ns1:CSAMIncident,
+        ns3:Event ;
+    rdfs:label "CSAMIncident · event/possession" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2023_199/phase/charged> a ns1:LegalProcessPhase,
+        ns3:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_199> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2023_199/provenance> .

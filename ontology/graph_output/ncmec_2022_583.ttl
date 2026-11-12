@@ -1,93 +1,101 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns4: <https://cacontology.projectvic.org/core#> .
+@prefix ns3: <https://cacontology.projectvic.org/core#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://cacontology.projectvic.org/detection#> .
+@prefix ns6: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_583> a ns2:CACInvestigation,
-        ns4:EnduringEntity ;
-    dcterms:created "2026-10-17 21:51:26.591252" ;
+        ns3:EnduringEntity ;
+    rdfs:label "Case ncmec_2022_583" ;
+    dcterms:created "2026-11-10T09:20:20.609688"^^xsd:dateTime ;
+    dcterms:date "2022-05-05"^^xsd:date ;
     dcterms:identifier "ncmec_2022_583" ;
-    dcterms:modified "2026-10-17 21:51:26.591252" ;
-    dcterms:source <https://newschannel20.com/news/local/central-illinois-man-arrested-on-15-counts-of-child-porn>,
+    dcterms:modified "2026-11-10T09:20:20.609688"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2022_583/provenance> ;
+    dcterms:source <https://www.newburyportnews.com/news/rowley-man-charged-with-having-child-porn/article_cafb9106-cbdd-11ec-a3d5-3b0a49eaab96.html#:~:text=ROWLEY%20%E2%80%94%20A%20local%20man%20charged,26%20for%20a%20pretrial%20hearing>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/central-illinois>,
-        <https://w3id.org/caselinker/resource/location/decatur>,
-        <https://w3id.org/caselinker/resource/location/ill> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2022_583/location/ipswich>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2022_583/location/rowley> ;
     ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_583/phase/charged> ;
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_583/phase/charged> ;
-    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_583/event/csam>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_583/event/distribution>,
+    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_583/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_583/legal-proceeding> ;
-    ns3:mentionsLocation <https://w3id.org/caselinker/resource/location/central-illinois>,
-        <https://w3id.org/caselinker/resource/location/decatur>,
-        <https://w3id.org/caselinker/resource/location/ill> .
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2022_583/agency/attorney-generals-office> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_583/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_583/event/csam> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_583/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_583/assessment/semantic/possession-csam> a ns3:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns2:CSAMIncident ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2022_583/narrative> ;
+    ns3:hasConfidence 0.5445 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_583/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_583/event/csam> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_583/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_583/person/offender/1/age> a ns6:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns6:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2022_583/person/offender/1> ;
+    ns6:concernsAgeQuality ns6:Age ;
+    ns6:hasAgeInYears 27.0 .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_583/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2022_583/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2022_583/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_583/agency/attorney-generals-office> a ns3:OrganizationLikeEntity,
+        ns4:StateAgency ;
+    rdfs:label "Attorney General's Office" ;
+    ns1:name "Attorney General's Office" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_583/charge/1> a ns5:CSAM_Possession,
         ns5:CriminalCharge ;
-    rdfs:label "child pornography" ;
-    ns5:indictmentCounts 32 .
+    rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_583/charge/2> a ns5:CSAM_Distribution,
-        ns5:CriminalCharge ;
-    rdfs:label "dissemination of child pornography are Class X felonies with a" ;
-    ns5:indictmentCounts 15 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_583/event/distribution> a ns4:Event,
-        ns5:CSAM_Distribution .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_583/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_583/legal-proceeding> a ns4:Event,
-        ns4:LegalEvent,
+<https://w3id.org/caselinker/resource/case/ncmec_2022_583/legal-proceeding> a ns3:Event,
+        ns3:LegalEvent,
         ns5:LegalProceeding ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_583/charge/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_583/charge/2> ;
-    ns5:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    rdfs:label "Event · legal-proceeding" ;
+    ns5:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_583/charge/1> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_583/location/ipswich> a ns3:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Ipswich" ;
+    ns1:name "Ipswich" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_583/location/rowley> a ns3:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Rowley" ;
+    ns1:name "Rowley" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_583/role/offender/1> a ns5:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_583/event/possession> .
+
+<https://w3id.org/caselinker/resource/platform/kik> a ns3:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#MessagingService> ;
+    rdfs:label "Kik" ;
+    ns1:name "Kik" .
+
+<https://w3id.org/caselinker/resource/platform/social-media> a ns3:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "social media" ;
+    ns1:name "social media" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_583/event/possession> a ns2:CSAMIncident,
+        ns3:Event ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns2:usesChannel <https://w3id.org/caselinker/resource/platform/kik>,
+        <https://w3id.org/caselinker/resource/platform/social-media> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_583/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns6:ageEstimate 19 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_583/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_583/phase/charged> a ns2:LegalProcessPhase,
-        ns4:Phase ;
-    ns2:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+        ns3:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
 
-<https://w3id.org/caselinker/resource/location/central-illinois> a ns4:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Central Illinois" ;
-    ns1:name "Central Illinois" .
-
-<https://w3id.org/caselinker/resource/location/decatur> a ns4:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Decatur" ;
-    ns1:name "Decatur" .
-
-<https://w3id.org/caselinker/resource/location/ill> a ns4:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Ill." ;
-    ns1:name "Ill." .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_583/event/csam> a ns2:CSAMIncident,
-        ns4:Event ;
-    ns1:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2022_583/facet/csam> .
-
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_583> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2022_583/provenance> .

@@ -1,111 +1,113 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://cacontology.projectvic.org/detection#> .
-@prefix ns6: <https://cacontology.projectvic.org/core#> .
-@prefix ns7: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns8: <https://cacontology.projectvic.org/us/ncmec#> .
+@prefix ns1: <https://cacontology.projectvic.org/core#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns6: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/texas_ag_2018_006/admission/1/extraction-confidence> a ns6:AssessmentResult ;
-    ns6:assesses <https://w3id.org/caselinker/resource/case/texas_ag_2018_006/admission/1> ;
-    ns6:generatedBy <https://w3id.org/caselinker/resource/case/texas_ag_2018_006> ;
-    ns6:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/texas_ag_2018_006/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2018-04-18T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/texas_ag_2018_006/event/online-only>,
-        <https://w3id.org/caselinker/resource/case/texas_ag_2018_006/event/possession> ;
-    ns6:hasRole <https://w3id.org/caselinker/resource/case/texas_ag_2018_006/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/agency/texas-attorney-generals-office> a ns7:StateAgency .
-
-<https://w3id.org/caselinker/resource/case/texas_ag_2018_006> a ns2:CACInvestigation,
-        ns6:EnduringEntity ;
-    dcterms:created "2026-10-18 07:53:53.882888" ;
+<https://w3id.org/caselinker/resource/case/texas_ag_2018_006> a ns3:CACInvestigation,
+        ns1:EnduringEntity ;
+    rdfs:label "Case texas_ag_2018_006" ;
+    dcterms:created "2026-11-11T18:48:44.079894"^^xsd:dateTime ;
+    dcterms:date "2018-04-18"^^xsd:date ;
     dcterms:identifier "texas_ag_2018_006" ;
-    dcterms:modified "2026-10-18 07:53:53.882888" ;
+    dcterms:modified "2026-11-11T18:48:44.079894"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/texas_ag_2018_006/provenance> ;
     dcterms:source <https://www.texasattorneygeneral.gov/news/categories/cyber-crimes>,
         "Texas AG" ;
-    ns2:currentPhase <https://w3id.org/caselinker/resource/case/texas_ag_2018_006/phase/convicted> ;
-    ns2:hasPhase <https://w3id.org/caselinker/resource/case/texas_ag_2018_006/phase/convicted> ;
-    ns2:hasStep <https://w3id.org/caselinker/resource/case/texas_ag_2018_006/admission/1>,
-        <https://w3id.org/caselinker/resource/case/texas_ag_2018_006/cybertip>,
-        <https://w3id.org/caselinker/resource/case/texas_ag_2018_006/event/distribution>,
+    ns3:currentPhase <https://w3id.org/caselinker/resource/case/texas_ag_2018_006/phase/arrested> ;
+    ns3:hasPhase <https://w3id.org/caselinker/resource/case/texas_ag_2018_006/phase/arrested> ;
+    ns3:hasStep <https://w3id.org/caselinker/resource/case/texas_ag_2018_006/event/distribution>,
         <https://w3id.org/caselinker/resource/case/texas_ag_2018_006/event/online-only>,
         <https://w3id.org/caselinker/resource/case/texas_ag_2018_006/event/possession>,
-        <https://w3id.org/caselinker/resource/case/texas_ag_2018_006/legal-proceeding>,
-        <https://w3id.org/caselinker/resource/case/texas_ag_2018_006/legal-step/convicted> ;
-    ns7:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
-        <https://w3id.org/caselinker/resource/agency/texas-attorney-generals-office> .
+        <https://w3id.org/caselinker/resource/case/texas_ag_2018_006/legal-proceeding> ;
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
+        <https://w3id.org/caselinker/resource/agency/texas-attorney-generals-office> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/texas_ag_2018_006/admission/1> .
 
-<https://w3id.org/caselinker/resource/case/texas_ag_2018_006/charge/1> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
-    rdfs:label "possession of child pornography" ;
-    ns4:indictmentCounts 2 .
+<https://w3id.org/caselinker/resource/case/texas_ag_2018_006/admission/1/extraction-confidence> a ns1:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/texas_ag_2018_006/admission/1> ;
+    ns1:hasConfidence 0.65 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/case/texas_ag_2018_006/cybertip> a ns8:NCMECCybertipReport ;
-    ns8:supportedBy <https://w3id.org/caselinker/resource/agency/ncmec> .
+<https://w3id.org/caselinker/resource/case/texas_ag_2018_006/assessment/semantic/exploitive-positions> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · exploitive_positions" ;
+    dcterms:subject <https://cacontology.projectvic.org/custodial#PositionOfTrust> ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/texas_ag_2018_006/narrative> ;
+    ns1:hasConfidence 0.4531 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/texas_ag_2018_006/event/distribution> a ns6:Event,
-        ns4:CSAM_Distribution .
+<https://w3id.org/caselinker/resource/case/texas_ag_2018_006/assessment/semantic/possession-csam> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns3:CSAMIncident ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/texas_ag_2018_006/narrative> ;
+    ns1:hasConfidence 0.5797 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/texas_ag_2018_006/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/texas_ag_2018_006/person/offender/1/age> a ns6:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns6:ageSubject <https://w3id.org/caselinker/resource/case/texas_ag_2018_006/person/offender/1> ;
+    ns6:concernsAgeQuality ns6:Age ;
+    ns6:hasAgeInYears 46.0 .
 
-<https://w3id.org/caselinker/resource/case/texas_ag_2018_006/legal-proceeding> a ns6:Event,
-        ns6:LegalEvent,
-        ns4:LegalProceeding ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/texas_ag_2018_006/charge/1> ;
-    ns4:hasProceedingBeginPoint "2018-04-18T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/texas_ag_2018_006/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/texas_ag_2018_006/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/texas_ag_2018_006/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/texas_ag_2018_006/legal-step/convicted> a ns6:Event,
-        ns6:LegalEvent,
-        ns4:LegalProceeding,
-        ns4:SentencingHearing ;
-    ns4:hasProceedingBeginPoint "2018-04-18T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/agency/ncmec> a ns1:OrganizationLikeEntity,
+        ns4:FederalAgency ;
+    rdfs:label "National Center for Missing and Exploited Children" ;
+    skos:altLabel "NCMEC" ;
+    ns2:name "National Center for Missing and Exploited Children" .
 
-<https://w3id.org/caselinker/resource/case/texas_ag_2018_006/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns5:ageEstimate 46 .
+<https://w3id.org/caselinker/resource/agency/texas-attorney-generals-office> a ns1:OrganizationLikeEntity,
+        ns4:StateAgency ;
+    rdfs:label "Texas Attorney General's Office" ;
+    ns2:name "Texas Attorney General's Office" .
 
-<https://w3id.org/caselinker/resource/case/texas_ag_2018_006/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/texas_ag_2018_006/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
+    rdfs:label "possession of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/texas_ag_2018_006/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2018-04-18T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/texas_ag_2018_006/event/online-only>,
-        <https://w3id.org/caselinker/resource/case/texas_ag_2018_006/event/possession> ;
-    ns6:hasRole <https://w3id.org/caselinker/resource/case/texas_ag_2018_006/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/texas_ag_2018_006/event/distribution> a ns1:Event,
+        ns5:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/agency/ncmec> a ns7:FederalAgency .
+<https://w3id.org/caselinker/resource/case/texas_ag_2018_006/event/online-only> a ns3:ChildSexualAbuseEvent,
+        ns1:Event ;
+    rdfs:label "Child Sexual Abuse Event · event/online-only" .
 
-<https://w3id.org/caselinker/resource/case/texas_ag_2018_006/phase/convicted> a ns6:Phase,
-        ns4:SentencingPhase ;
-    ns2:hasPhaseBeginPoint "2018-04-18T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/texas_ag_2018_006/event/possession> a ns3:CSAMIncident,
+        ns1:Event ;
+    rdfs:label "CSAMIncident · event/possession" .
 
-<https://w3id.org/caselinker/resource/case/texas_ag_2018_006/event/online-only> a ns2:ChildSexualAbuseEvent,
-        ns6:Event ;
-    ns2:producesArtifact <https://w3id.org/caselinker/resource/case/texas_ag_2018_006/admission/1> .
+<https://w3id.org/caselinker/resource/case/texas_ag_2018_006/legal-proceeding> a ns1:Event,
+        ns1:LegalEvent,
+        ns5:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns5:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/texas_ag_2018_006/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/texas_ag_2018_006/event/possession> a ns2:CSAMIncident,
-        ns6:Event ;
-    ns2:producesArtifact <https://w3id.org/caselinker/resource/case/texas_ag_2018_006/admission/1> ;
-    ns1:hasFacet <https://w3id.org/caselinker/resource/case/texas_ag_2018_006/facet/possession> .
+<https://w3id.org/caselinker/resource/case/texas_ag_2018_006/role/offender/1> a ns5:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/texas_ag_2018_006/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "downloaded, viewed and shared child pornography over the Internet" ;
     dcterms:source <https://www.texasattorneygeneral.gov/news/categories/cyber-crimes> ;
-    ns3:admissionContext "ed for examination by the attorney general’s Digital Forensics Unit. During an interview, Nickel admitted he downloaded, viewed and share..." ;
-    ns3:admissionFrame "admitted_he_she" ;
-    ns3:admissionTheme "harm_conduct",
-        "tech_use" ;
-    ns3:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/texas_ag_2018_006/role/offender/1> ;
-    ns3:evidenceTier "press_release_stated" ;
-    ns3:quoteType "paraphrase" ;
-    ns1:description "downloaded, viewed and shared child pornography over the Internet" .
+    ns2:description "downloaded, viewed and shared child pornography over the Internet" .
 
+<https://w3id.org/caselinker/resource/case/texas_ag_2018_006/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/texas_ag_2018_006> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/texas_ag_2018_006/provenance> .
+<https://w3id.org/caselinker/resource/case/texas_ag_2018_006/phase/arrested> a ns3:InitialPhase,
+        ns1:Phase ;
+    rdfs:label "Initial Phase · phase/arrested" .
+

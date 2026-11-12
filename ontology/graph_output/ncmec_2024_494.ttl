@@ -1,76 +1,95 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns3: <https://cacontology.projectvic.org/detection#> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns7: <https://cacontology.projectvic.org/core#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org#> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns5: <https://cacontology.projectvic.org/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_494> a ns1:CACInvestigation,
-        ns7:EnduringEntity ;
-    dcterms:created "2026-10-17 23:04:30.473413" ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_494> a ns2:CACInvestigation,
+        ns5:EnduringEntity ;
+    rdfs:label "Case ncmec_2024_494" ;
+    dcterms:created "2026-11-10T21:26:13.671378"^^xsd:dateTime ;
+    dcterms:date "2024-03-08"^^xsd:date ;
     dcterms:identifier "ncmec_2024_494" ;
-    dcterms:modified "2026-10-17 23:04:30.473413" ;
+    dcterms:modified "2026-11-12T00:34:36.961823"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_494/provenance> ;
     dcterms:source <https://www.wabi.tv/2024/03/08/convicted-sex-offender-arrested-again-facing-multiple-charges/>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/maine> ;
-    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_494/phase/convicted> ;
-    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_494/phase/convicted> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_494/event/possession>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/maine-me> ;
+    ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_494/phase/convicted> ;
+    ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_494/phase/convicted> ;
+    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_494/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_494/legal-step/convicted> ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/penobscot-county-sheriffs-office> ;
-    ns2:mentionsLocation <https://w3id.org/caselinker/resource/location/maine> .
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_494/agency/penobscot-county-sheriffs-office> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_494/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2024-03-08T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_494/event/possession> ;
-    ns1:perpetratorRegisteredSexOffender true ;
-    ns7:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_494/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_494/assessment/semantic/registered-sex-offender> a ns5:AssessmentResult ;
+    rdfs:label "semantic similarity · registered_sex_offender" ;
+    dcterms:subject <https://cacontology.projectvic.org/sex-offender-registry#RegisteredSexOffender> ;
+    ns5:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_494/narrative> ;
+    ns5:hasConfidence 0.4582 ;
+    ns5:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_494/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2024-03-08T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_494/event/possession> ;
-    ns7:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_494/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_494/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_494/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 31.0 .
 
-<https://w3id.org/caselinker/resource/agency/penobscot-county-sheriffs-office> a ns7:OrganizationLikeEntity,
-        ns6:LocalAgency ;
-    rdfs:label "Penobscot County Sheriff's Office" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_494/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_494/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_494/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_494/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_494/role/registered-sex-offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/registered-sex-offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_494/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_494/role/registered-sex-offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_494/legal-step/convicted> a ns7:Event,
-        ns7:LegalEvent,
-        ns5:LegalProceeding,
-        ns5:SentencingHearing ;
-    ns5:hasProceedingBeginPoint "2024-03-08T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_494/agency/penobscot-county-sheriffs-office> a ns5:OrganizationLikeEntity,
+        ns3:LocalAgency ;
+    rdfs:label "Penobscot County Sheriff's Office" ;
+    ns1:name "Penobscot County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_494/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns3:ageEstimate 31 .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_494/legal-step/convicted> a ns5:Event,
+        ns5:LegalEvent,
+        <https://cacontology.projectvic.org/legal-outcomes#LegalProceeding>,
+        <https://cacontology.projectvic.org/legal-outcomes#SentencingHearing> ;
+    rdfs:label "Sentencing Hearing · legal-step/convicted" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_494/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_494/role/offender/1> a ns2:OffenderRole ;
+    rdfs:label "Offender Role · role/offender/1" ;
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_494/event/possession> .
 
-<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "social media" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_494/role/registered-sex-offender/1> a <https://cacontology.projectvic.org/sex-offender-registry#RegisteredSexOffender> ;
+    rdfs:label "Registered Sex Offender · role/registered-sex-offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_494/phase/convicted> a ns7:Phase,
-        ns5:SentencingPhase ;
-    ns1:hasPhaseBeginPoint "2024-03-08T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/maine> a ns7:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/maine-me> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Maine" ;
-    ns4:name "Maine" .
+    dcterms:identifier "fips:23" ;
+    ns1:name "Maine" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_494/event/possession> a ns1:CSAMIncident,
-        ns7:Event ;
-    ns1:severityLevel 2 ;
-    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/social-media> ;
-    ns4:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2024_494/facet/possession> .
+<https://w3id.org/caselinker/resource/platform/social-media> a ns5:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "social media" ;
+    ns1:name "social media" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2024_494/event/possession> a ns2:CSAMIncident,
+        ns5:Event ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns2:severityLevel 2 ;
+    ns2:usesChannel <https://w3id.org/caselinker/resource/platform/social-media> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_494> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2024_494/provenance> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_494/phase/convicted> a ns5:Phase,
+        <https://cacontology.projectvic.org/legal-outcomes#SentencingPhase> ;
+    rdfs:label "Sentencing Phase · phase/convicted" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_494/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+

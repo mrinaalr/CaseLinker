@@ -1,65 +1,66 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org#> .
 @prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns5: <https://cacontology.projectvic.org/core#> .
-@prefix ns6: <https://w3id.org/caselinker/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/south_florida_icac_2024_022> a ns1:CACInvestigation,
-        ns5:EnduringEntity ;
-    dcterms:created "2026-10-18 07:13:25.357761" ;
+<https://w3id.org/caselinker/resource/case/south_florida_icac_2024_022> a ns2:CACInvestigation,
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case south_florida_icac_2024_022" ;
+    dcterms:created "2026-11-11T17:56:16.499624"^^xsd:dateTime ;
+    dcterms:date "2024-04-11"^^xsd:date ;
     dcterms:identifier "south_florida_icac_2024_022" ;
-    dcterms:modified "2026-10-18 07:13:25.357761" ;
+    dcterms:modified "2026-11-11T17:56:16.499624"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/south_florida_icac_2024_022/provenance> ;
     dcterms:source <https://www.palmbeachpost.com/story/news/local/jupiter/2024/04/11/longtime-jupiter-doctor-arrested-on-child-porn-possession-charges-thomas-lipin-south-florida/73279021007/>,
         "SOUTH FLORIDA ICAC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/jupiter> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/south_florida_icac_2024_022/event/possession>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/jupiter-town-fl> ;
+    ns2:hasStep <https://w3id.org/caselinker/resource/case/south_florida_icac_2024_022/event/possession>,
         <https://w3id.org/caselinker/resource/case/south_florida_icac_2024_022/legal-proceeding> ;
-    ns1:investigationStatus "unknown" ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/icac> ;
-    ns6:mentionsLocation <https://w3id.org/caselinker/resource/location/jupiter> .
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/icac> .
 
-<https://w3id.org/caselinker/resource/case/south_florida_icac_2024_022/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2024-04-11T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/south_florida_icac_2024_022/event/possession> ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/south_florida_icac_2024_022/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/south_florida_icac_2024_022/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/south_florida_icac_2024_022/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/south_florida_icac_2024_022/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/south_florida_icac_2024_022/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2024-04-11T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/south_florida_icac_2024_022/event/possession> ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/south_florida_icac_2024_022/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> .
+<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns1:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/case/south_florida_icac_2024_022/charge/1> a ns3:CSAM_Possession,
         ns3:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/south_florida_icac_2024_022/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/south_florida_icac_2024_022/legal-proceeding> a ns5:Event,
-        ns5:LegalEvent,
+<https://w3id.org/caselinker/resource/case/south_florida_icac_2024_022/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
         ns3:LegalProceeding ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/south_florida_icac_2024_022/charge/1> ;
-    ns3:hasProceedingBeginPoint "2024-04-11T00:00:00Z"^^xsd:dateTimeStamp .
+    rdfs:label "Event · legal-proceeding" ;
+    ns3:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/south_florida_icac_2024_022/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/south_florida_icac_2024_022/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/south_florida_icac_2024_022/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/south_florida_icac_2024_022/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/south_florida_icac_2024_022/role/offender/1> a ns3:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/south_florida_icac_2024_022/event/possession> .
 
-<https://w3id.org/caselinker/resource/location/jupiter> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/jupiter-town-fl> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Jupiter" ;
-    ns2:name "Jupiter" .
+    rdfs:label "Jupiter town" ;
+    dcterms:identifier "fips:1235875" ;
+    skos:altLabel "Jupiter" ;
+    ns1:name "Jupiter town" .
 
-<https://w3id.org/caselinker/resource/case/south_florida_icac_2024_022/event/possession> a ns1:CSAMIncident,
-        ns5:Event ;
-    ns2:hasFacet <https://w3id.org/caselinker/resource/case/south_florida_icac_2024_022/facet/possession> .
+<https://w3id.org/caselinker/resource/case/south_florida_icac_2024_022/event/possession> a ns2:CSAMIncident,
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/possession" .
 
-
-<https://w3id.org/caselinker/resource/case/south_florida_icac_2024_022> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/south_florida_icac_2024_022/provenance> .

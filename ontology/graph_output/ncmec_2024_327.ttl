@@ -1,114 +1,117 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://w3id.org/caselinker/resource/vocab/> .
+@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/core#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns5: <https://cacontology.projectvic.org/core#> .
 @prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns7: <https://cacontology.projectvic.org/detection#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_327/admission/1/extraction-confidence> a ns3:AssessmentResult ;
-    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_327/admission/1> ;
-    ns3:generatedBy <https://w3id.org/caselinker/resource/case/ncmec_2024_327> ;
-    ns3:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_327/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2024-06-18T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_327/event/possession> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_327/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/agency/illinois-department-of-corrections> a ns6:LocalAgency .
-
 <https://w3id.org/caselinker/resource/case/ncmec_2024_327> a ns2:CACInvestigation,
-        ns3:EnduringEntity ;
-    dcterms:created "2026-10-17 23:04:28.587961" ;
+        ns5:EnduringEntity ;
+    rdfs:label "Case ncmec_2024_327" ;
+    dcterms:created "2026-11-10T21:25:15.379702"^^xsd:dateTime ;
+    dcterms:date "2024-06-18"^^xsd:date ;
     dcterms:identifier "ncmec_2024_327" ;
-    dcterms:modified "2026-10-17 23:04:28.587961" ;
+    dcterms:modified "2026-11-12T00:26:32.937777"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_327/provenance> ;
     dcterms:source <https://muddyrivernews.com/noteworthy/while-pleading-his-innocence-quincy-man-sentenced-to-eight-years-in-prison-for-child-pornography/20240618065825/#:~:text=QUINCY%20%E2%80%94%20A%20Quincy%20man%20facing,Citro%20before%20Judge%20Tad%20Brenner>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/quincy>,
-        <https://w3id.org/caselinker/resource/location/virginia> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/quincy-city-il>,
+        <https://w3id.org/caselinker/resource/location/virginia-va> ;
     ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_327/phase/sentenced> ;
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_327/phase/sentenced> ;
-    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_327/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_327/event/possession>,
+    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_327/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_327/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_327/legal-step/sentenced> ;
-    ns2:investigationStatus "unknown" ;
     ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/illinois-department-of-corrections> ;
-    ns1:mentionsLocation <https://w3id.org/caselinker/resource/location/quincy>,
-        <https://w3id.org/caselinker/resource/location/virginia> .
+    ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2024_327/admission/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_327/charge/1> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_327/admission/1/extraction-confidence> a ns5:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns5:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_327/admission/1> ;
+    ns5:hasConfidence 0.65 ;
+    ns5:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_327/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_327/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 50.0 .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_327/role/offender/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2024_327/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2024_327/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/agency/illinois-department-of-corrections> a ns5:OrganizationLikeEntity,
+        ns6:LocalAgency ;
+    rdfs:label "Illinois Department of Corrections" ;
+    ns3:name "Illinois Department of Corrections" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_327/charge/1> a ns1:CSAM_Possession,
+        ns1:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_327/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_327/legal-proceeding> a ns3:Event,
-        ns3:LegalEvent,
-        ns4:LegalProceeding ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_327/charge/1> ;
-    ns4:hasProceedingBeginPoint "2024-06-18T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns4:resultsSentence <https://w3id.org/caselinker/resource/case/ncmec_2024_327/sentence/1>,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_327/legal-proceeding> a ns5:Event,
+        ns5:LegalEvent,
+        ns1:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns1:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns1:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_327/charge/1> ;
+    ns1:resultsSentence <https://w3id.org/caselinker/resource/case/ncmec_2024_327/sentence/1>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_327/sentence/2> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_327/legal-step/sentenced> a ns3:Event,
-        ns3:LegalEvent,
-        ns4:LegalProceeding,
-        ns4:SentencingHearing ;
-    ns4:hasProceedingBeginPoint "2024-06-18T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_327/legal-step/sentenced> a ns5:Event,
+        ns5:LegalEvent,
+        ns1:LegalProceeding,
+        ns1:SentencingHearing ;
+    rdfs:label "Sentencing Hearing · legal-step/sentenced" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_327/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns7:ageEstimate 50 .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_327/sentence/1> a ns1:CriminalSentence,
+        ns1:PrisonSentence ;
+    rdfs:label "EIGHT YEARS" ;
+    ns5:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_327/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_327/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_327/sentence/2> a ns1:CriminalSentence,
+        ns1:PrisonSentence ;
+    rdfs:label "four years" ;
+    ns5:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_327/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_327/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2024-06-18T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_327/event/possession> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_327/person/offender/1> .
+<https://w3id.org/caselinker/resource/location/quincy-city-il> a ns5:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Quincy city" ;
+    dcterms:identifier "fips:1762367" ;
+    skos:altLabel "Quincy" ;
+    ns3:name "Quincy city" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_327/sentence/1> a ns4:CriminalSentence,
-        ns4:PrisonSentence ;
-    rdfs:label "EIGHT YEARS" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_327/sentence/2> a ns4:CriminalSentence,
-        ns4:PrisonSentence ;
-    rdfs:label "four years" .
+<https://w3id.org/caselinker/resource/location/virginia-va> a ns5:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Virginia" ;
+    dcterms:identifier "fips:51" ;
+    ns3:name "Virginia" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_327/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "didn’t believe he was guilty of the crimes he was charged with" ;
     dcterms:source <https://muddyrivernews.com/noteworthy/while-pleading-his-innocence-quincy-man-sentenced-to-eight-years-in-prison-for-child-pornography/20240618065825/#:~:text=QUINCY%20%E2%80%94%20A%20Quincy%20man%20facing,Citro%20before%20Judge%20Tad%20Brenner> ;
-    ns1:admissionContext "as part of the negotiations. When a pre-sentence investigation was created for Phillips, he said he didn’t believe he was guilty of the c..." ;
-    ns1:admissionFrame "he_said_paraphrase" ;
-    ns1:admissionTheme "other" ;
-    ns1:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/ncmec_2024_327/role/offender/1> ;
-    ns1:evidenceTier "press_release_stated" ;
-    ns1:quoteType "paraphrase" ;
-    ns5:description "didn’t believe he was guilty of the crimes he was charged with" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_327/phase/sentenced> a ns3:Phase,
-        ns4:SentencingPhase ;
-    ns2:hasPhaseBeginPoint "2024-06-18T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/quincy> a ns3:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Quincy" ;
-    ns5:name "Quincy" .
-
-<https://w3id.org/caselinker/resource/location/virginia> a ns3:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Virginia" ;
-    ns5:name "Virginia" .
+    ns3:description "didn’t believe he was guilty of the crimes he was charged with" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_327/event/possession> a ns2:CSAMIncident,
-        ns3:Event ;
-    ns5:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2024_327/facet/possession> .
+        ns5:Event ;
+    rdfs:label "CSAMIncident · event/possession" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2024_327/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_327> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2024_327/provenance> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_327/phase/sentenced> a ns5:Phase,
+        ns1:SentencingPhase ;
+    rdfs:label "Sentencing Phase · phase/sentenced" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_327/role/offender/1> a ns2:OffenderRole ;
+    rdfs:label "Offender Role · role/offender/1" ;
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_327/event/possession> .
+

@@ -1,129 +1,140 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
 @prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns3: <https://w3id.org/caselinker/resource/vocab/> .
+@prefix ns3: <https://cacontology.projectvic.org/core#> .
 @prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns5: <https://cacontology.projectvic.org/core#> .
+@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns7: <https://cacontology.projectvic.org/detection#> .
+@prefix ns7: <https://cacontology.projectvic.org/platforms#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_233/admission/1/extraction-confidence> a ns5:AssessmentResult ;
-    ns5:assesses <https://w3id.org/caselinker/resource/case/ncmec_2023_233/admission/1> ;
-    ns5:generatedBy <https://w3id.org/caselinker/resource/case/ncmec_2023_233> ;
-    ns5:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_233/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_233/event/csam> ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_233/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/agency/fbi> a ns6:FederalAgency .
-
-<https://w3id.org/caselinker/resource/agency/hsi> a ns6:FederalAgency .
-
 <https://w3id.org/caselinker/resource/case/ncmec_2023_233> a ns1:CACInvestigation,
-        ns5:EnduringEntity ;
-    dcterms:created "2026-10-17 22:21:30.644229" ;
+        ns3:EnduringEntity ;
+    rdfs:label "Case ncmec_2023_233" ;
+    dcterms:created "2026-11-10T10:03:47.115492"^^xsd:dateTime ;
+    dcterms:date "2023-01"^^xsd:gYearMonth ;
     dcterms:identifier "ncmec_2023_233" ;
-    dcterms:modified "2026-10-17 22:21:30.644229" ;
+    dcterms:modified "2026-11-10T10:03:47.115492"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2023_233/provenance> ;
     dcterms:source <https://fox42kptm.com/news/local/fbi-omaha-man-sentenced-to-ten-years-for-child-pornography-receipt-and-distribution>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/neb>,
-        <https://w3id.org/caselinker/resource/location/omaha> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/nebraska-ne>,
+        <https://w3id.org/caselinker/resource/location/omaha-city-ne> ;
     ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_233/phase/sentenced> ;
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_233/phase/sentenced> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_233/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2023_233/event/csam>,
+    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_233/event/csam>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_233/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_233/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_233/legal-step/sentenced> ;
-    ns1:investigationStatus "unknown" ;
     ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/fbi>,
         <https://w3id.org/caselinker/resource/agency/hsi> ;
-    ns3:mentionsLocation <https://w3id.org/caselinker/resource/location/neb>,
-        <https://w3id.org/caselinker/resource/location/omaha> .
+    ns4:object <https://w3id.org/caselinker/resource/case/ncmec_2023_233/admission/1> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_233/admission/1/extraction-confidence> a ns3:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2023_233/admission/1> ;
+    ns3:hasConfidence 0.65 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_233/person/offender/1/age> a ns5:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2023_233/person/offender/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 21.0 .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_233/role/offender/1/has-role> a ns4:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns4:isDirectional true ;
+    ns4:kindOfRelationship "Has_Role" ;
+    ns4:source <https://w3id.org/caselinker/resource/case/ncmec_2023_233/person/offender/1> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/ncmec_2023_233/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/agency/fbi> a ns3:OrganizationLikeEntity,
+        ns6:FederalAgency ;
+    rdfs:label "Federal Bureau of Investigation" ;
+    skos:altLabel "FBI" ;
+    ns4:name "Federal Bureau of Investigation" .
+
+<https://w3id.org/caselinker/resource/agency/hsi> a ns3:OrganizationLikeEntity,
+        ns6:FederalAgency ;
+    rdfs:label "Homeland Security Investigations" ;
+    ns4:name "Homeland Security Investigations" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_233/charge/1> a ns2:CSAM_Possession,
         ns2:CriminalCharge ;
-    rdfs:label "child pornography" ;
-    ns2:indictmentCounts 2 .
+    rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_233/event/distribution> a ns5:Event,
+<https://w3id.org/caselinker/resource/case/ncmec_2023_233/event/distribution> a ns3:Event,
         ns2:CSAM_Distribution ;
-    ns1:severityLevel 3 .
+    rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_233/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_233/legal-proceeding> a ns5:Event,
-        ns5:LegalEvent,
+<https://w3id.org/caselinker/resource/case/ncmec_2023_233/legal-proceeding> a ns3:Event,
+        ns3:LegalEvent,
         ns2:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns2:chargeCount "2"^^xsd:nonNegativeInteger ;
     ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_233/charge/1> ;
-    ns2:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
     ns2:resultsSentence <https://w3id.org/caselinker/resource/case/ncmec_2023_233/sentence/1>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_233/sentence/2> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_233/legal-step/sentenced> a ns5:Event,
-        ns5:LegalEvent,
+<https://w3id.org/caselinker/resource/case/ncmec_2023_233/legal-step/sentenced> a ns3:Event,
+        ns3:LegalEvent,
         ns2:LegalProceeding,
         ns2:SentencingHearing ;
-    ns2:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_233/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns7:ageEstimate 21 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_233/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_233/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_233/event/csam> ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_233/person/offender/1> .
+    rdfs:label "Sentencing Hearing · legal-step/sentenced" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_233/sentence/1> a ns2:CriminalSentence,
         ns2:PrisonSentence ;
-    rdfs:label "ten years" .
+    rdfs:label "ten years" ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2023_233/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_233/sentence/2> a ns2:CriminalSentence,
         ns2:SupervisedRelease ;
-    rdfs:label "five-year supervised release" .
+    rdfs:label "five-year supervised release" ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2023_233/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/platform/omegle> a <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
-    rdfs:label "Omegle" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_233/phase/sentenced> a ns5:Phase,
-        ns2:SentencingPhase ;
-    ns1:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/neb> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/nebraska-ne> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Neb." ;
-    ns4:name "Neb." .
+    rdfs:label "Nebraska" ;
+    dcterms:identifier "fips:31" ;
+    skos:altLabel "Neb." ;
+    ns4:name "Nebraska" .
 
-<https://w3id.org/caselinker/resource/location/omaha> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/omaha-city-ne> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Omaha" ;
-    ns4:name "Omaha" .
+    rdfs:label "Omaha city" ;
+    dcterms:identifier "fips:3137000" ;
+    skos:altLabel "Omaha" ;
+    ns4:name "Omaha city" .
+
+<https://w3id.org/caselinker/resource/platform/omegle> a ns3:DigitalSystemEntity,
+        ns7:AnonymousChatPlatform ;
+    rdfs:label "Omegle" ;
+    ns7:guestAccountsAllowed "true" ;
+    ns7:identityVerificationRequired "false" ;
+    ns4:name "Omegle" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_233/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "looking at images and videos of child porn" ;
     dcterms:source <https://fox42kptm.com/news/local/fbi-omaha-man-sentenced-to-ten-years-for-child-pornography-receipt-and-distribution> ;
-    ns3:admissionContext "ender. There is no possibility of parole. In 2017, Homeland Security Investigations (HSI) looked into tips, and their investigation resul..." ;
-    ns3:admissionFrame "admitted_to" ;
-    ns3:admissionTheme "harm_conduct" ;
-    ns3:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/ncmec_2023_233/role/offender/1> ;
-    ns3:evidenceTier "press_release_stated" ;
-    ns3:quoteType "paraphrase" ;
     ns4:description "looking at images and videos of child porn" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_233/event/csam> a ns1:CSAMIncident,
-        ns5:Event ;
-    ns1:producesArtifact <https://w3id.org/caselinker/resource/case/ncmec_2023_233/admission/1> ;
+        ns3:Event ;
+    rdfs:label "CSAMIncident · event/csam" ;
     ns1:severityLevel 3 ;
-    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/omegle> ;
-    ns4:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2023_233/facet/csam> .
+    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/omegle> .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2023_233/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_233> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2023_233/provenance> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_233/phase/sentenced> a ns3:Phase,
+        ns2:SentencingPhase ;
+    rdfs:label "Sentencing Phase · phase/sentenced" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_233/role/offender/1> a ns1:OffenderRole ;
+    rdfs:label "Offender Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_233/event/csam> .
+

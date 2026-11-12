@@ -1,85 +1,86 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns3: <https://cacontology.projectvic.org/detection#> .
-@prefix ns4: <https://cacontology.projectvic.org/core#> .
-@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_489> a ns1:CACInvestigation,
-        ns4:EnduringEntity ;
-    dcterms:created "2026-10-17 23:04:30.426687" ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case ncmec_2024_489" ;
+    dcterms:created "2026-11-10T21:26:11.970257"^^xsd:dateTime ;
+    dcterms:date "2024-03-07"^^xsd:date ;
     dcterms:identifier "ncmec_2024_489" ;
-    dcterms:modified "2026-10-17 23:04:30.426687" ;
+    dcterms:modified "2026-11-12T00:34:23.033692"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_489/provenance> ;
     dcterms:source <https://www.ktbs.com/news/cpso-cyber-crimes-arrests-man-for-child-pornography/article_401312e4-dcd4-11ee-aa1f-8b2e90a0f334.html>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/bethany>,
-        <https://w3id.org/caselinker/resource/location/la>,
-        <https://w3id.org/caselinker/resource/location/shreveport> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2024_489/location/bethany>,
+        <https://w3id.org/caselinker/resource/location/louisiana-la>,
+        <https://w3id.org/caselinker/resource/location/shreveport-city-la> ;
     ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_489/phase/booked> ;
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_489/phase/booked> ;
     ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_489/event/possession>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_489/legal-proceeding> ;
-    ns1:investigationStatus "unknown" ;
-    ns2:mentionsLocation <https://w3id.org/caselinker/resource/location/bethany>,
-        <https://w3id.org/caselinker/resource/location/la>,
-        <https://w3id.org/caselinker/resource/location/shreveport> .
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_489/legal-proceeding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_489/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2024-03-07T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_489/event/possession> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_489/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_489/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_489/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 48.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_489/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2024-03-07T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_489/event/possession> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_489/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_489/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2024_489/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2024_489/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_489/charge/1> a ns6:CSAM_Possession,
-        ns6:CriminalCharge ;
-    rdfs:label "pornography involving juveniles" ;
-    ns6:indictmentCounts 61 .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_489/charge/1> a ns3:CSAM_Possession,
+        ns3:CriminalCharge ;
+    rdfs:label "pornography involving juveniles" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_489/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_489/legal-proceeding> a ns4:Event,
-        ns4:LegalEvent,
-        ns6:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_489/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        ns3:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): booked into Caddo Correctional Center" ;
-    ns6:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_489/charge/1> ;
-    ns6:hasProceedingBeginPoint "2024-03-07T00:00:00Z"^^xsd:dateTimeStamp .
+    ns3:chargeCount "61"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_489/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_489/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns3:ageEstimate 48 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_489/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_489/phase/booked> a ns1:InitialPhase,
-        ns4:Phase ;
-    ns1:hasPhaseBeginPoint "2024-03-07T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/bethany> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_489/location/bethany> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Bethany" ;
-    ns5:name "Bethany" .
+    ns2:name "Bethany" .
 
-<https://w3id.org/caselinker/resource/location/la> a ns4:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "La." ;
-    ns5:name "La." .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_489/role/offender/1> a ns3:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_489/event/possession> .
 
-<https://w3id.org/caselinker/resource/location/shreveport> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/louisiana-la> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Shreveport" ;
-    ns5:name "Shreveport" .
+    rdfs:label "Louisiana" ;
+    dcterms:identifier "fips:22" ;
+    skos:altLabel "La." ;
+    ns2:name "Louisiana" .
+
+<https://w3id.org/caselinker/resource/location/shreveport-city-la> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Shreveport city" ;
+    dcterms:identifier "fips:2270000" ;
+    skos:altLabel "Shreveport" ;
+    ns2:name "Shreveport city" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_489/event/possession> a ns1:CSAMIncident,
-        ns4:Event ;
-    ns5:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2024_489/facet/possession> .
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/possession" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2024_489/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_489> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2024_489/provenance> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_489/phase/booked> a ns1:InitialPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Initial Phase · phase/booked" .
+

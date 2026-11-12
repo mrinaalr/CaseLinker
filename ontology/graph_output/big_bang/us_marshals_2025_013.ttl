@@ -1,116 +1,131 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns3: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns4: <https://cacontology.projectvic.org/core#> .
-@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns6: <https://cacontology.projectvic.org/detection#> .
-@prefix ns7: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/us_marshals_2025_013> a ns1:CACInvestigation,
-        ns4:EnduringEntity ;
-    dcterms:created "2026-10-18 07:26:57.215030" ;
+        ns5:EnduringEntity ;
+    rdfs:label "Case us_marshals_2025_013" ;
+    dcterms:created "2026-11-11T18:14:27.004678"^^xsd:dateTime ;
+    dcterms:date "2025-11-12"^^xsd:date ;
     dcterms:identifier "us_marshals_2025_013" ;
-    dcterms:modified "2026-10-18 07:26:57.215030" ;
+    dcterms:modified "2026-11-11T18:14:27.004678"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/us_marshals_2025_013/provenance> ;
     dcterms:source <https://www.usmarshals.gov/news/press-release/compliance-not-optional-memphis-safe-task-force-targets-sex-offender-registry>,
         "US MARSHALS" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/memphis>,
-        <https://w3id.org/caselinker/resource/location/tennessee>,
-        <https://w3id.org/caselinker/resource/location/the-western-district>,
-        <https://w3id.org/caselinker/resource/location/united-states> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/us_marshals_2025_013/location/united-states>,
+        <https://w3id.org/caselinker/resource/case/us_marshals_2025_013/location/western-district-of-tennessee>,
+        <https://w3id.org/caselinker/resource/location/memphis-city-tn>,
+        <https://w3id.org/caselinker/resource/location/tennessee-tn> ;
     ns1:currentPhase <https://w3id.org/caselinker/resource/case/us_marshals_2025_013/phase/convicted> ;
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/us_marshals_2025_013/phase/convicted> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/us_marshals_2025_013/event/conspiracy>,
-        <https://w3id.org/caselinker/resource/case/us_marshals_2025_013/event/hands-on>,
+    ns1:hasStep <https://w3id.org/caselinker/resource/case/us_marshals_2025_013/event/hands-on>,
         <https://w3id.org/caselinker/resource/case/us_marshals_2025_013/legal-step/convicted>,
         <https://w3id.org/caselinker/resource/case/us_marshals_2025_013/operation> ;
-    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/memphis-safe-task-force>,
-        <https://w3id.org/caselinker/resource/agency/usms> ;
-    ns3:mentionsLocation <https://w3id.org/caselinker/resource/location/memphis>,
-        <https://w3id.org/caselinker/resource/location/tennessee>,
-        <https://w3id.org/caselinker/resource/location/the-western-district>,
-        <https://w3id.org/caselinker/resource/location/united-states> .
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/usms>,
+        <https://w3id.org/caselinker/resource/case/us_marshals_2025_013/agency/memphis-safe-task-force> .
 
-<https://w3id.org/caselinker/resource/case/us_marshals_2025_013/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2025-11-12T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/us_marshals_2025_013/event/conspiracy>,
-        <https://w3id.org/caselinker/resource/case/us_marshals_2025_013/event/hands-on> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/us_marshals_2025_013/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/us_marshals_2025_013/assessment/semantic/registered-sex-offender> a ns5:AssessmentResult ;
+    rdfs:label "semantic similarity · registered_sex_offender" ;
+    dcterms:subject <https://cacontology.projectvic.org/sex-offender-registry#RegisteredSexOffender> ;
+    ns5:assesses <https://w3id.org/caselinker/resource/case/us_marshals_2025_013/narrative> ;
+    ns5:hasConfidence 0.5236 ;
+    ns5:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/agency/memphis-safe-task-force> a ns4:OrganizationLikeEntity,
-        ns2:LocalAgency ;
-    rdfs:label "Memphis Safe Task Force" .
+<https://w3id.org/caselinker/resource/case/us_marshals_2025_013/person/offender/1/age> a ns3:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns3:ageSubject <https://w3id.org/caselinker/resource/case/us_marshals_2025_013/person/offender/1> ;
+    ns3:concernsAgeQuality ns3:Age ;
+    ns3:hasAgeInYears 53.0 .
 
-<https://w3id.org/caselinker/resource/agency/usms> a ns2:FederalAgency .
+<https://w3id.org/caselinker/resource/case/us_marshals_2025_013/person/offender/2/age> a ns3:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/2/age" ;
+    ns3:ageSubject <https://w3id.org/caselinker/resource/case/us_marshals_2025_013/person/offender/2> ;
+    ns3:concernsAgeQuality ns3:Age ;
+    ns3:hasAgeInYears 56.0 .
 
-<https://w3id.org/caselinker/resource/case/us_marshals_2025_013/legal-step/convicted> a ns4:Event,
-        ns4:LegalEvent,
-        ns7:LegalProceeding,
-        ns7:SentencingHearing ;
-    ns7:hasProceedingBeginPoint "2025-11-12T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/us_marshals_2025_013/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/us_marshals_2025_013/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/us_marshals_2025_013/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/us_marshals_2025_013/operation> a ns4:Event,
-        <https://cacontology.projectvic.org/taskforce#TaskForceOperation> .
+<https://w3id.org/caselinker/resource/case/us_marshals_2025_013/role/offender/2/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/2/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/us_marshals_2025_013/person/offender/2> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/us_marshals_2025_013/role/offender/2> .
 
-<https://w3id.org/caselinker/resource/case/us_marshals_2025_013/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns6:ageEstimate 53 .
+<https://w3id.org/caselinker/resource/agency/usms> a ns5:OrganizationLikeEntity,
+        ns4:FederalAgency ;
+    rdfs:label "U.S. Marshals Service" ;
+    ns2:name "U.S. Marshals Service" .
 
-<https://w3id.org/caselinker/resource/case/us_marshals_2025_013/person/offender/2> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns6:ageEstimate 56 .
+<https://w3id.org/caselinker/resource/case/us_marshals_2025_013/agency/memphis-safe-task-force> a ns5:OrganizationLikeEntity,
+        ns4:LocalAgency ;
+    rdfs:label "Memphis Safe Task Force" ;
+    ns2:name "Memphis Safe Task Force" .
 
-<https://w3id.org/caselinker/resource/case/us_marshals_2025_013/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/us_marshals_2025_013/legal-step/convicted> a ns5:Event,
+        ns5:LegalEvent,
+        <https://cacontology.projectvic.org/legal-outcomes#LegalProceeding>,
+        <https://cacontology.projectvic.org/legal-outcomes#SentencingHearing> ;
+    rdfs:label "Sentencing Hearing · legal-step/convicted" .
 
-<https://w3id.org/caselinker/resource/case/us_marshals_2025_013/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2025-11-12T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/us_marshals_2025_013/event/conspiracy>,
-        <https://w3id.org/caselinker/resource/case/us_marshals_2025_013/event/hands-on> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/us_marshals_2025_013/person/offender/1> .
-
-<https://w3id.org/caselinker/resource/case/us_marshals_2025_013/role/offender/2> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2025-11-12T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/us_marshals_2025_013/event/conspiracy>,
-        <https://w3id.org/caselinker/resource/case/us_marshals_2025_013/event/hands-on> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/us_marshals_2025_013/person/offender/2> .
-
-<https://w3id.org/caselinker/resource/case/us_marshals_2025_013/phase/convicted> a ns4:Phase,
-        ns7:SentencingPhase ;
-    ns1:hasPhaseBeginPoint "2025-11-12T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/memphis> a ns4:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Memphis" ;
-    ns5:name "Memphis" .
-
-<https://w3id.org/caselinker/resource/location/tennessee> a ns4:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Tennessee" ;
-    ns5:name "Tennessee" .
-
-<https://w3id.org/caselinker/resource/location/the-western-district> a ns4:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "the Western District" ;
-    ns5:name "the Western District" .
-
-<https://w3id.org/caselinker/resource/location/united-states> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/us_marshals_2025_013/location/united-states> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "United States" ;
-    ns5:name "United States" .
+    ns2:name "United States" .
 
-<https://w3id.org/caselinker/resource/case/us_marshals_2025_013/event/conspiracy> a ns1:ConspiracyToCommitCSA,
-        ns4:Event ;
-    ns1:conspiracyMemberCount 2 ;
-    ns1:participatesInConspiracy <https://w3id.org/caselinker/resource/case/us_marshals_2025_013/role/offender/1>,
-        <https://w3id.org/caselinker/resource/case/us_marshals_2025_013/role/offender/2> ;
-    ns1:severityLevel 3 .
+<https://w3id.org/caselinker/resource/case/us_marshals_2025_013/location/western-district-of-tennessee> a ns5:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Western District of Tennessee" ;
+    ns2:name "Western District of Tennessee" .
+
+<https://w3id.org/caselinker/resource/case/us_marshals_2025_013/operation> a ns5:Event,
+        <https://cacontology.projectvic.org/taskforce#TaskForceOperation> ;
+    rdfs:label "Task Force Operation · operation" .
+
+<https://w3id.org/caselinker/resource/case/us_marshals_2025_013/role/offender/1> a ns1:OffenderRole ;
+    rdfs:label "Offender Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/us_marshals_2025_013/event/hands-on> .
+
+<https://w3id.org/caselinker/resource/case/us_marshals_2025_013/role/offender/2> a ns1:OffenderRole ;
+    rdfs:label "Offender Role · role/offender/2" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/us_marshals_2025_013/event/hands-on> .
+
+<https://w3id.org/caselinker/resource/location/memphis-city-tn> a ns5:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Memphis city" ;
+    dcterms:identifier "fips:4748000" ;
+    skos:altLabel "Memphis" ;
+    ns2:name "Memphis city" .
+
+<https://w3id.org/caselinker/resource/location/tennessee-tn> a ns5:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Tennessee" ;
+    dcterms:identifier "fips:47" ;
+    ns2:name "Tennessee" .
+
+<https://w3id.org/caselinker/resource/case/us_marshals_2025_013/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/us_marshals_2025_013/person/offender/2> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/2" .
+
+<https://w3id.org/caselinker/resource/case/us_marshals_2025_013/phase/convicted> a ns5:Phase,
+        <https://cacontology.projectvic.org/legal-outcomes#SentencingPhase> ;
+    rdfs:label "Sentencing Phase · phase/convicted" .
 
 <https://w3id.org/caselinker/resource/case/us_marshals_2025_013/event/hands-on> a ns1:ChildSexualAbuseEvent,
-        ns4:Event ;
+        ns5:Event ;
+    rdfs:label "Child Sexual Abuse Event · event/hands-on" ;
     ns1:severityLevel 3 .
 
-
-<https://w3id.org/caselinker/resource/case/us_marshals_2025_013> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/us_marshals_2025_013/provenance> .

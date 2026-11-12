@@ -1,101 +1,128 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://w3id.org/caselinker/resource/vocab/> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/custodial#> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns5: <https://cacontology.projectvic.org/core#> .
+@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns4: <https://cacontology.projectvic.org/core#> .
+@prefix ns5: <https://cacontology.projectvic.org/custodial#> .
 @prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns7: <https://cacontology.projectvic.org/detection#> .
-@prefix ns8: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns7: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/scotland_police_2022_002> a ns2:CACInvestigation,
-        ns5:EnduringEntity ;
-    dcterms:created "2026-10-18 14:18:19.409049" ;
+        ns4:EnduringEntity ;
+    rdfs:label "Case scotland_police_2022_002" ;
+    dcterms:created "2026-11-11T17:36:09.441057"^^xsd:dateTime ;
+    dcterms:date "2022-02-17"^^xsd:date ;
     dcterms:identifier "scotland_police_2022_002" ;
-    dcterms:modified "2026-10-18 14:18:19.409049" ;
+    dcterms:modified "2026-11-11T17:36:09.441057"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/scotland_police_2022_002/provenance> ;
     dcterms:source <https://www.scotland.police.uk/what-s-happening/news/2022/february/matthew-birch-sentenced-to-11-years-in-prison-for-serious-sexual-offences/>,
         "SCOTLAND POLICE" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/glasgow>,
-        <https://w3id.org/caselinker/resource/location/north-lanarkshire> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/scotland_police_2022_002/location/glasgow>,
+        <https://w3id.org/caselinker/resource/case/scotland_police_2022_002/location/north-lanarkshire> ;
     ns2:currentPhase <https://w3id.org/caselinker/resource/case/scotland_police_2022_002/phase/sentenced> ;
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/scotland_police_2022_002/phase/sentenced> ;
     ns2:hasStep <https://w3id.org/caselinker/resource/case/scotland_police_2022_002/event/hands-on>,
         <https://w3id.org/caselinker/resource/case/scotland_police_2022_002/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/scotland_police_2022_002/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/scotland_police_2022_002/legal-step/sentenced> ;
-    ns2:investigationStatus "unknown" ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/fife-non-recent-child-abuse-investigation-team>,
-        <https://w3id.org/caselinker/resource/agency/police-scotland> ;
-    ns1:mentionsLocation <https://w3id.org/caselinker/resource/location/glasgow>,
-        <https://w3id.org/caselinker/resource/location/north-lanarkshire> .
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/police-scotland>,
+        <https://w3id.org/caselinker/resource/case/scotland_police_2022_002/agency/fife-non-recent-child-abuse-investigation-team> .
 
-<https://w3id.org/caselinker/resource/agency/fife-non-recent-child-abuse-investigation-team> a ns5:OrganizationLikeEntity,
+<https://w3id.org/caselinker/resource/case/scotland_police_2022_002/person/offender/1/age> a ns3:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns3:ageSubject <https://w3id.org/caselinker/resource/case/scotland_police_2022_002/person/offender/1> ;
+    ns3:concernsAgeQuality ns3:Age ;
+    ns3:hasAgeInYears 46.0 .
+
+<https://w3id.org/caselinker/resource/case/scotland_police_2022_002/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/scotland_police_2022_002/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/scotland_police_2022_002/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/scotland_police_2022_002/role/victim/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/victim/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/scotland_police_2022_002/person/victim/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/scotland_police_2022_002/role/victim/1> .
+
+<https://w3id.org/caselinker/resource/agency/police-scotland> a ns4:OrganizationLikeEntity,
         ns6:LocalAgency ;
-    rdfs:label "Fife Non Recent Child Abuse Investigation Team" .
+    rdfs:label "Police Scotland" ;
+    ns1:name "Police Scotland" .
 
-<https://w3id.org/caselinker/resource/agency/police-scotland> a ns6:LocalAgency .
+<https://w3id.org/caselinker/resource/case/scotland_police_2022_002/agency/fife-non-recent-child-abuse-investigation-team> a ns4:OrganizationLikeEntity,
+        ns6:LocalAgency ;
+    rdfs:label "Fife Non Recent Child Abuse Investigation Team" ;
+    ns1:name "Fife Non Recent Child Abuse Investigation Team" .
 
-<https://w3id.org/caselinker/resource/case/scotland_police_2022_002/event/trust-violation> a ns3:AuthorityAbuse,
-        ns3:TrustViolation ;
-    ns3:violatesRelationship <https://w3id.org/caselinker/resource/case/scotland_police_2022_002/relationship/teacher> .
+<https://w3id.org/caselinker/resource/case/scotland_police_2022_002/event/trust-violation> a ns5:AuthorityAbuse,
+        ns5:TrustViolation ;
+    rdfs:label "Authority Abuse · event/trust-violation" ;
+    ns5:perpetratedBy <https://w3id.org/caselinker/resource/case/scotland_police_2022_002/role/offender/1> ;
+    ns5:violatesRelationship <https://w3id.org/caselinker/resource/case/scotland_police_2022_002/relationship/teacher> .
 
-<https://w3id.org/caselinker/resource/case/scotland_police_2022_002/legal-proceeding> a ns5:Event,
-        ns5:LegalEvent,
-        ns8:LegalProceeding ;
-    ns8:hasProceedingBeginPoint "2022-02-17T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns8:resultsSentence <https://w3id.org/caselinker/resource/case/scotland_police_2022_002/sentence/1> .
+<https://w3id.org/caselinker/resource/case/scotland_police_2022_002/legal-proceeding> a ns4:Event,
+        ns4:LegalEvent,
+        ns7:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns7:resultsSentence <https://w3id.org/caselinker/resource/case/scotland_police_2022_002/sentence/1> .
 
-<https://w3id.org/caselinker/resource/case/scotland_police_2022_002/legal-step/sentenced> a ns5:Event,
-        ns5:LegalEvent,
-        ns8:LegalProceeding,
-        ns8:SentencingHearing ;
-    ns8:hasProceedingBeginPoint "2022-02-17T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/scotland_police_2022_002/legal-step/sentenced> a ns4:Event,
+        ns4:LegalEvent,
+        ns7:LegalProceeding,
+        ns7:SentencingHearing ;
+    rdfs:label "Sentencing Hearing · legal-step/sentenced" .
 
-<https://w3id.org/caselinker/resource/case/scotland_police_2022_002/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns7:ageEstimate 46 .
-
-<https://w3id.org/caselinker/resource/case/scotland_police_2022_002/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/scotland_police_2022_002/relationship/teacher> a ns3:CustodialRelationship,
-        ns3:Teacher ;
-    ns3:involvesChild <https://w3id.org/caselinker/resource/case/scotland_police_2022_002/role/victim/1> ;
-    ns3:involvesCustodian <https://w3id.org/caselinker/resource/case/scotland_police_2022_002/role/offender/1> ;
-    ns3:relationshipType "teacher" .
-
-<https://w3id.org/caselinker/resource/case/scotland_police_2022_002/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2022-02-17T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/scotland_police_2022_002/event/hands-on> ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/scotland_police_2022_002/person/offender/1> .
-
-<https://w3id.org/caselinker/resource/case/scotland_police_2022_002/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2022-02-17T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/scotland_police_2022_002/event/hands-on> ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/scotland_police_2022_002/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/case/scotland_police_2022_002/sentence/1> a ns8:CriminalSentence,
-        ns8:PrisonSentence ;
-    rdfs:label "11 years" .
-
-<https://w3id.org/caselinker/resource/case/scotland_police_2022_002/phase/sentenced> a ns5:Phase,
-        ns8:SentencingPhase ;
-    ns2:hasPhaseBeginPoint "2022-02-17T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/glasgow> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/scotland_police_2022_002/location/glasgow> a ns4:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Glasgow" ;
-    ns4:name "Glasgow" .
+    ns1:name "Glasgow" .
 
-<https://w3id.org/caselinker/resource/location/north-lanarkshire> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/scotland_police_2022_002/location/north-lanarkshire> a ns4:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "North Lanarkshire" ;
-    ns4:name "North Lanarkshire" .
+    ns1:name "North Lanarkshire" .
+
+<https://w3id.org/caselinker/resource/case/scotland_police_2022_002/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
+
+<https://w3id.org/caselinker/resource/case/scotland_police_2022_002/relationship/teacher> a ns5:CustodialRelationship,
+        ns5:Teacher ;
+    rdfs:label "Custodial Relationship · relationship/teacher" ;
+    ns5:involvesChild <https://w3id.org/caselinker/resource/case/scotland_police_2022_002/role/victim/1> ;
+    ns5:involvesCustodian <https://w3id.org/caselinker/resource/case/scotland_police_2022_002/role/offender/1> ;
+    ns5:relationshipType "teacher" ;
+    ns1:isDirectional true ;
+    ns1:source <https://w3id.org/caselinker/resource/case/scotland_police_2022_002/role/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/scotland_police_2022_002/role/victim/1> .
+
+<https://w3id.org/caselinker/resource/case/scotland_police_2022_002/sentence/1> a ns7:CriminalSentence,
+        ns7:PrisonSentence ;
+    rdfs:label "11 years" ;
+    ns4:assesses <https://w3id.org/caselinker/resource/case/scotland_police_2022_002/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/scotland_police_2022_002/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/scotland_police_2022_002/phase/sentenced> a ns4:Phase,
+        ns7:SentencingPhase ;
+    rdfs:label "Sentencing Phase · phase/sentenced" .
 
 <https://w3id.org/caselinker/resource/case/scotland_police_2022_002/event/hands-on> a ns2:ChildSexualAbuseEvent,
-        ns5:Event ;
+        ns4:Event ;
+    rdfs:label "Child Sexual Abuse Event · event/hands-on" ;
     ns2:severityLevel 3 .
+
+<https://w3id.org/caselinker/resource/case/scotland_police_2022_002/role/victim/1> a ns2:VictimRole ;
+    rdfs:label "Victim Role · role/victim/1" ;
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/scotland_police_2022_002/event/hands-on> .
+
+<https://w3id.org/caselinker/resource/case/scotland_police_2022_002/role/offender/1> a ns2:OffenderRole ;
+    rdfs:label "Offender Role · role/offender/1" ;
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/scotland_police_2022_002/event/hands-on> .
 

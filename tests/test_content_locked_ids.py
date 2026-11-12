@@ -258,3 +258,14 @@ def test_resolve_accepts_case_text_so_process_cases_can_pass_it():
     import processing
 
     processing.assertions_module.resolve([], batch_date=None, text="a 40-year-old man")
+
+
+def test_a_four_digit_ordinal_keeps_its_prefix():
+    stored = [(f"ncmec_2024_{n:03d}", _article(f"Stored{n}")) for n in range(1, 1000)]
+    index = _index_from(stored)
+    incoming = [
+        {"case_text": _article("Thousandth"), "case_id": "ncmec_2024_1000", "year": "2024", "source_file": "listing.pdf"},
+        {"case_text": _article("Next"), "case_id": "ncmec_2024_1001", "year": "2024", "source_file": "listing.pdf"},
+    ]
+    kept, _duplicates = assign_content_locked_ids(incoming, index)
+    assert [row["case_id"] for row in kept] == ["ncmec_2024_1000", "ncmec_2024_1001"]

@@ -1,72 +1,76 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/core#> .
+@prefix ns1: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://w3id.org/caselinker/resource/vocab/> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns4: <https://cacontology.projectvic.org#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://cacontology.projectvic.org/detection#> .
+@prefix ns5: <https://cacontology.projectvic.org/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/scotland_police_2024_016> a ns4:CACInvestigation,
-        ns1:EnduringEntity ;
-    dcterms:created "2026-10-18 14:18:21.328048" ;
+        ns5:EnduringEntity ;
+    rdfs:label "Case scotland_police_2024_016" ;
+    dcterms:created "2026-11-11T17:36:23.756916"^^xsd:dateTime ;
+    dcterms:date "2024-08-21"^^xsd:date ;
     dcterms:identifier "scotland_police_2024_016" ;
-    dcterms:modified "2026-10-18T19:04:31.189669" ;
+    dcterms:modified "2026-11-11T17:36:23.756916"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/scotland_police_2024_016/provenance> ;
     dcterms:source <https://www.scotland.police.uk/what-s-happening/news/2024/august/sentencing-of-jonathan-king-for-sexual-offences-and-following-women-in-paisley/>,
         "SCOTLAND POLICE" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/glasgow>,
-        <https://w3id.org/caselinker/resource/location/paisley> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/scotland_police_2024_016/location/glasgow>,
+        <https://w3id.org/caselinker/resource/case/scotland_police_2024_016/location/paisley> ;
     ns4:currentPhase <https://w3id.org/caselinker/resource/case/scotland_police_2024_016/phase/sentenced> ;
     ns4:hasPhase <https://w3id.org/caselinker/resource/case/scotland_police_2024_016/phase/sentenced> ;
     ns4:hasStep <https://w3id.org/caselinker/resource/case/scotland_police_2024_016/legal-proceeding>,
-        <https://w3id.org/caselinker/resource/case/scotland_police_2024_016/legal-step/sentenced> ;
-    ns3:mentionsLocation <https://w3id.org/caselinker/resource/location/glasgow>,
-        <https://w3id.org/caselinker/resource/location/paisley> .
+        <https://w3id.org/caselinker/resource/case/scotland_police_2024_016/legal-step/sentenced> .
 
-<https://w3id.org/caselinker/resource/case/scotland_police_2024_016/role/offender/1> a ns4:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns4:hasRoleBeginPoint "2024-08-21T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:hasRole <https://w3id.org/caselinker/resource/case/scotland_police_2024_016/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/scotland_police_2024_016/person/offender/1/age> a ns1:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns1:ageSubject <https://w3id.org/caselinker/resource/case/scotland_police_2024_016/person/offender/1> ;
+    ns1:concernsAgeQuality ns1:Age ;
+    ns1:hasAgeInYears 38.0 .
 
-<https://w3id.org/caselinker/resource/case/scotland_police_2024_016/role/victim/1> a ns4:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns4:hasRoleBeginPoint "2024-08-21T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:hasRole <https://w3id.org/caselinker/resource/case/scotland_police_2024_016/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/scotland_police_2024_016/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/scotland_police_2024_016/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/scotland_police_2024_016/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/scotland_police_2024_016/legal-proceeding> a ns1:Event,
-        ns1:LegalEvent,
-        ns5:LegalProceeding ;
-    ns5:hasProceedingBeginPoint "2024-08-21T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns5:resultsSentence <https://w3id.org/caselinker/resource/case/scotland_police_2024_016/sentence/1> .
+<https://w3id.org/caselinker/resource/case/scotland_police_2024_016/legal-proceeding> a ns5:Event,
+        ns5:LegalEvent,
+        ns3:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns3:resultsSentence <https://w3id.org/caselinker/resource/case/scotland_police_2024_016/sentence/1> .
 
-<https://w3id.org/caselinker/resource/case/scotland_police_2024_016/legal-step/sentenced> a ns1:Event,
-        ns1:LegalEvent,
-        ns5:LegalProceeding,
-        ns5:SentencingHearing ;
-    ns5:hasProceedingBeginPoint "2024-08-21T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/scotland_police_2024_016/legal-step/sentenced> a ns5:Event,
+        ns5:LegalEvent,
+        ns3:LegalProceeding,
+        ns3:SentencingHearing ;
+    rdfs:label "Sentencing Hearing · legal-step/sentenced" .
 
-<https://w3id.org/caselinker/resource/case/scotland_police_2024_016/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns6:ageEstimate 38 .
-
-<https://w3id.org/caselinker/resource/case/scotland_police_2024_016/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/scotland_police_2024_016/sentence/1> a ns5:CriminalSentence,
-        ns5:PrisonSentence ;
-    rdfs:label "eight years and six months" .
-
-<https://w3id.org/caselinker/resource/case/scotland_police_2024_016/phase/sentenced> a ns1:Phase,
-        ns5:SentencingPhase ;
-    ns4:hasPhaseBeginPoint "2024-08-21T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/glasgow> a ns1:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/scotland_police_2024_016/location/glasgow> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Glasgow" ;
     ns2:name "Glasgow" .
 
-<https://w3id.org/caselinker/resource/location/paisley> a ns1:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/scotland_police_2024_016/location/paisley> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Paisley" ;
     ns2:name "Paisley" .
+
+<https://w3id.org/caselinker/resource/case/scotland_police_2024_016/sentence/1> a ns3:CriminalSentence,
+        ns3:PrisonSentence ;
+    rdfs:label "eight years and six months" ;
+    ns5:assesses <https://w3id.org/caselinker/resource/case/scotland_police_2024_016/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/scotland_police_2024_016/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/scotland_police_2024_016/phase/sentenced> a ns5:Phase,
+        ns3:SentencingPhase ;
+    rdfs:label "Sentencing Phase · phase/sentenced" .
+
+<https://w3id.org/caselinker/resource/case/scotland_police_2024_016/role/offender/1> a ns4:OffenderRole ;
+    rdfs:label "Offender Role · role/offender/1" .
 

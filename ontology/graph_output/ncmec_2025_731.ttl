@@ -1,102 +1,103 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/core#> .
-@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns3: <https://cacontology.projectvic.org/detection#> .
-@prefix ns4: <https://cacontology.projectvic.org#> .
-@prefix ns5: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns6: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns7: <https://cacontology.projectvic.org/platforms#> .
+@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://cacontology.projectvic.org#> .
+@prefix ns3: <https://cacontology.projectvic.org/core#> .
+@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns6: <https://cacontology.projectvic.org/platforms#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_731/admission/1/extraction-confidence> a ns1:AssessmentResult ;
-    ns1:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_731/admission/1> ;
-    ns1:generatedBy <https://w3id.org/caselinker/resource/case/ncmec_2025_731> ;
-    ns1:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_731/role/victim/1> a ns4:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns4:hasRoleBeginPoint "2025-01-13T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_731/event/possession> ;
-    ns1:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2025_731/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_731> a ns4:CACInvestigation,
-        ns1:EnduringEntity ;
-    dcterms:created "2026-10-18 00:01:23.304347" ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_731> a ns2:CACInvestigation,
+        ns3:EnduringEntity ;
+    rdfs:label "Case ncmec_2025_731" ;
+    dcterms:created "2026-11-10T16:37:01.834371"^^xsd:dateTime ;
+    dcterms:date "2025-01-13"^^xsd:date ;
     dcterms:identifier "ncmec_2025_731" ;
-    dcterms:modified "2026-10-18T19:04:54.786917" ;
+    dcterms:modified "2026-11-12T02:08:06.519203"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2025_731/provenance> ;
     dcterms:source <https://okcfox.com/news/local/cyber-tip-leads-to-arrest-of-20-year-old-uco-student-for-child-pornography-possession-university-of-central-oklahoma-edmond-snapchat-discord-flagged-passcode-detective-investigation-aggravated>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/edmond> ;
-    ns4:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_731/phase/arrested> ;
-    ns4:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_731/phase/arrested> ;
-    ns4:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_731/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_731/event/distribution>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/edmond-city-ok> ;
+    ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_731/phase/arrested> ;
+    ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_731/phase/arrested> ;
+    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_731/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_731/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_731/legal-proceeding> ;
-    ns4:investigationStatus "unknown" ;
-    ns5:mentionsLocation <https://w3id.org/caselinker/resource/location/edmond> .
+    ns4:object <https://w3id.org/caselinker/resource/case/ncmec_2025_731/admission/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_731/charge/1> a ns2:CSAM_Possession,
-        ns2:CriminalCharge ;
-    rdfs:label "possession of child pornography" ;
-    ns2:indictmentCounts 2 .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_731/admission/1/extraction-confidence> a ns3:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_731/admission/1> ;
+    ns3:hasConfidence 0.65 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_731/event/distribution> a ns1:Event,
-        ns2:CSAM_Distribution .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_731/person/offender/1/age> a ns5:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2025_731/person/offender/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 20.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_731/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_731/role/offender/1/has-role> a ns4:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns4:isDirectional true ;
+    ns4:kindOfRelationship "Has_Role" ;
+    ns4:source <https://w3id.org/caselinker/resource/case/ncmec_2025_731/person/offender/1> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/ncmec_2025_731/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_731/legal-proceeding> a ns1:Event,
-        ns1:LegalEvent,
-        ns2:LegalProceeding ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_731/charge/1> ;
-    ns2:hasProceedingBeginPoint "2025-01-13T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_731/charge/1> a ns1:CSAM_Possession,
+        ns1:CriminalCharge ;
+    rdfs:label "possession of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_731/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns3:ageEstimate 20 .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_731/event/distribution> a ns3:Event,
+        ns1:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_731/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_731/legal-proceeding> a ns3:Event,
+        ns3:LegalEvent,
+        ns1:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns1:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns1:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_731/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_731/role/offender/1> a ns4:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns4:hasRoleBeginPoint "2025-01-13T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_731/event/possession> ;
-    ns1:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2025_731/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_731/role/offender/1> a ns1:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_731/event/possession> .
 
-<https://w3id.org/caselinker/resource/platform/discord> a ns1:DigitalSystemEntity,
-        ns7:MessagingService ;
-    rdfs:label "Discord" .
+<https://w3id.org/caselinker/resource/location/edmond-city-ok> a ns3:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Edmond city" ;
+    dcterms:identifier "fips:4023200" ;
+    skos:altLabel "Edmond" ;
+    ns4:name "Edmond city" .
 
-<https://w3id.org/caselinker/resource/platform/snapchat> a ns1:DigitalSystemEntity,
-        ns7:MessagingService ;
+<https://w3id.org/caselinker/resource/platform/discord> a ns3:DigitalSystemEntity,
+        ns6:MessagingService ;
+    rdfs:label "Discord" ;
+    ns4:name "Discord" .
+
+<https://w3id.org/caselinker/resource/platform/snapchat> a ns3:DigitalSystemEntity,
+        ns6:MessagingService ;
     rdfs:label "Snapchat" ;
-    ns7:encryptionLevel "end-to-end" .
+    ns6:encryptionLevel "end-to-end" ;
+    ns4:name "Snapchat" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_731/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "owning the accounts identified through the cyber-tips" ;
     dcterms:source <https://okcfox.com/news/local/cyber-tip-leads-to-arrest-of-20-year-old-uco-student-for-child-pornography-possession-university-of-central-oklahoma-edmond-snapchat-discord-flagged-passcode-detective-investigation-aggravated> ;
-    ns6:description "owning the accounts identified through the cyber-tips" ;
-    ns5:admissionContext "ress was located and matched other cyber-tips that involved Forrester's Discord account. After his arrest, Forrester admitted to owning t..." ;
-    ns5:admissionFrame "admitted_to" ;
-    ns5:admissionTheme "other" ;
-    ns5:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/ncmec_2025_731/role/offender/1> ;
-    ns5:evidenceTier "press_release_stated" ;
-    ns5:quoteType "paraphrase" .
+    ns4:description "owning the accounts identified through the cyber-tips" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_731/phase/arrested> a ns4:InitialPhase,
-        ns1:Phase ;
-    ns4:hasPhaseBeginPoint "2025-01-13T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_731/event/possession> a ns2:CSAMIncident,
+        ns3:Event ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns2:usesChannel <https://w3id.org/caselinker/resource/platform/discord>,
+        <https://w3id.org/caselinker/resource/platform/snapchat> .
 
-<https://w3id.org/caselinker/resource/location/edmond> a ns1:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Edmond" ;
-    ns6:name "Edmond" .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_731/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_731/event/possession> a ns4:CSAMIncident,
-        ns1:Event ;
-    ns4:usesChannel <https://w3id.org/caselinker/resource/platform/discord>,
-        <https://w3id.org/caselinker/resource/platform/snapchat> ;
-    ns6:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2025_731/facet/possession> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_731/phase/arrested> a ns2:InitialPhase,
+        ns3:Phase ;
+    rdfs:label "Initial Phase · phase/arrested" .
 

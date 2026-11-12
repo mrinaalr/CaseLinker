@@ -1,127 +1,134 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/core#> .
+@prefix ns1: <https://cacontology.projectvic.org/core#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns5: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns7: <https://cacontology.projectvic.org/detection#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/de_ag_2012_012/admission/1/extraction-confidence> a ns2:AssessmentResult ;
-    ns2:assesses <https://w3id.org/caselinker/resource/case/de_ag_2012_012/admission/1> ;
-    ns2:generatedBy <https://w3id.org/caselinker/resource/case/de_ag_2012_012> ;
-    ns2:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/de_ag_2012_012/role/victim/1> a ns3:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns3:hasRoleBeginPoint "2012-02-16T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/de_ag_2012_012/event/csam>,
-        <https://w3id.org/caselinker/resource/case/de_ag_2012_012/event/online-only> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/de_ag_2012_012/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/agency/delaware-child-predator-task-force> a ns4:LocalAgency .
-
-<https://w3id.org/caselinker/resource/agency/delaware-state-police-department> a ns4:StateAgency .
-
 <https://w3id.org/caselinker/resource/case/de_ag_2012_012> a ns3:CACInvestigation,
-        ns2:EnduringEntity ;
-    dcterms:created "2026-10-18 01:01:29.801795" ;
+        ns1:EnduringEntity ;
+    rdfs:label "Case de_ag_2012_012" ;
+    dcterms:created "2026-11-10T18:11:14.510483"^^xsd:dateTime ;
+    dcterms:date "2012-02-16"^^xsd:date ;
     dcterms:identifier "de_ag_2012_012" ;
-    dcterms:modified "2026-10-18 01:01:29.801795" ;
+    dcterms:modified "2026-11-10T18:11:14.510483"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/de_ag_2012_012/provenance> ;
     dcterms:source <https://news.delaware.gov/2012/02/15/child-predator-task-force-arrests-newark-man-on-child-pornography-charges>,
         "DE AG" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/delaware>,
-        <https://w3id.org/caselinker/resource/location/newark>,
-        <https://w3id.org/caselinker/resource/location/riggs>,
-        <https://w3id.org/caselinker/resource/location/wilmington> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/de_ag_2012_012/location/riggs>,
+        <https://w3id.org/caselinker/resource/location/delaware-de>,
+        <https://w3id.org/caselinker/resource/location/newark-city-de>,
+        <https://w3id.org/caselinker/resource/location/wilmington-city-de> ;
     ns3:currentPhase <https://w3id.org/caselinker/resource/case/de_ag_2012_012/phase/charged> ;
     ns3:hasPhase <https://w3id.org/caselinker/resource/case/de_ag_2012_012/phase/charged> ;
-    ns3:hasStep <https://w3id.org/caselinker/resource/case/de_ag_2012_012/admission/1>,
-        <https://w3id.org/caselinker/resource/case/de_ag_2012_012/event/csam>,
+    ns3:hasStep <https://w3id.org/caselinker/resource/case/de_ag_2012_012/event/csam>,
         <https://w3id.org/caselinker/resource/case/de_ag_2012_012/event/online-only>,
         <https://w3id.org/caselinker/resource/case/de_ag_2012_012/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/de_ag_2012_012/operation> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/delaware-child-predator-task-force>,
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/delaware-child-predator-task-force>,
         <https://w3id.org/caselinker/resource/agency/delaware-state-police-department> ;
-    ns5:mentionsLocation <https://w3id.org/caselinker/resource/location/delaware>,
-        <https://w3id.org/caselinker/resource/location/newark>,
-        <https://w3id.org/caselinker/resource/location/riggs>,
-        <https://w3id.org/caselinker/resource/location/wilmington> .
+    ns2:object <https://w3id.org/caselinker/resource/case/de_ag_2012_012/admission/1> .
 
-<https://w3id.org/caselinker/resource/case/de_ag_2012_012/charge/1> a ns6:CSAM_Possession,
-        ns6:CriminalCharge ;
-    rdfs:label "dealing child pornography" ;
-    ns6:indictmentCounts 26 .
+<https://w3id.org/caselinker/resource/case/de_ag_2012_012/admission/1/extraction-confidence> a ns1:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/de_ag_2012_012/admission/1> ;
+    ns1:hasConfidence 0.65 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/case/de_ag_2012_012/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/de_ag_2012_012/assessment/semantic/evidence-seizure> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · evidence_seizure" ;
+    dcterms:subject <https://cacontology.projectvic.org/production#ProducedContent> ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/de_ag_2012_012/narrative> ;
+    ns1:hasConfidence 0.4992 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/de_ag_2012_012/legal-proceeding> a ns2:Event,
-        ns2:LegalEvent,
-        ns6:LegalProceeding ;
-    ns6:hasCharge <https://w3id.org/caselinker/resource/case/de_ag_2012_012/charge/1> ;
-    ns6:hasProceedingBeginPoint "2012-02-16T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/de_ag_2012_012/person/offender/1/age> a ns5:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/de_ag_2012_012/person/offender/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 60.0 .
 
-<https://w3id.org/caselinker/resource/case/de_ag_2012_012/operation> a ns2:Event,
-        <https://cacontology.projectvic.org/taskforce#UndercoverUnit> .
+<https://w3id.org/caselinker/resource/case/de_ag_2012_012/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/de_ag_2012_012/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/de_ag_2012_012/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/de_ag_2012_012/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns7:ageEstimate 60 .
+<https://w3id.org/caselinker/resource/agency/delaware-child-predator-task-force> a ns1:OrganizationLikeEntity,
+        ns6:LocalAgency ;
+    rdfs:label "Delaware Child Predator Task Force" ;
+    ns2:name "Delaware Child Predator Task Force" .
 
-<https://w3id.org/caselinker/resource/case/de_ag_2012_012/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/agency/delaware-state-police-department> a ns1:OrganizationLikeEntity,
+        ns6:StateAgency ;
+    rdfs:label "Delaware State Police Department" ;
+    ns2:name "Delaware State Police Department" .
 
-<https://w3id.org/caselinker/resource/case/de_ag_2012_012/role/offender/1> a ns3:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns3:hasRoleBeginPoint "2012-02-16T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/de_ag_2012_012/event/csam>,
-        <https://w3id.org/caselinker/resource/case/de_ag_2012_012/event/online-only> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/de_ag_2012_012/person/offender/1> .
-
-<https://w3id.org/caselinker/resource/case/de_ag_2012_012/phase/charged> a ns3:LegalProcessPhase,
-        ns2:Phase ;
-    ns3:hasPhaseBeginPoint "2012-02-16T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/delaware> a ns2:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Delaware" ;
-    ns1:name "Delaware" .
-
-<https://w3id.org/caselinker/resource/location/newark> a ns2:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Newark" ;
-    ns1:name "Newark" .
-
-<https://w3id.org/caselinker/resource/location/riggs> a ns2:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Riggs’" ;
-    ns1:name "Riggs’" .
-
-<https://w3id.org/caselinker/resource/location/wilmington> a ns2:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Wilmington" ;
-    ns1:name "Wilmington" .
+<https://w3id.org/caselinker/resource/case/de_ag_2012_012/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
+    rdfs:label "dealing child pornography" .
 
 <https://w3id.org/caselinker/resource/case/de_ag_2012_012/event/csam> a ns3:CSAMIncident,
-        ns2:Event ;
-    ns3:producesArtifact <https://w3id.org/caselinker/resource/case/de_ag_2012_012/admission/1> ;
-    ns1:hasFacet <https://w3id.org/caselinker/resource/case/de_ag_2012_012/facet/csam> .
+        ns1:Event ;
+    rdfs:label "CSAMIncident · event/csam" .
 
 <https://w3id.org/caselinker/resource/case/de_ag_2012_012/event/online-only> a ns3:ChildSexualAbuseEvent,
-        ns2:Event ;
-    ns3:producesArtifact <https://w3id.org/caselinker/resource/case/de_ag_2012_012/admission/1> .
+        ns1:Event ;
+    rdfs:label "Child Sexual Abuse Event · event/online-only" .
+
+<https://w3id.org/caselinker/resource/case/de_ag_2012_012/legal-proceeding> a ns1:Event,
+        ns1:LegalEvent,
+        ns4:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns4:chargeCount "26"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/de_ag_2012_012/charge/1> .
+
+<https://w3id.org/caselinker/resource/case/de_ag_2012_012/location/riggs> a ns1:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Riggs’" ;
+    ns2:name "Riggs’" .
+
+<https://w3id.org/caselinker/resource/case/de_ag_2012_012/operation> a ns1:Event,
+        <https://cacontology.projectvic.org/undercover#UndercoverOperation> ;
+    rdfs:label "Undercover Operation · operation" .
+
+<https://w3id.org/caselinker/resource/case/de_ag_2012_012/role/offender/1> a ns4:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" .
+
+<https://w3id.org/caselinker/resource/location/delaware-de> a ns1:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Delaware" ;
+    dcterms:identifier "fips:10" ;
+    ns2:name "Delaware" .
+
+<https://w3id.org/caselinker/resource/location/newark-city-de> a ns1:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Newark city" ;
+    dcterms:identifier "fips:1050670" ;
+    skos:altLabel "Newark" ;
+    ns2:name "Newark city" .
+
+<https://w3id.org/caselinker/resource/location/wilmington-city-de> a ns1:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Wilmington city" ;
+    dcterms:identifier "fips:1077580" ;
+    skos:altLabel "Wilmington" ;
+    ns2:name "Wilmington city" .
 
 <https://w3id.org/caselinker/resource/case/de_ag_2012_012/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "used the internet to look for child pornography" ;
     dcterms:source <https://news.delaware.gov/2012/02/15/child-predator-task-force-arrests-newark-man-on-child-pornography-charges> ;
-    ns5:admissionContext "ximately 10-year-old girl with her genital area exposed. In an interview with detectives, Riggs admitted that he used the internet to loo..." ;
-    ns5:admissionFrame "admitted_paraphrase" ;
-    ns5:admissionTheme "harm_conduct",
-        "tech_use" ;
-    ns5:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/de_ag_2012_012/role/offender/1> ;
-    ns5:evidenceTier "press_release_stated" ;
-    ns5:quoteType "paraphrase" ;
-    ns1:description "used the internet to look for child pornography" .
+    ns2:description "used the internet to look for child pornography" .
 
+<https://w3id.org/caselinker/resource/case/de_ag_2012_012/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/de_ag_2012_012> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/de_ag_2012_012/provenance> .
+<https://w3id.org/caselinker/resource/case/de_ag_2012_012/phase/charged> a ns3:LegalProcessPhase,
+        ns1:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
+

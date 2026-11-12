@@ -1,80 +1,91 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/core#> .
-@prefix ns3: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns6: <https://cacontology.projectvic.org/detection#> .
+@prefix ns1: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/core#> .
+@prefix ns4: <https://cacontology.projectvic.org#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_033> a ns1:CACInvestigation,
-        ns2:EnduringEntity ;
-    dcterms:created "2026-10-17 21:51:19.961498" ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_033> a ns4:CACInvestigation,
+        ns3:EnduringEntity ;
+    rdfs:label "Case ncmec_2022_033" ;
+    dcterms:created "2026-11-10T09:17:16.861423"^^xsd:dateTime ;
+    dcterms:date "2022-01-25"^^xsd:date ;
     dcterms:identifier "ncmec_2022_033" ;
-    dcterms:modified "2026-10-17 21:51:19.961498" ;
+    dcterms:modified "2026-11-10T09:17:16.861423"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2022_033/provenance> ;
     dcterms:source <https://www.abc12.com/news/crime/otisville-man-facing-8-charges-for-allegedly-looking-at-child-pornography-online/article_bd57e7ca-7de0-11ec-8698-ffd29f48ab40.html>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/genesee-county>,
-        <https://w3id.org/caselinker/resource/location/mich>,
-        <https://w3id.org/caselinker/resource/location/otisville> ;
-    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_033/phase/arrested> ;
-    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_033/phase/arrested> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_033/event/online-only>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2022_033/location/genesee-county>,
+        <https://w3id.org/caselinker/resource/location/michigan-mi>,
+        <https://w3id.org/caselinker/resource/location/otisville-village-mi> ;
+    ns4:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_033/phase/arrested> ;
+    ns4:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_033/phase/arrested> ;
+    ns4:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_033/event/online-only>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_033/event/possession> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/michigan-state-police-department> ;
-    ns3:mentionsLocation <https://w3id.org/caselinker/resource/location/genesee-county>,
-        <https://w3id.org/caselinker/resource/location/mich>,
-        <https://w3id.org/caselinker/resource/location/otisville> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/michigan-state-police-department> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_033/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2022-01-25T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_033/event/online-only>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_033/event/possession> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_033/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_033/assessment/semantic/possession-csam> a ns3:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns4:CSAMIncident ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2022_033/narrative> ;
+    ns3:hasConfidence 0.52 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_033/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2022-01-25T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_033/event/online-only>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_033/event/possession> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_033/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_033/person/offender/1/age> a ns1:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns1:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2022_033/person/offender/1> ;
+    ns1:concernsAgeQuality ns1:Age ;
+    ns1:hasAgeInYears 19.0 .
 
-<https://w3id.org/caselinker/resource/agency/michigan-state-police-department> a ns4:StateAgency .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_033/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2022_033/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2022_033/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_033/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/agency/michigan-state-police-department> a ns3:OrganizationLikeEntity,
+        ns5:StateAgency ;
+    rdfs:label "Michigan State Police Department" ;
+    ns2:name "Michigan State Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_033/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns6:ageEstimate 19 .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_033/event/online-only> a ns4:ChildSexualAbuseEvent,
+        ns3:Event ;
+    rdfs:label "Child Sexual Abuse Event · event/online-only" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_033/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_033/event/possession> a ns4:CSAMIncident,
+        ns3:Event ;
+    rdfs:label "CSAMIncident · event/possession" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_033/phase/arrested> a ns1:InitialPhase,
-        ns2:Phase ;
-    ns1:hasPhaseBeginPoint "2022-01-25T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/genesee-county> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2022_033/location/genesee-county> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Genesee County" ;
-    ns5:name "Genesee County" .
+    ns2:name "Genesee County" .
 
-<https://w3id.org/caselinker/resource/location/mich> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2022_033/role/offender/1> a <https://cacontology.projectvic.org/legal-outcomes#DefendantRole> ;
+    rdfs:label "Defendant Role · role/offender/1" .
+
+<https://w3id.org/caselinker/resource/location/michigan-mi> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Mich." ;
-    ns5:name "Mich." .
+    rdfs:label "Michigan" ;
+    dcterms:identifier "fips:26" ;
+    skos:altLabel "Mich." ;
+    ns2:name "Michigan" .
 
-<https://w3id.org/caselinker/resource/location/otisville> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/otisville-village-mi> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Otisville" ;
-    ns5:name "Otisville" .
+    rdfs:label "Otisville village" ;
+    dcterms:identifier "fips:2661600" ;
+    skos:altLabel "Otisville" ;
+    ns2:name "Otisville village" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_033/event/online-only> a ns1:ChildSexualAbuseEvent,
-        ns2:Event .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_033/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_033/event/possession> a ns1:CSAMIncident,
-        ns2:Event ;
-    ns5:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2022_033/facet/possession> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_033/phase/arrested> a ns4:InitialPhase,
+        ns3:Phase ;
+    rdfs:label "Initial Phase · phase/arrested" .
 
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_033> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2022_033/provenance> .

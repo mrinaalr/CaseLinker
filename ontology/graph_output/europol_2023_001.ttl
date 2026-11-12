@@ -1,61 +1,53 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns1: <https://cacontology.projectvic.org/core#> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns4: <https://cacontology.projectvic.org/core#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/europol_2023_001> a ns2:CACInvestigation,
-        ns4:EnduringEntity ;
-    dcterms:created "2026-10-18 04:25:58.603679" ;
+        ns1:EnduringEntity ;
+    rdfs:label "Case europol_2023_001" ;
+    dcterms:created "2026-11-11T14:12:12.609591"^^xsd:dateTime ;
+    dcterms:date "2023-03-17"^^xsd:date ;
     dcterms:identifier "europol_2023_001" ;
-    dcterms:modified "2026-10-18 04:25:58.603679" ;
+    dcterms:modified "2026-11-11T14:12:12.609591"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/europol_2023_001/provenance> ;
     dcterms:source <https://www.europol.europa.eu/media-press/newsroom/news/49-arrests-in-poland-in-operation-targeting-child-sexual-exploitation-online>,
         "EUROPOL" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/poland> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/europol_2023_001/location/poland> ;
     ns2:hasStep <https://w3id.org/caselinker/resource/case/europol_2023_001/event/distribution>,
         <https://w3id.org/caselinker/resource/case/europol_2023_001/event/hands-on>,
-        <https://w3id.org/caselinker/resource/case/europol_2023_001/event/possession> ;
-    ns3:mentionsLocation <https://w3id.org/caselinker/resource/location/poland> .
+        <https://w3id.org/caselinker/resource/case/europol_2023_001/event/possession> .
 
-<https://w3id.org/caselinker/resource/case/europol_2023_001/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2023-03-17T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/europol_2023_001/event/hands-on>,
-        <https://w3id.org/caselinker/resource/case/europol_2023_001/event/possession> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/europol_2023_001/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/europol_2023_001/assessment/semantic/exploitive-positions> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · exploitive_positions" ;
+    dcterms:subject <https://cacontology.projectvic.org/custodial#PositionOfTrust> ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/europol_2023_001/narrative> ;
+    ns1:hasConfidence 0.4684 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/europol_2023_001/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2023-03-17T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/europol_2023_001/event/hands-on>,
-        <https://w3id.org/caselinker/resource/case/europol_2023_001/event/possession> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/europol_2023_001/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/europol_2023_001/assessment/semantic/possession-csam> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns2:CSAMIncident ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/europol_2023_001/narrative> ;
+    ns1:hasConfidence 0.5076 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/europol_2023_001/event/distribution> a ns4:Event,
+<https://w3id.org/caselinker/resource/case/europol_2023_001/event/distribution> a ns1:Event,
         <https://cacontology.projectvic.org/legal-outcomes#CSAM_Distribution> ;
-    ns2:severityLevel 3 .
-
-<https://w3id.org/caselinker/resource/case/europol_2023_001/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/europol_2023_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/europol_2023_001/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/location/poland> a ns4:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Poland" ;
-    ns1:name "Poland" .
+    rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/europol_2023_001/event/hands-on> a ns2:ChildSexualAbuseEvent,
-        ns4:Event ;
-    ns2:severityLevel 3 .
+        ns1:Event ;
+    rdfs:label "Child Sexual Abuse Event · event/hands-on" .
 
 <https://w3id.org/caselinker/resource/case/europol_2023_001/event/possession> a ns2:CSAMIncident,
-        ns4:Event ;
-    ns2:severityLevel 3 ;
-    ns1:hasFacet <https://w3id.org/caselinker/resource/case/europol_2023_001/facet/possession> .
+        ns1:Event ;
+    rdfs:label "CSAMIncident · event/possession" .
 
+<https://w3id.org/caselinker/resource/case/europol_2023_001/location/poland> a ns1:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Poland" ;
+    ns3:name "Poland" .
 
-<https://w3id.org/caselinker/resource/case/europol_2023_001> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/europol_2023_001/provenance> .

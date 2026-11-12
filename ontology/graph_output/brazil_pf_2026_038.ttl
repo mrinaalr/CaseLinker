@@ -1,69 +1,61 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org/core#> .
 @prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns4: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/brazil_pf_2026_038> a ns1:CACInvestigation,
+<https://w3id.org/caselinker/resource/case/brazil_pf_2026_038> a ns4:CACInvestigation,
         ns2:EnduringEntity ;
-    dcterms:created "2026-10-18 00:50:59.048119" ;
+    rdfs:label "Case brazil_pf_2026_038" ;
+    dcterms:created "2026-11-10T17:57:38.568444"^^xsd:dateTime ;
+    dcterms:date "2026-01"^^xsd:gYearMonth ;
     dcterms:identifier "brazil_pf_2026_038" ;
-    dcterms:modified "2026-10-18 00:50:59.048119" ;
+    dcterms:modified "2026-11-10T17:57:38.568444"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/brazil_pf_2026_038/provenance> ;
     dcterms:source <https://www.gov.br/pf/pt-br/assuntos/noticias/2026/08/pf-combate-crimes-de-abuso-sexual-infantojuvenil-em-alagoas>,
         "BRAZIL PF" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/alagoas>,
-        <https://w3id.org/caselinker/resource/location/maceió> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/brazil_pf_2026_038/event/distribution>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/brazil_pf_2026_038/location/alagoas>,
+        <https://w3id.org/caselinker/resource/case/brazil_pf_2026_038/location/maceió> ;
+    ns4:hasStep <https://w3id.org/caselinker/resource/case/brazil_pf_2026_038/event/distribution>,
         <https://w3id.org/caselinker/resource/case/brazil_pf_2026_038/event/possession> ;
-    ns1:investigationStatus "unknown" ;
     ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/federal-police-department>,
-        <https://w3id.org/caselinker/resource/agency/social-communication-of-the-federal-police-department> ;
-    ns4:mentionsLocation <https://w3id.org/caselinker/resource/location/alagoas>,
-        <https://w3id.org/caselinker/resource/location/maceió> .
+        <https://w3id.org/caselinker/resource/agency/social-communication-of-the-federal-police-department> .
 
-<https://w3id.org/caselinker/resource/case/brazil_pf_2026_038/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/brazil_pf_2026_038/event/possession> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/brazil_pf_2026_038/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/brazil_pf_2026_038/assessment/semantic/possession-csam> a ns2:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns4:CSAMIncident ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/brazil_pf_2026_038/narrative> ;
+    ns2:hasConfidence 0.5173 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/brazil_pf_2026_038/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/brazil_pf_2026_038/event/possession> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/brazil_pf_2026_038/person/victim/1> .
+<https://w3id.org/caselinker/resource/agency/federal-police-department> a ns2:OrganizationLikeEntity,
+        ns3:LocalAgency ;
+    rdfs:label "Federal Police Department" ;
+    ns1:name "Federal Police Department" .
 
-<https://w3id.org/caselinker/resource/agency/federal-police-department> a ns3:LocalAgency .
-
-<https://w3id.org/caselinker/resource/agency/social-communication-of-the-federal-police-department> a ns3:LocalAgency .
+<https://w3id.org/caselinker/resource/agency/social-communication-of-the-federal-police-department> a ns2:OrganizationLikeEntity,
+        ns3:LocalAgency ;
+    rdfs:label "Social Communication of the Federal Police Department" ;
+    ns1:name "Social Communication of the Federal Police Department" .
 
 <https://w3id.org/caselinker/resource/case/brazil_pf_2026_038/event/distribution> a ns2:Event,
         <https://cacontology.projectvic.org/legal-outcomes#CSAM_Distribution> ;
-    ns1:severityLevel 3 .
+    rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/brazil_pf_2026_038/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/brazil_pf_2026_038/event/possession> a ns4:CSAMIncident,
+        ns2:Event ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns4:severityLevel 3 .
 
-<https://w3id.org/caselinker/resource/case/brazil_pf_2026_038/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/brazil_pf_2026_038/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/location/alagoas> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/brazil_pf_2026_038/location/alagoas> a ns2:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Alagoas" ;
-    ns5:name "Alagoas" .
+    ns1:name "Alagoas" .
 
-<https://w3id.org/caselinker/resource/location/maceió> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/brazil_pf_2026_038/location/maceió> a ns2:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Maceió" ;
-    ns5:name "Maceió" .
+    ns1:name "Maceió" .
 
-<https://w3id.org/caselinker/resource/case/brazil_pf_2026_038/event/possession> a ns1:CSAMIncident,
-        ns2:Event ;
-    ns1:severityLevel 3 ;
-    ns5:hasFacet <https://w3id.org/caselinker/resource/case/brazil_pf_2026_038/facet/possession> .
-
-
-<https://w3id.org/caselinker/resource/case/brazil_pf_2026_038> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/brazil_pf_2026_038/provenance> .

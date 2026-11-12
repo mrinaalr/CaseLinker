@@ -1,110 +1,117 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/core#> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns1: <https://cacontology.projectvic.org/core#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org#> .
 @prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns6: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns7: <https://cacontology.projectvic.org/us/ncmec#> .
+@prefix ns5: <https://cacontology.projectvic.org/hotlines#> .
+@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_349/admission/1/extraction-confidence> a ns2:AssessmentResult ;
-    ns2:assesses <https://w3id.org/caselinker/resource/case/ncmec_2022_349/admission/1> ;
-    ns2:generatedBy <https://w3id.org/caselinker/resource/case/ncmec_2022_349> ;
-    ns2:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_349/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2022-01-12T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_349/event/possession> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_349/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/agency/nappanee-police-department> a ns2:OrganizationLikeEntity,
-        ns4:LocalAgency ;
-    rdfs:label "Nappanee Police Department" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_349> a ns1:CACInvestigation,
-        ns2:EnduringEntity ;
-    dcterms:created "2026-10-17 21:51:23.714874" ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_349> a ns3:CACInvestigation,
+        ns1:EnduringEntity ;
+    rdfs:label "Case ncmec_2022_349" ;
+    dcterms:created "2026-11-10T09:19:02.432317"^^xsd:dateTime ;
+    dcterms:date "2022-01-12"^^xsd:date ;
     dcterms:identifier "ncmec_2022_349" ;
-    dcterms:modified "2026-10-17 21:51:23.714874" ;
+    dcterms:modified "2026-11-10T09:19:02.432317"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2022_349/provenance> ;
     dcterms:source <http://www.inkfreenews.com/2022/01/12/nappanee-teen-arrested-for-possession-of-child-porn/>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/196-meadows>,
-        <https://w3id.org/caselinker/resource/location/nappanee> ;
-    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_349/phase/charged> ;
-    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_349/phase/charged> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_349/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_349/cybertip>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_349/event/possession>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2022_349/location/196-meadows>,
+        <https://w3id.org/caselinker/resource/location/nappanee-city> ;
+    ns3:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_349/phase/charged> ;
+    ns3:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_349/phase/charged> ;
+    ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_349/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_349/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_349/operation> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/nappanee-police-department>,
-        <https://w3id.org/caselinker/resource/agency/ncmec> ;
-    ns6:mentionsLocation <https://w3id.org/caselinker/resource/location/196-meadows>,
-        <https://w3id.org/caselinker/resource/location/nappanee> .
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2022_349/agency/nappanee-police-department> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2022_349/admission/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2022_349/cybertip> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_349/charge/1> a ns3:CSAM_Possession,
-        ns3:CriminalCharge ;
-    rdfs:label "child pornography" ;
-    ns3:indictmentCounts 2 .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_349/admission/1/extraction-confidence> a ns1:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/ncmec_2022_349/admission/1> ;
+    ns1:hasConfidence 0.65 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_349/cybertip> a ns7:NCMECCybertipReport ;
-    ns7:supportedBy <https://w3id.org/caselinker/resource/agency/ncmec> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_349/assessment/semantic/possession-csam> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns3:CSAMIncident ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/ncmec_2022_349/narrative> ;
+    ns1:hasConfidence 0.5088 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_349/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_349/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2022_349/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2022_349/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_349/legal-proceeding> a ns2:Event,
-        ns2:LegalEvent,
-        ns3:LegalProceeding ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_349/charge/1> ;
-    ns3:hasProceedingBeginPoint "2022-01-12T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_349/agency/nappanee-police-department> a ns1:OrganizationLikeEntity,
+        ns4:LocalAgency ;
+    rdfs:label "Nappanee Police Department" ;
+    ns2:name "Nappanee Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_349/operation> a ns2:Event,
-        <https://cacontology.projectvic.org/taskforce#ReactiveOperation> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_349/charge/1> a ns6:CSAM_Possession,
+        ns6:CriminalCharge ;
+    rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_349/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_349/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
+    rdfs:label "CyberTipline report" ;
+    ns5:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns2:name "observe" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_349/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_349/legal-proceeding> a ns1:Event,
+        ns1:LegalEvent,
+        ns6:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns6:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns6:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_349/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_349/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2022-01-12T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_349/event/possession> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_349/person/offender/1> .
-
-<https://w3id.org/caselinker/resource/agency/ncmec> a ns4:FederalAgency .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_349/phase/charged> a ns1:LegalProcessPhase,
-        ns2:Phase ;
-    ns1:hasPhaseBeginPoint "2022-01-12T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/196-meadows> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2022_349/location/196-meadows> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "196 Meadows" ;
-    ns5:name "196 Meadows" .
+    ns2:name "196 Meadows" .
 
-<https://w3id.org/caselinker/resource/location/nappanee> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2022_349/operation> a ns1:Event,
+        <https://cacontology.projectvic.org/taskforce#ReactiveOperation> ;
+    rdfs:label "Reactive Operation · operation" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_349/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_349/role/offender/1> a ns6:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_349/event/possession> .
+
+<https://w3id.org/caselinker/resource/location/nappanee-city> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Nappanee" ;
-    ns5:name "Nappanee" .
+    rdfs:label "Nappanee city" ;
+    dcterms:identifier "fips:1852020" ;
+    skos:altLabel "Nappanee" ;
+    ns2:name "Nappanee city" .
+
+<https://w3id.org/caselinker/resource/agency/ncmec> a ns1:OrganizationLikeEntity,
+        ns5:HotlineOrganization,
+        ns4:FederalAgency ;
+    rdfs:label "National Center for Missing and Exploited Children" ;
+    skos:altLabel "NCMEC" ;
+    ns2:name "National Center for Missing and Exploited Children" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_349/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "possessing videos and photographs of children under the age of 18" ;
     dcterms:source <http://www.inkfreenews.com/2022/01/12/nappanee-teen-arrested-for-possession-of-child-porn/> ;
-    ns6:admissionContext "arking lot and Owens agreed to speak with the officer at the Nappanee Police Department. During the interview, Owens admitted to possessi..." ;
-    ns6:admissionFrame "admitted_to" ;
-    ns6:admissionTheme "harm_conduct" ;
-    ns6:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/ncmec_2022_349/role/offender/1> ;
-    ns6:evidenceTier "press_release_stated" ;
-    ns6:quoteType "paraphrase" ;
-    ns5:description "possessing videos and photographs of children under the age of 18" .
+    ns2:description "possessing videos and photographs of children under the age of 18" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_349/event/possession> a ns1:CSAMIncident,
-        ns2:Event ;
-    ns1:producesArtifact <https://w3id.org/caselinker/resource/case/ncmec_2022_349/admission/1> ;
-    ns5:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2022_349/facet/possession> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_349/event/possession> a ns3:CSAMIncident,
+        ns1:Event ;
+    rdfs:label "CSAMIncident · event/possession" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2022_349/phase/charged> a ns3:LegalProcessPhase,
+        ns1:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_349> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2022_349/provenance> .

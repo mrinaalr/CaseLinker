@@ -1,189 +1,164 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns2: <https://cacontology.projectvic.org/core#> .
-@prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns1: <https://cacontology.projectvic.org/core#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns4: <https://cacontology.projectvic.org#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns7: <https://cacontology.projectvic.org/detection#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/doj_archives_2007_015/admission/1/extraction-confidence> a ns2:AssessmentResult ;
-    ns2:assesses <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/admission/1> ;
-    ns2:generatedBy <https://w3id.org/caselinker/resource/case/doj_archives_2007_015> ;
-    ns2:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/doj_archives_2007_015/admission/2/extraction-confidence> a ns2:AssessmentResult ;
-    ns2:assesses <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/admission/2> ;
-    ns2:generatedBy <https://w3id.org/caselinker/resource/case/doj_archives_2007_015> ;
-    ns2:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/doj_archives_2007_015/role/victim/1> a ns3:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns3:hasRoleBeginPoint "2007-08-23T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/event/hands-on>,
-        <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/event/possession>,
-        <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/offense-event/charge-2>,
-        <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/offense-event/charge-3> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/agency/ceos> a ns6:FederalAgency .
-
-<https://w3id.org/caselinker/resource/agency/ice> a ns6:FederalAgency .
-
-<https://w3id.org/caselinker/resource/agency/usao> a ns6:FederalAgency .
-
-<https://w3id.org/caselinker/resource/case/doj_archives_2007_015/charge/1> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
-    rdfs:label "child pornography" .
-
-<https://w3id.org/caselinker/resource/case/doj_archives_2007_015/charge/2> a ns4:CriminalCharge ;
-    rdfs:label "child molestation" ;
-    rdfs:seeAlso <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/offense-event/charge-2> ;
-    ns1:chargeCluster "child_molestation" ;
-    ns1:chargeOffenseEvent <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/offense-event/charge-2> .
-
-<https://w3id.org/caselinker/resource/case/doj_archives_2007_015/charge/3> a ns4:CriminalCharge ;
-    rdfs:label "child exploitation" ;
-    rdfs:seeAlso <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/offense-event/charge-3> ;
-    ns1:chargeCluster "child_exploitation" ;
-    ns1:chargeOffenseEvent <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/offense-event/charge-3> .
-
-<https://w3id.org/caselinker/resource/case/doj_archives_2007_015/event/project-safe-childhood> a ns2:Event,
-        ns6:ProjectSafeChildhoodOperation ;
-    ns3:severityLevel 3 .
-
-<https://w3id.org/caselinker/resource/case/doj_archives_2007_015/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/doj_archives_2007_015/legal-proceeding> a ns2:Event,
-        ns2:LegalEvent,
-        ns4:LegalProceeding ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/charge/1>,
-        <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/charge/2>,
-        <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/charge/3> ;
-    ns4:hasProceedingBeginPoint "2007-08-23T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/doj_archives_2007_015/legal-step/convicted> a ns2:Event,
-        ns2:LegalEvent,
-        ns4:LegalProceeding,
-        ns4:SentencingHearing ;
-    ns4:hasProceedingBeginPoint "2007-08-23T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/doj_archives_2007_015/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns7:ageEstimate 42 .
-
-<https://w3id.org/caselinker/resource/case/doj_archives_2007_015/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/doj_archives_2007_015> a ns3:CACInvestigation,
-        ns2:EnduringEntity ;
-    dcterms:created "2026-10-18 13:17:00.683121" ;
+<https://w3id.org/caselinker/resource/case/doj_archives_2007_015> a ns4:CACInvestigation,
+        ns1:EnduringEntity ;
+    rdfs:label "Case doj_archives_2007_015" ;
+    dcterms:created "2026-11-10T18:24:25.285247"^^xsd:dateTime ;
+    dcterms:date "2007-08-23"^^xsd:date ;
     dcterms:identifier "doj_archives_2007_015" ;
-    dcterms:modified "2026-10-18 13:17:00.683121" ;
+    dcterms:modified "2026-11-10T18:24:25.285247"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/provenance> ;
     dcterms:source <https://www.justice.gov/archive/criminal/ceos/pressreleases/downloads/SDIN_MBARNHORST-PLEA_082307.pdf>,
         "DOJ ARCHIVES" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/indiana>,
-        <https://w3id.org/caselinker/resource/location/indianapolis>,
-        <https://w3id.org/caselinker/resource/location/the-southern-district>,
-        <https://w3id.org/caselinker/resource/location/washington> ;
-    ns3:currentPhase <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/phase/convicted> ;
-    ns3:hasPhase <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/phase/convicted> ;
-    ns3:hasStep <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/admission/1>,
-        <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/admission/2>,
-        <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/event/hands-on>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/location/indianapolis>,
+        <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/location/southern-district-of-indiana>,
+        <https://w3id.org/caselinker/resource/location/indiana-in>,
+        <https://w3id.org/caselinker/resource/location/washington-wa> ;
+    ns4:currentPhase <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/phase/pleaded-guilty> ;
+    ns4:hasPhase <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/phase/pleaded-guilty> ;
+    ns4:hasStep <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/event/hands-on>,
         <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/event/possession>,
         <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/event/project-safe-childhood>,
         <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/legal-proceeding>,
-        <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/legal-step/convicted>,
-        <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/offense-event/charge-2>,
-        <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/offense-event/charge-3> ;
-    ns3:investigationStatus "unknown" ;
+        <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/legal-step/pleaded-guilty> ;
     ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/ceos>,
         <https://w3id.org/caselinker/resource/agency/ice>,
+        <https://w3id.org/caselinker/resource/agency/us-bureau-of-immigration-and-customs-enforcement>,
         <https://w3id.org/caselinker/resource/agency/usao> ;
-    ns1:mentionsLocation <https://w3id.org/caselinker/resource/location/indiana>,
-        <https://w3id.org/caselinker/resource/location/indianapolis>,
-        <https://w3id.org/caselinker/resource/location/the-southern-district>,
-        <https://w3id.org/caselinker/resource/location/washington> .
+    ns2:object <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/admission/1>,
+        <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/admission/2> .
 
-<https://w3id.org/caselinker/resource/case/doj_archives_2007_015/phase/convicted> a ns2:Phase,
-        ns4:SentencingPhase ;
-    ns3:hasPhaseBeginPoint "2007-08-23T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/doj_archives_2007_015/admission/1/extraction-confidence> a ns1:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/admission/1> ;
+    ns1:hasConfidence 0.65 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/case/doj_archives_2007_015/role/offender/1> a ns3:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns3:hasRoleBeginPoint "2007-08-23T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/event/hands-on>,
-        <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/event/possession>,
-        <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/offense-event/charge-2>,
-        <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/offense-event/charge-3> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/doj_archives_2007_015/admission/2/extraction-confidence> a ns1:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/2/extraction-confidence" ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/admission/2> ;
+    ns1:hasConfidence 0.65 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/location/indiana> a ns2:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Indiana" ;
-    ns5:name "Indiana" .
+<https://w3id.org/caselinker/resource/case/doj_archives_2007_015/person/offender/1/age> a ns3:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns3:ageSubject <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/person/offender/1> ;
+    ns3:concernsAgeQuality ns3:Age ;
+    ns3:hasAgeInYears 42.0 .
 
-<https://w3id.org/caselinker/resource/location/indianapolis> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/doj_archives_2007_015/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/agency/ceos> a ns1:OrganizationLikeEntity,
+        ns6:FederalAgency ;
+    rdfs:label "CEOS" ;
+    ns2:name "CEOS" .
+
+<https://w3id.org/caselinker/resource/agency/ice> a ns1:OrganizationLikeEntity,
+        ns6:FederalAgency ;
+    rdfs:label "ICE" ;
+    ns2:name "ICE" .
+
+<https://w3id.org/caselinker/resource/agency/us-bureau-of-immigration-and-customs-enforcement> a ns1:OrganizationLikeEntity,
+        ns6:FederalAgency ;
+    rdfs:label "U.S. Bureau of Immigration and Customs Enforcement" ;
+    ns2:name "U.S. Bureau of Immigration and Customs Enforcement" .
+
+<https://w3id.org/caselinker/resource/agency/usao> a ns1:OrganizationLikeEntity,
+        ns6:FederalAgency ;
+    rdfs:label "U.S. Attorney's Office" ;
+    ns2:name "U.S. Attorney's Office" .
+
+<https://w3id.org/caselinker/resource/case/doj_archives_2007_015/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
+    rdfs:label "child pornography" .
+
+<https://w3id.org/caselinker/resource/case/doj_archives_2007_015/charge/2> a ns5:CriminalCharge ;
+    rdfs:label "child molestation" ;
+    dcterms:subject <https://cacontology.projectvic.org/usa-federal-law#SexualAbuseOfMinor> .
+
+<https://w3id.org/caselinker/resource/case/doj_archives_2007_015/charge/3> a ns5:CriminalCharge ;
+    rdfs:label "child exploitation" ;
+    dcterms:subject ns4:ChildSexualAbuseEvent .
+
+<https://w3id.org/caselinker/resource/case/doj_archives_2007_015/event/hands-on> a ns4:ChildSexualAbuseEvent,
+        ns1:Event ;
+    rdfs:label "Child Sexual Abuse Event · event/hands-on" .
+
+<https://w3id.org/caselinker/resource/case/doj_archives_2007_015/event/possession> a ns4:CSAMIncident,
+        ns1:Event ;
+    rdfs:label "CSAMIncident · event/possession" .
+
+<https://w3id.org/caselinker/resource/case/doj_archives_2007_015/event/project-safe-childhood> a ns1:Event,
+        ns6:ProjectSafeChildhoodOperation ;
+    rdfs:label "Project Safe Childhood Operation · event/project-safe-childhood" .
+
+<https://w3id.org/caselinker/resource/case/doj_archives_2007_015/legal-proceeding> a ns1:Event,
+        ns1:LegalEvent,
+        ns5:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns5:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/charge/1>,
+        <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/charge/2>,
+        <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/charge/3> .
+
+<https://w3id.org/caselinker/resource/case/doj_archives_2007_015/legal-step/pleaded-guilty> a ns1:Event,
+        ns1:LegalEvent,
+        ns5:LegalProceeding,
+        ns5:PleaBargaining ;
+    rdfs:label "Plea Bargaining · legal-step/pleaded-guilty" .
+
+<https://w3id.org/caselinker/resource/case/doj_archives_2007_015/location/indianapolis> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Indianapolis" ;
-    ns5:name "Indianapolis" .
+    ns2:name "Indianapolis" .
 
-<https://w3id.org/caselinker/resource/location/the-southern-district> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/doj_archives_2007_015/location/southern-district-of-indiana> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "the Southern District" ;
-    ns5:name "the Southern District" .
+    rdfs:label "Southern District of Indiana" ;
+    ns2:name "Southern District of Indiana" .
 
-<https://w3id.org/caselinker/resource/location/washington> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/doj_archives_2007_015/role/offender/1> a ns4:OffenderRole ;
+    rdfs:label "Offender Role · role/offender/1" .
+
+<https://w3id.org/caselinker/resource/location/indiana-in> a ns1:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Indiana" ;
+    dcterms:identifier "fips:18" ;
+    ns2:name "Indiana" .
+
+<https://w3id.org/caselinker/resource/location/washington-wa> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Washington" ;
-    ns5:name "Washington" .
-
-<https://w3id.org/caselinker/resource/case/doj_archives_2007_015/event/hands-on> a ns3:ChildSexualAbuseEvent,
-        ns2:Event ;
-    ns3:producesArtifact <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/admission/1>,
-        <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/admission/2> ;
-    ns3:severityLevel 3 .
-
-<https://w3id.org/caselinker/resource/case/doj_archives_2007_015/event/possession> a ns3:CSAMIncident,
-        ns2:Event ;
-    ns3:producesArtifact <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/admission/1>,
-        <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/admission/2> ;
-    ns3:severityLevel 3 ;
-    ns5:hasFacet <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/facet/possession> .
+    dcterms:identifier "fips:53" ;
+    ns2:name "Washington" .
 
 <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "possessed images with photos of children engaged in various sexual acts" ;
     dcterms:source <https://www.justice.gov/archive/criminal/ceos/pressreleases/downloads/SDIN_MBARNHORST-PLEA_082307.pdf> ;
-    ns5:description "possessed images with photos of children engaged in various sexual acts" ;
-    ns1:admissionContext "t Judge Larry J. McKinney at the U.S. District Court in the Southern District of Indiana, Barnhorst admitted that he possessed images wit..." ;
-    ns1:admissionFrame "admitted_paraphrase" ;
-    ns1:admissionTheme "harm_conduct" ;
-    ns1:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/role/offender/1> ;
-    ns1:evidenceTier "press_release_stated" ;
-    ns1:quoteType "paraphrase" .
+    ns2:description "possessed images with photos of children engaged in various sexual acts" .
 
 <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/admission/2> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "to accessing child pornography websites and downloading images of the sexual abuse of children" ;
     dcterms:source <https://www.justice.gov/archive/criminal/ceos/pressreleases/downloads/SDIN_MBARNHORST-PLEA_082307.pdf> ;
-    ns5:description "to accessing child pornography websites and downloading images of the sexual abuse of children" ;
-    ns1:admissionContext "ted downloading three illegal images. A search warrant was executed at his residence, and Barnhorst ultimately confessed to accessing chi..." ;
-    ns1:admissionFrame "confessed_paraphrase" ;
-    ns1:admissionTheme "harm_conduct",
-        "tech_use" ;
-    ns1:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/doj_archives_2007_015/role/offender/1> ;
-    ns1:evidenceTier "press_release_stated" ;
-    ns1:quoteType "paraphrase" .
+    ns2:description "to accessing child pornography websites and downloading images of the sexual abuse of children" .
 
-<https://w3id.org/caselinker/resource/case/doj_archives_2007_015/offense-event/charge-2> a ns3:ChildSexualAbuseEvent,
-        ns2:Event,
-        <https://cacontology.projectvic.org/usa-federal-law#SexualAbuseOfMinor>,
-        <https://ontology.unifiedcyberontology.org/uco/action/Crime> ;
-    rdfs:label "Inferred offense from charge: child molestation" .
+<https://w3id.org/caselinker/resource/case/doj_archives_2007_015/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/doj_archives_2007_015/offense-event/charge-3> a ns3:ChildSexualAbuseEvent,
-        ns2:Event,
-        <https://ontology.unifiedcyberontology.org/uco/action/Crime> ;
-    rdfs:label "Inferred offense from charge: child exploitation" .
+<https://w3id.org/caselinker/resource/case/doj_archives_2007_015/phase/pleaded-guilty> a ns1:Phase,
+        ns5:PreTrialPhase ;
+    rdfs:label "Pre Trial Phase · phase/pleaded-guilty" .
 

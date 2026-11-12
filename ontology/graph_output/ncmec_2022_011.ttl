@@ -1,78 +1,83 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://cacontology.projectvic.org#> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns5: <https://cacontology.projectvic.org/core#> .
-@prefix ns6: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_011> a ns1:CACInvestigation,
+<https://w3id.org/caselinker/resource/case/ncmec_2022_011> a ns2:CACInvestigation,
         ns5:EnduringEntity ;
-    dcterms:created "2026-10-17 21:51:19.697609" ;
+    rdfs:label "Case ncmec_2022_011" ;
+    dcterms:created "2026-11-10T09:17:09.207582"^^xsd:dateTime ;
+    dcterms:date "2022-01"^^xsd:gYearMonth ;
     dcterms:identifier "ncmec_2022_011" ;
-    dcterms:modified "2026-10-17 21:51:19.697609" ;
+    dcterms:modified "2026-11-10T09:17:09.207582"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2022_011/provenance> ;
     dcterms:source <https://krcgtv.com/news/local/rocheport-man-charged-with-possessing-child-pornography>,
         "NCMEC" ;
-    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_011/phase/charged> ;
-    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_011/phase/charged> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_011/cybertip>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_011/event/online-only>,
+    ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_011/phase/charged> ;
+    ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_011/phase/charged> ;
+    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_011/event/online-only>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_011/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_011/legal-proceeding> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/boone-county-sheriffs-office>,
-        <https://w3id.org/caselinker/resource/agency/ncmec> .
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2022_011/agency/boone-county-sheriffs-office> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_011/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_011/event/online-only>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_011/event/possession> ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_011/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_011/assessment/semantic/possession-csam> a ns5:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns2:CSAMIncident ;
+    ns5:assesses <https://w3id.org/caselinker/resource/case/ncmec_2022_011/narrative> ;
+    ns5:hasConfidence 0.5039 ;
+    ns5:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_011/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_011/event/online-only>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_011/event/possession> ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_011/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_011/role/offender/1/has-role> a ns4:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns4:isDirectional true ;
+    ns4:kindOfRelationship "Has_Role" ;
+    ns4:source <https://w3id.org/caselinker/resource/case/ncmec_2022_011/person/offender/1> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/ncmec_2022_011/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/boone-county-sheriffs-office> a ns4:LocalAgency .
+<https://w3id.org/caselinker/resource/agency/ncmec> a ns5:OrganizationLikeEntity,
+        ns3:FederalAgency ;
+    rdfs:label "National Center for Missing and Exploited Children" ;
+    skos:altLabel "NCMEC" ;
+    ns4:name "National Center for Missing and Exploited Children" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_011/charge/1> a ns3:CSAM_Possession,
-        ns3:CriminalCharge ;
-    rdfs:label "possession of child pornography" ;
-    ns3:indictmentCounts 2 .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_011/agency/boone-county-sheriffs-office> a ns5:OrganizationLikeEntity,
+        ns3:LocalAgency ;
+    rdfs:label "Boone County Sheriff's Office" ;
+    ns4:name "Boone County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_011/cybertip> a ns6:NCMECCybertipReport ;
-    ns6:supportedBy <https://w3id.org/caselinker/resource/agency/ncmec> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_011/charge/1> a ns1:CSAM_Possession,
+        ns1:CriminalCharge ;
+    rdfs:label "possession of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_011/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_011/event/online-only> a ns2:ChildSexualAbuseEvent,
+        ns5:Event ;
+    rdfs:label "Child Sexual Abuse Event · event/online-only" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_011/event/possession> a ns2:CSAMIncident,
+        ns5:Event ;
+    rdfs:label "CSAMIncident · event/possession" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_011/legal-proceeding> a ns5:Event,
         ns5:LegalEvent,
-        ns3:LegalProceeding ;
+        ns1:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): Boone County Jail" ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_011/charge/1> ;
-    ns3:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    ns1:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns1:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_011/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_011/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_011/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_011/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_011/role/offender/1> a ns1:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" .
 
-<https://w3id.org/caselinker/resource/agency/ncmec> a ns4:FederalAgency .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_011/phase/charged> a ns1:LegalProcessPhase,
+<https://w3id.org/caselinker/resource/case/ncmec_2022_011/phase/charged> a ns2:LegalProcessPhase,
         ns5:Phase ;
-    ns1:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    rdfs:label "Legal Process Phase · phase/charged" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_011/event/online-only> a ns1:ChildSexualAbuseEvent,
-        ns5:Event .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_011/event/possession> a ns1:CSAMIncident,
-        ns5:Event ;
-    ns2:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2022_011/facet/possession> .
-
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_011> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2022_011/provenance> .

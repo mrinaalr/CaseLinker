@@ -1,84 +1,110 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/core#> .
+@prefix ns1: <https://cacontology.projectvic.org/custodial#> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
 @prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://cacontology.projectvic.org/custodial#> .
-@prefix ns5: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns7: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ohio_ag_2013_012> a ns2:CACInvestigation,
-        ns1:EnduringEntity ;
-    dcterms:created "2026-10-18 06:14:13.979732" ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case ohio_ag_2013_012" ;
+    dcterms:created "2026-11-11T16:37:55.751680"^^xsd:dateTime ;
+    dcterms:date "2013-03"^^xsd:gYearMonth ;
     dcterms:identifier "ohio_ag_2013_012" ;
-    dcterms:modified "2026-10-18 06:14:13.979732" ;
+    dcterms:modified "2026-11-11T16:37:55.751680"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ohio_ag_2013_012/provenance> ;
     dcterms:source <https://www.ohioattorneygeneral.gov/Media/News-Releases/March-2013/Attorney-General-DeWine-s-Crimes-Against-Children>,
         "OHIO AG" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/mount-healthy>,
-        <https://w3id.org/caselinker/resource/location/ohio> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/mount-healthy-city-oh>,
+        <https://w3id.org/caselinker/resource/location/ohio-oh> ;
     ns2:currentPhase <https://w3id.org/caselinker/resource/case/ohio_ag_2013_012/phase/arrested> ;
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/ohio_ag_2013_012/phase/arrested> ;
     ns2:hasStep <https://w3id.org/caselinker/resource/case/ohio_ag_2013_012/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/ohio_ag_2013_012/legal-proceeding> ;
-    ns2:investigationStatus "unknown" ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/attorney-generals-bureau-of-criminal-investigation>,
-        <https://w3id.org/caselinker/resource/agency/attorney-generals-office>,
-        <https://w3id.org/caselinker/resource/agency/mount-healthy-police-department> ;
-    ns5:mentionsLocation <https://w3id.org/caselinker/resource/location/mount-healthy>,
-        <https://w3id.org/caselinker/resource/location/ohio> .
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/attorney-generals-bureau-of-criminal-investigation-oh-unverified>,
+        <https://w3id.org/caselinker/resource/agency/attorney-generals-office-oh-unverified>,
+        <https://w3id.org/caselinker/resource/agency/mount-healthy-police-department-oh> .
 
-<https://w3id.org/caselinker/resource/agency/attorney-generals-bureau-of-criminal-investigation> a ns6:StateAgency .
+<https://w3id.org/caselinker/resource/case/ohio_ag_2013_012/role/offender/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ohio_ag_2013_012/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ohio_ag_2013_012/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/attorney-generals-office> a ns6:StateAgency .
+<https://w3id.org/caselinker/resource/case/ohio_ag_2013_012/role/victim/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/victim/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ohio_ag_2013_012/person/victim/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ohio_ag_2013_012/role/victim/1> .
 
-<https://w3id.org/caselinker/resource/agency/mount-healthy-police-department> a ns1:OrganizationLikeEntity,
-        ns6:LocalAgency ;
-    rdfs:label "Mount Healthy Police Department" .
+<https://w3id.org/caselinker/resource/agency/attorney-generals-bureau-of-criminal-investigation-oh-unverified> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns4:StateAgency ;
+    rdfs:label "Attorney General's Bureau of Criminal Investigation" ;
+    ns3:name "Attorney General's Bureau of Criminal Investigation" .
 
-<https://w3id.org/caselinker/resource/case/ohio_ag_2013_012/event/trust-violation> a ns4:CustodialAbuse,
-        ns4:TrustViolation ;
-    ns4:violatesRelationship <https://w3id.org/caselinker/resource/case/ohio_ag_2013_012/relationship/mother> .
+<https://w3id.org/caselinker/resource/agency/attorney-generals-office-oh-unverified> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns4:StateAgency ;
+    rdfs:label "Attorney General's Office" ;
+    ns3:name "Attorney General's Office" .
 
-<https://w3id.org/caselinker/resource/case/ohio_ag_2013_012/legal-proceeding> a ns1:Event,
-        ns1:LegalEvent,
-        ns7:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): incarcerated at the Hamilton County Jail" ;
-    ns7:hasProceedingBeginPoint "2013-03-01T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/agency/mount-healthy-police-department-oh> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns4:LocalAgency ;
+    rdfs:label "Mount Healthy Police Department" ;
+    dcterms:identifier "ori:OH0312400" ;
+    ns3:name "Mount Healthy Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ohio_ag_2013_012/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/ohio_ag_2013_012/event/trust-violation> a ns1:CustodialAbuse,
+        ns1:TrustViolation ;
+    rdfs:label "Custodial Abuse · event/trust-violation" ;
+    ns1:perpetratedBy <https://w3id.org/caselinker/resource/case/ohio_ag_2013_012/role/offender/1> ;
+    ns1:violatesRelationship <https://w3id.org/caselinker/resource/case/ohio_ag_2013_012/relationship/mother> .
 
-<https://w3id.org/caselinker/resource/case/ohio_ag_2013_012/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/ohio_ag_2013_012/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        <https://cacontology.projectvic.org/legal-outcomes#LegalProceeding> ;
+    rdfs:label "Event · legal-proceeding" ;
+    rdfs:comment "Pretrial detention facility (not a sentence): incarcerated at the Hamilton County Jail" .
 
-<https://w3id.org/caselinker/resource/case/ohio_ag_2013_012/relationship/mother> a ns4:CustodialRelationship,
-        ns4:FamilialRelationship ;
-    ns4:involvesChild <https://w3id.org/caselinker/resource/case/ohio_ag_2013_012/role/victim/1> ;
-    ns4:involvesCustodian <https://w3id.org/caselinker/resource/case/ohio_ag_2013_012/role/offender/1> ;
-    ns4:relationshipType "mother" .
+<https://w3id.org/caselinker/resource/case/ohio_ag_2013_012/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ohio_ag_2013_012/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2013-03-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:hasRole <https://w3id.org/caselinker/resource/case/ohio_ag_2013_012/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ohio_ag_2013_012/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
 
-<https://w3id.org/caselinker/resource/case/ohio_ag_2013_012/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2013-03-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:hasRole <https://w3id.org/caselinker/resource/case/ohio_ag_2013_012/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ohio_ag_2013_012/relationship/mother> a ns1:CustodialRelationship,
+        ns1:FamilialRelationship ;
+    rdfs:label "Custodial Relationship · relationship/mother" ;
+    ns1:involvesChild <https://w3id.org/caselinker/resource/case/ohio_ag_2013_012/role/victim/1> ;
+    ns1:involvesCustodian <https://w3id.org/caselinker/resource/case/ohio_ag_2013_012/role/offender/1> ;
+    ns1:relationshipType "parent" ;
+    ns3:isDirectional true ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ohio_ag_2013_012/role/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ohio_ag_2013_012/role/victim/1> .
 
-<https://w3id.org/caselinker/resource/case/ohio_ag_2013_012/phase/arrested> a ns2:InitialPhase,
-        ns1:Phase ;
-    ns2:hasPhaseBeginPoint "2013-03-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/mount-healthy> a ns1:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/mount-healthy-city-oh> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Mount Healthy" ;
-    ns3:name "Mount Healthy" .
+    rdfs:label "Mount Healthy city" ;
+    dcterms:identifier "fips:3952752" ;
+    skos:altLabel "Mount Healthy" ;
+    ns3:name "Mount Healthy city" .
 
-<https://w3id.org/caselinker/resource/location/ohio> a ns1:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/ohio-oh> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Ohio" ;
+    dcterms:identifier "fips:39" ;
     ns3:name "Ohio" .
+
+<https://w3id.org/caselinker/resource/case/ohio_ag_2013_012/phase/arrested> a ns2:InitialPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Initial Phase · phase/arrested" .
+
+<https://w3id.org/caselinker/resource/case/ohio_ag_2013_012/role/victim/1> a ns2:VictimRole ;
+    rdfs:label "Victim Role · role/victim/1" .
+
+<https://w3id.org/caselinker/resource/case/ohio_ag_2013_012/role/offender/1> a <https://cacontology.projectvic.org/legal-outcomes#DefendantRole> ;
+    rdfs:label "Defendant Role · role/offender/1" .
 

@@ -1,81 +1,85 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://cacontology.projectvic.org/core#> .
+@prefix ns1: <https://cacontology.projectvic.org/core#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_829> a ns1:CACInvestigation,
-        ns6:EnduringEntity ;
-    dcterms:created "2026-10-17 23:04:34.383136" ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_829> a ns3:CACInvestigation,
+        ns1:EnduringEntity ;
+    rdfs:label "Case ncmec_2024_829" ;
+    dcterms:created "2026-11-10T21:28:10.109811"^^xsd:dateTime ;
+    dcterms:date "2024-12-21"^^xsd:date ;
     dcterms:identifier "ncmec_2024_829" ;
-    dcterms:modified "2026-10-17 23:04:34.383136" ;
+    dcterms:modified "2026-11-12T00:49:48.334849"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_829/provenance> ;
     dcterms:source <https://kfgo.com/2024/12/21/man-charged-with-possession-of-child-sex-abuse-material-drugs/>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/humes-wahpeton>,
-        <https://w3id.org/caselinker/resource/location/nd>,
-        <https://w3id.org/caselinker/resource/location/wahpeton> ;
-    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_829/phase/charged> ;
-    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_829/phase/charged> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_829/event/possession>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2024_829/location/humes-wahpeton>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_829/location/wahpeton>,
+        <https://w3id.org/caselinker/resource/location/north-dakota-nd> ;
+    ns3:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_829/phase/charged> ;
+    ns3:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_829/phase/charged> ;
+    ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_829/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_829/legal-proceeding> ;
-    ns1:investigationStatus "unknown" ;
-    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/north-dakota-bureau-of-criminal-investigation> ;
-    ns4:mentionsLocation <https://w3id.org/caselinker/resource/location/humes-wahpeton>,
-        <https://w3id.org/caselinker/resource/location/nd>,
-        <https://w3id.org/caselinker/resource/location/wahpeton> .
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/north-dakota-bureau-of-criminal-investigation> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_829/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2024-12-21T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_829/event/possession> ;
-    ns6:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_829/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_829/assessment/semantic/possession-csam> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns3:CSAMIncident ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_829/narrative> ;
+    ns1:hasConfidence 0.5013 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_829/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2024-12-21T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_829/event/possession> ;
-    ns6:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_829/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_829/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2024_829/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2024_829/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/north-dakota-bureau-of-criminal-investigation> a ns2:LocalAgency .
+<https://w3id.org/caselinker/resource/agency/north-dakota-bureau-of-criminal-investigation> a ns1:OrganizationLikeEntity,
+        ns4:LocalAgency ;
+    rdfs:label "North Dakota Bureau of Criminal Investigation" ;
+    ns2:name "North Dakota Bureau of Criminal Investigation" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_829/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_829/legal-proceeding> a ns1:Event,
+        ns1:LegalEvent,
+        <https://cacontology.projectvic.org/legal-outcomes#LegalProceeding> ;
+    rdfs:label "Event · legal-proceeding" ;
+    rdfs:comment "Pretrial detention facility (not a sentence): Richland County Jail" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_829/legal-proceeding> a ns6:Event,
-        ns6:LegalEvent,
-        ns5:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Richland County Jail" ;
-    ns5:hasProceedingBeginPoint "2024-12-21T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_829/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_829/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_829/phase/charged> a ns1:LegalProcessPhase,
-        ns6:Phase ;
-    ns1:hasPhaseBeginPoint "2024-12-21T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/humes-wahpeton> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_829/location/humes-wahpeton> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Hume’s Wahpeton" ;
-    ns3:name "Hume’s Wahpeton" .
+    ns2:name "Hume’s Wahpeton" .
 
-<https://w3id.org/caselinker/resource/location/nd> a ns6:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "N.d." ;
-    ns3:name "N.d." .
-
-<https://w3id.org/caselinker/resource/location/wahpeton> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_829/location/wahpeton> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Wahpeton" ;
-    ns3:name "Wahpeton" .
+    ns2:name "Wahpeton" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_829/event/possession> a ns1:CSAMIncident,
-        ns6:Event ;
-    ns3:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2024_829/facet/possession> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_829/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2024_829/role/offender/1> a <https://cacontology.projectvic.org/legal-outcomes#DefendantRole> ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_829/event/possession> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_829> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2024_829/provenance> .
+<https://w3id.org/caselinker/resource/location/north-dakota-nd> a ns1:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "North Dakota" ;
+    dcterms:identifier "fips:38" ;
+    skos:altLabel "N.d." ;
+    ns2:name "North Dakota" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_829/event/possession> a ns3:CSAMIncident,
+        ns1:Event ;
+    rdfs:label "CSAMIncident · event/possession" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_829/phase/charged> a ns3:LegalProcessPhase,
+        ns1:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
+

@@ -1,116 +1,124 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/core#> .
-@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns3: <https://cacontology.projectvic.org/core#> .
 @prefix ns4: <https://cacontology.projectvic.org#> .
-@prefix ns5: <https://w3id.org/caselinker/resource/vocab/> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns7: <https://cacontology.projectvic.org/detection#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/spd_2023_001/admission/1/extraction-confidence> a ns1:AssessmentResult ;
-    ns1:assesses <https://w3id.org/caselinker/resource/case/spd_2023_001/admission/1> ;
-    ns1:generatedBy <https://w3id.org/caselinker/resource/case/spd_2023_001> ;
-    ns1:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/spd_2023_001/role/victim/1> a ns4:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns4:hasRoleBeginPoint "2023-03-17T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/spd_2023_001/event/possession> ;
-    ns1:hasRole <https://w3id.org/caselinker/resource/case/spd_2023_001/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/agency/hsi> a ns3:FederalAgency .
-
-<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> .
-
-<https://w3id.org/caselinker/resource/agency/king-county-sheriffs-office> a ns3:LocalAgency .
-
 <https://w3id.org/caselinker/resource/case/spd_2023_001> a ns4:CACInvestigation,
-        ns1:EnduringEntity ;
-    dcterms:created "2026-10-18 07:04:45.748758" ;
+        ns3:EnduringEntity ;
+    rdfs:label "Case spd_2023_001" ;
+    dcterms:created "2026-11-11T17:47:02.256801"^^xsd:dateTime ;
+    dcterms:date "2023-03-17"^^xsd:date ;
     dcterms:identifier "spd_2023_001" ;
-    dcterms:modified "2026-10-18 07:04:45.748758" ;
+    dcterms:modified "2026-11-11T17:47:02.256801"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/spd_2023_001/provenance> ;
     dcterms:source <https://spdblotter.seattle.gov/2023/03/17/months-long-investigation-leads-to-seattle-mans-arrest-on-child-pornography-charges/>,
         "SPD" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/seattle>,
-        <https://w3id.org/caselinker/resource/location/west-seattle> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/spd_2023_001/location/west-seattle>,
+        <https://w3id.org/caselinker/resource/location/seattle-city-wa> ;
     ns4:currentPhase <https://w3id.org/caselinker/resource/case/spd_2023_001/phase/booked> ;
     ns4:hasPhase <https://w3id.org/caselinker/resource/case/spd_2023_001/phase/booked> ;
-    ns4:hasStep <https://w3id.org/caselinker/resource/case/spd_2023_001/admission/1>,
-        <https://w3id.org/caselinker/resource/case/spd_2023_001/event/distribution>,
+    ns4:hasStep <https://w3id.org/caselinker/resource/case/spd_2023_001/event/distribution>,
         <https://w3id.org/caselinker/resource/case/spd_2023_001/event/possession>,
         <https://w3id.org/caselinker/resource/case/spd_2023_001/legal-proceeding> ;
-    ns4:investigationStatus "unknown" ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/hsi>,
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/hsi>,
         <https://w3id.org/caselinker/resource/agency/icac>,
-        <https://w3id.org/caselinker/resource/agency/king-county-sheriffs-office> ;
-    ns5:mentionsLocation <https://w3id.org/caselinker/resource/location/seattle>,
-        <https://w3id.org/caselinker/resource/location/west-seattle> .
+        <https://w3id.org/caselinker/resource/agency/king-county-sheriff-s-office-wa> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/spd_2023_001/admission/1> .
+
+<https://w3id.org/caselinker/resource/case/spd_2023_001/admission/1/extraction-confidence> a ns3:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/spd_2023_001/admission/1> ;
+    ns3:hasConfidence 0.65 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+
+<https://w3id.org/caselinker/resource/case/spd_2023_001/person/offender/1/age> a ns2:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns2:ageSubject <https://w3id.org/caselinker/resource/case/spd_2023_001/person/offender/1> ;
+    ns2:concernsAgeQuality ns2:Age ;
+    ns2:hasAgeInYears 37.0 .
+
+<https://w3id.org/caselinker/resource/case/spd_2023_001/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/spd_2023_001/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/spd_2023_001/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/agency/hsi> a ns3:OrganizationLikeEntity,
+        ns5:FederalAgency ;
+    rdfs:label "Homeland Security Investigations" ;
+    ns1:name "Homeland Security Investigations" .
+
+<https://w3id.org/caselinker/resource/agency/icac> a ns3:OrganizationLikeEntity,
+        <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns1:name "ICAC Task Force" .
+
+<https://w3id.org/caselinker/resource/agency/king-county-sheriff-s-office-wa> a ns3:OrganizationLikeEntity,
+        ns5:LocalAgency ;
+    rdfs:label "King County Sheriff's Office" ;
+    dcterms:identifier "ori:WA0170000" ;
+    ns1:name "King County Sheriff's Office" .
 
 <https://w3id.org/caselinker/resource/case/spd_2023_001/charge/1> a ns6:CSAM_Possession,
         ns6:CriminalCharge ;
     rdfs:label "child sexual abuse material" .
 
-<https://w3id.org/caselinker/resource/case/spd_2023_001/event/distribution> a ns1:Event,
+<https://w3id.org/caselinker/resource/case/spd_2023_001/event/distribution> a ns3:Event,
         ns6:CSAM_Distribution ;
-    ns4:severityLevel 3 .
+    rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/spd_2023_001/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/spd_2023_001/legal-proceeding> a ns1:Event,
-        ns1:LegalEvent,
+<https://w3id.org/caselinker/resource/case/spd_2023_001/legal-proceeding> a ns3:Event,
+        ns3:LegalEvent,
         ns6:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): booked into the King County Jail" ;
-    ns6:hasCharge <https://w3id.org/caselinker/resource/case/spd_2023_001/charge/1> ;
-    ns6:hasProceedingBeginPoint "2023-03-17T00:00:00Z"^^xsd:dateTimeStamp .
+    ns6:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns6:hasCharge <https://w3id.org/caselinker/resource/case/spd_2023_001/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/spd_2023_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns7:ageEstimate 37 .
-
-<https://w3id.org/caselinker/resource/case/spd_2023_001/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/spd_2023_001/role/offender/1> a ns4:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns4:hasRoleBeginPoint "2023-03-17T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/spd_2023_001/event/possession> ;
-    ns1:hasRole <https://w3id.org/caselinker/resource/case/spd_2023_001/person/offender/1> .
-
-<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
-    rdfs:label "chat" .
-
-<https://w3id.org/caselinker/resource/case/spd_2023_001/phase/booked> a ns4:InitialPhase,
-        ns1:Phase ;
-    ns4:hasPhaseBeginPoint "2023-03-17T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/seattle> a ns1:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Seattle" ;
-    ns2:name "Seattle" .
-
-<https://w3id.org/caselinker/resource/location/west-seattle> a ns1:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/spd_2023_001/location/west-seattle> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "West Seattle" ;
-    ns2:name "West Seattle" .
+    ns1:name "West Seattle" .
+
+<https://w3id.org/caselinker/resource/case/spd_2023_001/role/offender/1> a ns6:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/spd_2023_001/event/possession> .
+
+<https://w3id.org/caselinker/resource/location/seattle-city-wa> a ns3:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Seattle city" ;
+    dcterms:identifier "fips:5363000" ;
+    skos:altLabel "Seattle" ;
+    ns1:name "Seattle city" .
+
+<https://w3id.org/caselinker/resource/platform/chat> a ns3:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
+    rdfs:label "chat" ;
+    ns1:name "chat" .
 
 <https://w3id.org/caselinker/resource/case/spd_2023_001/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "uploading CSAM material and communicating with others about chatting online with minors" ;
     dcterms:source <https://spdblotter.seattle.gov/2023/03/17/months-long-investigation-leads-to-seattle-mans-arrest-on-child-pornography-charges/> ;
-    ns5:admissionContext "where several digital devices were seized pursuant to the search warrant. The 37-year-old suspect was interviewed by detectives and admit..." ;
-    ns5:admissionFrame "admitted_to" ;
-    ns5:admissionTheme "harm_conduct",
-        "tech_use" ;
-    ns5:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/spd_2023_001/role/offender/1> ;
-    ns5:evidenceTier "press_release_stated" ;
-    ns5:quoteType "paraphrase" ;
-    ns2:description "uploading CSAM material and communicating with others about chatting online with minors" .
+    ns1:description "uploading CSAM material and communicating with others about chatting online with minors" .
 
 <https://w3id.org/caselinker/resource/case/spd_2023_001/event/possession> a ns4:CSAMIncident,
-        ns1:Event ;
-    ns4:producesArtifact <https://w3id.org/caselinker/resource/case/spd_2023_001/admission/1> ;
+        ns3:Event ;
+    rdfs:label "CSAMIncident · event/possession" ;
     ns4:severityLevel 3 ;
-    ns4:usesChannel <https://w3id.org/caselinker/resource/platform/chat> ;
-    ns2:hasFacet <https://w3id.org/caselinker/resource/case/spd_2023_001/facet/possession> .
+    ns4:usesChannel <https://w3id.org/caselinker/resource/platform/chat> .
 
+<https://w3id.org/caselinker/resource/case/spd_2023_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/spd_2023_001> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/spd_2023_001/provenance> .
+<https://w3id.org/caselinker/resource/case/spd_2023_001/phase/booked> a ns4:InitialPhase,
+        ns3:Phase ;
+    rdfs:label "Initial Phase · phase/booked" .
+

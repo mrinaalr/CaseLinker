@@ -1,191 +1,204 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/detection#> .
-@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://cacontology.projectvic.org#> .
-@prefix ns5: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns6: <https://cacontology.projectvic.org/core#> .
-@prefix ns7: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns8: <https://cacontology.projectvic.org/us/ncmec#> .
+@prefix ns1: <https://cacontology.projectvic.org#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/core#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns7: <https://cacontology.projectvic.org/hotlines#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/spd_2025_008/admission/1/extraction-confidence> a ns6:AssessmentResult ;
-    ns6:assesses <https://w3id.org/caselinker/resource/case/spd_2025_008/admission/1> ;
-    ns6:generatedBy <https://w3id.org/caselinker/resource/case/spd_2025_008> ;
-    ns6:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/spd_2025_008/admission/2/extraction-confidence> a ns6:AssessmentResult ;
-    ns6:assesses <https://w3id.org/caselinker/resource/case/spd_2025_008/admission/2> ;
-    ns6:generatedBy <https://w3id.org/caselinker/resource/case/spd_2025_008> ;
-    ns6:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/spd_2025_008/role/victim/1> a ns4:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns4:hasRoleBeginPoint "2025-09-26T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/spd_2025_008/event/possession>,
-        <https://w3id.org/caselinker/resource/case/spd_2025_008/event/sextortion> ;
-    ns6:hasRole <https://w3id.org/caselinker/resource/case/spd_2025_008/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> .
-
-<https://w3id.org/caselinker/resource/agency/seattle-police-department> a ns2:LocalAgency .
-
-<https://w3id.org/caselinker/resource/case/spd_2025_008/charge/1> a ns7:CSAM_Possession,
-        ns7:CriminalCharge ;
-    rdfs:label "child sexual abuse material" .
-
-<https://w3id.org/caselinker/resource/case/spd_2025_008/charge/2> a ns7:CriminalCharge,
-        ns7:SextortionCharge ;
-    rdfs:label "sextortion" .
-
-<https://w3id.org/caselinker/resource/case/spd_2025_008/cybertip> a ns8:NCMECCybertipReport ;
-    ns8:supportedBy <https://w3id.org/caselinker/resource/agency/ncmec> .
-
-<https://w3id.org/caselinker/resource/case/spd_2025_008/event/distribution> a ns6:Event,
-        ns7:CSAM_Distribution ;
-    ns4:severityLevel 3 .
-
-<https://w3id.org/caselinker/resource/case/spd_2025_008/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/spd_2025_008/legal-proceeding> a ns6:Event,
-        ns6:LegalEvent,
-        ns7:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): booked into the King County Jail" ;
-    ns7:hasCharge <https://w3id.org/caselinker/resource/case/spd_2025_008/charge/1>,
-        <https://w3id.org/caselinker/resource/case/spd_2025_008/charge/2> ;
-    ns7:hasProceedingBeginPoint "2025-09-26T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/spd_2025_008/operation> a ns6:Event,
-        <https://cacontology.projectvic.org/taskforce#TaskForceOperation> .
-
-<https://w3id.org/caselinker/resource/case/spd_2025_008/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns1:ageEstimate 20 .
-
-<https://w3id.org/caselinker/resource/case/spd_2025_008/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/spd_2025_008/tech/cybertipline> a ns8:NCMECCybertipReport ;
-    rdfs:label "CyberTipline" .
-
-<https://w3id.org/caselinker/resource/agency/ncmec> a ns2:FederalAgency .
-
-<https://w3id.org/caselinker/resource/case/spd_2025_008> a ns4:CACInvestigation,
-        ns6:EnduringEntity ;
-    dcterms:created "2026-10-18 07:04:45.946707" ;
+<https://w3id.org/caselinker/resource/case/spd_2025_008> a ns1:CACInvestigation,
+        ns3:EnduringEntity ;
+    rdfs:label "Case spd_2025_008" ;
+    dcterms:created "2026-11-11T17:47:06.477928"^^xsd:dateTime ;
+    dcterms:date "2025-09-26"^^xsd:date ;
     dcterms:identifier "spd_2025_008" ;
-    dcterms:modified "2026-10-18 07:04:45.946707" ;
+    dcterms:modified "2026-11-11T17:47:06.477928"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/spd_2025_008/provenance> ;
     dcterms:source <https://spdblotter.seattle.gov/2025/09/26/woman-arrested-for-creating-sharing-child-sex-abuse-material-after-seattle-police-washington-internet-crimes-against-children-task-force-investigation/>,
         "SPD" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/king-pierce>,
-        <https://w3id.org/caselinker/resource/location/seattle>,
-        <https://w3id.org/caselinker/resource/location/snohomish>,
-        <https://w3id.org/caselinker/resource/location/the-puget-sound>,
-        <https://w3id.org/caselinker/resource/location/tukwila>,
-        <https://w3id.org/caselinker/resource/location/united-states> ;
-    ns4:currentPhase <https://w3id.org/caselinker/resource/case/spd_2025_008/phase/booked> ;
-    ns4:hasPhase <https://w3id.org/caselinker/resource/case/spd_2025_008/phase/booked> ;
-    ns4:hasStep <https://w3id.org/caselinker/resource/case/spd_2025_008/admission/1>,
-        <https://w3id.org/caselinker/resource/case/spd_2025_008/admission/2>,
-        <https://w3id.org/caselinker/resource/case/spd_2025_008/cybertip>,
-        <https://w3id.org/caselinker/resource/case/spd_2025_008/event/distribution>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/spd_2025_008/location/king-pierce>,
+        <https://w3id.org/caselinker/resource/case/spd_2025_008/location/puget-sound>,
+        <https://w3id.org/caselinker/resource/case/spd_2025_008/location/united-states>,
+        <https://w3id.org/caselinker/resource/location/seattle-city-wa>,
+        <https://w3id.org/caselinker/resource/location/snohomish-city-wa>,
+        <https://w3id.org/caselinker/resource/location/tukwila-city-wa> ;
+    ns1:currentPhase <https://w3id.org/caselinker/resource/case/spd_2025_008/phase/booked> ;
+    ns1:hasPhase <https://w3id.org/caselinker/resource/case/spd_2025_008/phase/booked> ;
+    ns1:hasStep <https://w3id.org/caselinker/resource/case/spd_2025_008/event/distribution>,
         <https://w3id.org/caselinker/resource/case/spd_2025_008/event/possession>,
         <https://w3id.org/caselinker/resource/case/spd_2025_008/event/sextortion>,
         <https://w3id.org/caselinker/resource/case/spd_2025_008/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/spd_2025_008/operation> ;
-    ns4:usesMethod <https://w3id.org/caselinker/resource/case/spd_2025_008/tech/cybertipline> ;
-    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/ncmec>,
-        <https://w3id.org/caselinker/resource/agency/seattle-police-department> ;
-    ns5:mentionsLocation <https://w3id.org/caselinker/resource/location/king-pierce>,
-        <https://w3id.org/caselinker/resource/location/seattle>,
-        <https://w3id.org/caselinker/resource/location/snohomish>,
-        <https://w3id.org/caselinker/resource/location/the-puget-sound>,
-        <https://w3id.org/caselinker/resource/location/tukwila>,
-        <https://w3id.org/caselinker/resource/location/united-states> .
+        <https://w3id.org/caselinker/resource/agency/seattle-police-department-wa> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/spd_2025_008/admission/1>,
+        <https://w3id.org/caselinker/resource/case/spd_2025_008/admission/2>,
+        <https://w3id.org/caselinker/resource/case/spd_2025_008/cybertip> .
 
-<https://w3id.org/caselinker/resource/case/spd_2025_008/admission/2> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
-    rdfs:label "taking illegal images of the 7-year-old girl and distributing them online on social media" ;
-    dcterms:source <https://spdblotter.seattle.gov/2025/09/26/woman-arrested-for-creating-sharing-child-sex-abuse-material-after-seattle-police-washington-internet-crimes-against-children-task-force-investigation/> ;
-    ns5:admissionContext "While investigators were searching the home, they found CSAM on the woman’s cell phone. The woman also admitted to taking illegal images..." ;
-    ns5:admissionFrame "admitted_to" ;
-    ns5:admissionTheme "other" ;
-    ns5:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/spd_2025_008/role/offender/1> ;
-    ns5:evidenceTier "press_release_stated" ;
-    ns5:quoteType "paraphrase" ;
-    ns3:description "taking illegal images of the 7-year-old girl and distributing them online on social media" .
+<https://w3id.org/caselinker/resource/case/spd_2025_008/admission/1/extraction-confidence> a ns3:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/spd_2025_008/admission/1> ;
+    ns3:hasConfidence 0.65 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/case/spd_2025_008/phase/booked> a ns4:InitialPhase,
-        ns6:Phase ;
-    ns4:hasPhaseBeginPoint "2025-09-26T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/spd_2025_008/admission/2/extraction-confidence> a ns3:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/2/extraction-confidence" ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/spd_2025_008/admission/2> ;
+    ns3:hasConfidence 0.65 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/case/spd_2025_008/role/offender/1> a ns4:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns4:hasRoleBeginPoint "2025-09-26T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/spd_2025_008/event/possession>,
-        <https://w3id.org/caselinker/resource/case/spd_2025_008/event/sextortion> ;
-    ns6:hasRole <https://w3id.org/caselinker/resource/case/spd_2025_008/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/spd_2025_008/assessment/semantic/exploitive-positions> a ns3:AssessmentResult ;
+    rdfs:label "semantic similarity · exploitive_positions" ;
+    dcterms:subject <https://cacontology.projectvic.org/custodial#PositionOfTrust> ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/spd_2025_008/narrative> ;
+    ns3:hasConfidence 0.4699 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/location/king-pierce> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/spd_2025_008/assessment/semantic/possession-csam> a ns3:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns1:CSAMIncident ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/spd_2025_008/narrative> ;
+    ns3:hasConfidence 0.5043 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/spd_2025_008/person/offender/1/age> a ns5:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/spd_2025_008/person/offender/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 20.0 .
+
+<https://w3id.org/caselinker/resource/case/spd_2025_008/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/spd_2025_008/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/spd_2025_008/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/platform/chat> a ns3:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
+    rdfs:label "chat" ;
+    ns2:name "chat" .
+
+<https://w3id.org/caselinker/resource/platform/social-media> a ns3:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "social media" ;
+    ns2:name "social media" .
+
+<https://w3id.org/caselinker/resource/agency/icac> a ns3:OrganizationLikeEntity,
+        <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns2:name "ICAC Task Force" .
+
+<https://w3id.org/caselinker/resource/agency/seattle-police-department-wa> a ns3:OrganizationLikeEntity,
+        ns6:LocalAgency ;
+    rdfs:label "Seattle Police Department" ;
+    dcterms:identifier "ori:WASPD0000" ;
+    ns2:name "Seattle Police Department" .
+
+<https://w3id.org/caselinker/resource/case/spd_2025_008/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
+    rdfs:label "child sexual abuse material" .
+
+<https://w3id.org/caselinker/resource/case/spd_2025_008/charge/2> a ns4:CriminalCharge,
+        ns4:SextortionCharge ;
+    rdfs:label "sextortion" .
+
+<https://w3id.org/caselinker/resource/case/spd_2025_008/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
+    rdfs:label "CyberTipline report" ;
+    ns7:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns2:name "observe" .
+
+<https://w3id.org/caselinker/resource/case/spd_2025_008/event/distribution> a ns3:Event,
+        ns4:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
+
+<https://w3id.org/caselinker/resource/case/spd_2025_008/event/possession> a ns1:CSAMIncident,
+        ns3:Event ;
+    rdfs:label "CSAMIncident · event/possession" .
+
+<https://w3id.org/caselinker/resource/case/spd_2025_008/event/sextortion> a ns3:Event,
+        <https://cacontology.projectvic.org/sextortion#SextortionIncident> ;
+    rdfs:label "Sextortion Incident · event/sextortion" .
+
+<https://w3id.org/caselinker/resource/case/spd_2025_008/legal-proceeding> a ns3:Event,
+        ns3:LegalEvent,
+        ns4:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    rdfs:comment "Pretrial detention facility (not a sentence): booked into the King County Jail" ;
+    ns4:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/spd_2025_008/charge/1>,
+        <https://w3id.org/caselinker/resource/case/spd_2025_008/charge/2> .
+
+<https://w3id.org/caselinker/resource/case/spd_2025_008/location/king-pierce> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "King, Pierce" ;
-    ns3:name "King, Pierce" .
+    ns2:name "King, Pierce" .
 
-<https://w3id.org/caselinker/resource/location/seattle> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/spd_2025_008/location/puget-sound> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Seattle" ;
-    ns3:name "Seattle" .
+    rdfs:label "Puget Sound" ;
+    ns2:name "Puget Sound" .
 
-<https://w3id.org/caselinker/resource/location/snohomish> a ns6:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Snohomish" ;
-    ns3:name "Snohomish" .
-
-<https://w3id.org/caselinker/resource/location/the-puget-sound> a ns6:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "the Puget Sound" ;
-    ns3:name "the Puget Sound" .
-
-<https://w3id.org/caselinker/resource/location/tukwila> a ns6:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Tukwila" ;
-    ns3:name "Tukwila" .
-
-<https://w3id.org/caselinker/resource/location/united-states> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/spd_2025_008/location/united-states> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "United States" ;
-    ns3:name "United States" .
+    ns2:name "United States" .
 
-<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
-    rdfs:label "chat" .
+<https://w3id.org/caselinker/resource/case/spd_2025_008/operation> a ns3:Event,
+        <https://cacontology.projectvic.org/taskforce#TaskForceOperation> ;
+    rdfs:label "Task Force Operation · operation" .
 
-<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "social media" .
+<https://w3id.org/caselinker/resource/case/spd_2025_008/role/offender/1> a ns4:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/spd_2025_008/event/possession> a ns4:CSAMIncident,
-        ns6:Event ;
-    ns4:producesArtifact <https://w3id.org/caselinker/resource/case/spd_2025_008/admission/1> ;
-    ns4:severityLevel 3 ;
-    ns4:usesChannel <https://w3id.org/caselinker/resource/platform/chat>,
-        <https://w3id.org/caselinker/resource/platform/social-media> ;
-    ns3:hasFacet <https://w3id.org/caselinker/resource/case/spd_2025_008/facet/possession> .
+<https://w3id.org/caselinker/resource/location/seattle-city-wa> a ns3:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Seattle city" ;
+    dcterms:identifier "fips:5363000" ;
+    skos:altLabel "Seattle" ;
+    ns2:name "Seattle city" .
 
-<https://w3id.org/caselinker/resource/case/spd_2025_008/event/sextortion> a ns6:Event,
-        <https://cacontology.projectvic.org/sextortion#SextortionIncident> ;
-    ns4:producesArtifact <https://w3id.org/caselinker/resource/case/spd_2025_008/admission/1> ;
-    ns4:severityLevel 3 ;
-    ns4:usesChannel <https://w3id.org/caselinker/resource/platform/chat>,
-        <https://w3id.org/caselinker/resource/platform/social-media> .
+<https://w3id.org/caselinker/resource/location/snohomish-city-wa> a ns3:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Snohomish city" ;
+    dcterms:identifier "fips:5365170" ;
+    skos:altLabel "Snohomish" ;
+    ns2:name "Snohomish city" .
+
+<https://w3id.org/caselinker/resource/location/tukwila-city-wa> a ns3:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Tukwila city" ;
+    dcterms:identifier "fips:5372625" ;
+    skos:altLabel "Tukwila" ;
+    ns2:name "Tukwila city" .
+
+<https://w3id.org/caselinker/resource/agency/ncmec> a ns3:OrganizationLikeEntity,
+        ns7:HotlineOrganization,
+        ns6:FederalAgency ;
+    rdfs:label "National Center for Missing and Exploited Children" ;
+    skos:altLabel "NCMEC" ;
+    ns2:name "National Center for Missing and Exploited Children" .
 
 <https://w3id.org/caselinker/resource/case/spd_2025_008/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "was the user who’d been discussing the sexual abuse of a minor on MeetMe" ;
     dcterms:source <https://spdblotter.seattle.gov/2025/09/26/woman-arrested-for-creating-sharing-child-sex-abuse-material-after-seattle-police-washington-internet-crimes-against-children-task-force-investigation/> ;
-    ns5:admissionContext "served a search warrant at the 20-year-old woman’s home and interviewed everyone inside. The woman admitted she was the user who’d been d..." ;
-    ns5:admissionFrame "admitted_he_she" ;
-    ns5:admissionTheme "harm_conduct" ;
-    ns5:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/spd_2025_008/role/offender/1> ;
-    ns5:evidenceTier "press_release_stated" ;
-    ns5:quoteType "paraphrase" ;
-    ns3:description "was the user who’d been discussing the sexual abuse of a minor on MeetMe" .
+    ns2:description "was the user who’d been discussing the sexual abuse of a minor on MeetMe" .
 
+<https://w3id.org/caselinker/resource/case/spd_2025_008/admission/2> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
+    rdfs:label "taking illegal images of the 7-year-old girl and distributing them online on social media" ;
+    dcterms:source <https://spdblotter.seattle.gov/2025/09/26/woman-arrested-for-creating-sharing-child-sex-abuse-material-after-seattle-police-washington-internet-crimes-against-children-task-force-investigation/> ;
+    ns2:description "taking illegal images of the 7-year-old girl and distributing them online on social media" .
 
-<https://w3id.org/caselinker/resource/case/spd_2025_008> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/spd_2025_008/provenance> .
+<https://w3id.org/caselinker/resource/case/spd_2025_008/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/spd_2025_008/phase/booked> a ns1:InitialPhase,
+        ns3:Phase ;
+    rdfs:label "Initial Phase · phase/booked" .
+

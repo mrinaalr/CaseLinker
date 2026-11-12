@@ -1,103 +1,113 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/custodial#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns6: <https://cacontology.projectvic.org/core#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org/core#> .
+@prefix ns3: <https://cacontology.projectvic.org#> .
+@prefix ns4: <https://cacontology.projectvic.org/custodial#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_060/admission/1/extraction-confidence> a ns6:AssessmentResult ;
-    ns6:assesses <https://w3id.org/caselinker/resource/case/ncmec_2022_060/admission/1> ;
-    ns6:generatedBy <https://w3id.org/caselinker/resource/case/ncmec_2022_060> ;
-    ns6:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_060> a ns2:CACInvestigation,
-        ns6:EnduringEntity ;
-    dcterms:created "2026-10-17 21:51:20.220821" ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_060> a ns3:CACInvestigation,
+        ns2:EnduringEntity ;
+    rdfs:label "Case ncmec_2022_060" ;
+    dcterms:created "2026-11-10T09:17:25.708169"^^xsd:dateTime ;
+    dcterms:date "2022-10-06"^^xsd:date ;
     dcterms:identifier "ncmec_2022_060" ;
-    dcterms:modified "2026-10-17 21:51:20.220821" ;
+    dcterms:modified "2026-11-10T09:17:25.708169"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2022_060/provenance> ;
     dcterms:source <https://www.modbee.com/news/local/crime/article266913571.html>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/newman>,
-        <https://w3id.org/caselinker/resource/location/stanislaus-county> ;
-    ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_060/phase/booked> ;
-    ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_060/phase/booked> ;
-    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_060/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_060/event/possession>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2022_060/location/newman>,
+        <https://w3id.org/caselinker/resource/location/stanislaus-county-ca> ;
+    ns3:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_060/phase/booked> ;
+    ns3:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_060/phase/booked> ;
+    ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_060/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_060/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_060/legal-proceeding> ;
-    ns2:investigationStatus "unknown" ;
-    ns1:mentionsLocation <https://w3id.org/caselinker/resource/location/newman>,
-        <https://w3id.org/caselinker/resource/location/stanislaus-county> .
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2022_060/admission/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_060/event/trust-violation> a ns3:AuthorityAbuse,
-        ns3:TrustViolation ;
-    ns3:violatesRelationship <https://w3id.org/caselinker/resource/case/ncmec_2022_060/relationship/teacher> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_060/admission/1/extraction-confidence> a ns2:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/ncmec_2022_060/admission/1> ;
+    ns2:hasConfidence 0.65 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_060/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_060/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2022_060/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2022_060/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_060/legal-proceeding> a ns6:Event,
-        ns6:LegalEvent,
-        ns4:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): booked in jail" ;
-    ns4:hasProceedingBeginPoint "2022-10-06T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_060/role/victim/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/victim/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2022_060/person/victim/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2022_060/role/victim/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_060/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_060/event/trust-violation> a ns4:AuthorityAbuse,
+        ns4:TrustViolation ;
+    rdfs:label "Authority Abuse · event/trust-violation" ;
+    ns4:perpetratedBy <https://w3id.org/caselinker/resource/case/ncmec_2022_060/role/offender/1> ;
+    ns4:violatesRelationship <https://w3id.org/caselinker/resource/case/ncmec_2022_060/relationship/teacher> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_060/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_060/legal-proceeding> a ns2:Event,
+        ns2:LegalEvent,
+        <https://cacontology.projectvic.org/legal-outcomes#LegalProceeding> ;
+    rdfs:label "Event · legal-proceeding" ;
+    rdfs:comment "Pretrial detention facility (not a sentence): booked in jail" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_060/relationship/teacher> a ns3:CustodialRelationship,
-        ns3:Teacher ;
-    ns3:involvesChild <https://w3id.org/caselinker/resource/case/ncmec_2022_060/role/victim/1> ;
-    ns3:involvesCustodian <https://w3id.org/caselinker/resource/case/ncmec_2022_060/role/offender/1> ;
-    ns3:relationshipType "teacher" .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_060/location/newman> a ns2:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Newman" ;
+    ns1:name "Newman" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_060/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2022-10-06T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_060/event/possession> ;
-    ns6:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_060/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_060/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/platform/facebook> a <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "Facebook" .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_060/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_060/relationship/teacher> a ns4:CustodialRelationship,
+        ns4:Teacher ;
+    rdfs:label "Custodial Relationship · relationship/teacher" ;
+    ns4:involvesChild <https://w3id.org/caselinker/resource/case/ncmec_2022_060/role/victim/1> ;
+    ns4:involvesCustodian <https://w3id.org/caselinker/resource/case/ncmec_2022_060/role/offender/1> ;
+    ns4:relationshipType "teacher" ;
+    ns1:isDirectional true ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2022_060/role/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2022_060/role/victim/1> .
+
+<https://w3id.org/caselinker/resource/location/stanislaus-county-ca> a ns2:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Stanislaus County" ;
+    dcterms:identifier "fips:06099" ;
+    ns1:name "Stanislaus County" .
+
+<https://w3id.org/caselinker/resource/platform/facebook> a ns2:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "Facebook" ;
+    ns1:name "Facebook" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_060/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "was a substitute teacher before that" ;
     dcterms:source <https://www.modbee.com/news/local/crime/article266913571.html> ;
-    ns1:admissionContext "aid. Mendonca was in his second year teaching full time at Yolo Middle School in Newman. Posey said he was a substitute teacher before that" ;
-    ns1:admissionFrame "said_paraphrase" ;
-    ns1:admissionTheme "other" ;
-    ns1:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/ncmec_2022_060/role/offender/1> ;
-    ns1:evidenceTier "press_release_stated" ;
-    ns1:quoteType "paraphrase" ;
-    ns5:description "was a substitute teacher before that" .
+    ns1:description "was a substitute teacher before that" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_060/phase/booked> a ns2:InitialPhase,
-        ns6:Phase ;
-    ns2:hasPhaseBeginPoint "2022-10-06T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_060/phase/booked> a ns3:InitialPhase,
+        ns2:Phase ;
+    rdfs:label "Initial Phase · phase/booked" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_060/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2022-10-06T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_060/event/possession> ;
-    ns6:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_060/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_060/event/possession> a ns3:CSAMIncident,
+        ns2:Event ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns3:usesChannel <https://w3id.org/caselinker/resource/platform/facebook> .
 
-<https://w3id.org/caselinker/resource/location/newman> a ns6:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Newman" ;
-    ns5:name "Newman" .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_060/role/victim/1> a ns3:VictimRole ;
+    rdfs:label "Victim Role · role/victim/1" ;
+    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_060/event/possession> .
 
-<https://w3id.org/caselinker/resource/location/stanislaus-county> a ns6:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Stanislaus County" ;
-    ns5:name "Stanislaus County" .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_060/role/offender/1> a <https://cacontology.projectvic.org/legal-outcomes#DefendantRole> ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_060/event/possession> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_060/event/possession> a ns2:CSAMIncident,
-        ns6:Event ;
-    ns2:usesChannel <https://w3id.org/caselinker/resource/platform/facebook> ;
-    ns5:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2022_060/facet/possession> .
-
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_060> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2022_060/provenance> .

@@ -1,57 +1,54 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
 @prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns3: <https://cacontology.projectvic.org/core#> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_924> a ns1:CACInvestigation,
-        ns3:EnduringEntity ;
-    dcterms:created "2026-10-17 23:04:35.900627" ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case ncmec_2024_924" ;
+    dcterms:created "2026-11-10T21:28:40.111286"^^xsd:dateTime ;
+    dcterms:date "2024-01"^^xsd:gYearMonth ;
     dcterms:identifier "ncmec_2024_924" ;
-    dcterms:modified "2026-10-17 23:04:35.900627" ;
+    dcterms:modified "2026-11-12T00:54:40.921785"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_924/provenance> ;
     dcterms:source <https://www.missingkids.org/gethelpnow/cybertipline/cybertiplinedata>,
         "NCMEC" ;
     ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_924/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_924/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_924/legal-proceeding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_924/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_924/event/possession> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_924/person/offender/1> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_924/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_924/event/possession> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_924/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_924/role/offender/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2024_924/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2024_924/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_924/charge/1> a ns2:CSAM_Possession,
         ns2:CriminalCharge ;
-    rdfs:label "possession of child pornography" ;
-    ns2:indictmentCounts 2 .
+    rdfs:label "possession of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_924/event/distribution> a ns3:Event,
-        ns2:CSAM_Distribution .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_924/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
+        ns2:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_924/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_924/legal-proceeding> a ns3:Event,
-        ns3:LegalEvent,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_924/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
         ns2:LegalProceeding ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_924/charge/1> ;
-    ns2:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    rdfs:label "Event · legal-proceeding" ;
+    ns2:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_924/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_924/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_924/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_924/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_924/role/offender/1> a ns2:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_924/event/possession> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_924/event/possession> a ns1:CSAMIncident,
-        ns3:Event ;
-    ns4:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2024_924/facet/possession> .
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/possession" .
 
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_924> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2024_924/provenance> .

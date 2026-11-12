@@ -1,78 +1,81 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns3: <https://cacontology.projectvic.org/core#> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns5: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns6: <https://cacontology.projectvic.org/detection#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns3: <https://cacontology.projectvic.org#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_460> a ns1:CACInvestigation,
-        ns3:EnduringEntity ;
-    dcterms:created "2026-10-17 21:51:24.972023" ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_460> a ns3:CACInvestigation,
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case ncmec_2022_460" ;
+    dcterms:created "2026-11-10T09:19:39.822097"^^xsd:dateTime ;
+    dcterms:date "2022-01"^^xsd:gYearMonth ;
     dcterms:identifier "ncmec_2022_460" ;
-    dcterms:modified "2026-10-17 21:51:24.972023" ;
+    dcterms:modified "2026-11-10T09:19:39.822097"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2022_460/provenance> ;
     dcterms:source <https://local12.com/news/local/local-man-accused-pandering-child-pornography-through-facebook-nicholas-newberry-obscenity-sexually-explicit-material-messenger-social-media-cincinnati-ohio>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/cincinnati> ;
-    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_460/phase/arrested> ;
-    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_460/phase/arrested> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_460/event/csam>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_460/legal-proceeding> ;
-    ns5:mentionsLocation <https://w3id.org/caselinker/resource/location/cincinnati> .
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2022_460/location/cincinnati> ;
+    ns3:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_460/phase/arrested> ;
+    ns3:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_460/phase/arrested> ;
+    ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_460/event/csam>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2022_460/legal-proceeding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_460/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_460/event/csam> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_460/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_460/person/offender/1/age> a ns2:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns2:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2022_460/person/offender/1> ;
+    ns2:concernsAgeQuality ns2:Age ;
+    ns2:hasAgeInYears 23.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_460/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_460/event/csam> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_460/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_460/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2022_460/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2022_460/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_460/charge/1> a ns2:CSAM_Possession,
-        ns2:CriminalCharge ;
-    rdfs:label "child pornography" ;
-    ns2:indictmentCounts 4 .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_460/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
+    rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_460/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_460/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        ns4:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns4:chargeCount "4"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_460/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_460/legal-proceeding> a ns3:Event,
-        ns3:LegalEvent,
-        ns2:LegalProceeding ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_460/charge/1> ;
-    ns2:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_460/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns6:ageEstimate 23 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_460/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/platform/facebook> a <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "Facebook" .
-
-<https://w3id.org/caselinker/resource/platform/facebook-messenger> a <https://cacontology.projectvic.org/platforms#MessagingService> ;
-    rdfs:label "Facebook Messenger" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_460/phase/arrested> a ns1:InitialPhase,
-        ns3:Phase ;
-    ns1:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/cincinnati> a ns3:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2022_460/location/cincinnati> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Cincinnati" ;
-    ns4:name "Cincinnati" .
+    ns1:name "Cincinnati" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_460/event/csam> a ns1:CSAMIncident,
-        ns3:Event ;
-    ns1:severityLevel 3 ;
-    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/facebook>,
-        <https://w3id.org/caselinker/resource/platform/facebook-messenger> ;
-    ns4:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2022_460/facet/csam> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_460/role/offender/1> a ns4:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_460/event/csam> .
 
+<https://w3id.org/caselinker/resource/platform/facebook> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "Facebook" ;
+    ns1:name "Facebook" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_460> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2022_460/provenance> .
+<https://w3id.org/caselinker/resource/platform/facebook-messenger> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#MessagingService> ;
+    rdfs:label "Facebook Messenger" ;
+    ns1:name "Facebook Messenger" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_460/event/csam> a ns3:CSAMIncident,
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/csam" ;
+    ns3:severityLevel 3 ;
+    ns3:usesChannel <https://w3id.org/caselinker/resource/platform/facebook>,
+        <https://w3id.org/caselinker/resource/platform/facebook-messenger> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_460/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_460/phase/arrested> a ns3:InitialPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Initial Phase · phase/arrested" .
+

@@ -1,83 +1,100 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
 @prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns5: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns6: <https://cacontology.projectvic.org/detection#> .
-@prefix ns7: <https://cacontology.projectvic.org/core#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ohio_ag_2015_013> a ns2:CACInvestigation,
-        ns7:EnduringEntity ;
-    dcterms:created "2026-10-18 06:14:13.598050" ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case ohio_ag_2015_013" ;
+    dcterms:created "2026-11-11T16:37:48.437536"^^xsd:dateTime ;
+    dcterms:date "2015-01"^^xsd:gYearMonth ;
     dcterms:identifier "ohio_ag_2015_013" ;
-    dcterms:modified "2026-10-18 06:14:13.598050" ;
+    dcterms:modified "2026-11-11T16:37:48.437536"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ohio_ag_2015_013/provenance> ;
     dcterms:source <https://www.ohioattorneygeneral.gov/Media/News-Releases/January-2015/Wanted-Sex-Offender-Richard-Jenkins>,
         "OHIO AG" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/kenton>,
-        <https://w3id.org/caselinker/resource/location/ohio> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/kenton-city-oh>,
+        <https://w3id.org/caselinker/resource/location/ohio-oh> ;
     ns2:currentPhase <https://w3id.org/caselinker/resource/case/ohio_ag_2015_013/phase/convicted> ;
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/ohio_ag_2015_013/phase/convicted> ;
     ns2:hasStep <https://w3id.org/caselinker/resource/case/ohio_ag_2015_013/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/ohio_ag_2015_013/legal-step/convicted> ;
-    ns2:investigationStatus "unknown" ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/hardin-county-sheriffs-office>,
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/hardin-county-sheriff-s-office-oh>,
         <https://w3id.org/caselinker/resource/agency/ohio-bureau-of-criminal-investigation>,
-        <https://w3id.org/caselinker/resource/agency/usms> ;
-    ns5:mentionsLocation <https://w3id.org/caselinker/resource/location/kenton>,
-        <https://w3id.org/caselinker/resource/location/ohio> .
+        <https://w3id.org/caselinker/resource/agency/usms> .
 
-<https://w3id.org/caselinker/resource/case/ohio_ag_2015_013/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2015-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns7:hasRole <https://w3id.org/caselinker/resource/case/ohio_ag_2015_013/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ohio_ag_2015_013/person/offender/1/age> a ns5:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/ohio_ag_2015_013/person/offender/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 71.0 .
 
-<https://w3id.org/caselinker/resource/case/ohio_ag_2015_013/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2015-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns7:hasRole <https://w3id.org/caselinker/resource/case/ohio_ag_2015_013/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ohio_ag_2015_013/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ohio_ag_2015_013/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ohio_ag_2015_013/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/hardin-county-sheriffs-office> a ns3:LocalAgency .
+<https://w3id.org/caselinker/resource/agency/hardin-county-sheriff-s-office-oh> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns3:LocalAgency ;
+    rdfs:label "Hardin County Sheriff's Office" ;
+    dcterms:identifier "ori:OH0330000" ;
+    ns1:name "Hardin County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/agency/ohio-bureau-of-criminal-investigation> a ns3:LocalAgency .
+<https://w3id.org/caselinker/resource/agency/ohio-bureau-of-criminal-investigation> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns3:LocalAgency ;
+    rdfs:label "Ohio Bureau of Criminal Investigation" ;
+    ns1:name "Ohio Bureau of Criminal Investigation" .
 
-<https://w3id.org/caselinker/resource/agency/usms> a ns3:FederalAgency .
+<https://w3id.org/caselinker/resource/agency/usms> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns3:FederalAgency ;
+    rdfs:label "U.S. Marshals Service" ;
+    skos:altLabel "U.S. Marshals" ;
+    ns1:name "U.S. Marshals Service" .
 
-<https://w3id.org/caselinker/resource/case/ohio_ag_2015_013/charge/1> a ns1:CSAM_Possession,
-        ns1:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ohio_ag_2015_013/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
     rdfs:label "pandering" .
 
-<https://w3id.org/caselinker/resource/case/ohio_ag_2015_013/legal-proceeding> a ns7:Event,
-        ns7:LegalEvent,
-        ns1:LegalProceeding ;
-    ns1:hasCharge <https://w3id.org/caselinker/resource/case/ohio_ag_2015_013/charge/1> ;
-    ns1:hasProceedingBeginPoint "2015-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ohio_ag_2015_013/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        ns4:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns4:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ohio_ag_2015_013/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ohio_ag_2015_013/legal-step/convicted> a ns7:Event,
-        ns7:LegalEvent,
-        ns1:LegalProceeding,
-        ns1:SentencingHearing ;
-    ns1:hasProceedingBeginPoint "2015-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ohio_ag_2015_013/legal-step/convicted> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        ns4:LegalProceeding,
+        ns4:SentencingHearing ;
+    rdfs:label "Sentencing Hearing · legal-step/convicted" .
 
-<https://w3id.org/caselinker/resource/case/ohio_ag_2015_013/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns6:ageEstimate 71 .
+<https://w3id.org/caselinker/resource/case/ohio_ag_2015_013/role/offender/1> a ns2:OffenderRole ;
+    rdfs:label "Offender Role · role/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ohio_ag_2015_013/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ohio_ag_2015_013/phase/convicted> a ns7:Phase,
-        ns1:SentencingPhase ;
-    ns2:hasPhaseBeginPoint "2015-01-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/kenton> a ns7:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/kenton-city-oh> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Kenton" ;
-    ns4:name "Kenton" .
+    rdfs:label "Kenton city" ;
+    dcterms:identifier "fips:3939886" ;
+    skos:altLabel "Kenton" ;
+    ns1:name "Kenton city" .
 
-<https://w3id.org/caselinker/resource/location/ohio> a ns7:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/ohio-oh> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Ohio" ;
-    ns4:name "Ohio" .
+    dcterms:identifier "fips:39" ;
+    ns1:name "Ohio" .
+
+<https://w3id.org/caselinker/resource/case/ohio_ag_2015_013/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/ohio_ag_2015_013/phase/convicted> a <https://cacontology.projectvic.org/core#Phase>,
+        ns4:SentencingPhase ;
+    rdfs:label "Sentencing Phase · phase/convicted" .
 

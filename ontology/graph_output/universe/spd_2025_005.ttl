@@ -1,91 +1,96 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
+@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/detection#> .
+@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://cacontology.projectvic.org/core#> .
-@prefix ns6: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns7: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/spd_2025_005> a ns1:CACInvestigation,
-        ns5:EnduringEntity ;
-    dcterms:created "2026-10-18 07:04:45.885347" ;
+<https://w3id.org/caselinker/resource/case/spd_2025_005> a ns5:CACInvestigation,
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case spd_2025_005" ;
+    dcterms:created "2026-11-11T17:47:05.310383"^^xsd:dateTime ;
+    dcterms:date "2025-04-21"^^xsd:date ;
     dcterms:identifier "spd_2025_005" ;
-    dcterms:modified "2026-10-18 07:04:45.885347" ;
+    dcterms:modified "2026-11-11T17:47:05.310383"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/spd_2025_005/provenance> ;
     dcterms:source <https://spdblotter.seattle.gov/2025/04/21/spd-afis-units-identify-suspect-in-recent-icac-investigation-help-provide-important-evidence-in-other-cases/>,
         "SPD" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/queen-anne>,
-        <https://w3id.org/caselinker/resource/location/seattle> ;
-    ns1:currentPhase <https://w3id.org/caselinker/resource/case/spd_2025_005/phase/arrested> ;
-    ns1:hasPhase <https://w3id.org/caselinker/resource/case/spd_2025_005/phase/arrested> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/spd_2025_005/event/csam>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/spd_2025_005/location/queen-anne>,
+        <https://w3id.org/caselinker/resource/location/seattle-city-wa> ;
+    ns5:currentPhase <https://w3id.org/caselinker/resource/case/spd_2025_005/phase/arrested> ;
+    ns5:hasPhase <https://w3id.org/caselinker/resource/case/spd_2025_005/phase/arrested> ;
+    ns5:hasStep <https://w3id.org/caselinker/resource/case/spd_2025_005/event/csam>,
         <https://w3id.org/caselinker/resource/case/spd_2025_005/event/hands-on>,
         <https://w3id.org/caselinker/resource/case/spd_2025_005/legal-proceeding> ;
-    ns1:investigationStatus "unknown" ;
-    ns7:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
-        <https://w3id.org/caselinker/resource/agency/seattle-police-department> ;
-    ns6:mentionsLocation <https://w3id.org/caselinker/resource/location/queen-anne>,
-        <https://w3id.org/caselinker/resource/location/seattle> .
+    ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+        <https://w3id.org/caselinker/resource/agency/seattle-police-department-wa> .
 
-<https://w3id.org/caselinker/resource/case/spd_2025_005/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2025-04-21T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/spd_2025_005/event/csam>,
-        <https://w3id.org/caselinker/resource/case/spd_2025_005/event/hands-on> ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/spd_2025_005/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/spd_2025_005/person/offender/1/age> a ns3:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns3:ageSubject <https://w3id.org/caselinker/resource/case/spd_2025_005/person/offender/1> ;
+    ns3:concernsAgeQuality ns3:Age ;
+    ns3:hasAgeInYears 63.0 .
 
-<https://w3id.org/caselinker/resource/case/spd_2025_005/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2025-04-21T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/spd_2025_005/event/csam>,
-        <https://w3id.org/caselinker/resource/case/spd_2025_005/event/hands-on> ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/spd_2025_005/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/spd_2025_005/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/spd_2025_005/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/spd_2025_005/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> .
+<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns2:name "ICAC Task Force" .
 
-<https://w3id.org/caselinker/resource/agency/seattle-police-department> a ns7:LocalAgency .
+<https://w3id.org/caselinker/resource/agency/seattle-police-department-wa> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns1:LocalAgency ;
+    rdfs:label "Seattle Police Department" ;
+    dcterms:identifier "ori:WASPD0000" ;
+    ns2:name "Seattle Police Department" .
 
 <https://w3id.org/caselinker/resource/case/spd_2025_005/charge/1> a ns4:CSAM_Possession,
         ns4:CriminalCharge ;
     rdfs:label "child sexual abuse material" .
 
-<https://w3id.org/caselinker/resource/case/spd_2025_005/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/spd_2025_005/event/csam> a ns5:CSAMIncident,
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/csam" .
 
-<https://w3id.org/caselinker/resource/case/spd_2025_005/legal-proceeding> a ns5:Event,
-        ns5:LegalEvent,
+<https://w3id.org/caselinker/resource/case/spd_2025_005/event/hands-on> a ns5:ChildSexualAbuseEvent,
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "Child Sexual Abuse Event · event/hands-on" .
+
+<https://w3id.org/caselinker/resource/case/spd_2025_005/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
         ns4:LegalProceeding ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/spd_2025_005/charge/1> ;
-    ns4:hasProceedingBeginPoint "2025-04-21T00:00:00Z"^^xsd:dateTimeStamp .
+    rdfs:label "Event · legal-proceeding" ;
+    ns4:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/spd_2025_005/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/spd_2025_005/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns3:ageEstimate 63 .
-
-<https://w3id.org/caselinker/resource/case/spd_2025_005/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/spd_2025_005/phase/arrested> a ns1:InitialPhase,
-        ns5:Phase ;
-    ns1:hasPhaseBeginPoint "2025-04-21T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/queen-anne> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/spd_2025_005/location/queen-anne> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Queen Anne" ;
     ns2:name "Queen Anne" .
 
-<https://w3id.org/caselinker/resource/location/seattle> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/spd_2025_005/role/offender/1> a ns4:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" .
+
+<https://w3id.org/caselinker/resource/location/seattle-city-wa> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Seattle" ;
-    ns2:name "Seattle" .
+    rdfs:label "Seattle city" ;
+    dcterms:identifier "fips:5363000" ;
+    skos:altLabel "Seattle" ;
+    ns2:name "Seattle city" .
 
-<https://w3id.org/caselinker/resource/case/spd_2025_005/event/csam> a ns1:CSAMIncident,
-        ns5:Event ;
-    ns1:severityLevel 3 ;
-    ns2:hasFacet <https://w3id.org/caselinker/resource/case/spd_2025_005/facet/csam> .
+<https://w3id.org/caselinker/resource/case/spd_2025_005/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/spd_2025_005/event/hands-on> a ns1:ChildSexualAbuseEvent,
-        ns5:Event ;
-    ns1:severityLevel 3 .
+<https://w3id.org/caselinker/resource/case/spd_2025_005/phase/arrested> a ns5:InitialPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Initial Phase · phase/arrested" .
 
-
-<https://w3id.org/caselinker/resource/case/spd_2025_005> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/spd_2025_005/provenance> .

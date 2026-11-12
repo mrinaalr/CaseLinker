@@ -1,74 +1,62 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://w3id.org/caselinker/resource/vocab/> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org#> .
+@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://cacontology.projectvic.org/detection#> .
-@prefix ns6: <https://cacontology.projectvic.org/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_854> a ns1:CACInvestigation,
-        ns6:EnduringEntity ;
-    dcterms:created "2026-10-17 23:04:34.669493" ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_854> a ns2:CACInvestigation,
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case ncmec_2024_854" ;
+    dcterms:created "2026-11-10T21:28:18.220850"^^xsd:dateTime ;
+    dcterms:date "2024-07-02"^^xsd:date ;
     dcterms:identifier "ncmec_2024_854" ;
-    dcterms:modified "2026-10-17 23:04:34.669493" ;
+    dcterms:modified "2026-11-12T00:50:57.005570"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_854/provenance> ;
     dcterms:source <https://www.dailyadvocate.com/2024/07/02/seelen-enters-guilty-plea-to-12-counts-of-pandering-obscenity-involving-a-minor/#:~:text=GREENVILLE%20%E2%80%94%20Christian%20L.,County%20Common%20Pleas%20Court%20Tuesday>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/greenville>,
-        <https://w3id.org/caselinker/resource/location/union-city> ;
-    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_854/phase/sentenced> ;
-    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_854/phase/sentenced> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_854/legal-proceeding>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_854/legal-step/sentenced> ;
-    ns3:mentionsLocation <https://w3id.org/caselinker/resource/location/greenville>,
-        <https://w3id.org/caselinker/resource/location/union-city> .
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2024_854/location/greenville>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_854/location/union-city> ;
+    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_854/legal-proceeding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_854/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2024-07-02T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns6:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_854/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_854/person/offender/1/age> a ns3:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns3:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_854/person/offender/1> ;
+    ns3:concernsAgeQuality ns3:Age ;
+    ns3:hasAgeInYears 28.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_854/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2024-07-02T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns6:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_854/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_854/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_854/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_854/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_854/charge/1> a ns4:CSAM_Possession,
         ns4:CriminalCharge ;
-    rdfs:label "PANDERING OBSCENITY INVOLVING A MINOR" ;
-    ns4:indictmentCounts 27 .
+    rdfs:label "PANDERING OBSCENITY INVOLVING A MINOR" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_854/legal-proceeding> a ns6:Event,
-        ns6:LegalEvent,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_854/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
         ns4:LegalProceeding ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_854/charge/1> ;
-    ns4:hasProceedingBeginPoint "2024-07-02T00:00:00Z"^^xsd:dateTimeStamp .
+    rdfs:label "Event · legal-proceeding" ;
+    ns4:chargeCount "27"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_854/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_854/legal-step/sentenced> a ns6:Event,
-        ns6:LegalEvent,
-        ns4:LegalProceeding,
-        ns4:SentencingHearing ;
-    ns4:hasProceedingBeginPoint "2024-07-02T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_854/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns5:ageEstimate 28 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_854/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_854/phase/sentenced> a ns6:Phase,
-        ns4:SentencingPhase ;
-    ns1:hasPhaseBeginPoint "2024-07-02T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/greenville> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_854/location/greenville> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Greenville" ;
-    ns2:name "Greenville" .
+    ns1:name "Greenville" .
 
-<https://w3id.org/caselinker/resource/location/union-city> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_854/location/union-city> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Union City" ;
-    ns2:name "Union City" .
+    ns1:name "Union City" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2024_854/role/offender/1> a ns4:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_854> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2024_854/provenance> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_854/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+

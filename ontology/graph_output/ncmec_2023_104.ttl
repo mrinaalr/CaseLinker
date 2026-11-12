@@ -1,121 +1,99 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/core#> .
-@prefix ns2: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns1: <https://cacontology.projectvic.org#> .
+@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/core#> .
 @prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://cacontology.projectvic.org/detection#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_104/admission/1/extraction-confidence> a ns1:AssessmentResult ;
-    ns1:assesses <https://w3id.org/caselinker/resource/case/ncmec_2023_104/admission/1> ;
-    ns1:generatedBy <https://w3id.org/caselinker/resource/case/ncmec_2023_104> ;
-    ns1:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_104/role/victim/1> a ns3:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns3:hasRoleBeginPoint "2023-09-13T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_104/event/hands-on>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2023_104/event/possession> ;
-    ns1:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_104/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_104> a ns3:CACInvestigation,
-        ns1:EnduringEntity ;
-    dcterms:created "2026-10-17 22:21:29.057106" ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_104> a ns1:CACInvestigation,
+        ns4:EnduringEntity ;
+    rdfs:label "Case ncmec_2023_104" ;
+    dcterms:created "2026-11-10T10:03:04.496738"^^xsd:dateTime ;
+    dcterms:date "2023-09-13"^^xsd:date ;
     dcterms:identifier "ncmec_2023_104" ;
-    dcterms:modified "2026-10-17 22:21:29.057106" ;
+    dcterms:modified "2026-11-10T10:03:04.496738"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2023_104/provenance> ;
     dcterms:source <https://dailydodge.com/mayville-man-facing-first-degree-child-sexual-assault-charges/>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/mayville> ;
-    ns3:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_104/phase/convicted> ;
-    ns3:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_104/phase/convicted> ;
-    ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_104/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2023_104/event/hands-on>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2023_104/location/mayville> ;
+    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_104/event/hands-on>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_104/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_104/legal-proceeding>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2023_104/legal-step/convicted>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_104/operation> ;
-    ns3:usesMethod <https://w3id.org/caselinker/resource/case/ncmec_2023_104/tech/cybertipline> ;
-    ns2:mentionsLocation <https://w3id.org/caselinker/resource/location/mayville> .
+    ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2023_104/admission/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2023_104/cybertip> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_104/admission/1/extraction-confidence> a ns4:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns4:assesses <https://w3id.org/caselinker/resource/case/ncmec_2023_104/admission/1> ;
+    ns4:hasConfidence 0.65 ;
+    ns4:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_104/person/offender/1/age> a ns2:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns2:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2023_104/person/offender/1> ;
+    ns2:concernsAgeQuality ns2:Age ;
+    ns2:hasAgeInYears 23.0 .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_104/role/offender/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2023_104/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2023_104/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/platform/kik> a ns4:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#MessagingService> ;
+    rdfs:label "Kik" ;
+    ns3:name "Kik" .
+
+<https://w3id.org/caselinker/resource/platform/social-media> a ns4:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "social media" ;
+    ns3:name "social media" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_104/charge/1> a ns5:CSAM_Possession,
         ns5:CriminalCharge ;
-    rdfs:label "possession of child pornography" ;
-    ns5:indictmentCounts 3 .
+    rdfs:label "possession of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_104/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_104/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
+    rdfs:label "CyberTipline report" ;
+    ns3:name "observe" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_104/legal-proceeding> a ns1:Event,
-        ns1:LegalEvent,
+<https://w3id.org/caselinker/resource/case/ncmec_2023_104/event/hands-on> a ns1:ChildSexualAbuseEvent,
+        ns4:Event ;
+    rdfs:label "Child Sexual Abuse Event · event/hands-on" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_104/event/possession> a ns1:CSAMIncident,
+        ns4:Event ;
+    rdfs:label "CSAMIncident · event/possession" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_104/legal-proceeding> a ns4:Event,
+        ns4:LegalEvent,
         ns5:LegalProceeding ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_104/charge/1> ;
-    ns5:hasProceedingBeginPoint "2023-09-13T00:00:00Z"^^xsd:dateTimeStamp .
+    rdfs:label "Event · legal-proceeding" ;
+    ns5:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_104/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_104/legal-step/convicted> a ns1:Event,
-        ns1:LegalEvent,
-        ns5:LegalProceeding,
-        ns5:SentencingHearing ;
-    ns5:hasProceedingBeginPoint "2023-09-13T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_104/operation> a ns1:Event,
-        <https://cacontology.projectvic.org/taskforce#ReactiveOperation> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_104/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns6:ageEstimate 23 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_104/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_104/role/offender/1> a ns3:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns3:hasRoleBeginPoint "2023-09-13T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_104/event/hands-on>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2023_104/event/possession> ;
-    ns1:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_104/person/offender/1> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_104/tech/cybertipline> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
-    rdfs:label "CyberTipline" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_104/phase/convicted> a ns1:Phase,
-        ns5:SentencingPhase ;
-    ns3:hasPhaseBeginPoint "2023-09-13T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/mayville> a ns1:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2023_104/location/mayville> a ns4:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Mayville" ;
-    ns4:name "Mayville" .
+    ns3:name "Mayville" .
 
-<https://w3id.org/caselinker/resource/platform/kik> a <https://cacontology.projectvic.org/platforms#MessagingService> ;
-    rdfs:label "Kik" .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_104/operation> a ns4:Event,
+        <https://cacontology.projectvic.org/taskforce#ReactiveOperation> ;
+    rdfs:label "Reactive Operation · operation" .
 
-<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "social media" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_104/event/hands-on> a ns3:ChildSexualAbuseEvent,
-        ns1:Event ;
-    ns3:producesArtifact <https://w3id.org/caselinker/resource/case/ncmec_2023_104/admission/1> ;
-    ns3:severityLevel 3 ;
-    ns3:usesChannel <https://w3id.org/caselinker/resource/platform/kik>,
-        <https://w3id.org/caselinker/resource/platform/social-media> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_104/event/possession> a ns3:CSAMIncident,
-        ns1:Event ;
-    ns3:producesArtifact <https://w3id.org/caselinker/resource/case/ncmec_2023_104/admission/1> ;
-    ns3:severityLevel 3 ;
-    ns3:usesChannel <https://w3id.org/caselinker/resource/platform/kik>,
-        <https://w3id.org/caselinker/resource/platform/social-media> ;
-    ns4:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2023_104/facet/possession> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_104/role/offender/1> a ns5:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_104/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "was hoping that the victim was young enough not to remember" ;
     dcterms:source <https://dailydodge.com/mayville-man-facing-first-degree-child-sexual-assault-charges/> ;
-    ns2:admissionContext "reportedly said (quote) “it was one time” and “it was an accident.” The 23-year-old also allegedly said he was hoping that the victim was..." ;
-    ns2:admissionFrame "said_paraphrase" ;
-    ns2:admissionTheme "harm_conduct" ;
-    ns2:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/ncmec_2023_104/role/offender/1> ;
-    ns2:evidenceTier "press_release_stated" ;
-    ns2:quoteType "paraphrase" ;
-    ns4:description "was hoping that the victim was young enough not to remember" .
+    ns3:description "was hoping that the victim was young enough not to remember" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2023_104/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_104> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2023_104/provenance> .

@@ -1,23 +1,25 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/core#> .
+@prefix ns1: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns5: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns6: <https://cacontology.projectvic.org/detection#> .
-@prefix ns7: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ky_sp_2026_021> a ns2:CACInvestigation,
-        ns1:EnduringEntity ;
-    dcterms:created "2026-10-18 05:15:33.109884" ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case ky_sp_2026_021" ;
+    dcterms:created "2026-11-11T15:07:49.529936"^^xsd:dateTime ;
+    dcterms:date "2026-04-10"^^xsd:date ;
     dcterms:identifier "ky_sp_2026_021" ;
-    dcterms:modified "2026-10-18 05:15:33.109884" ;
+    dcterms:modified "2026-11-11T15:07:49.529936"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ky_sp_2026_021/provenance> ;
     dcterms:source <https://www.kentuckystatepolice.ky.gov/news/ecb-4-10-2026/>,
         "KY SP" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/ky>,
-        <https://w3id.org/caselinker/resource/location/manchester> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/kentucky-ky>,
+        <https://w3id.org/caselinker/resource/location/manchester-city-ky> ;
     ns2:currentPhase <https://w3id.org/caselinker/resource/case/ky_sp_2026_021/phase/charged> ;
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/ky_sp_2026_021/phase/charged> ;
     ns2:hasStep <https://w3id.org/caselinker/resource/case/ky_sp_2026_021/event/csam>,
@@ -25,81 +27,86 @@
         <https://w3id.org/caselinker/resource/case/ky_sp_2026_021/event/hands-on>,
         <https://w3id.org/caselinker/resource/case/ky_sp_2026_021/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/ky_sp_2026_021/operation> ;
-    ns7:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
-        <https://w3id.org/caselinker/resource/agency/kentucky-state-police-department> ;
-    ns5:mentionsLocation <https://w3id.org/caselinker/resource/location/ky>,
-        <https://w3id.org/caselinker/resource/location/manchester> .
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+        <https://w3id.org/caselinker/resource/agency/kentucky-state-police-department> .
 
-<https://w3id.org/caselinker/resource/case/ky_sp_2026_021/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2026-04-10T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ky_sp_2026_021/event/csam>,
-        <https://w3id.org/caselinker/resource/case/ky_sp_2026_021/event/hands-on> ;
-    ns1:hasRole <https://w3id.org/caselinker/resource/case/ky_sp_2026_021/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ky_sp_2026_021/person/offender/1/age> a ns1:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns1:ageSubject <https://w3id.org/caselinker/resource/case/ky_sp_2026_021/person/offender/1> ;
+    ns1:concernsAgeQuality ns1:Age ;
+    ns1:hasAgeInYears 20.0 .
 
-<https://w3id.org/caselinker/resource/case/ky_sp_2026_021/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2026-04-10T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ky_sp_2026_021/event/csam>,
-        <https://w3id.org/caselinker/resource/case/ky_sp_2026_021/event/hands-on> ;
-    ns1:hasRole <https://w3id.org/caselinker/resource/case/ky_sp_2026_021/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ky_sp_2026_021/role/offender/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ky_sp_2026_021/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ky_sp_2026_021/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> .
+<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns3:name "ICAC Task Force" .
 
-<https://w3id.org/caselinker/resource/agency/kentucky-state-police-department> a ns7:StateAgency .
+<https://w3id.org/caselinker/resource/agency/kentucky-state-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns4:StateAgency ;
+    rdfs:label "Kentucky State Police Department" ;
+    ns3:name "Kentucky State Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ky_sp_2026_021/charge/1> a ns3:CSAM_Possession,
-        ns3:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ky_sp_2026_021/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
     rdfs:label "child sexual abuse material" .
 
-<https://w3id.org/caselinker/resource/case/ky_sp_2026_021/charge/2> a ns3:CriminalCharge ;
-    rdfs:label "sexual exploitation" ;
-    ns5:chargeCluster "sexual_exploitation_unspecified" .
-
-<https://w3id.org/caselinker/resource/case/ky_sp_2026_021/event/distribution> a ns1:Event,
-        ns3:CSAM_Distribution ;
-    ns2:severityLevel 3 .
-
-<https://w3id.org/caselinker/resource/case/ky_sp_2026_021/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/ky_sp_2026_021/legal-proceeding> a ns1:Event,
-        ns1:LegalEvent,
-        ns3:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): lodged in the Clay County Detention Center" ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ky_sp_2026_021/charge/1>,
-        <https://w3id.org/caselinker/resource/case/ky_sp_2026_021/charge/2> ;
-    ns3:hasProceedingBeginPoint "2026-04-10T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/ky_sp_2026_021/operation> a ns1:Event,
-        <https://cacontology.projectvic.org/taskforce#UndercoverUnit> .
-
-<https://w3id.org/caselinker/resource/case/ky_sp_2026_021/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns6:ageEstimate 20 .
-
-<https://w3id.org/caselinker/resource/case/ky_sp_2026_021/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ky_sp_2026_021/phase/charged> a ns2:LegalProcessPhase,
-        ns1:Phase ;
-    ns2:hasPhaseBeginPoint "2026-04-10T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/ky> a ns1:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Ky." ;
-    ns4:name "Ky." .
-
-<https://w3id.org/caselinker/resource/location/manchester> a ns1:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Manchester" ;
-    ns4:name "Manchester" .
+<https://w3id.org/caselinker/resource/case/ky_sp_2026_021/charge/2> a ns5:CriminalCharge ;
+    rdfs:label "sexual exploitation" .
 
 <https://w3id.org/caselinker/resource/case/ky_sp_2026_021/event/csam> a ns2:CSAMIncident,
-        ns1:Event ;
-    ns2:severityLevel 3 ;
-    ns4:hasFacet <https://w3id.org/caselinker/resource/case/ky_sp_2026_021/facet/csam> .
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/csam" .
+
+<https://w3id.org/caselinker/resource/case/ky_sp_2026_021/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
+        ns5:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/ky_sp_2026_021/event/hands-on> a ns2:ChildSexualAbuseEvent,
-        ns1:Event ;
-    ns2:severityLevel 3 .
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "Child Sexual Abuse Event · event/hands-on" .
 
+<https://w3id.org/caselinker/resource/case/ky_sp_2026_021/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        ns5:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    rdfs:comment "Pretrial detention facility (not a sentence): lodged in the Clay County Detention Center" ;
+    ns5:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ky_sp_2026_021/charge/1>,
+        <https://w3id.org/caselinker/resource/case/ky_sp_2026_021/charge/2> .
 
-<https://w3id.org/caselinker/resource/case/ky_sp_2026_021> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ky_sp_2026_021/provenance> .
+<https://w3id.org/caselinker/resource/case/ky_sp_2026_021/operation> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/undercover#UndercoverOperation> ;
+    rdfs:label "Undercover Operation · operation" .
+
+<https://w3id.org/caselinker/resource/case/ky_sp_2026_021/role/offender/1> a ns5:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" .
+
+<https://w3id.org/caselinker/resource/location/kentucky-ky> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Kentucky" ;
+    dcterms:identifier "fips:21" ;
+    skos:altLabel "Ky." ;
+    ns3:name "Kentucky" .
+
+<https://w3id.org/caselinker/resource/location/manchester-city-ky> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Manchester city" ;
+    dcterms:identifier "fips:2149656" ;
+    skos:altLabel "Manchester" ;
+    ns3:name "Manchester city" .
+
+<https://w3id.org/caselinker/resource/case/ky_sp_2026_021/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/ky_sp_2026_021/phase/charged> a ns2:LegalProcessPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Legal Process Phase · phase/charged" .
+

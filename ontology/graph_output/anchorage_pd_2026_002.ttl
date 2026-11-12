@@ -1,64 +1,75 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns3: <https://cacontology.projectvic.org/core#> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns5: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns6: <https://cacontology.projectvic.org/detection#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns3: <https://cacontology.projectvic.org#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/anchorage_pd_2026_002> a ns1:CACInvestigation,
-        ns3:EnduringEntity ;
-    dcterms:created "2026-10-18 00:39:05.924194" ;
+<https://w3id.org/caselinker/resource/case/anchorage_pd_2026_002> a ns3:CACInvestigation,
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case anchorage_pd_2026_002" ;
+    dcterms:created "2026-11-10T17:49:35.786619"^^xsd:dateTime ;
+    dcterms:date "2026-04-24"^^xsd:date ;
     dcterms:identifier "anchorage_pd_2026_002" ;
-    dcterms:modified "2026-10-18 00:39:05.924194" ;
+    dcterms:modified "2026-11-10T17:49:35.786619"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/anchorage_pd_2026_002/provenance> ;
     dcterms:source <https://www.anchoragepolice.com/news/james-williams-charged-in-sexual-abuse-of-a-minor-case-victims-being-sought>,
         "ANCHORAGE PD" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/anchorage>,
-        <https://w3id.org/caselinker/resource/location/klawock> ;
-    ns1:currentPhase <https://w3id.org/caselinker/resource/case/anchorage_pd_2026_002/phase/indicted> ;
-    ns1:hasPhase <https://w3id.org/caselinker/resource/case/anchorage_pd_2026_002/phase/indicted> ;
-    ns1:investigationStatus "unknown" ;
-    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/anchorage-police-department>,
-        <https://w3id.org/caselinker/resource/agency/klawock-police-department> ;
-    ns5:mentionsLocation <https://w3id.org/caselinker/resource/location/anchorage>,
-        <https://w3id.org/caselinker/resource/location/klawock> .
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/anchorage-municipality-ak>,
+        <https://w3id.org/caselinker/resource/location/klawock-city-ak> ;
+    ns3:currentPhase <https://w3id.org/caselinker/resource/case/anchorage_pd_2026_002/phase/indicted> ;
+    ns3:hasPhase <https://w3id.org/caselinker/resource/case/anchorage_pd_2026_002/phase/indicted> ;
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/anchorage-police-department-ak>,
+        <https://w3id.org/caselinker/resource/agency/klawock-police-department-ak> .
 
-<https://w3id.org/caselinker/resource/case/anchorage_pd_2026_002/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2026-04-24T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/anchorage_pd_2026_002/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/anchorage_pd_2026_002/person/offender/1/age> a ns2:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns2:ageSubject <https://w3id.org/caselinker/resource/case/anchorage_pd_2026_002/person/offender/1> ;
+    ns2:concernsAgeQuality ns2:Age ;
+    ns2:hasAgeInYears 87.0 .
 
-<https://w3id.org/caselinker/resource/case/anchorage_pd_2026_002/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2026-04-24T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/anchorage_pd_2026_002/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/anchorage_pd_2026_002/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/anchorage_pd_2026_002/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/anchorage_pd_2026_002/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/anchorage-police-department> a ns2:LocalAgency .
+<https://w3id.org/caselinker/resource/agency/anchorage-police-department-ak> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns4:LocalAgency ;
+    rdfs:label "Anchorage Police Department" ;
+    dcterms:identifier "ori:AK0010100" ;
+    ns1:name "Anchorage Police Department" .
 
-<https://w3id.org/caselinker/resource/agency/klawock-police-department> a ns3:OrganizationLikeEntity,
-        ns2:LocalAgency ;
-    rdfs:label "Klawock Police Department" .
+<https://w3id.org/caselinker/resource/agency/klawock-police-department-ak> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns4:LocalAgency ;
+    rdfs:label "Klawock Police Department" ;
+    dcterms:identifier "ori:AK0013500" ;
+    ns1:name "Klawock Police Department" .
+
+<https://w3id.org/caselinker/resource/case/anchorage_pd_2026_002/role/offender/1> a <https://cacontology.projectvic.org/legal-outcomes#DefendantRole> ;
+    rdfs:label "Defendant Role · role/offender/1" .
+
+<https://w3id.org/caselinker/resource/location/anchorage-municipality-ak> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Anchorage municipality" ;
+    dcterms:identifier "fips:0203000" ;
+    skos:altLabel "Anchorage" ;
+    ns1:name "Anchorage municipality" .
+
+<https://w3id.org/caselinker/resource/location/klawock-city-ak> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Klawock city" ;
+    dcterms:identifier "fips:0240400" ;
+    skos:altLabel "Klawock" ;
+    ns1:name "Klawock city" .
 
 <https://w3id.org/caselinker/resource/case/anchorage_pd_2026_002/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns6:ageEstimate 87 .
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/anchorage_pd_2026_002/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/anchorage_pd_2026_002/phase/indicted> a ns3:LegalProcessPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Legal Process Phase · phase/indicted" .
 
-<https://w3id.org/caselinker/resource/case/anchorage_pd_2026_002/phase/indicted> a ns1:LegalProcessPhase,
-        ns3:Phase ;
-    ns1:hasPhaseBeginPoint "2026-04-24T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/anchorage> a ns3:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Anchorage" ;
-    ns4:name "Anchorage" .
-
-<https://w3id.org/caselinker/resource/location/klawock> a ns3:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Klawock" ;
-    ns4:name "Klawock" .
-
-
-<https://w3id.org/caselinker/resource/case/anchorage_pd_2026_002> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/anchorage_pd_2026_002/provenance> .

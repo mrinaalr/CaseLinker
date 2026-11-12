@@ -1,94 +1,98 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns1: <https://cacontology.projectvic.org/core#> .
 @prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns3: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns4: <https://cacontology.projectvic.org/core#> .
-@prefix ns5: <https://cacontology.projectvic.org#> .
-@prefix ns6: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns7: <https://cacontology.projectvic.org/us/ncmec#> .
+@prefix ns3: <https://cacontology.projectvic.org#> .
+@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1192/admission/1/extraction-confidence> a ns4:AssessmentResult ;
-    ns4:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_1192/admission/1> ;
-    ns4:generatedBy <https://w3id.org/caselinker/resource/case/ncmec_2024_1192> ;
-    ns4:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1192/role/victim/1> a ns5:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns5:hasRoleBeginPoint "2024-11-14T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns5:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_1192/event/possession> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_1192/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/agency/department-of-criminal-investigation> a ns2:LocalAgency .
-
-<https://w3id.org/caselinker/resource/agency/manitowoc-police-department> a ns2:LocalAgency .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1192> a ns5:CACInvestigation,
-        ns4:EnduringEntity ;
-    dcterms:created "2026-10-17 23:04:39.463759" ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1192> a ns3:CACInvestigation,
+        ns1:EnduringEntity ;
+    rdfs:label "Case ncmec_2024_1192" ;
+    dcterms:created "2026-11-11T23:57:56.207732"^^xsd:dateTime ;
+    dcterms:date "2024-11-14"^^xsd:date ;
     dcterms:identifier "ncmec_2024_1192" ;
-    dcterms:modified "2026-10-17 23:04:39.463759" ;
+    dcterms:modified "2026-11-11T23:57:56.207732"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_1192/provenance> ;
     dcterms:source <https://www.seehafernews.com/2024/11/14/manitowoc-teen-jailed-on-child-porn-charges/>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/manitowoc> ;
-    ns5:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_1192/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_1192/cybertip>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_1192/event/possession>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/manitowoc-city> ;
+    ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_1192/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_1192/legal-proceeding> ;
-    ns5:investigationStatus "unknown" ;
-    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/department-of-criminal-investigation>,
-        <https://w3id.org/caselinker/resource/agency/manitowoc-police-department>,
-        <https://w3id.org/caselinker/resource/agency/ncmec> ;
-    ns3:mentionsLocation <https://w3id.org/caselinker/resource/location/manitowoc> .
+    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_1192/agency/department-of-criminal-investigation>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_1192/agency/manitowoc-police-department> ;
+    ns4:object <https://w3id.org/caselinker/resource/case/ncmec_2024_1192/admission/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1192/charge/1> a ns1:CSAM_Possession,
-        ns1:CriminalCharge ;
-    rdfs:label "possession of child pornography" ;
-    ns1:indictmentCounts 3 .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1192/admission/1/extraction-confidence> a ns1:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_1192/admission/1> ;
+    ns1:hasConfidence 0.65 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1192/cybertip> a ns7:NCMECCybertipReport ;
-    ns7:supportedBy <https://w3id.org/caselinker/resource/agency/ncmec> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1192/assessment/semantic/possession-csam> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns3:CSAMIncident ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_1192/narrative> ;
+    ns1:hasConfidence 0.5306 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1192/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1192/role/offender/1/has-role> a ns4:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns4:isDirectional true ;
+    ns4:kindOfRelationship "Has_Role" ;
+    ns4:source <https://w3id.org/caselinker/resource/case/ncmec_2024_1192/person/offender/1> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/ncmec_2024_1192/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1192/legal-proceeding> a ns4:Event,
-        ns4:LegalEvent,
-        ns1:LegalProceeding ;
-    ns1:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_1192/charge/1> ;
-    ns1:hasProceedingBeginPoint "2024-11-14T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/agency/ncmec> a ns1:OrganizationLikeEntity,
+        ns2:FederalAgency ;
+    rdfs:label "National Center for Missing and Exploited Children" ;
+    skos:altLabel "NCMEC" ;
+    ns4:name "National Center for Missing and Exploited Children" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1192/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1192/agency/department-of-criminal-investigation> a ns1:OrganizationLikeEntity,
+        ns2:LocalAgency ;
+    rdfs:label "Department of Criminal Investigation" ;
+    ns4:name "Department of Criminal Investigation" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1192/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1192/agency/manitowoc-police-department> a ns1:OrganizationLikeEntity,
+        ns2:LocalAgency ;
+    rdfs:label "Manitowoc Police Department" ;
+    ns4:name "Manitowoc Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1192/role/offender/1> a ns5:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns5:hasRoleBeginPoint "2024-11-14T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns5:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_1192/event/possession> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_1192/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1192/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
+    rdfs:label "possession of child pornography" .
 
-<https://w3id.org/caselinker/resource/agency/ncmec> a ns2:FederalAgency .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1192/legal-proceeding> a ns1:Event,
+        ns1:LegalEvent,
+        ns5:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns5:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_1192/charge/1> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1192/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1192/role/offender/1> a ns5:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_1192/event/possession> .
+
+<https://w3id.org/caselinker/resource/location/manitowoc-city> a ns1:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Manitowoc city" ;
+    dcterms:identifier "fips:5548500" ;
+    skos:altLabel "Manitowoc" ;
+    ns4:name "Manitowoc city" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_1192/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "searched for the material because he was “curious" ;
     dcterms:source <https://www.seehafernews.com/2024/11/14/manitowoc-teen-jailed-on-child-porn-charges/> ;
-    ns3:admissionContext "or Missing and Exploited Children. When asked about the six photos on his phone, Martinez-Figueroa said he searched for the material beca..." ;
-    ns3:admissionFrame "said_paraphrase" ;
-    ns3:admissionTheme "other" ;
-    ns3:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/ncmec_2024_1192/role/offender/1> ;
-    ns3:evidenceTier "press_release_stated" ;
-    ns3:quoteType "paraphrase" ;
-    ns6:description "searched for the material because he was “curious" .
+    ns4:description "searched for the material because he was “curious" .
 
-<https://w3id.org/caselinker/resource/location/manitowoc> a ns4:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Manitowoc" ;
-    ns6:name "Manitowoc" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1192/event/possession> a ns3:CSAMIncident,
+        ns1:Event ;
+    rdfs:label "CSAMIncident · event/possession" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1192/event/possession> a ns5:CSAMIncident,
-        ns4:Event ;
-    ns6:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2024_1192/facet/possession> .
-
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1192> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2024_1192/provenance> .

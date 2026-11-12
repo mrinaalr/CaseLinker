@@ -1,82 +1,86 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://cacontology.projectvic.org/detection#> .
-@prefix ns6: <https://cacontology.projectvic.org/core#> .
-@prefix ns7: <https://w3id.org/caselinker/resource/vocab/> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_920> a ns2:CACInvestigation,
-        ns6:EnduringEntity ;
-    dcterms:created "2026-10-18 00:01:25.872503" ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case ncmec_2025_920" ;
+    dcterms:created "2026-11-10T16:38:25.375975"^^xsd:dateTime ;
+    dcterms:date "2025-05-02"^^xsd:date ;
     dcterms:identifier "ncmec_2025_920" ;
-    dcterms:modified "2026-10-18 00:01:25.872503" ;
+    dcterms:modified "2026-11-12T02:17:06.024763"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2025_920/provenance> ;
     dcterms:source <https://www.hjnews.com/news/crime_and_courts/illegal-firearms-domestic-violence-child-sexual-abuse-compact-crime-wrap-up-april-25-may-1/article_1ab0983d-7a35-4390-8869-6004bbdcac68.html>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/cache-county>,
-        <https://w3id.org/caselinker/resource/location/hyrum> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/cache-county-ut>,
+        <https://w3id.org/caselinker/resource/location/hyrum-city> ;
     ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_920/phase/charged> ;
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_920/phase/charged> ;
     ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_920/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_920/legal-proceeding> ;
-    ns2:investigationStatus "unknown" ;
-    ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/cache-county-sheriffs-office> ;
-    ns7:mentionsLocation <https://w3id.org/caselinker/resource/location/cache-county>,
-        <https://w3id.org/caselinker/resource/location/hyrum> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2025_920/agency/cache-county-sheriffs-office> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_920/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2025-05-02T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_920/event/possession> ;
-    ns6:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2025_920/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_920/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2025_920/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 28.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_920/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2025-05-02T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_920/event/possession> ;
-    ns6:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2025_920/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_920/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2025_920/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2025_920/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/cache-county-sheriffs-office> a ns1:LocalAgency .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_920/agency/cache-county-sheriffs-office> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns5:LocalAgency ;
+    rdfs:label "Cache County Sheriff's Office" ;
+    ns1:name "Cache County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_920/charge/1> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
-    rdfs:label "child pornography" ;
-    ns4:indictmentCounts 2 .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_920/charge/1> a ns3:CSAM_Possession,
+        ns3:CriminalCharge ;
+    rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_920/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_920/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        ns3:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns3:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_920/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_920/legal-proceeding> a ns6:Event,
-        ns6:LegalEvent,
-        ns4:LegalProceeding ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_920/charge/1> ;
-    ns4:hasProceedingBeginPoint "2025-05-02T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_920/role/offender/1> a ns3:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_920/event/possession> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_920/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns5:ageEstimate 28 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_920/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_920/phase/charged> a ns2:LegalProcessPhase,
-        ns6:Phase ;
-    ns2:hasPhaseBeginPoint "2025-05-02T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/cache-county> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/cache-county-ut> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Cache County" ;
-    ns3:name "Cache County" .
+    dcterms:identifier "fips:49005" ;
+    ns1:name "Cache County" .
 
-<https://w3id.org/caselinker/resource/location/hyrum> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/hyrum-city> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Hyrum" ;
-    ns3:name "Hyrum" .
+    rdfs:label "Hyrum city" ;
+    dcterms:identifier "fips:4937500" ;
+    skos:altLabel "Hyrum" ;
+    ns1:name "Hyrum city" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_920/event/possession> a ns2:CSAMIncident,
-        ns6:Event ;
-    ns2:severityLevel 3 ;
-    ns3:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2025_920/facet/possession> .
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns2:severityLevel 3 .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2025_920/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_920> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2025_920/provenance> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_920/phase/charged> a ns2:LegalProcessPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Legal Process Phase · phase/charged" .
+

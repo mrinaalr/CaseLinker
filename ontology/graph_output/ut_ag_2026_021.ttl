@@ -1,81 +1,89 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://w3id.org/caselinker/resource/vocab/> .
+@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns3: <https://cacontology.projectvic.org/core#> .
 @prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ut_ag_2026_021> a ns1:CACInvestigation,
         ns3:EnduringEntity ;
-    dcterms:created "2026-10-18 07:37:09.202459" ;
+    rdfs:label "Case ut_ag_2026_021" ;
+    dcterms:created "2026-11-11T18:27:52.793591"^^xsd:dateTime ;
+    dcterms:date "2026-01"^^xsd:gYearMonth ;
     dcterms:identifier "ut_ag_2026_021" ;
-    dcterms:modified "2026-10-18 07:37:09.202459" ;
+    dcterms:modified "2026-11-11T18:27:52.793591"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ut_ag_2026_021/provenance> ;
     dcterms:source <https://attorneygeneral.utah.gov/icac-capture/>,
         "UT AG" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/salt-lake-city> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/salt-lake-city-city-ut> ;
     ns1:currentPhase <https://w3id.org/caselinker/resource/case/ut_ag_2026_021/phase/charged> ;
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/ut_ag_2026_021/phase/charged> ;
     ns1:hasStep <https://w3id.org/caselinker/resource/case/ut_ag_2026_021/event/csam>,
         <https://w3id.org/caselinker/resource/case/ut_ag_2026_021/legal-proceeding> ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/icac> ;
-    ns2:mentionsLocation <https://w3id.org/caselinker/resource/location/salt-lake-city> .
+    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/icac> .
 
-<https://w3id.org/caselinker/resource/case/ut_ag_2026_021/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ut_ag_2026_021/event/csam> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/ut_ag_2026_021/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ut_ag_2026_021/assessment/semantic/exploitive-positions> a ns3:AssessmentResult ;
+    rdfs:label "semantic similarity · exploitive_positions" ;
+    dcterms:subject <https://cacontology.projectvic.org/custodial#PositionOfTrust> ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/ut_ag_2026_021/narrative> ;
+    ns3:hasConfidence 0.4726 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ut_ag_2026_021/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ut_ag_2026_021/event/csam> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/ut_ag_2026_021/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ut_ag_2026_021/role/offender/1/has-role> a ns4:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns4:isDirectional true ;
+    ns4:kindOfRelationship "Has_Role" ;
+    ns4:source <https://w3id.org/caselinker/resource/case/ut_ag_2026_021/person/offender/1> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/ut_ag_2026_021/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> .
+<https://w3id.org/caselinker/resource/agency/icac> a ns3:OrganizationLikeEntity,
+        <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns4:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/case/ut_ag_2026_021/charge/1> a ns5:CriminalCharge,
         ns5:StateCharge ;
-    rdfs:label "felony sexual exploitation of a minor" ;
-    ns5:indictmentCounts 11 .
+    rdfs:label "felony sexual exploitation of a minor" .
 
 <https://w3id.org/caselinker/resource/case/ut_ag_2026_021/charge/2> a ns5:CSAM_Possession,
         ns5:CriminalCharge ;
     rdfs:label "child pornography" .
 
 <https://w3id.org/caselinker/resource/case/ut_ag_2026_021/charge/3> a ns5:CriminalCharge ;
-    rdfs:label "sexual exploitation" ;
-    ns2:chargeCluster "sexual_exploitation_unspecified" .
-
-<https://w3id.org/caselinker/resource/case/ut_ag_2026_021/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+    rdfs:label "sexual exploitation" .
 
 <https://w3id.org/caselinker/resource/case/ut_ag_2026_021/legal-proceeding> a ns3:Event,
         ns3:LegalEvent,
         ns5:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns5:chargeCount "13"^^xsd:nonNegativeInteger ;
     ns5:hasCharge <https://w3id.org/caselinker/resource/case/ut_ag_2026_021/charge/1>,
         <https://w3id.org/caselinker/resource/case/ut_ag_2026_021/charge/2>,
-        <https://w3id.org/caselinker/resource/case/ut_ag_2026_021/charge/3> ;
-    ns5:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+        <https://w3id.org/caselinker/resource/case/ut_ag_2026_021/charge/3> .
 
-<https://w3id.org/caselinker/resource/case/ut_ag_2026_021/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/ut_ag_2026_021/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ut_ag_2026_021/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/ut_ag_2026_021/role/offender/1> a ns5:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ut_ag_2026_021/event/csam> .
 
-<https://w3id.org/caselinker/resource/case/ut_ag_2026_021/phase/charged> a ns1:LegalProcessPhase,
-        ns3:Phase ;
-    ns1:hasPhaseBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/salt-lake-city> a ns3:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/salt-lake-city-city-ut> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Salt Lake City" ;
-    ns4:name "Salt Lake City" .
+    rdfs:label "Salt Lake City city" ;
+    dcterms:identifier "fips:4967000" ;
+    skos:altLabel "Salt Lake City" ;
+    ns4:name "Salt Lake City city" .
 
 <https://w3id.org/caselinker/resource/case/ut_ag_2026_021/event/csam> a ns1:CSAMIncident,
         ns3:Event ;
-    ns4:hasFacet <https://w3id.org/caselinker/resource/case/ut_ag_2026_021/facet/csam> .
+    rdfs:label "CSAMIncident · event/csam" .
 
+<https://w3id.org/caselinker/resource/case/ut_ag_2026_021/phase/charged> a ns1:LegalProcessPhase,
+        ns3:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
 
-<https://w3id.org/caselinker/resource/case/ut_ag_2026_021> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ut_ag_2026_021/provenance> .

@@ -1,107 +1,111 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://cacontology.projectvic.org/core#> .
-@prefix ns5: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns7: <https://cacontology.projectvic.org/detection#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_369> a ns1:CACInvestigation,
-        ns4:EnduringEntity ;
-    dcterms:created "2026-10-17 21:51:23.969382" ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case ncmec_2022_369" ;
+    dcterms:created "2026-11-10T09:19:08.909891"^^xsd:dateTime ;
+    dcterms:date "2022-03-08"^^xsd:date ;
     dcterms:identifier "ncmec_2022_369" ;
-    dcterms:modified "2026-10-17 21:51:23.969382" ;
+    dcterms:modified "2026-11-10T09:19:08.909891"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2022_369/provenance> ;
     dcterms:source <https://www.cachevalleydaily.com/news/archive/2022/03/08/hyrum-man-charged-with-sharing-child-pornography-through-facebook/#.YjTKoOrMKUk>,
         "NCMEC" ;
-    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_369/phase/convicted> ;
-    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_369/phase/convicted> ;
+    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_369/phase/charged> ;
+    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_369/phase/charged> ;
     ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_369/event/csam>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_369/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_369/legal-proceeding>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_369/legal-step/convicted>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_369/operation> ;
-    ns1:usesMethod <https://w3id.org/caselinker/resource/case/ncmec_2022_369/tech/cybertipline> ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/logan-city-police-department>,
-        <https://w3id.org/caselinker/resource/agency/utah-attorney-generals-office> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/utah-attorney-generals-office>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2022_369/agency/logan-city-police-department> ;
+    ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2022_369/cybertip> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_369/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2022-03-08T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_369/event/csam> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_369/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_369/person/offender/1/age> a ns2:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns2:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2022_369/person/offender/1> ;
+    ns2:concernsAgeQuality ns2:Age ;
+    ns2:hasAgeInYears 28.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_369/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2022-03-08T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_369/event/csam> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_369/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_369/role/offender/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2022_369/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2022_369/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/logan-city-police-department> a ns6:LocalAgency .
+<https://w3id.org/caselinker/resource/agency/utah-attorney-generals-office> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns5:StateAgency ;
+    rdfs:label "Utah Attorney General's Office" ;
+    ns3:name "Utah Attorney General's Office" .
 
-<https://w3id.org/caselinker/resource/agency/utah-attorney-generals-office> a ns4:OrganizationLikeEntity,
-        ns6:StateAgency ;
-    rdfs:label "Utah Attorney General's Office" .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_369/agency/logan-city-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns5:LocalAgency ;
+    rdfs:label "Logan City Police Department" ;
+    ns3:name "Logan City Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_369/charge/1> a ns2:CriminalCharge,
-        ns2:StateCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_369/charge/1> a ns4:CriminalCharge,
+        ns4:StateCharge ;
     rdfs:label "sexual exploitation of a minor" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_369/charge/2> a ns2:CSAM_Possession,
-        ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_369/charge/2> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_369/charge/3> a ns2:CriminalCharge ;
-    rdfs:label "sexual exploitation" ;
-    ns5:chargeCluster "sexual_exploitation_unspecified" .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_369/charge/3> a ns4:CriminalCharge ;
+    rdfs:label "sexual exploitation" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_369/event/distribution> a ns4:Event,
-        ns2:CSAM_Distribution .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_369/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
+    rdfs:label "CyberTipline report" ;
+    ns3:name "observe" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_369/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_369/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
+        ns4:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_369/legal-proceeding> a ns4:Event,
-        ns4:LegalEvent,
-        ns2:LegalProceeding ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_369/charge/1>,
+<https://w3id.org/caselinker/resource/case/ncmec_2022_369/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        ns4:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns4:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_369/charge/1>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_369/charge/2>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_369/charge/3> ;
-    ns2:hasProceedingBeginPoint "2022-03-08T00:00:00Z"^^xsd:dateTimeStamp .
+        <https://w3id.org/caselinker/resource/case/ncmec_2022_369/charge/3> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_369/legal-step/convicted> a ns4:Event,
-        ns4:LegalEvent,
-        ns2:LegalProceeding,
-        ns2:SentencingHearing ;
-    ns2:hasProceedingBeginPoint "2022-03-08T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_369/operation> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/taskforce#ReactiveOperation> ;
+    rdfs:label "Reactive Operation · operation" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_369/operation> a ns4:Event,
-        <https://cacontology.projectvic.org/taskforce#ReactiveOperation> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_369/role/offender/1> a ns4:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_369/event/csam> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_369/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns7:ageEstimate 28 .
+<https://w3id.org/caselinker/resource/platform/facebook> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "Facebook" ;
+    ns3:name "Facebook" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_369/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_369/tech/cybertipline> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
-    rdfs:label "CyberTipline" .
-
-<https://w3id.org/caselinker/resource/platform/facebook> a <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "Facebook" .
-
-<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "social media" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_369/phase/convicted> a ns4:Phase,
-        ns2:SentencingPhase ;
-    ns1:hasPhaseBeginPoint "2022-03-08T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "social media" ;
+    ns3:name "social media" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_369/event/csam> a ns1:CSAMIncident,
-        ns4:Event ;
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/csam" ;
     ns1:usesChannel <https://w3id.org/caselinker/resource/platform/facebook>,
-        <https://w3id.org/caselinker/resource/platform/social-media> ;
-    ns3:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2022_369/facet/csam> .
+        <https://w3id.org/caselinker/resource/platform/social-media> .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2022_369/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_369> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2022_369/provenance> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_369/phase/charged> a ns1:LegalProcessPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Legal Process Phase · phase/charged" .
+

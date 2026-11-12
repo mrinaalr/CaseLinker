@@ -1,112 +1,132 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/core#> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns5: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/core#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_365/admission/1/extraction-confidence> a ns3:AssessmentResult ;
-    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2022_365/admission/1> ;
-    ns3:generatedBy <https://w3id.org/caselinker/resource/case/ncmec_2022_365> ;
-    ns3:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_365/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2022-03-11T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_365/event/possession> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_365/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/agency/bedford-police-department> a ns3:OrganizationLikeEntity,
-        ns4:LocalAgency ;
-    rdfs:label "Bedford Police Department" .
-
-<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> .
-
 <https://w3id.org/caselinker/resource/case/ncmec_2022_365> a ns2:CACInvestigation,
-        ns3:EnduringEntity ;
-    dcterms:created "2026-10-17 21:51:23.928933" ;
+        ns4:EnduringEntity ;
+    rdfs:label "Case ncmec_2022_365" ;
+    dcterms:created "2026-11-10T09:19:07.767317"^^xsd:dateTime ;
+    dcterms:date "2022-03-11"^^xsd:date ;
     dcterms:identifier "ncmec_2022_365" ;
-    dcterms:modified "2026-10-17 21:51:23.928933" ;
+    dcterms:modified "2026-11-10T09:19:07.767317"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2022_365/provenance> ;
     dcterms:source <https://www.wbiw.com/2022/03/11/bedford-man-arrested-on-child-pornography-charges-2/>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/bedford>,
-        <https://w3id.org/caselinker/resource/location/kentucky> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2022_365/location/bedford>,
+        <https://w3id.org/caselinker/resource/location/kentucky-ky> ;
     ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_365/phase/arrested> ;
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_365/phase/arrested> ;
-    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_365/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_365/event/possession>,
+    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_365/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_365/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_365/operation> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/bedford-police-department>,
-        <https://w3id.org/caselinker/resource/agency/icac> ;
-    ns5:mentionsLocation <https://w3id.org/caselinker/resource/location/bedford>,
-        <https://w3id.org/caselinker/resource/location/kentucky> .
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2022_365/agency/bedford-police-department> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2022_365/admission/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2022_365/cybertip> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_365/charge/1> a ns6:CSAM_Possession,
-        ns6:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_365/admission/1/extraction-confidence> a ns4:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns4:assesses <https://w3id.org/caselinker/resource/case/ncmec_2022_365/admission/1> ;
+    ns4:hasConfidence 0.65 ;
+    ns4:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_365/assessment/semantic/exploitive-positions> a ns4:AssessmentResult ;
+    rdfs:label "semantic similarity · exploitive_positions" ;
+    dcterms:subject <https://cacontology.projectvic.org/custodial#PositionOfTrust> ;
+    ns4:assesses <https://w3id.org/caselinker/resource/case/ncmec_2022_365/narrative> ;
+    ns4:hasConfidence 0.4537 ;
+    ns4:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_365/assessment/semantic/possession-csam> a ns4:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns2:CSAMIncident ;
+    ns4:assesses <https://w3id.org/caselinker/resource/case/ncmec_2022_365/narrative> ;
+    ns4:hasConfidence 0.5052 ;
+    ns4:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_365/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2022_365/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2022_365/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/agency/icac> a ns4:OrganizationLikeEntity,
+        <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns1:name "ICAC Task Force" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_365/agency/bedford-police-department> a ns4:OrganizationLikeEntity,
+        ns3:LocalAgency ;
+    rdfs:label "Bedford Police Department" ;
+    ns1:name "Bedford Police Department" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_365/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_365/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_365/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
+    rdfs:label "CyberTipline report" ;
+    ns1:name "observe" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_365/legal-proceeding> a ns3:Event,
-        ns3:LegalEvent,
-        ns6:LegalProceeding ;
-    ns6:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_365/charge/1> ;
-    ns6:hasProceedingBeginPoint "2022-03-11T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_365/legal-proceeding> a ns4:Event,
+        ns4:LegalEvent,
+        ns5:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns5:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_365/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_365/operation> a ns3:Event,
-        <https://cacontology.projectvic.org/taskforce#ReactiveOperation> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_365/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_365/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_365/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2022-03-11T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_365/event/possession> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_365/person/offender/1> .
-
-<https://w3id.org/caselinker/resource/platform/facebook> a <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "Facebook" .
-
-<https://w3id.org/caselinker/resource/platform/kik> a <https://cacontology.projectvic.org/platforms#MessagingService> ;
-    rdfs:label "Kik" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_365/phase/arrested> a ns2:InitialPhase,
-        ns3:Phase ;
-    ns2:hasPhaseBeginPoint "2022-03-11T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/bedford> a ns3:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2022_365/location/bedford> a ns4:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Bedford" ;
     ns1:name "Bedford" .
 
-<https://w3id.org/caselinker/resource/location/kentucky> a ns3:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2022_365/operation> a ns4:Event,
+        <https://cacontology.projectvic.org/taskforce#ReactiveOperation> ;
+    rdfs:label "Reactive Operation · operation" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_365/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_365/role/offender/1> a ns5:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_365/event/possession> .
+
+<https://w3id.org/caselinker/resource/location/kentucky-ky> a ns4:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Kentucky" ;
+    dcterms:identifier "fips:21" ;
     ns1:name "Kentucky" .
+
+<https://w3id.org/caselinker/resource/platform/facebook> a ns4:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "Facebook" ;
+    ns1:name "Facebook" .
+
+<https://w3id.org/caselinker/resource/platform/kik> a ns4:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#MessagingService> ;
+    rdfs:label "Kik" ;
+    ns1:name "Kik" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_365/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "had never heard of the mobile app called “Kik”" ;
     dcterms:source <https://www.wbiw.com/2022/03/11/bedford-man-arrested-on-child-pornography-charges-2/> ;
-    ns5:admissionContext "elonged to Kameron Freeman who lived in the 1110 block of 13th Street in Bedford. Police interviewed Freeman who said he had never heard..." ;
-    ns5:admissionFrame "said_paraphrase" ;
-    ns5:admissionTheme "tech_use" ;
-    ns5:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/ncmec_2022_365/role/offender/1> ;
-    ns5:evidenceTier "press_release_stated" ;
-    ns5:quoteType "paraphrase" ;
     ns1:description "had never heard of the mobile app called “Kik”" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_365/event/possession> a ns2:CSAMIncident,
-        ns3:Event ;
-    ns2:producesArtifact <https://w3id.org/caselinker/resource/case/ncmec_2022_365/admission/1> ;
+        ns4:Event ;
+    rdfs:label "CSAMIncident · event/possession" ;
     ns2:usesChannel <https://w3id.org/caselinker/resource/platform/facebook>,
-        <https://w3id.org/caselinker/resource/platform/kik> ;
-    ns1:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2022_365/facet/possession> .
+        <https://w3id.org/caselinker/resource/platform/kik> .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2022_365/phase/arrested> a ns2:InitialPhase,
+        ns4:Phase ;
+    rdfs:label "Initial Phase · phase/arrested" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_365> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2022_365/provenance> .

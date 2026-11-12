@@ -1,109 +1,118 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/detection#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns4: <https://cacontology.projectvic.org/core#> .
-@prefix ns5: <https://w3id.org/caselinker/resource/vocab/> .
+@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns7: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns8: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_592/admission/1/extraction-confidence> a ns4:AssessmentResult ;
-    ns4:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_592/admission/1> ;
-    ns4:generatedBy <https://w3id.org/caselinker/resource/case/ncmec_2025_592> ;
-    ns4:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_592/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2025-01-21T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_592/event/possession> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2025_592/person/victim/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_592> a ns2:CACInvestigation,
         ns4:EnduringEntity ;
-    dcterms:created "2026-10-18 00:01:21.992508" ;
+    rdfs:label "Case ncmec_2025_592" ;
+    dcterms:created "2026-11-10T16:36:04.076949"^^xsd:dateTime ;
+    dcterms:date "2025-01-21"^^xsd:date ;
     dcterms:identifier "ncmec_2025_592" ;
-    dcterms:modified "2026-10-18 00:01:21.992508" ;
+    dcterms:modified "2026-11-12T02:01:43.822506"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2025_592/provenance> ;
     dcterms:source <https://www.yahoo.com/news/santa-fe-man-accused-possessing-003600073.html>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/santa-fe-county> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/santa-fe-county-nm> ;
     ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_592/phase/booked> ;
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_592/phase/booked> ;
-    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_592/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_592/cybertip>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_592/event/possession>,
+    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_592/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_592/legal-proceeding> ;
-    ns7:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec> ;
-    ns5:mentionsLocation <https://w3id.org/caselinker/resource/location/santa-fe-county> .
+    ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2025_592/admission/1> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_592/admission/1/extraction-confidence> a ns4:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns4:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_592/admission/1> ;
+    ns4:hasConfidence 0.65 ;
+    ns4:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_592/assessment/semantic/possession-csam> a ns4:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns2:CSAMIncident ;
+    ns4:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_592/narrative> ;
+    ns4:hasConfidence 0.5455 ;
+    ns4:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_592/person/offender/1/age> a ns5:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2025_592/person/offender/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 35.0 .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_592/role/offender/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2025_592/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2025_592/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/agency/ncmec> a ns4:OrganizationLikeEntity,
+        ns1:FederalAgency ;
+    rdfs:label "National Center for Missing and Exploited Children" ;
+    skos:altLabel "NCMEC" ;
+    ns3:name "National Center for Missing and Exploited Children" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_592/charge/1> a ns6:CSAM_Possession,
         ns6:CriminalCharge ;
     rdfs:label "child porn" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_592/cybertip> a ns8:NCMECCybertipReport ;
-    ns8:supportedBy <https://w3id.org/caselinker/resource/agency/ncmec> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_592/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
 <https://w3id.org/caselinker/resource/case/ncmec_2025_592/legal-proceeding> a ns4:Event,
         ns4:LegalEvent,
         ns6:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): booked into the Santa Fe County jail" ;
-    ns6:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_592/charge/1> ;
-    ns6:hasProceedingBeginPoint "2025-01-21T00:00:00Z"^^xsd:dateTimeStamp .
+    ns6:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns6:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_592/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_592/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns3:ageEstimate 35 .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_592/role/offender/1> a ns6:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_592/event/possession> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_592/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_592/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2025-01-21T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_592/event/possession> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2025_592/person/offender/1> .
-
-<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "social media" .
-
-<https://w3id.org/caselinker/resource/platform/telegram> a <https://cacontology.projectvic.org/platforms#MessagingService> ;
-    rdfs:label "Telegram" .
-
-<https://w3id.org/caselinker/resource/platform/twitter-x> a <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "Twitter / X" .
-
-<https://w3id.org/caselinker/resource/agency/ncmec> a ns7:FederalAgency .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_592/phase/booked> a ns2:InitialPhase,
-        ns4:Phase ;
-    ns2:hasPhaseBeginPoint "2025-01-21T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/santa-fe-county> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/santa-fe-county-nm> a ns4:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Santa Fe County" ;
-    ns1:name "Santa Fe County" .
+    dcterms:identifier "fips:35049" ;
+    ns3:name "Santa Fe County" .
+
+<https://w3id.org/caselinker/resource/platform/social-media> a ns4:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "social media" ;
+    ns3:name "social media" .
+
+<https://w3id.org/caselinker/resource/platform/telegram> a ns4:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#MessagingService> ;
+    rdfs:label "Telegram" ;
+    ns3:name "Telegram" .
+
+<https://w3id.org/caselinker/resource/platform/twitter-x> a ns4:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "Twitter / X" ;
+    ns3:name "Twitter / X" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_592/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "downloading the videos through the messaging app Telegram after linking to Telegram from an account on the social med..." ;
     dcterms:source <https://www.yahoo.com/news/santa-fe-man-accused-possessing-003600073.html> ;
-    ns5:admissionContext "associated with the tip, as well as a search warrant for devices at the man's residence. Police allege Romero Flores admitted to download..." ;
-    ns5:admissionFrame "admitted_to" ;
-    ns5:admissionTheme "tech_use" ;
-    ns5:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/ncmec_2025_592/role/offender/1> ;
-    ns5:evidenceTier "press_release_stated" ;
-    ns5:quoteType "paraphrase" ;
-    ns1:description "downloading the videos through the messaging app Telegram after linking to Telegram from an account on the social media site X, formerly known as Twitter, the affidavit says" .
+    ns3:description "downloading the videos through the messaging app Telegram after linking to Telegram from an account on the social media site X, formerly known as Twitter, the affidavit says" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_592/event/possession> a ns2:CSAMIncident,
         ns4:Event ;
-    ns2:producesArtifact <https://w3id.org/caselinker/resource/case/ncmec_2025_592/admission/1> ;
+    rdfs:label "CSAMIncident · event/possession" ;
     ns2:severityLevel 3 ;
     ns2:usesChannel <https://w3id.org/caselinker/resource/platform/social-media>,
         <https://w3id.org/caselinker/resource/platform/telegram>,
-        <https://w3id.org/caselinker/resource/platform/twitter-x> ;
-    ns1:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2025_592/facet/possession> .
+        <https://w3id.org/caselinker/resource/platform/twitter-x> .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2025_592/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_592> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2025_592/provenance> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_592/phase/booked> a ns2:InitialPhase,
+        ns4:Phase ;
+    rdfs:label "Initial Phase · phase/booked" .
+

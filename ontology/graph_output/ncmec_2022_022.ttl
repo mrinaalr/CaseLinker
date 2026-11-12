@@ -1,102 +1,107 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/core#> .
-@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/detection#> .
-@prefix ns4: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://cacontology.projectvic.org#> .
-@prefix ns7: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns1: <https://cacontology.projectvic.org#> .
+@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns6: <https://cacontology.projectvic.org/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_022/admission/1/extraction-confidence> a ns1:AssessmentResult ;
-    ns1:assesses <https://w3id.org/caselinker/resource/case/ncmec_2022_022/admission/1> ;
-    ns1:generatedBy <https://w3id.org/caselinker/resource/case/ncmec_2022_022> ;
-    ns1:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_022/role/victim/1> a ns6:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns6:hasRoleBeginPoint "2022-05-16T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns6:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_022/event/possession> ;
-    ns1:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_022/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_022> a ns6:CACInvestigation,
-        ns1:EnduringEntity ;
-    dcterms:created "2026-10-17 21:51:19.848830" ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_022> a ns1:CACInvestigation,
+        ns6:EnduringEntity ;
+    rdfs:label "Case ncmec_2022_022" ;
+    dcterms:created "2026-11-10T09:17:12.972448"^^xsd:dateTime ;
+    dcterms:date "2022-05-16"^^xsd:date ;
     dcterms:identifier "ncmec_2022_022" ;
-    dcterms:modified "2026-10-17 21:51:19.848830" ;
+    dcterms:modified "2026-11-10T09:17:12.972448"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2022_022/provenance> ;
     dcterms:source <https://www.wsaw.com/2022/05/16/bond-set-25k-stevens-point-man-charged-child-pornography-case/>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/stevens-point>,
-        <https://w3id.org/caselinker/resource/location/wis> ;
-    ns6:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_022/phase/charged> ;
-    ns6:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_022/phase/charged> ;
-    ns6:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_022/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_022/event/possession>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/stevens-point-city>,
+        <https://w3id.org/caselinker/resource/location/wisconsin-wi> ;
+    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_022/phase/charged> ;
+    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_022/phase/charged> ;
+    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_022/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_022/legal-proceeding> ;
-    ns7:involvesAgency <https://w3id.org/caselinker/resource/agency/icac> ;
-    ns4:mentionsLocation <https://w3id.org/caselinker/resource/location/stevens-point>,
-        <https://w3id.org/caselinker/resource/location/wis> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/icac> ;
+    ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2022_022/admission/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_022/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
-    rdfs:label "possession of child pornography" ;
-    ns5:indictmentCounts 2 .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_022/admission/1/extraction-confidence> a ns6:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns6:assesses <https://w3id.org/caselinker/resource/case/ncmec_2022_022/admission/1> ;
+    ns6:hasConfidence 0.65 ;
+    ns6:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_022/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_022/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2022_022/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 21.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_022/legal-proceeding> a ns1:Event,
-        ns1:LegalEvent,
-        ns5:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_022/role/offender/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2022_022/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2022_022/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/agency/icac> a ns6:OrganizationLikeEntity,
+        <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns3:name "ICAC Task Force" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_022/charge/1> a ns2:CSAM_Possession,
+        ns2:CriminalCharge ;
+    rdfs:label "possession of child pornography" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_022/legal-proceeding> a ns6:Event,
+        ns6:LegalEvent,
+        ns2:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): remains in custody" ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_022/charge/1> ;
-    ns5:hasProceedingBeginPoint "2022-05-16T00:00:00Z"^^xsd:dateTimeStamp .
+    ns2:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_022/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_022/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns3:ageEstimate 21 .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_022/role/offender/1> a ns2:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_022/event/possession> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_022/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/location/stevens-point-city> a ns6:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Stevens Point city" ;
+    dcterms:identifier "fips:5577200" ;
+    skos:altLabel "Stevens Point" ;
+    ns3:name "Stevens Point city" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_022/role/offender/1> a ns6:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns6:hasRoleBeginPoint "2022-05-16T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns6:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_022/event/possession> ;
-    ns1:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_022/person/offender/1> .
+<https://w3id.org/caselinker/resource/location/wisconsin-wi> a ns6:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Wisconsin" ;
+    dcterms:identifier "fips:55" ;
+    skos:altLabel "Wis." ;
+    ns3:name "Wisconsin" .
 
-<https://w3id.org/caselinker/resource/platform/kik> a <https://cacontology.projectvic.org/platforms#MessagingService> ;
-    rdfs:label "Kik" .
+<https://w3id.org/caselinker/resource/platform/kik> a ns6:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#MessagingService> ;
+    rdfs:label "Kik" ;
+    ns3:name "Kik" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_022/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "did not have time to read the criminal complaint before Monday initial appearance" ;
     dcterms:source <https://www.wsaw.com/2022/05/16/bond-set-25k-stevens-point-man-charged-child-pornography-case/> ;
-    ns4:admissionContext "tevens Point as result. Kucharski could also face charges in federal court. Kucharski’s attorney said he did not have time to read the cr..." ;
-    ns4:admissionFrame "said_paraphrase" ;
-    ns4:admissionTheme "other" ;
-    ns4:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/ncmec_2022_022/role/offender/1> ;
-    ns4:evidenceTier "press_release_stated" ;
-    ns4:quoteType "paraphrase" ;
-    ns2:description "did not have time to read the criminal complaint before Monday initial appearance" .
+    ns3:description "did not have time to read the criminal complaint before Monday initial appearance" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_022/phase/charged> a ns6:LegalProcessPhase,
-        ns1:Phase ;
-    ns6:hasPhaseBeginPoint "2022-05-16T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_022/event/possession> a ns1:CSAMIncident,
+        ns6:Event ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/kik> .
 
-<https://w3id.org/caselinker/resource/location/stevens-point> a ns1:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Stevens Point" ;
-    ns2:name "Stevens Point" .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_022/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/location/wis> a ns1:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Wis." ;
-    ns2:name "Wis." .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_022/phase/charged> a ns1:LegalProcessPhase,
+        ns6:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_022/event/possession> a ns6:CSAMIncident,
-        ns1:Event ;
-    ns6:usesChannel <https://w3id.org/caselinker/resource/platform/kik> ;
-    ns2:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2022_022/facet/possession> .
-
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_022> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2022_022/provenance> .

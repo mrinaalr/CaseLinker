@@ -1,197 +1,201 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns4: <https://cacontology.projectvic.org/core#> .
-@prefix ns5: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns6: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns7: <https://cacontology.projectvic.org/detection#> .
+@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org#> .
+@prefix ns6: <https://cacontology.projectvic.org/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/admission/1/extraction-confidence> a ns4:AssessmentResult ;
-    ns4:assesses <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/admission/1> ;
-    ns4:generatedBy <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004> ;
-    ns4:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/admission/2/extraction-confidence> a ns4:AssessmentResult ;
-    ns4:assesses <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/admission/2> ;
-    ns4:generatedBy <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004> ;
-    ns4:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2026-03-24T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/event/hands-on>,
-        <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/offense-event/charge-2> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/agency/army-criminal-investigation-division> a ns2:LocalAgency .
-
-<https://w3id.org/caselinker/resource/agency/ceos> a ns2:FederalAgency .
-
-<https://w3id.org/caselinker/resource/agency/department-of-the-army-criminal-investigation-division> a ns4:OrganizationLikeEntity,
-        ns2:LocalAgency ;
-    rdfs:label "Department of the Army Criminal Investigation Division" .
-
-<https://w3id.org/caselinker/resource/agency/doj> a ns2:FederalAgency .
-
-<https://w3id.org/caselinker/resource/agency/fbi> a ns2:FederalAgency .
-
-<https://w3id.org/caselinker/resource/agency/justice-departments-criminal-division> a ns2:LocalAgency .
-
-<https://w3id.org/caselinker/resource/agency/usao> a ns2:FederalAgency .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/charge/1> a ns3:CriminalCharge ;
-    rdfs:label "sexual exploitation" ;
-    ns5:chargeCluster "sexual_exploitation_unspecified" .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/charge/2> a ns3:CriminalCharge ;
-    rdfs:label "child exploitation" ;
-    rdfs:seeAlso <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/offense-event/charge-2> ;
-    ns5:chargeCluster "child_exploitation" ;
-    ns5:chargeOffenseEvent <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/offense-event/charge-2> .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/event/multi-jurisdiction> a ns4:Event,
-        ns2:MultiJurisdictionalInvestigation ;
-    ns1:severityLevel 3 ;
-    ns2:crossesBorders true .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/event/project-safe-childhood> a ns4:Event,
-        ns2:ProjectSafeChildhoodOperation ;
-    ns1:severityLevel 3 .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/legal-proceeding> a ns4:Event,
-        ns4:LegalEvent,
-        ns3:LegalProceeding ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/charge/1>,
-        <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/charge/2> ;
-    ns3:hasProceedingBeginPoint "2026-03-24T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:resultsSentence <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/sentence/1>,
-        <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/sentence/2> .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/legal-step/sentenced> a ns4:Event,
-        ns4:LegalEvent,
-        ns3:LegalProceeding,
-        ns3:SentencingHearing ;
-    ns3:hasProceedingBeginPoint "2026-03-24T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns7:ageEstimate 60 .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/sentence/1> a ns3:CriminalSentence,
-        ns3:PrisonSentence ;
-    rdfs:label "15 Years" .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/sentence/2> a ns3:CriminalSentence,
-        ns3:SupervisedRelease ;
-    rdfs:label "10 years supervised release" .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2026_004> a ns1:CACInvestigation,
-        ns4:EnduringEntity ;
-    dcterms:created "2026-10-18 01:43:40.488491" ;
+<https://w3id.org/caselinker/resource/case/doj_ceos_2026_004> a ns5:CACInvestigation,
+        ns6:EnduringEntity ;
+    rdfs:label "Case doj_ceos_2026_004" ;
+    dcterms:created "2026-11-10T19:05:34.274980"^^xsd:dateTime ;
+    dcterms:date "2026-03-24"^^xsd:date ;
     dcterms:identifier "doj_ceos_2026_004" ;
-    dcterms:modified "2026-10-18 13:29:14.985591" ;
+    dcterms:modified "2026-11-10T19:05:34.274980"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/provenance> ;
     dcterms:source <https://www.justice.gov/opa/pr/former-army-civilian-employee-sentenced-15-years-prison-sexually-abusing-children>,
         "DOJ CEOS" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/california>,
-        <https://w3id.org/caselinker/resource/location/hawaii>,
-        <https://w3id.org/caselinker/resource/location/japan>,
-        <https://w3id.org/caselinker/resource/location/merced>,
-        <https://w3id.org/caselinker/resource/location/united-states> ;
-    ns1:currentPhase <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/phase/sentenced> ;
-    ns1:hasPhase <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/phase/sentenced> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/admission/1>,
-        <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/admission/2>,
-        <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/event/hands-on>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/location/japan>,
+        <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/location/united-states>,
+        <https://w3id.org/caselinker/resource/location/california-ca>,
+        <https://w3id.org/caselinker/resource/location/hawaii-hi>,
+        <https://w3id.org/caselinker/resource/location/merced-city> ;
+    ns5:currentPhase <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/phase/sentenced> ;
+    ns5:hasPhase <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/phase/sentenced> ;
+    ns5:hasStep <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/event/hands-on>,
         <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/event/multi-jurisdiction>,
         <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/event/project-safe-childhood>,
         <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/legal-proceeding>,
-        <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/legal-step/sentenced>,
-        <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/offense-event/charge-2> ;
-    ns1:investigationStatus "unknown" ;
-    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/army-criminal-investigation-division>,
-        <https://w3id.org/caselinker/resource/agency/ceos>,
-        <https://w3id.org/caselinker/resource/agency/department-of-the-army-criminal-investigation-division>,
+        <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/legal-step/sentenced> ;
+    ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/ceos>,
         <https://w3id.org/caselinker/resource/agency/doj>,
         <https://w3id.org/caselinker/resource/agency/fbi>,
         <https://w3id.org/caselinker/resource/agency/justice-departments-criminal-division>,
-        <https://w3id.org/caselinker/resource/agency/usao> ;
-    ns5:mentionsLocation <https://w3id.org/caselinker/resource/location/california>,
-        <https://w3id.org/caselinker/resource/location/hawaii>,
-        <https://w3id.org/caselinker/resource/location/japan>,
-        <https://w3id.org/caselinker/resource/location/merced>,
-        <https://w3id.org/caselinker/resource/location/united-states> .
+        <https://w3id.org/caselinker/resource/agency/usao>,
+        <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/agency/army-criminal-investigation-division>,
+        <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/agency/department-of-the-army-criminal-investigation-division> ;
+    ns3:object <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/admission/1>,
+        <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/admission/2> .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/phase/sentenced> a ns4:Phase,
-        ns3:SentencingPhase ;
-    ns1:hasPhaseBeginPoint "2026-03-24T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/admission/1/extraction-confidence> a ns6:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns6:assesses <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/admission/1> ;
+    ns6:hasConfidence 0.65 ;
+    ns6:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2026-03-24T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/event/hands-on>,
-        <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/offense-event/charge-2> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/admission/2/extraction-confidence> a ns6:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/2/extraction-confidence" ;
+    ns6:assesses <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/admission/2> ;
+    ns6:hasConfidence 0.65 ;
+    ns6:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/location/california> a ns4:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "California" ;
-    ns6:name "California" .
+<https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/person/offender/1/age> a ns2:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns2:ageSubject <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/person/offender/1> ;
+    ns2:concernsAgeQuality ns2:Age ;
+    ns2:hasAgeInYears 60.0 .
 
-<https://w3id.org/caselinker/resource/location/hawaii> a ns4:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Hawaii" ;
-    ns6:name "Hawaii" .
+<https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/role/offender/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/location/japan> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/agency/ceos> a ns6:OrganizationLikeEntity,
+        ns1:FederalAgency ;
+    rdfs:label "CEOS" ;
+    ns3:name "CEOS" .
+
+<https://w3id.org/caselinker/resource/agency/doj> a ns6:OrganizationLikeEntity,
+        ns1:FederalAgency ;
+    rdfs:label "U.S. Department of Justice" ;
+    ns3:name "U.S. Department of Justice" .
+
+<https://w3id.org/caselinker/resource/agency/fbi> a ns6:OrganizationLikeEntity,
+        ns1:FederalAgency ;
+    rdfs:label "Federal Bureau of Investigation" ;
+    skos:altLabel "FBI" ;
+    ns3:name "Federal Bureau of Investigation" .
+
+<https://w3id.org/caselinker/resource/agency/justice-departments-criminal-division> a ns6:OrganizationLikeEntity,
+        ns1:LocalAgency ;
+    rdfs:label "Justice Department's Criminal Division" ;
+    ns3:name "Justice Department's Criminal Division" .
+
+<https://w3id.org/caselinker/resource/agency/usao> a ns6:OrganizationLikeEntity,
+        ns1:FederalAgency ;
+    rdfs:label "U.S. Attorney's Office" ;
+    ns3:name "U.S. Attorney's Office" .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/agency/army-criminal-investigation-division> a ns6:OrganizationLikeEntity,
+        ns1:LocalAgency ;
+    rdfs:label "Army Criminal Investigation Division" ;
+    ns3:name "Army Criminal Investigation Division" .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/agency/department-of-the-army-criminal-investigation-division> a ns6:OrganizationLikeEntity,
+        ns1:LocalAgency ;
+    rdfs:label "Department of the Army Criminal Investigation Division" ;
+    ns3:name "Department of the Army Criminal Investigation Division" .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/charge/1> a ns4:CriminalCharge ;
+    rdfs:label "sexual exploitation" .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/charge/2> a ns4:CriminalCharge ;
+    rdfs:label "child exploitation" ;
+    dcterms:subject ns5:ChildSexualAbuseEvent .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/event/multi-jurisdiction> a ns6:Event,
+        ns1:MultiJurisdictionalInvestigation ;
+    rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" ;
+    ns1:crossesBorders true .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/event/project-safe-childhood> a ns6:Event,
+        ns1:ProjectSafeChildhoodOperation ;
+    rdfs:label "Project Safe Childhood Operation · event/project-safe-childhood" .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/legal-proceeding> a ns6:Event,
+        ns6:LegalEvent,
+        ns4:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns4:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/charge/1>,
+        <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/charge/2> ;
+    ns4:resultsSentence <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/sentence/1>,
+        <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/sentence/2> .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/legal-step/sentenced> a ns6:Event,
+        ns6:LegalEvent,
+        ns4:LegalProceeding,
+        ns4:SentencingHearing ;
+    rdfs:label "Sentencing Hearing · legal-step/sentenced" .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/location/japan> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Japan" ;
-    ns6:name "Japan" .
+    ns3:name "Japan" .
 
-<https://w3id.org/caselinker/resource/location/merced> a ns4:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Merced" ;
-    ns6:name "Merced" .
-
-<https://w3id.org/caselinker/resource/location/united-states> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/location/united-states> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "United States" ;
-    ns6:name "United States" .
+    ns3:name "United States" .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/sentence/1> a ns4:CriminalSentence,
+        ns4:PrisonSentence ;
+    rdfs:label "15 Years" ;
+    ns6:assesses <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/sentence/2> a ns4:CriminalSentence,
+        ns4:SupervisedRelease ;
+    rdfs:label "10 years supervised release" ;
+    ns6:assesses <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/location/california-ca> a ns6:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "California" ;
+    dcterms:identifier "fips:06" ;
+    ns3:name "California" .
+
+<https://w3id.org/caselinker/resource/location/hawaii-hi> a ns6:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Hawaii" ;
+    dcterms:identifier "fips:15" ;
+    ns3:name "Hawaii" .
+
+<https://w3id.org/caselinker/resource/location/merced-city> a ns6:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Merced city" ;
+    dcterms:identifier "fips:0646898" ;
+    skos:altLabel "Merced" ;
+    ns3:name "Merced city" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "engaging in sexual acts with both minor children" ;
     dcterms:source <https://www.justice.gov/opa/pr/former-army-civilian-employee-sentenced-15-years-prison-sexually-abusing-children> ;
-    ns6:description "engaging in sexual acts with both minor children" ;
-    ns5:admissionContext "where he was employed by the U.S. Army as a civilian employee. During the investigation, Santos gave an interview to law enforcement offi..." ;
-    ns5:admissionFrame "admitted_to" ;
-    ns5:admissionTheme "harm_conduct" ;
-    ns5:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/role/offender/1> ;
-    ns5:evidenceTier "press_release_stated" ;
-    ns5:quoteType "paraphrase" .
+    ns3:description "engaging in sexual acts with both minor children" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/admission/2> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "to engaging in sexual acts with both minor children" ;
     dcterms:source <https://www.justice.gov/opa/pr/former-army-civilian-employee-sentenced-15-years-prison-sexually-abusing-children> ;
-    ns6:description "to engaging in sexual acts with both minor children" ;
-    ns5:admissionContext "yee. During the investigation, Santos gave an interview to law enforcement officers where he admitted to engaging in sexual acts with bot..." ;
-    ns5:admissionFrame "he_admitted_paraphrase" ;
-    ns5:admissionTheme "harm_conduct" ;
-    ns5:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/role/offender/1> ;
-    ns5:evidenceTier "press_release_stated" ;
-    ns5:quoteType "paraphrase" .
+    ns3:description "to engaging in sexual acts with both minor children" .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/event/hands-on> a ns1:ChildSexualAbuseEvent,
-        ns4:Event ;
-    ns1:producesArtifact <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/admission/1>,
-        <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/admission/2> ;
-    ns1:severityLevel 3 .
+<https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/event/hands-on> a ns5:ChildSexualAbuseEvent,
+        ns6:Event ;
+    rdfs:label "Child Sexual Abuse Event · event/hands-on" ;
+    ns5:severityLevel 3 .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/offense-event/charge-2> a ns1:ChildSexualAbuseEvent,
-        ns4:Event,
-        <https://ontology.unifiedcyberontology.org/uco/action/Crime> ;
-    rdfs:label "Inferred offense from charge: child exploitation" .
+<https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/phase/sentenced> a ns6:Phase,
+        ns4:SentencingPhase ;
+    rdfs:label "Sentencing Phase · phase/sentenced" .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/role/offender/1> a ns5:OffenderRole ;
+    rdfs:label "Offender Role · role/offender/1" ;
+    ns5:participatesInEvent <https://w3id.org/caselinker/resource/case/doj_ceos_2026_004/event/hands-on> .
 

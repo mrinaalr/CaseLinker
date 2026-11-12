@@ -1,95 +1,92 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://w3id.org/caselinker/resource/vocab/> .
+@prefix ns2: <https://cacontology.projectvic.org/core#> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/core#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/wa_ag_2005_001/admission/1/extraction-confidence> a ns4:AssessmentResult ;
-    ns4:assesses <https://w3id.org/caselinker/resource/case/wa_ag_2005_001/admission/1> ;
-    ns4:generatedBy <https://w3id.org/caselinker/resource/case/wa_ag_2005_001> ;
-    ns4:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/wa_ag_2005_001/role/victim/1> a ns3:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns3:hasRoleBeginPoint "2005-12-22T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/wa_ag_2005_001/event/hands-on> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/wa_ag_2005_001/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/agency/attorney-generals-office> a ns6:StateAgency .
-
 <https://w3id.org/caselinker/resource/case/wa_ag_2005_001> a ns3:CACInvestigation,
-        ns4:EnduringEntity ;
-    dcterms:created "2026-10-18 07:46:56.901062" ;
+        ns2:EnduringEntity ;
+    rdfs:label "Case wa_ag_2005_001" ;
+    dcterms:created "2026-11-11T18:40:00.543706"^^xsd:dateTime ;
+    dcterms:date "2005-12-22"^^xsd:date ;
     dcterms:identifier "wa_ag_2005_001" ;
-    dcterms:modified "2026-10-18 07:46:56.901062" ;
+    dcterms:modified "2026-11-11T18:40:00.543706"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/wa_ag_2005_001/provenance> ;
     dcterms:source <https://www.atg.wa.gov/news/news-releases/mckenna-announces-supreme-court-decision-sexually-violent-predator-case>,
         "WA AG" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/clark-county>,
-        <https://w3id.org/caselinker/resource/location/mcneil-island>,
-        <https://w3id.org/caselinker/resource/location/seattle> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/wa_ag_2005_001/location/mcneil-island>,
+        <https://w3id.org/caselinker/resource/location/clark-county-wa>,
+        <https://w3id.org/caselinker/resource/location/seattle-city-wa> ;
     ns3:currentPhase <https://w3id.org/caselinker/resource/case/wa_ag_2005_001/phase/convicted> ;
     ns3:hasPhase <https://w3id.org/caselinker/resource/case/wa_ag_2005_001/phase/convicted> ;
-    ns3:hasStep <https://w3id.org/caselinker/resource/case/wa_ag_2005_001/admission/1>,
-        <https://w3id.org/caselinker/resource/case/wa_ag_2005_001/event/hands-on>,
+    ns3:hasStep <https://w3id.org/caselinker/resource/case/wa_ag_2005_001/event/hands-on>,
         <https://w3id.org/caselinker/resource/case/wa_ag_2005_001/legal-step/convicted> ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/attorney-generals-office> ;
-    ns2:mentionsLocation <https://w3id.org/caselinker/resource/location/clark-county>,
-        <https://w3id.org/caselinker/resource/location/mcneil-island>,
-        <https://w3id.org/caselinker/resource/location/seattle> .
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/attorney-generals-office-wa-unverified> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/wa_ag_2005_001/admission/1> .
 
-<https://w3id.org/caselinker/resource/case/wa_ag_2005_001/legal-step/convicted> a ns4:Event,
-        ns4:LegalEvent,
-        ns5:LegalProceeding,
-        ns5:SentencingHearing ;
-    ns5:hasProceedingBeginPoint "2005-12-22T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/wa_ag_2005_001/admission/1/extraction-confidence> a ns2:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/wa_ag_2005_001/admission/1> ;
+    ns2:hasConfidence 0.65 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/case/wa_ag_2005_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/wa_ag_2005_001/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/wa_ag_2005_001/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/wa_ag_2005_001/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/wa_ag_2005_001/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/agency/attorney-generals-office-wa-unverified> a ns2:OrganizationLikeEntity,
+        ns4:StateAgency ;
+    rdfs:label "Attorney General's Office" ;
+    ns1:name "Attorney General's Office" .
 
-<https://w3id.org/caselinker/resource/case/wa_ag_2005_001/role/offender/1> a ns3:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns3:hasRoleBeginPoint "2005-12-22T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/wa_ag_2005_001/event/hands-on> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/wa_ag_2005_001/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/wa_ag_2005_001/legal-step/convicted> a ns2:Event,
+        ns2:LegalEvent,
+        <https://cacontology.projectvic.org/legal-outcomes#LegalProceeding>,
+        <https://cacontology.projectvic.org/legal-outcomes#SentencingHearing> ;
+    rdfs:label "Sentencing Hearing · legal-step/convicted" .
 
-<https://w3id.org/caselinker/resource/case/wa_ag_2005_001/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
-    rdfs:label "additional victims" ;
-    dcterms:source <https://www.atg.wa.gov/news/news-releases/mckenna-announces-supreme-court-decision-sexually-violent-predator-case> ;
-    ns2:admissionContext "n. The decision concerns the commitment of Raymond Marshall. Marshall, 34, has a six-year history of convictions for abusing four victims..." ;
-    ns2:admissionFrame "admitted_to" ;
-    ns2:admissionTheme "other" ;
-    ns2:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/wa_ag_2005_001/role/offender/1> ;
-    ns2:evidenceTier "press_release_stated" ;
-    ns2:quoteType "paraphrase" ;
-    ns1:description "additional victims" .
-
-<https://w3id.org/caselinker/resource/case/wa_ag_2005_001/phase/convicted> a ns4:Phase,
-        ns5:SentencingPhase ;
-    ns3:hasPhaseBeginPoint "2005-12-22T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/clark-county> a ns4:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Clark County" ;
-    ns1:name "Clark County" .
-
-<https://w3id.org/caselinker/resource/location/mcneil-island> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/wa_ag_2005_001/location/mcneil-island> a ns2:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Mcneil Island" ;
     ns1:name "Mcneil Island" .
 
-<https://w3id.org/caselinker/resource/location/seattle> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/wa_ag_2005_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/wa_ag_2005_001/role/offender/1> a ns3:OffenderRole ;
+    rdfs:label "Offender Role · role/offender/1" ;
+    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/wa_ag_2005_001/event/hands-on> .
+
+<https://w3id.org/caselinker/resource/location/clark-county-wa> a ns2:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Seattle" ;
-    ns1:name "Seattle" .
+    rdfs:label "Clark County" ;
+    dcterms:identifier "fips:53011" ;
+    ns1:name "Clark County" .
+
+<https://w3id.org/caselinker/resource/location/seattle-city-wa> a ns2:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Seattle city" ;
+    dcterms:identifier "fips:5363000" ;
+    skos:altLabel "Seattle" ;
+    ns1:name "Seattle city" .
+
+<https://w3id.org/caselinker/resource/case/wa_ag_2005_001/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
+    rdfs:label "additional victims" ;
+    dcterms:source <https://www.atg.wa.gov/news/news-releases/mckenna-announces-supreme-court-decision-sexually-violent-predator-case> ;
+    ns1:description "additional victims" .
 
 <https://w3id.org/caselinker/resource/case/wa_ag_2005_001/event/hands-on> a ns3:ChildSexualAbuseEvent,
-        ns4:Event ;
+        ns2:Event ;
+    rdfs:label "Child Sexual Abuse Event · event/hands-on" ;
     ns3:severityLevel 3 .
 
+<https://w3id.org/caselinker/resource/case/wa_ag_2005_001/phase/convicted> a ns2:Phase,
+        <https://cacontology.projectvic.org/legal-outcomes#SentencingPhase> ;
+    rdfs:label "Sentencing Phase · phase/convicted" .
 
-<https://w3id.org/caselinker/resource/case/wa_ag_2005_001> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/wa_ag_2005_001/provenance> .

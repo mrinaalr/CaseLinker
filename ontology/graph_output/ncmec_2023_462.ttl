@@ -1,69 +1,74 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns4: <https://cacontology.projectvic.org/core#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns7: <https://cacontology.projectvic.org/detection#> .
+@prefix ns1: <https://cacontology.projectvic.org#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_462> a ns2:CACInvestigation,
-        ns4:EnduringEntity ;
-    dcterms:created "2026-10-17 22:21:33.618913" ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_462> a ns1:CACInvestigation,
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case ncmec_2023_462" ;
+    dcterms:created "2026-11-10T10:05:06.213212"^^xsd:dateTime ;
+    dcterms:date "2023-10-04"^^xsd:date ;
     dcterms:identifier "ncmec_2023_462" ;
-    dcterms:modified "2026-10-17 22:21:33.618913" ;
+    dcterms:modified "2026-11-10T10:05:06.213212"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2023_462/provenance> ;
     dcterms:source <https://whky.com/hickory-man-jailed-on-20-sexual-exploitation-charges/>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/hickory> ;
-    ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_462/phase/charged> ;
-    ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_462/phase/charged> ;
-    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_462/legal-proceeding> ;
-    ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/hickory-police-department> ;
-    ns3:mentionsLocation <https://w3id.org/caselinker/resource/location/hickory> .
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2023_462/location/hickory> ;
+    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_462/phase/charged> ;
+    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_462/phase/charged> ;
+    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_462/legal-proceeding> ;
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2023_462/agency/hickory-police-department> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_462/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2023-10-04T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_462/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_462/person/offender/1/age> a ns5:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2023_462/person/offender/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 20.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_462/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2023-10-04T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_462/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_462/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2023_462/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2023_462/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/hickory-police-department> a ns1:LocalAgency .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_462/agency/hickory-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns4:LocalAgency ;
+    rdfs:label "Hickory Police Department" ;
+    ns2:name "Hickory Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_462/charge/1> a ns5:CriminalCharge,
-        ns5:StateCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_462/charge/1> a ns3:CriminalCharge,
+        ns3:StateCharge ;
     rdfs:label "sexual exploitation of a minor" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_462/charge/2> a ns5:CriminalCharge ;
-    rdfs:label "sexual exploitation" ;
-    ns3:chargeCluster "sexual_exploitation_unspecified" .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_462/charge/2> a ns3:CriminalCharge ;
+    rdfs:label "sexual exploitation" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_462/legal-proceeding> a ns4:Event,
-        ns4:LegalEvent,
-        ns5:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_462/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        ns3:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): incarcerated in the Catawba County Detention Facility" ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_462/charge/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2023_462/charge/2> ;
-    ns5:hasProceedingBeginPoint "2023-10-04T00:00:00Z"^^xsd:dateTimeStamp .
+    ns3:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_462/charge/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2023_462/charge/2> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_462/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns7:ageEstimate 20 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_462/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_462/phase/charged> a ns2:LegalProcessPhase,
-        ns4:Phase ;
-    ns2:hasPhaseBeginPoint "2023-10-04T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/hickory> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2023_462/location/hickory> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Hickory" ;
-    ns6:name "Hickory" .
+    ns2:name "Hickory" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2023_462/role/offender/1> a ns3:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_462> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2023_462/provenance> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_462/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_462/phase/charged> a ns1:LegalProcessPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Legal Process Phase · phase/charged" .
+

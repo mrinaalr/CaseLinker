@@ -1,82 +1,111 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
+@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://cacontology.projectvic.org/core#> .
-@prefix ns6: <https://w3id.org/caselinker/resource/vocab/> .
+@prefix ns3: <https://cacontology.projectvic.org/core#> .
+@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns5: <https://cacontology.projectvic.org#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/brazil_pf_2026_101> a ns1:CACInvestigation,
-        ns5:EnduringEntity ;
-    dcterms:created "2026-10-18 00:50:59.419983" ;
+<https://w3id.org/caselinker/resource/case/brazil_pf_2026_101> a ns5:CACInvestigation,
+        ns3:EnduringEntity ;
+    rdfs:label "Case brazil_pf_2026_101" ;
+    dcterms:created "2026-11-10T17:58:00.384835"^^xsd:dateTime ;
+    dcterms:date "2026-01"^^xsd:gYearMonth ;
     dcterms:identifier "brazil_pf_2026_101" ;
-    dcterms:modified "2026-10-18 00:50:59.419983" ;
+    dcterms:modified "2026-11-10T17:58:00.384835"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/provenance> ;
     dcterms:source <https://www.gov.br/pf/pt-br/assuntos/noticias/2026/07/pf-efetua-prisao-e-busca-para-reprimir-a-exploracao-sexual-infantojuvenil-na-paraiba>,
         "BRAZIL PF" ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/event/hands-on>,
+    ns5:hasStep <https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/event/hands-on>,
         <https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/event/multi-jurisdiction>,
         <https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/event/possession>,
         <https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/legal-proceeding> ;
-    ns1:investigationStatus "unknown" ;
     ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/federal-police-department> .
 
-<https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/event/hands-on>,
-        <https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/event/possession> ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/assessment/semantic/dissemination> a ns3:AssessmentResult ;
+    rdfs:label "semantic similarity · dissemination" ;
+    dcterms:subject ns1:CSAM_Distribution ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/narrative> ;
+    ns3:hasConfidence 0.5231 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/event/hands-on>,
-        <https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/event/possession> ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/assessment/semantic/exploitive-positions> a ns3:AssessmentResult ;
+    rdfs:label "semantic similarity · exploitive_positions" ;
+    dcterms:subject <https://cacontology.projectvic.org/custodial#PositionOfTrust> ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/narrative> ;
+    ns3:hasConfidence 0.6211 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/agency/federal-police-department> a ns2:LocalAgency .
+<https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/assessment/semantic/possession-csam> a ns3:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns5:CSAMIncident ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/narrative> ;
+    ns3:hasConfidence 0.6391 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/charge/1> a ns4:CriminalCharge,
-        ns4:StateCharge ;
+<https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/assessment/semantic/production-csam> a ns3:AssessmentResult ;
+    rdfs:label "semantic similarity · production_csam" ;
+    dcterms:subject <https://cacontology.projectvic.org/production#ProductionOffense> ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/narrative> ;
+    ns3:hasConfidence 0.5676 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/assessment/semantic/sextortion> a ns3:AssessmentResult ;
+    rdfs:label "semantic similarity · sextortion" ;
+    dcterms:subject <https://cacontology.projectvic.org/sextortion#SextortionIncident> ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/narrative> ;
+    ns3:hasConfidence 0.5129 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/role/offender/1/has-role> a ns4:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns4:isDirectional true ;
+    ns4:kindOfRelationship "Has_Role" ;
+    ns4:source <https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/person/offender/1> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/platform/instagram> a ns3:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "Instagram" ;
+    ns4:name "Instagram" .
+
+<https://w3id.org/caselinker/resource/agency/federal-police-department> a ns3:OrganizationLikeEntity,
+        ns2:LocalAgency ;
+    rdfs:label "Federal Police Department" ;
+    ns4:name "Federal Police Department" .
+
+<https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/charge/1> a ns1:CriminalCharge,
+        ns1:StateCharge ;
     rdfs:label "sexual exploitation of children" .
 
-<https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/charge/2> a ns4:CriminalCharge ;
-    rdfs:label "sexual exploitation" ;
-    ns6:chargeCluster "sexual_exploitation_unspecified" .
+<https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/charge/2> a ns1:CriminalCharge ;
+    rdfs:label "sexual exploitation" .
 
-<https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/event/multi-jurisdiction> a ns5:Event,
+<https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/event/hands-on> a ns5:ChildSexualAbuseEvent,
+        ns3:Event ;
+    rdfs:label "Child Sexual Abuse Event · event/hands-on" .
+
+<https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/event/multi-jurisdiction> a ns3:Event,
         ns2:MultiJurisdictionalInvestigation ;
-    ns1:severityLevel 3 ;
+    rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" ;
     ns2:crossesBorders true .
 
-<https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/event/possession> a ns5:CSAMIncident,
+        ns3:Event ;
+    rdfs:label "CSAMIncident · event/possession" .
 
-<https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/legal-proceeding> a ns5:Event,
-        ns5:LegalEvent,
-        ns4:LegalProceeding ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/charge/1>,
-        <https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/charge/2> ;
-    ns4:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/legal-proceeding> a ns3:Event,
+        ns3:LegalEvent,
+        ns1:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns1:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns1:hasCharge <https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/charge/1>,
+        <https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/charge/2> .
 
-<https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/role/offender/1> a ns1:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" .
 
-<https://w3id.org/caselinker/resource/platform/instagram> a <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "Instagram" .
-
-<https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/event/hands-on> a ns1:ChildSexualAbuseEvent,
-        ns5:Event ;
-    ns1:severityLevel 3 ;
-    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/instagram> .
-
-<https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/event/possession> a ns1:CSAMIncident,
-        ns5:Event ;
-    ns1:severityLevel 3 ;
-    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/instagram> ;
-    ns3:hasFacet <https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/facet/possession> .
-
-
-<https://w3id.org/caselinker/resource/case/brazil_pf_2026_101> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/brazil_pf_2026_101/provenance> .

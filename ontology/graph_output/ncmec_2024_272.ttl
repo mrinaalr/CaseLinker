@@ -1,69 +1,74 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns3: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns4: <https://cacontology.projectvic.org/detection#> .
-@prefix ns5: <https://cacontology.projectvic.org/core#> .
-@prefix ns6: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns7: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns1: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns2: <https://cacontology.projectvic.org#> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_272> a ns1:CACInvestigation,
-        ns5:EnduringEntity ;
-    dcterms:created "2026-10-17 23:04:27.888999" ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_272> a ns2:CACInvestigation,
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case ncmec_2024_272" ;
+    dcterms:created "2026-11-10T21:24:56.516092"^^xsd:dateTime ;
+    dcterms:date "2024-11-18"^^xsd:date ;
     dcterms:identifier "ncmec_2024_272" ;
-    dcterms:modified "2026-10-17 23:04:27.888999" ;
+    dcterms:modified "2026-11-12T00:23:52.889395"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_272/provenance> ;
     dcterms:source <https://wgtjradio.com/gville-man-charged-with-sexual-exploitation-of-children/>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/gainesville> ;
-    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_272/phase/charged> ;
-    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_272/phase/charged> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_272/legal-proceeding> ;
-    ns7:involvesAgency <https://w3id.org/caselinker/resource/agency/gainesville-police-department> ;
-    ns3:mentionsLocation <https://w3id.org/caselinker/resource/location/gainesville> .
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2024_272/location/gainesville> ;
+    ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_272/phase/charged> ;
+    ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_272/phase/charged> ;
+    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_272/legal-proceeding> ;
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_272/agency/gainesville-police-department> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_272/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2024-11-18T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_272/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_272/person/offender/1/age> a ns1:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns1:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_272/person/offender/1> ;
+    ns1:concernsAgeQuality ns1:Age ;
+    ns1:hasAgeInYears 30.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_272/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2024-11-18T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_272/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_272/role/offender/1/has-role> a ns4:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns4:isDirectional true ;
+    ns4:kindOfRelationship "Has_Role" ;
+    ns4:source <https://w3id.org/caselinker/resource/case/ncmec_2024_272/person/offender/1> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/ncmec_2024_272/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/gainesville-police-department> a ns7:LocalAgency .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_272/agency/gainesville-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns5:LocalAgency ;
+    rdfs:label "Gainesville Police Department" ;
+    ns4:name "Gainesville Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_272/charge/1> a ns2:CriminalCharge,
-        ns2:StateCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_272/charge/1> a ns3:CriminalCharge,
+        ns3:StateCharge ;
     rdfs:label "sexual exploitation of children" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_272/charge/2> a ns2:CriminalCharge ;
-    rdfs:label "sexual exploitation" ;
-    ns3:chargeCluster "sexual_exploitation_unspecified" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_272/charge/2> a ns3:CriminalCharge ;
+    rdfs:label "sexual exploitation" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_272/legal-proceeding> a ns5:Event,
-        ns5:LegalEvent,
-        ns2:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_272/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        ns3:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): held without bond" ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_272/charge/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_272/charge/2> ;
-    ns2:hasProceedingBeginPoint "2024-11-18T00:00:00Z"^^xsd:dateTimeStamp .
+    ns3:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_272/charge/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_272/charge/2> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_272/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns4:ageEstimate 30 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_272/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_272/phase/charged> a ns1:LegalProcessPhase,
-        ns5:Phase ;
-    ns1:hasPhaseBeginPoint "2024-11-18T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/gainesville> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_272/location/gainesville> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Gainesville" ;
-    ns6:name "Gainesville" .
+    ns4:name "Gainesville" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2024_272/role/offender/1> a ns3:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_272> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2024_272/provenance> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_272/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_272/phase/charged> a ns2:LegalProcessPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Legal Process Phase · phase/charged" .
+

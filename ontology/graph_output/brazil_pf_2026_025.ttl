@@ -1,68 +1,71 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
+@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns2: <https://cacontology.projectvic.org/core#> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns4: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/platforms#> .
+@prefix ns5: <https://cacontology.projectvic.org#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/brazil_pf_2026_025> a ns1:CACInvestigation,
+<https://w3id.org/caselinker/resource/case/brazil_pf_2026_025> a ns5:CACInvestigation,
         ns2:EnduringEntity ;
-    dcterms:created "2026-10-18 00:50:58.969425" ;
+    rdfs:label "Case brazil_pf_2026_025" ;
+    dcterms:created "2026-11-10T17:57:33.813435"^^xsd:dateTime ;
+    dcterms:date "2026-01"^^xsd:gYearMonth ;
     dcterms:identifier "brazil_pf_2026_025" ;
-    dcterms:modified "2026-10-18 00:50:58.969425" ;
+    dcterms:modified "2026-11-10T17:57:33.813435"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/brazil_pf_2026_025/provenance> ;
     dcterms:source <https://www.gov.br/pf/pt-br/assuntos/noticias/2026/09/pf-cumpre-mandado-contra-crimes-de-abuso-e-exploracao-sexual-infantojuvenil>,
         "BRAZIL PF" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/cascavel>,
-        <https://w3id.org/caselinker/resource/location/toledo> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/brazil_pf_2026_025/event/possession> ;
-    ns1:investigationStatus "unknown" ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/alert-the-federal-police-department>,
-        <https://w3id.org/caselinker/resource/agency/social-communication-of-the-federal-police-department> ;
-    ns4:mentionsLocation <https://w3id.org/caselinker/resource/location/cascavel>,
-        <https://w3id.org/caselinker/resource/location/toledo> .
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/brazil_pf_2026_025/location/cascavel>,
+        <https://w3id.org/caselinker/resource/case/brazil_pf_2026_025/location/toledo> ;
+    ns5:hasStep <https://w3id.org/caselinker/resource/case/brazil_pf_2026_025/event/possession> ;
+    ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/alert-the-federal-police-department>,
+        <https://w3id.org/caselinker/resource/agency/social-communication-of-the-federal-police-department> .
 
-<https://w3id.org/caselinker/resource/case/brazil_pf_2026_025/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/brazil_pf_2026_025/event/possession> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/brazil_pf_2026_025/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/brazil_pf_2026_025/assessment/semantic/exploitive-positions> a ns2:AssessmentResult ;
+    rdfs:label "semantic similarity · exploitive_positions" ;
+    dcterms:subject <https://cacontology.projectvic.org/custodial#PositionOfTrust> ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/brazil_pf_2026_025/narrative> ;
+    ns2:hasConfidence 0.4957 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/brazil_pf_2026_025/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/brazil_pf_2026_025/event/possession> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/brazil_pf_2026_025/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/brazil_pf_2026_025/assessment/semantic/possession-csam> a ns2:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns5:CSAMIncident ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/brazil_pf_2026_025/narrative> ;
+    ns2:hasConfidence 0.5141 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/agency/alert-the-federal-police-department> a ns3:LocalAgency .
+<https://w3id.org/caselinker/resource/agency/alert-the-federal-police-department> a ns2:OrganizationLikeEntity,
+        ns1:LocalAgency ;
+    rdfs:label "Alert The Federal Police Department" ;
+    ns3:name "Alert The Federal Police Department" .
 
-<https://w3id.org/caselinker/resource/agency/social-communication-of-the-federal-police-department> a ns3:LocalAgency .
+<https://w3id.org/caselinker/resource/agency/social-communication-of-the-federal-police-department> a ns2:OrganizationLikeEntity,
+        ns1:LocalAgency ;
+    rdfs:label "Social Communication of the Federal Police Department" ;
+    ns3:name "Social Communication of the Federal Police Department" .
 
-<https://w3id.org/caselinker/resource/case/brazil_pf_2026_025/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/brazil_pf_2026_025/event/possession> a ns5:CSAMIncident,
+        ns2:Event ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns5:severityLevel 3 ;
+    ns5:usesChannel <https://w3id.org/caselinker/resource/platform/whatsapp> .
 
-<https://w3id.org/caselinker/resource/case/brazil_pf_2026_025/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/brazil_pf_2026_025/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/platform/whatsapp> a <https://cacontology.projectvic.org/platforms#MessagingService> ;
-    rdfs:label "WhatsApp" .
-
-<https://w3id.org/caselinker/resource/location/cascavel> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/brazil_pf_2026_025/location/cascavel> a ns2:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Cascavel" ;
-    ns5:name "Cascavel" .
+    ns3:name "Cascavel" .
 
-<https://w3id.org/caselinker/resource/location/toledo> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/brazil_pf_2026_025/location/toledo> a ns2:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Toledo" ;
-    ns5:name "Toledo" .
+    ns3:name "Toledo" .
 
-<https://w3id.org/caselinker/resource/case/brazil_pf_2026_025/event/possession> a ns1:CSAMIncident,
-        ns2:Event ;
-    ns1:severityLevel 3 ;
-    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/whatsapp> ;
-    ns5:hasFacet <https://w3id.org/caselinker/resource/case/brazil_pf_2026_025/facet/possession> .
+<https://w3id.org/caselinker/resource/platform/whatsapp> a ns2:DigitalSystemEntity,
+        ns4:MessagingService ;
+    rdfs:label "WhatsApp" ;
+    ns4:encryptionLevel "end-to-end" ;
+    ns3:name "WhatsApp" .
 
-
-<https://w3id.org/caselinker/resource/case/brazil_pf_2026_025> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/brazil_pf_2026_025/provenance> .

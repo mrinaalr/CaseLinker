@@ -1,78 +1,82 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns3: <https://cacontology.projectvic.org/core#> .
-@prefix ns4: <https://w3id.org/caselinker/resource/vocab/> .
+@prefix ns2: <https://cacontology.projectvic.org/core#> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/texas_ag_2016_001> a ns1:CACInvestigation,
-        ns3:EnduringEntity ;
-    dcterms:created "2026-10-18 07:53:53.938228" ;
+        ns2:EnduringEntity ;
+    rdfs:label "Case texas_ag_2016_001" ;
+    dcterms:created "2026-11-11T18:48:45.491193"^^xsd:dateTime ;
+    dcterms:date "2016-10-21"^^xsd:date ;
     dcterms:identifier "texas_ag_2016_001" ;
-    dcterms:modified "2026-10-18 07:53:53.938228" ;
+    dcterms:modified "2026-11-11T18:48:45.491193"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/texas_ag_2016_001/provenance> ;
     dcterms:source <https://www.texasattorneygeneral.gov/news/categories/cyber-crimes>,
         "Texas AG" ;
     ns1:currentPhase <https://w3id.org/caselinker/resource/case/texas_ag_2016_001/phase/arrested> ;
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/texas_ag_2016_001/phase/arrested> ;
     ns1:hasStep <https://w3id.org/caselinker/resource/case/texas_ag_2016_001/event/online-only>,
         <https://w3id.org/caselinker/resource/case/texas_ag_2016_001/legal-proceeding>,
-        <https://w3id.org/caselinker/resource/case/texas_ag_2016_001/offense-event/charge-1>,
         <https://w3id.org/caselinker/resource/case/texas_ag_2016_001/operation> ;
-    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/rockwall-county-sheriffs-office>,
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/rockwall-county-sheriff-s-office-tx>,
         <https://w3id.org/caselinker/resource/agency/texas-attorney-generals-office> .
 
-<https://w3id.org/caselinker/resource/case/texas_ag_2016_001/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2016-10-21T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/texas_ag_2016_001/event/online-only>,
-        <https://w3id.org/caselinker/resource/case/texas_ag_2016_001/offense-event/charge-1> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/texas_ag_2016_001/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/texas_ag_2016_001/assessment/semantic/exploitive-positions> a ns2:AssessmentResult ;
+    rdfs:label "semantic similarity · exploitive_positions" ;
+    dcterms:subject <https://cacontology.projectvic.org/custodial#PositionOfTrust> ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/texas_ag_2016_001/narrative> ;
+    ns2:hasConfidence 0.4649 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/texas_ag_2016_001/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2016-10-21T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/texas_ag_2016_001/event/online-only>,
-        <https://w3id.org/caselinker/resource/case/texas_ag_2016_001/offense-event/charge-1> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/texas_ag_2016_001/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/texas_ag_2016_001/role/offender/1/has-role> a ns4:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns4:isDirectional true ;
+    ns4:kindOfRelationship "Has_Role" ;
+    ns4:source <https://w3id.org/caselinker/resource/case/texas_ag_2016_001/person/offender/1> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/texas_ag_2016_001/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/rockwall-county-sheriffs-office> a ns3:OrganizationLikeEntity,
-        ns2:LocalAgency ;
-    rdfs:label "Rockwall County Sheriff's Office" .
+<https://w3id.org/caselinker/resource/agency/rockwall-county-sheriff-s-office-tx> a ns2:OrganizationLikeEntity,
+        ns3:LocalAgency ;
+    rdfs:label "Rockwall County Sheriff's Office" ;
+    dcterms:identifier "ori:TX1990000" ;
+    ns4:name "Rockwall County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/agency/texas-attorney-generals-office> a ns2:StateAgency .
+<https://w3id.org/caselinker/resource/agency/texas-attorney-generals-office> a ns2:OrganizationLikeEntity,
+        ns3:StateAgency ;
+    rdfs:label "Texas Attorney General's Office" ;
+    ns4:name "Texas Attorney General's Office" .
 
 <https://w3id.org/caselinker/resource/case/texas_ag_2016_001/charge/1> a ns5:CriminalCharge ;
     rdfs:label "child exploitation" ;
-    rdfs:seeAlso <https://w3id.org/caselinker/resource/case/texas_ag_2016_001/offense-event/charge-1> ;
-    ns4:chargeCluster "child_exploitation" ;
-    ns4:chargeOffenseEvent <https://w3id.org/caselinker/resource/case/texas_ag_2016_001/offense-event/charge-1> .
+    dcterms:subject ns1:ChildSexualAbuseEvent .
 
-<https://w3id.org/caselinker/resource/case/texas_ag_2016_001/legal-proceeding> a ns3:Event,
-        ns3:LegalEvent,
+<https://w3id.org/caselinker/resource/case/texas_ag_2016_001/legal-proceeding> a ns2:Event,
+        ns2:LegalEvent,
         ns5:LegalProceeding ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/texas_ag_2016_001/charge/1> ;
-    ns5:hasProceedingBeginPoint "2016-10-21T00:00:00Z"^^xsd:dateTimeStamp .
+    rdfs:label "Event · legal-proceeding" ;
+    ns5:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/texas_ag_2016_001/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/texas_ag_2016_001/operation> a ns3:Event,
-        <https://cacontology.projectvic.org/taskforce#UndercoverUnit> .
+<https://w3id.org/caselinker/resource/case/texas_ag_2016_001/operation> a ns2:Event,
+        <https://cacontology.projectvic.org/undercover#UndercoverOperation> ;
+    rdfs:label "Undercover Operation · operation" .
 
-<https://w3id.org/caselinker/resource/case/texas_ag_2016_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/texas_ag_2016_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/texas_ag_2016_001/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/texas_ag_2016_001/phase/arrested> a ns1:InitialPhase,
-        ns3:Phase ;
-    ns1:hasPhaseBeginPoint "2016-10-21T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/texas_ag_2016_001/role/offender/1> a ns5:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/texas_ag_2016_001/event/online-only> .
 
 <https://w3id.org/caselinker/resource/case/texas_ag_2016_001/event/online-only> a ns1:ChildSexualAbuseEvent,
-        ns3:Event .
+        ns2:Event ;
+    rdfs:label "Child Sexual Abuse Event · event/online-only" .
 
-<https://w3id.org/caselinker/resource/case/texas_ag_2016_001/offense-event/charge-1> a ns1:ChildSexualAbuseEvent,
-        ns3:Event,
-        <https://ontology.unifiedcyberontology.org/uco/action/Crime> ;
-    rdfs:label "Inferred offense from charge: child exploitation" .
+<https://w3id.org/caselinker/resource/case/texas_ag_2016_001/phase/arrested> a ns1:InitialPhase,
+        ns2:Phase ;
+    rdfs:label "Initial Phase · phase/arrested" .
 
-
-<https://w3id.org/caselinker/resource/case/texas_ag_2016_001> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/texas_ag_2016_001/provenance> .

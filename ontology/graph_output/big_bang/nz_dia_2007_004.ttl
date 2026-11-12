@@ -1,67 +1,70 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/core#> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns5: <https://w3id.org/caselinker/resource/vocab/> .
+@prefix ns2: <https://cacontology.projectvic.org/core#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org#> .
+@prefix ns5: <https://cacontology.projectvic.org/platforms#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/nz_dia_2007_004> a ns2:CACInvestigation,
-        ns3:EnduringEntity ;
-    dcterms:created "2026-10-18 14:04:15.470024" ;
+<https://w3id.org/caselinker/resource/case/nz_dia_2007_004> a ns4:CACInvestigation,
+        ns2:EnduringEntity ;
+    rdfs:label "Case nz_dia_2007_004" ;
+    dcterms:created "2026-11-11T16:25:32.055051"^^xsd:dateTime ;
+    dcterms:date "2007-02-16"^^xsd:date ;
     dcterms:identifier "nz_dia_2007_004" ;
-    dcterms:modified "2026-10-18 14:04:15.470024" ;
+    dcterms:modified "2026-11-11T16:25:32.055051"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/nz_dia_2007_004/provenance> ;
     dcterms:source <https://www.dia.govt.nz/press.nsf/d77da9b523f12931cc256ac5000d19b6/5dd8045a6ee06ffccc2572840076c291!OpenDocument>,
         "NZ DIA" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/wellington> ;
-    ns2:hasStep <https://w3id.org/caselinker/resource/case/nz_dia_2007_004/event/distribution>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/nz_dia_2007_004/location/wellington> ;
+    ns4:hasStep <https://w3id.org/caselinker/resource/case/nz_dia_2007_004/event/distribution>,
         <https://w3id.org/caselinker/resource/case/nz_dia_2007_004/event/multi-jurisdiction>,
         <https://w3id.org/caselinker/resource/case/nz_dia_2007_004/event/possession> ;
-    ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/department-of-internal-affairs> ;
-    ns5:mentionsLocation <https://w3id.org/caselinker/resource/location/wellington> .
+    ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/department-of-internal-affairs> .
 
-<https://w3id.org/caselinker/resource/case/nz_dia_2007_004/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2007-02-16T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/nz_dia_2007_004/event/possession> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/nz_dia_2007_004/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/nz_dia_2007_004/assessment/semantic/exploitive-positions> a ns2:AssessmentResult ;
+    rdfs:label "semantic similarity · exploitive_positions" ;
+    dcterms:subject <https://cacontology.projectvic.org/custodial#PositionOfTrust> ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/nz_dia_2007_004/narrative> ;
+    ns2:hasConfidence 0.5043 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/nz_dia_2007_004/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2007-02-16T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/nz_dia_2007_004/event/possession> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/nz_dia_2007_004/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/nz_dia_2007_004/assessment/semantic/possession-csam> a ns2:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns4:CSAMIncident ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/nz_dia_2007_004/narrative> ;
+    ns2:hasConfidence 0.6114 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/agency/department-of-internal-affairs> a ns1:LocalAgency .
+<https://w3id.org/caselinker/resource/agency/department-of-internal-affairs> a ns2:OrganizationLikeEntity,
+        ns1:LocalAgency ;
+    rdfs:label "NZ DIA" ;
+    ns3:name "NZ DIA" .
 
-<https://w3id.org/caselinker/resource/case/nz_dia_2007_004/event/distribution> a ns3:Event,
+<https://w3id.org/caselinker/resource/case/nz_dia_2007_004/event/distribution> a ns2:Event,
         <https://cacontology.projectvic.org/legal-outcomes#CSAM_Distribution> ;
-    ns2:severityLevel 3 .
+    rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/nz_dia_2007_004/event/multi-jurisdiction> a ns3:Event,
+<https://w3id.org/caselinker/resource/case/nz_dia_2007_004/event/multi-jurisdiction> a ns2:Event,
         ns1:MultiJurisdictionalInvestigation ;
-    ns2:severityLevel 3 ;
+    rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" ;
     ns1:crossesBorders true .
 
-<https://w3id.org/caselinker/resource/case/nz_dia_2007_004/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/nz_dia_2007_004/event/possession> a ns4:CSAMIncident,
+        ns2:Event ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns4:severityLevel 3 ;
+    ns4:usesChannel <https://w3id.org/caselinker/resource/platform/kazaa> .
 
-<https://w3id.org/caselinker/resource/case/nz_dia_2007_004/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/nz_dia_2007_004/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/platform/kazaa> a <https://cacontology.projectvic.org/platforms#FileHostingService> ;
-    rdfs:label "Kazaa" .
-
-<https://w3id.org/caselinker/resource/location/wellington> a ns3:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/nz_dia_2007_004/location/wellington> a ns2:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Wellington" ;
-    ns4:name "Wellington" .
+    ns3:name "Wellington" .
 
-<https://w3id.org/caselinker/resource/case/nz_dia_2007_004/event/possession> a ns2:CSAMIncident,
-        ns3:Event ;
-    ns2:severityLevel 3 ;
-    ns2:usesChannel <https://w3id.org/caselinker/resource/platform/kazaa> ;
-    ns4:hasFacet <https://w3id.org/caselinker/resource/case/nz_dia_2007_004/facet/possession> .
+<https://w3id.org/caselinker/resource/platform/kazaa> a ns2:DigitalSystemEntity,
+        ns5:FileHostingService ;
+    rdfs:label "Kazaa" ;
+    ns5:platformType "p2p" ;
+    ns3:name "Kazaa" .
 

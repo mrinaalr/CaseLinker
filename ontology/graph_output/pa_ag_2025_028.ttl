@@ -1,79 +1,88 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/core#> .
-@prefix ns3: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns5: <https://cacontology.projectvic.org/detection#> .
-@prefix ns6: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns7: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/pa_ag_2025_028> a ns1:CACInvestigation,
-        ns2:EnduringEntity ;
-    dcterms:created "2026-10-18 06:23:11.964993" ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case pa_ag_2025_028" ;
+    dcterms:created "2026-11-11T16:49:03.756448"^^xsd:dateTime ;
+    dcterms:date "2025-10-31"^^xsd:date ;
     dcterms:identifier "pa_ag_2025_028" ;
-    dcterms:modified "2026-10-18 06:23:11.964993" ;
+    dcterms:modified "2026-11-11T16:49:03.756448"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/pa_ag_2025_028/provenance> ;
     dcterms:source <https://www.attorneygeneral.gov/taking-action/verdict-perry-county-man-found-guilty-of-physically-and-sexually-abusing-four-children/>,
         "PA AG" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/harrisburg>,
-        <https://w3id.org/caselinker/resource/location/newport>,
-        <https://w3id.org/caselinker/resource/location/perry-county> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/harrisburg-city-pa>,
+        <https://w3id.org/caselinker/resource/location/newport-borough-pa>,
+        <https://w3id.org/caselinker/resource/location/perry-county-pa> ;
     ns1:currentPhase <https://w3id.org/caselinker/resource/case/pa_ag_2025_028/phase/sentenced> ;
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/pa_ag_2025_028/phase/sentenced> ;
     ns1:hasStep <https://w3id.org/caselinker/resource/case/pa_ag_2025_028/event/hands-on>,
         <https://w3id.org/caselinker/resource/case/pa_ag_2025_028/legal-step/sentenced> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/office-of-the-attorney-general> ;
-    ns3:mentionsLocation <https://w3id.org/caselinker/resource/location/harrisburg>,
-        <https://w3id.org/caselinker/resource/location/newport>,
-        <https://w3id.org/caselinker/resource/location/perry-county> .
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/office-of-the-attorney-general-pa-unverified> .
 
-<https://w3id.org/caselinker/resource/case/pa_ag_2025_028/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2025-10-31T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/pa_ag_2025_028/event/hands-on> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/pa_ag_2025_028/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/pa_ag_2025_028/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/pa_ag_2025_028/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 55.0 .
 
-<https://w3id.org/caselinker/resource/case/pa_ag_2025_028/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2025-10-31T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/pa_ag_2025_028/event/hands-on> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/pa_ag_2025_028/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/pa_ag_2025_028/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/pa_ag_2025_028/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/pa_ag_2025_028/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/office-of-the-attorney-general> a ns4:StateAgency .
+<https://w3id.org/caselinker/resource/agency/office-of-the-attorney-general-pa-unverified> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns3:StateAgency ;
+    rdfs:label "Office of the Attorney General" ;
+    ns2:name "Office of the Attorney General" .
 
-<https://w3id.org/caselinker/resource/case/pa_ag_2025_028/legal-step/sentenced> a ns2:Event,
-        ns2:LegalEvent,
-        ns7:LegalProceeding,
-        ns7:SentencingHearing ;
-    ns7:hasProceedingBeginPoint "2025-10-31T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/pa_ag_2025_028/legal-step/sentenced> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        <https://cacontology.projectvic.org/legal-outcomes#LegalProceeding>,
+        <https://cacontology.projectvic.org/legal-outcomes#SentencingHearing> ;
+    rdfs:label "Sentencing Hearing · legal-step/sentenced" .
 
-<https://w3id.org/caselinker/resource/case/pa_ag_2025_028/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns5:ageEstimate 55 .
+<https://w3id.org/caselinker/resource/case/pa_ag_2025_028/role/offender/1> a ns1:OffenderRole ;
+    rdfs:label "Offender Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/pa_ag_2025_028/event/hands-on> .
 
-<https://w3id.org/caselinker/resource/case/pa_ag_2025_028/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/pa_ag_2025_028/phase/sentenced> a ns2:Phase,
-        ns7:SentencingPhase ;
-    ns1:hasPhaseBeginPoint "2025-10-31T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/harrisburg> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/harrisburg-city-pa> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Harrisburg" ;
-    ns6:name "Harrisburg" .
+    rdfs:label "Harrisburg city" ;
+    dcterms:identifier "fips:4232800" ;
+    skos:altLabel "Harrisburg" ;
+    ns2:name "Harrisburg city" .
 
-<https://w3id.org/caselinker/resource/location/newport> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/newport-borough-pa> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Newport" ;
-    ns6:name "Newport" .
+    rdfs:label "Newport borough" ;
+    dcterms:identifier "fips:4253968" ;
+    skos:altLabel "Newport" ;
+    ns2:name "Newport borough" .
 
-<https://w3id.org/caselinker/resource/location/perry-county> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/perry-county-pa> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Perry County" ;
-    ns6:name "Perry County" .
+    dcterms:identifier "fips:42099" ;
+    ns2:name "Perry County" .
 
 <https://w3id.org/caselinker/resource/case/pa_ag_2025_028/event/hands-on> a ns1:ChildSexualAbuseEvent,
-        ns2:Event ;
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "Child Sexual Abuse Event · event/hands-on" ;
     ns1:severityLevel 3 .
+
+<https://w3id.org/caselinker/resource/case/pa_ag_2025_028/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/pa_ag_2025_028/phase/sentenced> a <https://cacontology.projectvic.org/core#Phase>,
+        <https://cacontology.projectvic.org/legal-outcomes#SentencingPhase> ;
+    rdfs:label "Sentencing Phase · phase/sentenced" .
 

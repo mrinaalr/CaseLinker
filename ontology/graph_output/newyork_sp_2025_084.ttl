@@ -1,82 +1,95 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://w3id.org/caselinker/resource/vocab/> .
+@prefix ns1: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
 @prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns5: <https://cacontology.projectvic.org/core#> .
-@prefix ns6: <https://cacontology.projectvic.org/detection#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/newyork_sp_2025_084> a ns2:CACInvestigation,
-        ns5:EnduringEntity ;
-    dcterms:created "2026-10-18 06:04:25.368399" ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case newyork_sp_2025_084" ;
+    dcterms:created "2026-11-11T16:12:34.272739"^^xsd:dateTime ;
+    dcterms:date "2025-01"^^xsd:gYearMonth ;
     dcterms:identifier "newyork_sp_2025_084" ;
-    dcterms:modified "2026-10-18 06:04:25.368399" ;
+    dcterms:modified "2026-11-11T16:12:34.272739"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/newyork_sp_2025_084/provenance> ;
     dcterms:source <https://troopers.ny.gov/news/state-police-arrest-pennsylvania-man-following-child-endangerment-investigation>,
         "NEWYORK SP" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/clifton-park>,
-        <https://w3id.org/caselinker/resource/location/new-york>,
-        <https://w3id.org/caselinker/resource/location/pennsylvania>,
-        <https://w3id.org/caselinker/resource/location/saylorsburg> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/newyork_sp_2025_084/location/clifton-park>,
+        <https://w3id.org/caselinker/resource/location/new-york-ny>,
+        <https://w3id.org/caselinker/resource/location/pennsylvania-pa>,
+        <https://w3id.org/caselinker/resource/location/saylorsburg-cdp-pa> ;
     ns2:currentPhase <https://w3id.org/caselinker/resource/case/newyork_sp_2025_084/phase/arrested> ;
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/newyork_sp_2025_084/phase/arrested> ;
     ns2:hasStep <https://w3id.org/caselinker/resource/case/newyork_sp_2025_084/event/distribution> ;
-    ns2:investigationStatus "unknown" ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/saratoga-county-probation-department>,
-        <https://w3id.org/caselinker/resource/agency/state-police-department> ;
-    ns1:mentionsLocation <https://w3id.org/caselinker/resource/location/clifton-park>,
-        <https://w3id.org/caselinker/resource/location/new-york>,
-        <https://w3id.org/caselinker/resource/location/pennsylvania>,
-        <https://w3id.org/caselinker/resource/location/saylorsburg> .
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/saratoga-county-probation-department-ny-unverified>,
+        <https://w3id.org/caselinker/resource/agency/state-police-department-ny-unverified> .
 
-<https://w3id.org/caselinker/resource/case/newyork_sp_2025_084/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/newyork_sp_2025_084/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/newyork_sp_2025_084/person/offender/1/age> a ns1:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns1:ageSubject <https://w3id.org/caselinker/resource/case/newyork_sp_2025_084/person/offender/1> ;
+    ns1:concernsAgeQuality ns1:Age ;
+    ns1:hasAgeInYears 38.0 .
 
-<https://w3id.org/caselinker/resource/case/newyork_sp_2025_084/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/newyork_sp_2025_084/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/newyork_sp_2025_084/role/offender/1/has-role> a ns4:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns4:isDirectional true ;
+    ns4:kindOfRelationship "Has_Role" ;
+    ns4:source <https://w3id.org/caselinker/resource/case/newyork_sp_2025_084/person/offender/1> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/newyork_sp_2025_084/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "social media" .
+<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "social media" ;
+    ns4:name "social media" .
 
-<https://w3id.org/caselinker/resource/agency/saratoga-county-probation-department> a ns3:LocalAgency .
+<https://w3id.org/caselinker/resource/agency/saratoga-county-probation-department-ny-unverified> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns3:LocalAgency ;
+    rdfs:label "Saratoga County Probation Department" ;
+    ns4:name "Saratoga County Probation Department" .
 
-<https://w3id.org/caselinker/resource/agency/state-police-department> a ns3:StateAgency .
+<https://w3id.org/caselinker/resource/agency/state-police-department-ny-unverified> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns3:StateAgency ;
+    rdfs:label "State Police Department" ;
+    ns4:name "State Police Department" .
 
-<https://w3id.org/caselinker/resource/case/newyork_sp_2025_084/event/distribution> a ns5:Event,
-        <https://cacontology.projectvic.org/legal-outcomes#CSAM_Distribution> .
+<https://w3id.org/caselinker/resource/case/newyork_sp_2025_084/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/legal-outcomes#CSAM_Distribution> ;
+    rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/newyork_sp_2025_084/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns6:ageEstimate 38 .
-
-<https://w3id.org/caselinker/resource/case/newyork_sp_2025_084/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/newyork_sp_2025_084/phase/arrested> a ns2:InitialPhase,
-        ns5:Phase ;
-    ns2:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/clifton-park> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/newyork_sp_2025_084/location/clifton-park> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Clifton Park" ;
     ns4:name "Clifton Park" .
 
-<https://w3id.org/caselinker/resource/location/new-york> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/newyork_sp_2025_084/role/offender/1> a <https://cacontology.projectvic.org/legal-outcomes#DefendantRole> ;
+    rdfs:label "Defendant Role · role/offender/1" .
+
+<https://w3id.org/caselinker/resource/location/new-york-ny> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "New York" ;
+    dcterms:identifier "fips:36" ;
     ns4:name "New York" .
 
-<https://w3id.org/caselinker/resource/location/pennsylvania> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/pennsylvania-pa> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Pennsylvania" ;
+    dcterms:identifier "fips:42" ;
     ns4:name "Pennsylvania" .
 
-<https://w3id.org/caselinker/resource/location/saylorsburg> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/saylorsburg-cdp-pa> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Saylorsburg" ;
-    ns4:name "Saylorsburg" .
+    rdfs:label "Saylorsburg CDP" ;
+    dcterms:identifier "fips:4268088" ;
+    skos:altLabel "Saylorsburg" ;
+    ns4:name "Saylorsburg CDP" .
+
+<https://w3id.org/caselinker/resource/case/newyork_sp_2025_084/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/newyork_sp_2025_084/phase/arrested> a ns2:InitialPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Initial Phase · phase/arrested" .
 

@@ -1,73 +1,83 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns2: <https://cacontology.projectvic.org/core#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns5: <https://w3id.org/caselinker/resource/vocab/> .
+@prefix ns4: <https://cacontology.projectvic.org/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_492> a ns3:CACInvestigation,
-        ns2:EnduringEntity ;
-    dcterms:created "2026-10-17 22:21:33.942754" ;
+        ns4:EnduringEntity ;
+    rdfs:label "Case ncmec_2023_492" ;
+    dcterms:created "2026-11-10T10:05:15.917935"^^xsd:dateTime ;
+    dcterms:date "2023-05"^^xsd:gYearMonth ;
     dcterms:identifier "ncmec_2023_492" ;
-    dcterms:modified "2026-10-17 22:21:33.942754" ;
+    dcterms:modified "2026-11-10T10:05:15.917935"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2023_492/provenance> ;
     dcterms:source <https://thesuncoastnews.com/2023/05/sarasota-man-faces-additional-charges-for-video-voyeurism-and-possessing-obscene-material-of-a-child/>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/sarasota> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/sarasota-city> ;
     ns3:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_492/phase/arrested> ;
     ns3:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_492/phase/arrested> ;
     ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_492/event/possession>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2023_492/legal-proceeding> ;
-    ns3:investigationStatus "unknown" ;
-    ns5:mentionsLocation <https://w3id.org/caselinker/resource/location/sarasota> .
+        <https://w3id.org/caselinker/resource/case/ncmec_2023_492/legal-proceeding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_492/role/offender/1> a ns3:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns3:hasRoleBeginPoint "2023-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_492/event/possession> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_492/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_492/assessment/semantic/exploitive-positions> a ns4:AssessmentResult ;
+    rdfs:label "semantic similarity · exploitive_positions" ;
+    dcterms:subject <https://cacontology.projectvic.org/custodial#PositionOfTrust> ;
+    ns4:assesses <https://w3id.org/caselinker/resource/case/ncmec_2023_492/narrative> ;
+    ns4:hasConfidence 0.4606 ;
+    ns4:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_492/role/victim/1> a ns3:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns3:hasRoleBeginPoint "2023-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_492/event/possession> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_492/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_492/assessment/semantic/possession-csam> a ns4:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns3:CSAMIncident ;
+    ns4:assesses <https://w3id.org/caselinker/resource/case/ncmec_2023_492/narrative> ;
+    ns4:hasConfidence 0.5322 ;
+    ns4:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_492/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2023_492/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2023_492/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_492/charge/1> a ns1:CriminalCharge ;
-    rdfs:label "possessing material depicting child sex and video" ;
-    ns1:indictmentCounts 40 .
+    rdfs:label "possessing material depicting child sex and video" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_492/charge/2> a ns1:CSAM_Possession,
         ns1:CriminalCharge ;
-    rdfs:label "child pornography" ;
-    ns1:indictmentCounts 2 .
+    rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_492/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_492/legal-proceeding> a ns2:Event,
-        ns2:LegalEvent,
+<https://w3id.org/caselinker/resource/case/ncmec_2023_492/legal-proceeding> a ns4:Event,
+        ns4:LegalEvent,
         ns1:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns1:chargeCount "42"^^xsd:nonNegativeInteger ;
     ns1:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_492/charge/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2023_492/charge/2> ;
-    ns1:hasProceedingBeginPoint "2023-05-01T00:00:00Z"^^xsd:dateTimeStamp .
+        <https://w3id.org/caselinker/resource/case/ncmec_2023_492/charge/2> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_492/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_492/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_492/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_492/role/offender/1> a ns1:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_492/event/possession> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_492/phase/arrested> a ns3:InitialPhase,
-        ns2:Phase ;
-    ns3:hasPhaseBeginPoint "2023-05-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/sarasota> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/sarasota-city> a ns4:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Sarasota" ;
-    ns4:name "Sarasota" .
+    rdfs:label "Sarasota city" ;
+    dcterms:identifier "fips:1264175" ;
+    skos:altLabel "Sarasota" ;
+    ns2:name "Sarasota city" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_492/event/possession> a ns3:CSAMIncident,
-        ns2:Event ;
-    ns4:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2023_492/facet/possession> .
+        ns4:Event ;
+    rdfs:label "CSAMIncident · event/possession" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2023_492/phase/arrested> a ns3:InitialPhase,
+        ns4:Phase ;
+    rdfs:label "Initial Phase · phase/arrested" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_492> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2023_492/provenance> .

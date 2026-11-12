@@ -1,98 +1,97 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/core#> .
-@prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://w3id.org/caselinker/resource/vocab/> .
+@prefix ns1: <https://cacontology.projectvic.org#> .
+@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://cacontology.projectvic.org/detection#> .
+@prefix ns5: <https://cacontology.projectvic.org/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_132/admission/1/extraction-confidence> a ns1:AssessmentResult ;
-    ns1:assesses <https://w3id.org/caselinker/resource/case/ncmec_2022_132/admission/1> ;
-    ns1:generatedBy <https://w3id.org/caselinker/resource/case/ncmec_2022_132> ;
-    ns1:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_132/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2022-08-12T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_132/event/possession> ;
-    ns1:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_132/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_132> a ns2:CACInvestigation,
-        ns1:EnduringEntity ;
-    dcterms:created "2026-10-17 21:51:20.987790" ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_132> a ns1:CACInvestigation,
+        ns5:EnduringEntity ;
+    rdfs:label "Case ncmec_2022_132" ;
+    dcterms:created "2026-11-10T09:17:49.737539"^^xsd:dateTime ;
+    dcterms:date "2022-08-12"^^xsd:date ;
     dcterms:identifier "ncmec_2022_132" ;
-    dcterms:modified "2026-10-17 21:51:20.987790" ;
+    dcterms:modified "2026-11-10T09:17:49.737539"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2022_132/provenance> ;
     dcterms:source <https://www.kpvi.com/news/national_news/haughton-man-arrested-on-child-pornography-charges/article_e783453a-b914-53bd-b508-201711e9fa68.html>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/benton>,
-        <https://w3id.org/caselinker/resource/location/la> ;
-    ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_132/phase/charged> ;
-    ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_132/phase/charged> ;
-    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_132/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_132/event/distribution>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/benton-town-la>,
+        <https://w3id.org/caselinker/resource/location/louisiana-la> ;
+    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_132/phase/charged> ;
+    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_132/phase/charged> ;
+    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_132/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_132/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_132/legal-proceeding> ;
-    ns2:investigationStatus "unknown" ;
-    ns3:mentionsLocation <https://w3id.org/caselinker/resource/location/benton>,
-        <https://w3id.org/caselinker/resource/location/la> .
+    ns4:object <https://w3id.org/caselinker/resource/case/ncmec_2022_132/admission/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_132/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_132/admission/1/extraction-confidence> a ns5:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns5:assesses <https://w3id.org/caselinker/resource/case/ncmec_2022_132/admission/1> ;
+    ns5:hasConfidence 0.65 ;
+    ns5:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_132/person/offender/1/age> a ns3:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns3:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2022_132/person/offender/1> ;
+    ns3:concernsAgeQuality ns3:Age ;
+    ns3:hasAgeInYears 24.0 .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_132/role/offender/1/has-role> a ns4:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns4:isDirectional true ;
+    ns4:kindOfRelationship "Has_Role" ;
+    ns4:source <https://w3id.org/caselinker/resource/case/ncmec_2022_132/person/offender/1> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/ncmec_2022_132/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_132/charge/1> a ns2:CSAM_Possession,
+        ns2:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_132/event/distribution> a ns1:Event,
-        ns5:CSAM_Distribution .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_132/event/distribution> a ns5:Event,
+        ns2:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_132/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_132/legal-proceeding> a ns5:Event,
+        ns5:LegalEvent,
+        ns2:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns2:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_132/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_132/legal-proceeding> a ns1:Event,
-        ns1:LegalEvent,
-        ns5:LegalProceeding ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_132/charge/1> ;
-    ns5:hasProceedingBeginPoint "2022-08-12T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_132/role/offender/1> a ns2:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_132/event/possession> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_132/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns6:ageEstimate 24 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_132/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_132/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2022-08-12T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_132/event/possession> ;
-    ns1:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_132/person/offender/1> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_132/phase/charged> a ns2:LegalProcessPhase,
-        ns1:Phase ;
-    ns2:hasPhaseBeginPoint "2022-08-12T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/benton> a ns1:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/benton-town-la> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Benton" ;
-    ns4:name "Benton" .
+    rdfs:label "Benton town" ;
+    dcterms:identifier "fips:2206925" ;
+    skos:altLabel "Benton" ;
+    ns4:name "Benton town" .
 
-<https://w3id.org/caselinker/resource/location/la> a ns1:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/louisiana-la> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "La." ;
-    ns4:name "La." .
+    rdfs:label "Louisiana" ;
+    dcterms:identifier "fips:22" ;
+    skos:altLabel "La." ;
+    ns4:name "Louisiana" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_132/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "to possessing and distributing child pornography involving prepubescent juveniles under the age of 13" ;
     dcterms:source <https://www.kpvi.com/news/national_news/haughton-man-arrested-on-child-pornography-charges/article_e783453a-b914-53bd-b508-201711e9fa68.html> ;
-    ns3:admissionContext "as also charged with possessing drugs and drug paraphernalia. Detectives said during the investigation Watson confessed to possessing and..." ;
-    ns3:admissionFrame "confessed_paraphrase" ;
-    ns3:admissionTheme "harm_conduct" ;
-    ns3:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/ncmec_2022_132/role/offender/1> ;
-    ns3:evidenceTier "press_release_stated" ;
-    ns3:quoteType "paraphrase" ;
     ns4:description "to possessing and distributing child pornography involving prepubescent juveniles under the age of 13" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_132/event/possession> a ns2:CSAMIncident,
-        ns1:Event ;
-    ns2:producesArtifact <https://w3id.org/caselinker/resource/case/ncmec_2022_132/admission/1> ;
-    ns4:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2022_132/facet/possession> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_132/event/possession> a ns1:CSAMIncident,
+        ns5:Event ;
+    rdfs:label "CSAMIncident · event/possession" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2022_132/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_132> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2022_132/provenance> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_132/phase/charged> a ns1:LegalProcessPhase,
+        ns5:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
+

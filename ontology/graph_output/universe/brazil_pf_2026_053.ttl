@@ -1,69 +1,102 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/core#> .
+@prefix ns1: <https://cacontology.projectvic.org/core#> .
+@prefix ns2: <https://cacontology.projectvic.org#> .
 @prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns6: <https://w3id.org/caselinker/resource/vocab/> .
+@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/brazil_pf_2026_053> a ns1:CACInvestigation,
-        ns2:EnduringEntity ;
-    dcterms:created "2026-10-18 00:50:59.128952" ;
+<https://w3id.org/caselinker/resource/case/brazil_pf_2026_053> a ns2:CACInvestigation,
+        ns1:EnduringEntity ;
+    rdfs:label "Case brazil_pf_2026_053" ;
+    dcterms:created "2026-11-10T17:57:43.636434"^^xsd:dateTime ;
+    dcterms:date "2026-01"^^xsd:gYearMonth ;
     dcterms:identifier "brazil_pf_2026_053" ;
-    dcterms:modified "2026-10-18 00:50:59.128952" ;
+    dcterms:modified "2026-11-10T17:57:43.636434"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/brazil_pf_2026_053/provenance> ;
     dcterms:source <https://www.gov.br/pf/pt-br/assuntos/noticias/2026/08/pf-investiga-crimes-de-abuso-sexual-infantojuvenil-no-tocantins>,
         "BRAZIL PF" ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/brazil_pf_2026_053/event/distribution>,
+    ns2:hasStep <https://w3id.org/caselinker/resource/case/brazil_pf_2026_053/event/distribution>,
         <https://w3id.org/caselinker/resource/case/brazil_pf_2026_053/event/possession>,
         <https://w3id.org/caselinker/resource/case/brazil_pf_2026_053/legal-proceeding> ;
-    ns1:investigationStatus "unknown" ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/federal-police-department> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/federal-police-department> .
 
-<https://w3id.org/caselinker/resource/case/brazil_pf_2026_053/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/brazil_pf_2026_053/event/possession> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/brazil_pf_2026_053/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/brazil_pf_2026_053/assessment/semantic/dissemination> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · dissemination" ;
+    dcterms:subject ns3:CSAM_Distribution ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/brazil_pf_2026_053/narrative> ;
+    ns1:hasConfidence 0.4968 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/brazil_pf_2026_053/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/brazil_pf_2026_053/event/possession> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/brazil_pf_2026_053/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/brazil_pf_2026_053/assessment/semantic/evidence-seizure> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · evidence_seizure" ;
+    dcterms:subject <https://cacontology.projectvic.org/production#ProducedContent> ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/brazil_pf_2026_053/narrative> ;
+    ns1:hasConfidence 0.484 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/agency/federal-police-department> a ns4:LocalAgency .
+<https://w3id.org/caselinker/resource/case/brazil_pf_2026_053/assessment/semantic/exploitive-positions> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · exploitive_positions" ;
+    dcterms:subject <https://cacontology.projectvic.org/custodial#PositionOfTrust> ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/brazil_pf_2026_053/narrative> ;
+    ns1:hasConfidence 0.6064 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/brazil_pf_2026_053/assessment/semantic/possession-csam> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns2:CSAMIncident ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/brazil_pf_2026_053/narrative> ;
+    ns1:hasConfidence 0.7179 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/brazil_pf_2026_053/assessment/semantic/production-csam> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · production_csam" ;
+    dcterms:subject <https://cacontology.projectvic.org/production#ProductionOffense> ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/brazil_pf_2026_053/narrative> ;
+    ns1:hasConfidence 0.603 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/brazil_pf_2026_053/role/offender/1/has-role> a ns4:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns4:isDirectional true ;
+    ns4:kindOfRelationship "Has_Role" ;
+    ns4:source <https://w3id.org/caselinker/resource/case/brazil_pf_2026_053/person/offender/1> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/brazil_pf_2026_053/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/agency/federal-police-department> a ns1:OrganizationLikeEntity,
+        ns5:LocalAgency ;
+    rdfs:label "Federal Police Department" ;
+    ns4:name "Federal Police Department" .
 
 <https://w3id.org/caselinker/resource/case/brazil_pf_2026_053/charge/1> a ns3:CriminalCharge,
         ns3:StateCharge ;
     rdfs:label "sexual exploitation of children" .
 
 <https://w3id.org/caselinker/resource/case/brazil_pf_2026_053/charge/2> a ns3:CriminalCharge ;
-    rdfs:label "sexual exploitation" ;
-    ns6:chargeCluster "sexual_exploitation_unspecified" .
+    rdfs:label "sexual exploitation" .
 
-<https://w3id.org/caselinker/resource/case/brazil_pf_2026_053/event/distribution> a ns2:Event,
+<https://w3id.org/caselinker/resource/case/brazil_pf_2026_053/event/distribution> a ns1:Event,
         ns3:CSAM_Distribution ;
-    ns1:severityLevel 3 .
+    rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/brazil_pf_2026_053/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/brazil_pf_2026_053/legal-proceeding> a ns2:Event,
-        ns2:LegalEvent,
+<https://w3id.org/caselinker/resource/case/brazil_pf_2026_053/legal-proceeding> a ns1:Event,
+        ns1:LegalEvent,
         ns3:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns3:chargeCount "2"^^xsd:nonNegativeInteger ;
     ns3:hasCharge <https://w3id.org/caselinker/resource/case/brazil_pf_2026_053/charge/1>,
-        <https://w3id.org/caselinker/resource/case/brazil_pf_2026_053/charge/2> ;
-    ns3:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+        <https://w3id.org/caselinker/resource/case/brazil_pf_2026_053/charge/2> .
 
-<https://w3id.org/caselinker/resource/case/brazil_pf_2026_053/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/brazil_pf_2026_053/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/brazil_pf_2026_053/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/brazil_pf_2026_053/role/offender/1> a ns3:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/brazil_pf_2026_053/event/possession> .
 
-<https://w3id.org/caselinker/resource/case/brazil_pf_2026_053/event/possession> a ns1:CSAMIncident,
-        ns2:Event ;
-    ns1:severityLevel 3 ;
-    ns5:hasFacet <https://w3id.org/caselinker/resource/case/brazil_pf_2026_053/facet/possession> .
+<https://w3id.org/caselinker/resource/case/brazil_pf_2026_053/event/possession> a ns2:CSAMIncident,
+        ns1:Event ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns2:severityLevel 3 .
 
-
-<https://w3id.org/caselinker/resource/case/brazil_pf_2026_053> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/brazil_pf_2026_053/provenance> .

@@ -2,95 +2,109 @@
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org/core#> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://w3id.org/caselinker/resource/vocab/> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_108> a ns3:CACInvestigation,
         ns2:EnduringEntity ;
-    dcterms:created "2026-10-18 00:01:16.669256" ;
+    rdfs:label "Case ncmec_2025_108" ;
+    dcterms:created "2026-11-10T16:32:31.684904"^^xsd:dateTime ;
+    dcterms:date "2025-02-27"^^xsd:date ;
     dcterms:identifier "ncmec_2025_108" ;
-    dcterms:modified "2026-10-18 00:01:16.669256" ;
+    dcterms:modified "2026-11-12T01:38:06.318769"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2025_108/provenance> ;
     dcterms:source <https://www.yourcentralvalley.com/news/crime/man-arrested-after-found-with-child-sexual-abuse-material-in-visalia-police-say/>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/calif>,
-        <https://w3id.org/caselinker/resource/location/visalia> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/california-ca>,
+        <https://w3id.org/caselinker/resource/location/visalia-city-ca> ;
     ns3:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_108/phase/arrested> ;
     ns3:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_108/phase/arrested> ;
     ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_108/event/possession>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_108/legal-proceeding>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_108/offense-event/charge-2> ;
-    ns3:investigationStatus "unknown" ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/visalia-police-department> ;
-    ns4:mentionsLocation <https://w3id.org/caselinker/resource/location/calif>,
-        <https://w3id.org/caselinker/resource/location/visalia> .
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_108/legal-proceeding> ;
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2025_108/agency/visalia-police-department> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_108/role/offender/1> a ns3:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns3:hasRoleBeginPoint "2025-02-27T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_108/event/possession>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_108/offense-event/charge-2> ;
-    ns3:perpetratorRegisteredSexOffender true ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2025_108/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_108/assessment/semantic/possession-csam> a ns2:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns3:CSAMIncident ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_108/narrative> ;
+    ns2:hasConfidence 0.5107 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_108/role/victim/1> a ns3:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns3:hasRoleBeginPoint "2025-02-27T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_108/event/possession>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_108/offense-event/charge-2> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2025_108/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_108/assessment/semantic/registered-sex-offender> a ns2:AssessmentResult ;
+    rdfs:label "semantic similarity · registered_sex_offender" ;
+    dcterms:subject <https://cacontology.projectvic.org/sex-offender-registry#RegisteredSexOffender> ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_108/narrative> ;
+    ns2:hasConfidence 0.5248 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/agency/visalia-police-department> a ns6:LocalAgency .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_108/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2025_108/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2025_108/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_108/role/registered-sex-offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/registered-sex-offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2025_108/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2025_108/role/registered-sex-offender/1> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_108/agency/visalia-police-department> a ns2:OrganizationLikeEntity,
+        ns4:LocalAgency ;
+    rdfs:label "Visalia Police Department" ;
+    ns1:name "Visalia Police Department" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_108/charge/1> a ns5:CSAM_Possession,
         ns5:CriminalCharge ;
-    rdfs:label "child sexual abuse material" ;
-    ns5:indictmentCounts 2 .
+    rdfs:label "child sexual abuse material" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_108/charge/2> a ns5:CriminalCharge ;
     rdfs:label "child exploitation" ;
-    rdfs:seeAlso <https://w3id.org/caselinker/resource/case/ncmec_2025_108/offense-event/charge-2> ;
-    ns4:chargeCluster "child_exploitation" ;
-    ns4:chargeOffenseEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_108/offense-event/charge-2> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_108/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+    dcterms:subject ns3:ChildSexualAbuseEvent .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_108/legal-proceeding> a ns2:Event,
         ns2:LegalEvent,
         ns5:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns5:chargeCount "3"^^xsd:nonNegativeInteger ;
     ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_108/charge/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_108/charge/2> ;
-    ns5:hasProceedingBeginPoint "2025-02-27T00:00:00Z"^^xsd:dateTimeStamp .
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_108/charge/2> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_108/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_108/role/offender/1> a ns5:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_108/event/possession> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_108/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_108/role/registered-sex-offender/1> a <https://cacontology.projectvic.org/sex-offender-registry#RegisteredSexOffender> ;
+    rdfs:label "Registered Sex Offender · role/registered-sex-offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_108/phase/arrested> a ns3:InitialPhase,
-        ns2:Phase ;
-    ns3:hasPhaseBeginPoint "2025-02-27T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/calif> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/california-ca> a ns2:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Calif." ;
-    ns1:name "Calif." .
+    rdfs:label "California" ;
+    dcterms:identifier "fips:06" ;
+    skos:altLabel "Calif." ;
+    ns1:name "California" .
 
-<https://w3id.org/caselinker/resource/location/visalia> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/visalia-city-ca> a ns2:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Visalia" ;
-    ns1:name "Visalia" .
+    rdfs:label "Visalia city" ;
+    dcterms:identifier "fips:0682954" ;
+    skos:altLabel "Visalia" ;
+    ns1:name "Visalia city" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_108/event/possession> a ns3:CSAMIncident,
         ns2:Event ;
-    ns3:severityLevel 3 ;
-    ns1:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2025_108/facet/possession> .
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns3:severityLevel 3 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_108/offense-event/charge-2> a ns3:ChildSexualAbuseEvent,
-        ns2:Event,
-        <https://ontology.unifiedcyberontology.org/uco/action/Crime> ;
-    rdfs:label "Inferred offense from charge: child exploitation" .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_108/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2025_108/phase/arrested> a ns3:InitialPhase,
+        ns2:Phase ;
+    rdfs:label "Initial Phase · phase/arrested" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_108> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2025_108/provenance> .

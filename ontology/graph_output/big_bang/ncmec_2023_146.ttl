@@ -1,62 +1,81 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/detection#> .
-@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns3: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns5: <https://cacontology.projectvic.org#> .
-@prefix ns6: <https://cacontology.projectvic.org/core#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns3: <https://cacontology.projectvic.org/core#> .
+@prefix ns4: <https://cacontology.projectvic.org#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_146> a ns5:CACInvestigation,
-        ns6:EnduringEntity ;
-    dcterms:created "2026-10-17 22:21:29.643595" ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_146> a ns4:CACInvestigation,
+        ns3:EnduringEntity ;
+    rdfs:label "Case ncmec_2023_146" ;
+    dcterms:created "2026-11-10T10:03:17.550355"^^xsd:dateTime ;
+    dcterms:date "2023-06"^^xsd:gYearMonth ;
     dcterms:identifier "ncmec_2023_146" ;
-    dcterms:modified "2026-10-17 22:21:29.643595" ;
+    dcterms:modified "2026-11-10T10:03:17.550355"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2023_146/provenance> ;
     dcterms:source <https://www.wmur.com/article/manchester-man-child-sex-abuse-images-discovery/44065937#>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/manchester>,
-        <https://w3id.org/caselinker/resource/location/nh> ;
-    ns5:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_146/event/possession> ;
-    ns5:investigationStatus "unknown" ;
-    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/icac> ;
-    ns3:mentionsLocation <https://w3id.org/caselinker/resource/location/manchester>,
-        <https://w3id.org/caselinker/resource/location/nh> .
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2023_146/location/manchester>,
+        <https://w3id.org/caselinker/resource/location/new-hampshire-nh> ;
+    ns4:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_146/event/possession> ;
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/icac> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_146/role/offender/1> a ns5:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns5:hasRoleBeginPoint "2023-06-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns5:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_146/event/possession> ;
-    ns6:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_146/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_146/assessment/semantic/exploitive-positions> a ns3:AssessmentResult ;
+    rdfs:label "semantic similarity · exploitive_positions" ;
+    dcterms:subject <https://cacontology.projectvic.org/custodial#PositionOfTrust> ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2023_146/narrative> ;
+    ns3:hasConfidence 0.4534 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_146/role/victim/1> a ns5:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns5:hasRoleBeginPoint "2023-06-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns5:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_146/event/possession> ;
-    ns6:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_146/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_146/assessment/semantic/possession-csam> a ns3:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns4:CSAMIncident ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2023_146/narrative> ;
+    ns3:hasConfidence 0.5423 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_146/person/offender/1/age> a ns2:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns2:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2023_146/person/offender/1> ;
+    ns2:concernsAgeQuality ns2:Age ;
+    ns2:hasAgeInYears 47.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_146/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_146/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2023_146/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2023_146/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_146/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns1:ageEstimate 47 .
+<https://w3id.org/caselinker/resource/agency/icac> a ns3:OrganizationLikeEntity,
+        <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns1:name "ICAC Task Force" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_146/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/location/manchester> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2023_146/location/manchester> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Manchester" ;
-    ns4:name "Manchester" .
+    ns1:name "Manchester" .
 
-<https://w3id.org/caselinker/resource/location/nh> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2023_146/role/offender/1> a <https://cacontology.projectvic.org/legal-outcomes#DefendantRole> ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_146/event/possession> .
+
+<https://w3id.org/caselinker/resource/location/new-hampshire-nh> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "N.h." ;
-    ns4:name "N.h." .
+    rdfs:label "New Hampshire" ;
+    dcterms:identifier "fips:33" ;
+    skos:altLabel "N.h." ;
+    ns1:name "New Hampshire" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_146/event/possession> a ns5:CSAMIncident,
-        ns6:Event ;
-    ns4:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2023_146/facet/possession> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_146/event/possession> a ns4:CSAMIncident,
+        ns3:Event ;
+    rdfs:label "CSAMIncident · event/possession" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2023_146/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_146> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2023_146/provenance> .

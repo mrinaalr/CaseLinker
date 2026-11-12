@@ -1,88 +1,94 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns2: <https://cacontology.projectvic.org/core#> .
+@prefix ns1: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
 @prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns6: <https://cacontology.projectvic.org/detection#> .
-@prefix ns7: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns8: <https://cacontology.projectvic.org/us/ncmec#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/la_ag_2026_037> a ns3:CACInvestigation,
-        ns2:EnduringEntity ;
-    dcterms:created "2026-10-18 05:29:41.993942" ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case la_ag_2026_037" ;
+    dcterms:created "2026-11-11T15:31:19.546232"^^xsd:dateTime ;
+    dcterms:date "2026-01"^^xsd:gYearMonth ;
     dcterms:identifier "la_ag_2026_037" ;
-    dcterms:modified "2026-10-18 05:29:41.993942" ;
+    dcterms:modified "2026-11-11T15:31:19.546232"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/la_ag_2026_037/provenance> ;
     dcterms:source <https://www.ag.state.la.us/Article/396>,
         "LA AG" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/lafayette>,
-        <https://w3id.org/caselinker/resource/location/louisiana> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/lafayette-city-la>,
+        <https://w3id.org/caselinker/resource/location/louisiana-la> ;
     ns3:currentPhase <https://w3id.org/caselinker/resource/case/la_ag_2026_037/phase/booked> ;
     ns3:hasPhase <https://w3id.org/caselinker/resource/case/la_ag_2026_037/phase/booked> ;
-    ns3:hasStep <https://w3id.org/caselinker/resource/case/la_ag_2026_037/cybertip>,
-        <https://w3id.org/caselinker/resource/case/la_ag_2026_037/event/possession>,
+    ns3:hasStep <https://w3id.org/caselinker/resource/case/la_ag_2026_037/event/possession>,
         <https://w3id.org/caselinker/resource/case/la_ag_2026_037/legal-proceeding> ;
-    ns3:investigationStatus "unknown" ;
     ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/louisiana-bureau-of-investigation>,
-        <https://w3id.org/caselinker/resource/agency/ncmec> ;
-    ns1:mentionsLocation <https://w3id.org/caselinker/resource/location/lafayette>,
-        <https://w3id.org/caselinker/resource/location/louisiana> .
+        <https://w3id.org/caselinker/resource/agency/ncmec> .
 
-<https://w3id.org/caselinker/resource/case/la_ag_2026_037/role/offender/1> a ns3:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns3:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/la_ag_2026_037/event/possession> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/la_ag_2026_037/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/la_ag_2026_037/person/offender/1/age> a ns1:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns1:ageSubject <https://w3id.org/caselinker/resource/case/la_ag_2026_037/person/offender/1> ;
+    ns1:concernsAgeQuality ns1:Age ;
+    ns1:hasAgeInYears 19.0 .
 
-<https://w3id.org/caselinker/resource/case/la_ag_2026_037/role/victim/1> a ns3:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns3:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/la_ag_2026_037/event/possession> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/la_ag_2026_037/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/la_ag_2026_037/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/la_ag_2026_037/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/la_ag_2026_037/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> .
+<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns2:name "ICAC Task Force" .
 
-<https://w3id.org/caselinker/resource/agency/louisiana-bureau-of-investigation> a ns4:StateAgency .
+<https://w3id.org/caselinker/resource/agency/louisiana-bureau-of-investigation> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns4:StateAgency ;
+    rdfs:label "Louisiana Bureau of Investigation" ;
+    ns2:name "Louisiana Bureau of Investigation" .
 
-<https://w3id.org/caselinker/resource/case/la_ag_2026_037/cybertip> a ns8:NCMECCybertipReport ;
-    ns8:supportedBy <https://w3id.org/caselinker/resource/agency/ncmec> .
+<https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns4:FederalAgency ;
+    rdfs:label "National Center for Missing and Exploited Children" ;
+    skos:altLabel "NCMEC" ;
+    ns2:name "National Center for Missing and Exploited Children" .
 
-<https://w3id.org/caselinker/resource/case/la_ag_2026_037/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/la_ag_2026_037/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        <https://cacontology.projectvic.org/legal-outcomes#LegalProceeding> ;
+    rdfs:label "Event · legal-proceeding" ;
+    rdfs:comment "Pretrial detention facility (not a sentence): booked into the Lafayette Parish Correctional Center" .
 
-<https://w3id.org/caselinker/resource/case/la_ag_2026_037/legal-proceeding> a ns2:Event,
-        ns2:LegalEvent,
-        ns7:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): booked into the Lafayette Parish Correctional Center" ;
-    ns7:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/la_ag_2026_037/role/offender/1> a <https://cacontology.projectvic.org/legal-outcomes#DefendantRole> ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/la_ag_2026_037/event/possession> .
 
-<https://w3id.org/caselinker/resource/case/la_ag_2026_037/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns6:ageEstimate 19 .
-
-<https://w3id.org/caselinker/resource/case/la_ag_2026_037/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/agency/ncmec> a ns4:FederalAgency .
-
-<https://w3id.org/caselinker/resource/case/la_ag_2026_037/phase/booked> a ns3:InitialPhase,
-        ns2:Phase ;
-    ns3:hasPhaseBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/lafayette> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/lafayette-city-la> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Lafayette" ;
-    ns5:name "Lafayette" .
+    rdfs:label "Lafayette city" ;
+    dcterms:identifier "fips:2240735" ;
+    skos:altLabel "Lafayette" ;
+    ns2:name "Lafayette city" .
 
-<https://w3id.org/caselinker/resource/location/louisiana> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/louisiana-la> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Louisiana" ;
-    ns5:name "Louisiana" .
+    dcterms:identifier "fips:22" ;
+    ns2:name "Louisiana" .
 
 <https://w3id.org/caselinker/resource/case/la_ag_2026_037/event/possession> a ns3:CSAMIncident,
-        ns2:Event ;
-    ns3:severityLevel 3 ;
-    ns5:hasFacet <https://w3id.org/caselinker/resource/case/la_ag_2026_037/facet/possession> .
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns3:severityLevel 3 .
 
+<https://w3id.org/caselinker/resource/case/la_ag_2026_037/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/la_ag_2026_037> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/la_ag_2026_037/provenance> .
+<https://w3id.org/caselinker/resource/case/la_ag_2026_037/phase/booked> a ns3:InitialPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Initial Phase · phase/booked" .
+
