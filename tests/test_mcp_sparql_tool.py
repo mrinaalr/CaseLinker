@@ -190,3 +190,10 @@ def test_unconfigured_store_says_where_to_query(monkeypatch):
     tool = _fake_post(monkeypatch, 503, body)
     out = asyncio.run(tool.run_sparql("SELECT ?a WHERE { ?a ?b ?c }", backend="live"))
     assert out["status_code"] == 503 and tool.PUBLIC_SPARQL_URL in out["hint"]
+
+
+def test_truncated_results_document_without_the_cancel_message_is_an_error(monkeypatch):
+    # The connection dropped mid-stream: a results document that never closes.
+    tool = _fake_post(monkeypatch, 200, '{"head":{"vars":["a"]},"results":{"bindings":[{"a":{"type":"uri"')
+    out = asyncio.run(tool.run_sparql("SELECT ?a WHERE { ?a ?b ?c }", backend="live"))
+    assert "error" in out and "raw" not in out

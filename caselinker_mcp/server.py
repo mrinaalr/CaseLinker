@@ -1675,10 +1675,19 @@ async def sparql_query(
     evidence is in ``…/case/{id}/provenance``. Keep a join inside
     ``GRAPH ?g { ... }`` and count ``DISTINCT ?g``; a join across the union
     default graph fans out over shared platform / agency / location nodes and
-    can time out. A query the store stops returns ``error`` plus ``hint``, never
-    partial rows. The case's people and platforms are ``uco-core:object`` of the
-    case node; ``cac:usesChannel`` and ``cac:participatesInEvent`` exist only
-    where the case has a single offense event.
+    can time out. A query the store reports as cancelled returns ``error`` plus
+    ``hint`` instead of partial rows.
+
+    Reaching a case's people and platforms: ``cac:usesChannel`` and
+    ``cac:participatesInEvent`` exist only where the case has a single offense
+    event. Graphs generated since PR 82 also list every person and platform as
+    ``uco-core:object`` of the case node; a store loaded before that has the
+    edge for CyberTip reports and admissions only. Check which layout you are
+    querying before relying on it:
+    ``ASK { ?c <https://ontology.unifiedcyberontology.org/uco/core/object> ?p .
+    ?p a <https://ontology.unifiedcyberontology.org/uco/identity/Person> }``.
+    If it is false, find them inside the case's named graph instead
+    (``GRAPH ?g { ?p a uco-identity:Person }``).
     """
     try:
         from caselinker_mcp.sparql_tool import run_sparql

@@ -966,8 +966,9 @@ class CaseToCAC:
         The graph states only what the case's extracted fields state. A link
         between two nodes (a role in an event, a platform used in an event) is
         written only when the case has exactly one event to attach it to; the
-        extraction holds case-level sets, not pairings. Nothing is added to
-        satisfy a SHACL shape.
+        extraction holds case-level sets, not pairings. People and platforms
+        are always objects of the investigation itself (``_link_to_case``).
+        Nothing is added to satisfy a SHACL shape.
 
         Returns
         -------

@@ -217,3 +217,22 @@ def test_people_and_platforms_are_objects_of_the_investigation(case_id):
     nlp_nodes = set(graph.get_context(GRAPH_NLP).subjects())
     floating = {s for s in set(g.subjects()) if isinstance(s, URIRef)} - reached - nlp_nodes
     assert floating == set(), sorted(floating)
+
+
+def test_only_people_and_platforms_join_the_existing_case_objects():
+    # The reporter's ESP is who sent the tip, not something the case used.
+    _, g = _graph("fixture_full_001")
+    objects = set(g.objects(BASE["case/fixture_full_001"], UCO_CORE.object))
+    assert not objects & _typed(g, CAC_PLATFORMS.ElectronicServiceProvider)
+    assert not objects & {r for r in set(g.subjects()) if "/role/" in str(r)}
+
+
+def test_case_with_no_offense_event_still_holds_its_people_and_platforms():
+    case = FX.case("fixture_arrest_002")
+    case["case_topics"] = []                      # no topic → no offense event to pair with
+    g = flatten_dataset(CaseToCAC().map_case(case)[0])
+    assert not list(g.triples((None, CAC.usesChannel, None)))
+    objects = set(g.objects(BASE["case/fixture_arrest_002"], UCO_CORE.object))
+    people = _typed(g, URIRef("https://ontology.unifiedcyberontology.org/uco/identity/Person"))
+    assert people and people <= objects
+    assert BASE["platform/snapchat"] in objects
