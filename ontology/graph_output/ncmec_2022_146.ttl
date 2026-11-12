@@ -1,114 +1,122 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/core#> .
-@prefix ns3: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org#> .
+@prefix ns3: <https://cacontology.projectvic.org/core#> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://cacontology.projectvic.org/us/ncmec#> .
+@prefix ns6: <https://cacontology.projectvic.org/platforms#> .
 @prefix ns7: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns8: <https://cacontology.projectvic.org/detection#> .
+@prefix ns8: <https://cacontology.projectvic.org/hotlines#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_146/admission/1/extraction-confidence> a ns2:AssessmentResult ;
-    ns2:assesses <https://w3id.org/caselinker/resource/case/ncmec_2022_146/admission/1> ;
-    ns2:generatedBy <https://w3id.org/caselinker/resource/case/ncmec_2022_146> ;
-    ns2:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_146/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2022-04-08T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_146/event/possession> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_146/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_146> a ns1:CACInvestigation,
-        ns2:EnduringEntity ;
-    dcterms:created "2026-10-17 21:51:21.140085" ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_146> a ns2:CACInvestigation,
+        ns3:EnduringEntity ;
+    rdfs:label "Case ncmec_2022_146" ;
+    dcterms:created "2026-11-10T09:17:54.635163"^^xsd:dateTime ;
+    dcterms:date "2022-04-08"^^xsd:date ;
     dcterms:identifier "ncmec_2022_146" ;
-    dcterms:modified "2026-10-17 21:51:21.140085" ;
+    dcterms:modified "2026-11-10T09:17:54.635163"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2022_146/provenance> ;
     dcterms:source <https://www.weau.com/2022/04/08/menomonie-man-facing-10-charges-possession-child-porn/>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/menomonie>,
-        <https://w3id.org/caselinker/resource/location/wis> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_146/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_146/cybertip>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_146/event/possession>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/menomonie-city>,
+        <https://w3id.org/caselinker/resource/location/wisconsin-wi> ;
+    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_146/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_146/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_146/operation> ;
-    ns1:usesMethod <https://w3id.org/caselinker/resource/case/ncmec_2022_146/tech/cybertipline> ;
     ns7:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec> ;
-    ns3:mentionsLocation <https://w3id.org/caselinker/resource/location/menomonie>,
-        <https://w3id.org/caselinker/resource/location/wis> .
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2022_146/admission/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2022_146/cybertip> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_146/admission/1/extraction-confidence> a ns3:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2022_146/admission/1> ;
+    ns3:hasConfidence 0.65 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_146/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2022_146/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 32.0 .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_146/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2022_146/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2022_146/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_146/charge/1> a ns5:CSAM_Possession,
         ns5:CriminalCharge ;
-    rdfs:label "possession of child pornography" ;
-    ns5:indictmentCounts 3 .
+    rdfs:label "possession of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_146/cybertip> a ns6:NCMECCybertipReport ;
-    ns6:supportedBy <https://w3id.org/caselinker/resource/agency/ncmec> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_146/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
+    rdfs:label "CyberTipline report" ;
+    ns8:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns1:name "observe" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_146/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_146/legal-proceeding> a ns2:Event,
-        ns2:LegalEvent,
+<https://w3id.org/caselinker/resource/case/ncmec_2022_146/legal-proceeding> a ns3:Event,
+        ns3:LegalEvent,
         ns5:LegalProceeding ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_146/charge/1> ;
-    ns5:hasProceedingBeginPoint "2022-04-08T00:00:00Z"^^xsd:dateTimeStamp .
+    rdfs:label "Event · legal-proceeding" ;
+    ns5:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_146/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_146/operation> a ns2:Event,
-        <https://cacontology.projectvic.org/taskforce#ReactiveOperation> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_146/operation> a ns3:Event,
+        <https://cacontology.projectvic.org/taskforce#ReactiveOperation> ;
+    rdfs:label "Reactive Operation · operation" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_146/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns8:ageEstimate 32 .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_146/role/offender/1> a ns5:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_146/event/possession> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_146/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_146/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2022-04-08T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_146/event/possession> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_146/person/offender/1> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_146/tech/cybertipline> a ns6:NCMECCybertipReport ;
-    rdfs:label "CyberTipline" .
-
-<https://w3id.org/caselinker/resource/platform/kik> a <https://cacontology.projectvic.org/platforms#MessagingService> ;
-    rdfs:label "Kik" .
-
-<https://w3id.org/caselinker/resource/platform/snapchat> a <https://cacontology.projectvic.org/platforms#MessagingService> ;
-    rdfs:label "Snapchat" .
-
-<https://w3id.org/caselinker/resource/agency/ncmec> a ns7:FederalAgency .
-
-<https://w3id.org/caselinker/resource/location/menomonie> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/menomonie-city> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Menomonie" ;
-    ns4:name "Menomonie" .
+    rdfs:label "Menomonie city" ;
+    dcterms:identifier "fips:5551025" ;
+    skos:altLabel "Menomonie" ;
+    ns1:name "Menomonie city" .
 
-<https://w3id.org/caselinker/resource/location/wis> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/wisconsin-wi> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Wis." ;
-    ns4:name "Wis." .
+    rdfs:label "Wisconsin" ;
+    dcterms:identifier "fips:55" ;
+    skos:altLabel "Wis." ;
+    ns1:name "Wisconsin" .
+
+<https://w3id.org/caselinker/resource/platform/kik> a ns3:DigitalSystemEntity,
+        ns6:MessagingService ;
+    rdfs:label "Kik" ;
+    ns1:name "Kik" .
+
+<https://w3id.org/caselinker/resource/platform/snapchat> a ns3:DigitalSystemEntity,
+        ns6:MessagingService ;
+    rdfs:label "Snapchat" ;
+    ns6:encryptionLevel "end-to-end" ;
+    ns1:name "Snapchat" .
+
+<https://w3id.org/caselinker/resource/agency/ncmec> a ns3:OrganizationLikeEntity,
+        ns8:HotlineOrganization,
+        ns7:FederalAgency ;
+    rdfs:label "National Center for Missing and Exploited Children" ;
+    skos:altLabel "NCMEC" ;
+    ns1:name "National Center for Missing and Exploited Children" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_146/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "had Snapchat in the past but got rid of it" ;
     dcterms:source <https://www.weau.com/2022/04/08/menomonie-man-facing-10-charges-possession-child-porn/> ;
-    ns3:admissionContext "a search warrant was executed by Eau Claire Area Regional SWAT team at Christian’s home. Christian said he had Snapchat in the past but g..." ;
-    ns3:admissionFrame "said_paraphrase" ;
-    ns3:admissionTheme "tech_use" ;
-    ns3:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/ncmec_2022_146/role/offender/1> ;
-    ns3:evidenceTier "press_release_stated" ;
-    ns3:quoteType "paraphrase" ;
-    ns4:description "had Snapchat in the past but got rid of it" .
+    ns1:description "had Snapchat in the past but got rid of it" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_146/event/possession> a ns1:CSAMIncident,
-        ns2:Event ;
-    ns1:producesArtifact <https://w3id.org/caselinker/resource/case/ncmec_2022_146/admission/1> ;
-    ns1:severityLevel 3 ;
-    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/kik>,
-        <https://w3id.org/caselinker/resource/platform/snapchat> ;
-    ns4:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2022_146/facet/possession> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_146/event/possession> a ns2:CSAMIncident,
+        ns3:Event ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns2:severityLevel 3 ;
+    ns2:usesChannel <https://w3id.org/caselinker/resource/platform/kik>,
+        <https://w3id.org/caselinker/resource/platform/snapchat> .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2022_146/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_146> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2022_146/provenance> .

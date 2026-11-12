@@ -1,86 +1,99 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/core#> .
+@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://cacontology.projectvic.org/detection#> .
-@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns7: <https://w3id.org/caselinker/resource/vocab/> .
+@prefix ns4: <https://cacontology.projectvic.org/core#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns6: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_774> a ns1:CACInvestigation,
-        ns2:EnduringEntity ;
-    dcterms:created "2026-10-17 23:04:33.733204" ;
+        ns4:EnduringEntity ;
+    rdfs:label "Case ncmec_2024_774" ;
+    dcterms:created "2026-11-10T21:27:50.761520"^^xsd:dateTime ;
+    dcterms:date "2024-05-03"^^xsd:date ;
     dcterms:identifier "ncmec_2024_774" ;
-    dcterms:modified "2026-10-17 23:04:33.733204" ;
+    dcterms:modified "2026-11-12T00:47:16.722203"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_774/provenance> ;
     dcterms:source <https://www.foxcarolina.com/2024/05/04/yancey-county-man-charged-after-deputies-discover-child-pornography-devices/>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/fox-carolina>,
-        <https://w3id.org/caselinker/resource/location/nc>,
-        <https://w3id.org/caselinker/resource/location/yancey-county> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2024_774/location/fox-carolina>,
+        <https://w3id.org/caselinker/resource/location/north-carolina-nc>,
+        <https://w3id.org/caselinker/resource/location/yancey-county-nc> ;
     ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_774/phase/charged> ;
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_774/phase/charged> ;
     ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_774/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_774/legal-proceeding> ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/yancey-county-sheriffs-office> ;
-    ns7:mentionsLocation <https://w3id.org/caselinker/resource/location/fox-carolina>,
-        <https://w3id.org/caselinker/resource/location/nc>,
-        <https://w3id.org/caselinker/resource/location/yancey-county> .
+    ns2:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_774/agency/yancey-county-sheriffs-office> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_774/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2024-05-03T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_774/event/possession> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_774/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_774/assessment/semantic/possession-csam> a ns4:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns1:CSAMIncident ;
+    ns4:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_774/narrative> ;
+    ns4:hasConfidence 0.547 ;
+    ns4:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_774/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2024-05-03T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_774/event/possession> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_774/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_774/person/offender/1/age> a ns6:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns6:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_774/person/offender/1> ;
+    ns6:concernsAgeQuality ns6:Age ;
+    ns6:hasAgeInYears 63.0 .
 
-<https://w3id.org/caselinker/resource/agency/yancey-county-sheriffs-office> a ns6:LocalAgency .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_774/role/offender/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2024_774/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2024_774/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_774/charge/1> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_774/agency/yancey-county-sheriffs-office> a ns4:OrganizationLikeEntity,
+        ns2:LocalAgency ;
+    rdfs:label "Yancey County Sheriff's Office" ;
+    ns3:name "Yancey County Sheriff's Office" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_774/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_774/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_774/legal-proceeding> a ns4:Event,
+        ns4:LegalEvent,
+        ns5:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns5:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_774/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_774/legal-proceeding> a ns2:Event,
-        ns2:LegalEvent,
-        ns4:LegalProceeding ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_774/charge/1> ;
-    ns4:hasProceedingBeginPoint "2024-05-03T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_774/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns5:ageEstimate 63 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_774/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_774/phase/charged> a ns1:LegalProcessPhase,
-        ns2:Phase ;
-    ns1:hasPhaseBeginPoint "2024-05-03T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/fox-carolina> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_774/location/fox-carolina> a ns4:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Fox Carolina" ;
     ns3:name "Fox Carolina" .
 
-<https://w3id.org/caselinker/resource/location/nc> a ns2:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "N.c." ;
-    ns3:name "N.c." .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_774/role/offender/1> a ns5:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_774/event/possession> .
 
-<https://w3id.org/caselinker/resource/location/yancey-county> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/north-carolina-nc> a ns4:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "North Carolina" ;
+    dcterms:identifier "fips:37" ;
+    skos:altLabel "N.c." ;
+    ns3:name "North Carolina" .
+
+<https://w3id.org/caselinker/resource/location/yancey-county-nc> a ns4:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Yancey County" ;
+    dcterms:identifier "fips:37199" ;
     ns3:name "Yancey County" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_774/event/possession> a ns1:CSAMIncident,
-        ns2:Event ;
-    ns3:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2024_774/facet/possession> .
+        ns4:Event ;
+    rdfs:label "CSAMIncident · event/possession" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2024_774/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_774> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2024_774/provenance> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_774/phase/charged> a ns1:LegalProcessPhase,
+        ns4:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
+

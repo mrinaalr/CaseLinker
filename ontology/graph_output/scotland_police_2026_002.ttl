@@ -1,69 +1,85 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
+@prefix ns1: <https://cacontology.projectvic.org/core#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/detection#> .
-@prefix ns4: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://cacontology.projectvic.org/core#> .
-@prefix ns7: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://cacontology.projectvic.org#> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/scotland_police_2026_002> a ns1:CACInvestigation,
-        ns6:EnduringEntity ;
-    dcterms:created "2026-10-18 14:18:21.890807" ;
+<https://w3id.org/caselinker/resource/case/scotland_police_2026_002> a ns3:CACInvestigation,
+        ns1:EnduringEntity ;
+    rdfs:label "Case scotland_police_2026_002" ;
+    dcterms:created "2026-11-11T17:36:31.631575"^^xsd:dateTime ;
+    dcterms:date "2026-03-09"^^xsd:date ;
     dcterms:identifier "scotland_police_2026_002" ;
-    dcterms:modified "2026-10-18 14:18:21.890807" ;
+    dcterms:modified "2026-11-11T17:36:31.631575"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/scotland_police_2026_002/provenance> ;
     dcterms:source <https://www.scotland.police.uk/what-s-happening/news/2026/march/man-jailed-in-connection-with-indecent-images-offences/>,
         "SCOTLAND POLICE" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/lochgelly> ;
-    ns1:currentPhase <https://w3id.org/caselinker/resource/case/scotland_police_2026_002/phase/sentenced> ;
-    ns1:hasPhase <https://w3id.org/caselinker/resource/case/scotland_police_2026_002/phase/sentenced> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/scotland_police_2026_002/event/possession>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/scotland_police_2026_002/location/lochgelly> ;
+    ns3:currentPhase <https://w3id.org/caselinker/resource/case/scotland_police_2026_002/phase/sentenced> ;
+    ns3:hasPhase <https://w3id.org/caselinker/resource/case/scotland_police_2026_002/phase/sentenced> ;
+    ns3:hasStep <https://w3id.org/caselinker/resource/case/scotland_police_2026_002/event/possession>,
         <https://w3id.org/caselinker/resource/case/scotland_police_2026_002/legal-step/sentenced> ;
-    ns1:investigationStatus "unknown" ;
-    ns7:involvesAgency <https://w3id.org/caselinker/resource/agency/police-scotland> ;
-    ns4:mentionsLocation <https://w3id.org/caselinker/resource/location/lochgelly> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/police-scotland> .
 
-<https://w3id.org/caselinker/resource/case/scotland_police_2026_002/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2026-03-09T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/scotland_police_2026_002/event/possession> ;
-    ns6:hasRole <https://w3id.org/caselinker/resource/case/scotland_police_2026_002/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/scotland_police_2026_002/assessment/semantic/exploitive-positions> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · exploitive_positions" ;
+    dcterms:subject <https://cacontology.projectvic.org/custodial#PositionOfTrust> ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/scotland_police_2026_002/narrative> ;
+    ns1:hasConfidence 0.5672 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/scotland_police_2026_002/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2026-03-09T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/scotland_police_2026_002/event/possession> ;
-    ns6:hasRole <https://w3id.org/caselinker/resource/case/scotland_police_2026_002/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/scotland_police_2026_002/assessment/semantic/possession-csam> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns3:CSAMIncident ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/scotland_police_2026_002/narrative> ;
+    ns1:hasConfidence 0.5704 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/agency/police-scotland> a ns7:LocalAgency .
+<https://w3id.org/caselinker/resource/case/scotland_police_2026_002/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/scotland_police_2026_002/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 35.0 .
 
-<https://w3id.org/caselinker/resource/case/scotland_police_2026_002/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/scotland_police_2026_002/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/scotland_police_2026_002/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/scotland_police_2026_002/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/scotland_police_2026_002/legal-step/sentenced> a ns6:Event,
-        ns6:LegalEvent,
-        ns5:LegalProceeding,
-        ns5:SentencingHearing ;
-    ns5:hasProceedingBeginPoint "2026-03-09T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/agency/police-scotland> a ns1:OrganizationLikeEntity,
+        ns5:LocalAgency ;
+    rdfs:label "Police Scotland" ;
+    ns2:name "Police Scotland" .
 
-<https://w3id.org/caselinker/resource/case/scotland_police_2026_002/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns3:ageEstimate 35 .
+<https://w3id.org/caselinker/resource/case/scotland_police_2026_002/legal-step/sentenced> a ns1:Event,
+        ns1:LegalEvent,
+        <https://cacontology.projectvic.org/legal-outcomes#LegalProceeding>,
+        <https://cacontology.projectvic.org/legal-outcomes#SentencingHearing> ;
+    rdfs:label "Sentencing Hearing · legal-step/sentenced" .
 
-<https://w3id.org/caselinker/resource/case/scotland_police_2026_002/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/scotland_police_2026_002/phase/sentenced> a ns6:Phase,
-        ns5:SentencingPhase ;
-    ns1:hasPhaseBeginPoint "2026-03-09T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/lochgelly> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/scotland_police_2026_002/location/lochgelly> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Lochgelly" ;
     ns2:name "Lochgelly" .
 
-<https://w3id.org/caselinker/resource/case/scotland_police_2026_002/event/possession> a ns1:CSAMIncident,
-        ns6:Event ;
-    ns1:severityLevel 3 ;
-    ns2:hasFacet <https://w3id.org/caselinker/resource/case/scotland_police_2026_002/facet/possession> .
+<https://w3id.org/caselinker/resource/case/scotland_police_2026_002/role/offender/1> a ns3:OffenderRole ;
+    rdfs:label "Offender Role · role/offender/1" ;
+    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/scotland_police_2026_002/event/possession> .
+
+<https://w3id.org/caselinker/resource/case/scotland_police_2026_002/event/possession> a ns3:CSAMIncident,
+        ns1:Event ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns3:severityLevel 3 .
+
+<https://w3id.org/caselinker/resource/case/scotland_police_2026_002/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/scotland_police_2026_002/phase/sentenced> a ns1:Phase,
+        <https://cacontology.projectvic.org/legal-outcomes#SentencingPhase> ;
+    rdfs:label "Sentencing Phase · phase/sentenced" .
 

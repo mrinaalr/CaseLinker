@@ -1,221 +1,237 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/detection#> .
+@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns4: <https://cacontology.projectvic.org#> .
-@prefix ns5: <https://cacontology.projectvic.org/core#> .
-@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns7: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns8: <https://cacontology.projectvic.org/us/ncmec#> .
-@prefix ns9: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns4: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns6: <https://cacontology.projectvic.org#> .
+@prefix ns7: <https://cacontology.projectvic.org/core#> .
+@prefix ns8: <https://cacontology.projectvic.org/hotlines#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_030/admission/1/extraction-confidence> a ns5:AssessmentResult ;
-    ns5:assesses <https://w3id.org/caselinker/resource/case/ncmec_2023_030/admission/1> ;
-    ns5:generatedBy <https://w3id.org/caselinker/resource/case/ncmec_2023_030> ;
-    ns5:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_030/admission/2/extraction-confidence> a ns5:AssessmentResult ;
-    ns5:assesses <https://w3id.org/caselinker/resource/case/ncmec_2023_030/admission/2> ;
-    ns5:generatedBy <https://w3id.org/caselinker/resource/case/ncmec_2023_030> ;
-    ns5:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> .
-
-<https://w3id.org/caselinker/resource/agency/pennsylvania-state-police-department> a ns7:StateAgency .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_030/charge/1> a ns6:CSAM_Possession,
-        ns6:CriminalCharge ;
-    rdfs:label "child pornography" ;
-    ns6:indictmentCounts 3 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_030/cybertip> a ns8:NCMECCybertipReport ;
-    ns8:supportedBy <https://w3id.org/caselinker/resource/agency/ncmec> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_030/event/distribution> a ns5:Event,
-        ns6:CSAM_Distribution ;
-    ns4:severityLevel 3 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_030/event/multi-jurisdiction> a ns5:Event,
-        ns7:MultiJurisdictionalInvestigation ;
-    ns4:severityLevel 3 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_030/event/trust-violation> a ns9:AuthorityAbuse,
-        ns9:TrustViolation ;
-    ns9:violatesRelationship <https://w3id.org/caselinker/resource/case/ncmec_2023_030/relationship/coach> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_030/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_030/legal-proceeding> a ns5:Event,
-        ns5:LegalEvent,
-        ns6:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): jailed at the Luzerne County Correctional Facility" ;
-    ns6:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_030/charge/1> ;
-    ns6:hasProceedingBeginPoint "2023-04-21T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_030/operation> a ns5:Event,
-        <https://cacontology.projectvic.org/taskforce#ReactiveOperation> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_030/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns1:ageEstimate 54 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_030/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_030/relationship/coach> a ns9:Coach,
-        ns9:CustodialRelationship ;
-    ns9:involvesChild <https://w3id.org/caselinker/resource/case/ncmec_2023_030/role/victim/1> ;
-    ns9:involvesCustodian <https://w3id.org/caselinker/resource/case/ncmec_2023_030/role/offender/1> ;
-    ns9:relationshipType "coach" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_030/role/victim/1> a ns4:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns4:hasRoleBeginPoint "2023-04-21T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_030/event/possession> ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_030/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_030/tech/cybertipline> a ns8:NCMECCybertipReport ;
-    rdfs:label "CyberTipline" .
-
-<https://w3id.org/caselinker/resource/agency/ncmec> a ns7:FederalAgency .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_030> a ns4:CACInvestigation,
-        ns5:EnduringEntity ;
-    dcterms:created "2026-10-17 22:21:27.994138" ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_030> a ns6:CACInvestigation,
+        ns7:EnduringEntity ;
+    rdfs:label "Case ncmec_2023_030" ;
+    dcterms:created "2026-11-10T10:02:39.060004"^^xsd:dateTime ;
+    dcterms:date "2023-04-21"^^xsd:date ;
     dcterms:identifier "ncmec_2023_030" ;
-    dcterms:modified "2026-10-17 22:21:27.994138" ;
+    dcterms:modified "2026-11-10T10:02:39.060004"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2023_030/provenance> ;
     dcterms:source <https://www.timesleader.com/news/1606409/gymnastics-coach-charged-with-possessing-and-sharing-child-sexual-abuse-materials>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/annapolis>,
-        <https://w3id.org/caselinker/resource/location/central-kentucky>,
-        <https://w3id.org/caselinker/resource/location/fairmount-township>,
-        <https://w3id.org/caselinker/resource/location/keller-road>,
-        <https://w3id.org/caselinker/resource/location/lebanon-county>,
-        <https://w3id.org/caselinker/resource/location/luzerne-county>,
-        <https://w3id.org/caselinker/resource/location/maryland>,
-        <https://w3id.org/caselinker/resource/location/neafie>,
-        <https://w3id.org/caselinker/resource/location/palmyra>,
-        <https://w3id.org/caselinker/resource/location/pennsylvania>,
-        <https://w3id.org/caselinker/resource/location/west-hazleton> ;
-    ns4:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_030/phase/charged> ;
-    ns4:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_030/phase/charged> ;
-    ns4:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_030/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2023_030/admission/2>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2023_030/cybertip>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2023_030/event/distribution>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2023_030/location/annapolis>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2023_030/location/central-kentucky>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2023_030/location/fairmount-township>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2023_030/location/keller-road>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2023_030/location/lebanon-county>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2023_030/location/neafie>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2023_030/location/palmyra>,
+        <https://w3id.org/caselinker/resource/location/luzerne-county-pa>,
+        <https://w3id.org/caselinker/resource/location/maryland-md>,
+        <https://w3id.org/caselinker/resource/location/pennsylvania-pa>,
+        <https://w3id.org/caselinker/resource/location/west-hazleton-borough> ;
+    ns6:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_030/phase/charged> ;
+    ns6:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_030/phase/charged> ;
+    ns6:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_030/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_030/event/multi-jurisdiction>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_030/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_030/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_030/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_030/operation> ;
-    ns4:usesMethod <https://w3id.org/caselinker/resource/case/ncmec_2023_030/tech/cybertipline> ;
-    ns7:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+    ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/ncmec>,
         <https://w3id.org/caselinker/resource/agency/pennsylvania-state-police-department> ;
-    ns3:mentionsLocation <https://w3id.org/caselinker/resource/location/annapolis>,
-        <https://w3id.org/caselinker/resource/location/central-kentucky>,
-        <https://w3id.org/caselinker/resource/location/fairmount-township>,
-        <https://w3id.org/caselinker/resource/location/keller-road>,
-        <https://w3id.org/caselinker/resource/location/lebanon-county>,
-        <https://w3id.org/caselinker/resource/location/luzerne-county>,
-        <https://w3id.org/caselinker/resource/location/maryland>,
-        <https://w3id.org/caselinker/resource/location/neafie>,
-        <https://w3id.org/caselinker/resource/location/palmyra>,
-        <https://w3id.org/caselinker/resource/location/pennsylvania>,
-        <https://w3id.org/caselinker/resource/location/west-hazleton> .
+    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2023_030/admission/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2023_030/admission/2>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2023_030/cybertip> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_030/admission/2> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
-    rdfs:label "has been a gymnastics coach for 34, years focusing on children from 8 to 18-years old" ;
-    dcterms:source <https://www.timesleader.com/news/1606409/gymnastics-coach-charged-with-possessing-and-sharing-child-sexual-abuse-materials> ;
-    ns3:admissionContext "at his residence when the search warrant was served. During an interview with detectives, Neafie said he has been a gymnastics coach for..." ;
-    ns3:admissionFrame "said_paraphrase" ;
-    ns3:admissionTheme "other" ;
-    ns3:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/ncmec_2023_030/role/offender/1> ;
-    ns3:evidenceTier "press_release_stated" ;
-    ns3:quoteType "paraphrase" ;
-    ns2:description "has been a gymnastics coach for 34, years focusing on children from 8 to 18-years old" .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_030/admission/1/extraction-confidence> a ns7:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns7:assesses <https://w3id.org/caselinker/resource/case/ncmec_2023_030/admission/1> ;
+    ns7:hasConfidence 0.65 ;
+    ns7:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_030/phase/charged> a ns4:LegalProcessPhase,
-        ns5:Phase ;
-    ns4:hasPhaseBeginPoint "2023-04-21T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_030/admission/2/extraction-confidence> a ns7:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/2/extraction-confidence" ;
+    ns7:assesses <https://w3id.org/caselinker/resource/case/ncmec_2023_030/admission/2> ;
+    ns7:hasConfidence 0.65 ;
+    ns7:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/location/annapolis> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2023_030/person/offender/1/age> a ns3:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns3:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2023_030/person/offender/1> ;
+    ns3:concernsAgeQuality ns3:Age ;
+    ns3:hasAgeInYears 54.0 .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_030/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2023_030/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2023_030/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_030/role/victim/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/victim/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2023_030/person/victim/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2023_030/role/victim/1> .
+
+<https://w3id.org/caselinker/resource/agency/icac> a ns7:OrganizationLikeEntity,
+        <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns2:name "ICAC Task Force" .
+
+<https://w3id.org/caselinker/resource/agency/pennsylvania-state-police-department> a ns7:OrganizationLikeEntity,
+        ns1:StateAgency ;
+    rdfs:label "Pennsylvania State Police Department" ;
+    ns2:name "Pennsylvania State Police Department" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_030/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
+    rdfs:label "child pornography" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_030/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
+    rdfs:label "CyberTipline report" ;
+    ns8:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns2:name "observe" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_030/event/distribution> a ns7:Event,
+        ns5:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_030/event/multi-jurisdiction> a ns7:Event,
+        ns1:MultiJurisdictionalInvestigation ;
+    rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_030/event/trust-violation> a ns4:AuthorityAbuse,
+        ns4:TrustViolation ;
+    rdfs:label "Authority Abuse · event/trust-violation" ;
+    ns4:perpetratedBy <https://w3id.org/caselinker/resource/case/ncmec_2023_030/role/offender/1> ;
+    ns4:violatesRelationship <https://w3id.org/caselinker/resource/case/ncmec_2023_030/relationship/coach> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_030/legal-proceeding> a ns7:Event,
+        ns7:LegalEvent,
+        ns5:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    rdfs:comment "Pretrial detention facility (not a sentence): jailed at the Luzerne County Correctional Facility" ;
+    ns5:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_030/charge/1> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_030/location/annapolis> a ns7:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Annapolis" ;
     ns2:name "Annapolis" .
 
-<https://w3id.org/caselinker/resource/location/central-kentucky> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2023_030/location/central-kentucky> a ns7:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Central Kentucky" ;
     ns2:name "Central Kentucky" .
 
-<https://w3id.org/caselinker/resource/location/fairmount-township> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2023_030/location/fairmount-township> a ns7:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Fairmount Township" ;
     ns2:name "Fairmount Township" .
 
-<https://w3id.org/caselinker/resource/location/keller-road> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2023_030/location/keller-road> a ns7:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Keller Road" ;
     ns2:name "Keller Road" .
 
-<https://w3id.org/caselinker/resource/location/lebanon-county> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2023_030/location/lebanon-county> a ns7:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Lebanon County" ;
     ns2:name "Lebanon County" .
 
-<https://w3id.org/caselinker/resource/location/luzerne-county> a ns5:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Luzerne County" ;
-    ns2:name "Luzerne County" .
-
-<https://w3id.org/caselinker/resource/location/maryland> a ns5:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Maryland" ;
-    ns2:name "Maryland" .
-
-<https://w3id.org/caselinker/resource/location/neafie> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2023_030/location/neafie> a ns7:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Neafie" ;
     ns2:name "Neafie" .
 
-<https://w3id.org/caselinker/resource/location/palmyra> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2023_030/location/palmyra> a ns7:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Palmyra" ;
     ns2:name "Palmyra" .
 
-<https://w3id.org/caselinker/resource/location/pennsylvania> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2023_030/operation> a ns7:Event,
+        <https://cacontology.projectvic.org/taskforce#ReactiveOperation> ;
+    rdfs:label "Reactive Operation · operation" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_030/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_030/relationship/coach> a ns4:Coach,
+        ns4:CustodialRelationship ;
+    rdfs:label "Coach · relationship/coach" ;
+    ns4:involvesChild <https://w3id.org/caselinker/resource/case/ncmec_2023_030/role/victim/1> ;
+    ns4:involvesCustodian <https://w3id.org/caselinker/resource/case/ncmec_2023_030/role/offender/1> ;
+    ns4:relationshipType "coach" ;
+    ns2:isDirectional true ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2023_030/role/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2023_030/role/victim/1> .
+
+<https://w3id.org/caselinker/resource/location/luzerne-county-pa> a ns7:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Luzerne County" ;
+    dcterms:identifier "fips:42079" ;
+    ns2:name "Luzerne County" .
+
+<https://w3id.org/caselinker/resource/location/maryland-md> a ns7:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Maryland" ;
+    dcterms:identifier "fips:24" ;
+    ns2:name "Maryland" .
+
+<https://w3id.org/caselinker/resource/location/pennsylvania-pa> a ns7:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Pennsylvania" ;
+    dcterms:identifier "fips:42" ;
     ns2:name "Pennsylvania" .
 
-<https://w3id.org/caselinker/resource/location/west-hazleton> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/west-hazleton-borough> a ns7:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "West Hazleton" ;
-    ns2:name "West Hazleton" .
+    rdfs:label "West Hazleton borough" ;
+    dcterms:identifier "fips:4283136" ;
+    skos:altLabel "West Hazleton" ;
+    ns2:name "West Hazleton borough" .
+
+<https://w3id.org/caselinker/resource/agency/ncmec> a ns7:OrganizationLikeEntity,
+        ns8:HotlineOrganization,
+        ns1:FederalAgency ;
+    rdfs:label "National Center for Missing and Exploited Children" ;
+    skos:altLabel "NCMEC" ;
+    ns2:name "National Center for Missing and Exploited Children" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_030/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "browses the internet for pornographic images, court records say" ;
     dcterms:source <https://www.timesleader.com/news/1606409/gymnastics-coach-charged-with-possessing-and-sharing-child-sexual-abuse-materials> ;
-    ns3:admissionContext "we’re not certain,” Sanguedolce said. Neafie initially denied possessing any child sexual abuse materials but admitted he browses the int..." ;
-    ns3:admissionFrame "admitted_he_she" ;
-    ns3:admissionTheme "tech_use" ;
-    ns3:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/ncmec_2023_030/role/offender/1> ;
-    ns3:evidenceTier "press_release_stated" ;
-    ns3:quoteType "paraphrase" ;
     ns2:description "browses the internet for pornographic images, court records say" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_030/event/possession> a ns4:CSAMIncident,
-        ns5:Event ;
-    ns4:producesArtifact <https://w3id.org/caselinker/resource/case/ncmec_2023_030/admission/1> ;
-    ns4:severityLevel 3 ;
-    ns2:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2023_030/facet/possession> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_030/admission/2> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
+    rdfs:label "has been a gymnastics coach for 34, years focusing on children from 8 to 18-years old" ;
+    dcterms:source <https://www.timesleader.com/news/1606409/gymnastics-coach-charged-with-possessing-and-sharing-child-sexual-abuse-materials> ;
+    ns2:description "has been a gymnastics coach for 34, years focusing on children from 8 to 18-years old" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_030/role/offender/1> a ns4:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns4:hasRoleBeginPoint "2023-04-21T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_030/event/possession> ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_030/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_030/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2023_030/phase/charged> a ns6:LegalProcessPhase,
+        ns7:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_030> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2023_030/provenance> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_030/event/possession> a ns6:CSAMIncident,
+        ns7:Event ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns6:severityLevel 3 .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_030/role/victim/1> a ns6:VictimRole ;
+    rdfs:label "Victim Role · role/victim/1" ;
+    ns6:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_030/event/possession> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_030/role/offender/1> a ns5:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns6:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_030/event/possession> .
+

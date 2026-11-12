@@ -102,7 +102,7 @@ How to query the live store, including GET vs POST, `VALUES` + `LIMIT` ordering,
 
 ## Graph pools
 
-The live Oxigraph store holds **10,711** press-release case graphs (`cac:CACInvestigation`, one named graph per case) plus matching provenance graphs. The live corpus is **10,711 case reports** and **131,332 extracted features**. Separately, **297** PACER CASE-UCO graphs live under `urn:pacer:kg:…` (see [docs/SPARQL.md](docs/SPARQL.md#two-pacer-named-graph-families)). Ontology & Graphs **Find/load/compare** uses the full staging set (`pool=full`, max **2000** graphs merged at once). Big Bang / Universe / Analysis remain secret merge modes over locked subsets (`*_ids.txt`).
+The live Oxigraph store holds **10,802** press-release case graphs (`cac:CACInvestigation`, one named graph per case) plus matching provenance graphs. The live corpus is **10,802 case reports** and **131,910 extracted features**. Separately, **297** PACER CASE-UCO graphs live under `urn:pacer:kg:…` (see [docs/SPARQL.md](docs/SPARQL.md#two-pacer-named-graph-families)). Ontology & Graphs **Find/load/compare** uses the full staging set (`pool=full`, max **2000** graphs merged at once). Big Bang / Universe / Analysis remain secret merge modes over locked subsets (`*_ids.txt`).
 
 | Pool | ID list | Folder | Used by |
 |---|---|---|---|
@@ -149,7 +149,7 @@ Rebuild tables: `python3 ontology/platform_affordance_evidence/platform_affordan
 
 ## PACER and lifecycle
 
-[`PACER/`](PACER/) holds public federal docket material modeled by the CASE-UCO SDK (41 investigations, 128 documents, annotations across enterprise / enticement / production / sextortion / trafficking). Loaded into Oxigraph as **297** named graphs `urn:pacer:kg:…` via [`scripts/load_pacer_jsonld.py`](../scripts/load_pacer_jsonld.py). Those graphs also feed CAC state machines under `state_machines/` and the `/lifecycle` UI. They are a **court-record overlay**, not a substitute for the 10,711 press-release case graphs.
+[`PACER/`](PACER/) holds public federal docket material modeled by the CASE-UCO SDK (41 investigations, 128 documents, annotations across enterprise / enticement / production / sextortion / trafficking). Loaded into Oxigraph as **297** named graphs `urn:pacer:kg:…` via [`scripts/load_pacer_jsonld.py`](../scripts/load_pacer_jsonld.py). Those graphs also feed CAC state machines under `state_machines/` and the `/lifecycle` UI. They are a **court-record overlay**, not a substitute for the 10,802 press-release case graphs.
 
 ## MCP (on-demand cohorts)
 

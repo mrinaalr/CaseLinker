@@ -1,96 +1,103 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns3: <https://cacontology.projectvic.org/core#> .
+@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns4: <https://cacontology.projectvic.org#> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns6: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns7: <https://cacontology.projectvic.org/detection#> .
+@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_716> a ns4:CACInvestigation,
-        ns3:EnduringEntity ;
-    dcterms:created "2026-10-17 23:04:33.208948" ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case ncmec_2024_716" ;
+    dcterms:created "2026-11-10T21:27:30.632760"^^xsd:dateTime ;
+    dcterms:date "2024-08-21"^^xsd:date ;
     dcterms:identifier "ncmec_2024_716" ;
-    dcterms:modified "2026-10-17 23:04:33.208948" ;
+    dcterms:modified "2026-11-12T00:44:41.117338"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_716/provenance> ;
     dcterms:source <https://lilifepolitics.com/news/crime/deer-park-man-man-arrested-for-possessing-child-pornography/>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/central-islip>,
-        <https://w3id.org/caselinker/resource/location/deer-park>,
-        <https://w3id.org/caselinker/resource/location/suffolk-county> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2024_716/location/deer-park>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_716/location/suffolk-county>,
+        <https://w3id.org/caselinker/resource/location/central-islip-cdp> ;
     ns4:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_716/phase/charged> ;
     ns4:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_716/phase/charged> ;
     ns4:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_716/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_716/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_716/legal-proceeding> ;
-    ns4:investigationStatus "unknown" ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
-        <https://w3id.org/caselinker/resource/agency/suffolk-county-police-department> ;
-    ns1:mentionsLocation <https://w3id.org/caselinker/resource/location/central-islip>,
-        <https://w3id.org/caselinker/resource/location/deer-park>,
-        <https://w3id.org/caselinker/resource/location/suffolk-county> .
+    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_716/agency/suffolk-county-police-department> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_716/role/offender/1> a ns4:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns4:hasRoleBeginPoint "2024-08-21T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_716/event/possession> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_716/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_716/person/offender/1/age> a ns5:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_716/person/offender/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 51.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_716/role/victim/1> a ns4:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns4:hasRoleBeginPoint "2024-08-21T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_716/event/possession> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_716/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_716/role/offender/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2024_716/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2024_716/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> .
+<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns3:name "ICAC Task Force" .
 
-<https://w3id.org/caselinker/resource/agency/suffolk-county-police-department> a ns5:LocalAgency .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_716/agency/suffolk-county-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns2:LocalAgency ;
+    rdfs:label "Suffolk County Police Department" ;
+    ns3:name "Suffolk County Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_716/charge/1> a ns2:CSAM_Possession,
-        ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_716/charge/1> a ns1:CSAM_Possession,
+        ns1:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_716/event/distribution> a ns3:Event,
-        ns2:CSAM_Distribution ;
-    ns4:severityLevel 3 .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_716/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
+        ns1:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_716/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_716/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        ns1:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns1:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns1:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_716/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_716/legal-proceeding> a ns3:Event,
-        ns3:LegalEvent,
-        ns2:LegalProceeding ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_716/charge/1> ;
-    ns2:hasProceedingBeginPoint "2024-08-21T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_716/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns7:ageEstimate 51 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_716/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_716/phase/charged> a ns4:LegalProcessPhase,
-        ns3:Phase ;
-    ns4:hasPhaseBeginPoint "2024-08-21T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/central-islip> a ns3:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Central Islip" ;
-    ns6:name "Central Islip" .
-
-<https://w3id.org/caselinker/resource/location/deer-park> a ns3:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_716/location/deer-park> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Deer Park" ;
-    ns6:name "Deer Park" .
+    ns3:name "Deer Park" .
 
-<https://w3id.org/caselinker/resource/location/suffolk-county> a ns3:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_716/location/suffolk-county> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Suffolk County" ;
-    ns6:name "Suffolk County" .
+    ns3:name "Suffolk County" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_716/role/offender/1> a ns1:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_716/event/possession> .
+
+<https://w3id.org/caselinker/resource/location/central-islip-cdp> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Central Islip CDP" ;
+    dcterms:identifier "fips:3613552" ;
+    skos:altLabel "Central Islip" ;
+    ns3:name "Central Islip CDP" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_716/event/possession> a ns4:CSAMIncident,
-        ns3:Event ;
-    ns4:severityLevel 3 ;
-    ns6:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2024_716/facet/possession> .
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns4:severityLevel 3 .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2024_716/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_716> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2024_716/provenance> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_716/phase/charged> a ns4:LegalProcessPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Legal Process Phase · phase/charged" .
+

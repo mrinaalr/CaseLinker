@@ -1,127 +1,132 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/core#> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns4: <https://cacontology.projectvic.org/custodial#> .
-@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns6: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns7: <https://cacontology.projectvic.org/detection#> .
-@prefix ns8: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org#> .
+@prefix ns3: <https://cacontology.projectvic.org/core#> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_363> a ns1:CACInvestigation,
-        ns2:EnduringEntity ;
-    dcterms:created "2026-10-17 21:51:23.908232" ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_363> a ns2:CACInvestigation,
+        ns3:EnduringEntity ;
+    rdfs:label "Case ncmec_2022_363" ;
+    dcterms:created "2026-11-10T09:19:07.078242"^^xsd:dateTime ;
+    dcterms:date "2022-01"^^xsd:gYearMonth ;
     dcterms:identifier "ncmec_2022_363" ;
-    dcterms:modified "2026-10-17 21:51:23.908232" ;
+    dcterms:modified "2026-11-10T09:19:07.078242"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2022_363/provenance> ;
     dcterms:source <https://www.ksl.com/article/50322044/couple-charged-in-child-porn-case-went-back-to-living-at-day-care-warrant-says#:~:text=Kadence%20Pinder%2C%2024%2C%20and%20Marcus,10%2C%20according%20to%20court%20records>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/sandy> ;
-    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_363/phase/charged> ;
-    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_363/phase/charged> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_363/event/conspiracy>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_363/event/possession>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_363/event/trust-violation>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2022_363/location/sandy> ;
+    ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_363/phase/charged> ;
+    ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_363/phase/charged> ;
+    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_363/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_363/legal-proceeding> ;
-    ns8:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
-        <https://w3id.org/caselinker/resource/agency/salt-lake-county-health-department> ;
-    ns6:mentionsLocation <https://w3id.org/caselinker/resource/location/sandy> .
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2022_363/agency/salt-lake-county-health-department> .
 
-<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_363/assessment/semantic/exploitive-positions> a ns3:AssessmentResult ;
+    rdfs:label "semantic similarity · exploitive_positions" ;
+    dcterms:subject <https://cacontology.projectvic.org/custodial#PositionOfTrust> ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2022_363/narrative> ;
+    ns3:hasConfidence 0.4564 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/agency/salt-lake-county-health-department> a ns2:OrganizationLikeEntity,
-        ns8:LocalAgency ;
-    rdfs:label "Salt Lake County Health Department" .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_363/assessment/semantic/possession-csam> a ns3:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns2:CSAMIncident ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2022_363/narrative> ;
+    ns3:hasConfidence 0.5208 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_363/charge/1> a ns3:CriminalCharge ;
-    rdfs:label "and Strebel with 10" ;
-    ns3:indictmentCounts 15 .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_363/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2022_363/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 24.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_363/charge/2> a ns3:CriminalCharge,
-        ns3:StateCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_363/person/offender/2/age> a ns4:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/2/age" ;
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2022_363/person/offender/2> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 29.0 .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_363/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2022_363/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2022_363/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_363/role/offender/2/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/2/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2022_363/person/offender/2> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2022_363/role/offender/2> .
+
+<https://w3id.org/caselinker/resource/agency/icac> a ns3:OrganizationLikeEntity,
+        <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns1:name "ICAC Task Force" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_363/agency/salt-lake-county-health-department> a ns3:OrganizationLikeEntity,
+        ns6:LocalAgency ;
+    rdfs:label "Salt Lake County Health Department" ;
+    ns1:name "Salt Lake County Health Department" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_363/charge/1> a ns5:CriminalCharge ;
+    rdfs:label "and Strebel with 10" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_363/charge/2> a ns5:CriminalCharge,
+        ns5:StateCharge ;
     rdfs:label "sexual exploitation of a minor" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_363/charge/3> a ns3:CSAM_Possession,
-        ns3:CriminalCharge ;
-    rdfs:label "child pornography" ;
-    ns3:indictmentCounts 2 .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_363/charge/3> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
+    rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_363/charge/4> a ns3:CriminalCharge ;
-    rdfs:label "sexual exploitation" ;
-    ns6:chargeCluster "sexual_exploitation_unspecified" .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_363/charge/4> a ns5:CriminalCharge ;
+    rdfs:label "sexual exploitation" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_363/event/trust-violation> a ns4:CustodialAbuse,
-        ns4:TrustViolation ;
-    ns4:violatesRelationship <https://w3id.org/caselinker/resource/case/ncmec_2022_363/relationship/mother> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_363/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_363/legal-proceeding> a ns2:Event,
-        ns2:LegalEvent,
-        ns3:LegalProceeding ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_363/charge/1>,
+<https://w3id.org/caselinker/resource/case/ncmec_2022_363/legal-proceeding> a ns3:Event,
+        ns3:LegalEvent,
+        ns5:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns5:chargeCount "19"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_363/charge/1>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_363/charge/2>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_363/charge/3>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_363/charge/4> ;
-    ns3:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+        <https://w3id.org/caselinker/resource/case/ncmec_2022_363/charge/4> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_363/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns7:ageEstimate 24 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_363/person/offender/2> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns7:ageEstimate 29 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_363/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_363/relationship/mother> a ns4:CustodialRelationship,
-        ns4:FamilialRelationship ;
-    ns4:involvesChild <https://w3id.org/caselinker/resource/case/ncmec_2022_363/role/victim/1> ;
-    ns4:involvesCustodian <https://w3id.org/caselinker/resource/case/ncmec_2022_363/role/offender/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_363/role/offender/2> ;
-    ns4:relationshipType "mother" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_363/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_363/event/conspiracy>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_363/event/possession> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_363/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_363/phase/charged> a ns1:LegalProcessPhase,
-        ns2:Phase ;
-    ns1:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_363/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_363/event/conspiracy>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_363/event/possession> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_363/person/offender/1> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_363/role/offender/2> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_363/event/conspiracy>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_363/event/possession> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_363/person/offender/2> .
-
-<https://w3id.org/caselinker/resource/location/sandy> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2022_363/location/sandy> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Sandy" ;
-    ns5:name "Sandy" .
+    ns1:name "Sandy" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_363/event/conspiracy> a ns1:ConspiracyToCommitCSA,
-        ns2:Event ;
-    ns1:conspiracyMemberCount 2 ;
-    ns1:participatesInConspiracy <https://w3id.org/caselinker/resource/case/ncmec_2022_363/role/offender/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_363/role/offender/2> ;
-    ns1:severityLevel 1 .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_363/role/offender/1> a ns5:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_363/event/possession> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_363/event/possession> a ns1:CSAMIncident,
-        ns2:Event ;
-    ns1:severityLevel 1 ;
-    ns5:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2022_363/facet/possession> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_363/role/offender/2> a ns5:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/2" ;
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_363/event/possession> .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2022_363/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_363> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2022_363/provenance> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_363/person/offender/2> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/2" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_363/phase/charged> a ns2:LegalProcessPhase,
+        ns3:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_363/event/possession> a ns2:CSAMIncident,
+        ns3:Event ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns2:severityLevel 1 .
+

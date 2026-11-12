@@ -1,48 +1,64 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns3: <https://cacontology.projectvic.org/detection#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/core#> .
 @prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://cacontology.projectvic.org/us/ncmec#> .
+@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns7: <https://cacontology.projectvic.org/core#> .
-@prefix ns8: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_014> a ns1:CACInvestigation,
-        ns7:EnduringEntity ;
-    dcterms:created "2026-10-17 22:21:27.805473" ;
+        ns3:EnduringEntity ;
+    rdfs:label "Case ncmec_2023_014" ;
+    dcterms:created "2026-11-10T10:02:33.362034"^^xsd:dateTime ;
+    dcterms:date "2023-03-17"^^xsd:date ;
     dcterms:identifier "ncmec_2023_014" ;
-    dcterms:modified "2026-10-17 22:21:27.805473" ;
+    dcterms:modified "2026-11-10T10:02:33.362034"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2023_014/provenance> ;
     dcterms:source <https://www.newser.com/story/332848/cops-searched-for-child-porn-allegedly-found-him-staring-at-it.html>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/gainesville>,
-        <https://w3id.org/caselinker/resource/location/georgia> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2023_014/location/gainesville>,
+        <https://w3id.org/caselinker/resource/location/georgia-ga> ;
     ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_014/phase/charged> ;
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_014/phase/charged> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_014/cybertip>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2023_014/event/distribution>,
+    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_014/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_014/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_014/legal-proceeding> ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/hall-county-sheriffs-office>,
-        <https://w3id.org/caselinker/resource/agency/ncmec> ;
-    ns2:mentionsLocation <https://w3id.org/caselinker/resource/location/gainesville>,
-        <https://w3id.org/caselinker/resource/location/georgia> .
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2023_014/agency/hall-county-sheriffs-office> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_014/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2023-03-17T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_014/event/possession> ;
-    ns7:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_014/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_014/assessment/semantic/possession-csam> a ns3:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns1:CSAMIncident ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2023_014/narrative> ;
+    ns3:hasConfidence 0.5218 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_014/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2023-03-17T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_014/event/possession> ;
-    ns7:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_014/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_014/person/offender/1/age> a ns5:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2023_014/person/offender/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 75.0 .
 
-<https://w3id.org/caselinker/resource/agency/hall-county-sheriffs-office> a ns6:LocalAgency .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_014/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2023_014/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2023_014/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/agency/ncmec> a ns3:OrganizationLikeEntity,
+        ns6:FederalAgency ;
+    rdfs:label "National Center for Missing and Exploited Children" ;
+    skos:altLabel "NCMEC" ;
+    ns2:name "National Center for Missing and Exploited Children" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_014/agency/hall-county-sheriffs-office> a ns3:OrganizationLikeEntity,
+        ns6:LocalAgency ;
+    rdfs:label "Hall County Sheriff's Office" ;
+    ns2:name "Hall County Sheriff's Office" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_014/charge/1> a ns4:CriminalCharge,
         ns4:StateCharge ;
@@ -53,50 +69,45 @@
     rdfs:label "child pornography" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_014/charge/3> a ns4:CriminalCharge ;
-    rdfs:label "sexual exploitation" ;
-    ns2:chargeCluster "sexual_exploitation_unspecified" .
+    rdfs:label "sexual exploitation" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_014/cybertip> a ns5:NCMECCybertipReport ;
-    ns5:supportedBy <https://w3id.org/caselinker/resource/agency/ncmec> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_014/event/distribution> a ns3:Event,
+        ns4:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_014/event/distribution> a ns7:Event,
-        ns4:CSAM_Distribution .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_014/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_014/legal-proceeding> a ns7:Event,
-        ns7:LegalEvent,
+<https://w3id.org/caselinker/resource/case/ncmec_2023_014/legal-proceeding> a ns3:Event,
+        ns3:LegalEvent,
         ns4:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): held in Hall County Jail" ;
+    ns4:chargeCount "3"^^xsd:nonNegativeInteger ;
     ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_014/charge/1>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_014/charge/2>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2023_014/charge/3> ;
-    ns4:hasProceedingBeginPoint "2023-03-17T00:00:00Z"^^xsd:dateTimeStamp .
+        <https://w3id.org/caselinker/resource/case/ncmec_2023_014/charge/3> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_014/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns3:ageEstimate 75 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_014/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/agency/ncmec> a ns6:FederalAgency .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_014/phase/charged> a ns1:LegalProcessPhase,
-        ns7:Phase ;
-    ns1:hasPhaseBeginPoint "2023-03-17T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/gainesville> a ns7:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2023_014/location/gainesville> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Gainesville" ;
-    ns8:name "Gainesville" .
+    ns2:name "Gainesville" .
 
-<https://w3id.org/caselinker/resource/location/georgia> a ns7:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2023_014/role/offender/1> a ns4:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_014/event/possession> .
+
+<https://w3id.org/caselinker/resource/location/georgia-ga> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Georgia" ;
-    ns8:name "Georgia" .
+    dcterms:identifier "fips:13" ;
+    ns2:name "Georgia" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_014/event/possession> a ns1:CSAMIncident,
-        ns7:Event ;
-    ns8:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2023_014/facet/possession> .
+        ns3:Event ;
+    rdfs:label "CSAMIncident · event/possession" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2023_014/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_014> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2023_014/provenance> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_014/phase/charged> a ns1:LegalProcessPhase,
+        ns3:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
+

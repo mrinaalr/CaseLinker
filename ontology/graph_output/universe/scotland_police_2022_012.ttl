@@ -1,22 +1,22 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/core#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://w3id.org/caselinker/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/scotland_police_2022_012> a ns1:CACInvestigation,
-        ns2:EnduringEntity ;
-    dcterms:created "2026-10-18 14:18:20.259519" ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case scotland_police_2022_012" ;
+    dcterms:created "2026-11-11T17:36:14.885100"^^xsd:dateTime ;
+    dcterms:date "2022-04"^^xsd:gYearMonth ;
     dcterms:identifier "scotland_police_2022_012" ;
-    dcterms:modified "2026-10-18 14:18:20.259519" ;
+    dcterms:modified "2026-11-11T17:36:14.885100"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/scotland_police_2022_012/provenance> ;
     dcterms:source <https://www.scotland.police.uk/what-s-happening/news/2023/june/increase-in-online-child-abuse-reports/>,
         "SCOTLAND POLICE" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/scotland> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/scotland_police_2022_012/location/scotland> ;
     ns1:currentPhase <https://w3id.org/caselinker/resource/case/scotland_police_2022_012/phase/arrested> ;
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/scotland_police_2022_012/phase/arrested> ;
     ns1:hasStep <https://w3id.org/caselinker/resource/case/scotland_police_2022_012/event/csam>,
@@ -24,65 +24,68 @@
         <https://w3id.org/caselinker/resource/case/scotland_police_2022_012/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/scotland_police_2022_012/operation> ;
     ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/police-scotland>,
-        <https://w3id.org/caselinker/resource/agency/public-protection-and-police-department> ;
-    ns6:mentionsLocation <https://w3id.org/caselinker/resource/location/scotland> .
+        <https://w3id.org/caselinker/resource/case/scotland_police_2022_012/agency/public-protection-and-police-department> .
 
-<https://w3id.org/caselinker/resource/case/scotland_police_2022_012/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2022-04-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/scotland_police_2022_012/event/csam> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/scotland_police_2022_012/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/scotland_police_2022_012/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/scotland_police_2022_012/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/scotland_police_2022_012/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/scotland_police_2022_012/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2022-04-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/scotland_police_2022_012/event/csam> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/scotland_police_2022_012/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/agency/police-scotland> a ns4:LocalAgency .
-
-<https://w3id.org/caselinker/resource/agency/public-protection-and-police-department> a ns2:OrganizationLikeEntity,
+<https://w3id.org/caselinker/resource/agency/police-scotland> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
         ns4:LocalAgency ;
-    rdfs:label "Public Protection and Police Department" .
+    rdfs:label "Police Scotland" ;
+    ns2:name "Police Scotland" .
 
-<https://w3id.org/caselinker/resource/case/scotland_police_2022_012/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/scotland_police_2022_012/agency/public-protection-and-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns4:LocalAgency ;
+    rdfs:label "Public Protection and Police Department" ;
+    ns2:name "Public Protection and Police Department" .
+
+<https://w3id.org/caselinker/resource/case/scotland_police_2022_012/charge/1> a ns3:CSAM_Possession,
+        ns3:CriminalCharge ;
     rdfs:label "child sexual abuse material" .
 
-<https://w3id.org/caselinker/resource/case/scotland_police_2022_012/event/distribution> a ns2:Event,
-        ns5:CSAM_Distribution ;
-    ns1:severityLevel 3 .
+<https://w3id.org/caselinker/resource/case/scotland_police_2022_012/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
+        ns3:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/scotland_police_2022_012/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/scotland_police_2022_012/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        ns3:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns3:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/scotland_police_2022_012/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/scotland_police_2022_012/legal-proceeding> a ns2:Event,
-        ns2:LegalEvent,
-        ns5:LegalProceeding ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/scotland_police_2022_012/charge/1> ;
-    ns5:hasProceedingBeginPoint "2022-04-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/scotland_police_2022_012/operation> a ns2:Event,
-        <https://cacontology.projectvic.org/taskforce#TaskForceOperation> .
-
-<https://w3id.org/caselinker/resource/case/scotland_police_2022_012/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/scotland_police_2022_012/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "social media" .
-
-<https://w3id.org/caselinker/resource/case/scotland_police_2022_012/phase/arrested> a ns1:InitialPhase,
-        ns2:Phase ;
-    ns1:hasPhaseBeginPoint "2022-04-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/scotland> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/scotland_police_2022_012/location/scotland> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Scotland" ;
-    ns3:name "Scotland" .
+    ns2:name "Scotland" .
+
+<https://w3id.org/caselinker/resource/case/scotland_police_2022_012/operation> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/taskforce#TaskForceOperation> ;
+    rdfs:label "Task Force Operation · operation" .
+
+<https://w3id.org/caselinker/resource/case/scotland_police_2022_012/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/scotland_police_2022_012/role/offender/1> a ns3:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/scotland_police_2022_012/event/csam> .
+
+<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "social media" ;
+    ns2:name "social media" .
 
 <https://w3id.org/caselinker/resource/case/scotland_police_2022_012/event/csam> a ns1:CSAMIncident,
-        ns2:Event ;
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/csam" ;
     ns1:severityLevel 3 ;
-    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/social-media> ;
-    ns3:hasFacet <https://w3id.org/caselinker/resource/case/scotland_police_2022_012/facet/csam> .
+    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/social-media> .
+
+<https://w3id.org/caselinker/resource/case/scotland_police_2022_012/phase/arrested> a ns1:InitialPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Initial Phase · phase/arrested" .
 

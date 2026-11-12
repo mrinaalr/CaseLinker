@@ -1,101 +1,125 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://w3id.org/caselinker/resource/vocab/> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/custodial#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://cacontology.projectvic.org/core#> .
-@prefix ns6: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns7: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns8: <https://cacontology.projectvic.org/detection#> .
+@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns4: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_349> a ns2:CACInvestigation,
-        ns5:EnduringEntity ;
-    dcterms:created "2026-10-17 22:21:32.038594" ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case ncmec_2023_349" ;
+    dcterms:created "2026-11-10T10:04:27.033399"^^xsd:dateTime ;
+    dcterms:date "2022-04-22"^^xsd:date ;
     dcterms:identifier "ncmec_2023_349" ;
-    dcterms:modified "2026-10-17 22:21:32.038594" ;
+    dcterms:modified "2026-11-10T10:04:27.033399"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2023_349/provenance> ;
     dcterms:source <https://www.wqad.com/article/news/crime/sterling-man-child-pornography-arrest-illinois-morrison-teacher/526-8302d011-2aff-41b6-809f-61ece54d5c07>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/ill>,
-        <https://w3id.org/caselinker/resource/location/robbins>,
-        <https://w3id.org/caselinker/resource/location/sterling> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2023_349/location/robbins>,
+        <https://w3id.org/caselinker/resource/location/illinois-il>,
+        <https://w3id.org/caselinker/resource/location/sterling-city-il> ;
     ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_349/phase/charged> ;
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_349/phase/charged> ;
     ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_349/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_349/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_349/legal-proceeding> ;
-    ns2:investigationStatus "unknown" ;
-    ns7:involvesAgency <https://w3id.org/caselinker/resource/agency/illinois-state-police-department> ;
-    ns1:mentionsLocation <https://w3id.org/caselinker/resource/location/ill>,
-        <https://w3id.org/caselinker/resource/location/robbins>,
-        <https://w3id.org/caselinker/resource/location/sterling> .
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/illinois-state-police-department> .
 
-<https://w3id.org/caselinker/resource/agency/illinois-state-police-department> a ns7:StateAgency .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_349/person/offender/1/age> a ns3:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns3:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2023_349/person/offender/1> ;
+    ns3:concernsAgeQuality ns3:Age ;
+    ns3:hasAgeInYears 49.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_349/charge/1> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
-    rdfs:label "possession of child pornography" ;
-    ns4:indictmentCounts 2 .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_349/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2023_349/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2023_349/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_349/event/trust-violation> a ns3:AuthorityAbuse,
-        ns3:TrustViolation ;
-    ns3:violatesRelationship <https://w3id.org/caselinker/resource/case/ncmec_2023_349/relationship/teacher> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_349/role/victim/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/victim/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2023_349/person/victim/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2023_349/role/victim/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_349/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/agency/illinois-state-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns6:StateAgency ;
+    rdfs:label "Illinois State Police Department" ;
+    ns1:name "Illinois State Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_349/legal-proceeding> a ns5:Event,
-        ns5:LegalEvent,
-        ns4:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_349/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
+    rdfs:label "possession of child pornography" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_349/event/trust-violation> a ns4:AuthorityAbuse,
+        ns4:TrustViolation ;
+    rdfs:label "Authority Abuse · event/trust-violation" ;
+    ns4:perpetratedBy <https://w3id.org/caselinker/resource/case/ncmec_2023_349/role/offender/1> ;
+    ns4:violatesRelationship <https://w3id.org/caselinker/resource/case/ncmec_2023_349/relationship/teacher> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_349/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        ns5:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): held at the Whiteside County Jail" ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_349/charge/1> ;
-    ns4:hasProceedingBeginPoint "2022-04-22T00:00:00Z"^^xsd:dateTimeStamp .
+    ns5:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_349/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_349/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns8:ageEstimate 49 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_349/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_349/relationship/teacher> a ns3:CustodialRelationship,
-        ns3:Teacher ;
-    ns3:involvesChild <https://w3id.org/caselinker/resource/case/ncmec_2023_349/role/victim/1> ;
-    ns3:involvesCustodian <https://w3id.org/caselinker/resource/case/ncmec_2023_349/role/offender/1> ;
-    ns3:relationshipType "teacher" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_349/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2022-04-22T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_349/event/possession> ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_349/person/offender/1> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_349/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2022-04-22T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_349/event/possession> ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_349/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_349/phase/charged> a ns2:LegalProcessPhase,
-        ns5:Phase ;
-    ns2:hasPhaseBeginPoint "2022-04-22T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/ill> a ns5:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Ill." ;
-    ns6:name "Ill." .
-
-<https://w3id.org/caselinker/resource/location/robbins> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2023_349/location/robbins> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Robbins'" ;
-    ns6:name "Robbins'" .
+    ns1:name "Robbins'" .
 
-<https://w3id.org/caselinker/resource/location/sterling> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2023_349/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_349/relationship/teacher> a ns4:CustodialRelationship,
+        ns4:Teacher ;
+    rdfs:label "Custodial Relationship · relationship/teacher" ;
+    ns4:involvesChild <https://w3id.org/caselinker/resource/case/ncmec_2023_349/role/victim/1> ;
+    ns4:involvesCustodian <https://w3id.org/caselinker/resource/case/ncmec_2023_349/role/offender/1> ;
+    ns4:relationshipType "teacher" ;
+    ns1:isDirectional true ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2023_349/role/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2023_349/role/victim/1> .
+
+<https://w3id.org/caselinker/resource/location/illinois-il> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Sterling" ;
-    ns6:name "Sterling" .
+    rdfs:label "Illinois" ;
+    dcterms:identifier "fips:17" ;
+    skos:altLabel "Ill." ;
+    ns1:name "Illinois" .
+
+<https://w3id.org/caselinker/resource/location/sterling-city-il> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Sterling city" ;
+    dcterms:identifier "fips:1772546" ;
+    skos:altLabel "Sterling" ;
+    ns1:name "Sterling city" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_349/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_349/phase/charged> a ns2:LegalProcessPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Legal Process Phase · phase/charged" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_349/event/possession> a ns2:CSAMIncident,
-        ns5:Event ;
-    ns6:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2023_349/facet/possession> .
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/possession" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2023_349/role/victim/1> a ns2:VictimRole ;
+    rdfs:label "Victim Role · role/victim/1" ;
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_349/event/possession> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_349> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2023_349/provenance> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_349/role/offender/1> a ns5:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_349/event/possession> .
+

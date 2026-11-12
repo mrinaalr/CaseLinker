@@ -1,140 +1,167 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/custodial#> .
-@prefix ns2: <https://cacontology.projectvic.org/core#> .
-@prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/production#> .
-@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns7: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns8: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns9: <https://cacontology.projectvic.org/detection#> .
+@prefix ns1: <https://cacontology.projectvic.org/core#> .
+@prefix ns2: <https://cacontology.projectvic.org#> .
+@prefix ns3: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns7: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/azicac_2013_009/admission/1/extraction-confidence> a ns2:AssessmentResult ;
-    ns2:assesses <https://w3id.org/caselinker/resource/case/azicac_2013_009/admission/1> ;
-    ns2:generatedBy <https://w3id.org/caselinker/resource/case/azicac_2013_009> ;
-    ns2:hasConfidence 0.9 .
-
-<https://w3id.org/caselinker/resource/case/azicac_2013_009/admission/2/extraction-confidence> a ns2:AssessmentResult ;
-    ns2:assesses <https://w3id.org/caselinker/resource/case/azicac_2013_009/admission/2> ;
-    ns2:generatedBy <https://w3id.org/caselinker/resource/case/azicac_2013_009> ;
-    ns2:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/agency/azicac-task-force> a <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> .
-
-<https://w3id.org/caselinker/resource/case/azicac_2013_009/charge/1> a ns6:CriminalCharge ;
-    rdfs:label "sexual exploitation" ;
-    ns7:chargeCluster "sexual_exploitation_unspecified" .
-
-<https://w3id.org/caselinker/resource/case/azicac_2013_009/charge/2> a ns6:CriminalCharge ;
-    rdfs:label "child molestation" ;
-    rdfs:seeAlso <https://w3id.org/caselinker/resource/case/azicac_2013_009/offense-event/charge-2> ;
-    ns7:chargeCluster "child_molestation" ;
-    ns7:chargeOffenseEvent <https://w3id.org/caselinker/resource/case/azicac_2013_009/offense-event/charge-2> .
-
-<https://w3id.org/caselinker/resource/case/azicac_2013_009/event/trust-violation> a ns1:CustodialAbuse,
-        ns1:TrustViolation ;
-    ns1:violatesRelationship <https://w3id.org/caselinker/resource/case/azicac_2013_009/relationship/mother> .
-
-<https://w3id.org/caselinker/resource/case/azicac_2013_009/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/azicac_2013_009/legal-proceeding> a ns2:Event,
-        ns2:LegalEvent,
-        ns6:LegalProceeding ;
-    ns6:hasCharge <https://w3id.org/caselinker/resource/case/azicac_2013_009/charge/1>,
-        <https://w3id.org/caselinker/resource/case/azicac_2013_009/charge/2> ;
-    ns6:hasProceedingBeginPoint "2013-09-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/azicac_2013_009/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns9:ageEstimate 32 .
-
-<https://w3id.org/caselinker/resource/case/azicac_2013_009/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns4:victimAge 13 .
-
-<https://w3id.org/caselinker/resource/case/azicac_2013_009/relationship/mother> a ns1:CustodialRelationship,
-        ns1:FamilialRelationship ;
-    ns1:involvesChild <https://w3id.org/caselinker/resource/case/azicac_2013_009/role/victim/1> ;
-    ns1:involvesCustodian <https://w3id.org/caselinker/resource/case/azicac_2013_009/role/offender/1> ;
-    ns1:relationshipType "mother" .
-
-<https://w3id.org/caselinker/resource/case/azicac_2013_009/role/victim/1> a ns3:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns3:hasRoleBeginPoint "2013-09-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/azicac_2013_009/event/hands-on>,
-        <https://w3id.org/caselinker/resource/case/azicac_2013_009/event/possession>,
-        <https://w3id.org/caselinker/resource/case/azicac_2013_009/offense-event/charge-2> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/azicac_2013_009/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/case/azicac_2013_009> a ns3:CACInvestigation,
-        ns2:EnduringEntity ;
-    dcterms:created "2026-10-17 21:41:25.788632" ;
+<https://w3id.org/caselinker/resource/case/azicac_2013_009> a ns2:CACInvestigation,
+        ns1:EnduringEntity ;
+    rdfs:label "Case azicac_2013_009" ;
+    dcterms:created "2026-11-10T09:13:15.617177"^^xsd:dateTime ;
+    dcterms:date "2013-09"^^xsd:gYearMonth ;
     dcterms:identifier "azicac_2013_009" ;
-    dcterms:modified "2026-10-17 21:41:25.788632" ;
+    dcterms:modified "2026-11-10T09:13:15.617177"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/azicac_2013_009/provenance> ;
     dcterms:source <https://www.azicac.org/cases-and-arrests/>,
         "AZICAC" ;
-    ns3:currentPhase <https://w3id.org/caselinker/resource/case/azicac_2013_009/phase/booked> ;
-    ns3:hasPhase <https://w3id.org/caselinker/resource/case/azicac_2013_009/phase/booked> ;
-    ns3:hasStep <https://w3id.org/caselinker/resource/case/azicac_2013_009/admission/1>,
-        <https://w3id.org/caselinker/resource/case/azicac_2013_009/admission/2>,
-        <https://w3id.org/caselinker/resource/case/azicac_2013_009/event/hands-on>,
+    ns2:currentPhase <https://w3id.org/caselinker/resource/case/azicac_2013_009/phase/booked> ;
+    ns2:hasPhase <https://w3id.org/caselinker/resource/case/azicac_2013_009/phase/booked> ;
+    ns2:hasStep <https://w3id.org/caselinker/resource/case/azicac_2013_009/event/hands-on>,
         <https://w3id.org/caselinker/resource/case/azicac_2013_009/event/possession>,
         <https://w3id.org/caselinker/resource/case/azicac_2013_009/event/trust-violation>,
-        <https://w3id.org/caselinker/resource/case/azicac_2013_009/legal-proceeding>,
-        <https://w3id.org/caselinker/resource/case/azicac_2013_009/offense-event/charge-2> ;
-    ns3:investigationStatus "unknown" ;
-    ns8:involvesAgency <https://w3id.org/caselinker/resource/agency/azicac-task-force> .
+        <https://w3id.org/caselinker/resource/case/azicac_2013_009/legal-proceeding> ;
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/azicac-task-force-az-unverified> ;
+    ns4:object <https://w3id.org/caselinker/resource/case/azicac_2013_009/admission/1>,
+        <https://w3id.org/caselinker/resource/case/azicac_2013_009/admission/2> .
+
+<https://w3id.org/caselinker/resource/case/azicac_2013_009/admission/1/extraction-confidence> a ns1:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/azicac_2013_009/admission/1> ;
+    ns1:hasConfidence 0.9 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+
+<https://w3id.org/caselinker/resource/case/azicac_2013_009/admission/2/extraction-confidence> a ns1:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/2/extraction-confidence" ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/azicac_2013_009/admission/2> ;
+    ns1:hasConfidence 0.65 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+
+<https://w3id.org/caselinker/resource/case/azicac_2013_009/assessment/semantic/exploitive-positions> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · exploitive_positions" ;
+    dcterms:subject ns3:PositionOfTrust ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/azicac_2013_009/narrative> ;
+    ns1:hasConfidence 0.574 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/azicac_2013_009/assessment/semantic/possession-csam> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns2:CSAMIncident ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/azicac_2013_009/narrative> ;
+    ns1:hasConfidence 0.582 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/azicac_2013_009/assessment/semantic/production-csam> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · production_csam" ;
+    dcterms:subject <https://cacontology.projectvic.org/production#ProductionOffense> ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/azicac_2013_009/narrative> ;
+    ns1:hasConfidence 0.5098 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/azicac_2013_009/assessment/semantic/sextortion> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · sextortion" ;
+    dcterms:subject <https://cacontology.projectvic.org/sextortion#SextortionIncident> ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/azicac_2013_009/narrative> ;
+    ns1:hasConfidence 0.461 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/azicac_2013_009/person/offender/1/age> a ns5:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/azicac_2013_009/person/offender/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 32.0 .
+
+<https://w3id.org/caselinker/resource/case/azicac_2013_009/person/victim/1/age> a ns5:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/victim/1/age" ;
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/azicac_2013_009/person/victim/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 13.0 .
+
+<https://w3id.org/caselinker/resource/case/azicac_2013_009/role/offender/1/has-role> a ns4:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns4:isDirectional true ;
+    ns4:kindOfRelationship "Has_Role" ;
+    ns4:source <https://w3id.org/caselinker/resource/case/azicac_2013_009/person/offender/1> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/azicac_2013_009/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/azicac_2013_009/role/victim/1/has-role> a ns4:Relationship ;
+    rdfs:label "Relationship · role/victim/1/has-role" ;
+    ns4:isDirectional true ;
+    ns4:kindOfRelationship "Has_Role" ;
+    ns4:source <https://w3id.org/caselinker/resource/case/azicac_2013_009/person/victim/1> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/azicac_2013_009/role/victim/1> .
+
+<https://w3id.org/caselinker/resource/agency/azicac-task-force-az-unverified> a ns1:OrganizationLikeEntity,
+        <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
+    rdfs:label "AZICAC Task Force" ;
+    ns4:name "AZICAC Task Force" .
+
+<https://w3id.org/caselinker/resource/case/azicac_2013_009/charge/1> a ns7:CriminalCharge ;
+    rdfs:label "sexual exploitation" .
+
+<https://w3id.org/caselinker/resource/case/azicac_2013_009/charge/2> a ns7:CriminalCharge ;
+    rdfs:label "child molestation" ;
+    dcterms:subject <https://cacontology.projectvic.org/usa-federal-law#SexualAbuseOfMinor> .
+
+<https://w3id.org/caselinker/resource/case/azicac_2013_009/event/hands-on> a ns2:ChildSexualAbuseEvent,
+        ns1:Event ;
+    rdfs:label "Child Sexual Abuse Event · event/hands-on" .
+
+<https://w3id.org/caselinker/resource/case/azicac_2013_009/event/possession> a ns2:CSAMIncident,
+        ns1:Event ;
+    rdfs:label "CSAMIncident · event/possession" .
+
+<https://w3id.org/caselinker/resource/case/azicac_2013_009/event/trust-violation> a ns3:CustodialAbuse,
+        ns3:TrustViolation ;
+    rdfs:label "Custodial Abuse · event/trust-violation" ;
+    ns3:perpetratedBy <https://w3id.org/caselinker/resource/case/azicac_2013_009/role/offender/1> ;
+    ns3:violatesRelationship <https://w3id.org/caselinker/resource/case/azicac_2013_009/relationship/mother> .
+
+<https://w3id.org/caselinker/resource/case/azicac_2013_009/legal-proceeding> a ns1:Event,
+        ns1:LegalEvent,
+        ns7:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns7:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns7:hasCharge <https://w3id.org/caselinker/resource/case/azicac_2013_009/charge/1>,
+        <https://w3id.org/caselinker/resource/case/azicac_2013_009/charge/2> .
+
+<https://w3id.org/caselinker/resource/case/azicac_2013_009/relationship/mother> a ns3:CustodialRelationship,
+        ns3:FamilialRelationship ;
+    rdfs:label "Custodial Relationship · relationship/mother" ;
+    ns3:involvesChild <https://w3id.org/caselinker/resource/case/azicac_2013_009/role/victim/1> ;
+    ns3:involvesCustodian <https://w3id.org/caselinker/resource/case/azicac_2013_009/role/offender/1> ;
+    ns3:relationshipType "parent" ;
+    ns4:isDirectional true ;
+    ns4:source <https://w3id.org/caselinker/resource/case/azicac_2013_009/role/offender/1> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/azicac_2013_009/role/victim/1> .
 
 <https://w3id.org/caselinker/resource/case/azicac_2013_009/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "he wanted to teach her about sex" ;
     dcterms:source <https://www.azicac.org/cases-and-arrests/> ;
-    ns7:admissionContext "g sexually abused on his computer. Investigators located the suspect and interviewed him; the suspect admitted he lured the minor into th..." ;
-    ns7:admissionFrame "admitted_because_quote" ;
-    ns7:admissionTheme "other" ;
-    ns7:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/azicac_2013_009/role/offender/1> ;
-    ns7:evidenceTier "press_release_stated" ;
-    ns7:quoteType "direct" ;
-    ns5:description "he wanted to teach her about sex" .
-
-<https://w3id.org/caselinker/resource/case/azicac_2013_009/phase/booked> a ns3:InitialPhase,
-        ns2:Phase ;
-    ns3:hasPhaseBeginPoint "2013-09-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/azicac_2013_009/event/hands-on> a ns3:ChildSexualAbuseEvent,
-        ns2:Event ;
-    ns3:producesArtifact <https://w3id.org/caselinker/resource/case/azicac_2013_009/admission/2> ;
-    ns3:severityLevel 3 .
-
-<https://w3id.org/caselinker/resource/case/azicac_2013_009/event/possession> a ns3:CSAMIncident,
-        ns2:Event ;
-    ns3:producesArtifact <https://w3id.org/caselinker/resource/case/azicac_2013_009/admission/2> ;
-    ns3:severityLevel 3 ;
-    ns5:hasFacet <https://w3id.org/caselinker/resource/case/azicac_2013_009/facet/possession> .
-
-<https://w3id.org/caselinker/resource/case/azicac_2013_009/role/offender/1> a ns3:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns3:hasRoleBeginPoint "2013-09-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/azicac_2013_009/event/hands-on>,
-        <https://w3id.org/caselinker/resource/case/azicac_2013_009/event/possession>,
-        <https://w3id.org/caselinker/resource/case/azicac_2013_009/offense-event/charge-2> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/azicac_2013_009/person/offender/1> .
+    ns4:description "he wanted to teach her about sex" .
 
 <https://w3id.org/caselinker/resource/case/azicac_2013_009/admission/2> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "lured the minor into the sex idea because “he wanted to teach her about sex”" ;
     dcterms:source <https://www.azicac.org/cases-and-arrests/> ;
-    ns7:admissionContext "g sexually abused on his computer. Investigators located the suspect and interviewed him; the suspect admitted he lured the minor into th..." ;
-    ns7:admissionFrame "admitted_he_she" ;
-    ns7:admissionTheme "harm_conduct" ;
-    ns7:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/azicac_2013_009/role/offender/1> ;
-    ns7:evidenceTier "press_release_stated" ;
-    ns7:quoteType "paraphrase" ;
-    ns5:description "lured the minor into the sex idea because “he wanted to teach her about sex”" .
+    ns4:description "lured the minor into the sex idea because “he wanted to teach her about sex”" .
 
-<https://w3id.org/caselinker/resource/case/azicac_2013_009/offense-event/charge-2> a ns3:ChildSexualAbuseEvent,
-        ns2:Event,
-        <https://cacontology.projectvic.org/usa-federal-law#SexualAbuseOfMinor>,
-        <https://ontology.unifiedcyberontology.org/uco/action/Crime> ;
-    rdfs:label "Inferred offense from charge: child molestation" .
+<https://w3id.org/caselinker/resource/case/azicac_2013_009/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
+<https://w3id.org/caselinker/resource/case/azicac_2013_009/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
 
-<https://w3id.org/caselinker/resource/case/azicac_2013_009> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/azicac_2013_009/provenance> .
+<https://w3id.org/caselinker/resource/case/azicac_2013_009/phase/booked> a ns2:InitialPhase,
+        ns1:Phase ;
+    rdfs:label "Initial Phase · phase/booked" .
+
+<https://w3id.org/caselinker/resource/case/azicac_2013_009/role/victim/1> a ns2:VictimRole ;
+    rdfs:label "Victim Role · role/victim/1" .
+
+<https://w3id.org/caselinker/resource/case/azicac_2013_009/role/offender/1> a ns7:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" .
+

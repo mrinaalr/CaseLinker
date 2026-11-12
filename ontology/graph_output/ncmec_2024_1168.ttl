@@ -1,88 +1,105 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/core#> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns5: <https://cacontology.projectvic.org/detection#> .
-@prefix ns6: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns7: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/core#> .
+@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_1168> a ns1:CACInvestigation,
-        ns2:EnduringEntity ;
-    dcterms:created "2026-10-17 23:04:39.141372" ;
+        ns5:EnduringEntity ;
+    rdfs:label "Case ncmec_2024_1168" ;
+    dcterms:created "2026-11-11T23:57:46.332323"^^xsd:dateTime ;
+    dcterms:date "2024-02"^^xsd:gYearMonth ;
     dcterms:identifier "ncmec_2024_1168" ;
-    dcterms:modified "2026-10-17 23:04:39.141372" ;
+    dcterms:modified "2026-11-11T23:57:46.332323"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_1168/provenance> ;
     dcterms:source <https://www.weau.com/2024/02/02/man-charged-with-possessing-child-pornography/>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/menomonie>,
-        <https://w3id.org/caselinker/resource/location/wis> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/menomonie-city-wi>,
+        <https://w3id.org/caselinker/resource/location/wisconsin-wi> ;
     ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_1168/phase/charged> ;
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_1168/phase/charged> ;
     ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_1168/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_1168/legal-proceeding> ;
-    ns1:investigationStatus "unknown" ;
-    ns1:usesMethod <https://w3id.org/caselinker/resource/case/ncmec_2024_1168/tech/cybertipline> ;
-    ns7:involvesAgency <https://w3id.org/caselinker/resource/agency/menomonie-police-department> ;
-    ns6:mentionsLocation <https://w3id.org/caselinker/resource/location/menomonie>,
-        <https://w3id.org/caselinker/resource/location/wis> .
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_1168/agency/menomonie-police-department> ;
+    ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2024_1168/cybertip> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1168/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2024-02-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_1168/event/possession> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_1168/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1168/assessment/semantic/possession-csam> a ns5:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns1:CSAMIncident ;
+    ns5:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_1168/narrative> ;
+    ns5:hasConfidence 0.555 ;
+    ns5:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1168/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2024-02-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_1168/event/possession> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_1168/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1168/person/offender/1/age> a ns2:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns2:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_1168/person/offender/1> ;
+    ns2:concernsAgeQuality ns2:Age ;
+    ns2:hasAgeInYears 43.0 .
 
-<https://w3id.org/caselinker/resource/agency/menomonie-police-department> a ns7:LocalAgency .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1168/role/offender/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2024_1168/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2024_1168/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1168/charge/1> a ns3:CSAM_Possession,
-        ns3:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1168/agency/menomonie-police-department> a ns5:OrganizationLikeEntity,
+        ns6:LocalAgency ;
+    rdfs:label "Menomonie Police Department" ;
+    ns3:name "Menomonie Police Department" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1168/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1168/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1168/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
+    rdfs:label "CyberTipline report" ;
+    ns3:name "observe" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1168/legal-proceeding> a ns2:Event,
-        ns2:LegalEvent,
-        ns3:LegalProceeding ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_1168/charge/1> ;
-    ns3:hasProceedingBeginPoint "2024-02-01T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1168/legal-proceeding> a ns5:Event,
+        ns5:LegalEvent,
+        ns4:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns4:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_1168/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1168/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns5:ageEstimate 43 .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1168/role/offender/1> a ns4:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_1168/event/possession> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1168/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1168/tech/cybertipline> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
-    rdfs:label "CyberTipline" .
-
-<https://w3id.org/caselinker/resource/platform/google-drive> a <https://cacontology.projectvic.org/platforms#FileHostingService> ;
-    rdfs:label "Google Drive" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1168/phase/charged> a ns1:LegalProcessPhase,
-        ns2:Phase ;
-    ns1:hasPhaseBeginPoint "2024-02-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/menomonie> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/menomonie-city-wi> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Menomonie" ;
-    ns4:name "Menomonie" .
+    rdfs:label "Menomonie city" ;
+    dcterms:identifier "fips:5551025" ;
+    skos:altLabel "Menomonie" ;
+    ns3:name "Menomonie city" .
 
-<https://w3id.org/caselinker/resource/location/wis> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/wisconsin-wi> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Wis." ;
-    ns4:name "Wis." .
+    rdfs:label "Wisconsin" ;
+    dcterms:identifier "fips:55" ;
+    skos:altLabel "Wis." ;
+    ns3:name "Wisconsin" .
+
+<https://w3id.org/caselinker/resource/platform/google-drive> a ns5:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#FileHostingService> ;
+    rdfs:label "Google Drive" ;
+    ns3:name "Google Drive" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_1168/event/possession> a ns1:CSAMIncident,
-        ns2:Event ;
-    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/google-drive> ;
-    ns4:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2024_1168/facet/possession> .
+        ns5:Event ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/google-drive> .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1168/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1168> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2024_1168/provenance> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1168/phase/charged> a ns1:LegalProcessPhase,
+        ns5:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
+

@@ -1,176 +1,185 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/detection#> .
-@prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns4: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns5: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns1: <https://cacontology.projectvic.org/core#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns7: <https://cacontology.projectvic.org/core#> .
-@prefix ns8: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns7: <https://cacontology.projectvic.org/custodial#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/admission/1/extraction-confidence> a ns7:AssessmentResult ;
-    ns7:assesses <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/admission/1> ;
-    ns7:generatedBy <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001> ;
-    ns7:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/admission/2/extraction-confidence> a ns7:AssessmentResult ;
-    ns7:assesses <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/admission/2> ;
-    ns7:generatedBy <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001> ;
-    ns7:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/agency/cobb-county-police-department> a ns7:OrganizationLikeEntity,
-        ns6:LocalAgency ;
-    rdfs:label "Cobb County Police Department" .
-
-<https://w3id.org/caselinker/resource/agency/us-secret-service> a ns7:OrganizationLikeEntity,
-        ns6:FederalAgency ;
-    rdfs:label "U.S. Secret Service" .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/charge/1> a ns3:CSAM_Possession,
-        ns3:CriminalCharge ;
-    rdfs:label "child pornography" .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/charge/2> a ns3:CSAM_Production,
-        ns3:CriminalCharge ;
-    rdfs:label "production of child pornography" .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/event/trust-violation> a ns5:CustodialAbuse,
-        ns5:TrustViolation ;
-    ns5:violatesRelationship <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/relationship/mother> .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/facet/production> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/legal-proceeding> a ns7:Event,
-        ns7:LegalEvent,
-        ns3:LegalProceeding ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/charge/1>,
-        <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/charge/2> ;
-    ns3:hasProceedingBeginPoint "2010-03-16T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/legal-step/pleaded-guilty> a ns7:Event,
-        ns7:LegalEvent,
-        ns3:LegalProceeding,
-        ns3:PleaBargaining ;
-    ns3:hasProceedingBeginPoint "2010-03-16T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns1:ageEstimate 38 .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/relationship/mother> a ns5:CustodialRelationship,
-        ns5:FamilialRelationship ;
-    ns5:involvesChild <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/role/victim/1> ;
-    ns5:involvesCustodian <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/role/offender/1> ;
-    ns5:relationshipType "mother" .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2010-03-16T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/event/csam>,
-        <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/event/production> ;
-    ns7:hasRole <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2010_001> a ns2:CACInvestigation,
-        ns7:EnduringEntity ;
-    dcterms:created "2026-10-18 01:29:54.020232" ;
+<https://w3id.org/caselinker/resource/case/doj_ceos_2010_001> a ns3:CACInvestigation,
+        ns1:EnduringEntity ;
+    rdfs:label "Case doj_ceos_2010_001" ;
+    dcterms:created "2026-11-10T18:42:09.052472"^^xsd:dateTime ;
+    dcterms:date "2010-03-16"^^xsd:date ;
     dcterms:identifier "doj_ceos_2010_001" ;
-    dcterms:modified "2026-10-18T19:02:41.277323" ;
+    dcterms:modified "2026-11-10T18:42:09.052472"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/provenance> ;
     dcterms:source <https://www.justice.gov/archives/opa/pr/georgia-man-pleads-guilty-production-child-pornography-using-hidden-videos-store-bathrooms>,
         "DOJ CEOS" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/atlanta>,
-        <https://w3id.org/caselinker/resource/location/cobb-county>,
-        <https://w3id.org/caselinker/resource/location/ga>,
-        <https://w3id.org/caselinker/resource/location/georgia>,
-        <https://w3id.org/caselinker/resource/location/kennesaw> ;
-    ns2:currentPhase <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/phase/pleaded-guilty> ;
-    ns2:hasPhase <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/phase/pleaded-guilty> ;
-    ns2:hasStep <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/admission/1>,
-        <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/admission/2>,
-        <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/event/csam>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/location/cobb-county>,
+        <https://w3id.org/caselinker/resource/location/atlanta-city-ga>,
+        <https://w3id.org/caselinker/resource/location/georgia-ga>,
+        <https://w3id.org/caselinker/resource/location/georgia-ga-13>,
+        <https://w3id.org/caselinker/resource/location/kennesaw-city-ga> ;
+    ns3:currentPhase <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/phase/pleaded-guilty> ;
+    ns3:hasPhase <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/phase/pleaded-guilty> ;
+    ns3:hasStep <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/event/csam>,
         <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/event/production>,
         <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/legal-step/pleaded-guilty> ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/cobb-county-police-department>,
-        <https://w3id.org/caselinker/resource/agency/us-secret-service> ;
-    ns4:mentionsLocation <https://w3id.org/caselinker/resource/location/atlanta>,
-        <https://w3id.org/caselinker/resource/location/cobb-county>,
-        <https://w3id.org/caselinker/resource/location/ga>,
-        <https://w3id.org/caselinker/resource/location/georgia>,
-        <https://w3id.org/caselinker/resource/location/kennesaw> .
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/usss>,
+        <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/agency/cobb-county-police-department> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/admission/1>,
+        <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/admission/2> .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/admission/1/extraction-confidence> a ns1:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/admission/1> ;
+    ns1:hasConfidence 0.65 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/admission/2/extraction-confidence> a ns1:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/2/extraction-confidence" ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/admission/2> ;
+    ns1:hasConfidence 0.65 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/person/offender/1/age> a ns5:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/person/offender/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 38.0 .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/role/victim/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/victim/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/person/victim/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/role/victim/1> .
+
+<https://w3id.org/caselinker/resource/agency/usss> a ns1:OrganizationLikeEntity,
+        ns6:FederalAgency ;
+    rdfs:label "U.S. Secret Service" ;
+    ns2:name "U.S. Secret Service" .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/agency/cobb-county-police-department> a ns1:OrganizationLikeEntity,
+        ns6:LocalAgency ;
+    rdfs:label "Cobb County Police Department" ;
+    ns2:name "Cobb County Police Department" .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
+    rdfs:label "child pornography" .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/charge/2> a ns4:CSAM_Production,
+        ns4:CriminalCharge ;
+    rdfs:label "production of child pornography" .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/event/csam> a ns3:CSAMIncident,
+        ns1:Event ;
+    rdfs:label "CSAMIncident · event/csam" .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/event/production> a ns1:Event,
+        <https://cacontology.projectvic.org/production#ProductionOffense> ;
+    rdfs:label "Production Offense · event/production" .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/event/trust-violation> a ns7:CustodialAbuse,
+        ns7:TrustViolation ;
+    rdfs:label "Custodial Abuse · event/trust-violation" ;
+    ns7:perpetratedBy <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/role/offender/1> ;
+    ns7:violatesRelationship <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/relationship/mother> .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/legal-proceeding> a ns1:Event,
+        ns1:LegalEvent,
+        ns4:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns4:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/charge/1>,
+        <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/charge/2> .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/legal-step/pleaded-guilty> a ns1:Event,
+        ns1:LegalEvent,
+        ns4:LegalProceeding,
+        ns4:PleaBargaining ;
+    rdfs:label "Plea Bargaining · legal-step/pleaded-guilty" .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/location/cobb-county> a ns1:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Cobb County" ;
+    ns2:name "Cobb County" .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/relationship/mother> a ns7:CustodialRelationship,
+        ns7:FamilialRelationship ;
+    rdfs:label "Custodial Relationship · relationship/mother" ;
+    ns7:involvesChild <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/role/victim/1> ;
+    ns7:involvesCustodian <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/role/offender/1> ;
+    ns7:relationshipType "parent" ;
+    ns2:isDirectional true ;
+    ns2:source <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/role/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/role/victim/1> .
+
+<https://w3id.org/caselinker/resource/location/atlanta-city-ga> a ns1:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Atlanta city" ;
+    dcterms:identifier "fips:1304000" ;
+    skos:altLabel "Atlanta" ;
+    ns2:name "Atlanta city" .
+
+<https://w3id.org/caselinker/resource/location/georgia-ga> a ns1:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Georgia" ;
+    dcterms:identifier "fips:13" ;
+    skos:altLabel "Ga." ;
+    ns2:name "Georgia" .
+
+<https://w3id.org/caselinker/resource/location/georgia-ga-13> a ns1:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Georgia" ;
+    dcterms:identifier "fips:13" ;
+    ns2:name "Georgia" .
+
+<https://w3id.org/caselinker/resource/location/kennesaw-city-ga> a ns1:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Kennesaw city" ;
+    dcterms:identifier "fips:1343192" ;
+    skos:altLabel "Kennesaw" ;
+    ns2:name "Kennesaw city" .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
+    rdfs:label "produced of boys in public restrooms, along with thousands of additional images of child pornography that [PERSON] ha..." ;
+    dcterms:source <https://www.justice.gov/archives/opa/pr/georgia-man-pleads-guilty-production-child-pornography-using-hidden-videos-store-bathrooms> ;
+    ns2:description "produced of boys in public restrooms, along with thousands of additional images of child pornography that [PERSON] had downloaded from the Internet" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/admission/2> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "would also enter and secretly videotape the boys" ;
     dcterms:source <https://www.justice.gov/archives/opa/pr/georgia-man-pleads-guilty-production-child-pornography-using-hidden-videos-store-bathrooms> ;
-    ns8:description "would also enter and secretly videotape the boys" ;
-    ns4:admissionContext "tractions. When Wasley observed young boys entering a restroom unaccompanied by an adult, he admitted he would also enter and secretly vi..." ;
-    ns4:admissionFrame "he_admitted_paraphrase" ;
-    ns4:admissionTheme "other" ;
-    ns4:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/role/offender/1> ;
-    ns4:evidenceTier "press_release_stated" ;
-    ns4:quoteType "paraphrase" .
+    ns2:description "would also enter and secretly videotape the boys" .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/phase/pleaded-guilty> a ns7:Phase,
-        ns3:PreTrialPhase ;
-    ns2:hasPhaseBeginPoint "2010-03-16T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/location/atlanta> a ns7:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Atlanta" ;
-    ns8:name "Atlanta" .
+<https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/phase/pleaded-guilty> a ns1:Phase,
+        ns4:PreTrialPhase ;
+    rdfs:label "Pre Trial Phase · phase/pleaded-guilty" .
 
-<https://w3id.org/caselinker/resource/location/cobb-county> a ns7:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Cobb County" ;
-    ns8:name "Cobb County" .
+<https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/role/victim/1> a ns3:VictimRole ;
+    rdfs:label "Victim Role · role/victim/1" .
 
-<https://w3id.org/caselinker/resource/location/ga> a ns7:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Ga." ;
-    ns8:name "Ga." .
-
-<https://w3id.org/caselinker/resource/location/georgia> a ns7:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Georgia" ;
-    ns8:name "Georgia" .
-
-<https://w3id.org/caselinker/resource/location/kennesaw> a ns7:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Kennesaw" ;
-    ns8:name "Kennesaw" .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/event/csam> a ns2:CSAMIncident,
-        ns7:Event ;
-    ns2:producesArtifact <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/admission/1> ;
-    ns8:hasFacet <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/facet/csam> .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/event/production> a ns7:Event,
-        <https://cacontology.projectvic.org/production#ProductionOffense> ;
-    ns2:producesArtifact <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/admission/1> ;
-    ns8:hasFacet <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/facet/production> .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2010-03-16T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/event/csam>,
-        <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/event/production> ;
-    ns7:hasRole <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/person/offender/1> .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
-    rdfs:label "produced of boys in public restrooms, along with thousands of additional images of child pornography that Wasley had ..." ;
-    dcterms:source <https://www.justice.gov/archives/opa/pr/georgia-man-pleads-guilty-production-child-pornography-using-hidden-videos-store-bathrooms> ;
-    ns8:description "produced of boys in public restrooms, along with thousands of additional images of child pornography that Wasley had downloaded from the Internet" ;
-    ns4:admissionContext "linked to Wasley. A subsequent search of Wasley’s home yielded a computer containing six videos Wasley admitted he produced of boys in pu..." ;
-    ns4:admissionFrame "admitted_he_she" ;
-    ns4:admissionTheme "harm_conduct",
-        "tech_use" ;
-    ns4:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/role/offender/1> ;
-    ns4:evidenceTier "press_release_stated" ;
-    ns4:quoteType "paraphrase" .
+<https://w3id.org/caselinker/resource/case/doj_ceos_2010_001/role/offender/1> a ns3:OffenderRole ;
+    rdfs:label "Offender Role · role/offender/1" .
 

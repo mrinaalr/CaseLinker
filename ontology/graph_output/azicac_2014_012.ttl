@@ -1,18 +1,20 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/production#> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org/core#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://cacontology.projectvic.org/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/azicac_2014_012> a ns1:CACInvestigation,
-        ns6:EnduringEntity ;
-    dcterms:created "2026-10-17 21:42:21.613310" ;
+        ns2:EnduringEntity ;
+    rdfs:label "Case azicac_2014_012" ;
+    dcterms:created "2026-11-10T09:14:06.700214"^^xsd:dateTime ;
+    dcterms:date "2014-11"^^xsd:gYearMonth ;
     dcterms:identifier "azicac_2014_012" ;
-    dcterms:modified "2026-10-18T19:02:51.645072" ;
+    dcterms:modified "2026-11-10T09:14:06.700214"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/azicac_2014_012/provenance> ;
     dcterms:source <https://www.azicac.org/cases-and-arrests/>,
         "AZICAC" ;
@@ -21,63 +23,78 @@
     ns1:hasStep <https://w3id.org/caselinker/resource/case/azicac_2014_012/event/hands-on>,
         <https://w3id.org/caselinker/resource/case/azicac_2014_012/event/possession>,
         <https://w3id.org/caselinker/resource/case/azicac_2014_012/legal-proceeding> ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/icac> .
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/icac> .
 
-<https://w3id.org/caselinker/resource/case/azicac_2014_012/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2014-11-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/azicac_2014_012/event/hands-on>,
-        <https://w3id.org/caselinker/resource/case/azicac_2014_012/event/possession> ;
-    ns1:perpetratorRegisteredSexOffender true ;
-    ns6:hasRole <https://w3id.org/caselinker/resource/case/azicac_2014_012/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/azicac_2014_012/assessment/semantic/exploitive-positions> a ns2:AssessmentResult ;
+    rdfs:label "semantic similarity · exploitive_positions" ;
+    dcterms:subject <https://cacontology.projectvic.org/custodial#PositionOfTrust> ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/azicac_2014_012/narrative> ;
+    ns2:hasConfidence 0.5521 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/azicac_2014_012/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2014-11-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/azicac_2014_012/event/hands-on>,
-        <https://w3id.org/caselinker/resource/case/azicac_2014_012/event/possession> ;
-    ns6:hasRole <https://w3id.org/caselinker/resource/case/azicac_2014_012/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/azicac_2014_012/assessment/semantic/possession-csam> a ns2:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns1:CSAMIncident ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/azicac_2014_012/narrative> ;
+    ns2:hasConfidence 0.5854 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/agency/icac> a ns6:OrganizationLikeEntity,
+<https://w3id.org/caselinker/resource/case/azicac_2014_012/role/offender/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/azicac_2014_012/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/azicac_2014_012/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/azicac_2014_012/role/registered-sex-offender/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/registered-sex-offender/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/azicac_2014_012/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/azicac_2014_012/role/registered-sex-offender/1> .
+
+<https://w3id.org/caselinker/resource/platform/facebook> a ns2:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "Facebook" ;
+    ns3:name "Facebook" .
+
+<https://w3id.org/caselinker/resource/agency/icac> a ns2:OrganizationLikeEntity,
         <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
-    rdfs:label "ICAC" .
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns3:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/case/azicac_2014_012/charge/1> a ns5:CSAM_Possession,
         ns5:CriminalCharge ;
-    rdfs:label "child pornography" ;
-    ns5:indictmentCounts 2 .
-
-<https://w3id.org/caselinker/resource/case/azicac_2014_012/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/azicac_2014_012/legal-proceeding> a ns6:Event,
-        ns6:LegalEvent,
-        ns5:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): (non-bondable)" ;
-    ns5:bailStatus "held_without_bail" ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/azicac_2014_012/charge/1> ;
-    ns5:hasProceedingBeginPoint "2014-11-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/azicac_2014_012/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/azicac_2014_012/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns2:victimAge 4 .
-
-<https://w3id.org/caselinker/resource/case/azicac_2014_012/phase/charged> a ns1:LegalProcessPhase,
-        ns6:Phase ;
-    ns1:hasPhaseBeginPoint "2014-11-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/platform/facebook> a ns6:DigitalSystemEntity,
-        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "Facebook" .
+    rdfs:label "child pornography" .
 
 <https://w3id.org/caselinker/resource/case/azicac_2014_012/event/hands-on> a ns1:ChildSexualAbuseEvent,
-        ns6:Event ;
-    ns1:severityLevel 3 ;
-    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/facebook> .
+        ns2:Event ;
+    rdfs:label "Child Sexual Abuse Event · event/hands-on" .
 
 <https://w3id.org/caselinker/resource/case/azicac_2014_012/event/possession> a ns1:CSAMIncident,
-        ns6:Event ;
-    ns1:severityLevel 3 ;
-    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/facebook> ;
-    ns4:hasFacet <https://w3id.org/caselinker/resource/case/azicac_2014_012/facet/possession> .
+        ns2:Event ;
+    rdfs:label "CSAMIncident · event/possession" .
+
+<https://w3id.org/caselinker/resource/case/azicac_2014_012/legal-proceeding> a ns2:Event,
+        ns2:LegalEvent,
+        ns5:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    rdfs:comment "Pretrial detention facility (not a sentence): (non-bondable)" ;
+    ns5:bailStatus "held_without_bail" ;
+    ns5:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/azicac_2014_012/charge/1> .
+
+<https://w3id.org/caselinker/resource/case/azicac_2014_012/role/offender/1> a ns5:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/azicac_2014_012/role/registered-sex-offender/1> a <https://cacontology.projectvic.org/sex-offender-registry#RegisteredSexOffender> ;
+    rdfs:label "Registered Sex Offender · role/registered-sex-offender/1" .
+
+<https://w3id.org/caselinker/resource/case/azicac_2014_012/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/azicac_2014_012/phase/charged> a ns1:LegalProcessPhase,
+        ns2:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
 

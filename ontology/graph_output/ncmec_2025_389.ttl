@@ -1,96 +1,91 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://w3id.org/caselinker/resource/vocab/> .
+@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns4: <https://cacontology.projectvic.org/core#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://cacontology.projectvic.org/detection#> .
+@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_389/admission/1/extraction-confidence> a ns4:AssessmentResult ;
-    ns4:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_389/admission/1> ;
-    ns4:generatedBy <https://w3id.org/caselinker/resource/case/ncmec_2025_389> ;
-    ns4:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_389/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2025-03-24T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_389/event/possession> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2025_389/person/victim/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_389> a ns1:CACInvestigation,
         ns4:EnduringEntity ;
-    dcterms:created "2026-10-18 00:01:19.675203" ;
+    rdfs:label "Case ncmec_2025_389" ;
+    dcterms:created "2026-11-10T16:34:27.862035"^^xsd:dateTime ;
+    dcterms:date "2025-03-24"^^xsd:date ;
     dcterms:identifier "ncmec_2025_389" ;
-    dcterms:modified "2026-10-18 00:01:19.675203" ;
+    dcterms:modified "2026-11-12T01:51:52.541173"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2025_389/provenance> ;
     dcterms:source <https://www.lex18.com/news/covering-kentucky/fcps-employee-facing-child-pornography-charges-appears-in-court>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/fayette-county>,
-        <https://w3id.org/caselinker/resource/location/ky>,
-        <https://w3id.org/caselinker/resource/location/lexington> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_389/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_389/event/possession>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2025_389/location/fayette-county>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_389/location/lexington>,
+        <https://w3id.org/caselinker/resource/location/kentucky-ky> ;
+    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_389/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_389/legal-proceeding> ;
-    ns2:mentionsLocation <https://w3id.org/caselinker/resource/location/fayette-county>,
-        <https://w3id.org/caselinker/resource/location/ky>,
-        <https://w3id.org/caselinker/resource/location/lexington> .
+    ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2025_389/admission/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_389/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_389/admission/1/extraction-confidence> a ns4:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns4:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_389/admission/1> ;
+    ns4:hasConfidence 0.65 ;
+    ns4:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_389/person/offender/1/age> a ns5:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2025_389/person/offender/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 42.0 .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_389/role/offender/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2025_389/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2025_389/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_389/charge/1> a ns2:CSAM_Possession,
+        ns2:CriminalCharge ;
     rdfs:label "child pornography" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_389/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_389/legal-proceeding> a ns4:Event,
         ns4:LegalEvent,
-        ns5:LegalProceeding ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_389/charge/1> ;
-    ns5:hasProceedingBeginPoint "2025-03-24T00:00:00Z"^^xsd:dateTimeStamp .
+        ns2:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns2:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_389/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_389/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns6:ageEstimate 42 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_389/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_389/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2025-03-24T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_389/event/possession> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2025_389/person/offender/1> .
-
-<https://w3id.org/caselinker/resource/location/fayette-county> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2025_389/location/fayette-county> a ns4:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Fayette County" ;
     ns3:name "Fayette County" .
 
-<https://w3id.org/caselinker/resource/location/ky> a ns4:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Ky." ;
-    ns3:name "Ky." .
-
-<https://w3id.org/caselinker/resource/location/lexington> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2025_389/location/lexington> a ns4:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Lexington" ;
     ns3:name "Lexington" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2025_389/role/offender/1> a ns2:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_389/event/possession> .
+
+<https://w3id.org/caselinker/resource/location/kentucky-ky> a ns4:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Kentucky" ;
+    dcterms:identifier "fips:21" ;
+    skos:altLabel "Ky." ;
+    ns3:name "Kentucky" .
+
 <https://w3id.org/caselinker/resource/case/ncmec_2025_389/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "the possession of child sexual assault images and videos he \"acquired online and had saved to a hard drive or device ..." ;
     dcterms:source <https://www.lex18.com/news/covering-kentucky/fcps-employee-facing-child-pornography-charges-appears-in-court> ;
-    ns2:admissionContext "of 12. William Adam Lyle, 42, appeared virtually before a judge to plead not guilty. An arrest citation revealed Lyle admitted to the pos..." ;
-    ns2:admissionFrame "admitted_to" ;
-    ns2:admissionTheme "harm_conduct",
-        "tech_use" ;
-    ns2:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/ncmec_2025_389/role/offender/1> ;
-    ns2:evidenceTier "press_release_stated" ;
-    ns2:quoteType "paraphrase" ;
     ns3:description "the possession of child sexual assault images and videos he \"acquired online and had saved to a hard drive or device and uploaded to an electronic service based cloud belonging to himself" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_389/event/possession> a ns1:CSAMIncident,
         ns4:Event ;
-    ns1:producesArtifact <https://w3id.org/caselinker/resource/case/ncmec_2025_389/admission/1> ;
-    ns1:severityLevel 3 ;
-    ns3:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2025_389/facet/possession> .
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns1:severityLevel 3 .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2025_389/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_389> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2025_389/provenance> .

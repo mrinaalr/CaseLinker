@@ -1,68 +1,78 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/core#> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns6: <https://cacontology.projectvic.org/detection#> .
+@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_126> a ns1:CACInvestigation,
-        ns2:EnduringEntity ;
-    dcterms:created "2026-10-17 21:51:20.921199" ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case ncmec_2022_126" ;
+    dcterms:created "2026-11-10T09:17:47.980392"^^xsd:dateTime ;
+    dcterms:date "2022-04-29"^^xsd:date ;
     dcterms:identifier "ncmec_2022_126" ;
-    dcterms:modified "2026-10-17 21:51:20.921199" ;
+    dcterms:modified "2026-11-10T09:17:47.980392"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2022_126/provenance> ;
     dcterms:source <https://www.fontanaheraldnews.com/news/fontana-teenager-is-arrested-on-child-pornography-charges-on-april-6/article_0cb03b62-b6a6-11ec-8bcf-278803a42d7e.html>,
         "NCMEC" ;
     ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_126/phase/booked> ;
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_126/phase/booked> ;
     ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_126/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_126/legal-proceeding> ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/fontana-police-department>,
-        <https://w3id.org/caselinker/resource/agency/icac> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2022_126/agency/fontana-police-department> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_126/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2022-04-29T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_126/event/possession> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_126/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_126/person/offender/1/age> a ns3:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns3:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2022_126/person/offender/1> ;
+    ns3:concernsAgeQuality ns3:Age ;
+    ns3:hasAgeInYears 18.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_126/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2022-04-29T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_126/event/possession> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_126/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_126/role/offender/1/has-role> a ns4:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns4:isDirectional true ;
+    ns4:kindOfRelationship "Has_Role" ;
+    ns4:source <https://w3id.org/caselinker/resource/case/ncmec_2022_126/person/offender/1> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/ncmec_2022_126/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/fontana-police-department> a ns3:LocalAgency .
+<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns4:name "ICAC Task Force" .
 
-<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_126/agency/fontana-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns5:LocalAgency ;
+    rdfs:label "Fontana Police Department" ;
+    ns4:name "Fontana Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_126/charge/1> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_126/charge/1> a ns2:CSAM_Possession,
+        ns2:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_126/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_126/legal-proceeding> a ns2:Event,
-        ns2:LegalEvent,
-        ns4:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_126/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        ns2:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): booked at West Valley Detention Center" ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_126/charge/1> ;
-    ns4:hasProceedingBeginPoint "2022-04-29T00:00:00Z"^^xsd:dateTimeStamp .
+    ns2:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_126/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_126/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns6:ageEstimate 18 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_126/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_126/phase/booked> a ns1:InitialPhase,
-        ns2:Phase ;
-    ns1:hasPhaseBeginPoint "2022-04-29T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_126/role/offender/1> a ns2:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_126/event/possession> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_126/event/possession> a ns1:CSAMIncident,
-        ns2:Event ;
-    ns5:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2022_126/facet/possession> .
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/possession" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2022_126/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_126> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2022_126/provenance> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_126/phase/booked> a ns1:InitialPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Initial Phase · phase/booked" .
+

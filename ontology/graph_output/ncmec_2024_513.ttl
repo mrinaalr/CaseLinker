@@ -1,80 +1,82 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns4: <https://cacontology.projectvic.org/core#> .
-@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns6: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns7: <https://cacontology.projectvic.org/detection#> .
+@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_513> a ns2:CACInvestigation,
-        ns4:EnduringEntity ;
-    dcterms:created "2026-10-17 23:04:30.688511" ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case ncmec_2024_513" ;
+    dcterms:created "2026-11-10T21:26:20.461455"^^xsd:dateTime ;
+    dcterms:date "2024-07-26"^^xsd:date ;
     dcterms:identifier "ncmec_2024_513" ;
-    dcterms:modified "2026-10-17 23:04:30.688511" ;
+    dcterms:modified "2026-11-12T00:35:28.822564"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_513/provenance> ;
     dcterms:source <https://www.metrowestdailynews.com/story/news/courts/2024/07/26/marlborough-ma-man-faces-child-pornography-charges-for-second-time-in-month/74534347007/>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/marlborough> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2024_513/location/marlborough> ;
     ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_513/phase/charged> ;
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_513/phase/charged> ;
     ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_513/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_513/legal-proceeding> ;
-    ns2:investigationStatus "unknown" ;
-    ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/district-attorneys-office>,
-        <https://w3id.org/caselinker/resource/agency/middlesex-district-attorneys-office> ;
-    ns6:mentionsLocation <https://w3id.org/caselinker/resource/location/marlborough> .
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_513/agency/district-attorneys-office>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_513/agency/middlesex-district-attorneys-office> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_513/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2024-07-26T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_513/event/possession> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_513/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_513/person/offender/1/age> a ns3:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns3:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_513/person/offender/1> ;
+    ns3:concernsAgeQuality ns3:Age ;
+    ns3:hasAgeInYears 25.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_513/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2024-07-26T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_513/event/possession> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_513/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_513/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_513/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_513/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/district-attorneys-office> a ns1:StateAgency .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_513/agency/district-attorneys-office> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns4:StateAgency ;
+    rdfs:label "District Attorney's Office" ;
+    ns1:name "District Attorney's Office" .
 
-<https://w3id.org/caselinker/resource/agency/middlesex-district-attorneys-office> a ns4:OrganizationLikeEntity,
-        ns1:StateAgency ;
-    rdfs:label "Middlesex District Attorney's Office" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_513/agency/middlesex-district-attorneys-office> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns4:StateAgency ;
+    rdfs:label "Middlesex District Attorney's Office" ;
+    ns1:name "Middlesex District Attorney's Office" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_513/charge/1> a ns3:CSAM_Possession,
-        ns3:CriminalCharge ;
-    rdfs:label "possession of child pornography" ;
-    ns3:indictmentCounts 2 .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_513/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
+    rdfs:label "possession of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_513/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_513/legal-proceeding> a ns4:Event,
-        ns4:LegalEvent,
-        ns3:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_513/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        ns5:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): held without bail" ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_513/charge/1> ;
-    ns3:hasProceedingBeginPoint "2024-07-26T00:00:00Z"^^xsd:dateTimeStamp .
+    ns5:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_513/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_513/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns7:ageEstimate 25 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_513/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_513/phase/charged> a ns2:LegalProcessPhase,
-        ns4:Phase ;
-    ns2:hasPhaseBeginPoint "2024-07-26T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/marlborough> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_513/location/marlborough> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Marlborough" ;
-    ns5:name "Marlborough" .
+    ns1:name "Marlborough" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_513/role/offender/1> a ns5:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_513/event/possession> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_513/event/possession> a ns2:CSAMIncident,
-        ns4:Event ;
-    ns5:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2024_513/facet/possession> .
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/possession" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2024_513/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_513> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2024_513/provenance> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_513/phase/charged> a ns2:LegalProcessPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Legal Process Phase · phase/charged" .
+

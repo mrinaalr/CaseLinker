@@ -1,105 +1,110 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns3: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns4: <https://cacontology.projectvic.org/core#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns7: <https://cacontology.projectvic.org/production#> .
-@prefix ns8: <https://cacontology.projectvic.org/us/ncmec#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns6: <https://cacontology.projectvic.org/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_615/admission/1/extraction-confidence> a ns4:AssessmentResult ;
-    ns4:assesses <https://w3id.org/caselinker/resource/case/ncmec_2023_615/admission/1> ;
-    ns4:generatedBy <https://w3id.org/caselinker/resource/case/ncmec_2023_615> ;
-    ns4:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_615/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_615/event/possession> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_615/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/agency/state-police-department> a ns2:StateAgency .
-
 <https://w3id.org/caselinker/resource/case/ncmec_2023_615> a ns1:CACInvestigation,
-        ns4:EnduringEntity ;
-    dcterms:created "2026-10-17 22:21:35.660491" ;
+        ns6:EnduringEntity ;
+    rdfs:label "Case ncmec_2023_615" ;
+    dcterms:created "2026-11-10T10:05:59.001358"^^xsd:dateTime ;
+    dcterms:date "2023-01"^^xsd:gYearMonth ;
     dcterms:identifier "ncmec_2023_615" ;
-    dcterms:modified "2026-10-17 22:21:35.660491" ;
+    dcterms:modified "2026-11-10T10:05:59.001358"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2023_615/provenance> ;
     dcterms:source <https://www.welchnews.com/2023/01/06/child-pornography-cybertip-leads-to-welch-mans-arrest/>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/wva> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2023_615/location/wva> ;
     ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_615/phase/arrested> ;
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_615/phase/arrested> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_615/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2023_615/cybertip>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2023_615/event/possession>,
+    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_615/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_615/legal-proceeding> ;
-    ns1:investigationStatus "unknown" ;
-    ns1:usesMethod <https://w3id.org/caselinker/resource/case/ncmec_2023_615/tech/cybertipline> ;
-    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
-        <https://w3id.org/caselinker/resource/agency/state-police-department> ;
-    ns3:mentionsLocation <https://w3id.org/caselinker/resource/location/wva> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2023_615/agency/state-police-department> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2023_615/admission/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_615/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_615/admission/1/extraction-confidence> a ns6:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns6:assesses <https://w3id.org/caselinker/resource/case/ncmec_2023_615/admission/1> ;
+    ns6:hasConfidence 0.65 ;
+    ns6:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_615/person/victim/1/age> a ns3:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/victim/1/age" ;
+    ns3:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2023_615/person/victim/1> ;
+    ns3:concernsAgeQuality ns3:Age ;
+    ns3:hasAgeInYears 4.0 .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_615/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2023_615/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2023_615/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_615/role/victim/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/victim/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2023_615/person/victim/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2023_615/role/victim/1> .
+
+<https://w3id.org/caselinker/resource/agency/ncmec> a ns6:OrganizationLikeEntity,
+        ns5:FederalAgency ;
+    rdfs:label "National Center for Missing and Exploited Children" ;
+    skos:altLabel "NCMEC" ;
+    ns2:name "National Center for Missing and Exploited Children" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_615/agency/state-police-department> a ns6:OrganizationLikeEntity,
+        ns5:StateAgency ;
+    rdfs:label "State Police Department" ;
+    ns2:name "State Police Department" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_615/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_615/cybertip> a ns8:NCMECCybertipReport ;
-    ns8:supportedBy <https://w3id.org/caselinker/resource/agency/ncmec> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_615/legal-proceeding> a ns6:Event,
+        ns6:LegalEvent,
+        ns4:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns4:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_615/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_615/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_615/legal-proceeding> a ns4:Event,
-        ns4:LegalEvent,
-        ns5:LegalProceeding ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_615/charge/1> ;
-    ns5:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_615/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_615/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns7:victimAge 4 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_615/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_615/event/possession> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_615/person/offender/1> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_615/tech/cybertipline> a ns8:NCMECCybertipReport ;
-    rdfs:label "CyberTipline" .
-
-<https://w3id.org/caselinker/resource/agency/ncmec> a ns2:FederalAgency .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_615/phase/arrested> a ns1:InitialPhase,
-        ns4:Phase ;
-    ns1:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/wva> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2023_615/location/wva> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "W.va." ;
-    ns6:name "W.va." .
+    ns2:name "W.va." .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_615/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_615/role/offender/1> a ns4:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_615/event/possession> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_615/role/victim/1> a ns1:VictimRole ;
+    rdfs:label "Victim Role · role/victim/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_615/event/possession> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_615/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "creating the account and that his reasoning was to ‘keep his wife from finding out about his porn addiction" ;
     dcterms:source <https://www.welchnews.com/2023/01/06/child-pornography-cybertip-leads-to-welch-mans-arrest/> ;
-    ns3:admissionContext "several electronic devices before taking Morgan to the Welch Detachment for an interview. During the interview, Trooper Jones said Morgan..." ;
-    ns3:admissionFrame "admitted_to" ;
-    ns3:admissionTheme "harm_conduct",
-        "recidivism_escalation",
-        "tech_use" ;
-    ns3:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/ncmec_2023_615/role/offender/1> ;
-    ns3:evidenceTier "press_release_stated" ;
-    ns3:quoteType "paraphrase" ;
-    ns6:description "creating the account and that his reasoning was to ‘keep his wife from finding out about his porn addiction" .
+    ns2:description "creating the account and that his reasoning was to ‘keep his wife from finding out about his porn addiction" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_615/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_615/phase/arrested> a ns1:InitialPhase,
+        ns6:Phase ;
+    rdfs:label "Initial Phase · phase/arrested" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_615/event/possession> a ns1:CSAMIncident,
-        ns4:Event ;
-    ns1:producesArtifact <https://w3id.org/caselinker/resource/case/ncmec_2023_615/admission/1> ;
-    ns6:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2023_615/facet/possession> .
+        ns6:Event ;
+    rdfs:label "CSAMIncident · event/possession" .
 
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_615> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2023_615/provenance> .

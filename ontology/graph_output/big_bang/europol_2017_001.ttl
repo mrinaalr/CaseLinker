@@ -1,26 +1,28 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns1: <https://cacontology.projectvic.org/core#> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns5: <https://cacontology.projectvic.org/custodial#> .
-@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns7: <https://cacontology.projectvic.org/core#> .
-@prefix ns8: <https://cacontology.projectvic.org/detection#> .
+@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns4: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns7: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/europol_2017_001> a ns2:CACInvestigation,
-        ns7:EnduringEntity ;
-    dcterms:created "2026-10-18 04:25:58.216633" ;
+        ns1:EnduringEntity ;
+    rdfs:label "Case europol_2017_001" ;
+    dcterms:created "2026-11-11T14:12:01.806377"^^xsd:dateTime ;
+    dcterms:date "2017-02-03"^^xsd:date ;
     dcterms:identifier "europol_2017_001" ;
-    dcterms:modified "2026-10-18 04:25:58.216633" ;
+    dcterms:modified "2026-11-11T14:12:01.806377"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/europol_2017_001/provenance> ;
     dcterms:source <https://www.europol.europa.eu/media-press/newsroom/news/serial-child-sex-offender-convicted-in-uk>,
         "EUROPOL" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/guernsey>,
-        <https://w3id.org/caselinker/resource/location/netherlands>,
-        <https://w3id.org/caselinker/resource/location/spain>,
-        <https://w3id.org/caselinker/resource/location/thailand> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/europol_2017_001/location/guernsey>,
+        <https://w3id.org/caselinker/resource/case/europol_2017_001/location/netherlands>,
+        <https://w3id.org/caselinker/resource/case/europol_2017_001/location/spain>,
+        <https://w3id.org/caselinker/resource/case/europol_2017_001/location/thailand> ;
     ns2:currentPhase <https://w3id.org/caselinker/resource/case/europol_2017_001/phase/convicted> ;
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/europol_2017_001/phase/convicted> ;
     ns2:hasStep <https://w3id.org/caselinker/resource/case/europol_2017_001/event/multi-jurisdiction>,
@@ -28,105 +30,135 @@
         <https://w3id.org/caselinker/resource/case/europol_2017_001/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/europol_2017_001/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/europol_2017_001/legal-step/convicted> ;
-    ns2:investigationStatus "unknown" ;
-    ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/national-crime-agency>,
-        <https://w3id.org/caselinker/resource/agency/uks-national-crime-agency> ;
-    ns4:mentionsLocation <https://w3id.org/caselinker/resource/location/guernsey>,
-        <https://w3id.org/caselinker/resource/location/netherlands>,
-        <https://w3id.org/caselinker/resource/location/spain>,
-        <https://w3id.org/caselinker/resource/location/thailand> .
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/national-crime-agency>,
+        <https://w3id.org/caselinker/resource/agency/uks-national-crime-agency> .
 
-<https://w3id.org/caselinker/resource/agency/national-crime-agency> a ns7:OrganizationLikeEntity,
-        ns1:LocalAgency ;
-    rdfs:label "National Crime Agency" .
+<https://w3id.org/caselinker/resource/case/europol_2017_001/assessment/semantic/exploitive-positions> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · exploitive_positions" ;
+    dcterms:subject ns4:PositionOfTrust ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/europol_2017_001/narrative> ;
+    ns1:hasConfidence 0.4745 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/agency/uks-national-crime-agency> a ns7:OrganizationLikeEntity,
-        ns1:LocalAgency ;
-    rdfs:label "UK's National Crime Agency" .
+<https://w3id.org/caselinker/resource/case/europol_2017_001/assessment/semantic/registered-sex-offender> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · registered_sex_offender" ;
+    dcterms:subject <https://cacontology.projectvic.org/sex-offender-registry#RegisteredSexOffender> ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/europol_2017_001/narrative> ;
+    ns1:hasConfidence 0.506 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/europol_2017_001/charge/1> a ns6:CSAM_Possession,
-        ns6:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/europol_2017_001/person/offender/1/age> a ns3:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns3:ageSubject <https://w3id.org/caselinker/resource/case/europol_2017_001/person/offender/1> ;
+    ns3:concernsAgeQuality ns3:Age ;
+    ns3:hasAgeInYears 70.0 .
+
+<https://w3id.org/caselinker/resource/case/europol_2017_001/role/offender/1/has-role> a ns5:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns5:isDirectional true ;
+    ns5:kindOfRelationship "Has_Role" ;
+    ns5:source <https://w3id.org/caselinker/resource/case/europol_2017_001/person/offender/1> ;
+    ns5:target <https://w3id.org/caselinker/resource/case/europol_2017_001/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/europol_2017_001/role/victim/1/has-role> a ns5:Relationship ;
+    rdfs:label "Relationship · role/victim/1/has-role" ;
+    ns5:isDirectional true ;
+    ns5:kindOfRelationship "Has_Role" ;
+    ns5:source <https://w3id.org/caselinker/resource/case/europol_2017_001/person/victim/1> ;
+    ns5:target <https://w3id.org/caselinker/resource/case/europol_2017_001/role/victim/1> .
+
+<https://w3id.org/caselinker/resource/agency/national-crime-agency> a ns1:OrganizationLikeEntity,
+        ns6:LocalAgency ;
+    rdfs:label "National Crime Agency" ;
+    ns5:name "National Crime Agency" .
+
+<https://w3id.org/caselinker/resource/agency/uks-national-crime-agency> a ns1:OrganizationLikeEntity,
+        ns6:LocalAgency ;
+    rdfs:label "National Crime Agency" ;
+    ns5:name "National Crime Agency" .
+
+<https://w3id.org/caselinker/resource/case/europol_2017_001/charge/1> a ns7:CSAM_Possession,
+        ns7:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/europol_2017_001/charge/2> a ns6:CriminalCharge ;
-    rdfs:label "sexual exploitation" ;
-    ns4:chargeCluster "sexual_exploitation_unspecified" .
+<https://w3id.org/caselinker/resource/case/europol_2017_001/charge/2> a ns7:CriminalCharge ;
+    rdfs:label "sexual exploitation" .
 
-<https://w3id.org/caselinker/resource/case/europol_2017_001/event/multi-jurisdiction> a ns7:Event,
-        ns1:MultiJurisdictionalInvestigation ;
-    ns2:severityLevel 3 ;
-    ns1:crossesBorders true .
+<https://w3id.org/caselinker/resource/case/europol_2017_001/event/multi-jurisdiction> a ns1:Event,
+        ns6:MultiJurisdictionalInvestigation ;
+    rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" ;
+    ns6:crossesBorders true .
 
-<https://w3id.org/caselinker/resource/case/europol_2017_001/event/trust-violation> a ns5:AuthorityAbuse,
-        ns5:TrustViolation ;
-    ns5:violatesRelationship <https://w3id.org/caselinker/resource/case/europol_2017_001/relationship/teacher> .
+<https://w3id.org/caselinker/resource/case/europol_2017_001/event/trust-violation> a ns4:AuthorityAbuse,
+        ns4:TrustViolation ;
+    rdfs:label "Authority Abuse · event/trust-violation" ;
+    ns4:perpetratedBy <https://w3id.org/caselinker/resource/case/europol_2017_001/role/offender/1> ;
+    ns4:violatesRelationship <https://w3id.org/caselinker/resource/case/europol_2017_001/relationship/teacher> .
 
-<https://w3id.org/caselinker/resource/case/europol_2017_001/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/europol_2017_001/legal-proceeding> a ns1:Event,
+        ns1:LegalEvent,
+        ns7:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns7:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns7:hasCharge <https://w3id.org/caselinker/resource/case/europol_2017_001/charge/1>,
+        <https://w3id.org/caselinker/resource/case/europol_2017_001/charge/2> .
 
-<https://w3id.org/caselinker/resource/case/europol_2017_001/legal-proceeding> a ns7:Event,
-        ns7:LegalEvent,
-        ns6:LegalProceeding ;
-    ns6:hasCharge <https://w3id.org/caselinker/resource/case/europol_2017_001/charge/1>,
-        <https://w3id.org/caselinker/resource/case/europol_2017_001/charge/2> ;
-    ns6:hasProceedingBeginPoint "2017-02-03T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/europol_2017_001/legal-step/convicted> a ns1:Event,
+        ns1:LegalEvent,
+        ns7:LegalProceeding,
+        ns7:SentencingHearing ;
+    rdfs:label "Sentencing Hearing · legal-step/convicted" .
 
-<https://w3id.org/caselinker/resource/case/europol_2017_001/legal-step/convicted> a ns7:Event,
-        ns7:LegalEvent,
-        ns6:LegalProceeding,
-        ns6:SentencingHearing ;
-    ns6:hasProceedingBeginPoint "2017-02-03T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/europol_2017_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns8:ageEstimate 70 .
-
-<https://w3id.org/caselinker/resource/case/europol_2017_001/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/europol_2017_001/relationship/teacher> a ns5:CustodialRelationship,
-        ns5:Teacher ;
-    ns5:involvesChild <https://w3id.org/caselinker/resource/case/europol_2017_001/role/victim/1> ;
-    ns5:involvesCustodian <https://w3id.org/caselinker/resource/case/europol_2017_001/role/offender/1> ;
-    ns5:relationshipType "teacher" .
-
-<https://w3id.org/caselinker/resource/case/europol_2017_001/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2017-02-03T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/europol_2017_001/event/possession> ;
-    ns7:hasRole <https://w3id.org/caselinker/resource/case/europol_2017_001/person/offender/1> .
-
-<https://w3id.org/caselinker/resource/case/europol_2017_001/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2017-02-03T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/europol_2017_001/event/possession> ;
-    ns7:hasRole <https://w3id.org/caselinker/resource/case/europol_2017_001/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/case/europol_2017_001/phase/convicted> a ns7:Phase,
-        ns6:SentencingPhase ;
-    ns2:hasPhaseBeginPoint "2017-02-03T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/guernsey> a ns7:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/europol_2017_001/location/guernsey> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Guernsey" ;
-    ns3:name "Guernsey" .
+    ns5:name "Guernsey" .
 
-<https://w3id.org/caselinker/resource/location/netherlands> a ns7:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/europol_2017_001/location/netherlands> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Netherlands" ;
-    ns3:name "Netherlands" .
+    ns5:name "Netherlands" .
 
-<https://w3id.org/caselinker/resource/location/spain> a ns7:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/europol_2017_001/location/spain> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Spain" ;
-    ns3:name "Spain" .
+    ns5:name "Spain" .
 
-<https://w3id.org/caselinker/resource/location/thailand> a ns7:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/europol_2017_001/location/thailand> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Thailand" ;
-    ns3:name "Thailand" .
+    ns5:name "Thailand" .
+
+<https://w3id.org/caselinker/resource/case/europol_2017_001/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
+
+<https://w3id.org/caselinker/resource/case/europol_2017_001/relationship/teacher> a ns4:CustodialRelationship,
+        ns4:Teacher ;
+    rdfs:label "Custodial Relationship · relationship/teacher" ;
+    ns4:involvesChild <https://w3id.org/caselinker/resource/case/europol_2017_001/role/victim/1> ;
+    ns4:involvesCustodian <https://w3id.org/caselinker/resource/case/europol_2017_001/role/offender/1> ;
+    ns4:relationshipType "teacher" ;
+    ns5:isDirectional true ;
+    ns5:source <https://w3id.org/caselinker/resource/case/europol_2017_001/role/offender/1> ;
+    ns5:target <https://w3id.org/caselinker/resource/case/europol_2017_001/role/victim/1> .
+
+<https://w3id.org/caselinker/resource/case/europol_2017_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/europol_2017_001/phase/convicted> a ns1:Phase,
+        ns7:SentencingPhase ;
+    rdfs:label "Sentencing Phase · phase/convicted" .
 
 <https://w3id.org/caselinker/resource/case/europol_2017_001/event/possession> a ns2:CSAMIncident,
-        ns7:Event ;
-    ns2:severityLevel 3 ;
-    ns3:hasFacet <https://w3id.org/caselinker/resource/case/europol_2017_001/facet/possession> .
+        ns1:Event ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns2:severityLevel 3 .
 
+<https://w3id.org/caselinker/resource/case/europol_2017_001/role/victim/1> a ns2:VictimRole ;
+    rdfs:label "Victim Role · role/victim/1" ;
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/europol_2017_001/event/possession> .
 
-<https://w3id.org/caselinker/resource/case/europol_2017_001> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/europol_2017_001/provenance> .
+<https://w3id.org/caselinker/resource/case/europol_2017_001/role/offender/1> a ns2:OffenderRole ;
+    rdfs:label "Offender Role · role/offender/1" ;
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/europol_2017_001/event/possession> .
+

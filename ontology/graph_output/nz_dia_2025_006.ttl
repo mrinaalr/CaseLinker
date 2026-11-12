@@ -1,72 +1,89 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns4: <https://cacontology.projectvic.org/detection#> .
-@prefix ns5: <https://cacontology.projectvic.org/core#> .
-@prefix ns6: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns1: <https://cacontology.projectvic.org#> .
+@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://cacontology.projectvic.org/core#> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/nz_dia_2025_006> a ns2:CACInvestigation,
-        ns5:EnduringEntity ;
-    dcterms:created "2026-10-18 14:04:19.918912" ;
+<https://w3id.org/caselinker/resource/case/nz_dia_2025_006> a ns1:CACInvestigation,
+        ns3:EnduringEntity ;
+    rdfs:label "Case nz_dia_2025_006" ;
+    dcterms:created "2026-11-11T16:26:02.332945"^^xsd:dateTime ;
+    dcterms:date "2025-10-10"^^xsd:date ;
     dcterms:identifier "nz_dia_2025_006" ;
-    dcterms:modified "2026-10-18 14:04:19.918912" ;
+    dcterms:modified "2026-11-11T16:26:02.332945"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/nz_dia_2025_006/provenance> ;
     dcterms:source <https://www.dia.govt.nz/press.nsf/d77da9b523f12931cc256ac5000d19b6/90d13a596343e0a8cc258d1f00140215!OpenDocument>,
         "NZ DIA" ;
-    ns2:currentPhase <https://w3id.org/caselinker/resource/case/nz_dia_2025_006/phase/sentenced> ;
-    ns2:hasPhase <https://w3id.org/caselinker/resource/case/nz_dia_2025_006/phase/sentenced> ;
-    ns2:hasStep <https://w3id.org/caselinker/resource/case/nz_dia_2025_006/event/possession>,
+    ns1:currentPhase <https://w3id.org/caselinker/resource/case/nz_dia_2025_006/phase/sentenced> ;
+    ns1:hasPhase <https://w3id.org/caselinker/resource/case/nz_dia_2025_006/phase/sentenced> ;
+    ns1:hasStep <https://w3id.org/caselinker/resource/case/nz_dia_2025_006/event/possession>,
         <https://w3id.org/caselinker/resource/case/nz_dia_2025_006/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/nz_dia_2025_006/legal-step/sentenced> .
 
-<https://w3id.org/caselinker/resource/case/nz_dia_2025_006/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2025-10-10T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/nz_dia_2025_006/event/possession> ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/nz_dia_2025_006/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/nz_dia_2025_006/assessment/semantic/exploitive-positions> a ns3:AssessmentResult ;
+    rdfs:label "semantic similarity · exploitive_positions" ;
+    dcterms:subject <https://cacontology.projectvic.org/custodial#PositionOfTrust> ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/nz_dia_2025_006/narrative> ;
+    ns3:hasConfidence 0.5076 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/nz_dia_2025_006/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2025-10-10T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/nz_dia_2025_006/event/possession> ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/nz_dia_2025_006/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/nz_dia_2025_006/assessment/semantic/possession-csam> a ns3:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns1:CSAMIncident ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/nz_dia_2025_006/narrative> ;
+    ns3:hasConfidence 0.5695 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/nz_dia_2025_006/charge/1> a ns1:CriminalCharge ;
-    rdfs:label "sexual exploitation" ;
-    ns3:chargeCluster "sexual_exploitation_unspecified" .
+<https://w3id.org/caselinker/resource/case/nz_dia_2025_006/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/nz_dia_2025_006/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 41.0 .
 
-<https://w3id.org/caselinker/resource/case/nz_dia_2025_006/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/nz_dia_2025_006/role/offender/1/has-role> a ns5:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns5:isDirectional true ;
+    ns5:kindOfRelationship "Has_Role" ;
+    ns5:source <https://w3id.org/caselinker/resource/case/nz_dia_2025_006/person/offender/1> ;
+    ns5:target <https://w3id.org/caselinker/resource/case/nz_dia_2025_006/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/nz_dia_2025_006/legal-proceeding> a ns5:Event,
-        ns5:LegalEvent,
-        ns1:LegalProceeding ;
-    ns1:hasCharge <https://w3id.org/caselinker/resource/case/nz_dia_2025_006/charge/1> ;
-    ns1:hasProceedingBeginPoint "2025-10-10T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:resultsSentence <https://w3id.org/caselinker/resource/case/nz_dia_2025_006/sentence/1> .
+<https://w3id.org/caselinker/resource/case/nz_dia_2025_006/charge/1> a ns2:CriminalCharge ;
+    rdfs:label "sexual exploitation" .
 
-<https://w3id.org/caselinker/resource/case/nz_dia_2025_006/legal-step/sentenced> a ns5:Event,
-        ns5:LegalEvent,
-        ns1:LegalProceeding,
-        ns1:SentencingHearing ;
-    ns1:hasProceedingBeginPoint "2025-10-10T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/nz_dia_2025_006/legal-proceeding> a ns3:Event,
+        ns3:LegalEvent,
+        ns2:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns2:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns2:hasCharge <https://w3id.org/caselinker/resource/case/nz_dia_2025_006/charge/1> ;
+    ns2:resultsSentence <https://w3id.org/caselinker/resource/case/nz_dia_2025_006/sentence/1> .
+
+<https://w3id.org/caselinker/resource/case/nz_dia_2025_006/legal-step/sentenced> a ns3:Event,
+        ns3:LegalEvent,
+        ns2:LegalProceeding,
+        ns2:SentencingHearing ;
+    rdfs:label "Sentencing Hearing · legal-step/sentenced" .
+
+<https://w3id.org/caselinker/resource/case/nz_dia_2025_006/sentence/1> a ns2:CriminalSentence,
+        ns2:PrisonSentence ;
+    rdfs:label "4 years" ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/nz_dia_2025_006/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/nz_dia_2025_006/event/possession> a ns1:CSAMIncident,
+        ns3:Event ;
+    rdfs:label "CSAMIncident · event/possession" .
 
 <https://w3id.org/caselinker/resource/case/nz_dia_2025_006/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns4:ageEstimate 41 .
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/nz_dia_2025_006/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/nz_dia_2025_006/phase/sentenced> a ns3:Phase,
+        ns2:SentencingPhase ;
+    rdfs:label "Sentencing Phase · phase/sentenced" .
 
-<https://w3id.org/caselinker/resource/case/nz_dia_2025_006/sentence/1> a ns1:CriminalSentence,
-        ns1:PrisonSentence ;
-    rdfs:label "4 years" .
-
-<https://w3id.org/caselinker/resource/case/nz_dia_2025_006/phase/sentenced> a ns5:Phase,
-        ns1:SentencingPhase ;
-    ns2:hasPhaseBeginPoint "2025-10-10T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/nz_dia_2025_006/event/possession> a ns2:CSAMIncident,
-        ns5:Event ;
-    ns6:hasFacet <https://w3id.org/caselinker/resource/case/nz_dia_2025_006/facet/possession> .
+<https://w3id.org/caselinker/resource/case/nz_dia_2025_006/role/offender/1> a ns1:OffenderRole ;
+    rdfs:label "Offender Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/nz_dia_2025_006/event/possession> .
 

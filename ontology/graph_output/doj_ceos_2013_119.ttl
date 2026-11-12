@@ -1,78 +1,115 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns3: <https://cacontology.projectvic.org/core#> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns6: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns7: <https://cacontology.projectvic.org/production#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org/core#> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns5: <https://cacontology.projectvic.org#> .
+@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_119> a ns1:CACInvestigation,
-        ns3:EnduringEntity ;
-    dcterms:created "2026-10-18 01:29:56.429051" ;
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_119> a ns5:CACInvestigation,
+        ns2:EnduringEntity ;
+    rdfs:label "Case doj_ceos_2013_119" ;
+    dcterms:created "2026-11-10T18:43:05.965590"^^xsd:dateTime ;
+    dcterms:date "2013-07-30"^^xsd:date ;
     dcterms:identifier "doj_ceos_2013_119" ;
-    dcterms:modified "2026-10-18 01:29:56.429051" ;
+    dcterms:modified "2026-11-10T18:43:05.965590"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/doj_ceos_2013_119/provenance> ;
     dcterms:source <https://www.justice.gov/usao-ndal/pr/federal-judge-finds-tuscaloosa-county-man-guilty-sexual-exploitation-child-and>,
         "DOJ CEOS" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/tuscaloosa>,
-        <https://w3id.org/caselinker/resource/location/tuscaloosa-county> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/doj_ceos_2013_119/event/possession>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/tuscaloosa-city>,
+        <https://w3id.org/caselinker/resource/location/tuscaloosa-county-al> ;
+    ns5:hasStep <https://w3id.org/caselinker/resource/case/doj_ceos_2013_119/event/possession>,
         <https://w3id.org/caselinker/resource/case/doj_ceos_2013_119/legal-proceeding> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/fbi>,
-        <https://w3id.org/caselinker/resource/agency/tuscaloosa-police-department> ;
-    ns6:mentionsLocation <https://w3id.org/caselinker/resource/location/tuscaloosa>,
-        <https://w3id.org/caselinker/resource/location/tuscaloosa-county> .
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/fbi>,
+        <https://w3id.org/caselinker/resource/case/doj_ceos_2013_119/agency/tuscaloosa-police-department> .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_119/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2013-07-30T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/doj_ceos_2013_119/event/possession> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/doj_ceos_2013_119/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_119/assessment/semantic/exploitive-positions> a ns2:AssessmentResult ;
+    rdfs:label "semantic similarity · exploitive_positions" ;
+    dcterms:subject <https://cacontology.projectvic.org/custodial#PositionOfTrust> ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/doj_ceos_2013_119/narrative> ;
+    ns2:hasConfidence 0.4604 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_119/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2013-07-30T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/doj_ceos_2013_119/event/possession> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/doj_ceos_2013_119/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_119/assessment/semantic/possession-csam> a ns2:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns5:CSAMIncident ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/doj_ceos_2013_119/narrative> ;
+    ns2:hasConfidence 0.5383 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/agency/fbi> a ns4:FederalAgency .
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_119/person/victim/1/age> a ns4:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/victim/1/age" ;
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/doj_ceos_2013_119/person/victim/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 15.0 .
 
-<https://w3id.org/caselinker/resource/agency/tuscaloosa-police-department> a ns3:OrganizationLikeEntity,
-        ns4:LocalAgency ;
-    rdfs:label "Tuscaloosa Police Department" .
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_119/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/doj_ceos_2013_119/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/doj_ceos_2013_119/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_119/charge/1> a ns2:CSAM_Possession,
-        ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_119/role/victim/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/victim/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/doj_ceos_2013_119/person/victim/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/doj_ceos_2013_119/role/victim/1> .
+
+<https://w3id.org/caselinker/resource/agency/fbi> a ns2:OrganizationLikeEntity,
+        ns6:FederalAgency ;
+    rdfs:label "Federal Bureau of Investigation" ;
+    skos:altLabel "FBI" ;
+    ns1:name "Federal Bureau of Investigation" .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_119/agency/tuscaloosa-police-department> a ns2:OrganizationLikeEntity,
+        ns6:LocalAgency ;
+    rdfs:label "Tuscaloosa Police Department" ;
+    ns1:name "Tuscaloosa Police Department" .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_119/charge/1> a ns3:CSAM_Possession,
+        ns3:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_119/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_119/legal-proceeding> a ns2:Event,
+        ns2:LegalEvent,
+        ns3:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns3:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/doj_ceos_2013_119/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_119/legal-proceeding> a ns3:Event,
-        ns3:LegalEvent,
-        ns2:LegalProceeding ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/doj_ceos_2013_119/charge/1> ;
-    ns2:hasProceedingBeginPoint "2013-07-30T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_119/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_119/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_119/role/offender/1> a ns3:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns5:participatesInEvent <https://w3id.org/caselinker/resource/case/doj_ceos_2013_119/event/possession> .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_119/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns7:victimAge 15 .
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_119/role/victim/1> a ns5:VictimRole ;
+    rdfs:label "Victim Role · role/victim/1" ;
+    ns5:participatesInEvent <https://w3id.org/caselinker/resource/case/doj_ceos_2013_119/event/possession> .
 
-<https://w3id.org/caselinker/resource/location/tuscaloosa> a ns3:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/tuscaloosa-city> a ns2:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Tuscaloosa" ;
-    ns5:name "Tuscaloosa" .
+    rdfs:label "Tuscaloosa city" ;
+    dcterms:identifier "fips:0177256" ;
+    skos:altLabel "Tuscaloosa" ;
+    ns1:name "Tuscaloosa city" .
 
-<https://w3id.org/caselinker/resource/location/tuscaloosa-county> a ns3:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/tuscaloosa-county-al> a ns2:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Tuscaloosa County" ;
-    ns5:name "Tuscaloosa County" .
+    dcterms:identifier "fips:01125" ;
+    ns1:name "Tuscaloosa County" .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_119/event/possession> a ns1:CSAMIncident,
-        ns3:Event ;
-    ns5:hasFacet <https://w3id.org/caselinker/resource/case/doj_ceos_2013_119/facet/possession> .
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_119/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
 
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_119/event/possession> a ns5:CSAMIncident,
+        ns2:Event ;
+    rdfs:label "CSAMIncident · event/possession" .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_119> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/doj_ceos_2013_119/provenance> .

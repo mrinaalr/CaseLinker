@@ -1,64 +1,69 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://w3id.org/caselinker/resource/vocab/> .
+@prefix ns1: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns4: <https://cacontology.projectvic.org/detection#> .
-@prefix ns5: <https://cacontology.projectvic.org/core#> .
-@prefix ns6: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns7: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_501> a ns2:CACInvestigation,
-        ns5:EnduringEntity ;
-    dcterms:created "2026-10-17 22:21:34.030438" ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case ncmec_2023_501" ;
+    dcterms:created "2026-11-10T10:05:19.350209"^^xsd:dateTime ;
+    dcterms:date "2023-01"^^xsd:gYearMonth ;
     dcterms:identifier "ncmec_2023_501" ;
-    dcterms:modified "2026-10-17 22:21:34.030438" ;
+    dcterms:modified "2026-11-10T10:05:19.350209"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2023_501/provenance> ;
     dcterms:source <https://www.wfmj.com/story/49185032/niles-man-pleads-guilty-to-sending-obscene-video-to-minors>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/pennsylvania> ;
-    ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_501/phase/sentenced> ;
-    ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_501/phase/sentenced> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/pennsylvania-pa> ;
+    ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_501/phase/pleaded-guilty> ;
+    ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_501/phase/pleaded-guilty> ;
     ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_501/event/distribution>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2023_501/legal-step/sentenced> ;
-    ns2:investigationStatus "unknown" ;
-    ns7:involvesAgency <https://w3id.org/caselinker/resource/agency/niles-police-department> ;
-    ns1:mentionsLocation <https://w3id.org/caselinker/resource/location/pennsylvania> .
+        <https://w3id.org/caselinker/resource/case/ncmec_2023_501/legal-step/pleaded-guilty> ;
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2023_501/agency/niles-police-department> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_501/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_501/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_501/person/offender/1/age> a ns1:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns1:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2023_501/person/offender/1> ;
+    ns1:concernsAgeQuality ns1:Age ;
+    ns1:hasAgeInYears 30.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_501/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_501/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_501/role/offender/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2023_501/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2023_501/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/niles-police-department> a ns7:LocalAgency .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_501/agency/niles-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns4:LocalAgency ;
+    rdfs:label "Niles Police Department" ;
+    ns3:name "Niles Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_501/event/distribution> a ns5:Event,
-        ns3:CSAM_Distribution .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_501/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/legal-outcomes#CSAM_Distribution> ;
+    rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_501/legal-step/sentenced> a ns5:Event,
-        ns5:LegalEvent,
-        ns3:LegalProceeding,
-        ns3:SentencingHearing ;
-    ns3:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_501/legal-step/pleaded-guilty> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        <https://cacontology.projectvic.org/legal-outcomes#LegalProceeding>,
+        <https://cacontology.projectvic.org/legal-outcomes#PleaBargaining> ;
+    rdfs:label "Plea Bargaining · legal-step/pleaded-guilty" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_501/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns4:ageEstimate 30 .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_501/role/offender/1> a ns2:OffenderRole ;
+    rdfs:label "Offender Role · role/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_501/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_501/phase/sentenced> a ns5:Phase,
-        ns3:SentencingPhase ;
-    ns2:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/pennsylvania> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/pennsylvania-pa> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Pennsylvania" ;
-    ns6:name "Pennsylvania" .
+    dcterms:identifier "fips:42" ;
+    ns3:name "Pennsylvania" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2023_501/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_501> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2023_501/provenance> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_501/phase/pleaded-guilty> a <https://cacontology.projectvic.org/core#Phase>,
+        <https://cacontology.projectvic.org/legal-outcomes#PreTrialPhase> ;
+    rdfs:label "Pre Trial Phase · phase/pleaded-guilty" .
+

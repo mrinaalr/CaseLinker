@@ -1,70 +1,79 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns2: <https://cacontology.projectvic.org/core#> .
-@prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns7: <https://cacontology.projectvic.org/detection#> .
+@prefix ns1: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_368> a ns3:CACInvestigation,
-        ns2:EnduringEntity ;
-    dcterms:created "2026-10-17 21:51:23.959453" ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_368> a ns4:CACInvestigation,
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case ncmec_2022_368" ;
+    dcterms:created "2026-11-10T09:19:08.761670"^^xsd:dateTime ;
+    dcterms:date "2022-06"^^xsd:gYearMonth ;
     dcterms:identifier "ncmec_2022_368" ;
-    dcterms:modified "2026-10-17 21:51:23.959453" ;
+    dcterms:modified "2026-11-10T09:19:08.761670"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2022_368/provenance> ;
     dcterms:source <https://710keel.com/shreveport-woman-arrested-for-indecent-behavior-with-juvenile/>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/caddo>,
-        <https://w3id.org/caselinker/resource/location/shreveport> ;
-    ns3:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_368/phase/booked> ;
-    ns3:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_368/phase/booked> ;
-    ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_368/legal-proceeding> ;
-    ns3:investigationStatus "unknown" ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/louisiana-bureau-of-investigation> ;
-    ns1:mentionsLocation <https://w3id.org/caselinker/resource/location/caddo>,
-        <https://w3id.org/caselinker/resource/location/shreveport> .
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/caddo-town>,
+        <https://w3id.org/caselinker/resource/location/shreveport-city> ;
+    ns4:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_368/phase/booked> ;
+    ns4:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_368/phase/booked> ;
+    ns4:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_368/legal-proceeding> ;
+    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/louisiana-bureau-of-investigation> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_368/role/offender/1> a ns3:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns3:hasRoleBeginPoint "2022-06-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_368/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_368/person/offender/1/age> a ns1:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns1:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2022_368/person/offender/1> ;
+    ns1:concernsAgeQuality ns1:Age ;
+    ns1:hasAgeInYears 28.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_368/role/victim/1> a ns3:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns3:hasRoleBeginPoint "2022-06-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_368/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_368/role/offender/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2022_368/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2022_368/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "social media" .
+<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "social media" ;
+    ns3:name "social media" .
 
-<https://w3id.org/caselinker/resource/agency/louisiana-bureau-of-investigation> a ns4:StateAgency .
+<https://w3id.org/caselinker/resource/agency/louisiana-bureau-of-investigation> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns2:StateAgency ;
+    rdfs:label "Louisiana Bureau of Investigation" ;
+    ns3:name "Louisiana Bureau of Investigation" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_368/legal-proceeding> a ns2:Event,
-        ns2:LegalEvent,
-        ns5:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): booked into Caddo Correctional Center" ;
-    ns5:hasProceedingBeginPoint "2022-06-01T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_368/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        <https://cacontology.projectvic.org/legal-outcomes#LegalProceeding> ;
+    rdfs:label "Event · legal-proceeding" ;
+    rdfs:comment "Pretrial detention facility (not a sentence): booked into Caddo Correctional Center" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_368/role/offender/1> a <https://cacontology.projectvic.org/legal-outcomes#DefendantRole> ;
+    rdfs:label "Defendant Role · role/offender/1" .
+
+<https://w3id.org/caselinker/resource/location/caddo-town> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Caddo town" ;
+    dcterms:identifier "fips:4010800" ;
+    skos:altLabel "Caddo" ;
+    ns3:name "Caddo town" .
+
+<https://w3id.org/caselinker/resource/location/shreveport-city> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Shreveport city" ;
+    dcterms:identifier "fips:2270000" ;
+    skos:altLabel "Shreveport" ;
+    ns3:name "Shreveport city" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_368/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns7:ageEstimate 28 .
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_368/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_368/phase/booked> a ns4:InitialPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Initial Phase · phase/booked" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_368/phase/booked> a ns3:InitialPhase,
-        ns2:Phase ;
-    ns3:hasPhaseBeginPoint "2022-06-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/caddo> a ns2:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Caddo" ;
-    ns6:name "Caddo" .
-
-<https://w3id.org/caselinker/resource/location/shreveport> a ns2:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Shreveport" ;
-    ns6:name "Shreveport" .
-
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_368> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2022_368/provenance> .

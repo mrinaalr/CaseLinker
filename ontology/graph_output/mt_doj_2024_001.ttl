@@ -1,96 +1,123 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
+@prefix ns1: <https://cacontology.projectvic.org/custodial#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns4: <https://cacontology.projectvic.org/custodial#> .
-@prefix ns5: <https://cacontology.projectvic.org/core#> .
-@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns7: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns8: <https://cacontology.projectvic.org/detection#> .
+@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns4: <https://cacontology.projectvic.org#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns6: <https://cacontology.projectvic.org/core#> .
+@prefix ns7: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/mt_doj_2024_001> a ns1:CACInvestigation,
-        ns5:EnduringEntity ;
-    dcterms:created "2026-10-18 05:35:36.603552" ;
+<https://w3id.org/caselinker/resource/case/mt_doj_2024_001> a ns4:CACInvestigation,
+        ns6:EnduringEntity ;
+    rdfs:label "Case mt_doj_2024_001" ;
+    dcterms:created "2026-11-11T15:39:05.461221"^^xsd:dateTime ;
+    dcterms:date "2024-10-24"^^xsd:date ;
     dcterms:identifier "mt_doj_2024_001" ;
-    dcterms:modified "2026-10-18 05:35:36.603552" ;
+    dcterms:modified "2026-11-11T15:39:05.461221"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/mt_doj_2024_001/provenance> ;
     dcterms:source <https://dojmt.gov/red-lodge-man-sentenced-in-child-assault-case/>,
         "MT DOJ" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/carbon-county>,
-        <https://w3id.org/caselinker/resource/location/montana>,
-        <https://w3id.org/caselinker/resource/location/salt-lake-city> ;
-    ns1:currentPhase <https://w3id.org/caselinker/resource/case/mt_doj_2024_001/phase/sentenced> ;
-    ns1:hasPhase <https://w3id.org/caselinker/resource/case/mt_doj_2024_001/phase/sentenced> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/mt_doj_2024_001/event/trust-violation>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/mt_doj_2024_001/location/salt-lake-city>,
+        <https://w3id.org/caselinker/resource/location/carbon-county-mt>,
+        <https://w3id.org/caselinker/resource/location/montana-mt> ;
+    ns4:currentPhase <https://w3id.org/caselinker/resource/case/mt_doj_2024_001/phase/sentenced> ;
+    ns4:hasPhase <https://w3id.org/caselinker/resource/case/mt_doj_2024_001/phase/sentenced> ;
+    ns4:hasStep <https://w3id.org/caselinker/resource/case/mt_doj_2024_001/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/mt_doj_2024_001/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/mt_doj_2024_001/legal-step/sentenced> ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/red-lodge-police-department> ;
-    ns7:mentionsLocation <https://w3id.org/caselinker/resource/location/carbon-county>,
-        <https://w3id.org/caselinker/resource/location/montana>,
-        <https://w3id.org/caselinker/resource/location/salt-lake-city> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/red-lodge-police-department-mt> .
 
-<https://w3id.org/caselinker/resource/agency/red-lodge-police-department> a ns6:LocalAgency .
+<https://w3id.org/caselinker/resource/case/mt_doj_2024_001/person/offender/1/age> a ns3:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns3:ageSubject <https://w3id.org/caselinker/resource/case/mt_doj_2024_001/person/offender/1> ;
+    ns3:concernsAgeQuality ns3:Age ;
+    ns3:hasAgeInYears 27.0 .
 
-<https://w3id.org/caselinker/resource/case/mt_doj_2024_001/event/trust-violation> a ns4:CustodialAbuse,
-        ns4:TrustViolation ;
-    ns4:violatesRelationship <https://w3id.org/caselinker/resource/case/mt_doj_2024_001/relationship/mother> .
+<https://w3id.org/caselinker/resource/case/mt_doj_2024_001/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/mt_doj_2024_001/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/mt_doj_2024_001/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/mt_doj_2024_001/legal-proceeding> a ns5:Event,
-        ns5:LegalEvent,
-        ns3:LegalProceeding ;
-    ns3:hasProceedingBeginPoint "2024-10-24T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:resultsSentence <https://w3id.org/caselinker/resource/case/mt_doj_2024_001/sentence/1> .
+<https://w3id.org/caselinker/resource/case/mt_doj_2024_001/role/victim/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/victim/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/mt_doj_2024_001/person/victim/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/mt_doj_2024_001/role/victim/1> .
 
-<https://w3id.org/caselinker/resource/case/mt_doj_2024_001/legal-step/sentenced> a ns5:Event,
-        ns5:LegalEvent,
-        ns3:LegalProceeding,
-        ns3:SentencingHearing ;
-    ns3:hasProceedingBeginPoint "2024-10-24T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/agency/red-lodge-police-department-mt> a ns6:OrganizationLikeEntity,
+        ns5:LocalAgency ;
+    rdfs:label "Red Lodge Police Department" ;
+    dcterms:identifier "ori:MT0050100" ;
+    ns2:name "Red Lodge Police Department" .
 
-<https://w3id.org/caselinker/resource/case/mt_doj_2024_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns8:ageEstimate 27 .
+<https://w3id.org/caselinker/resource/case/mt_doj_2024_001/event/trust-violation> a ns1:CustodialAbuse,
+        ns1:TrustViolation ;
+    rdfs:label "Custodial Abuse · event/trust-violation" ;
+    ns1:perpetratedBy <https://w3id.org/caselinker/resource/case/mt_doj_2024_001/role/offender/1> ;
+    ns1:violatesRelationship <https://w3id.org/caselinker/resource/case/mt_doj_2024_001/relationship/mother> .
 
-<https://w3id.org/caselinker/resource/case/mt_doj_2024_001/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/mt_doj_2024_001/legal-proceeding> a ns6:Event,
+        ns6:LegalEvent,
+        ns7:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns7:resultsSentence <https://w3id.org/caselinker/resource/case/mt_doj_2024_001/sentence/1> .
 
-<https://w3id.org/caselinker/resource/case/mt_doj_2024_001/relationship/mother> a ns4:CustodialRelationship,
-        ns4:FamilialRelationship ;
-    ns4:involvesChild <https://w3id.org/caselinker/resource/case/mt_doj_2024_001/role/victim/1> ;
-    ns4:involvesCustodian <https://w3id.org/caselinker/resource/case/mt_doj_2024_001/role/offender/1> ;
-    ns4:relationshipType "mother" .
+<https://w3id.org/caselinker/resource/case/mt_doj_2024_001/legal-step/sentenced> a ns6:Event,
+        ns6:LegalEvent,
+        ns7:LegalProceeding,
+        ns7:SentencingHearing ;
+    rdfs:label "Sentencing Hearing · legal-step/sentenced" .
 
-<https://w3id.org/caselinker/resource/case/mt_doj_2024_001/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2024-10-24T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/mt_doj_2024_001/person/offender/1> .
-
-<https://w3id.org/caselinker/resource/case/mt_doj_2024_001/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2024-10-24T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/mt_doj_2024_001/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/case/mt_doj_2024_001/sentence/1> a ns3:CriminalSentence,
-        ns3:PrisonSentence ;
-    rdfs:label "20 years" .
-
-<https://w3id.org/caselinker/resource/case/mt_doj_2024_001/phase/sentenced> a ns5:Phase,
-        ns3:SentencingPhase ;
-    ns1:hasPhaseBeginPoint "2024-10-24T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/carbon-county> a ns5:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Carbon County" ;
-    ns2:name "Carbon County" .
-
-<https://w3id.org/caselinker/resource/location/montana> a ns5:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Montana" ;
-    ns2:name "Montana" .
-
-<https://w3id.org/caselinker/resource/location/salt-lake-city> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/mt_doj_2024_001/location/salt-lake-city> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Salt Lake City" ;
     ns2:name "Salt Lake City" .
 
+<https://w3id.org/caselinker/resource/case/mt_doj_2024_001/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
 
-<https://w3id.org/caselinker/resource/case/mt_doj_2024_001> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/mt_doj_2024_001/provenance> .
+<https://w3id.org/caselinker/resource/case/mt_doj_2024_001/relationship/mother> a ns1:CustodialRelationship,
+        ns1:FamilialRelationship ;
+    rdfs:label "Custodial Relationship · relationship/mother" ;
+    ns1:involvesChild <https://w3id.org/caselinker/resource/case/mt_doj_2024_001/role/victim/1> ;
+    ns1:involvesCustodian <https://w3id.org/caselinker/resource/case/mt_doj_2024_001/role/offender/1> ;
+    ns1:relationshipType "parent" ;
+    ns2:isDirectional true ;
+    ns2:source <https://w3id.org/caselinker/resource/case/mt_doj_2024_001/role/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/mt_doj_2024_001/role/victim/1> .
+
+<https://w3id.org/caselinker/resource/case/mt_doj_2024_001/sentence/1> a ns7:CriminalSentence,
+        ns7:PrisonSentence ;
+    rdfs:label "20 years" ;
+    ns6:assesses <https://w3id.org/caselinker/resource/case/mt_doj_2024_001/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/location/carbon-county-mt> a ns6:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Carbon County" ;
+    dcterms:identifier "fips:30009" ;
+    ns2:name "Carbon County" .
+
+<https://w3id.org/caselinker/resource/location/montana-mt> a ns6:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Montana" ;
+    dcterms:identifier "fips:30" ;
+    ns2:name "Montana" .
+
+<https://w3id.org/caselinker/resource/case/mt_doj_2024_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/mt_doj_2024_001/phase/sentenced> a ns6:Phase,
+        ns7:SentencingPhase ;
+    rdfs:label "Sentencing Phase · phase/sentenced" .
+
+<https://w3id.org/caselinker/resource/case/mt_doj_2024_001/role/victim/1> a ns4:VictimRole ;
+    rdfs:label "Victim Role · role/victim/1" .
+
+<https://w3id.org/caselinker/resource/case/mt_doj_2024_001/role/offender/1> a ns4:OffenderRole ;
+    rdfs:label "Offender Role · role/offender/1" .
+

@@ -1,73 +1,82 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/core#> .
-@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns3: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns4: <https://cacontology.projectvic.org/detection#> .
-@prefix ns5: <https://cacontology.projectvic.org#> .
-@prefix ns6: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns7: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_268> a ns5:CACInvestigation,
-        ns1:EnduringEntity ;
-    dcterms:created "2026-10-17 23:04:27.843793" ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_268> a ns4:CACInvestigation,
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case ncmec_2024_268" ;
+    dcterms:created "2026-11-10T21:24:54.950277"^^xsd:dateTime ;
+    dcterms:date "2024-07-17"^^xsd:date ;
     dcterms:identifier "ncmec_2024_268" ;
-    dcterms:modified "2026-10-17 23:04:27.843793" ;
+    dcterms:modified "2026-11-12T00:23:42.016313"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_268/provenance> ;
     dcterms:source <https://www.mdjonline.com/news/police_fire/acworth-man-accused-of-sexual-exploitation-of-a-child/article_1551d64a-4385-11ef-95c6-b72a7ded233c.html>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/acworth> ;
-    ns5:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_268/phase/charged> ;
-    ns5:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_268/phase/charged> ;
-    ns5:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_268/event/distribution>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/acworth-city> ;
+    ns4:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_268/phase/charged> ;
+    ns4:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_268/phase/charged> ;
+    ns4:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_268/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_268/legal-proceeding> ;
-    ns7:involvesAgency <https://w3id.org/caselinker/resource/agency/cobb-county-police-department> ;
-    ns3:mentionsLocation <https://w3id.org/caselinker/resource/location/acworth> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_268/agency/cobb-county-police-department> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_268/role/offender/1> a ns5:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns5:hasRoleBeginPoint "2024-07-17T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_268/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_268/person/offender/1/age> a ns2:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns2:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_268/person/offender/1> ;
+    ns2:concernsAgeQuality ns2:Age ;
+    ns2:hasAgeInYears 29.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_268/role/victim/1> a ns5:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns5:hasRoleBeginPoint "2024-07-17T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_268/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_268/role/offender/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2024_268/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2024_268/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/cobb-county-police-department> a ns7:LocalAgency .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_268/agency/cobb-county-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns5:LocalAgency ;
+    rdfs:label "Cobb County Police Department" ;
+    ns3:name "Cobb County Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_268/charge/1> a ns2:CriminalCharge,
-        ns2:StateCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_268/charge/1> a ns1:CriminalCharge,
+        ns1:StateCharge ;
     rdfs:label "sexual exploitation of a child" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_268/charge/2> a ns2:CriminalCharge ;
-    rdfs:label "sexual exploitation" ;
-    ns3:chargeCluster "sexual_exploitation_unspecified" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_268/charge/2> a ns1:CriminalCharge ;
+    rdfs:label "sexual exploitation" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_268/event/distribution> a ns1:Event,
-        ns2:CSAM_Distribution .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_268/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
+        ns1:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_268/legal-proceeding> a ns1:Event,
-        ns1:LegalEvent,
-        ns2:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_268/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        ns1:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): booked into the Cobb County Adult Detention Center; remains in custody" ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_268/charge/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_268/charge/2> ;
-    ns2:hasProceedingBeginPoint "2024-07-17T00:00:00Z"^^xsd:dateTimeStamp .
+    ns1:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns1:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_268/charge/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_268/charge/2> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_268/role/offender/1> a ns1:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" .
+
+<https://w3id.org/caselinker/resource/location/acworth-city> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Acworth city" ;
+    dcterms:identifier "fips:1300408" ;
+    skos:altLabel "Acworth" ;
+    ns3:name "Acworth city" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_268/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns4:ageEstimate 29 .
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_268/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_268/phase/charged> a ns4:LegalProcessPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Legal Process Phase · phase/charged" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_268/phase/charged> a ns5:LegalProcessPhase,
-        ns1:Phase ;
-    ns5:hasPhaseBeginPoint "2024-07-17T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/acworth> a ns1:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Acworth" ;
-    ns6:name "Acworth" .
-
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_268> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2024_268/provenance> .

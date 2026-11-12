@@ -1,75 +1,88 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns5: <https://cacontology.projectvic.org/core#> .
-@prefix ns6: <https://cacontology.projectvic.org/detection#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns3: <https://cacontology.projectvic.org/core#> .
+@prefix ns4: <https://cacontology.projectvic.org#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_133> a ns1:CACInvestigation,
-        ns5:EnduringEntity ;
-    dcterms:created "2026-10-18 00:01:16.948694" ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_133> a ns4:CACInvestigation,
+        ns3:EnduringEntity ;
+    rdfs:label "Case ncmec_2025_133" ;
+    dcterms:created "2026-11-10T16:32:42.351278"^^xsd:dateTime ;
+    dcterms:date "2025-01"^^xsd:gYearMonth ;
     dcterms:identifier "ncmec_2025_133" ;
-    dcterms:modified "2026-10-18 00:01:16.948694" ;
+    dcterms:modified "2026-11-12T01:39:14.640767"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2025_133/provenance> ;
     dcterms:source <https://www.msn.com/en-us/news/crime/hartford-man-arrested-for-possession-of-child-sex-abuse-materials/ar-AA1zM3bI>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/conn>,
-        <https://w3id.org/caselinker/resource/location/connecticut>,
-        <https://w3id.org/caselinker/resource/location/hartford> ;
-    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_133/phase/arrested> ;
-    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_133/phase/arrested> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_133/event/possession> ;
-    ns1:investigationStatus "unknown" ;
-    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/hartford-police-department> ;
-    ns4:mentionsLocation <https://w3id.org/caselinker/resource/location/conn>,
-        <https://w3id.org/caselinker/resource/location/connecticut>,
-        <https://w3id.org/caselinker/resource/location/hartford> .
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/connecticut-ct>,
+        <https://w3id.org/caselinker/resource/location/connecticut-ct-09>,
+        <https://w3id.org/caselinker/resource/location/hartford-city-ct> ;
+    ns4:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_133/phase/arrested> ;
+    ns4:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_133/phase/arrested> ;
+    ns4:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_133/event/possession> ;
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2025_133/agency/hartford-police-department> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_133/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_133/event/possession> ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2025_133/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_133/assessment/semantic/possession-csam> a ns3:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns4:CSAMIncident ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_133/narrative> ;
+    ns3:hasConfidence 0.5032 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_133/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_133/event/possession> ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2025_133/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_133/person/offender/1/age> a ns2:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns2:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2025_133/person/offender/1> ;
+    ns2:concernsAgeQuality ns2:Age ;
+    ns2:hasAgeInYears 27.0 .
 
-<https://w3id.org/caselinker/resource/agency/hartford-police-department> a ns2:LocalAgency .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_133/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2025_133/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2025_133/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_133/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_133/agency/hartford-police-department> a ns3:OrganizationLikeEntity,
+        ns5:LocalAgency ;
+    rdfs:label "Hartford Police Department" ;
+    ns1:name "Hartford Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_133/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns6:ageEstimate 27 .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_133/role/offender/1> a <https://cacontology.projectvic.org/legal-outcomes#DefendantRole> ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_133/event/possession> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_133/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_133/phase/arrested> a ns1:InitialPhase,
-        ns5:Phase ;
-    ns1:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/conn> a ns5:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Conn." ;
-    ns3:name "Conn." .
-
-<https://w3id.org/caselinker/resource/location/connecticut> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/connecticut-ct> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Connecticut" ;
-    ns3:name "Connecticut" .
+    dcterms:identifier "fips:09" ;
+    skos:altLabel "Conn." ;
+    ns1:name "Connecticut" .
 
-<https://w3id.org/caselinker/resource/location/hartford> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/connecticut-ct-09> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Hartford" ;
-    ns3:name "Hartford" .
+    rdfs:label "Connecticut" ;
+    dcterms:identifier "fips:09" ;
+    ns1:name "Connecticut" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_133/event/possession> a ns1:CSAMIncident,
-        ns5:Event ;
-    ns3:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2025_133/facet/possession> .
+<https://w3id.org/caselinker/resource/location/hartford-city-ct> a ns3:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Hartford city" ;
+    dcterms:identifier "fips:0937000" ;
+    skos:altLabel "Hartford" ;
+    ns1:name "Hartford city" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2025_133/event/possession> a ns4:CSAMIncident,
+        ns3:Event ;
+    rdfs:label "CSAMIncident · event/possession" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_133> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2025_133/provenance> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_133/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_133/phase/arrested> a ns4:InitialPhase,
+        ns3:Phase ;
+    rdfs:label "Initial Phase · phase/arrested" .
+

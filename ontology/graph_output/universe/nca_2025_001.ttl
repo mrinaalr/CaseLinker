@@ -1,120 +1,147 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org#> .
 @prefix ns3: <https://cacontology.projectvic.org/core#> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns5: <https://cacontology.projectvic.org#> .
-@prefix ns6: <https://cacontology.projectvic.org/detection#> .
-@prefix ns7: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/nca_2025_001/admission/1/extraction-confidence> a ns3:AssessmentResult ;
-    ns3:assesses <https://w3id.org/caselinker/resource/case/nca_2025_001/admission/1> ;
-    ns3:generatedBy <https://w3id.org/caselinker/resource/case/nca_2025_001> ;
-    ns3:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/nca_2025_001/role/victim/1> a ns5:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns5:hasRoleBeginPoint "2025-05-08T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns5:participatesInEvent <https://w3id.org/caselinker/resource/case/nca_2025_001/event/possession> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/nca_2025_001/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/agency/national-crime-agency> a ns4:LocalAgency .
-
-<https://w3id.org/caselinker/resource/case/nca_2025_001> a ns5:CACInvestigation,
+<https://w3id.org/caselinker/resource/case/nca_2025_001> a ns2:CACInvestigation,
         ns3:EnduringEntity ;
-    dcterms:created "2026-10-18 05:40:01.899946" ;
+    rdfs:label "Case nca_2025_001" ;
+    dcterms:created "2026-11-11T15:47:31.315895"^^xsd:dateTime ;
+    dcterms:date "2025-05-08"^^xsd:date ;
     dcterms:identifier "nca_2025_001" ;
-    dcterms:modified "2026-10-18 05:40:01.899946" ;
+    dcterms:modified "2026-11-11T15:47:31.315895"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/nca_2025_001/provenance> ;
     dcterms:source <https://www.nationalcrimeagency.gov.uk/news/global-moderator-of-child-sexual-abuse-sites-sentenced>,
         "NCA" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/london>,
-        <https://w3id.org/caselinker/resource/location/wood-green> ;
-    ns5:currentPhase <https://w3id.org/caselinker/resource/case/nca_2025_001/phase/sentenced> ;
-    ns5:hasPhase <https://w3id.org/caselinker/resource/case/nca_2025_001/phase/sentenced> ;
-    ns5:hasStep <https://w3id.org/caselinker/resource/case/nca_2025_001/admission/1>,
-        <https://w3id.org/caselinker/resource/case/nca_2025_001/event/distribution>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/nca_2025_001/location/london>,
+        <https://w3id.org/caselinker/resource/case/nca_2025_001/location/wood-green> ;
+    ns2:currentPhase <https://w3id.org/caselinker/resource/case/nca_2025_001/phase/sentenced> ;
+    ns2:hasPhase <https://w3id.org/caselinker/resource/case/nca_2025_001/phase/sentenced> ;
+    ns2:hasStep <https://w3id.org/caselinker/resource/case/nca_2025_001/event/distribution>,
         <https://w3id.org/caselinker/resource/case/nca_2025_001/event/possession>,
         <https://w3id.org/caselinker/resource/case/nca_2025_001/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/nca_2025_001/legal-step/sentenced> ;
-    ns5:investigationStatus "unknown" ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/national-crime-agency> ;
-    ns1:mentionsLocation <https://w3id.org/caselinker/resource/location/london>,
-        <https://w3id.org/caselinker/resource/location/wood-green> .
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/national-crime-agency> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/nca_2025_001/admission/1> .
+
+<https://w3id.org/caselinker/resource/case/nca_2025_001/admission/1/extraction-confidence> a ns3:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/nca_2025_001/admission/1> ;
+    ns3:hasConfidence 0.65 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+
+<https://w3id.org/caselinker/resource/case/nca_2025_001/assessment/semantic/dissemination> a ns3:AssessmentResult ;
+    rdfs:label "semantic similarity · dissemination" ;
+    dcterms:subject ns5:CSAM_Distribution ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/nca_2025_001/narrative> ;
+    ns3:hasConfidence 0.451 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/nca_2025_001/assessment/semantic/exploitive-positions> a ns3:AssessmentResult ;
+    rdfs:label "semantic similarity · exploitive_positions" ;
+    dcterms:subject <https://cacontology.projectvic.org/custodial#PositionOfTrust> ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/nca_2025_001/narrative> ;
+    ns3:hasConfidence 0.5377 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/nca_2025_001/assessment/semantic/possession-csam> a ns3:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns2:CSAMIncident ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/nca_2025_001/narrative> ;
+    ns3:hasConfidence 0.5989 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/nca_2025_001/assessment/semantic/production-csam> a ns3:AssessmentResult ;
+    rdfs:label "semantic similarity · production_csam" ;
+    dcterms:subject <https://cacontology.projectvic.org/production#ProductionOffense> ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/nca_2025_001/narrative> ;
+    ns3:hasConfidence 0.5159 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/nca_2025_001/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/nca_2025_001/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 36.0 .
+
+<https://w3id.org/caselinker/resource/case/nca_2025_001/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/nca_2025_001/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/nca_2025_001/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/agency/national-crime-agency> a ns3:OrganizationLikeEntity,
+        ns6:LocalAgency ;
+    rdfs:label "National Crime Agency" ;
+    ns1:name "National Crime Agency" .
 
 <https://w3id.org/caselinker/resource/case/nca_2025_001/event/distribution> a ns3:Event,
-        ns2:CSAM_Distribution ;
-    ns5:severityLevel 3 .
-
-<https://w3id.org/caselinker/resource/case/nca_2025_001/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+        ns5:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/nca_2025_001/legal-proceeding> a ns3:Event,
         ns3:LegalEvent,
-        ns2:LegalProceeding ;
-    ns2:hasProceedingBeginPoint "2025-05-08T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:resultsSentence <https://w3id.org/caselinker/resource/case/nca_2025_001/sentence/1>,
+        ns5:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns5:resultsSentence <https://w3id.org/caselinker/resource/case/nca_2025_001/sentence/1>,
         <https://w3id.org/caselinker/resource/case/nca_2025_001/sentence/2> .
 
 <https://w3id.org/caselinker/resource/case/nca_2025_001/legal-step/sentenced> a ns3:Event,
         ns3:LegalEvent,
-        ns2:LegalProceeding,
-        ns2:SentencingHearing ;
-    ns2:hasProceedingBeginPoint "2025-05-08T00:00:00Z"^^xsd:dateTimeStamp .
+        ns5:LegalProceeding,
+        ns5:SentencingHearing ;
+    rdfs:label "Sentencing Hearing · legal-step/sentenced" .
 
-<https://w3id.org/caselinker/resource/case/nca_2025_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns6:ageEstimate 36 .
-
-<https://w3id.org/caselinker/resource/case/nca_2025_001/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/nca_2025_001/role/offender/1> a ns5:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns5:hasRoleBeginPoint "2025-05-08T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns5:participatesInEvent <https://w3id.org/caselinker/resource/case/nca_2025_001/event/possession> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/nca_2025_001/person/offender/1> .
-
-<https://w3id.org/caselinker/resource/case/nca_2025_001/sentence/1> a ns2:CriminalSentence,
-        ns2:PrisonSentence ;
-    rdfs:label "six years" .
-
-<https://w3id.org/caselinker/resource/case/nca_2025_001/sentence/2> a ns2:CriminalSentence,
-        ns2:PrisonSentence ;
-    rdfs:label "ten-year" .
-
-<https://w3id.org/caselinker/resource/platform/dark-web> a <https://cacontology.projectvic.org/platforms#DarkWebService> ;
-    rdfs:label "dark web" .
-
-<https://w3id.org/caselinker/resource/case/nca_2025_001/phase/sentenced> a ns3:Phase,
-        ns2:SentencingPhase ;
-    ns5:hasPhaseBeginPoint "2025-05-08T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/london> a ns3:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/nca_2025_001/location/london> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "London" ;
-    ns7:name "London" .
+    ns1:name "London" .
 
-<https://w3id.org/caselinker/resource/location/wood-green> a ns3:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/nca_2025_001/location/wood-green> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Wood Green" ;
-    ns7:name "Wood Green" .
+    ns1:name "Wood Green" .
+
+<https://w3id.org/caselinker/resource/case/nca_2025_001/sentence/1> a ns5:CriminalSentence,
+        ns5:PrisonSentence ;
+    rdfs:label "six years" ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/nca_2025_001/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/nca_2025_001/sentence/2> a ns5:CriminalSentence,
+        ns5:PrisonSentence ;
+    rdfs:label "ten-year" ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/nca_2025_001/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/platform/dark-web> a ns3:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#DarkWebService> ;
+    rdfs:label "dark web" ;
+    ns1:name "dark web" .
 
 <https://w3id.org/caselinker/resource/case/nca_2025_001/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "“never intentionally arranged or facilitated the sexual abuse of children”" ;
     dcterms:source <https://www.nationalcrimeagency.gov.uk/news/global-moderator-of-child-sexual-abuse-sites-sentenced> ;
-    ns1:admissionContext "und to be Category A, the most severe. Slate gave a prepared statement at interview where he said he “never intentionally arranged or fac..." ;
-    ns1:admissionFrame "he_said_paraphrase" ;
-    ns1:admissionTheme "harm_conduct" ;
-    ns1:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/nca_2025_001/role/offender/1> ;
-    ns1:evidenceTier "press_release_stated" ;
-    ns1:quoteType "paraphrase" ;
-    ns7:description "“never intentionally arranged or facilitated the sexual abuse of children”" .
+    ns1:description "“never intentionally arranged or facilitated the sexual abuse of children”" .
 
-<https://w3id.org/caselinker/resource/case/nca_2025_001/event/possession> a ns5:CSAMIncident,
+<https://w3id.org/caselinker/resource/case/nca_2025_001/event/possession> a ns2:CSAMIncident,
         ns3:Event ;
-    ns5:producesArtifact <https://w3id.org/caselinker/resource/case/nca_2025_001/admission/1> ;
-    ns5:severityLevel 3 ;
-    ns5:usesChannel <https://w3id.org/caselinker/resource/platform/dark-web> ;
-    ns7:hasFacet <https://w3id.org/caselinker/resource/case/nca_2025_001/facet/possession> .
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns2:severityLevel 3 ;
+    ns2:usesChannel <https://w3id.org/caselinker/resource/platform/dark-web> .
 
+<https://w3id.org/caselinker/resource/case/nca_2025_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/nca_2025_001> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/nca_2025_001/provenance> .
+<https://w3id.org/caselinker/resource/case/nca_2025_001/phase/sentenced> a ns3:Phase,
+        ns5:SentencingPhase ;
+    rdfs:label "Sentencing Phase · phase/sentenced" .
+
+<https://w3id.org/caselinker/resource/case/nca_2025_001/role/offender/1> a ns2:OffenderRole ;
+    rdfs:label "Offender Role · role/offender/1" ;
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/nca_2025_001/event/possession> .
+

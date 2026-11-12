@@ -1,0 +1,114 @@
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org#> .
+@prefix ns3: <https://cacontology.projectvic.org/core#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns6: <https://cacontology.projectvic.org/hotlines#> .
+@prefix ns7: <https://cacontology.projectvic.org/platforms#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://w3id.org/caselinker/resource/case/nashville_pd_2026_002> a ns2:CACInvestigation,
+        ns3:EnduringEntity ;
+    rdfs:label "Case nashville_pd_2026_002" ;
+    dcterms:created "2026-11-12T01:20:13.447413"^^xsd:dateTime ;
+    dcterms:date "2026-08-19"^^xsd:date ;
+    dcterms:identifier "nashville_pd_2026_002" ;
+    dcterms:modified "2026-11-12T01:20:13.447413"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/nashville_pd_2026_002/provenance> ;
+    dcterms:source <https://www.nashville.gov/departments/police/news/convicted-sex-offender-charged-after-uploading-ai-generated-child-sex-abuse-image>,
+        "NASHVILLE PD" ;
+    ns2:currentPhase <https://w3id.org/caselinker/resource/case/nashville_pd_2026_002/phase/charged> ;
+    ns2:hasPhase <https://w3id.org/caselinker/resource/case/nashville_pd_2026_002/phase/charged> ;
+    ns2:hasStep <https://w3id.org/caselinker/resource/case/nashville_pd_2026_002/event/ai-csam>,
+        <https://w3id.org/caselinker/resource/case/nashville_pd_2026_002/event/distribution>,
+        <https://w3id.org/caselinker/resource/case/nashville_pd_2026_002/legal-proceeding> ;
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/nashville_pd_2026_002/cybertip> .
+
+<https://w3id.org/caselinker/resource/case/nashville_pd_2026_002/assessment/semantic/registered-sex-offender> a ns3:AssessmentResult ;
+    rdfs:label "semantic similarity · registered_sex_offender" ;
+    dcterms:subject <https://cacontology.projectvic.org/sex-offender-registry#RegisteredSexOffender> ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/nashville_pd_2026_002/narrative> ;
+    ns3:hasConfidence 0.4631 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/nashville_pd_2026_002/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/nashville_pd_2026_002/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/nashville_pd_2026_002/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/nashville_pd_2026_002/role/registered-sex-offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/registered-sex-offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/nashville_pd_2026_002/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/nashville_pd_2026_002/role/registered-sex-offender/1> .
+
+<https://w3id.org/caselinker/resource/case/nashville_pd_2026_002/charge/1> a ns5:CriminalCharge,
+        ns5:StateCharge ;
+    rdfs:label "sexual exploitation of a minor" .
+
+<https://w3id.org/caselinker/resource/case/nashville_pd_2026_002/charge/2> a ns5:CriminalCharge ;
+    rdfs:label "sexual exploitation" .
+
+<https://w3id.org/caselinker/resource/case/nashville_pd_2026_002/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
+    rdfs:label "CyberTipline report" ;
+    ns6:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns1:name "observe" .
+
+<https://w3id.org/caselinker/resource/case/nashville_pd_2026_002/event/distribution> a ns3:Event,
+        ns5:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
+
+<https://w3id.org/caselinker/resource/case/nashville_pd_2026_002/legal-proceeding> a ns3:Event,
+        ns3:LegalEvent,
+        ns5:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns5:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/nashville_pd_2026_002/charge/1>,
+        <https://w3id.org/caselinker/resource/case/nashville_pd_2026_002/charge/2> .
+
+<https://w3id.org/caselinker/resource/case/nashville_pd_2026_002/role/offender/1> a ns5:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/nashville_pd_2026_002/event/ai-csam> .
+
+<https://w3id.org/caselinker/resource/case/nashville_pd_2026_002/role/registered-sex-offender/1> a <https://cacontology.projectvic.org/sex-offender-registry#RegisteredSexOffender> ;
+    rdfs:label "Registered Sex Offender · role/registered-sex-offender/1" .
+
+<https://w3id.org/caselinker/resource/platform/discord> a ns3:DigitalSystemEntity,
+        ns7:MessagingService ;
+    rdfs:label "Discord" ;
+    ns1:name "Discord" .
+
+<https://w3id.org/caselinker/resource/platform/gen-ai> a ns3:DigitalSystemEntity,
+        ns7:FileHostingService ;
+    rdfs:label "Gen AI" ;
+    ns7:platformType "generative-ai" ;
+    ns1:name "Gen AI" .
+
+<https://w3id.org/caselinker/resource/agency/ncmec> a ns3:OrganizationLikeEntity,
+        ns6:HotlineOrganization,
+        ns4:FederalAgency ;
+    rdfs:label "National Center for Missing and Exploited Children" ;
+    skos:altLabel "NCMEC" ;
+    ns1:name "National Center for Missing and Exploited Children" .
+
+<https://w3id.org/caselinker/resource/case/nashville_pd_2026_002/event/ai-csam> a ns2:DigitallyGeneratedCSAMIncident,
+        <https://cacontology.projectvic.org/ai-csam#AIGeneratedCSAM>,
+        ns3:Event ;
+    rdfs:label "Digitally Generated CSAMIncident · event/ai-csam" ;
+    ns2:usesChannel <https://w3id.org/caselinker/resource/platform/discord>,
+        <https://w3id.org/caselinker/resource/platform/gen-ai> .
+
+<https://w3id.org/caselinker/resource/case/nashville_pd_2026_002/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/nashville_pd_2026_002/phase/charged> a ns2:LegalProcessPhase,
+        ns3:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
+

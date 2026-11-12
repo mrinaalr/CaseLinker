@@ -1,90 +1,96 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns1: <https://cacontology.projectvic.org/core#> .
+@prefix ns2: <https://cacontology.projectvic.org#> .
 @prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://cacontology.projectvic.org/core#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns6: <https://w3id.org/caselinker/resource/vocab/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_090> a ns1:CACInvestigation,
-        ns4:EnduringEntity ;
-    dcterms:created "2026-10-17 22:21:28.774213" ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_090> a ns2:CACInvestigation,
+        ns1:EnduringEntity ;
+    rdfs:label "Case ncmec_2023_090" ;
+    dcterms:created "2026-11-10T10:02:59.857647"^^xsd:dateTime ;
+    dcterms:date "2023-01"^^xsd:gYearMonth ;
     dcterms:identifier "ncmec_2023_090" ;
-    dcterms:modified "2026-10-17 22:21:28.774213" ;
+    dcterms:modified "2026-11-10T10:02:59.857647"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2023_090/provenance> ;
     dcterms:source <https://mynbc15.com/news/local/mobile-man-arrested-for-child-sexual-abuse-material>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/ala>,
-        <https://w3id.org/caselinker/resource/location/mobile> ;
-    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_090/phase/charged> ;
-    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_090/phase/charged> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_090/event/distribution>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/alabama-al>,
+        <https://w3id.org/caselinker/resource/location/mobile-city-al> ;
+    ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_090/phase/charged> ;
+    ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_090/phase/charged> ;
+    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_090/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_090/event/hands-on>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_090/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_090/legal-proceeding> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/mobile-county-sheriffs-office> ;
-    ns6:mentionsLocation <https://w3id.org/caselinker/resource/location/ala>,
-        <https://w3id.org/caselinker/resource/location/mobile> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2023_090/agency/mobile-county-sheriffs-office> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_090/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_090/event/hands-on>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2023_090/event/possession> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_090/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_090/assessment/semantic/possession-csam> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns2:CSAMIncident ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/ncmec_2023_090/narrative> ;
+    ns1:hasConfidence 0.5547 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_090/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_090/event/hands-on>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2023_090/event/possession> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_090/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_090/role/offender/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2023_090/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2023_090/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/mobile-county-sheriffs-office> a ns5:LocalAgency .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_090/agency/mobile-county-sheriffs-office> a ns1:OrganizationLikeEntity,
+        ns5:LocalAgency ;
+    rdfs:label "Mobile County Sheriff's Office" ;
+    ns3:name "Mobile County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_090/charge/1> a ns2:CSAM_Possession,
-        ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_090/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
     rdfs:label "child sexual abuse material" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_090/event/distribution> a ns4:Event,
-        ns2:CSAM_Distribution ;
-    ns1:severityLevel 3 .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_090/event/distribution> a ns1:Event,
+        ns4:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_090/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_090/event/hands-on> a ns2:ChildSexualAbuseEvent,
+        ns1:Event ;
+    rdfs:label "Child Sexual Abuse Event · event/hands-on" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_090/legal-proceeding> a ns4:Event,
-        ns4:LegalEvent,
-        ns2:LegalProceeding ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_090/charge/1> ;
-    ns2:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_090/event/possession> a ns2:CSAMIncident,
+        ns1:Event ;
+    rdfs:label "CSAMIncident · event/possession" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_090/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_090/legal-proceeding> a ns1:Event,
+        ns1:LegalEvent,
+        ns4:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns4:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_090/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_090/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_090/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_090/phase/charged> a ns1:LegalProcessPhase,
-        ns4:Phase ;
-    ns1:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_090/role/offender/1> a ns4:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" .
 
-<https://w3id.org/caselinker/resource/location/ala> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/alabama-al> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Ala." ;
-    ns3:name "Ala." .
+    rdfs:label "Alabama" ;
+    dcterms:identifier "fips:01" ;
+    skos:altLabel "Ala." ;
+    ns3:name "Alabama" .
 
-<https://w3id.org/caselinker/resource/location/mobile> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/mobile-city-al> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Mobile" ;
-    ns3:name "Mobile" .
+    rdfs:label "Mobile city" ;
+    dcterms:identifier "fips:0150000" ;
+    skos:altLabel "Mobile" ;
+    ns3:name "Mobile city" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_090/event/hands-on> a ns1:ChildSexualAbuseEvent,
-        ns4:Event ;
-    ns1:severityLevel 3 .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_090/phase/charged> a ns2:LegalProcessPhase,
+        ns1:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_090/event/possession> a ns1:CSAMIncident,
-        ns4:Event ;
-    ns1:severityLevel 3 ;
-    ns3:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2023_090/facet/possession> .
-
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_090> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2023_090/provenance> .

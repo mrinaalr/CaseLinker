@@ -1,137 +1,140 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns6: <https://cacontology.projectvic.org/core#> .
-@prefix ns7: <https://cacontology.projectvic.org/us/ncmec#> .
-@prefix ns8: <https://cacontology.projectvic.org/detection#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://cacontology.projectvic.org#> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns5: <https://cacontology.projectvic.org/core#> .
+@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns7: <https://cacontology.projectvic.org/hotlines#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_1008/admission/1/extraction-confidence> a ns6:AssessmentResult ;
-    ns6:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_1008/admission/1> ;
-    ns6:generatedBy <https://w3id.org/caselinker/resource/case/ncmec_2025_1008> ;
-    ns6:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_1008/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2025-02-26T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_1008/event/possession> ;
-    ns6:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2025_1008/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/agency/department-of-criminal-investigations> a ns6:OrganizationLikeEntity,
-        ns4:LocalAgency ;
-    rdfs:label "Department of Criminal Investigations" .
-
-<https://w3id.org/caselinker/resource/agency/hartford-police-department> a ns4:LocalAgency .
-
-<https://w3id.org/caselinker/resource/agency/wisconsin-department-of-justice> a ns4:StateAgency .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_1008> a ns2:CACInvestigation,
-        ns6:EnduringEntity ;
-    dcterms:created "2026-10-18 00:01:26.922006" ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_1008> a ns3:CACInvestigation,
+        ns5:EnduringEntity ;
+    rdfs:label "Case ncmec_2025_1008" ;
+    dcterms:created "2026-11-12T01:21:41.899274"^^xsd:dateTime ;
+    dcterms:date "2025-02-26"^^xsd:date ;
     dcterms:identifier "ncmec_2025_1008" ;
-    dcterms:modified "2026-10-18 00:01:26.922006" ;
+    dcterms:modified "2026-11-12T01:21:41.899274"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2025_1008/provenance> ;
     dcterms:source <https://www.gmtoday.com/daily_news/news/hartford-man-charged-with-15-felonies-for-possession-of-child-porn/article_7a0979e8-ae30-5425-8c1d-2f949ac203e0.html>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/hartford>,
-        <https://w3id.org/caselinker/resource/location/washington-county>,
-        <https://w3id.org/caselinker/resource/location/west-bend> ;
-    ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_1008/phase/convicted> ;
-    ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_1008/phase/convicted> ;
-    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_1008/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_1008/cybertip>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_1008/event/multi-jurisdiction>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2025_1008/location/hartford>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_1008/location/washington-county>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_1008/location/west-bend> ;
+    ns3:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_1008/phase/charged> ;
+    ns3:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_1008/phase/charged> ;
+    ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_1008/event/multi-jurisdiction>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_1008/event/possession>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_1008/legal-proceeding>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_1008/legal-step/convicted> ;
-    ns2:investigationStatus "unknown" ;
-    ns2:usesMethod <https://w3id.org/caselinker/resource/case/ncmec_2025_1008/tech/cybertipline> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/department-of-criminal-investigations>,
-        <https://w3id.org/caselinker/resource/agency/hartford-police-department>,
-        <https://w3id.org/caselinker/resource/agency/ncmec>,
-        <https://w3id.org/caselinker/resource/agency/wisconsin-department-of-justice> ;
-    ns3:mentionsLocation <https://w3id.org/caselinker/resource/location/hartford>,
-        <https://w3id.org/caselinker/resource/location/washington-county>,
-        <https://w3id.org/caselinker/resource/location/west-bend> .
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_1008/legal-proceeding> ;
+    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
+        <https://w3id.org/caselinker/resource/agency/wisconsin-department-of-justice>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_1008/agency/department-of-criminal-investigations>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_1008/agency/hartford-police-department> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2025_1008/admission/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_1008/cybertip> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_1008/charge/1> a ns1:CSAM_Possession,
-        ns1:CriminalCharge ;
-    rdfs:label "possession of child pornography" ;
-    ns1:indictmentCounts 3 .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_1008/admission/1/extraction-confidence> a ns5:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns5:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_1008/admission/1> ;
+    ns5:hasConfidence 0.65 ;
+    ns5:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_1008/cybertip> a ns7:NCMECCybertipReport ;
-    ns7:supportedBy <https://w3id.org/caselinker/resource/agency/ncmec> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_1008/assessment/semantic/possession-csam> a ns5:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns3:CSAMIncident ;
+    ns5:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_1008/narrative> ;
+    ns5:hasConfidence 0.5015 ;
+    ns5:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_1008/event/multi-jurisdiction> a ns6:Event,
-        ns4:MultiJurisdictionalInvestigation .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_1008/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2025_1008/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 63.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_1008/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_1008/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2025_1008/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2025_1008/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_1008/legal-proceeding> a ns6:Event,
-        ns6:LegalEvent,
-        ns1:LegalProceeding ;
-    ns1:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_1008/charge/1> ;
-    ns1:hasProceedingBeginPoint "2025-02-26T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/agency/wisconsin-department-of-justice> a ns5:OrganizationLikeEntity,
+        ns2:StateAgency ;
+    rdfs:label "Wisconsin Department of Justice" ;
+    ns1:name "Wisconsin Department of Justice" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_1008/legal-step/convicted> a ns6:Event,
-        ns6:LegalEvent,
-        ns1:LegalProceeding,
-        ns1:SentencingHearing ;
-    ns1:hasProceedingBeginPoint "2025-02-26T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_1008/agency/department-of-criminal-investigations> a ns5:OrganizationLikeEntity,
+        ns2:LocalAgency ;
+    rdfs:label "Department of Criminal Investigations" ;
+    ns1:name "Department of Criminal Investigations" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_1008/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns8:ageEstimate 63 .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_1008/agency/hartford-police-department> a ns5:OrganizationLikeEntity,
+        ns2:LocalAgency ;
+    rdfs:label "Hartford Police Department" ;
+    ns1:name "Hartford Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_1008/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_1008/charge/1> a ns6:CSAM_Possession,
+        ns6:CriminalCharge ;
+    rdfs:label "possession of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_1008/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2025-02-26T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_1008/event/possession> ;
-    ns6:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2025_1008/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_1008/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
+    rdfs:label "CyberTipline report" ;
+    ns7:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns1:name "observe" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_1008/tech/cybertipline> a ns7:NCMECCybertipReport ;
-    rdfs:label "CyberTipline" .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_1008/event/multi-jurisdiction> a ns5:Event,
+        ns2:MultiJurisdictionalInvestigation ;
+    rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" .
 
-<https://w3id.org/caselinker/resource/agency/ncmec> a ns4:FederalAgency .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_1008/legal-proceeding> a ns5:Event,
+        ns5:LegalEvent,
+        ns6:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns6:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns6:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_1008/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_1008/phase/convicted> a ns6:Phase,
-        ns1:SentencingPhase ;
-    ns2:hasPhaseBeginPoint "2025-02-26T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/hartford> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2025_1008/location/hartford> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Hartford" ;
-    ns5:name "Hartford" .
+    ns1:name "Hartford" .
 
-<https://w3id.org/caselinker/resource/location/washington-county> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2025_1008/location/washington-county> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Washington County" ;
-    ns5:name "Washington County" .
+    ns1:name "Washington County" .
 
-<https://w3id.org/caselinker/resource/location/west-bend> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2025_1008/location/west-bend> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "West Bend" ;
-    ns5:name "West Bend" .
+    ns1:name "West Bend" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_1008/role/offender/1> a ns6:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_1008/event/possession> .
+
+<https://w3id.org/caselinker/resource/agency/ncmec> a ns5:OrganizationLikeEntity,
+        ns7:HotlineOrganization,
+        ns2:FederalAgency ;
+    rdfs:label "National Center for Missing and Exploited Children" ;
+    skos:altLabel "NCMEC" ;
+    ns1:name "National Center for Missing and Exploited Children" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_1008/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "had child pornography on the computer in his residence, but that he was going to delete it and just had not done so yet" ;
     dcterms:source <https://www.gmtoday.com/daily_news/news/hartford-man-charged-with-15-felonies-for-possession-of-child-porn/article_7a0979e8-ae30-5425-8c1d-2f949ac203e0.html> ;
-    ns3:admissionContext "ndant stated he watches ‘Live Gore’ every once and a while.\" According to the complaint, Litza admitted that he had child pornography on..." ;
-    ns3:admissionFrame "admitted_paraphrase" ;
-    ns3:admissionTheme "harm_conduct" ;
-    ns3:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/ncmec_2025_1008/role/offender/1> ;
-    ns3:evidenceTier "press_release_stated" ;
-    ns3:quoteType "paraphrase" ;
-    ns5:description "had child pornography on the computer in his residence, but that he was going to delete it and just had not done so yet" .
+    ns1:description "had child pornography on the computer in his residence, but that he was going to delete it and just had not done so yet" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_1008/event/possession> a ns2:CSAMIncident,
-        ns6:Event ;
-    ns2:producesArtifact <https://w3id.org/caselinker/resource/case/ncmec_2025_1008/admission/1> ;
-    ns5:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2025_1008/facet/possession> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_1008/event/possession> a ns3:CSAMIncident,
+        ns5:Event ;
+    rdfs:label "CSAMIncident · event/possession" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2025_1008/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_1008> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2025_1008/provenance> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_1008/phase/charged> a ns3:LegalProcessPhase,
+        ns5:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
+

@@ -1,83 +1,86 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns3: <https://cacontology.projectvic.org/core#> .
-@prefix ns4: <https://cacontology.projectvic.org/detection#> .
-@prefix ns5: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns6: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns7: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns4: <https://cacontology.projectvic.org#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_150> a ns1:CACInvestigation,
-        ns3:EnduringEntity ;
-    dcterms:created "2026-10-18 00:01:17.100154" ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_150> a ns4:CACInvestigation,
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case ncmec_2025_150" ;
+    dcterms:created "2026-11-10T16:32:48.878087"^^xsd:dateTime ;
+    dcterms:date "2025-03-20"^^xsd:date ;
     dcterms:identifier "ncmec_2025_150" ;
-    dcterms:modified "2026-10-18 00:01:17.100154" ;
+    dcterms:modified "2026-11-12T01:40:01.394976"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2025_150/provenance> ;
     dcterms:source <https://www.nbcmiami.com/news/local/miami-dade-schools-employee-arrested-on-child-porn-charges-in-hollywood-police/3572729/>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/hollywood>,
-        <https://w3id.org/caselinker/resource/location/miami> ;
-    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_150/phase/arrested> ;
-    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_150/phase/arrested> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_150/event/possession>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/hollywood-city-fl>,
+        <https://w3id.org/caselinker/resource/location/miami-city-fl> ;
+    ns4:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_150/phase/arrested> ;
+    ns4:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_150/phase/arrested> ;
+    ns4:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_150/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_150/legal-proceeding> ;
-    ns1:investigationStatus "unknown" ;
-    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/hollywood-police-department> ;
-    ns5:mentionsLocation <https://w3id.org/caselinker/resource/location/hollywood>,
-        <https://w3id.org/caselinker/resource/location/miami> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2025_150/agency/hollywood-police-department> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_150/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2025-03-20T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_150/event/possession> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2025_150/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_150/person/offender/1/age> a ns3:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns3:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2025_150/person/offender/1> ;
+    ns3:concernsAgeQuality ns3:Age ;
+    ns3:hasAgeInYears 63.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_150/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2025-03-20T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_150/event/possession> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2025_150/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_150/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2025_150/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2025_150/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/hollywood-police-department> a ns3:OrganizationLikeEntity,
-        ns2:LocalAgency ;
-    rdfs:label "Hollywood Police Department" .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_150/agency/hollywood-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns5:LocalAgency ;
+    rdfs:label "Hollywood Police Department" ;
+    ns1:name "Hollywood Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_150/charge/1> a ns7:CSAM_Possession,
-        ns7:CriminalCharge ;
-    rdfs:label "possession of child pornography and one" ;
-    ns7:indictmentCounts 13 .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_150/charge/1> a ns2:CSAM_Possession,
+        ns2:CriminalCharge ;
+    rdfs:label "possession of child pornography and one" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_150/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_150/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        ns2:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns2:chargeCount "13"^^xsd:nonNegativeInteger ;
+    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_150/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_150/legal-proceeding> a ns3:Event,
-        ns3:LegalEvent,
-        ns7:LegalProceeding ;
-    ns7:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_150/charge/1> ;
-    ns7:hasProceedingBeginPoint "2025-03-20T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_150/role/offender/1> a ns2:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_150/event/possession> .
+
+<https://w3id.org/caselinker/resource/location/hollywood-city-fl> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Hollywood city" ;
+    dcterms:identifier "fips:1232000" ;
+    skos:altLabel "Hollywood" ;
+    ns1:name "Hollywood city" .
+
+<https://w3id.org/caselinker/resource/location/miami-city-fl> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Miami city" ;
+    dcterms:identifier "fips:1245000" ;
+    skos:altLabel "Miami" ;
+    ns1:name "Miami city" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_150/event/possession> a ns4:CSAMIncident,
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/possession" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_150/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns4:ageEstimate 63 .
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_150/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_150/phase/arrested> a ns4:InitialPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Initial Phase · phase/arrested" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_150/phase/arrested> a ns1:InitialPhase,
-        ns3:Phase ;
-    ns1:hasPhaseBeginPoint "2025-03-20T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/hollywood> a ns3:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Hollywood" ;
-    ns6:name "Hollywood" .
-
-<https://w3id.org/caselinker/resource/location/miami> a ns3:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Miami" ;
-    ns6:name "Miami" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_150/event/possession> a ns1:CSAMIncident,
-        ns3:Event ;
-    ns6:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2025_150/facet/possession> .
-
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_150> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2025_150/provenance> .

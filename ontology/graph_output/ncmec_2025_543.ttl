@@ -1,75 +1,68 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/core#> .
-@prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns5: <https://cacontology.projectvic.org/detection#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org/core#> .
+@prefix ns3: <https://cacontology.projectvic.org#> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_543/admission/1/extraction-confidence> a ns1:AssessmentResult ;
-    ns1:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_543/admission/1> ;
-    ns1:generatedBy <https://w3id.org/caselinker/resource/case/ncmec_2025_543> ;
-    ns1:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_543/admission/2/extraction-confidence> a ns1:AssessmentResult ;
-    ns1:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_543/admission/2> ;
-    ns1:generatedBy <https://w3id.org/caselinker/resource/case/ncmec_2025_543> ;
-    ns1:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_543/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2025_543/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_543/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns5:ageEstimate 35 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_543/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_543> a ns2:CACInvestigation,
-        ns1:EnduringEntity ;
-    dcterms:created "2026-10-18 00:01:21.297621" ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_543> a ns3:CACInvestigation,
+        ns2:EnduringEntity ;
+    rdfs:label "Case ncmec_2025_543" ;
+    dcterms:created "2026-11-10T16:35:45.518830"^^xsd:dateTime ;
+    dcterms:date "2025-01"^^xsd:gYearMonth ;
     dcterms:identifier "ncmec_2025_543" ;
-    dcterms:modified "2026-10-18 00:01:21.297621" ;
+    dcterms:modified "2026-11-12T01:59:05.223610"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2025_543/provenance> ;
     dcterms:source <https://www.missingkids.org/gethelpnow/cybertipline/cybertiplinedata>,
         "NCMEC" ;
-    ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_543/phase/charged> ;
-    ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_543/phase/charged> ;
-    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_543/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_543/admission/2> ;
-    ns2:investigationStatus "unknown" .
+    ns3:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_543/phase/charged> ;
+    ns3:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_543/phase/charged> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2025_543/admission/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_543/admission/2> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_543/admission/1/extraction-confidence> a ns2:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_543/admission/1> ;
+    ns2:hasConfidence 0.65 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_543/admission/2/extraction-confidence> a ns2:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/2/extraction-confidence" ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_543/admission/2> ;
+    ns2:hasConfidence 0.65 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_543/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2025_543/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 35.0 .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_543/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2025_543/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2025_543/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_543/role/offender/1> a <https://cacontology.projectvic.org/legal-outcomes#DefendantRole> ;
+    rdfs:label "Defendant Role · role/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_543/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "police that she’d been prostituting, at times in her house when her children were home" ;
     dcterms:source <https://www.missingkids.org/gethelpnow/cybertipline/cybertiplinedata> ;
-    ns3:admissionContext "at $750,000, an amount a judge declined to lower despite requests by her defense counsel. Prosecutors say she admitted to police that she..." ;
-    ns3:admissionFrame "admitted_to" ;
-    ns3:admissionTheme "other" ;
-    ns3:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/ncmec_2025_543/role/offender/1> ;
-    ns3:evidenceTier "press_release_stated" ;
-    ns3:quoteType "paraphrase" ;
-    ns4:description "police that she’d been prostituting, at times in her house when her children were home" .
+    ns1:description "police that she’d been prostituting, at times in her house when her children were home" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_543/admission/2> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "to police that she’d been prostituting, at times in her house when her children were home" ;
     dcterms:source <https://www.missingkids.org/gethelpnow/cybertipline/cybertiplinedata> ;
-    ns3:admissionContext "amount a judge declined to lower despite requests by her defense counsel. Prosecutors say she admitted to police that she’d been prostitu..." ;
-    ns3:admissionFrame "he_admitted_paraphrase" ;
-    ns3:admissionTheme "other" ;
-    ns3:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/ncmec_2025_543/role/offender/1> ;
-    ns3:evidenceTier "press_release_stated" ;
-    ns3:quoteType "paraphrase" ;
-    ns4:description "to police that she’d been prostituting, at times in her house when her children were home" .
+    ns1:description "to police that she’d been prostituting, at times in her house when her children were home" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_543/phase/charged> a ns2:LegalProcessPhase,
-        ns1:Phase ;
-    ns2:hasPhaseBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_543/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_543/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2025-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2025_543/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_543/phase/charged> a ns3:LegalProcessPhase,
+        ns2:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
 
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_543> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2025_543/provenance> .

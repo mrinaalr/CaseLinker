@@ -1,93 +1,97 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
+@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns3: <https://cacontology.projectvic.org/core#> .
-@prefix ns4: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns6: <https://cacontology.projectvic.org/us/ncmec#> .
-@prefix ns7: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns8: <https://cacontology.projectvic.org/detection#> .
+@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns6: <https://cacontology.projectvic.org#> .
+@prefix ns7: <https://cacontology.projectvic.org/hotlines#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_666/admission/1/extraction-confidence> a ns3:AssessmentResult ;
-    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_666/admission/1> ;
-    ns3:generatedBy <https://w3id.org/caselinker/resource/case/ncmec_2025_666> ;
-    ns3:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_666/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2025-02-27T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2025_666/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/agency/invictus-task-force> a ns5:LocalAgency .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_666> a ns1:CACInvestigation,
+<https://w3id.org/caselinker/resource/case/ncmec_2025_666> a ns6:CACInvestigation,
         ns3:EnduringEntity ;
-    dcterms:created "2026-10-18 00:01:22.697742" ;
+    rdfs:label "Case ncmec_2025_666" ;
+    dcterms:created "2026-11-10T16:36:35.481037"^^xsd:dateTime ;
+    dcterms:date "2025-02-27"^^xsd:date ;
     dcterms:identifier "ncmec_2025_666" ;
-    dcterms:modified "2026-10-18 00:01:22.697742" ;
+    dcterms:modified "2026-11-12T02:05:07.702042"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2025_666/provenance> ;
     dcterms:source <https://www.wxii12.com/article/davidson-county-sexual-exploitation-invictus-task-force/63961116>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/davidson-county> ;
-    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_666/phase/charged> ;
-    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_666/phase/charged> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_666/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_666/cybertip>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_666/legal-proceeding> ;
-    ns1:investigationStatus "unknown" ;
-    ns1:usesMethod <https://w3id.org/caselinker/resource/case/ncmec_2025_666/tech/cybertipline> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/invictus-task-force>,
-        <https://w3id.org/caselinker/resource/agency/ncmec> ;
-    ns4:mentionsLocation <https://w3id.org/caselinker/resource/location/davidson-county> .
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2025_666/location/davidson-county> ;
+    ns6:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_666/phase/charged> ;
+    ns6:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_666/phase/charged> ;
+    ns6:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_666/legal-proceeding> ;
+    ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_666/agency/invictus-task-force> ;
+    ns4:object <https://w3id.org/caselinker/resource/case/ncmec_2025_666/admission/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_666/cybertip> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_666/admission/1/extraction-confidence> a ns3:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_666/admission/1> ;
+    ns3:hasConfidence 0.65 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_666/person/offender/1/age> a ns5:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2025_666/person/offender/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 30.0 .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_666/role/offender/1/has-role> a ns4:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns4:isDirectional true ;
+    ns4:kindOfRelationship "Has_Role" ;
+    ns4:source <https://w3id.org/caselinker/resource/case/ncmec_2025_666/person/offender/1> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/ncmec_2025_666/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_666/agency/invictus-task-force> a ns3:OrganizationLikeEntity,
+        ns1:LocalAgency ;
+    rdfs:label "Invictus Task Force" ;
+    ns4:name "Invictus Task Force" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_666/charge/1> a ns2:CriminalCharge ;
-    rdfs:label "sexual exploitation" ;
-    ns4:chargeCluster "sexual_exploitation_unspecified" .
+    rdfs:label "sexual exploitation" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_666/cybertip> a ns6:NCMECCybertipReport ;
-    ns6:supportedBy <https://w3id.org/caselinker/resource/agency/ncmec> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_666/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
+    rdfs:label "CyberTipline report" ;
+    ns7:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns4:name "observe" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_666/legal-proceeding> a ns3:Event,
         ns3:LegalEvent,
         ns2:LegalProceeding ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_666/charge/1> ;
-    ns2:hasProceedingBeginPoint "2025-02-27T00:00:00Z"^^xsd:dateTimeStamp .
+    rdfs:label "Event · legal-proceeding" ;
+    ns2:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_666/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_666/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns8:ageEstimate 30 .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_666/location/davidson-county> a ns3:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Davidson County" ;
+    ns4:name "Davidson County" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_666/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_666/role/offender/1> a ns2:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_666/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2025-02-27T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2025_666/person/offender/1> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_666/tech/cybertipline> a ns6:NCMECCybertipReport ;
-    rdfs:label "CyberTipline" .
-
-<https://w3id.org/caselinker/resource/agency/ncmec> a ns5:FederalAgency .
+<https://w3id.org/caselinker/resource/agency/ncmec> a ns3:OrganizationLikeEntity,
+        ns7:HotlineOrganization,
+        ns1:FederalAgency ;
+    rdfs:label "National Center for Missing and Exploited Children" ;
+    skos:altLabel "NCMEC" ;
+    ns4:name "National Center for Missing and Exploited Children" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_666/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "was taken to the Davidson County Detention Center, where his bond was set at $100,000" ;
     dcterms:source <https://www.wxii12.com/article/davidson-county-sexual-exploitation-invictus-task-force/63961116> ;
-    ns4:admissionContext "was arrested and charged with six counts of second-degree sexual exploitation of a minor. Officials said he was taken to the Davidson Cou..." ;
-    ns4:admissionFrame "said_paraphrase" ;
-    ns4:admissionTheme "other" ;
-    ns4:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/ncmec_2025_666/role/offender/1> ;
-    ns4:evidenceTier "press_release_stated" ;
-    ns4:quoteType "paraphrase" ;
-    ns7:description "was taken to the Davidson County Detention Center, where his bond was set at $100,000" .
+    ns4:description "was taken to the Davidson County Detention Center, where his bond was set at $100,000" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_666/phase/charged> a ns1:LegalProcessPhase,
+<https://w3id.org/caselinker/resource/case/ncmec_2025_666/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_666/phase/charged> a ns6:LegalProcessPhase,
         ns3:Phase ;
-    ns1:hasPhaseBeginPoint "2025-02-27T00:00:00Z"^^xsd:dateTimeStamp .
+    rdfs:label "Legal Process Phase · phase/charged" .
 
-<https://w3id.org/caselinker/resource/location/davidson-county> a ns3:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Davidson County" ;
-    ns7:name "Davidson County" .
-
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_666> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2025_666/provenance> .

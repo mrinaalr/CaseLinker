@@ -1,56 +1,62 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/detection#> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns5: <https://cacontology.projectvic.org/core#> .
-@prefix ns6: <https://w3id.org/caselinker/resource/vocab/> .
+@prefix ns1: <https://cacontology.projectvic.org#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/scotland_police_2022_006> a ns2:CACInvestigation,
-        ns5:EnduringEntity ;
-    dcterms:created "2026-10-18 14:18:19.485240" ;
+<https://w3id.org/caselinker/resource/case/scotland_police_2022_006> a ns1:CACInvestigation,
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case scotland_police_2022_006" ;
+    dcterms:created "2026-11-11T17:36:10.692761"^^xsd:dateTime ;
+    dcterms:date "2022-08-10"^^xsd:date ;
     dcterms:identifier "scotland_police_2022_006" ;
-    dcterms:modified "2026-10-18 14:18:19.485240" ;
+    dcterms:modified "2026-11-11T17:36:10.692761"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/scotland_police_2022_006/provenance> ;
     dcterms:source <https://www.scotland.police.uk/what-s-happening/news/2022/august/man-found-guilty-of-sexual-offences-in-fife/>,
         "SCOTLAND POLICE" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/edinburgh> ;
-    ns2:currentPhase <https://w3id.org/caselinker/resource/case/scotland_police_2022_006/phase/charged> ;
-    ns2:hasPhase <https://w3id.org/caselinker/resource/case/scotland_police_2022_006/phase/charged> ;
-    ns2:investigationStatus "unknown" ;
-    ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/child-abuse-investigation-unit>,
-        <https://w3id.org/caselinker/resource/agency/police-scotland> ;
-    ns6:mentionsLocation <https://w3id.org/caselinker/resource/location/edinburgh> .
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/scotland_police_2022_006/location/edinburgh> ;
+    ns1:currentPhase <https://w3id.org/caselinker/resource/case/scotland_police_2022_006/phase/charged> ;
+    ns1:hasPhase <https://w3id.org/caselinker/resource/case/scotland_police_2022_006/phase/charged> ;
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/police-scotland>,
+        <https://w3id.org/caselinker/resource/case/scotland_police_2022_006/agency/child-abuse-investigation-unit> .
 
-<https://w3id.org/caselinker/resource/case/scotland_police_2022_006/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2022-08-10T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/scotland_police_2022_006/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/scotland_police_2022_006/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/scotland_police_2022_006/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 42.0 .
 
-<https://w3id.org/caselinker/resource/case/scotland_police_2022_006/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2022-08-10T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/scotland_police_2022_006/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/scotland_police_2022_006/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/scotland_police_2022_006/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/scotland_police_2022_006/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/child-abuse-investigation-unit> a ns5:OrganizationLikeEntity,
-        ns1:LocalAgency ;
-    rdfs:label "Child Abuse Investigation Unit" .
+<https://w3id.org/caselinker/resource/agency/police-scotland> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns3:LocalAgency ;
+    rdfs:label "Police Scotland" ;
+    ns2:name "Police Scotland" .
 
-<https://w3id.org/caselinker/resource/agency/police-scotland> a ns1:LocalAgency .
+<https://w3id.org/caselinker/resource/case/scotland_police_2022_006/agency/child-abuse-investigation-unit> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns3:LocalAgency ;
+    rdfs:label "Child Abuse Investigation Unit" ;
+    ns2:name "Child Abuse Investigation Unit" .
 
-<https://w3id.org/caselinker/resource/case/scotland_police_2022_006/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns3:ageEstimate 42 .
-
-<https://w3id.org/caselinker/resource/case/scotland_police_2022_006/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/scotland_police_2022_006/phase/charged> a ns2:LegalProcessPhase,
-        ns5:Phase ;
-    ns2:hasPhaseBeginPoint "2022-08-10T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/edinburgh> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/scotland_police_2022_006/location/edinburgh> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Edinburgh" ;
-    ns4:name "Edinburgh" .
+    ns2:name "Edinburgh" .
+
+<https://w3id.org/caselinker/resource/case/scotland_police_2022_006/role/offender/1> a <https://cacontology.projectvic.org/legal-outcomes#DefendantRole> ;
+    rdfs:label "Defendant Role · role/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/scotland_police_2022_006/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/scotland_police_2022_006/phase/charged> a ns1:LegalProcessPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Legal Process Phase · phase/charged" .
 

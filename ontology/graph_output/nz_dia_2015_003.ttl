@@ -1,17 +1,18 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns3: <https://cacontology.projectvic.org/core#> .
-@prefix ns4: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org/core#> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/nz_dia_2015_003> a ns1:CACInvestigation,
-        ns3:EnduringEntity ;
-    dcterms:created "2026-10-18 14:04:16.782790" ;
+        ns2:EnduringEntity ;
+    rdfs:label "Case nz_dia_2015_003" ;
+    dcterms:created "2026-11-11T16:25:47.547637"^^xsd:dateTime ;
+    dcterms:date "2015-09-30"^^xsd:date ;
     dcterms:identifier "nz_dia_2015_003" ;
-    dcterms:modified "2026-10-18 14:04:16.782790" ;
+    dcterms:modified "2026-11-11T16:25:47.547637"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/nz_dia_2015_003/provenance> ;
     dcterms:source <https://www.dia.govt.nz/press.nsf/d77da9b523f12931cc256ac5000d19b6/0a76751767afaa88cc257ed00010fc9c!OpenDocument>,
         "NZ DIA" ;
@@ -22,60 +23,91 @@
         <https://w3id.org/caselinker/resource/case/nz_dia_2015_003/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/nz_dia_2015_003/legal-step/pleaded-guilty> .
 
-<https://w3id.org/caselinker/resource/case/nz_dia_2015_003/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2015-09-30T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/nz_dia_2015_003/event/possession> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/nz_dia_2015_003/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/nz_dia_2015_003/assessment/semantic/dissemination> a ns2:AssessmentResult ;
+    rdfs:label "semantic similarity · dissemination" ;
+    dcterms:subject ns3:CSAM_Distribution ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/nz_dia_2015_003/narrative> ;
+    ns2:hasConfidence 0.5215 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/nz_dia_2015_003/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2015-09-30T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/nz_dia_2015_003/event/possession> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/nz_dia_2015_003/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/nz_dia_2015_003/assessment/semantic/exploitive-positions> a ns2:AssessmentResult ;
+    rdfs:label "semantic similarity · exploitive_positions" ;
+    dcterms:subject <https://cacontology.projectvic.org/custodial#PositionOfTrust> ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/nz_dia_2015_003/narrative> ;
+    ns2:hasConfidence 0.6162 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/nz_dia_2015_003/charge/1> a ns2:CriminalCharge,
-        ns2:StateCharge ;
+<https://w3id.org/caselinker/resource/case/nz_dia_2015_003/assessment/semantic/possession-csam> a ns2:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns1:CSAMIncident ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/nz_dia_2015_003/narrative> ;
+    ns2:hasConfidence 0.713 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/nz_dia_2015_003/assessment/semantic/production-csam> a ns2:AssessmentResult ;
+    rdfs:label "semantic similarity · production_csam" ;
+    dcterms:subject <https://cacontology.projectvic.org/production#ProductionOffense> ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/nz_dia_2015_003/narrative> ;
+    ns2:hasConfidence 0.5729 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/nz_dia_2015_003/assessment/semantic/sextortion> a ns2:AssessmentResult ;
+    rdfs:label "semantic similarity · sextortion" ;
+    dcterms:subject <https://cacontology.projectvic.org/sextortion#SextortionIncident> ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/nz_dia_2015_003/narrative> ;
+    ns2:hasConfidence 0.5205 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/nz_dia_2015_003/role/offender/1/has-role> a ns4:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns4:isDirectional true ;
+    ns4:kindOfRelationship "Has_Role" ;
+    ns4:source <https://w3id.org/caselinker/resource/case/nz_dia_2015_003/person/offender/1> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/nz_dia_2015_003/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/nz_dia_2015_003/charge/1> a ns3:CriminalCharge,
+        ns3:StateCharge ;
     rdfs:label "sexual exploitation of children" .
 
-<https://w3id.org/caselinker/resource/case/nz_dia_2015_003/charge/2> a ns2:CSAM_Possession,
-        ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/nz_dia_2015_003/charge/2> a ns3:CSAM_Possession,
+        ns3:CriminalCharge ;
     rdfs:label "child sexual abuse material" .
 
-<https://w3id.org/caselinker/resource/case/nz_dia_2015_003/charge/3> a ns2:CriminalCharge ;
-    rdfs:label "sexual exploitation" ;
-    ns4:chargeCluster "sexual_exploitation_unspecified" .
+<https://w3id.org/caselinker/resource/case/nz_dia_2015_003/charge/3> a ns3:CriminalCharge ;
+    rdfs:label "sexual exploitation" .
 
-<https://w3id.org/caselinker/resource/case/nz_dia_2015_003/event/distribution> a ns3:Event,
-        ns2:CSAM_Distribution ;
-    ns1:severityLevel 3 .
+<https://w3id.org/caselinker/resource/case/nz_dia_2015_003/event/distribution> a ns2:Event,
+        ns3:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/nz_dia_2015_003/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/nz_dia_2015_003/legal-proceeding> a ns3:Event,
-        ns3:LegalEvent,
-        ns2:LegalProceeding ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/nz_dia_2015_003/charge/1>,
+<https://w3id.org/caselinker/resource/case/nz_dia_2015_003/legal-proceeding> a ns2:Event,
+        ns2:LegalEvent,
+        ns3:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns3:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/nz_dia_2015_003/charge/1>,
         <https://w3id.org/caselinker/resource/case/nz_dia_2015_003/charge/2>,
-        <https://w3id.org/caselinker/resource/case/nz_dia_2015_003/charge/3> ;
-    ns2:hasProceedingBeginPoint "2015-09-30T00:00:00Z"^^xsd:dateTimeStamp .
+        <https://w3id.org/caselinker/resource/case/nz_dia_2015_003/charge/3> .
 
-<https://w3id.org/caselinker/resource/case/nz_dia_2015_003/legal-step/pleaded-guilty> a ns3:Event,
-        ns3:LegalEvent,
-        ns2:LegalProceeding,
-        ns2:PleaBargaining ;
-    ns2:hasProceedingBeginPoint "2015-09-30T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/nz_dia_2015_003/legal-step/pleaded-guilty> a ns2:Event,
+        ns2:LegalEvent,
+        ns3:LegalProceeding,
+        ns3:PleaBargaining ;
+    rdfs:label "Plea Bargaining · legal-step/pleaded-guilty" .
 
-<https://w3id.org/caselinker/resource/case/nz_dia_2015_003/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/nz_dia_2015_003/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/nz_dia_2015_003/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/nz_dia_2015_003/phase/pleaded-guilty> a ns3:Phase,
-        ns2:PreTrialPhase ;
-    ns1:hasPhaseBeginPoint "2015-09-30T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/nz_dia_2015_003/role/offender/1> a ns1:OffenderRole ;
+    rdfs:label "Offender Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/nz_dia_2015_003/event/possession> .
 
 <https://w3id.org/caselinker/resource/case/nz_dia_2015_003/event/possession> a ns1:CSAMIncident,
-        ns3:Event ;
-    ns1:severityLevel 3 ;
-    ns5:hasFacet <https://w3id.org/caselinker/resource/case/nz_dia_2015_003/facet/possession> .
+        ns2:Event ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns1:severityLevel 3 .
+
+<https://w3id.org/caselinker/resource/case/nz_dia_2015_003/phase/pleaded-guilty> a ns2:Phase,
+        ns3:PreTrialPhase ;
+    rdfs:label "Pre Trial Phase · phase/pleaded-guilty" .
 

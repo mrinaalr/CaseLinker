@@ -1,233 +1,206 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/core#> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns4: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns7: <https://cacontology.projectvic.org/detection#> .
-@prefix ns8: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://cacontology.projectvic.org#> .
+@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns5: <https://cacontology.projectvic.org/core#> .
+@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/admission/1/extraction-confidence> a ns2:AssessmentResult ;
-    ns2:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/admission/1> ;
-    ns2:generatedBy <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100> ;
-    ns2:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/admission/2/extraction-confidence> a ns2:AssessmentResult ;
-    ns2:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/admission/2> ;
-    ns2:generatedBy <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100> ;
-    ns2:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/agency/cobb-county-police-department> a ns3:LocalAgency .
-
-<https://w3id.org/caselinker/resource/agency/fbi> a ns3:FederalAgency .
-
-<https://w3id.org/caselinker/resource/agency/usao> a ns3:FederalAgency .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
-    rdfs:label "child pornography" .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/charge/2> a ns5:CSAM_Production,
-        ns5:CriminalCharge ;
-    rdfs:label "production of child pornography" .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/event/project-safe-childhood> a ns2:Event,
-        ns3:ProjectSafeChildhoodOperation ;
-    ns1:severityLevel 1 .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/event/trust-violation> a ns8:CustodialAbuse,
-        ns8:TrustViolation ;
-    ns8:violatesRelationship <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/relationship/mother> .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/facet/production> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/legal-proceeding> a ns2:Event,
-        ns2:LegalEvent,
-        ns5:LegalProceeding ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/charge/1>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/charge/2> ;
-    ns5:hasProceedingBeginPoint "2023-10-20T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns5:resultsSentence <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/sentence/1>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/sentence/2> .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/legal-step/sentenced> a ns2:Event,
-        ns2:LegalEvent,
-        ns5:LegalProceeding,
-        ns5:SentencingHearing ;
-    ns5:hasProceedingBeginPoint "2023-10-20T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/operation> a ns2:Event,
-        <https://cacontology.projectvic.org/taskforce#TaskForceOperation> .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns7:ageEstimate 16 .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/person/offender/2> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns7:ageEstimate 32 .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/relationship/mother> a ns8:CustodialRelationship,
-        ns8:FamilialRelationship ;
-    ns8:involvesChild <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/role/victim/1> ;
-    ns8:involvesCustodian <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/role/offender/1>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/role/offender/2> ;
-    ns8:relationshipType "mother" .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2023-10-20T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/event/conspiracy>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/event/csam>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/event/online-only>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/event/production> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/sentence/1> a ns5:CriminalSentence,
-        ns5:PrisonSentence ;
-    rdfs:label "20 years" .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/sentence/2> a ns5:CriminalSentence,
-        ns5:SupervisedRelease ;
-    rdfs:label "five years supervised release" .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100> a ns1:CACInvestigation,
-        ns2:EnduringEntity ;
-    dcterms:created "2026-10-18 02:38:23.761524" ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100> a ns2:CACInvestigation,
+        ns5:EnduringEntity ;
+    rdfs:label "Case doj_safe_childhood_2023_100" ;
+    dcterms:created "2026-11-11T11:13:22.593208"^^xsd:dateTime ;
+    dcterms:date "2023-10-20"^^xsd:date ;
     dcterms:identifier "doj_safe_childhood_2023_100" ;
-    dcterms:modified "2026-10-18 12:14:39.375653" ;
+    dcterms:modified "2026-11-11T11:13:22.593208"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/provenance> ;
     dcterms:source <https://www.justice.gov/usao-ndga/pr/cobb-county-man-receives-20-year-sentence-producing-child-pornography>,
         "DOJ SAFE CHILDHOOD" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/acworth>,
-        <https://w3id.org/caselinker/resource/location/atlanta>,
-        <https://w3id.org/caselinker/resource/location/cobb-county>,
-        <https://w3id.org/caselinker/resource/location/georgia> ;
-    ns1:currentPhase <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/phase/sentenced> ;
-    ns1:hasPhase <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/phase/sentenced> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/admission/1>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/admission/2>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/event/conspiracy>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/event/csam>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/location/atlanta>,
+        <https://w3id.org/caselinker/resource/location/acworth-city-ga>,
+        <https://w3id.org/caselinker/resource/location/cobb-county-ga>,
+        <https://w3id.org/caselinker/resource/location/georgia-ga> ;
+    ns2:currentPhase <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/phase/sentenced> ;
+    ns2:hasPhase <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/phase/sentenced> ;
+    ns2:hasStep <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/event/csam>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/event/online-only>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/event/production>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/event/project-safe-childhood>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/legal-step/sentenced>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/operation> ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/cobb-county-police-department>,
-        <https://w3id.org/caselinker/resource/agency/fbi>,
-        <https://w3id.org/caselinker/resource/agency/usao> ;
-    ns4:mentionsLocation <https://w3id.org/caselinker/resource/location/acworth>,
-        <https://w3id.org/caselinker/resource/location/atlanta>,
-        <https://w3id.org/caselinker/resource/location/cobb-county>,
-        <https://w3id.org/caselinker/resource/location/georgia> .
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/fbi>,
+        <https://w3id.org/caselinker/resource/agency/usao>,
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/agency/cobb-county-police-department> ;
+    ns4:object <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/admission/1>,
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/admission/2> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/admission/2> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
-    rdfs:label "was “Zack” and pretended to be a 16-year-old when he learned the girl was 14 years old" ;
-    dcterms:source <https://www.justice.gov/usao-ndga/pr/cobb-county-man-receives-20-year-sentence-producing-child-pornography> ;
-    ns6:description "was “Zack” and pretended to be a 16-year-old when he learned the girl was 14 years old" ;
-    ns4:admissionContext "y arrested Calhoun on state charges. During a post-arrest interview with CCPD detectives, Calhoun admitted that he was “Zack” and pretend..." ;
-    ns4:admissionFrame "admitted_paraphrase" ;
-    ns4:admissionTheme "other" ;
-    ns4:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/role/offender/1> ;
-    ns4:evidenceTier "press_release_stated" ;
-    ns4:quoteType "paraphrase" .
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/admission/1/extraction-confidence> a ns5:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns5:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/admission/1> ;
+    ns5:hasConfidence 0.65 ;
+    ns5:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/phase/sentenced> a ns2:Phase,
-        ns5:SentencingPhase ;
-    ns1:hasPhaseBeginPoint "2023-10-20T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/admission/2/extraction-confidence> a ns5:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/2/extraction-confidence" ;
+    ns5:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/admission/2> ;
+    ns5:hasConfidence 0.65 ;
+    ns5:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/role/offender/2> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2023-10-20T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/event/conspiracy>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/event/csam>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/event/online-only>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/event/production> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/person/offender/2> .
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/person/offender/1/age> a ns3:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns3:ageSubject <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/person/offender/1> ;
+    ns3:concernsAgeQuality ns3:Age ;
+    ns3:hasAgeInYears 16.0 .
 
-<https://w3id.org/caselinker/resource/location/acworth> a ns2:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Acworth" ;
-    ns6:name "Acworth" .
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/person/offender/2/age> a ns3:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/2/age" ;
+    ns3:ageSubject <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/person/offender/2> ;
+    ns3:concernsAgeQuality ns3:Age ;
+    ns3:hasAgeInYears 32.0 .
 
-<https://w3id.org/caselinker/resource/location/atlanta> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/role/offender/1/has-role> a ns4:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns4:isDirectional true ;
+    ns4:kindOfRelationship "Has_Role" ;
+    ns4:source <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/person/offender/1> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/role/offender/2/has-role> a ns4:Relationship ;
+    rdfs:label "Relationship · role/offender/2/has-role" ;
+    ns4:isDirectional true ;
+    ns4:kindOfRelationship "Has_Role" ;
+    ns4:source <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/person/offender/2> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/role/offender/2> .
+
+<https://w3id.org/caselinker/resource/platform/instagram> a ns5:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "Instagram" ;
+    ns4:name "Instagram" .
+
+<https://w3id.org/caselinker/resource/platform/social-media> a ns5:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "social media" ;
+    ns4:name "social media" .
+
+<https://w3id.org/caselinker/resource/agency/fbi> a ns5:OrganizationLikeEntity,
+        ns6:FederalAgency ;
+    rdfs:label "Federal Bureau of Investigation" ;
+    skos:altLabel "FBI" ;
+    ns4:name "Federal Bureau of Investigation" .
+
+<https://w3id.org/caselinker/resource/agency/usao> a ns5:OrganizationLikeEntity,
+        ns6:FederalAgency ;
+    rdfs:label "U.S. Attorney's Office" ;
+    ns4:name "U.S. Attorney's Office" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/agency/cobb-county-police-department> a ns5:OrganizationLikeEntity,
+        ns6:LocalAgency ;
+    rdfs:label "Cobb County Police Department" ;
+    ns4:name "Cobb County Police Department" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/charge/1> a ns1:CSAM_Possession,
+        ns1:CriminalCharge ;
+    rdfs:label "child pornography" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/charge/2> a ns1:CSAM_Production,
+        ns1:CriminalCharge ;
+    rdfs:label "production of child pornography" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/event/csam> a ns2:CSAMIncident,
+        ns5:Event ;
+    rdfs:label "CSAMIncident · event/csam" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/event/online-only> a ns2:ChildSexualAbuseEvent,
+        ns5:Event ;
+    rdfs:label "Child Sexual Abuse Event · event/online-only" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/event/production> a ns5:Event,
+        <https://cacontology.projectvic.org/production#ProductionOffense> ;
+    rdfs:label "Production Offense · event/production" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/event/project-safe-childhood> a ns5:Event,
+        ns6:ProjectSafeChildhoodOperation ;
+    rdfs:label "Project Safe Childhood Operation · event/project-safe-childhood" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/legal-proceeding> a ns5:Event,
+        ns5:LegalEvent,
+        ns1:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns1:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns1:hasCharge <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/charge/1>,
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/charge/2> ;
+    ns1:resultsSentence <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/sentence/1>,
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/sentence/2> .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/legal-step/sentenced> a ns5:Event,
+        ns5:LegalEvent,
+        ns1:LegalProceeding,
+        ns1:SentencingHearing ;
+    rdfs:label "Sentencing Hearing · legal-step/sentenced" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/location/atlanta> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Atlanta" ;
-    ns6:name "Atlanta" .
+    ns4:name "Atlanta" .
 
-<https://w3id.org/caselinker/resource/location/cobb-county> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/operation> a ns5:Event,
+        <https://cacontology.projectvic.org/taskforce#TaskForceOperation> ;
+    rdfs:label "Task Force Operation · operation" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/role/offender/1> a ns2:OffenderRole ;
+    rdfs:label "Offender Role · role/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/role/offender/2> a ns2:OffenderRole ;
+    rdfs:label "Offender Role · role/offender/2" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/sentence/1> a ns1:CriminalSentence,
+        ns1:PrisonSentence ;
+    rdfs:label "20 years" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/sentence/2> a ns1:CriminalSentence,
+        ns1:SupervisedRelease ;
+    rdfs:label "five years supervised release" .
+
+<https://w3id.org/caselinker/resource/location/acworth-city-ga> a ns5:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Acworth city" ;
+    dcterms:identifier "fips:1300408" ;
+    skos:altLabel "Acworth" ;
+    ns4:name "Acworth city" .
+
+<https://w3id.org/caselinker/resource/location/cobb-county-ga> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Cobb County" ;
-    ns6:name "Cobb County" .
+    dcterms:identifier "fips:13067" ;
+    ns4:name "Cobb County" .
 
-<https://w3id.org/caselinker/resource/location/georgia> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/georgia-ga> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Georgia" ;
-    ns6:name "Georgia" .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/event/conspiracy> a ns1:ConspiracyToCommitCSA,
-        ns2:Event ;
-    ns1:conspiracyMemberCount 2 ;
-    ns1:participatesInConspiracy <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/role/offender/1>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/role/offender/2> ;
-    ns1:severityLevel 1 ;
-    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/instagram>,
-        <https://w3id.org/caselinker/resource/platform/social-media> .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/event/csam> a ns1:CSAMIncident,
-        ns2:Event ;
-    ns1:producesArtifact <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/admission/1> ;
-    ns1:severityLevel 1 ;
-    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/instagram>,
-        <https://w3id.org/caselinker/resource/platform/social-media> ;
-    ns6:hasFacet <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/facet/csam> .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/event/online-only> a ns1:ChildSexualAbuseEvent,
-        ns2:Event ;
-    ns1:producesArtifact <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/admission/1> ;
-    ns1:severityLevel 1 ;
-    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/instagram>,
-        <https://w3id.org/caselinker/resource/platform/social-media> .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/event/production> a ns2:Event,
-        <https://cacontology.projectvic.org/production#ProductionOffense> ;
-    ns1:producesArtifact <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/admission/1> ;
-    ns1:severityLevel 1 ;
-    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/instagram>,
-        <https://w3id.org/caselinker/resource/platform/social-media> ;
-    ns6:hasFacet <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/facet/production> .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2023-10-20T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/event/conspiracy>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/event/csam>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/event/online-only>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/event/production> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/person/offender/1> .
-
-<https://w3id.org/caselinker/resource/platform/instagram> a <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "Instagram" .
-
-<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "social media" .
+    dcterms:identifier "fips:13" ;
+    ns4:name "Georgia" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "receiving sexually explicit videos from her" ;
     dcterms:source <https://www.justice.gov/usao-ndga/pr/cobb-county-man-receives-20-year-sentence-producing-child-pornography> ;
-    ns6:description "receiving sexually explicit videos from her" ;
-    ns4:admissionContext "e was “Zack” and pretended to be a 16-year-old when he learned the girl was 14 years old. Calhoun also admitted to receiving sexually exp..." ;
-    ns4:admissionFrame "admitted_to" ;
-    ns4:admissionTheme "harm_conduct" ;
-    ns4:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/role/offender/1> ;
-    ns4:evidenceTier "press_release_stated" ;
-    ns4:quoteType "paraphrase" .
+    ns4:description "receiving sexually explicit videos from her" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/admission/2> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
+    rdfs:label "was “Zack” and pretended to be a 16-year-old when he learned the girl was 14 years old" ;
+    dcterms:source <https://www.justice.gov/usao-ndga/pr/cobb-county-man-receives-20-year-sentence-producing-child-pornography> ;
+    ns4:description "was “Zack” and pretended to be a 16-year-old when he learned the girl was 14 years old" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/person/offender/2> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/2" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_100/phase/sentenced> a ns5:Phase,
+        ns1:SentencingPhase ;
+    rdfs:label "Sentencing Phase · phase/sentenced" .
 

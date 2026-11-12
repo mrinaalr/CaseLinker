@@ -1,95 +1,103 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns1: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns5: <https://cacontology.projectvic.org/core#> .
-@prefix ns6: <https://cacontology.projectvic.org/detection#> .
-@prefix ns7: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_651> a ns2:CACInvestigation,
         ns5:EnduringEntity ;
-    dcterms:created "2026-10-17 23:04:32.113825" ;
+    rdfs:label "Case ncmec_2024_651" ;
+    dcterms:created "2026-11-10T21:27:07.768356"^^xsd:dateTime ;
+    dcterms:date "2024-07-07"^^xsd:date ;
     dcterms:identifier "ncmec_2024_651" ;
-    dcterms:modified "2026-10-17 23:04:32.113825" ;
+    dcterms:modified "2026-11-12T00:41:41.373923"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_651/provenance> ;
     dcterms:source <https://www.mycentraljersey.com/story/news/crime/2024/07/07/child-porn-nj/74294679007/>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/north-plainfield>,
-        <https://w3id.org/caselinker/resource/location/somerset-county> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2024_651/location/somerset-county>,
+        <https://w3id.org/caselinker/resource/location/north-plainfield-borough> ;
     ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_651/phase/charged> ;
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_651/phase/charged> ;
     ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_651/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_651/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_651/legal-proceeding> ;
-    ns2:investigationStatus "unknown" ;
-    ns7:involvesAgency <https://w3id.org/caselinker/resource/agency/north-plainfield-police-department> ;
-    ns3:mentionsLocation <https://w3id.org/caselinker/resource/location/north-plainfield>,
-        <https://w3id.org/caselinker/resource/location/somerset-county> .
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_651/agency/north-plainfield-police-department> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_651/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2024-07-07T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_651/event/possession> ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_651/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_651/assessment/semantic/possession-csam> a ns5:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns2:CSAMIncident ;
+    ns5:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_651/narrative> ;
+    ns5:hasConfidence 0.5249 ;
+    ns5:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_651/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2024-07-07T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_651/event/possession> ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_651/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_651/person/offender/1/age> a ns1:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns1:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_651/person/offender/1> ;
+    ns1:concernsAgeQuality ns1:Age ;
+    ns1:hasAgeInYears 62.0 .
 
-<https://w3id.org/caselinker/resource/agency/north-plainfield-police-department> a ns5:OrganizationLikeEntity,
-        ns7:LocalAgency ;
-    rdfs:label "North Plainfield Police Department" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_651/role/offender/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2024_651/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2024_651/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_651/charge/1> a ns1:CSAM_Possession,
-        ns1:CriminalCharge ;
-    rdfs:label "child sexual abuse material" ;
-    ns1:indictmentCounts 2 .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_651/agency/north-plainfield-police-department> a ns5:OrganizationLikeEntity,
+        ns6:LocalAgency ;
+    rdfs:label "North Plainfield Police Department" ;
+    ns3:name "North Plainfield Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_651/charge/2> a ns1:CriminalCharge ;
-    rdfs:label "sexual exploitation" ;
-    ns3:chargeCluster "sexual_exploitation_unspecified" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_651/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
+    rdfs:label "child sexual abuse material" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_651/charge/2> a ns4:CriminalCharge ;
+    rdfs:label "sexual exploitation" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_651/event/distribution> a ns5:Event,
-        ns1:CSAM_Distribution ;
-    ns2:severityLevel 3 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_651/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+        ns4:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_651/legal-proceeding> a ns5:Event,
         ns5:LegalEvent,
-        ns1:LegalProceeding ;
+        ns4:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): Somerset County Jail" ;
-    ns1:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_651/charge/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_651/charge/2> ;
-    ns1:hasProceedingBeginPoint "2024-07-07T00:00:00Z"^^xsd:dateTimeStamp .
+    ns4:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_651/charge/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_651/charge/2> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_651/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns6:ageEstimate 62 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_651/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_651/phase/charged> a ns2:LegalProcessPhase,
-        ns5:Phase ;
-    ns2:hasPhaseBeginPoint "2024-07-07T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/north-plainfield> a ns5:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "North Plainfield" ;
-    ns4:name "North Plainfield" .
-
-<https://w3id.org/caselinker/resource/location/somerset-county> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_651/location/somerset-county> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Somerset County" ;
-    ns4:name "Somerset County" .
+    ns3:name "Somerset County" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_651/role/offender/1> a ns4:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_651/event/possession> .
+
+<https://w3id.org/caselinker/resource/location/north-plainfield-borough> a ns5:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "North Plainfield borough" ;
+    dcterms:identifier "fips:3453280" ;
+    skos:altLabel "North Plainfield" ;
+    ns3:name "North Plainfield borough" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_651/event/possession> a ns2:CSAMIncident,
         ns5:Event ;
-    ns2:severityLevel 3 ;
-    ns4:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2024_651/facet/possession> .
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns2:severityLevel 3 .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2024_651/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_651> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2024_651/provenance> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_651/phase/charged> a ns2:LegalProcessPhase,
+        ns5:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
+

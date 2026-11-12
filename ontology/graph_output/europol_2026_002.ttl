@@ -1,96 +1,93 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns3: <https://w3id.org/caselinker/resource/vocab/> .
+@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://cacontology.projectvic.org/core#> .
 @prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns5: <https://cacontology.projectvic.org/detection#> .
-@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns7: <https://cacontology.projectvic.org/core#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns6: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/europol_2026_002> a ns1:CACInvestigation,
-        ns7:EnduringEntity ;
-    dcterms:created "2026-10-18 04:25:58.858106" ;
+        ns3:EnduringEntity ;
+    rdfs:label "Case europol_2026_002" ;
+    dcterms:created "2026-11-11T14:12:17.260602"^^xsd:dateTime ;
+    dcterms:date "2026-05-12"^^xsd:date ;
     dcterms:identifier "europol_2026_002" ;
-    dcterms:modified "2026-10-18 04:25:58.858106" ;
+    dcterms:modified "2026-11-11T14:12:17.260602"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/europol_2026_002/provenance> ;
     dcterms:source <https://www.europol.europa.eu/media-press/newsroom/news/eu-most-wanted-platform-helps-locate-hungarian-child-abuser-hiding-in-spain>,
         "EUROPOL" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/europe>,
-        <https://w3id.org/caselinker/resource/location/spain>,
-        <https://w3id.org/caselinker/resource/location/tenerife> ;
-    ns1:currentPhase <https://w3id.org/caselinker/resource/case/europol_2026_002/phase/sentenced> ;
-    ns1:hasPhase <https://w3id.org/caselinker/resource/case/europol_2026_002/phase/sentenced> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/europol_2026_002/location/europe>,
+        <https://w3id.org/caselinker/resource/case/europol_2026_002/location/spain>,
+        <https://w3id.org/caselinker/resource/case/europol_2026_002/location/tenerife> ;
+    ns1:currentPhase <https://w3id.org/caselinker/resource/case/europol_2026_002/phase/arrested> ;
+    ns1:hasPhase <https://w3id.org/caselinker/resource/case/europol_2026_002/phase/arrested> ;
     ns1:hasStep <https://w3id.org/caselinker/resource/case/europol_2026_002/event/multi-jurisdiction>,
-        <https://w3id.org/caselinker/resource/case/europol_2026_002/legal-proceeding>,
-        <https://w3id.org/caselinker/resource/case/europol_2026_002/legal-step/sentenced> ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/spanish-police-department> ;
-    ns3:mentionsLocation <https://w3id.org/caselinker/resource/location/europe>,
-        <https://w3id.org/caselinker/resource/location/spain>,
-        <https://w3id.org/caselinker/resource/location/tenerife> .
+        <https://w3id.org/caselinker/resource/case/europol_2026_002/legal-proceeding> ;
+    ns2:involvesAgency <https://w3id.org/caselinker/resource/case/europol_2026_002/agency/spanish-police-department> .
 
-<https://w3id.org/caselinker/resource/case/europol_2026_002/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2026-05-12T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns7:hasRole <https://w3id.org/caselinker/resource/case/europol_2026_002/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/europol_2026_002/person/offender/1/age> a ns6:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns6:ageSubject <https://w3id.org/caselinker/resource/case/europol_2026_002/person/offender/1> ;
+    ns6:concernsAgeQuality ns6:Age ;
+    ns6:hasAgeInYears 37.0 .
 
-<https://w3id.org/caselinker/resource/case/europol_2026_002/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2026-05-12T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns7:hasRole <https://w3id.org/caselinker/resource/case/europol_2026_002/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/europol_2026_002/role/offender/1/has-role> a ns4:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns4:isDirectional true ;
+    ns4:kindOfRelationship "Has_Role" ;
+    ns4:source <https://w3id.org/caselinker/resource/case/europol_2026_002/person/offender/1> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/europol_2026_002/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/spanish-police-department> a ns7:OrganizationLikeEntity,
-        ns6:LocalAgency ;
-    rdfs:label "Spanish Police Department" .
+<https://w3id.org/caselinker/resource/case/europol_2026_002/agency/spanish-police-department> a ns3:OrganizationLikeEntity,
+        ns2:LocalAgency ;
+    rdfs:label "Spanish Police Department" ;
+    ns4:name "Spanish Police Department" .
 
-<https://w3id.org/caselinker/resource/case/europol_2026_002/charge/1> a ns2:CriminalCharge ;
-    rdfs:label "sexual exploitation" ;
-    ns3:chargeCluster "sexual_exploitation_unspecified" .
+<https://w3id.org/caselinker/resource/case/europol_2026_002/charge/1> a ns5:CriminalCharge ;
+    rdfs:label "sexual exploitation" .
 
-<https://w3id.org/caselinker/resource/case/europol_2026_002/event/multi-jurisdiction> a ns7:Event,
-        ns6:MultiJurisdictionalInvestigation ;
-    ns6:crossesBorders true .
+<https://w3id.org/caselinker/resource/case/europol_2026_002/event/multi-jurisdiction> a ns3:Event,
+        ns2:MultiJurisdictionalInvestigation ;
+    rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" ;
+    ns2:crossesBorders true .
 
-<https://w3id.org/caselinker/resource/case/europol_2026_002/legal-proceeding> a ns7:Event,
-        ns7:LegalEvent,
-        ns2:LegalProceeding ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/europol_2026_002/charge/1> ;
-    ns2:hasProceedingBeginPoint "2026-05-12T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:resultsSentence <https://w3id.org/caselinker/resource/case/europol_2026_002/sentence/1> .
+<https://w3id.org/caselinker/resource/case/europol_2026_002/legal-proceeding> a ns3:Event,
+        ns3:LegalEvent,
+        ns5:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns5:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/europol_2026_002/charge/1> ;
+    ns5:resultsSentence <https://w3id.org/caselinker/resource/case/europol_2026_002/sentence/1> .
 
-<https://w3id.org/caselinker/resource/case/europol_2026_002/legal-step/sentenced> a ns7:Event,
-        ns7:LegalEvent,
-        ns2:LegalProceeding,
-        ns2:SentencingHearing ;
-    ns2:hasProceedingBeginPoint "2026-05-12T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/europol_2026_002/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns5:ageEstimate 37 .
-
-<https://w3id.org/caselinker/resource/case/europol_2026_002/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/europol_2026_002/sentence/1> a ns2:CriminalSentence,
-        ns2:PrisonSentence ;
-    rdfs:label "eight years" .
-
-<https://w3id.org/caselinker/resource/case/europol_2026_002/phase/sentenced> a ns7:Phase,
-        ns2:SentencingPhase ;
-    ns1:hasPhaseBeginPoint "2026-05-12T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/europe> a ns7:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/europol_2026_002/location/europe> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Europe" ;
     ns4:name "Europe" .
 
-<https://w3id.org/caselinker/resource/location/spain> a ns7:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/europol_2026_002/location/spain> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Spain" ;
     ns4:name "Spain" .
 
-<https://w3id.org/caselinker/resource/location/tenerife> a ns7:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/europol_2026_002/location/tenerife> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Tenerife" ;
     ns4:name "Tenerife" .
 
+<https://w3id.org/caselinker/resource/case/europol_2026_002/sentence/1> a ns5:CriminalSentence,
+        ns5:PrisonSentence ;
+    rdfs:label "eight years" ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/europol_2026_002/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/europol_2026_002> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/europol_2026_002/provenance> .
+<https://w3id.org/caselinker/resource/case/europol_2026_002/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/europol_2026_002/phase/arrested> a ns1:InitialPhase,
+        ns3:Phase ;
+    rdfs:label "Initial Phase · phase/arrested" .
+
+<https://w3id.org/caselinker/resource/case/europol_2026_002/role/offender/1> a ns5:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" .
+

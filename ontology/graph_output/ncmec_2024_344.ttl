@@ -1,89 +1,100 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://w3id.org/caselinker/resource/vocab/> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://cacontology.projectvic.org/core#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_344> a ns2:CACInvestigation,
-        ns4:EnduringEntity ;
-    dcterms:created "2026-10-17 23:04:28.807307" ;
+        ns5:EnduringEntity ;
+    rdfs:label "Case ncmec_2024_344" ;
+    dcterms:created "2026-11-10T21:25:21.539371"^^xsd:dateTime ;
+    dcterms:date "2024-01"^^xsd:gYearMonth ;
     dcterms:identifier "ncmec_2024_344" ;
-    dcterms:modified "2026-10-17 23:04:28.807307" ;
+    dcterms:modified "2026-11-12T00:27:25.409869"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_344/provenance> ;
     dcterms:source <https://www.fox32chicago.com/news/west-chicago-man-denied-pre-trial-release-charges-distributing-child-pornography>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/ill>,
-        <https://w3id.org/caselinker/resource/location/west-chicago>,
-        <https://w3id.org/caselinker/resource/location/wheaton> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/illinois-il>,
+        <https://w3id.org/caselinker/resource/location/west-chicago-city-il>,
+        <https://w3id.org/caselinker/resource/location/wheaton-city-il> ;
     ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_344/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_344/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_344/legal-proceeding> ;
-    ns2:investigationStatus "unknown" ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/west-chicago-police-department> ;
-    ns1:mentionsLocation <https://w3id.org/caselinker/resource/location/ill>,
-        <https://w3id.org/caselinker/resource/location/west-chicago>,
-        <https://w3id.org/caselinker/resource/location/wheaton> .
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_344/agency/west-chicago-police-department> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_344/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_344/event/possession> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_344/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_344/assessment/semantic/possession-csam> a ns5:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns2:CSAMIncident ;
+    ns5:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_344/narrative> ;
+    ns5:hasConfidence 0.5302 ;
+    ns5:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_344/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_344/event/possession> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_344/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_344/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_344/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_344/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/west-chicago-police-department> a ns4:OrganizationLikeEntity,
-        ns6:LocalAgency ;
-    rdfs:label "West Chicago Police Department" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_344/agency/west-chicago-police-department> a ns5:OrganizationLikeEntity,
+        ns3:LocalAgency ;
+    rdfs:label "West Chicago Police Department" ;
+    ns1:name "West Chicago Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_344/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_344/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_344/event/distribution> a ns4:Event,
-        ns5:CSAM_Distribution .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_344/event/distribution> a ns5:Event,
+        ns4:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_344/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_344/legal-proceeding> a ns5:Event,
+        ns5:LegalEvent,
+        ns4:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns4:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_344/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_344/legal-proceeding> a ns4:Event,
-        ns4:LegalEvent,
-        ns5:LegalProceeding ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_344/charge/1> ;
-    ns5:hasProceedingBeginPoint "2024-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_344/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_344/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_344/role/offender/1> a ns4:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_344/event/possession> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_344/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/platform/kik> a <https://cacontology.projectvic.org/platforms#MessagingService> ;
-    rdfs:label "Kik" .
-
-<https://w3id.org/caselinker/resource/location/ill> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/illinois-il> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Ill." ;
-    ns3:name "Ill." .
+    rdfs:label "Illinois" ;
+    dcterms:identifier "fips:17" ;
+    skos:altLabel "Ill." ;
+    ns1:name "Illinois" .
 
-<https://w3id.org/caselinker/resource/location/west-chicago> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/west-chicago-city-il> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "West Chicago" ;
-    ns3:name "West Chicago" .
+    rdfs:label "West Chicago city" ;
+    dcterms:identifier "fips:1780060" ;
+    skos:altLabel "West Chicago" ;
+    ns1:name "West Chicago city" .
 
-<https://w3id.org/caselinker/resource/location/wheaton> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/wheaton-city-il> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Wheaton" ;
-    ns3:name "Wheaton" .
+    rdfs:label "Wheaton city" ;
+    dcterms:identifier "fips:1781048" ;
+    skos:altLabel "Wheaton" ;
+    ns1:name "Wheaton city" .
+
+<https://w3id.org/caselinker/resource/platform/kik> a ns5:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#MessagingService> ;
+    rdfs:label "Kik" ;
+    ns1:name "Kik" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_344/event/possession> a ns2:CSAMIncident,
-        ns4:Event ;
-    ns2:usesChannel <https://w3id.org/caselinker/resource/platform/kik> ;
-    ns3:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2024_344/facet/possession> .
+        ns5:Event ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns2:usesChannel <https://w3id.org/caselinker/resource/platform/kik> .
 
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_344> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2024_344/provenance> .

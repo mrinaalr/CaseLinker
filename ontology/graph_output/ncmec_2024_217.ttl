@@ -1,82 +1,93 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/detection#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://w3id.org/caselinker/resource/vocab/> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns7: <https://cacontology.projectvic.org/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_217> a ns2:CACInvestigation,
-        ns7:EnduringEntity ;
-    dcterms:created "2026-10-17 23:04:27.223375" ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case ncmec_2024_217" ;
+    dcterms:created "2026-11-10T21:24:38.604032"^^xsd:dateTime ;
+    dcterms:date "2024-01-25"^^xsd:date ;
     dcterms:identifier "ncmec_2024_217" ;
-    dcterms:modified "2026-10-17 23:04:27.223375" ;
+    dcterms:modified "2026-11-12T00:21:12.389051"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_217/provenance> ;
     dcterms:source <https://www.wftv.com/news/local/orlando-man-arrested-charged-with-multiple-county-sex-abuse-child-under-12-years-old/J6A5ONNPRFC6BIEK3DU3S55NXU/>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/fla>,
-        <https://w3id.org/caselinker/resource/location/orlando> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/florida-fl>,
+        <https://w3id.org/caselinker/resource/location/orlando-city-fl> ;
     ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_217/phase/charged> ;
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_217/phase/charged> ;
     ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_217/event/hands-on>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_217/legal-proceeding> ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/orange-county-sheriffs-office> ;
-    ns4:mentionsLocation <https://w3id.org/caselinker/resource/location/fla>,
-        <https://w3id.org/caselinker/resource/location/orlando> .
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_217/agency/orange-county-sheriffs-office> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_217/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2024-01-25T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_217/event/hands-on> ;
-    ns7:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_217/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_217/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_217/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 49.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_217/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2024-01-25T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_217/event/hands-on> ;
-    ns7:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_217/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_217/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_217/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_217/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/orange-county-sheriffs-office> a ns6:LocalAgency .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_217/agency/orange-county-sheriffs-office> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns3:LocalAgency ;
+    rdfs:label "Orange County Sheriff's Office" ;
+    ns1:name "Orange County Sheriff's Office" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_217/charge/1> a ns5:CriminalCharge ;
-    rdfs:label "related to child sexual abuse" ;
-    ns5:indictmentCounts 11 .
+    rdfs:label "related to child sexual abuse" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_217/legal-proceeding> a ns7:Event,
-        ns7:LegalEvent,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_217/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
         ns5:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): Orange County Jail" ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_217/charge/1> ;
-    ns5:hasProceedingBeginPoint "2024-01-25T00:00:00Z"^^xsd:dateTimeStamp .
+    ns5:chargeCount "11"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_217/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_217/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns1:ageEstimate 49 .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_217/role/offender/1> a ns5:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_217/event/hands-on> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_217/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/platform/dropbox> a <https://cacontology.projectvic.org/platforms#FileHostingService> ;
-    rdfs:label "Dropbox" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_217/phase/charged> a ns2:LegalProcessPhase,
-        ns7:Phase ;
-    ns2:hasPhaseBeginPoint "2024-01-25T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/fla> a ns7:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/florida-fl> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Fla." ;
-    ns3:name "Fla." .
+    rdfs:label "Florida" ;
+    dcterms:identifier "fips:12" ;
+    skos:altLabel "Fla." ;
+    ns1:name "Florida" .
 
-<https://w3id.org/caselinker/resource/location/orlando> a ns7:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/orlando-city-fl> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Orlando" ;
-    ns3:name "Orlando" .
+    rdfs:label "Orlando city" ;
+    dcterms:identifier "fips:1253000" ;
+    skos:altLabel "Orlando" ;
+    ns1:name "Orlando city" .
+
+<https://w3id.org/caselinker/resource/platform/dropbox> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#FileHostingService> ;
+    rdfs:label "Dropbox" ;
+    ns1:name "Dropbox" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_217/event/hands-on> a ns2:ChildSexualAbuseEvent,
-        ns7:Event ;
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "Child Sexual Abuse Event · event/hands-on" ;
     ns2:severityLevel 3 ;
     ns2:usesChannel <https://w3id.org/caselinker/resource/platform/dropbox> .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2024_217/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_217> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2024_217/provenance> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_217/phase/charged> a ns2:LegalProcessPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Legal Process Phase · phase/charged" .
+

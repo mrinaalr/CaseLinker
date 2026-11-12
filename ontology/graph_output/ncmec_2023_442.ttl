@@ -1,82 +1,95 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/detection#> .
-@prefix ns2: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns3: <https://cacontology.projectvic.org/core#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://cacontology.projectvic.org#> .
-@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns7: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns1: <https://cacontology.projectvic.org/core#> .
+@prefix ns2: <https://cacontology.projectvic.org#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_442> a ns5:CACInvestigation,
-        ns3:EnduringEntity ;
-    dcterms:created "2026-10-17 22:21:33.390692" ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_442> a ns2:CACInvestigation,
+        ns1:EnduringEntity ;
+    rdfs:label "Case ncmec_2023_442" ;
+    dcterms:created "2026-11-10T10:04:59.408876"^^xsd:dateTime ;
+    dcterms:date "2023-09-20"^^xsd:date ;
     dcterms:identifier "ncmec_2023_442" ;
-    dcterms:modified "2026-10-17 22:21:33.390692" ;
+    dcterms:modified "2026-11-10T10:04:59.408876"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2023_442/provenance> ;
     dcterms:source <https://whnt.com/news/decatur/decatur-man-charged-for-possession-of-material-showing-child-sex-abuse/>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/ala>,
-        <https://w3id.org/caselinker/resource/location/decatur> ;
-    ns5:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_442/phase/charged> ;
-    ns5:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_442/phase/charged> ;
-    ns5:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_442/event/possession>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/alabama-al>,
+        <https://w3id.org/caselinker/resource/location/decatur-city-al> ;
+    ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_442/phase/charged> ;
+    ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_442/phase/charged> ;
+    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_442/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_442/legal-proceeding> ;
-    ns5:investigationStatus "unknown" ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/decatur-police-department>,
-        <https://w3id.org/caselinker/resource/agency/dpds-criminal-investigation-division> ;
-    ns2:mentionsLocation <https://w3id.org/caselinker/resource/location/ala>,
-        <https://w3id.org/caselinker/resource/location/decatur> .
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2023_442/agency/decatur-police-department>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2023_442/agency/dpds-criminal-investigation-division> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_442/role/offender/1> a ns5:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns5:hasRoleBeginPoint "2023-09-20T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns5:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_442/event/possession> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_442/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_442/assessment/semantic/possession-csam> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns2:CSAMIncident ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/ncmec_2023_442/narrative> ;
+    ns1:hasConfidence 0.5118 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_442/role/victim/1> a ns5:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns5:hasRoleBeginPoint "2023-09-20T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns5:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_442/event/possession> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_442/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_442/person/offender/1/age> a ns5:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2023_442/person/offender/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 30.0 .
 
-<https://w3id.org/caselinker/resource/agency/decatur-police-department> a ns6:LocalAgency .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_442/role/offender/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2023_442/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2023_442/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/dpds-criminal-investigation-division> a ns3:OrganizationLikeEntity,
-        ns6:LocalAgency ;
-    rdfs:label "DPD's Criminal Investigation Division" .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_442/agency/decatur-police-department> a ns1:OrganizationLikeEntity,
+        ns4:LocalAgency ;
+    rdfs:label "Decatur Police Department" ;
+    ns3:name "Decatur Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_442/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_442/agency/dpds-criminal-investigation-division> a ns1:OrganizationLikeEntity,
+        ns4:LocalAgency ;
+    rdfs:label "DPD's Criminal Investigation Division" ;
+    ns3:name "DPD's Criminal Investigation Division" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_442/legal-proceeding> a ns3:Event,
-        ns3:LegalEvent,
-        ns4:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): held in the Morgan County Jail" ;
-    ns4:hasProceedingBeginPoint "2023-09-20T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_442/legal-proceeding> a ns1:Event,
+        ns1:LegalEvent,
+        <https://cacontology.projectvic.org/legal-outcomes#LegalProceeding> ;
+    rdfs:label "Event · legal-proceeding" ;
+    rdfs:comment "Pretrial detention facility (not a sentence): held in the Morgan County Jail" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_442/role/offender/1> a <https://cacontology.projectvic.org/legal-outcomes#DefendantRole> ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_442/event/possession> .
+
+<https://w3id.org/caselinker/resource/location/alabama-al> a ns1:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Alabama" ;
+    dcterms:identifier "fips:01" ;
+    skos:altLabel "Ala." ;
+    ns3:name "Alabama" .
+
+<https://w3id.org/caselinker/resource/location/decatur-city-al> a ns1:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Decatur city" ;
+    dcterms:identifier "fips:0120104" ;
+    skos:altLabel "Decatur" ;
+    ns3:name "Decatur city" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_442/event/possession> a ns2:CSAMIncident,
+        ns1:Event ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns2:severityLevel 3 .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_442/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns1:ageEstimate 30 .
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_442/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_442/phase/charged> a ns2:LegalProcessPhase,
+        ns1:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_442/phase/charged> a ns5:LegalProcessPhase,
-        ns3:Phase ;
-    ns5:hasPhaseBeginPoint "2023-09-20T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/ala> a ns3:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Ala." ;
-    ns7:name "Ala." .
-
-<https://w3id.org/caselinker/resource/location/decatur> a ns3:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Decatur" ;
-    ns7:name "Decatur" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_442/event/possession> a ns5:CSAMIncident,
-        ns3:Event ;
-    ns5:severityLevel 3 ;
-    ns7:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2023_442/facet/possession> .
-
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_442> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2023_442/provenance> .

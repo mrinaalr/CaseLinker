@@ -1,86 +1,95 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns6: <https://cacontology.projectvic.org/core#> .
-@prefix ns7: <https://cacontology.projectvic.org/detection#> .
+@prefix ns2: <https://cacontology.projectvic.org/core#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/mt_doj_2023_008/admission/1/extraction-confidence> a ns6:AssessmentResult ;
-    ns6:assesses <https://w3id.org/caselinker/resource/case/mt_doj_2023_008/admission/1> ;
-    ns6:generatedBy <https://w3id.org/caselinker/resource/case/mt_doj_2023_008> ;
-    ns6:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/mt_doj_2023_008/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2023-08-02T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns6:hasRole <https://w3id.org/caselinker/resource/case/mt_doj_2023_008/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/agency/department-of-health-and-human-services> a ns5:LocalAgency .
-
-<https://w3id.org/caselinker/resource/agency/doj> a ns5:FederalAgency .
-
-<https://w3id.org/caselinker/resource/agency/montana-department-of-justice-division-of-criminal-investigation> a ns5:StateAgency .
-
-<https://w3id.org/caselinker/resource/agency/prosecution-services-bureau> a ns5:LocalAgency .
-
 <https://w3id.org/caselinker/resource/case/mt_doj_2023_008> a ns1:CACInvestigation,
-        ns6:EnduringEntity ;
-    dcterms:created "2026-10-18 05:35:36.801107" ;
+        ns2:EnduringEntity ;
+    rdfs:label "Case mt_doj_2023_008" ;
+    dcterms:created "2026-11-11T15:39:10.810688"^^xsd:dateTime ;
+    dcterms:date "2023-08-02"^^xsd:date ;
     dcterms:identifier "mt_doj_2023_008" ;
-    dcterms:modified "2026-10-18 05:35:36.801107" ;
+    dcterms:modified "2026-11-11T15:39:10.810688"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/mt_doj_2023_008/provenance> ;
     dcterms:source <https://dojmt.gov/attorney-generals-office-secures-guilty-plea-from-former-deputy-sheriff-in-child-sexual-abuse-case/>,
         "MT DOJ" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/wibaux-county> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/wibaux-county-mt> ;
     ns1:currentPhase <https://w3id.org/caselinker/resource/case/mt_doj_2023_008/phase/pleaded-guilty> ;
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/mt_doj_2023_008/phase/pleaded-guilty> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/mt_doj_2023_008/admission/1>,
-        <https://w3id.org/caselinker/resource/case/mt_doj_2023_008/legal-step/pleaded-guilty> ;
-    ns1:investigationStatus "unknown" ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/department-of-health-and-human-services>,
+    ns1:hasStep <https://w3id.org/caselinker/resource/case/mt_doj_2023_008/legal-step/pleaded-guilty> ;
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/department-of-health-and-human-services-mt-unverified>,
         <https://w3id.org/caselinker/resource/agency/doj>,
         <https://w3id.org/caselinker/resource/agency/montana-department-of-justice-division-of-criminal-investigation>,
-        <https://w3id.org/caselinker/resource/agency/prosecution-services-bureau> ;
-    ns2:mentionsLocation <https://w3id.org/caselinker/resource/location/wibaux-county> .
+        <https://w3id.org/caselinker/resource/agency/prosecution-services-bureau-mt-unverified> ;
+    ns3:object <https://w3id.org/caselinker/resource/case/mt_doj_2023_008/admission/1> .
 
-<https://w3id.org/caselinker/resource/case/mt_doj_2023_008/legal-step/pleaded-guilty> a ns6:Event,
-        ns6:LegalEvent,
-        ns3:LegalProceeding,
-        ns3:PleaBargaining ;
-    ns3:hasProceedingBeginPoint "2023-08-02T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/mt_doj_2023_008/admission/1/extraction-confidence> a ns2:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/mt_doj_2023_008/admission/1> ;
+    ns2:hasConfidence 0.65 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/case/mt_doj_2023_008/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns7:ageEstimate 42 .
+<https://w3id.org/caselinker/resource/case/mt_doj_2023_008/person/offender/1/age> a ns5:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/mt_doj_2023_008/person/offender/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 42.0 .
 
-<https://w3id.org/caselinker/resource/case/mt_doj_2023_008/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/mt_doj_2023_008/role/offender/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/mt_doj_2023_008/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/mt_doj_2023_008/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/mt_doj_2023_008/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2023-08-02T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns6:hasRole <https://w3id.org/caselinker/resource/case/mt_doj_2023_008/person/offender/1> .
+<https://w3id.org/caselinker/resource/agency/department-of-health-and-human-services-mt-unverified> a ns2:OrganizationLikeEntity,
+        ns4:LocalAgency ;
+    rdfs:label "Department of Health and Human Services" ;
+    ns3:name "Department of Health and Human Services" .
+
+<https://w3id.org/caselinker/resource/agency/doj> a ns2:OrganizationLikeEntity,
+        ns4:FederalAgency ;
+    rdfs:label "U.S. Department of Justice" ;
+    ns3:name "U.S. Department of Justice" .
+
+<https://w3id.org/caselinker/resource/agency/montana-department-of-justice-division-of-criminal-investigation> a ns2:OrganizationLikeEntity,
+        ns4:StateAgency ;
+    rdfs:label "Montana Department of Justice Division of Criminal Investigation" ;
+    ns3:name "Montana Department of Justice Division of Criminal Investigation" .
+
+<https://w3id.org/caselinker/resource/agency/prosecution-services-bureau-mt-unverified> a ns2:OrganizationLikeEntity,
+        ns4:LocalAgency ;
+    rdfs:label "Prosecution Services Bureau" ;
+    ns3:name "Prosecution Services Bureau" .
+
+<https://w3id.org/caselinker/resource/case/mt_doj_2023_008/legal-step/pleaded-guilty> a ns2:Event,
+        ns2:LegalEvent,
+        <https://cacontology.projectvic.org/legal-outcomes#LegalProceeding>,
+        <https://cacontology.projectvic.org/legal-outcomes#PleaBargaining> ;
+    rdfs:label "Plea Bargaining · legal-step/pleaded-guilty" .
+
+<https://w3id.org/caselinker/resource/case/mt_doj_2023_008/role/offender/1> a ns1:OffenderRole ;
+    rdfs:label "Offender Role · role/offender/1" .
+
+<https://w3id.org/caselinker/resource/location/wibaux-county-mt> a ns2:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Wibaux County" ;
+    dcterms:identifier "fips:30109" ;
+    ns3:name "Wibaux County" .
 
 <https://w3id.org/caselinker/resource/case/mt_doj_2023_008/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "sexually assaulting three young girls multiple times over the span of about eight years" ;
     dcterms:source <https://dojmt.gov/attorney-generals-office-secures-guilty-plea-from-former-deputy-sheriff-in-child-sexual-abuse-case/> ;
-    ns2:admissionContext "e child under the age of 16, Attorney General Austin Knudsen announced today. On July 25, Joshua Harris, 42, admitted to sexually assault..." ;
-    ns2:admissionFrame "admitted_to" ;
-    ns2:admissionTheme "harm_conduct" ;
-    ns2:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/mt_doj_2023_008/role/offender/1> ;
-    ns2:evidenceTier "press_release_stated" ;
-    ns2:quoteType "paraphrase" ;
-    ns4:description "sexually assaulting three young girls multiple times over the span of about eight years" .
+    ns3:description "sexually assaulting three young girls multiple times over the span of about eight years" .
 
-<https://w3id.org/caselinker/resource/case/mt_doj_2023_008/phase/pleaded-guilty> a ns6:Phase,
-        ns3:PreTrialPhase ;
-    ns1:hasPhaseBeginPoint "2023-08-02T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/mt_doj_2023_008/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/location/wibaux-county> a ns6:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Wibaux County" ;
-    ns4:name "Wibaux County" .
+<https://w3id.org/caselinker/resource/case/mt_doj_2023_008/phase/pleaded-guilty> a ns2:Phase,
+        <https://cacontology.projectvic.org/legal-outcomes#PreTrialPhase> ;
+    rdfs:label "Pre Trial Phase · phase/pleaded-guilty" .
 
-
-<https://w3id.org/caselinker/resource/case/mt_doj_2023_008> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/mt_doj_2023_008/provenance> .

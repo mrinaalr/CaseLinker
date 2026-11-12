@@ -1,233 +1,146 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/core#> .
-@prefix ns2: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://cacontology.projectvic.org/detection#> .
-@prefix ns6: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns7: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns1: <https://cacontology.projectvic.org#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns6: <https://cacontology.projectvic.org/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/usss_2021_010/admission/1/extraction-confidence> a ns1:AssessmentResult ;
-    ns1:assesses <https://w3id.org/caselinker/resource/case/usss_2021_010/admission/1> ;
-    ns1:generatedBy <https://w3id.org/caselinker/resource/case/usss_2021_010> ;
-    ns1:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/usss_2021_010/admission/2/extraction-confidence> a ns1:AssessmentResult ;
-    ns1:assesses <https://w3id.org/caselinker/resource/case/usss_2021_010/admission/2> ;
-    ns1:generatedBy <https://w3id.org/caselinker/resource/case/usss_2021_010> ;
-    ns1:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/usss_2021_010/admission/3/extraction-confidence> a ns1:AssessmentResult ;
-    ns1:assesses <https://w3id.org/caselinker/resource/case/usss_2021_010/admission/3> ;
-    ns1:generatedBy <https://w3id.org/caselinker/resource/case/usss_2021_010> ;
-    ns1:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/usss_2021_010/role/victim/1> a ns3:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns3:hasRoleBeginPoint "2021-10-12T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/usss_2021_010/event/csam>,
-        <https://w3id.org/caselinker/resource/case/usss_2021_010/event/production>,
-        <https://w3id.org/caselinker/resource/case/usss_2021_010/offense-event/charge-3> ;
-    ns1:hasRole <https://w3id.org/caselinker/resource/case/usss_2021_010/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/agency/ceos> a ns7:FederalAgency .
-
-<https://w3id.org/caselinker/resource/agency/doj> a ns7:FederalAgency .
-
-<https://w3id.org/caselinker/resource/agency/kentucky-state-police-department> a ns7:StateAgency .
-
-<https://w3id.org/caselinker/resource/agency/us-secret-service> a ns7:FederalAgency .
-
-<https://w3id.org/caselinker/resource/agency/usao> a ns7:FederalAgency .
-
-<https://w3id.org/caselinker/resource/case/usss_2021_010/charge/1> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
-    rdfs:label "child pornography" .
-
-<https://w3id.org/caselinker/resource/case/usss_2021_010/charge/2> a ns4:CriminalCharge ;
-    rdfs:label "sexual exploitation" ;
-    ns2:chargeCluster "sexual_exploitation_unspecified" .
-
-<https://w3id.org/caselinker/resource/case/usss_2021_010/charge/3> a ns4:CriminalCharge ;
-    rdfs:label "child exploitation" ;
-    rdfs:seeAlso <https://w3id.org/caselinker/resource/case/usss_2021_010/offense-event/charge-3> ;
-    ns2:chargeCluster "child_exploitation" ;
-    ns2:chargeOffenseEvent <https://w3id.org/caselinker/resource/case/usss_2021_010/offense-event/charge-3> .
-
-<https://w3id.org/caselinker/resource/case/usss_2021_010/event/project-safe-childhood> a ns1:Event,
-        ns7:ProjectSafeChildhoodOperation .
-
-<https://w3id.org/caselinker/resource/case/usss_2021_010/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/usss_2021_010/facet/production> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/usss_2021_010/legal-proceeding> a ns1:Event,
-        ns1:LegalEvent,
-        ns4:LegalProceeding ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/usss_2021_010/charge/1>,
-        <https://w3id.org/caselinker/resource/case/usss_2021_010/charge/2>,
-        <https://w3id.org/caselinker/resource/case/usss_2021_010/charge/3> ;
-    ns4:hasProceedingBeginPoint "2021-10-12T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/usss_2021_010/legal-step/sentenced> a ns1:Event,
-        ns1:LegalEvent,
-        ns4:LegalProceeding,
-        ns4:SentencingHearing ;
-    ns4:hasProceedingBeginPoint "2021-10-12T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/usss_2021_010/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns5:ageEstimate 40 .
-
-<https://w3id.org/caselinker/resource/case/usss_2021_010/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/usss_2021_010/phase/sentenced> a ns1:Phase,
-        ns4:SentencingPhase ;
-    ns3:hasPhaseBeginPoint "2021-10-12T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/bath-county> a ns1:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Bath County" ;
-    ns6:name "Bath County" .
-
-<https://w3id.org/caselinker/resource/location/kentucky> a ns1:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Kentucky" ;
-    ns6:name "Kentucky" .
-
-<https://w3id.org/caselinker/resource/location/ky> a ns1:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Ky." ;
-    ns6:name "Ky." .
-
-<https://w3id.org/caselinker/resource/location/lexington> a ns1:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Lexington" ;
-    ns6:name "Lexington" .
-
-<https://w3id.org/caselinker/resource/location/morehead> a ns1:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Morehead" ;
-    ns6:name "Morehead" .
-
-<https://w3id.org/caselinker/resource/location/the-eastern-district> a ns1:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "the Eastern District" ;
-    ns6:name "the Eastern District" .
-
-<https://w3id.org/caselinker/resource/location/united-states> a ns1:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "United States" ;
-    ns6:name "United States" .
-
-<https://w3id.org/caselinker/resource/case/usss_2021_010> a ns3:CACInvestigation,
-        ns1:EnduringEntity ;
-    dcterms:created "2026-10-18 07:32:40.610614" ;
+<https://w3id.org/caselinker/resource/case/usss_2021_010> a ns1:CACInvestigation,
+        ns6:EnduringEntity ;
+    rdfs:label "Case usss_2021_010" ;
+    dcterms:created "2026-11-11T18:21:38.962855"^^xsd:dateTime ;
+    dcterms:date "2021-08-16"^^xsd:date ;
     dcterms:identifier "usss_2021_010" ;
-    dcterms:modified "2026-10-18 07:32:40.610614" ;
-    dcterms:source <https://www.secretservice.gov/newsroom/releases/2021/10/former-bath-county-deputy-sheriff-pleads-guilty-production-child>,
+    dcterms:modified "2026-11-11T18:21:38.962855"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/usss_2021_010/provenance> ;
+    dcterms:source <https://www.secretservice.gov/newsroom/releases/2021/08/council-bluffs-man-sentenced-prison-possession-child-pornography>,
         "USSS" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/bath-county>,
-        <https://w3id.org/caselinker/resource/location/kentucky>,
-        <https://w3id.org/caselinker/resource/location/ky>,
-        <https://w3id.org/caselinker/resource/location/lexington>,
-        <https://w3id.org/caselinker/resource/location/morehead>,
-        <https://w3id.org/caselinker/resource/location/the-eastern-district>,
-        <https://w3id.org/caselinker/resource/location/united-states> ;
-    ns3:currentPhase <https://w3id.org/caselinker/resource/case/usss_2021_010/phase/sentenced> ;
-    ns3:hasPhase <https://w3id.org/caselinker/resource/case/usss_2021_010/phase/sentenced> ;
-    ns3:hasStep <https://w3id.org/caselinker/resource/case/usss_2021_010/admission/1>,
-        <https://w3id.org/caselinker/resource/case/usss_2021_010/admission/2>,
-        <https://w3id.org/caselinker/resource/case/usss_2021_010/admission/3>,
-        <https://w3id.org/caselinker/resource/case/usss_2021_010/event/csam>,
-        <https://w3id.org/caselinker/resource/case/usss_2021_010/event/production>,
-        <https://w3id.org/caselinker/resource/case/usss_2021_010/event/project-safe-childhood>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/usss_2021_010/location/southern-district-of-iowa>,
+        <https://w3id.org/caselinker/resource/case/usss_2021_010/location/united-states>,
+        <https://w3id.org/caselinker/resource/location/iowa-ia> ;
+    ns1:currentPhase <https://w3id.org/caselinker/resource/case/usss_2021_010/phase/sentenced> ;
+    ns1:hasPhase <https://w3id.org/caselinker/resource/case/usss_2021_010/phase/sentenced> ;
+    ns1:hasStep <https://w3id.org/caselinker/resource/case/usss_2021_010/event/possession>,
         <https://w3id.org/caselinker/resource/case/usss_2021_010/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/usss_2021_010/legal-step/sentenced>,
-        <https://w3id.org/caselinker/resource/case/usss_2021_010/offense-event/charge-3> ;
-    ns3:investigationStatus "unknown" ;
-    ns7:involvesAgency <https://w3id.org/caselinker/resource/agency/ceos>,
-        <https://w3id.org/caselinker/resource/agency/doj>,
-        <https://w3id.org/caselinker/resource/agency/kentucky-state-police-department>,
-        <https://w3id.org/caselinker/resource/agency/us-secret-service>,
-        <https://w3id.org/caselinker/resource/agency/usao> ;
-    ns2:mentionsLocation <https://w3id.org/caselinker/resource/location/bath-county>,
-        <https://w3id.org/caselinker/resource/location/kentucky>,
-        <https://w3id.org/caselinker/resource/location/ky>,
-        <https://w3id.org/caselinker/resource/location/lexington>,
-        <https://w3id.org/caselinker/resource/location/morehead>,
-        <https://w3id.org/caselinker/resource/location/the-eastern-district>,
-        <https://w3id.org/caselinker/resource/location/united-states> .
+        <https://w3id.org/caselinker/resource/case/usss_2021_010/operation> ;
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/usao>,
+        <https://w3id.org/caselinker/resource/agency/usss>,
+        <https://w3id.org/caselinker/resource/case/usss_2021_010/agency/council-bluffs-police-department> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/usss_2021_010/cybertip> .
 
-<https://w3id.org/caselinker/resource/case/usss_2021_010/event/csam> a ns3:CSAMIncident,
-        ns1:Event ;
-    ns3:producesArtifact <https://w3id.org/caselinker/resource/case/usss_2021_010/admission/1>,
-        <https://w3id.org/caselinker/resource/case/usss_2021_010/admission/2>,
-        <https://w3id.org/caselinker/resource/case/usss_2021_010/admission/3> ;
-    ns3:usesChannel <https://w3id.org/caselinker/resource/platform/snapchat> ;
-    ns6:hasFacet <https://w3id.org/caselinker/resource/case/usss_2021_010/facet/csam> .
+<https://w3id.org/caselinker/resource/case/usss_2021_010/assessment/semantic/possession-csam> a ns6:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns1:CSAMIncident ;
+    ns6:assesses <https://w3id.org/caselinker/resource/case/usss_2021_010/narrative> ;
+    ns6:hasConfidence 0.5055 ;
+    ns6:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/usss_2021_010/event/production> a ns1:Event,
-        <https://cacontology.projectvic.org/production#ProductionOffense> ;
-    ns3:producesArtifact <https://w3id.org/caselinker/resource/case/usss_2021_010/admission/1>,
-        <https://w3id.org/caselinker/resource/case/usss_2021_010/admission/2>,
-        <https://w3id.org/caselinker/resource/case/usss_2021_010/admission/3> ;
-    ns3:usesChannel <https://w3id.org/caselinker/resource/platform/snapchat> ;
-    ns6:hasFacet <https://w3id.org/caselinker/resource/case/usss_2021_010/facet/production> .
+<https://w3id.org/caselinker/resource/case/usss_2021_010/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/usss_2021_010/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 31.0 .
 
-<https://w3id.org/caselinker/resource/case/usss_2021_010/role/offender/1> a ns3:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns3:hasRoleBeginPoint "2021-10-12T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/usss_2021_010/event/csam>,
-        <https://w3id.org/caselinker/resource/case/usss_2021_010/event/production>,
-        <https://w3id.org/caselinker/resource/case/usss_2021_010/offense-event/charge-3> ;
-    ns1:hasRole <https://w3id.org/caselinker/resource/case/usss_2021_010/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/usss_2021_010/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/usss_2021_010/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/usss_2021_010/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/platform/snapchat> a <https://cacontology.projectvic.org/platforms#MessagingService> ;
-    rdfs:label "Snapchat" .
+<https://w3id.org/caselinker/resource/agency/usao> a ns6:OrganizationLikeEntity,
+        ns5:FederalAgency ;
+    rdfs:label "U.S. Attorney's Office" ;
+    ns2:name "U.S. Attorney's Office" .
 
-<https://w3id.org/caselinker/resource/case/usss_2021_010/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
-    rdfs:label "answering a call about a minor victim who was acting out of control at her residence and transporting the victim to a..." ;
-    dcterms:source <https://www.secretservice.gov/newsroom/releases/2021/10/former-bath-county-deputy-sheriff-pleads-guilty-production-child> ;
-    ns2:admissionContext "im to engage in sexually explicit conduct for the purpose of producing child pornography. According to Preece’s plea agreement, on Novemb..." ;
-    ns2:admissionFrame "admitted_to" ;
-    ns2:admissionTheme "harm_conduct",
-        "recidivism_escalation" ;
-    ns2:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/usss_2021_010/role/offender/1> ;
-    ns2:evidenceTier "press_release_stated" ;
-    ns2:quoteType "paraphrase" ;
-    ns6:description "answering a call about a minor victim who was acting out of control at her residence and transporting the victim to a remote area in Bath County" .
+<https://w3id.org/caselinker/resource/agency/usss> a ns6:OrganizationLikeEntity,
+        ns5:FederalAgency,
+        ns5:LocalAgency ;
+    rdfs:label "U.S. Secret Service" ;
+    skos:altLabel "United States Secret Service National Computer Forensics Institute" ;
+    ns2:name "U.S. Secret Service" .
 
-<https://w3id.org/caselinker/resource/case/usss_2021_010/admission/2> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
-    rdfs:label "sexually assaulting the victim and later asking for photos via Snapchat" ;
-    dcterms:source <https://www.secretservice.gov/newsroom/releases/2021/10/former-bath-county-deputy-sheriff-pleads-guilty-production-child> ;
-    ns2:admissionContext "trol at her residence and transporting the victim to a remote area in Bath County. At the remote location, Preece admitted to sexually as..." ;
-    ns2:admissionFrame "admitted_to" ;
-    ns2:admissionTheme "harm_conduct",
-        "tech_use" ;
-    ns2:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/usss_2021_010/role/offender/1> ;
-    ns2:evidenceTier "press_release_stated" ;
-    ns2:quoteType "paraphrase" ;
-    ns6:description "sexually assaulting the victim and later asking for photos via Snapchat" .
+<https://w3id.org/caselinker/resource/case/usss_2021_010/agency/council-bluffs-police-department> a ns6:OrganizationLikeEntity,
+        ns5:LocalAgency ;
+    rdfs:label "Council Bluffs Police Department" ;
+    ns2:name "Council Bluffs Police Department" .
 
-<https://w3id.org/caselinker/resource/case/usss_2021_010/admission/3> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
-    rdfs:label "to answering a call about a minor victim who was acting out of control at her residence and transporting the victim t..." ;
-    dcterms:source <https://www.secretservice.gov/newsroom/releases/2021/10/former-bath-county-deputy-sheriff-pleads-guilty-production-child> ;
-    ns2:admissionContext "f producing child pornography. According to Preece’s plea agreement, on November 5, 2018, he admitted to answering a call about a minor v..." ;
-    ns2:admissionFrame "he_admitted_paraphrase" ;
-    ns2:admissionTheme "harm_conduct",
-        "recidivism_escalation" ;
-    ns2:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/usss_2021_010/role/offender/1> ;
-    ns2:evidenceTier "press_release_stated" ;
-    ns2:quoteType "paraphrase" ;
-    ns6:description "to answering a call about a minor victim who was acting out of control at her residence and transporting the victim to a remote area in Bath County" .
+<https://w3id.org/caselinker/resource/case/usss_2021_010/charge/1> a ns3:CSAM_Possession,
+        ns3:CriminalCharge ;
+    rdfs:label "possession of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/usss_2021_010/offense-event/charge-3> a ns3:ChildSexualAbuseEvent,
-        ns1:Event,
-        <https://ontology.unifiedcyberontology.org/uco/action/Crime> ;
-    rdfs:label "Inferred offense from charge: child exploitation" ;
-    ns3:usesChannel <https://w3id.org/caselinker/resource/platform/snapchat> .
+<https://w3id.org/caselinker/resource/case/usss_2021_010/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
+    rdfs:label "CyberTipline report" ;
+    ns2:name "observe" .
 
+<https://w3id.org/caselinker/resource/case/usss_2021_010/legal-proceeding> a ns6:Event,
+        ns6:LegalEvent,
+        ns3:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns3:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/usss_2021_010/charge/1> ;
+    ns3:resultsSentence <https://w3id.org/caselinker/resource/case/usss_2021_010/sentence/1>,
+        <https://w3id.org/caselinker/resource/case/usss_2021_010/sentence/2> .
 
-<https://w3id.org/caselinker/resource/case/usss_2021_010> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/usss_2021_010/provenance> .
+<https://w3id.org/caselinker/resource/case/usss_2021_010/legal-step/sentenced> a ns6:Event,
+        ns6:LegalEvent,
+        ns3:LegalProceeding,
+        ns3:SentencingHearing ;
+    rdfs:label "Sentencing Hearing · legal-step/sentenced" .
+
+<https://w3id.org/caselinker/resource/case/usss_2021_010/location/southern-district-of-iowa> a ns6:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Southern District of Iowa" ;
+    ns2:name "Southern District of Iowa" .
+
+<https://w3id.org/caselinker/resource/case/usss_2021_010/location/united-states> a ns6:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "United States" ;
+    ns2:name "United States" .
+
+<https://w3id.org/caselinker/resource/case/usss_2021_010/operation> a ns6:Event,
+        <https://cacontology.projectvic.org/taskforce#ReactiveOperation> ;
+    rdfs:label "Reactive Operation · operation" .
+
+<https://w3id.org/caselinker/resource/case/usss_2021_010/sentence/1> a ns3:CriminalSentence,
+        ns3:PrisonSentence ;
+    rdfs:label "121 months" ;
+    ns6:assesses <https://w3id.org/caselinker/resource/case/usss_2021_010/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/usss_2021_010/sentence/2> a ns3:CriminalSentence,
+        ns3:SupervisedRelease ;
+    rdfs:label "10 years supervised release" ;
+    ns6:assesses <https://w3id.org/caselinker/resource/case/usss_2021_010/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/location/iowa-ia> a ns6:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Iowa" ;
+    dcterms:identifier "fips:19" ;
+    ns2:name "Iowa" .
+
+<https://w3id.org/caselinker/resource/platform/google-drive> a ns6:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#FileHostingService> ;
+    rdfs:label "Google Drive" ;
+    ns2:name "Google Drive" .
+
+<https://w3id.org/caselinker/resource/case/usss_2021_010/event/possession> a ns1:CSAMIncident,
+        ns6:Event ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/google-drive> .
+
+<https://w3id.org/caselinker/resource/case/usss_2021_010/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/usss_2021_010/phase/sentenced> a ns6:Phase,
+        ns3:SentencingPhase ;
+    rdfs:label "Sentencing Phase · phase/sentenced" .
+
+<https://w3id.org/caselinker/resource/case/usss_2021_010/role/offender/1> a ns1:OffenderRole ;
+    rdfs:label "Offender Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/usss_2021_010/event/possession> .
+

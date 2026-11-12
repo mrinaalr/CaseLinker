@@ -1,156 +1,164 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/core#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://w3id.org/caselinker/resource/vocab/> .
+@prefix ns1: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns5: <https://cacontology.projectvic.org/custodial#> .
-@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns6: <https://cacontology.projectvic.org/core#> .
 @prefix ns7: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns8: <https://cacontology.projectvic.org/detection#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ut_ag_2020_001/admission/1/extraction-confidence> a ns2:AssessmentResult ;
-    ns2:assesses <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/admission/1> ;
-    ns2:generatedBy <https://w3id.org/caselinker/resource/case/ut_ag_2020_001> ;
-    ns2:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/ut_ag_2020_001/admission/2/extraction-confidence> a ns2:AssessmentResult ;
-    ns2:assesses <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/admission/2> ;
-    ns2:generatedBy <https://w3id.org/caselinker/resource/case/ut_ag_2020_001> ;
-    ns2:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> .
-
-<https://w3id.org/caselinker/resource/case/ut_ag_2020_001/charge/1> a ns6:CSAM_Possession,
-        ns6:CriminalCharge ;
-    rdfs:label "child pornography" .
-
-<https://w3id.org/caselinker/resource/case/ut_ag_2020_001/charge/2> a ns6:CriminalCharge ;
-    rdfs:label "sexual exploitation" ;
-    ns4:chargeCluster "sexual_exploitation_unspecified" .
-
-<https://w3id.org/caselinker/resource/case/ut_ag_2020_001/event/trust-violation> a ns5:CustodialAbuse,
-        ns5:TrustViolation ;
-    ns5:violatesRelationship <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/relationship/mother> .
-
-<https://w3id.org/caselinker/resource/case/ut_ag_2020_001/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/ut_ag_2020_001/legal-proceeding> a ns2:Event,
-        ns2:LegalEvent,
-        ns6:LegalProceeding ;
-    ns6:hasCharge <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/charge/1>,
-        <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/charge/2> ;
-    ns6:hasProceedingBeginPoint "2020-01-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/ut_ag_2020_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns8:ageEstimate 43 .
-
-<https://w3id.org/caselinker/resource/case/ut_ag_2020_001/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ut_ag_2020_001/relationship/mother> a ns5:CustodialRelationship,
-        ns5:FamilialRelationship ;
-    ns5:involvesChild <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/role/victim/1> ;
-    ns5:involvesCustodian <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/role/offender/1> ;
-    ns5:relationshipType "mother" .
-
-<https://w3id.org/caselinker/resource/case/ut_ag_2020_001/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2020-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/event/online-only>,
-        <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/event/possession> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/case/ut_ag_2020_001> a ns1:CACInvestigation,
-        ns2:EnduringEntity ;
-    dcterms:created "2026-10-18 07:37:09.100277" ;
+<https://w3id.org/caselinker/resource/case/ut_ag_2020_001> a ns3:CACInvestigation,
+        ns6:EnduringEntity ;
+    rdfs:label "Case ut_ag_2020_001" ;
+    dcterms:created "2026-11-11T18:27:49.497938"^^xsd:dateTime ;
+    dcterms:date "2020-01"^^xsd:gYearMonth ;
     dcterms:identifier "ut_ag_2020_001" ;
-    dcterms:modified "2026-10-18 07:37:09.100277" ;
+    dcterms:modified "2026-11-11T18:27:49.497938"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/provenance> ;
     dcterms:source <https://attorneygeneral.utah.gov/utah-man-charged-for-possessing-child-pornography/>,
         "UT AG" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/indiana>,
-        <https://w3id.org/caselinker/resource/location/utah> ;
-    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/phase/charged> ;
-    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/phase/charged> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/admission/2>,
-        <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/event/online-only>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/indiana-in>,
+        <https://w3id.org/caselinker/resource/location/utah-ut> ;
+    ns3:currentPhase <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/phase/charged> ;
+    ns3:hasPhase <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/phase/charged> ;
+    ns3:hasStep <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/event/online-only>,
         <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/event/possession>,
         <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/legal-proceeding> ;
     ns7:involvesAgency <https://w3id.org/caselinker/resource/agency/icac> ;
-    ns4:mentionsLocation <https://w3id.org/caselinker/resource/location/indiana>,
-        <https://w3id.org/caselinker/resource/location/utah> .
+    ns2:object <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/admission/1>,
+        <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/admission/2> .
 
-<https://w3id.org/caselinker/resource/case/ut_ag_2020_001/phase/charged> a ns1:LegalProcessPhase,
-        ns2:Phase ;
-    ns1:hasPhaseBeginPoint "2020-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ut_ag_2020_001/admission/1/extraction-confidence> a ns6:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns6:assesses <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/admission/1> ;
+    ns6:hasConfidence 0.65 ;
+    ns6:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/location/indiana> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ut_ag_2020_001/admission/2/extraction-confidence> a ns6:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/2/extraction-confidence" ;
+    ns6:assesses <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/admission/2> ;
+    ns6:hasConfidence 0.65 ;
+    ns6:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+
+<https://w3id.org/caselinker/resource/case/ut_ag_2020_001/person/offender/1/age> a ns1:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns1:ageSubject <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/person/offender/1> ;
+    ns1:concernsAgeQuality ns1:Age ;
+    ns1:hasAgeInYears 43.0 .
+
+<https://w3id.org/caselinker/resource/case/ut_ag_2020_001/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/ut_ag_2020_001/role/victim/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/victim/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/person/victim/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/role/victim/1> .
+
+<https://w3id.org/caselinker/resource/platform/chat> a ns6:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
+    rdfs:label "chat" ;
+    ns2:name "chat" .
+
+<https://w3id.org/caselinker/resource/platform/facebook> a ns6:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "Facebook" ;
+    ns2:name "Facebook" .
+
+<https://w3id.org/caselinker/resource/platform/facebook-messenger> a ns6:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#MessagingService> ;
+    rdfs:label "Facebook Messenger" ;
+    ns2:name "Facebook Messenger" .
+
+<https://w3id.org/caselinker/resource/agency/icac> a ns6:OrganizationLikeEntity,
+        <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns2:name "ICAC Task Force" .
+
+<https://w3id.org/caselinker/resource/case/ut_ag_2020_001/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
+    rdfs:label "child pornography" .
+
+<https://w3id.org/caselinker/resource/case/ut_ag_2020_001/charge/2> a ns4:CriminalCharge ;
+    rdfs:label "sexual exploitation" .
+
+<https://w3id.org/caselinker/resource/case/ut_ag_2020_001/event/online-only> a ns3:ChildSexualAbuseEvent,
+        ns6:Event ;
+    rdfs:label "Child Sexual Abuse Event · event/online-only" .
+
+<https://w3id.org/caselinker/resource/case/ut_ag_2020_001/event/possession> a ns3:CSAMIncident,
+        ns6:Event ;
+    rdfs:label "CSAMIncident · event/possession" .
+
+<https://w3id.org/caselinker/resource/case/ut_ag_2020_001/event/trust-violation> a ns5:CustodialAbuse,
+        ns5:TrustViolation ;
+    rdfs:label "Custodial Abuse · event/trust-violation" ;
+    ns5:perpetratedBy <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/role/offender/1> ;
+    ns5:violatesRelationship <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/relationship/mother> .
+
+<https://w3id.org/caselinker/resource/case/ut_ag_2020_001/legal-proceeding> a ns6:Event,
+        ns6:LegalEvent,
+        ns4:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns4:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/charge/1>,
+        <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/charge/2> .
+
+<https://w3id.org/caselinker/resource/case/ut_ag_2020_001/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
+
+<https://w3id.org/caselinker/resource/case/ut_ag_2020_001/relationship/mother> a ns5:CustodialRelationship,
+        ns5:FamilialRelationship ;
+    rdfs:label "Custodial Relationship · relationship/mother" ;
+    ns5:involvesChild <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/role/victim/1> ;
+    ns5:involvesCustodian <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/role/offender/1> ;
+    ns5:relationshipType "parent" ;
+    ns2:isDirectional true ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/role/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/role/victim/1> .
+
+<https://w3id.org/caselinker/resource/location/indiana-in> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Indiana" ;
-    ns3:name "Indiana" .
+    dcterms:identifier "fips:18" ;
+    ns2:name "Indiana" .
 
-<https://w3id.org/caselinker/resource/location/utah> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/utah-ut> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Utah" ;
-    ns3:name "Utah" .
-
-<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
-    rdfs:label "chat" .
-
-<https://w3id.org/caselinker/resource/platform/facebook> a <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "Facebook" .
-
-<https://w3id.org/caselinker/resource/platform/facebook-messenger> a <https://cacontology.projectvic.org/platforms#MessagingService> ;
-    rdfs:label "Facebook Messenger" .
-
-<https://w3id.org/caselinker/resource/case/ut_ag_2020_001/event/online-only> a ns1:ChildSexualAbuseEvent,
-        ns2:Event ;
-    ns1:producesArtifact <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/admission/2> ;
-    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/chat>,
-        <https://w3id.org/caselinker/resource/platform/facebook>,
-        <https://w3id.org/caselinker/resource/platform/facebook-messenger> .
-
-<https://w3id.org/caselinker/resource/case/ut_ag_2020_001/event/possession> a ns1:CSAMIncident,
-        ns2:Event ;
-    ns1:producesArtifact <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/admission/2> ;
-    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/chat>,
-        <https://w3id.org/caselinker/resource/platform/facebook>,
-        <https://w3id.org/caselinker/resource/platform/facebook-messenger> ;
-    ns3:hasFacet <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/facet/possession> .
-
-<https://w3id.org/caselinker/resource/case/ut_ag_2020_001/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2020-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/event/online-only>,
-        <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/event/possession> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/person/offender/1> .
+    dcterms:identifier "fips:49" ;
+    ns2:name "Utah" .
 
 <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
-    rdfs:label "approving the Facebook contact with Hardman and that they had met Hardman through a mutual friend and played online v..." ;
+    rdfs:label "approving the Facebook contact with [PERSON] and that they had met [PERSON] through a mutual friend and played online..." ;
     dcterms:source <https://attorneygeneral.utah.gov/utah-man-charged-for-possessing-child-pornography/> ;
-    ns4:admissionContext "was setup “as a permitted child account associated with a parent Facebook account”. In an interview with Indiana law enforcement, the mot..." ;
-    ns4:admissionFrame "admitted_to" ;
-    ns4:admissionTheme "tech_use" ;
-    ns4:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/role/offender/1> ;
-    ns4:evidenceTier "press_release_stated" ;
-    ns4:quoteType "paraphrase" ;
-    ns3:description "approving the Facebook contact with Hardman and that they had met Hardman through a mutual friend and played online video games together" .
+    ns2:description "approving the Facebook contact with [PERSON] and that they had met [PERSON] through a mutual friend and played online video games together" .
 
 <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/admission/2> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "chatting with the victim for over a year, almost every day through both video chat and Facebook Messenger" ;
     dcterms:source <https://attorneygeneral.utah.gov/utah-man-charged-for-possessing-child-pornography/> ;
-    ns4:admissionContext "en visited their home. On May 21, 2020, agents served a search warrant on Hardman’s home. During an interview, Hardman admitted to chatti..." ;
-    ns4:admissionFrame "admitted_to" ;
-    ns4:admissionTheme "harm_conduct",
-        "tech_use" ;
-    ns4:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/role/offender/1> ;
-    ns4:evidenceTier "press_release_stated" ;
-    ns4:quoteType "paraphrase" ;
-    ns3:description "chatting with the victim for over a year, almost every day through both video chat and Facebook Messenger" .
+    ns2:description "chatting with the victim for over a year, almost every day through both video chat and Facebook Messenger" .
 
+<https://w3id.org/caselinker/resource/case/ut_ag_2020_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ut_ag_2020_001> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ut_ag_2020_001/provenance> .
+<https://w3id.org/caselinker/resource/case/ut_ag_2020_001/phase/charged> a ns3:LegalProcessPhase,
+        ns6:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
+
+<https://w3id.org/caselinker/resource/case/ut_ag_2020_001/role/victim/1> a ns3:VictimRole ;
+    rdfs:label "Victim Role · role/victim/1" .
+
+<https://w3id.org/caselinker/resource/case/ut_ag_2020_001/role/offender/1> a ns4:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" .
+

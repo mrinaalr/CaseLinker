@@ -1,182 +1,202 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/custodial#> .
-@prefix ns3: <https://cacontology.projectvic.org/core#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns7: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns8: <https://cacontology.projectvic.org/detection#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns3: <https://cacontology.projectvic.org#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns6: <https://cacontology.projectvic.org/core#> .
+@prefix ns7: <https://cacontology.projectvic.org/custodial#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/admission/1/extraction-confidence> a ns3:AssessmentResult ;
-    ns3:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/admission/1> ;
-    ns3:generatedBy <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181> ;
-    ns3:hasConfidence 0.9 .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/admission/2/extraction-confidence> a ns3:AssessmentResult ;
-    ns3:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/admission/2> ;
-    ns3:generatedBy <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181> ;
-    ns3:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/agency/boise-police-department> a ns6:LocalAgency .
-
-<https://w3id.org/caselinker/resource/agency/ceos> a ns6:FederalAgency .
-
-<https://w3id.org/caselinker/resource/agency/doj> a ns6:FederalAgency .
-
-<https://w3id.org/caselinker/resource/agency/fbi> a ns6:FederalAgency .
-
-<https://w3id.org/caselinker/resource/agency/usao> a ns6:FederalAgency .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/charge/1> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
-    rdfs:label "child pornography" .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/charge/2> a ns4:CriminalCharge ;
-    rdfs:label "sexual exploitation" ;
-    ns7:chargeCluster "sexual_exploitation_unspecified" .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/charge/3> a ns4:CriminalCharge ;
-    rdfs:label "child exploitation" ;
-    rdfs:seeAlso <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/offense-event/charge-3> ;
-    ns7:chargeCluster "child_exploitation" ;
-    ns7:chargeOffenseEvent <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/offense-event/charge-3> .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/event/distribution> a ns3:Event,
-        ns4:CSAM_Distribution ;
-    ns1:severityLevel 3 .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/event/project-safe-childhood> a ns3:Event,
-        ns6:ProjectSafeChildhoodOperation ;
-    ns1:severityLevel 3 .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/event/trust-violation> a ns2:CustodialAbuse,
-        ns2:TrustViolation ;
-    ns2:violatesRelationship <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/relationship/father> .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/legal-proceeding> a ns3:Event,
-        ns3:LegalEvent,
-        ns4:LegalProceeding ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/charge/1>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/charge/2>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/charge/3> ;
-    ns4:hasProceedingBeginPoint "2026-05-20T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns4:resultsSentence <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/sentence/1> .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/legal-step/sentenced> a ns3:Event,
-        ns3:LegalEvent,
-        ns4:LegalProceeding,
-        ns4:SentencingHearing ;
-    ns4:hasProceedingBeginPoint "2026-05-20T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/operation> a ns3:Event,
-        <https://cacontology.projectvic.org/taskforce#UndercoverUnit> .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns8:ageEstimate 31 .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/relationship/father> a ns2:CustodialRelationship,
-        ns2:FamilialRelationship ;
-    ns2:involvesChild <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/role/victim/1> ;
-    ns2:involvesCustodian <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/role/offender/1> ;
-    ns2:relationshipType "father" .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2026-05-20T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/event/csam>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/offense-event/charge-3> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/sentence/1> a ns4:CriminalSentence,
-        ns4:PrisonSentence ;
-    rdfs:label "162 months" .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181> a ns1:CACInvestigation,
-        ns3:EnduringEntity ;
-    dcterms:created "2026-10-18 02:38:00.938644" ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181> a ns3:CACInvestigation,
+        ns6:EnduringEntity ;
+    rdfs:label "Case doj_safe_childhood_2026_181" ;
+    dcterms:created "2026-11-10T19:28:55.107077"^^xsd:dateTime ;
+    dcterms:date "2026-05-20"^^xsd:date ;
     dcterms:identifier "doj_safe_childhood_2026_181" ;
-    dcterms:modified "2026-10-18 11:20:05.061676" ;
+    dcterms:modified "2026-11-11T11:56:19.526590"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/provenance> ;
     dcterms:source <https://www.justice.gov/usao-id/pr/boise-man-sentenced-135-years-federal-prison-distributing-child-pornography>,
         "DOJ SAFE CHILDHOOD" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/boise> ;
-    ns1:currentPhase <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/phase/sentenced> ;
-    ns1:hasPhase <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/phase/sentenced> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/admission/1>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/admission/2>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/event/csam>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/location/boise> ;
+    ns3:currentPhase <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/phase/sentenced> ;
+    ns3:hasPhase <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/phase/sentenced> ;
+    ns3:hasStep <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/event/csam>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/event/distribution>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/event/project-safe-childhood>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/legal-step/sentenced>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/offense-event/charge-3>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/operation> ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/boise-police-department>,
-        <https://w3id.org/caselinker/resource/agency/ceos>,
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/ceos>,
         <https://w3id.org/caselinker/resource/agency/doj>,
         <https://w3id.org/caselinker/resource/agency/fbi>,
-        <https://w3id.org/caselinker/resource/agency/usao> ;
-    ns7:mentionsLocation <https://w3id.org/caselinker/resource/location/boise> .
+        <https://w3id.org/caselinker/resource/agency/usao>,
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/agency/boise-police-department> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/admission/1>,
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/admission/2> .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/admission/1/extraction-confidence> a ns6:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns6:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/admission/1> ;
+    ns6:hasConfidence 0.9 ;
+    ns6:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/admission/2/extraction-confidence> a ns6:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/2/extraction-confidence" ;
+    ns6:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/admission/2> ;
+    ns6:hasConfidence 0.65 ;
+    ns6:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/person/offender/1/age> a ns2:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns2:ageSubject <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/person/offender/1> ;
+    ns2:concernsAgeQuality ns2:Age ;
+    ns2:hasAgeInYears 31.0 .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/role/victim/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/victim/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/person/victim/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/role/victim/1> .
+
+<https://w3id.org/caselinker/resource/agency/ceos> a ns6:OrganizationLikeEntity,
+        ns4:FederalAgency ;
+    rdfs:label "CEOS" ;
+    ns1:name "CEOS" .
+
+<https://w3id.org/caselinker/resource/agency/doj> a ns6:OrganizationLikeEntity,
+        ns4:FederalAgency ;
+    rdfs:label "U.S. Department of Justice" ;
+    ns1:name "U.S. Department of Justice" .
+
+<https://w3id.org/caselinker/resource/agency/fbi> a ns6:OrganizationLikeEntity,
+        ns4:FederalAgency ;
+    rdfs:label "Federal Bureau of Investigation" ;
+    skos:altLabel "FBI" ;
+    ns1:name "Federal Bureau of Investigation" .
+
+<https://w3id.org/caselinker/resource/agency/usao> a ns6:OrganizationLikeEntity,
+        ns4:FederalAgency ;
+    rdfs:label "U.S. Attorney's Office" ;
+    ns1:name "U.S. Attorney's Office" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/agency/boise-police-department> a ns6:OrganizationLikeEntity,
+        ns4:LocalAgency ;
+    rdfs:label "Boise Police Department" ;
+    ns1:name "Boise Police Department" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
+    rdfs:label "child pornography" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/charge/2> a ns5:CriminalCharge ;
+    rdfs:label "sexual exploitation" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/charge/3> a ns5:CriminalCharge ;
+    rdfs:label "child exploitation" ;
+    dcterms:subject ns3:ChildSexualAbuseEvent .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/event/distribution> a ns6:Event,
+        ns5:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/event/project-safe-childhood> a ns6:Event,
+        ns4:ProjectSafeChildhoodOperation ;
+    rdfs:label "Project Safe Childhood Operation · event/project-safe-childhood" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/event/trust-violation> a ns7:CustodialAbuse,
+        ns7:TrustViolation ;
+    rdfs:label "Custodial Abuse · event/trust-violation" ;
+    ns7:perpetratedBy <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/role/offender/1> ;
+    ns7:violatesRelationship <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/relationship/father> .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/legal-proceeding> a ns6:Event,
+        ns6:LegalEvent,
+        ns5:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns5:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/charge/1>,
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/charge/2>,
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/charge/3> ;
+    ns5:resultsSentence <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/sentence/1> .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/legal-step/sentenced> a ns6:Event,
+        ns6:LegalEvent,
+        ns5:LegalProceeding,
+        ns5:SentencingHearing ;
+    rdfs:label "Sentencing Hearing · legal-step/sentenced" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/location/boise> a ns6:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Boise" ;
+    ns1:name "Boise" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/operation> a ns6:Event,
+        <https://cacontology.projectvic.org/undercover#UndercoverOperation> ;
+    rdfs:label "Undercover Operation · operation" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/relationship/father> a ns7:CustodialRelationship,
+        ns7:FamilialRelationship ;
+    rdfs:label "Custodial Relationship · relationship/father" ;
+    ns7:involvesChild <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/role/victim/1> ;
+    ns7:involvesCustodian <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/role/offender/1> ;
+    ns7:relationshipType "parent" ;
+    ns1:isDirectional true ;
+    ns1:source <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/role/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/role/victim/1> .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/sentence/1> a ns5:CriminalSentence,
+        ns5:PrisonSentence ;
+    rdfs:label "162 months" ;
+    ns6:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/platform/social-media> a ns6:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "social media" ;
+    ns1:name "social media" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "slightly into the idea of sex with a seven-year-old boy" ;
     dcterms:source <https://www.justice.gov/usao-id/pr/boise-man-sentenced-135-years-federal-prison-distributing-child-pornography> ;
-    ns5:description "slightly into the idea of sex with a seven-year-old boy" ;
-    ns7:admissionContext "orcement officer. Law enforcement identified Ellinger and arrested him on April 24, 2024. During a consensual interview with law enforcem..." ;
-    ns7:admissionFrame "perp_proximate_admitted_quote" ;
-    ns7:admissionTheme "other" ;
-    ns7:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/role/offender/1> ;
-    ns7:evidenceTier "press_release_stated" ;
-    ns7:quoteType "direct" .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/phase/sentenced> a ns3:Phase,
-        ns4:SentencingPhase ;
-    ns1:hasPhaseBeginPoint "2026-05-20T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/boise> a ns3:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Boise" ;
-    ns5:name "Boise" .
-
-<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "social media" .
+    ns1:description "slightly into the idea of sex with a seven-year-old boy" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/admission/2> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "was “slightly into the idea of sex with a seven-year-old boy” and further admitted receiving and distributing child p..." ;
     dcterms:source <https://www.justice.gov/usao-id/pr/boise-man-sentenced-135-years-federal-prison-distributing-child-pornography> ;
-    ns5:description "was “slightly into the idea of sex with a seven-year-old boy” and further admitted receiving and distributing child pornography using social media" ;
-    ns7:admissionContext "r and arrested him on April 24, 2024. During a consensual interview with law enforcement, Ellinger admitted that he was “slightly into th..." ;
-    ns7:admissionFrame "admitted_paraphrase" ;
-    ns7:admissionTheme "harm_conduct" ;
-    ns7:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/role/offender/1> ;
-    ns7:evidenceTier "press_release_stated" ;
-    ns7:quoteType "paraphrase" .
+    ns1:description "was “slightly into the idea of sex with a seven-year-old boy” and further admitted receiving and distributing child pornography using social media" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/event/csam> a ns1:CSAMIncident,
-        ns3:Event ;
-    ns1:producesArtifact <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/admission/2> ;
-    ns1:severityLevel 3 ;
-    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/social-media> ;
-    ns5:hasFacet <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/facet/csam> .
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2026-05-20T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/event/csam>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/offense-event/charge-3> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/phase/sentenced> a ns6:Phase,
+        ns5:SentencingPhase ;
+    rdfs:label "Sentencing Phase · phase/sentenced" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/offense-event/charge-3> a ns1:ChildSexualAbuseEvent,
-        ns3:Event,
-        <https://ontology.unifiedcyberontology.org/uco/action/Crime> ;
-    rdfs:label "Inferred offense from charge: child exploitation" ;
-    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/social-media> .
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/event/csam> a ns3:CSAMIncident,
+        ns6:Event ;
+    rdfs:label "CSAMIncident · event/csam" ;
+    ns3:severityLevel 3 ;
+    ns3:usesChannel <https://w3id.org/caselinker/resource/platform/social-media> .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/role/victim/1> a ns3:VictimRole ;
+    rdfs:label "Victim Role · role/victim/1" ;
+    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/event/csam> .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/role/offender/1> a ns3:OffenderRole ;
+    rdfs:label "Offender Role · role/offender/1" ;
+    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2026_181/event/csam> .
 

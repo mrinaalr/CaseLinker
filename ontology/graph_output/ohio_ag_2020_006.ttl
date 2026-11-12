@@ -1,94 +1,123 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/core#> .
-@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns6: <https://cacontology.projectvic.org/detection#> .
-@prefix ns7: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns1: <https://cacontology.projectvic.org/core#> .
+@prefix ns2: <https://cacontology.projectvic.org#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ohio_ag_2020_006> a ns3:CACInvestigation,
-        ns4:EnduringEntity ;
-    dcterms:created "2026-10-18 06:14:12.507115" ;
+<https://w3id.org/caselinker/resource/case/ohio_ag_2020_006> a ns2:CACInvestigation,
+        ns1:EnduringEntity ;
+    rdfs:label "Case ohio_ag_2020_006" ;
+    dcterms:created "2026-11-11T16:37:33.866766"^^xsd:dateTime ;
+    dcterms:date "2020-02"^^xsd:gYearMonth ;
     dcterms:identifier "ohio_ag_2020_006" ;
-    dcterms:modified "2026-10-18 06:14:12.507115" ;
+    dcterms:modified "2026-11-11T16:37:33.866766"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ohio_ag_2020_006/provenance> ;
     dcterms:source <https://www.ohioattorneygeneral.gov/Media/News-Releases/February-2020/Dayton-Doctor-Indicted-on-145-Charges-for-Child-Po>,
         "OHIO AG" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/beavercreek>,
-        <https://w3id.org/caselinker/resource/location/dayton>,
-        <https://w3id.org/caselinker/resource/location/ohio> ;
-    ns3:hasStep <https://w3id.org/caselinker/resource/case/ohio_ag_2020_006/event/possession>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/beavercreek-city-oh>,
+        <https://w3id.org/caselinker/resource/location/dayton-city-oh>,
+        <https://w3id.org/caselinker/resource/location/ohio-oh> ;
+    ns2:hasStep <https://w3id.org/caselinker/resource/case/ohio_ag_2020_006/event/possession>,
         <https://w3id.org/caselinker/resource/case/ohio_ag_2020_006/legal-proceeding> ;
-    ns3:investigationStatus "unknown" ;
-    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/beavercreek-police-department>,
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/beavercreek-police-department-oh>,
         <https://w3id.org/caselinker/resource/agency/icac>,
-        <https://w3id.org/caselinker/resource/agency/ohio-bureau-of-criminal-investigation> ;
-    ns1:mentionsLocation <https://w3id.org/caselinker/resource/location/beavercreek>,
-        <https://w3id.org/caselinker/resource/location/dayton>,
-        <https://w3id.org/caselinker/resource/location/ohio> .
+        <https://w3id.org/caselinker/resource/agency/ohio-bureau-of-criminal-investigation> .
 
-<https://w3id.org/caselinker/resource/case/ohio_ag_2020_006/role/offender/1> a ns3:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns3:hasRoleBeginPoint "2020-02-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ohio_ag_2020_006/event/possession> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/ohio_ag_2020_006/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ohio_ag_2020_006/assessment/semantic/exploitive-positions> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · exploitive_positions" ;
+    dcterms:subject <https://cacontology.projectvic.org/custodial#PositionOfTrust> ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/ohio_ag_2020_006/narrative> ;
+    ns1:hasConfidence 0.52 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ohio_ag_2020_006/role/victim/1> a ns3:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns3:hasRoleBeginPoint "2020-02-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ohio_ag_2020_006/event/possession> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/ohio_ag_2020_006/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ohio_ag_2020_006/assessment/semantic/possession-csam> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns2:CSAMIncident ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/ohio_ag_2020_006/narrative> ;
+    ns1:hasConfidence 0.5662 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/agency/beavercreek-police-department> a ns4:OrganizationLikeEntity,
-        ns2:LocalAgency ;
-    rdfs:label "Beavercreek Police Department" .
+<https://w3id.org/caselinker/resource/case/ohio_ag_2020_006/person/offender/1/age> a ns5:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/ohio_ag_2020_006/person/offender/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 70.0 .
 
-<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> .
+<https://w3id.org/caselinker/resource/case/ohio_ag_2020_006/role/offender/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ohio_ag_2020_006/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ohio_ag_2020_006/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/ohio-bureau-of-criminal-investigation> a ns2:LocalAgency .
+<https://w3id.org/caselinker/resource/agency/beavercreek-police-department-oh> a ns1:OrganizationLikeEntity,
+        ns4:LocalAgency ;
+    rdfs:label "Beavercreek Police Department" ;
+    dcterms:identifier "ori:OH0291100" ;
+    ns3:name "Beavercreek Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ohio_ag_2020_006/charge/1> a ns7:CSAM_Possession,
-        ns7:CriminalCharge ;
-    rdfs:label "possession of child pornography" ;
-    ns7:indictmentCounts 5 .
+<https://w3id.org/caselinker/resource/agency/icac> a ns1:OrganizationLikeEntity,
+        <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns3:name "ICAC Task Force" .
 
-<https://w3id.org/caselinker/resource/case/ohio_ag_2020_006/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/agency/ohio-bureau-of-criminal-investigation> a ns1:OrganizationLikeEntity,
+        ns4:LocalAgency ;
+    rdfs:label "Ohio Bureau of Criminal Investigation" ;
+    ns3:name "Ohio Bureau of Criminal Investigation" .
 
-<https://w3id.org/caselinker/resource/case/ohio_ag_2020_006/legal-proceeding> a ns4:Event,
-        ns4:LegalEvent,
-        ns7:LegalProceeding ;
-    ns7:hasCharge <https://w3id.org/caselinker/resource/case/ohio_ag_2020_006/charge/1> ;
-    ns7:hasProceedingBeginPoint "2020-02-01T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ohio_ag_2020_006/charge/1> a ns6:CSAM_Possession,
+        ns6:CriminalCharge ;
+    rdfs:label "possession of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ohio_ag_2020_006/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns6:ageEstimate 70 .
+<https://w3id.org/caselinker/resource/case/ohio_ag_2020_006/legal-proceeding> a ns1:Event,
+        ns1:LegalEvent,
+        ns6:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns6:chargeCount "5"^^xsd:nonNegativeInteger ;
+    ns6:hasCharge <https://w3id.org/caselinker/resource/case/ohio_ag_2020_006/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ohio_ag_2020_006/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/ohio_ag_2020_006/role/offender/1> a ns6:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ohio_ag_2020_006/event/possession> .
 
-<https://w3id.org/caselinker/resource/platform/twitter-x> a <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "Twitter / X" .
-
-<https://w3id.org/caselinker/resource/location/beavercreek> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/beavercreek-city-oh> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Beavercreek" ;
-    ns5:name "Beavercreek" .
+    rdfs:label "Beavercreek city" ;
+    dcterms:identifier "fips:3904720" ;
+    skos:altLabel "Beavercreek" ;
+    ns3:name "Beavercreek city" .
 
-<https://w3id.org/caselinker/resource/location/dayton> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/dayton-city-oh> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Dayton" ;
-    ns5:name "Dayton" .
+    rdfs:label "Dayton city" ;
+    dcterms:identifier "fips:3921000" ;
+    skos:altLabel "Dayton" ;
+    ns3:name "Dayton city" .
 
-<https://w3id.org/caselinker/resource/location/ohio> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/ohio-oh> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Ohio" ;
-    ns5:name "Ohio" .
+    dcterms:identifier "fips:39" ;
+    ns3:name "Ohio" .
 
-<https://w3id.org/caselinker/resource/case/ohio_ag_2020_006/event/possession> a ns3:CSAMIncident,
-        ns4:Event ;
-    ns3:severityLevel 1 ;
-    ns3:usesChannel <https://w3id.org/caselinker/resource/platform/twitter-x> ;
-    ns5:hasFacet <https://w3id.org/caselinker/resource/case/ohio_ag_2020_006/facet/possession> .
+<https://w3id.org/caselinker/resource/platform/twitter-x> a ns1:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "Twitter / X" ;
+    ns3:name "Twitter / X" .
+
+<https://w3id.org/caselinker/resource/case/ohio_ag_2020_006/event/possession> a ns2:CSAMIncident,
+        ns1:Event ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns2:severityLevel 1 ;
+    ns2:usesChannel <https://w3id.org/caselinker/resource/platform/twitter-x> .
+
+<https://w3id.org/caselinker/resource/case/ohio_ag_2020_006/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

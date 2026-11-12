@@ -1,82 +1,63 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns3: <https://cacontology.projectvic.org/custodial#> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns5: <https://cacontology.projectvic.org/core#> .
-@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/tbi_icac_2017_002> a ns1:CACInvestigation,
-        ns5:EnduringEntity ;
-    dcterms:created "2026-10-18 07:19:08.638969" ;
+<https://w3id.org/caselinker/resource/case/tbi_icac_2017_002> a <https://cacontology.projectvic.org#CACInvestigation>,
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case tbi_icac_2017_002" ;
+    dcterms:created "2026-11-11T18:03:31.399584"^^xsd:dateTime ;
+    dcterms:date "2017-03-16"^^xsd:date ;
     dcterms:identifier "tbi_icac_2017_002" ;
-    dcterms:modified "2026-10-18 07:19:08.638969" ;
+    dcterms:modified "2026-11-11T18:03:31.399584"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/tbi_icac_2017_002/provenance> ;
     dcterms:source <https://tbinewsroom.com/2017/03/16/amber-alert-update-2-elizabeth-thomas/>,
         "TBI ICAC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/alabama>,
-        <https://w3id.org/caselinker/resource/location/columbia>,
-        <https://w3id.org/caselinker/resource/location/decatur>,
-        <https://w3id.org/caselinker/resource/location/tennessee> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/tbi_icac_2017_002/event/trust-violation> ;
-    ns1:investigationStatus "unknown" ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/maury-county-sheriffs-department>,
-        <https://w3id.org/caselinker/resource/agency/tennessee-bureau-of-investigation> ;
-    ns2:mentionsLocation <https://w3id.org/caselinker/resource/location/alabama>,
-        <https://w3id.org/caselinker/resource/location/columbia>,
-        <https://w3id.org/caselinker/resource/location/decatur>,
-        <https://w3id.org/caselinker/resource/location/tennessee> .
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/alabama-al>,
+        <https://w3id.org/caselinker/resource/location/columbia-city-tn>,
+        <https://w3id.org/caselinker/resource/location/decatur-city-al>,
+        <https://w3id.org/caselinker/resource/location/tennessee-tn> ;
+    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/maury-county-sheriff-s-office-tn>,
+        <https://w3id.org/caselinker/resource/agency/tennessee-bureau-of-investigation-tn> .
 
-<https://w3id.org/caselinker/resource/agency/maury-county-sheriffs-department> a ns5:OrganizationLikeEntity,
-        ns6:LocalAgency ;
-    rdfs:label "Maury County Sheriff's Department" .
+<https://w3id.org/caselinker/resource/agency/maury-county-sheriff-s-office-tn> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns2:LocalAgency ;
+    rdfs:label "Maury County Sheriff's Office" ;
+    dcterms:identifier "ori:TN0600000" ;
+    skos:altLabel "Maury County Sheriff's Department" ;
+    ns1:name "Maury County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/agency/tennessee-bureau-of-investigation> a ns6:StateAgency .
+<https://w3id.org/caselinker/resource/agency/tennessee-bureau-of-investigation-tn> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns2:StateAgency ;
+    rdfs:label "Tennessee Bureau of Investigation" ;
+    dcterms:identifier "ori:TNTBI0000" ;
+    ns1:name "Tennessee Bureau of Investigation" .
 
-<https://w3id.org/caselinker/resource/case/tbi_icac_2017_002/event/trust-violation> a ns3:AuthorityAbuse,
-        ns3:TrustViolation ;
-    ns3:violatesRelationship <https://w3id.org/caselinker/resource/case/tbi_icac_2017_002/relationship/teacher> .
-
-<https://w3id.org/caselinker/resource/case/tbi_icac_2017_002/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/tbi_icac_2017_002/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/tbi_icac_2017_002/relationship/teacher> a ns3:CustodialRelationship,
-        ns3:Teacher ;
-    ns3:involvesChild <https://w3id.org/caselinker/resource/case/tbi_icac_2017_002/role/victim/1> ;
-    ns3:involvesCustodian <https://w3id.org/caselinker/resource/case/tbi_icac_2017_002/role/offender/1> ;
-    ns3:relationshipType "teacher" .
-
-<https://w3id.org/caselinker/resource/case/tbi_icac_2017_002/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2017-03-16T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/tbi_icac_2017_002/person/offender/1> .
-
-<https://w3id.org/caselinker/resource/case/tbi_icac_2017_002/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2017-03-16T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/tbi_icac_2017_002/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/location/alabama> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/alabama-al> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Alabama" ;
-    ns4:name "Alabama" .
+    dcterms:identifier "fips:01" ;
+    ns1:name "Alabama" .
 
-<https://w3id.org/caselinker/resource/location/columbia> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/columbia-city-tn> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Columbia" ;
-    ns4:name "Columbia" .
+    rdfs:label "Columbia city" ;
+    dcterms:identifier "fips:4716540" ;
+    skos:altLabel "Columbia" ;
+    ns1:name "Columbia city" .
 
-<https://w3id.org/caselinker/resource/location/decatur> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/decatur-city-al> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Decatur" ;
-    ns4:name "Decatur" .
+    rdfs:label "Decatur city" ;
+    dcterms:identifier "fips:0120104" ;
+    skos:altLabel "Decatur" ;
+    ns1:name "Decatur city" .
 
-<https://w3id.org/caselinker/resource/location/tennessee> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/tennessee-tn> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Tennessee" ;
-    ns4:name "Tennessee" .
+    dcterms:identifier "fips:47" ;
+    ns1:name "Tennessee" .
 
-
-<https://w3id.org/caselinker/resource/case/tbi_icac_2017_002> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/tbi_icac_2017_002/provenance> .

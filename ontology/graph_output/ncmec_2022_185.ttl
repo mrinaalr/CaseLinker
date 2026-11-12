@@ -1,84 +1,85 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns4: <https://cacontology.projectvic.org/detection#> .
-@prefix ns5: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns6: <https://cacontology.projectvic.org/core#> .
-@prefix ns7: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_185> a ns2:CACInvestigation,
-        ns6:EnduringEntity ;
-    dcterms:created "2026-10-17 21:51:21.516556" ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case ncmec_2022_185" ;
+    dcterms:created "2026-11-10T09:18:07.073268"^^xsd:dateTime ;
+    dcterms:date "2022-07-12"^^xsd:date ;
     dcterms:identifier "ncmec_2022_185" ;
-    dcterms:modified "2026-10-17 21:51:21.516556" ;
+    dcterms:modified "2026-11-10T09:18:07.073268"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2022_185/provenance> ;
     dcterms:source <https://www.wifr.com/2022/07/12/rock-county-man-faces-child-porn-charges/>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/rock-county>,
-        <https://w3id.org/caselinker/resource/location/rock-township>,
-        <https://w3id.org/caselinker/resource/location/wis> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2022_185/location/rock-county>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2022_185/location/rock-township>,
+        <https://w3id.org/caselinker/resource/location/wisconsin-wi> ;
     ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_185/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_185/legal-proceeding> ;
-    ns7:involvesAgency <https://w3id.org/caselinker/resource/agency/rock-county-sheriffs-office> ;
-    ns5:mentionsLocation <https://w3id.org/caselinker/resource/location/rock-county>,
-        <https://w3id.org/caselinker/resource/location/rock-township>,
-        <https://w3id.org/caselinker/resource/location/wis> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2022_185/agency/rock-county-sheriffs-office> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_185/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2022-07-12T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_185/event/possession> ;
-    ns6:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_185/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_185/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2022_185/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 36.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_185/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2022-07-12T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_185/event/possession> ;
-    ns6:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_185/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_185/role/offender/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2022_185/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2022_185/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/rock-county-sheriffs-office> a ns6:OrganizationLikeEntity,
-        ns7:LocalAgency ;
-    rdfs:label "Rock County Sheriff's Office" .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_185/agency/rock-county-sheriffs-office> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns5:LocalAgency ;
+    rdfs:label "Rock County Sheriff's Office" ;
+    ns3:name "Rock County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_185/charge/1> a ns3:CSAM_Possession,
-        ns3:CriminalCharge ;
-    rdfs:label "possession of child pornography" ;
-    ns3:indictmentCounts 3 .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_185/charge/1> a ns1:CSAM_Possession,
+        ns1:CriminalCharge ;
+    rdfs:label "possession of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_185/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_185/legal-proceeding> a ns6:Event,
-        ns6:LegalEvent,
-        ns3:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_185/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        ns1:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): held at the Rock County jail" ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_185/charge/1> ;
-    ns3:hasProceedingBeginPoint "2022-07-12T00:00:00Z"^^xsd:dateTimeStamp .
+    ns1:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns1:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_185/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_185/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns4:ageEstimate 36 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_185/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/location/rock-county> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2022_185/location/rock-county> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Rock County" ;
-    ns1:name "Rock County" .
+    ns3:name "Rock County" .
 
-<https://w3id.org/caselinker/resource/location/rock-township> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2022_185/location/rock-township> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Rock Township" ;
-    ns1:name "Rock Township" .
+    ns3:name "Rock Township" .
 
-<https://w3id.org/caselinker/resource/location/wis> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2022_185/role/offender/1> a ns1:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_185/event/possession> .
+
+<https://w3id.org/caselinker/resource/location/wisconsin-wi> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Wis." ;
-    ns1:name "Wis." .
+    rdfs:label "Wisconsin" ;
+    dcterms:identifier "fips:55" ;
+    skos:altLabel "Wis." ;
+    ns3:name "Wisconsin" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_185/event/possession> a ns2:CSAMIncident,
-        ns6:Event ;
-    ns1:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2022_185/facet/possession> .
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/possession" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2022_185/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_185> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2022_185/provenance> .

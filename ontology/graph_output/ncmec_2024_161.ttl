@@ -1,139 +1,158 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/core#> .
-@prefix ns2: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns5: <https://cacontology.projectvic.org/custodial#> .
-@prefix ns6: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns7: <https://cacontology.projectvic.org/detection#> .
-@prefix ns8: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org/core#> .
+@prefix ns3: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns4: <https://cacontology.projectvic.org#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns6: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_161/admission/1/extraction-confidence> a ns1:AssessmentResult ;
-    ns1:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_161/admission/1> ;
-    ns1:generatedBy <https://w3id.org/caselinker/resource/case/ncmec_2024_161> ;
-    ns1:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_161/admission/2/extraction-confidence> a ns1:AssessmentResult ;
-    ns1:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_161/admission/2> ;
-    ns1:generatedBy <https://w3id.org/caselinker/resource/case/ncmec_2024_161> ;
-    ns1:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/agency/orlando-police-department> a ns4:LocalAgency .
-
-<https://w3id.org/caselinker/resource/agency/osceola-county-sheriffs-office> a ns4:LocalAgency .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_161/event/trust-violation> a ns5:CustodialAbuse,
-        ns5:TrustViolation ;
-    ns5:violatesRelationship <https://w3id.org/caselinker/resource/case/ncmec_2024_161/relationship/mother> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_161/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_161/legal-proceeding> a ns1:Event,
-        ns1:LegalEvent,
-        ns8:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): held without bond" ;
-    ns8:hasProceedingBeginPoint "2024-05-22T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_161/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns7:ageEstimate 27 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_161/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_161/relationship/mother> a ns5:CustodialRelationship,
-        ns5:FamilialRelationship ;
-    ns5:involvesChild <https://w3id.org/caselinker/resource/case/ncmec_2024_161/role/victim/1> ;
-    ns5:involvesCustodian <https://w3id.org/caselinker/resource/case/ncmec_2024_161/role/offender/1> ;
-    ns5:relationshipType "mother" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_161/role/victim/1> a ns3:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns3:hasRoleBeginPoint "2024-05-22T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_161/event/csam> ;
-    ns1:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_161/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_161> a ns3:CACInvestigation,
-        ns1:EnduringEntity ;
-    dcterms:created "2026-10-17 23:04:26.316543" ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_161> a ns4:CACInvestigation,
+        ns2:EnduringEntity ;
+    rdfs:label "Case ncmec_2024_161" ;
+    dcterms:created "2026-11-10T15:51:36.765424"^^xsd:dateTime ;
+    dcterms:date "2024-05-22"^^xsd:date ;
     dcterms:identifier "ncmec_2024_161" ;
-    dcterms:modified "2026-10-17 23:04:26.316543" ;
+    dcterms:modified "2026-11-12T00:18:13.468457"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_161/provenance> ;
     dcterms:source <https://wflaorlando.iheart.com/featured/florida-news/content/2024-05-21-man-arrested-for-alleged-video-voyeurism-at-target-store/#:~:text=Authorities%20say%20Daniel%20Mora%20has,flash%20and%20informed%20her%20mother>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/florida>,
-        <https://w3id.org/caselinker/resource/location/kissimmee>,
-        <https://w3id.org/caselinker/resource/location/orlando>,
-        <https://w3id.org/caselinker/resource/location/osceola-county> ;
-    ns3:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_161/phase/charged> ;
-    ns3:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_161/phase/charged> ;
-    ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_161/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_161/admission/2>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_161/event/csam>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/florida-fl>,
+        <https://w3id.org/caselinker/resource/location/kissimmee-city>,
+        <https://w3id.org/caselinker/resource/location/orlando-city-fl>,
+        <https://w3id.org/caselinker/resource/location/osceola-county-fl> ;
+    ns4:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_161/phase/charged> ;
+    ns4:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_161/phase/charged> ;
+    ns4:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_161/event/csam>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_161/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_161/legal-proceeding> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/orlando-police-department>,
-        <https://w3id.org/caselinker/resource/agency/osceola-county-sheriffs-office> ;
-    ns2:mentionsLocation <https://w3id.org/caselinker/resource/location/florida>,
-        <https://w3id.org/caselinker/resource/location/kissimmee>,
-        <https://w3id.org/caselinker/resource/location/orlando>,
-        <https://w3id.org/caselinker/resource/location/osceola-county> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_161/agency/orlando-police-department>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_161/agency/osceola-county-sheriffs-office> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2024_161/admission/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_161/admission/2> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_161/admission/1/extraction-confidence> a ns2:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_161/admission/1> ;
+    ns2:hasConfidence 0.65 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_161/admission/2/extraction-confidence> a ns2:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/2/extraction-confidence" ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_161/admission/2> ;
+    ns2:hasConfidence 0.65 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_161/person/offender/1/age> a ns6:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns6:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_161/person/offender/1> ;
+    ns6:concernsAgeQuality ns6:Age ;
+    ns6:hasAgeInYears 27.0 .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_161/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_161/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_161/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_161/role/victim/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/victim/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_161/person/victim/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_161/role/victim/1> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_161/agency/orlando-police-department> a ns2:OrganizationLikeEntity,
+        ns5:LocalAgency ;
+    rdfs:label "Orlando Police Department" ;
+    ns1:name "Orlando Police Department" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_161/agency/osceola-county-sheriffs-office> a ns2:OrganizationLikeEntity,
+        ns5:LocalAgency ;
+    rdfs:label "Osceola County Sheriff's Office" ;
+    ns1:name "Osceola County Sheriff's Office" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_161/event/trust-violation> a ns3:CustodialAbuse,
+        ns3:TrustViolation ;
+    rdfs:label "Custodial Abuse · event/trust-violation" ;
+    ns3:perpetratedBy <https://w3id.org/caselinker/resource/case/ncmec_2024_161/role/offender/1> ;
+    ns3:violatesRelationship <https://w3id.org/caselinker/resource/case/ncmec_2024_161/relationship/mother> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_161/legal-proceeding> a ns2:Event,
+        ns2:LegalEvent,
+        <https://cacontology.projectvic.org/legal-outcomes#LegalProceeding> ;
+    rdfs:label "Event · legal-proceeding" ;
+    rdfs:comment "Pretrial detention facility (not a sentence): held without bond" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_161/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_161/relationship/mother> a ns3:CustodialRelationship,
+        ns3:FamilialRelationship ;
+    rdfs:label "Custodial Relationship · relationship/mother" ;
+    ns3:involvesChild <https://w3id.org/caselinker/resource/case/ncmec_2024_161/role/victim/1> ;
+    ns3:involvesCustodian <https://w3id.org/caselinker/resource/case/ncmec_2024_161/role/offender/1> ;
+    ns3:relationshipType "parent" ;
+    ns1:isDirectional true ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_161/role/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_161/role/victim/1> .
+
+<https://w3id.org/caselinker/resource/location/florida-fl> a ns2:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Florida" ;
+    dcterms:identifier "fips:12" ;
+    ns1:name "Florida" .
+
+<https://w3id.org/caselinker/resource/location/kissimmee-city> a ns2:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Kissimmee city" ;
+    dcterms:identifier "fips:1236950" ;
+    skos:altLabel "Kissimmee" ;
+    ns1:name "Kissimmee city" .
+
+<https://w3id.org/caselinker/resource/location/orlando-city-fl> a ns2:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Orlando city" ;
+    dcterms:identifier "fips:1253000" ;
+    skos:altLabel "Orlando" ;
+    ns1:name "Orlando city" .
+
+<https://w3id.org/caselinker/resource/location/osceola-county-fl> a ns2:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Osceola County" ;
+    dcterms:identifier "fips:12097" ;
+    ns1:name "Osceola County" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_161/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "taking the photograph for pleasure and expressed embarrassment" ;
     dcterms:source <https://wflaorlando.iheart.com/featured/florida-news/content/2024-05-21-man-arrested-for-alleged-video-voyeurism-at-target-store/#:~:text=Authorities%20say%20Daniel%20Mora%20has,flash%20and%20informed%20her%20mother> ;
-    ns2:admissionContext "er mother. Mora is charged with video voyeurism and is currently being held without bond. During questioning, he admitted to taking the p..." ;
-    ns2:admissionFrame "admitted_to" ;
-    ns2:admissionTheme "other" ;
-    ns2:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/ncmec_2024_161/role/offender/1> ;
-    ns2:evidenceTier "press_release_stated" ;
-    ns2:quoteType "paraphrase" ;
-    ns6:description "taking the photograph for pleasure and expressed embarrassment" .
+    ns1:description "taking the photograph for pleasure and expressed embarrassment" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_161/admission/2> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "to taking the photograph for pleasure and expressed embarrassment" ;
     dcterms:source <https://wflaorlando.iheart.com/featured/florida-news/content/2024-05-21-man-arrested-for-alleged-video-voyeurism-at-target-store/#:~:text=Authorities%20say%20Daniel%20Mora%20has,flash%20and%20informed%20her%20mother> ;
-    ns2:admissionContext "harged with video voyeurism and is currently being held without bond. During questioning, he admitted to taking the photograph for pleasu..." ;
-    ns2:admissionFrame "he_admitted_paraphrase" ;
-    ns2:admissionTheme "other" ;
-    ns2:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/ncmec_2024_161/role/offender/1> ;
-    ns2:evidenceTier "press_release_stated" ;
-    ns2:quoteType "paraphrase" ;
-    ns6:description "to taking the photograph for pleasure and expressed embarrassment" .
+    ns1:description "to taking the photograph for pleasure and expressed embarrassment" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_161/phase/charged> a ns3:LegalProcessPhase,
-        ns1:Phase ;
-    ns3:hasPhaseBeginPoint "2024-05-22T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_161/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/location/florida> a ns1:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Florida" ;
-    ns6:name "Florida" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_161/phase/charged> a ns4:LegalProcessPhase,
+        ns2:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
 
-<https://w3id.org/caselinker/resource/location/kissimmee> a ns1:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Kissimmee" ;
-    ns6:name "Kissimmee" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_161/event/csam> a ns4:CSAMIncident,
+        ns2:Event ;
+    rdfs:label "CSAMIncident · event/csam" ;
+    ns4:severityLevel 3 .
 
-<https://w3id.org/caselinker/resource/location/orlando> a ns1:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Orlando" ;
-    ns6:name "Orlando" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_161/role/victim/1> a ns4:VictimRole ;
+    rdfs:label "Victim Role · role/victim/1" ;
+    ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_161/event/csam> .
 
-<https://w3id.org/caselinker/resource/location/osceola-county> a ns1:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Osceola County" ;
-    ns6:name "Osceola County" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_161/role/offender/1> a <https://cacontology.projectvic.org/legal-outcomes#DefendantRole> ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_161/event/csam> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_161/event/csam> a ns3:CSAMIncident,
-        ns1:Event ;
-    ns3:severityLevel 3 ;
-    ns6:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2024_161/facet/csam> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_161/role/offender/1> a ns3:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns3:hasRoleBeginPoint "2024-05-22T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_161/event/csam> ;
-    ns1:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_161/person/offender/1> .
-
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_161> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2024_161/provenance> .

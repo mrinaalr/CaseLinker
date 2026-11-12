@@ -2,80 +2,82 @@
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
 @prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns4: <https://cacontology.projectvic.org/us/ncmec#> .
-@prefix ns5: <https://cacontology.projectvic.org/detection#> .
-@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns7: <https://cacontology.projectvic.org/core#> .
-@prefix ns8: <https://w3id.org/caselinker/resource/vocab/> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_1170> a ns2:CACInvestigation,
-        ns7:EnduringEntity ;
-    dcterms:created "2026-10-17 23:04:39.160422" ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case ncmec_2024_1170" ;
+    dcterms:created "2026-11-11T23:57:47.660308"^^xsd:dateTime ;
+    dcterms:date "2024-02-21"^^xsd:date ;
     dcterms:identifier "ncmec_2024_1170" ;
-    dcterms:modified "2026-10-17 23:04:39.160422" ;
+    dcterms:modified "2026-11-11T23:57:47.660308"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_1170/provenance> ;
     dcterms:source <https://www.1059thehog.com/2024/02/21/janesville-man-charged-with-possession-of-child-pornography-5/>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/janesville> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2024_1170/location/janesville> ;
     ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_1170/phase/charged> ;
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_1170/phase/charged> ;
-    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_1170/cybertip>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_1170/event/possession>,
+    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_1170/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_1170/legal-proceeding> ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/janesville-police-department>,
-        <https://w3id.org/caselinker/resource/agency/ncmec> ;
-    ns8:mentionsLocation <https://w3id.org/caselinker/resource/location/janesville> .
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_1170/agency/janesville-police-department> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1170/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2024-02-21T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_1170/event/possession> ;
-    ns7:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_1170/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1170/person/offender/1/age> a ns5:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_1170/person/offender/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 27.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1170/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2024-02-21T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_1170/event/possession> ;
-    ns7:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_1170/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1170/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_1170/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_1170/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/janesville-police-department> a ns3:LocalAgency .
+<https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns3:FederalAgency ;
+    rdfs:label "National Center for Missing and Exploited Children" ;
+    skos:altLabel "NCMEC" ;
+    ns1:name "National Center for Missing and Exploited Children" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1170/charge/1> a ns6:CSAM_Possession,
-        ns6:CriminalCharge ;
-    rdfs:label "possession of child pornography" ;
-    ns6:indictmentCounts 2 .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1170/agency/janesville-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns3:LocalAgency ;
+    rdfs:label "Janesville Police Department" ;
+    ns1:name "Janesville Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1170/cybertip> a ns4:NCMECCybertipReport ;
-    ns4:supportedBy <https://w3id.org/caselinker/resource/agency/ncmec> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1170/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
+    rdfs:label "possession of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1170/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1170/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        ns4:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns4:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_1170/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1170/legal-proceeding> a ns7:Event,
-        ns7:LegalEvent,
-        ns6:LegalProceeding ;
-    ns6:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_1170/charge/1> ;
-    ns6:hasProceedingBeginPoint "2024-02-21T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1170/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns5:ageEstimate 27 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1170/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/agency/ncmec> a ns3:FederalAgency .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1170/phase/charged> a ns2:LegalProcessPhase,
-        ns7:Phase ;
-    ns2:hasPhaseBeginPoint "2024-02-21T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/janesville> a ns7:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1170/location/janesville> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Janesville" ;
     ns1:name "Janesville" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1170/role/offender/1> a ns4:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_1170/event/possession> .
+
 <https://w3id.org/caselinker/resource/case/ncmec_2024_1170/event/possession> a ns2:CSAMIncident,
-        ns7:Event ;
-    ns1:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2024_1170/facet/possession> .
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/possession" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1170/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1170> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2024_1170/provenance> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1170/phase/charged> a ns2:LegalProcessPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Legal Process Phase · phase/charged" .
+

@@ -1,78 +1,96 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/core#> .
-@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://cacontology.projectvic.org/detection#> .
-@prefix ns6: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns7: <https://cacontology.projectvic.org/production#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_1139> a ns3:CACInvestigation,
-        ns1:EnduringEntity ;
-    dcterms:created "2026-10-17 23:04:38.676384" ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case ncmec_2024_1139" ;
+    dcterms:created "2026-11-11T23:57:36.332677"^^xsd:dateTime ;
+    dcterms:date "2024-05-10"^^xsd:date ;
     dcterms:identifier "ncmec_2024_1139" ;
-    dcterms:modified "2026-10-17 23:04:38.676384" ;
+    dcterms:modified "2026-11-11T23:57:36.332677"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_1139/provenance> ;
     dcterms:source <https://kfdm.com/news/local/99-year-sentence-without-parole-for-man-who-sexually-assaulted-5-year-old-girl>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/jefferson-county>,
-        <https://w3id.org/caselinker/resource/location/nederland> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2024_1139/location/jefferson-county>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_1139/location/nederland> ;
     ns3:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_1139/phase/convicted> ;
     ns3:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_1139/phase/convicted> ;
     ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_1139/event/hands-on>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_1139/legal-proceeding>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_1139/legal-step/convicted> ;
-    ns6:mentionsLocation <https://w3id.org/caselinker/resource/location/jefferson-county>,
-        <https://w3id.org/caselinker/resource/location/nederland> .
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_1139/legal-step/convicted> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1139/role/offender/1> a ns3:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns3:hasRoleBeginPoint "2024-05-10T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_1139/event/hands-on> ;
-    ns1:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_1139/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1139/person/offender/1/age> a ns2:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns2:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_1139/person/offender/1> ;
+    ns2:concernsAgeQuality ns2:Age ;
+    ns2:hasAgeInYears 30.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1139/role/victim/1> a ns3:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns3:hasRoleBeginPoint "2024-05-10T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_1139/event/hands-on> ;
-    ns1:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_1139/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1139/person/victim/1/age> a ns2:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/victim/1/age" ;
+    ns2:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_1139/person/victim/1> ;
+    ns2:concernsAgeQuality ns2:Age ;
+    ns2:hasAgeInYears 5.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1139/legal-proceeding> a ns1:Event,
-        ns1:LegalEvent,
-        ns4:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): Jefferson County Jail" ;
-    ns4:hasProceedingBeginPoint "2024-05-10T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1139/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_1139/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_1139/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1139/legal-step/convicted> a ns1:Event,
-        ns1:LegalEvent,
-        ns4:LegalProceeding,
-        ns4:SentencingHearing ;
-    ns4:hasProceedingBeginPoint "2024-05-10T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1139/role/victim/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/victim/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_1139/person/victim/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_1139/role/victim/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1139/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns5:ageEstimate 30 .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1139/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        <https://cacontology.projectvic.org/legal-outcomes#LegalProceeding> ;
+    rdfs:label "Event · legal-proceeding" ;
+    rdfs:comment "Pretrial detention facility (not a sentence): Jefferson County Jail" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1139/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns7:victimAge 5 .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1139/legal-step/convicted> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        <https://cacontology.projectvic.org/legal-outcomes#LegalProceeding>,
+        <https://cacontology.projectvic.org/legal-outcomes#SentencingHearing> ;
+    rdfs:label "Sentencing Hearing · legal-step/convicted" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1139/phase/convicted> a ns1:Phase,
-        ns4:SentencingPhase ;
-    ns3:hasPhaseBeginPoint "2024-05-10T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/jefferson-county> a ns1:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1139/location/jefferson-county> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Jefferson County" ;
-    ns2:name "Jefferson County" .
+    ns1:name "Jefferson County" .
 
-<https://w3id.org/caselinker/resource/location/nederland> a ns1:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1139/location/nederland> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Nederland" ;
-    ns2:name "Nederland" .
+    ns1:name "Nederland" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1139/role/offender/1> a ns3:OffenderRole ;
+    rdfs:label "Offender Role · role/offender/1" ;
+    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_1139/event/hands-on> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1139/role/victim/1> a ns3:VictimRole ;
+    rdfs:label "Victim Role · role/victim/1" ;
+    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_1139/event/hands-on> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1139/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1139/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1139/phase/convicted> a <https://cacontology.projectvic.org/core#Phase>,
+        <https://cacontology.projectvic.org/legal-outcomes#SentencingPhase> ;
+    rdfs:label "Sentencing Phase · phase/convicted" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_1139/event/hands-on> a ns3:ChildSexualAbuseEvent,
-        ns1:Event ;
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "Child Sexual Abuse Event · event/hands-on" ;
     ns3:severityLevel 3 .
 
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1139> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2024_1139/provenance> .

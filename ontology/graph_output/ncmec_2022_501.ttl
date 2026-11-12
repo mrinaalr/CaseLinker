@@ -1,181 +1,168 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns2: <https://cacontology.projectvic.org#> .
+@prefix ns1: <https://cacontology.projectvic.org#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns3: <https://cacontology.projectvic.org/core#> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns5: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns7: <https://cacontology.projectvic.org/detection#> .
-@prefix ns8: <https://cacontology.projectvic.org/us/ncmec#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns6: <https://cacontology.projectvic.org/hotlines#> .
+@prefix ns7: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_501/admission/1/extraction-confidence> a ns3:AssessmentResult ;
-    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2022_501/admission/1> ;
-    ns3:generatedBy <https://w3id.org/caselinker/resource/case/ncmec_2022_501> ;
-    ns3:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_501/admission/2/extraction-confidence> a ns3:AssessmentResult ;
-    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2022_501/admission/2> ;
-    ns3:generatedBy <https://w3id.org/caselinker/resource/case/ncmec_2022_501> ;
-    ns3:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_501/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_501/event/hands-on>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_501/event/possession> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_501/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/agency/bucks-county-detective-bureau> a ns3:OrganizationLikeEntity,
-        ns1:LocalAgency ;
-    rdfs:label "Bucks County Detective Bureau" .
-
-<https://w3id.org/caselinker/resource/agency/district-attorneys> a ns3:OrganizationLikeEntity,
-        ns1:StateAgency ;
-    rdfs:label "District Attorney's" .
-
-<https://w3id.org/caselinker/resource/agency/perkasie-borough-police-department> a ns3:OrganizationLikeEntity,
-        ns1:LocalAgency ;
-    rdfs:label "Perkasie Borough Police Department" .
-
-<https://w3id.org/caselinker/resource/agency/perkasie-police-department> a ns3:OrganizationLikeEntity,
-        ns1:LocalAgency ;
-    rdfs:label "Perkasie Police Department" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_501/charge/1> a ns6:CSAM_Possession,
-        ns6:CriminalCharge ;
-    rdfs:label "possession of child pornography" ;
-    ns6:indictmentCounts 3 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_501/cybertip> a ns8:NCMECCybertipReport ;
-    ns8:supportedBy <https://w3id.org/caselinker/resource/agency/ncmec> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_501/event/distribution> a ns3:Event,
-        ns6:CSAM_Distribution ;
-    ns2:severityLevel 3 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_501/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_501/legal-proceeding> a ns3:Event,
-        ns3:LegalEvent,
-        ns6:LegalProceeding ;
-    ns6:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_501/charge/1> ;
-    ns6:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_501/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns7:ageEstimate 28 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_501/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_501/tech/cybertipline> a ns8:NCMECCybertipReport ;
-    rdfs:label "CyberTipline" .
-
-<https://w3id.org/caselinker/resource/agency/ncmec> a ns1:FederalAgency .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_501> a ns2:CACInvestigation,
+<https://w3id.org/caselinker/resource/case/ncmec_2022_501> a ns1:CACInvestigation,
         ns3:EnduringEntity ;
-    dcterms:created "2026-10-17 21:51:25.603529" ;
+    rdfs:label "Case ncmec_2022_501" ;
+    dcterms:created "2026-11-10T09:19:54.387523"^^xsd:dateTime ;
+    dcterms:date "2022-01"^^xsd:gYearMonth ;
     dcterms:identifier "ncmec_2022_501" ;
-    dcterms:modified "2026-10-17 21:51:25.603529" ;
+    dcterms:modified "2026-11-10T09:19:54.387523"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2022_501/provenance> ;
     dcterms:source <https://northpennnow.com/central-bucks-school-district-employee-charged-with-possession-of-child-por-p6010-119.htm>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/bucks-county>,
-        <https://w3id.org/caselinker/resource/location/north-penn>,
-        <https://w3id.org/caselinker/resource/location/perkasie> ;
-    ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_501/phase/charged> ;
-    ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_501/phase/charged> ;
-    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_501/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_501/admission/2>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_501/cybertip>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_501/event/distribution>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2022_501/location/north-penn>,
+        <https://w3id.org/caselinker/resource/location/bucks-county-pa>,
+        <https://w3id.org/caselinker/resource/location/perkasie-borough> ;
+    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_501/phase/charged> ;
+    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_501/phase/charged> ;
+    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_501/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_501/event/hands-on>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_501/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_501/legal-proceeding> ;
-    ns2:investigationStatus "unknown" ;
-    ns2:usesMethod <https://w3id.org/caselinker/resource/case/ncmec_2022_501/tech/cybertipline> ;
-    ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/bucks-county-detective-bureau>,
-        <https://w3id.org/caselinker/resource/agency/district-attorneys>,
-        <https://w3id.org/caselinker/resource/agency/ncmec>,
-        <https://w3id.org/caselinker/resource/agency/perkasie-borough-police-department>,
-        <https://w3id.org/caselinker/resource/agency/perkasie-police-department> ;
-    ns5:mentionsLocation <https://w3id.org/caselinker/resource/location/bucks-county>,
-        <https://w3id.org/caselinker/resource/location/north-penn>,
-        <https://w3id.org/caselinker/resource/location/perkasie> .
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2022_501/agency/bucks-county-detective-bureau>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2022_501/agency/district-attorneys>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2022_501/agency/perkasie-borough-police-department>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2022_501/agency/perkasie-police-department> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2022_501/admission/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2022_501/admission/2>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2022_501/cybertip> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_501/phase/charged> a ns2:LegalProcessPhase,
-        ns3:Phase ;
-    ns2:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_501/admission/1/extraction-confidence> a ns3:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2022_501/admission/1> ;
+    ns3:hasConfidence 0.65 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_501/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_501/event/hands-on>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_501/event/possession> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_501/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_501/admission/2/extraction-confidence> a ns3:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/2/extraction-confidence" ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2022_501/admission/2> ;
+    ns3:hasConfidence 0.65 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/location/bucks-county> a ns3:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Bucks County" ;
-    ns4:name "Bucks County" .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_501/person/offender/1/age> a ns7:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns7:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2022_501/person/offender/1> ;
+    ns7:concernsAgeQuality ns7:Age ;
+    ns7:hasAgeInYears 28.0 .
 
-<https://w3id.org/caselinker/resource/location/north-penn> a ns3:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2022_501/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2022_501/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2022_501/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/platform/social-media> a ns3:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "social media" ;
+    ns2:name "social media" .
+
+<https://w3id.org/caselinker/resource/platform/telegram> a ns3:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#MessagingService> ;
+    rdfs:label "Telegram" ;
+    ns2:name "Telegram" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_501/agency/bucks-county-detective-bureau> a ns3:OrganizationLikeEntity,
+        ns4:LocalAgency ;
+    rdfs:label "Bucks County Detective Bureau" ;
+    ns2:name "Bucks County Detective Bureau" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_501/agency/district-attorneys> a ns3:OrganizationLikeEntity,
+        ns4:StateAgency ;
+    rdfs:label "District Attorney's" ;
+    ns2:name "District Attorney's" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_501/agency/perkasie-borough-police-department> a ns3:OrganizationLikeEntity,
+        ns4:LocalAgency ;
+    rdfs:label "Perkasie Borough Police Department" ;
+    ns2:name "Perkasie Borough Police Department" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_501/agency/perkasie-police-department> a ns3:OrganizationLikeEntity,
+        ns4:LocalAgency ;
+    rdfs:label "Perkasie Police Department" ;
+    ns2:name "Perkasie Police Department" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_501/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
+    rdfs:label "possession of child pornography" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_501/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
+    rdfs:label "CyberTipline report" ;
+    ns6:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns2:name "observe" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_501/event/distribution> a ns3:Event,
+        ns5:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_501/event/hands-on> a ns1:ChildSexualAbuseEvent,
+        ns3:Event ;
+    rdfs:label "Child Sexual Abuse Event · event/hands-on" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_501/event/possession> a ns1:CSAMIncident,
+        ns3:Event ;
+    rdfs:label "CSAMIncident · event/possession" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_501/legal-proceeding> a ns3:Event,
+        ns3:LegalEvent,
+        ns5:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns5:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_501/charge/1> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_501/location/north-penn> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "North Penn" ;
-    ns4:name "North Penn" .
+    ns2:name "North Penn" .
 
-<https://w3id.org/caselinker/resource/location/perkasie> a ns3:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2022_501/role/offender/1> a ns5:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" .
+
+<https://w3id.org/caselinker/resource/location/bucks-county-pa> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Perkasie" ;
-    ns4:name "Perkasie" .
+    rdfs:label "Bucks County" ;
+    dcterms:identifier "fips:42017" ;
+    ns2:name "Bucks County" .
 
-<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "social media" .
+<https://w3id.org/caselinker/resource/location/perkasie-borough> a ns3:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Perkasie borough" ;
+    dcterms:identifier "fips:4259384" ;
+    skos:altLabel "Perkasie" ;
+    ns2:name "Perkasie borough" .
 
-<https://w3id.org/caselinker/resource/platform/telegram> a <https://cacontology.projectvic.org/platforms#MessagingService> ;
-    rdfs:label "Telegram" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_501/event/hands-on> a ns2:ChildSexualAbuseEvent,
-        ns3:Event ;
-    ns2:producesArtifact <https://w3id.org/caselinker/resource/case/ncmec_2022_501/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_501/admission/2> ;
-    ns2:severityLevel 3 ;
-    ns2:usesChannel <https://w3id.org/caselinker/resource/platform/social-media>,
-        <https://w3id.org/caselinker/resource/platform/telegram> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_501/event/possession> a ns2:CSAMIncident,
-        ns3:Event ;
-    ns2:producesArtifact <https://w3id.org/caselinker/resource/case/ncmec_2022_501/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_501/admission/2> ;
-    ns2:severityLevel 3 ;
-    ns2:usesChannel <https://w3id.org/caselinker/resource/platform/social-media>,
-        <https://w3id.org/caselinker/resource/platform/telegram> ;
-    ns4:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2022_501/facet/possession> .
+<https://w3id.org/caselinker/resource/agency/ncmec> a ns3:OrganizationLikeEntity,
+        ns6:HotlineOrganization,
+        ns4:FederalAgency ;
+    rdfs:label "National Center for Missing and Exploited Children" ;
+    skos:altLabel "NCMEC" ;
+    ns2:name "National Center for Missing and Exploited Children" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_501/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "to being sexually attracted to young boys, adding that he views videos of prepubescent and pubescent boys on the soci..." ;
     dcterms:source <https://northpennnow.com/central-bucks-school-district-employee-charged-with-possession-of-child-por-p6010-119.htm> ;
-    ns5:admissionContext "was currently employed there. On Aug. 26, Murphy met with investigators at his home and allegedly confessed to being sexually attracted t..." ;
-    ns5:admissionFrame "confessed_paraphrase" ;
-    ns5:admissionTheme "harm_conduct",
-        "sexual_interest",
-        "tech_use" ;
-    ns5:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/ncmec_2022_501/role/offender/1> ;
-    ns5:evidenceTier "press_release_stated" ;
-    ns5:quoteType "paraphrase" ;
-    ns4:description "to being sexually attracted to young boys, adding that he views videos of prepubescent and pubescent boys on the social media site Telegram" .
+    ns2:description "to being sexually attracted to young boys, adding that he views videos of prepubescent and pubescent boys on the social media site Telegram" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_501/admission/2> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "to possessing more than 100 videos of child pornography on his phone in a password protected app called Gallery Vault" ;
     dcterms:source <https://northpennnow.com/central-bucks-school-district-employee-charged-with-possession-of-child-por-p6010-119.htm> ;
-    ns5:admissionContext "hat he views videos of prepubescent and pubescent boys on the social media site Telegram. Murphy also confessed to possessing more than 1..." ;
-    ns5:admissionFrame "confessed_paraphrase" ;
-    ns5:admissionTheme "harm_conduct",
-        "tech_use" ;
-    ns5:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/ncmec_2022_501/role/offender/1> ;
-    ns5:evidenceTier "press_release_stated" ;
-    ns5:quoteType "paraphrase" ;
-    ns4:description "to possessing more than 100 videos of child pornography on his phone in a password protected app called Gallery Vault" .
+    ns2:description "to possessing more than 100 videos of child pornography on his phone in a password protected app called Gallery Vault" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2022_501/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_501> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2022_501/provenance> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_501/phase/charged> a ns1:LegalProcessPhase,
+        ns3:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
+

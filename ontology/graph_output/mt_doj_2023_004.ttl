@@ -1,112 +1,120 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://cacontology.projectvic.org/core#> .
-@prefix ns7: <https://cacontology.projectvic.org/detection#> .
+@prefix ns3: <https://cacontology.projectvic.org/core#> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/mt_doj_2023_004/admission/1/extraction-confidence> a ns6:AssessmentResult ;
-    ns6:assesses <https://w3id.org/caselinker/resource/case/mt_doj_2023_004/admission/1> ;
-    ns6:generatedBy <https://w3id.org/caselinker/resource/case/mt_doj_2023_004> ;
-    ns6:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/mt_doj_2023_004/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2023-10-05T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/mt_doj_2023_004/event/hands-on> ;
-    ns6:hasRole <https://w3id.org/caselinker/resource/case/mt_doj_2023_004/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/agency/billings-police-department> a ns4:LocalAgency .
-
-<https://w3id.org/caselinker/resource/agency/miles-city-police-department> a ns6:OrganizationLikeEntity,
-        ns4:LocalAgency ;
-    rdfs:label "Miles City Police Department" .
-
 <https://w3id.org/caselinker/resource/case/mt_doj_2023_004> a ns1:CACInvestigation,
-        ns6:EnduringEntity ;
-    dcterms:created "2026-10-18 05:35:36.750986" ;
+        ns3:EnduringEntity ;
+    rdfs:label "Case mt_doj_2023_004" ;
+    dcterms:created "2026-11-11T15:39:09.170283"^^xsd:dateTime ;
+    dcterms:date "2023-10-05"^^xsd:date ;
     dcterms:identifier "mt_doj_2023_004" ;
-    dcterms:modified "2026-10-18 05:35:36.750986" ;
+    dcterms:modified "2026-11-11T15:39:09.170283"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/mt_doj_2023_004/provenance> ;
     dcterms:source <https://dojmt.gov/miles-city-child-sexual-abuse-predator-sentenced-to-50-years/>,
         "MT DOJ" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/custer-county>,
-        <https://w3id.org/caselinker/resource/location/miles-city> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/custer-county-mt>,
+        <https://w3id.org/caselinker/resource/location/miles-city-city-mt> ;
     ns1:currentPhase <https://w3id.org/caselinker/resource/case/mt_doj_2023_004/phase/sentenced> ;
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/mt_doj_2023_004/phase/sentenced> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/mt_doj_2023_004/admission/1>,
-        <https://w3id.org/caselinker/resource/case/mt_doj_2023_004/event/hands-on>,
+    ns1:hasStep <https://w3id.org/caselinker/resource/case/mt_doj_2023_004/event/hands-on>,
         <https://w3id.org/caselinker/resource/case/mt_doj_2023_004/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/mt_doj_2023_004/legal-step/sentenced> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/billings-police-department>,
-        <https://w3id.org/caselinker/resource/agency/miles-city-police-department> ;
-    ns3:mentionsLocation <https://w3id.org/caselinker/resource/location/custer-county>,
-        <https://w3id.org/caselinker/resource/location/miles-city> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/billings-police-department-mt>,
+        <https://w3id.org/caselinker/resource/agency/miles-city-police-department-mt> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/mt_doj_2023_004/admission/1> .
 
-<https://w3id.org/caselinker/resource/case/mt_doj_2023_004/legal-proceeding> a ns6:Event,
-        ns6:LegalEvent,
-        ns5:LegalProceeding ;
-    ns5:hasProceedingBeginPoint "2023-10-05T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns5:resultsSentence <https://w3id.org/caselinker/resource/case/mt_doj_2023_004/sentence/1>,
+<https://w3id.org/caselinker/resource/case/mt_doj_2023_004/admission/1/extraction-confidence> a ns3:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/mt_doj_2023_004/admission/1> ;
+    ns3:hasConfidence 0.65 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+
+<https://w3id.org/caselinker/resource/case/mt_doj_2023_004/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/mt_doj_2023_004/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 45.0 .
+
+<https://w3id.org/caselinker/resource/case/mt_doj_2023_004/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/mt_doj_2023_004/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/mt_doj_2023_004/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/agency/billings-police-department-mt> a ns3:OrganizationLikeEntity,
+        ns5:LocalAgency ;
+    rdfs:label "Billings Police Department" ;
+    dcterms:identifier "ori:MT0560100" ;
+    ns2:name "Billings Police Department" .
+
+<https://w3id.org/caselinker/resource/agency/miles-city-police-department-mt> a ns3:OrganizationLikeEntity,
+        ns5:LocalAgency ;
+    rdfs:label "Miles City Police Department" ;
+    dcterms:identifier "ori:MT0090100" ;
+    ns2:name "Miles City Police Department" .
+
+<https://w3id.org/caselinker/resource/case/mt_doj_2023_004/legal-proceeding> a ns3:Event,
+        ns3:LegalEvent,
+        ns6:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns6:resultsSentence <https://w3id.org/caselinker/resource/case/mt_doj_2023_004/sentence/1>,
         <https://w3id.org/caselinker/resource/case/mt_doj_2023_004/sentence/2> .
 
-<https://w3id.org/caselinker/resource/case/mt_doj_2023_004/legal-step/sentenced> a ns6:Event,
-        ns6:LegalEvent,
-        ns5:LegalProceeding,
-        ns5:SentencingHearing ;
-    ns5:hasProceedingBeginPoint "2023-10-05T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/mt_doj_2023_004/legal-step/sentenced> a ns3:Event,
+        ns3:LegalEvent,
+        ns6:LegalProceeding,
+        ns6:SentencingHearing ;
+    rdfs:label "Sentencing Hearing · legal-step/sentenced" .
 
-<https://w3id.org/caselinker/resource/case/mt_doj_2023_004/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns7:ageEstimate 45 .
+<https://w3id.org/caselinker/resource/case/mt_doj_2023_004/sentence/1> a ns6:CriminalSentence,
+        ns6:PrisonSentence ;
+    rdfs:label "50 Years" ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/mt_doj_2023_004/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/mt_doj_2023_004/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/mt_doj_2023_004/sentence/2> a ns6:CriminalSentence,
+        ns6:PrisonSentence ;
+    rdfs:label "15 year" ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/mt_doj_2023_004/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/mt_doj_2023_004/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2023-10-05T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/mt_doj_2023_004/event/hands-on> ;
-    ns6:hasRole <https://w3id.org/caselinker/resource/case/mt_doj_2023_004/person/offender/1> .
-
-<https://w3id.org/caselinker/resource/case/mt_doj_2023_004/sentence/1> a ns5:CriminalSentence,
-        ns5:PrisonSentence ;
-    rdfs:label "50 Years" .
-
-<https://w3id.org/caselinker/resource/case/mt_doj_2023_004/sentence/2> a ns5:CriminalSentence,
-        ns5:PrisonSentence ;
-    rdfs:label "15 year" .
-
-<https://w3id.org/caselinker/resource/case/mt_doj_2023_004/phase/sentenced> a ns6:Phase,
-        ns5:SentencingPhase ;
-    ns1:hasPhaseBeginPoint "2023-10-05T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/custer-county> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/custer-county-mt> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Custer County" ;
+    dcterms:identifier "fips:30017" ;
     ns2:name "Custer County" .
 
-<https://w3id.org/caselinker/resource/location/miles-city> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/miles-city-city-mt> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Miles City" ;
-    ns2:name "Miles City" .
+    rdfs:label "Miles City city" ;
+    dcterms:identifier "fips:3049525" ;
+    skos:altLabel "Miles City" ;
+    ns2:name "Miles City city" .
 
 <https://w3id.org/caselinker/resource/case/mt_doj_2023_004/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "sexually assaulting a young girl multiple times between 2017 and 2019" ;
     dcterms:source <https://dojmt.gov/miles-city-child-sexual-abuse-predator-sentenced-to-50-years/> ;
-    ns3:admissionContext "ilty to one count of sexual intercourse without consent with a child under the age of 12. Kraft admitted to sexually assaulting a young g..." ;
-    ns3:admissionFrame "admitted_to" ;
-    ns3:admissionTheme "harm_conduct" ;
-    ns3:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/mt_doj_2023_004/role/offender/1> ;
-    ns3:evidenceTier "press_release_stated" ;
-    ns3:quoteType "paraphrase" ;
     ns2:description "sexually assaulting a young girl multiple times between 2017 and 2019" .
 
 <https://w3id.org/caselinker/resource/case/mt_doj_2023_004/event/hands-on> a ns1:ChildSexualAbuseEvent,
-        ns6:Event ;
-    ns1:producesArtifact <https://w3id.org/caselinker/resource/case/mt_doj_2023_004/admission/1> ;
+        ns3:Event ;
+    rdfs:label "Child Sexual Abuse Event · event/hands-on" ;
     ns1:severityLevel 3 .
 
+<https://w3id.org/caselinker/resource/case/mt_doj_2023_004/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/mt_doj_2023_004> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/mt_doj_2023_004/provenance> .
+<https://w3id.org/caselinker/resource/case/mt_doj_2023_004/phase/sentenced> a ns3:Phase,
+        ns6:SentencingPhase ;
+    rdfs:label "Sentencing Phase · phase/sentenced" .
+
+<https://w3id.org/caselinker/resource/case/mt_doj_2023_004/role/offender/1> a ns1:OffenderRole ;
+    rdfs:label "Offender Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/mt_doj_2023_004/event/hands-on> .
+

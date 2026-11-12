@@ -1,70 +1,79 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/core#> .
-@prefix ns4: <https://cacontology.projectvic.org/detection#> .
-@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns7: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns3: <https://cacontology.projectvic.org#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_701> a ns2:CACInvestigation,
-        ns3:EnduringEntity ;
-    dcterms:created "2026-10-18 00:01:23.039081" ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_701> a ns3:CACInvestigation,
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case ncmec_2025_701" ;
+    dcterms:created "2026-11-10T16:36:51.906741"^^xsd:dateTime ;
+    dcterms:date "2025-03-07"^^xsd:date ;
     dcterms:identifier "ncmec_2025_701" ;
-    dcterms:modified "2026-10-18 00:01:23.039081" ;
+    dcterms:modified "2026-11-12T02:06:43.826217"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2025_701/provenance> ;
     dcterms:source <https://www.kfyrtv.com/2025/03/08/arrest-made-minot-following-cyber-tip-into-child-sexual-abuse-videos/>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/minot>,
-        <https://w3id.org/caselinker/resource/location/nd> ;
-    ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_701/phase/charged> ;
-    ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_701/phase/charged> ;
-    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_701/legal-proceeding> ;
-    ns2:investigationStatus "unknown" ;
-    ns7:involvesAgency <https://w3id.org/caselinker/resource/agency/north-dakota-bureau-of-criminal-investigation> ;
-    ns1:mentionsLocation <https://w3id.org/caselinker/resource/location/minot>,
-        <https://w3id.org/caselinker/resource/location/nd> .
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/minot-city>,
+        <https://w3id.org/caselinker/resource/location/north-dakota-nd> ;
+    ns3:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_701/phase/charged> ;
+    ns3:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_701/phase/charged> ;
+    ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_701/legal-proceeding> ;
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/north-dakota-bureau-of-criminal-investigation> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_701/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2025-03-07T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2025_701/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_701/person/offender/1/age> a ns2:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns2:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2025_701/person/offender/1> ;
+    ns2:concernsAgeQuality ns2:Age ;
+    ns2:hasAgeInYears 29.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_701/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2025-03-07T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2025_701/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_701/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2025_701/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2025_701/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
-    rdfs:label "chat" .
+<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
+    rdfs:label "chat" ;
+    ns1:name "chat" .
 
-<https://w3id.org/caselinker/resource/agency/north-dakota-bureau-of-criminal-investigation> a ns7:LocalAgency .
+<https://w3id.org/caselinker/resource/agency/north-dakota-bureau-of-criminal-investigation> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns4:LocalAgency ;
+    rdfs:label "North Dakota Bureau of Criminal Investigation" ;
+    ns1:name "North Dakota Bureau of Criminal Investigation" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_701/legal-proceeding> a ns3:Event,
-        ns3:LegalEvent,
-        ns6:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): remains in custody" ;
-    ns6:hasProceedingBeginPoint "2025-03-07T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_701/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        <https://cacontology.projectvic.org/legal-outcomes#LegalProceeding> ;
+    rdfs:label "Event · legal-proceeding" ;
+    rdfs:comment "Pretrial detention facility (not a sentence): remains in custody" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_701/role/offender/1> a <https://cacontology.projectvic.org/legal-outcomes#DefendantRole> ;
+    rdfs:label "Defendant Role · role/offender/1" .
+
+<https://w3id.org/caselinker/resource/location/minot-city> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Minot city" ;
+    dcterms:identifier "fips:3853380" ;
+    skos:altLabel "Minot" ;
+    ns1:name "Minot city" .
+
+<https://w3id.org/caselinker/resource/location/north-dakota-nd> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "North Dakota" ;
+    dcterms:identifier "fips:38" ;
+    skos:altLabel "N.d." ;
+    ns1:name "North Dakota" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_701/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns4:ageEstimate 29 .
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_701/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_701/phase/charged> a ns3:LegalProcessPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Legal Process Phase · phase/charged" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_701/phase/charged> a ns2:LegalProcessPhase,
-        ns3:Phase ;
-    ns2:hasPhaseBeginPoint "2025-03-07T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/minot> a ns3:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Minot" ;
-    ns5:name "Minot" .
-
-<https://w3id.org/caselinker/resource/location/nd> a ns3:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "N.d." ;
-    ns5:name "N.d." .
-
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_701> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2025_701/provenance> .

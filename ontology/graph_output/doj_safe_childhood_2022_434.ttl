@@ -1,195 +1,202 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://w3id.org/caselinker/resource/vocab/> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns3: <https://cacontology.projectvic.org/core#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns6: <https://cacontology.projectvic.org/detection#> .
-@prefix ns7: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns6: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/admission/1/extraction-confidence> a ns3:AssessmentResult ;
-    ns3:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/admission/1> ;
-    ns3:generatedBy <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434> ;
-    ns3:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/admission/2/extraction-confidence> a ns3:AssessmentResult ;
-    ns3:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/admission/2> ;
-    ns3:generatedBy <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434> ;
-    ns3:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2022-03-16T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/event/csam>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/offense-event/charge-3> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/agency/ceos> a ns7:FederalAgency .
-
-<https://w3id.org/caselinker/resource/agency/doj> a ns7:FederalAgency .
-
-<https://w3id.org/caselinker/resource/agency/fbi> a ns7:FederalAgency .
-
-<https://w3id.org/caselinker/resource/agency/usao> a ns7:FederalAgency .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/charge/1> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
-    rdfs:label "child pornography" .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/charge/2> a ns4:CriminalCharge ;
-    rdfs:label "sexual exploitation" ;
-    ns2:chargeCluster "sexual_exploitation_unspecified" .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/charge/3> a ns4:CriminalCharge ;
-    rdfs:label "child exploitation" ;
-    rdfs:seeAlso <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/offense-event/charge-3> ;
-    ns2:chargeCluster "child_exploitation" ;
-    ns2:chargeOffenseEvent <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/offense-event/charge-3> .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/event/distribution> a ns3:Event,
-        ns4:CSAM_Distribution ;
-    ns1:severityLevel 3 .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/event/multi-jurisdiction> a ns3:Event,
-        ns7:MultiJurisdictionalInvestigation ;
-    ns1:severityLevel 3 .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/event/project-safe-childhood> a ns3:Event,
-        ns7:ProjectSafeChildhoodOperation ;
-    ns1:severityLevel 3 .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/legal-proceeding> a ns3:Event,
-        ns3:LegalEvent,
-        ns4:LegalProceeding ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/charge/1>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/charge/2>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/charge/3> ;
-    ns4:hasProceedingBeginPoint "2022-03-16T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/legal-step/pleaded-guilty> a ns3:Event,
-        ns3:LegalEvent,
-        ns4:LegalProceeding,
-        ns4:PleaBargaining ;
-    ns4:hasProceedingBeginPoint "2022-03-16T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/operation> a ns3:Event,
-        <https://cacontology.projectvic.org/taskforce#UndercoverUnit> .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns6:ageEstimate 30 .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434> a ns1:CACInvestigation,
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434> a ns4:CACInvestigation,
         ns3:EnduringEntity ;
-    dcterms:created "2026-10-18 02:38:37.086554" ;
+    rdfs:label "Case doj_safe_childhood_2022_434" ;
+    dcterms:created "2026-11-11T11:19:15.610700"^^xsd:dateTime ;
+    dcterms:date "2022-03-16"^^xsd:date ;
     dcterms:identifier "doj_safe_childhood_2022_434" ;
-    dcterms:modified "2026-10-18 12:53:17.058866" ;
+    dcterms:modified "2026-11-11T11:19:15.610700"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/provenance> ;
     dcterms:source <https://www.justice.gov/usao-wdmo/pr/kc-man-pleads-guilty-child-pornography>,
         "DOJ SAFE CHILDHOOD" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/kansas-city>,
-        <https://w3id.org/caselinker/resource/location/knoxville>,
-        <https://w3id.org/caselinker/resource/location/missouri>,
-        <https://w3id.org/caselinker/resource/location/mo>,
-        <https://w3id.org/caselinker/resource/location/tennessee> ;
-    ns1:currentPhase <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/phase/pleaded-guilty> ;
-    ns1:hasPhase <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/phase/pleaded-guilty> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/admission/1>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/admission/2>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/event/csam>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/kansas-city-city-ks>,
+        <https://w3id.org/caselinker/resource/location/knoxville-city-tn>,
+        <https://w3id.org/caselinker/resource/location/missouri-mo>,
+        <https://w3id.org/caselinker/resource/location/missouri-mo-29>,
+        <https://w3id.org/caselinker/resource/location/tennessee-tn> ;
+    ns4:currentPhase <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/phase/pleaded-guilty> ;
+    ns4:hasPhase <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/phase/pleaded-guilty> ;
+    ns4:hasStep <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/event/csam>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/event/distribution>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/event/multi-jurisdiction>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/event/project-safe-childhood>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/legal-step/pleaded-guilty>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/offense-event/charge-3>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/operation> ;
-    ns7:involvesAgency <https://w3id.org/caselinker/resource/agency/ceos>,
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/ceos>,
         <https://w3id.org/caselinker/resource/agency/doj>,
         <https://w3id.org/caselinker/resource/agency/fbi>,
         <https://w3id.org/caselinker/resource/agency/usao> ;
-    ns2:mentionsLocation <https://w3id.org/caselinker/resource/location/kansas-city>,
-        <https://w3id.org/caselinker/resource/location/knoxville>,
-        <https://w3id.org/caselinker/resource/location/missouri>,
-        <https://w3id.org/caselinker/resource/location/mo>,
-        <https://w3id.org/caselinker/resource/location/tennessee> .
+    ns1:object <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/admission/1>,
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/admission/2> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/admission/2> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
-    rdfs:label "wanted to meet in person before going any further in their plans" ;
-    dcterms:source <https://www.justice.gov/usao-wdmo/pr/kc-man-pleads-guilty-child-pornography> ;
-    ns5:description "wanted to meet in person before going any further in their plans" ;
-    ns2:admissionContext "hared child pornography. He asked to meet the FBI covert employee for dinner and a drink. Lilley said he wanted to meet in person before..." ;
-    ns2:admissionFrame "said_paraphrase" ;
-    ns2:admissionTheme "other" ;
-    ns2:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/role/offender/1> ;
-    ns2:evidenceTier "press_release_stated" ;
-    ns2:quoteType "paraphrase" .
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/admission/1/extraction-confidence> a ns3:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/admission/1> ;
+    ns3:hasConfidence 0.65 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/phase/pleaded-guilty> a ns3:Phase,
-        ns4:PreTrialPhase ;
-    ns1:hasPhaseBeginPoint "2022-03-16T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/admission/2/extraction-confidence> a ns3:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/2/extraction-confidence" ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/admission/2> ;
+    ns3:hasConfidence 0.65 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2022-03-16T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/event/csam>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/offense-event/charge-3> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/assessment/semantic/sextortion> a ns3:AssessmentResult ;
+    rdfs:label "semantic similarity · sextortion" ;
+    dcterms:subject <https://cacontology.projectvic.org/sextortion#SextortionIncident> ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/narrative> ;
+    ns3:hasConfidence 0.5093 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/location/kansas-city> a ns3:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/person/offender/1/age> a ns6:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns6:ageSubject <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/person/offender/1> ;
+    ns6:concernsAgeQuality ns6:Age ;
+    ns6:hasAgeInYears 30.0 .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/agency/ceos> a ns3:OrganizationLikeEntity,
+        ns5:FederalAgency ;
+    rdfs:label "CEOS" ;
+    ns1:name "CEOS" .
+
+<https://w3id.org/caselinker/resource/agency/doj> a ns3:OrganizationLikeEntity,
+        ns5:FederalAgency ;
+    rdfs:label "U.S. Department of Justice" ;
+    ns1:name "U.S. Department of Justice" .
+
+<https://w3id.org/caselinker/resource/agency/fbi> a ns3:OrganizationLikeEntity,
+        ns5:FederalAgency ;
+    rdfs:label "Federal Bureau of Investigation" ;
+    skos:altLabel "FBI" ;
+    ns1:name "Federal Bureau of Investigation" .
+
+<https://w3id.org/caselinker/resource/agency/usao> a ns3:OrganizationLikeEntity,
+        ns5:FederalAgency ;
+    rdfs:label "U.S. Attorney's Office" ;
+    ns1:name "U.S. Attorney's Office" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/charge/1> a ns2:CSAM_Possession,
+        ns2:CriminalCharge ;
+    rdfs:label "child pornography" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/charge/2> a ns2:CriminalCharge ;
+    rdfs:label "sexual exploitation" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/charge/3> a ns2:CriminalCharge ;
+    rdfs:label "child exploitation" ;
+    dcterms:subject ns4:ChildSexualAbuseEvent .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/event/distribution> a ns3:Event,
+        ns2:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/event/multi-jurisdiction> a ns3:Event,
+        ns5:MultiJurisdictionalInvestigation ;
+    rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/event/project-safe-childhood> a ns3:Event,
+        ns5:ProjectSafeChildhoodOperation ;
+    rdfs:label "Project Safe Childhood Operation · event/project-safe-childhood" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/legal-proceeding> a ns3:Event,
+        ns3:LegalEvent,
+        ns2:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns2:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns2:hasCharge <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/charge/1>,
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/charge/2>,
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/charge/3> .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/legal-step/pleaded-guilty> a ns3:Event,
+        ns3:LegalEvent,
+        ns2:LegalProceeding,
+        ns2:PleaBargaining ;
+    rdfs:label "Plea Bargaining · legal-step/pleaded-guilty" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/operation> a ns3:Event,
+        <https://cacontology.projectvic.org/undercover#UndercoverOperation> ;
+    rdfs:label "Undercover Operation · operation" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/role/offender/1> a ns4:OffenderRole ;
+    rdfs:label "Offender Role · role/offender/1" ;
+    ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/event/csam> .
+
+<https://w3id.org/caselinker/resource/location/kansas-city-city-ks> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Kansas City" ;
-    ns5:name "Kansas City" .
+    rdfs:label "Kansas City city" ;
+    dcterms:identifier "fips:2036000" ;
+    skos:altLabel "Kansas City" ;
+    ns1:name "Kansas City city" .
 
-<https://w3id.org/caselinker/resource/location/knoxville> a ns3:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/knoxville-city-tn> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Knoxville" ;
-    ns5:name "Knoxville" .
+    rdfs:label "Knoxville city" ;
+    dcterms:identifier "fips:4740000" ;
+    skos:altLabel "Knoxville" ;
+    ns1:name "Knoxville city" .
 
-<https://w3id.org/caselinker/resource/location/missouri> a ns3:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/missouri-mo> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Missouri" ;
-    ns5:name "Missouri" .
+    dcterms:identifier "fips:29" ;
+    ns1:name "Missouri" .
 
-<https://w3id.org/caselinker/resource/location/mo> a ns3:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/missouri-mo-29> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Mo." ;
-    ns5:name "Mo." .
+    rdfs:label "Missouri" ;
+    dcterms:identifier "fips:29" ;
+    skos:altLabel "Mo." ;
+    ns1:name "Missouri" .
 
-<https://w3id.org/caselinker/resource/location/tennessee> a ns3:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/tennessee-tn> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Tennessee" ;
-    ns5:name "Tennessee" .
+    dcterms:identifier "fips:47" ;
+    ns1:name "Tennessee" .
 
-<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "social media" .
+<https://w3id.org/caselinker/resource/platform/social-media> a ns3:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "social media" ;
+    ns1:name "social media" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "was involved with other groups on the social media site that shared child pornography" ;
     dcterms:source <https://www.justice.gov/usao-wdmo/pr/kc-man-pleads-guilty-child-pornography> ;
-    ns5:description "was involved with other groups on the social media site that shared child pornography" ;
-    ns2:admissionContext "also sent a link to approximately 184 videos of child sexual abuse that he had collected. Lilley said he was involved with other groups o..." ;
-    ns2:admissionFrame "said_paraphrase" ;
-    ns2:admissionTheme "harm_conduct" ;
-    ns2:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/role/offender/1> ;
-    ns2:evidenceTier "press_release_stated" ;
-    ns2:quoteType "paraphrase" .
+    ns1:description "was involved with other groups on the social media site that shared child pornography" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/event/csam> a ns1:CSAMIncident,
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/admission/2> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
+    rdfs:label "wanted to meet in person before going any further in their plans" ;
+    dcterms:source <https://www.justice.gov/usao-wdmo/pr/kc-man-pleads-guilty-child-pornography> ;
+    ns1:description "wanted to meet in person before going any further in their plans" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/event/csam> a ns4:CSAMIncident,
         ns3:Event ;
-    ns1:producesArtifact <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/admission/1> ;
-    ns1:severityLevel 3 ;
-    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/social-media> ;
-    ns5:hasFacet <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/facet/csam> .
+    rdfs:label "CSAMIncident · event/csam" ;
+    ns4:severityLevel 3 ;
+    ns4:usesChannel <https://w3id.org/caselinker/resource/platform/social-media> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/offense-event/charge-3> a ns1:ChildSexualAbuseEvent,
-        ns3:Event,
-        <https://ontology.unifiedcyberontology.org/uco/action/Crime> ;
-    rdfs:label "Inferred offense from charge: child exploitation" ;
-    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/social-media> .
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_434/phase/pleaded-guilty> a ns3:Phase,
+        ns2:PreTrialPhase ;
+    rdfs:label "Pre Trial Phase · phase/pleaded-guilty" .
 

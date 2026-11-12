@@ -1,204 +1,126 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/core#> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns4: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns6: <https://cacontology.projectvic.org/custodial#> .
-@prefix ns7: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://cacontology.projectvic.org#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/admission/1/extraction-confidence> a ns2:AssessmentResult ;
-    ns2:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/admission/1> ;
-    ns2:generatedBy <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225> ;
-    ns2:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/admission/2/extraction-confidence> a ns2:AssessmentResult ;
-    ns2:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/admission/2> ;
-    ns2:generatedBy <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225> ;
-    ns2:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/agency/doj> a ns3:FederalAgency .
-
-<https://w3id.org/caselinker/resource/agency/hsi> a ns3:FederalAgency .
-
-<https://w3id.org/caselinker/resource/agency/nassau-county-police-department> a ns2:OrganizationLikeEntity,
-        ns3:LocalAgency ;
-    rdfs:label "Nassau County Police Department" .
-
-<https://w3id.org/caselinker/resource/agency/usao> a ns3:FederalAgency .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/charge/1> a ns7:CSAM_Possession,
-        ns7:CriminalCharge ;
-    rdfs:label "child pornography" ;
-    ns7:indictmentCounts 2 .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/charge/2> a ns7:CSAM_Distribution,
-        ns7:CriminalCharge ;
-    rdfs:label "distribution of child pornography" .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/charge/3> a ns7:CriminalCharge ;
-    rdfs:label "sexual exploitation" ;
-    ns4:chargeCluster "sexual_exploitation_unspecified" .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/event/distribution> a ns2:Event,
-        ns7:CSAM_Distribution ;
-    ns1:severityLevel 3 .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/event/project-safe-childhood> a ns2:Event,
-        ns3:ProjectSafeChildhoodOperation ;
-    ns1:severityLevel 3 .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/event/trafficking> a ns2:Event,
-        ns7:SexTrafficking ;
-    ns1:severityLevel 3 .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/event/trust-violation> a ns6:CustodialAbuse,
-        ns6:TrustViolation ;
-    ns6:violatesRelationship <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/relationship/father> .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/legal-proceeding> a ns2:Event,
-        ns2:LegalEvent,
-        ns7:LegalProceeding ;
-    ns7:hasCharge <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/charge/1>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/charge/2>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/charge/3> ;
-    ns7:hasProceedingBeginPoint "2025-06-18T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/legal-step/sentenced> a ns2:Event,
-        ns2:LegalEvent,
-        ns7:LegalProceeding,
-        ns7:SentencingHearing ;
-    ns7:hasProceedingBeginPoint "2025-06-18T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/relationship/father> a ns6:CustodialRelationship,
-        ns6:FamilialRelationship ;
-    ns6:involvesChild <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/role/victim/1> ;
-    ns6:involvesCustodian <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/role/offender/1> ;
-    ns6:relationshipType "father" .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2025-06-18T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/event/csam>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/event/hands-on> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225> a ns1:CACInvestigation,
-        ns2:EnduringEntity ;
-    dcterms:created "2026-10-18 02:38:10.322443" ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225> a ns4:CACInvestigation,
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case doj_safe_childhood_2025_225" ;
+    dcterms:created "2026-11-10T19:32:10.894856"^^xsd:dateTime ;
+    dcterms:date "2025-06-18"^^xsd:date ;
     dcterms:identifier "doj_safe_childhood_2025_225" ;
-    dcterms:modified "2026-10-18 11:38:47.162260" ;
+    dcterms:modified "2026-11-11T12:21:30.216811"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/provenance> ;
-    dcterms:source <https://www.justice.gov/usao-edny/pr/long-island-child-therapist-pleads-guilty-distribution-child-pornography>,
+    dcterms:source <https://www.justice.gov/usao-nv/pr/las-vegas-man-convicted-receipt-and-possession-child-pornography-following-multiple>,
         "DOJ SAFE CHILDHOOD" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/central-islip>,
-        <https://w3id.org/caselinker/resource/location/melville>,
-        <https://w3id.org/caselinker/resource/location/new-york>,
-        <https://w3id.org/caselinker/resource/location/united-states> ;
-    ns1:currentPhase <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/phase/sentenced> ;
-    ns1:hasPhase <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/phase/sentenced> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/admission/1>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/admission/2>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/event/csam>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/event/distribution>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/event/hands-on>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/location/district-of-nevada>,
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/location/las-vegas>,
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/location/united-states> ;
+    ns4:currentPhase <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/phase/convicted> ;
+    ns4:hasPhase <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/phase/convicted> ;
+    ns4:hasStep <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/event/multi-jurisdiction>,
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/event/online-only>,
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/event/possession>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/event/project-safe-childhood>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/event/trafficking>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/legal-proceeding>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/legal-step/sentenced> ;
-    ns1:investigationStatus "unknown" ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/doj>,
-        <https://w3id.org/caselinker/resource/agency/hsi>,
-        <https://w3id.org/caselinker/resource/agency/nassau-county-police-department>,
-        <https://w3id.org/caselinker/resource/agency/usao> ;
-    ns4:mentionsLocation <https://w3id.org/caselinker/resource/location/central-islip>,
-        <https://w3id.org/caselinker/resource/location/melville>,
-        <https://w3id.org/caselinker/resource/location/new-york>,
-        <https://w3id.org/caselinker/resource/location/united-states> .
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/legal-step/convicted> ;
+    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/ceos>,
+        <https://w3id.org/caselinker/resource/agency/doj>,
+        <https://w3id.org/caselinker/resource/agency/fbi>,
+        <https://w3id.org/caselinker/resource/agency/usao> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/phase/sentenced> a ns2:Phase,
-        ns7:SentencingPhase ;
-    ns1:hasPhaseBeginPoint "2025-06-18T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/location/central-islip> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/agency/ceos> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns2:FederalAgency ;
+    rdfs:label "CEOS" ;
+    ns1:name "CEOS" .
+
+<https://w3id.org/caselinker/resource/agency/doj> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns2:FederalAgency ;
+    rdfs:label "U.S. Department of Justice" ;
+    ns1:name "U.S. Department of Justice" .
+
+<https://w3id.org/caselinker/resource/agency/fbi> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns2:FederalAgency ;
+    rdfs:label "Federal Bureau of Investigation" ;
+    skos:altLabel "FBI",
+        "FBI Las Vegas Division" ;
+    ns1:name "Federal Bureau of Investigation" .
+
+<https://w3id.org/caselinker/resource/agency/usao> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns2:FederalAgency ;
+    rdfs:label "U.S. Attorney's Office" ;
+    ns1:name "U.S. Attorney's Office" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/charge/1> a ns3:CSAM_Possession,
+        ns3:CriminalCharge ;
+    rdfs:label "possession of child pornography" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/charge/2> a ns3:CriminalCharge ;
+    rdfs:label "sexual exploitation" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/event/multi-jurisdiction> a <https://cacontology.projectvic.org/core#Event>,
+        ns2:MultiJurisdictionalInvestigation ;
+    rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/event/online-only> a ns4:ChildSexualAbuseEvent,
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "Child Sexual Abuse Event · event/online-only" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/event/possession> a ns4:CSAMIncident,
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/possession" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/event/project-safe-childhood> a <https://cacontology.projectvic.org/core#Event>,
+        ns2:ProjectSafeChildhoodOperation ;
+    rdfs:label "Project Safe Childhood Operation · event/project-safe-childhood" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        ns3:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns3:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/charge/1>,
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/charge/2> .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/legal-step/convicted> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        ns3:LegalProceeding,
+        ns3:SentencingHearing ;
+    rdfs:label "Sentencing Hearing · legal-step/convicted" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/location/district-of-nevada> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Central Islip" ;
-    ns5:name "Central Islip" .
+    rdfs:label "District of Nevada" ;
+    ns1:name "District of Nevada" .
 
-<https://w3id.org/caselinker/resource/location/melville> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/location/las-vegas> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Melville" ;
-    ns5:name "Melville" .
+    rdfs:label "Las Vegas" ;
+    ns1:name "Las Vegas" .
 
-<https://w3id.org/caselinker/resource/location/new-york> a ns2:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "New York" ;
-    ns5:name "New York" .
-
-<https://w3id.org/caselinker/resource/location/united-states> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/location/united-states> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "United States" ;
-    ns5:name "United States" .
+    ns1:name "United States" .
 
-<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
-    rdfs:label "chat" .
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "social media" .
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/role/offender/1> a ns4:OffenderRole ;
+    rdfs:label "Offender Role · role/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/event/csam> a ns1:CSAMIncident,
-        ns2:Event ;
-    ns1:producesArtifact <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/admission/1>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/admission/2> ;
-    ns1:severityLevel 3 ;
-    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/chat>,
-        <https://w3id.org/caselinker/resource/platform/social-media> ;
-    ns5:hasFacet <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/facet/csam> .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/event/hands-on> a ns1:ChildSexualAbuseEvent,
-        ns2:Event ;
-    ns1:producesArtifact <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/admission/1>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/admission/2> ;
-    ns1:severityLevel 3 ;
-    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/chat>,
-        <https://w3id.org/caselinker/resource/platform/social-media> .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2025-06-18T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/event/csam>,
-        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/event/hands-on> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/person/offender/1> .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
-    rdfs:label "distributing extremely vile and unthinkable videos depicting the horrific sexual abuse of babies" ;
-    dcterms:source <https://www.justice.gov/usao-edny/pr/long-island-child-therapist-pleads-guilty-distribution-child-pornography> ;
-    ns5:description "distributing extremely vile and unthinkable videos depicting the horrific sexual abuse of babies" ;
-    ns4:admissionContext "Patrick Ryder, Commissioner, Nassau County Police Department, announced the guilty plea. “The defendant, a licensed social worker, admitt..." ;
-    ns4:admissionFrame "admitted_to" ;
-    ns4:admissionTheme "harm_conduct" ;
-    ns4:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/role/offender/1> ;
-    ns4:evidenceTier "press_release_stated" ;
-    ns4:quoteType "paraphrase" .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/admission/2> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
-    rdfs:label "using encrypted social media messaging applications to upload, receive, and trade digital videos and images depicting..." ;
-    dcterms:source <https://www.justice.gov/usao-edny/pr/long-island-child-therapist-pleads-guilty-distribution-child-pornography> ;
-    ns5:description "using encrypted social media messaging applications to upload, receive, and trade digital videos and images depicting minors engaging in sexually explicit conduct, including several videos of infants" ;
-    ns4:admissionContext "o HSI and the Nassau County Police Department for their work on the case. As set forth in court filings and on the record at today’s plea..." ;
-    ns4:admissionFrame "admitted_to" ;
-    ns4:admissionTheme "harm_conduct",
-        "tech_use" ;
-    ns4:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/role/offender/1> ;
-    ns4:evidenceTier "press_release_stated" ;
-    ns4:quoteType "paraphrase" .
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_225/phase/convicted> a <https://cacontology.projectvic.org/core#Phase>,
+        ns3:SentencingPhase ;
+    rdfs:label "Sentencing Phase · phase/convicted" .
 

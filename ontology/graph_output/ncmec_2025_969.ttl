@@ -1,75 +1,73 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/core#> .
-@prefix ns3: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_969> a ns1:CACInvestigation,
-        ns2:EnduringEntity ;
-    dcterms:created "2026-10-18 00:01:26.463606" ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case ncmec_2025_969" ;
+    dcterms:created "2026-11-10T16:38:50.758009"^^xsd:dateTime ;
+    dcterms:date "2025-06-27"^^xsd:date ;
     dcterms:identifier "ncmec_2025_969" ;
-    dcterms:modified "2026-10-18 00:01:26.463606" ;
+    dcterms:modified "2026-11-12T02:19:26.621137"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2025_969/provenance> ;
     dcterms:source <https://katu.com/news/local/officers-find-10-dead-cats-during-arrest-of-accused-child-predator-in-vancouver-washington-investigation-sexual-assault-materials-dealing-minor>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/vancouver>,
-        <https://w3id.org/caselinker/resource/location/wash> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/vancouver-city-wa>,
+        <https://w3id.org/caselinker/resource/location/washington-wa> ;
     ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_969/phase/charged> ;
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_969/phase/charged> ;
     ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_969/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_969/legal-proceeding> ;
-    ns1:investigationStatus "unknown" ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/vancouver-police-department> ;
-    ns3:mentionsLocation <https://w3id.org/caselinker/resource/location/vancouver>,
-        <https://w3id.org/caselinker/resource/location/wash> .
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2025_969/agency/vancouver-police-department> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_969/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2025-06-27T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_969/event/possession> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2025_969/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_969/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2025_969/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2025_969/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_969/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2025-06-27T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_969/event/possession> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2025_969/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_969/agency/vancouver-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns3:LocalAgency ;
+    rdfs:label "Vancouver Police Department" ;
+    ns2:name "Vancouver Police Department" .
 
-<https://w3id.org/caselinker/resource/agency/vancouver-police-department> a ns2:OrganizationLikeEntity,
-        ns5:LocalAgency ;
-    rdfs:label "Vancouver Police Department" .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_969/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        <https://cacontology.projectvic.org/legal-outcomes#LegalProceeding> ;
+    rdfs:label "Event · legal-proceeding" ;
+    rdfs:comment "Pretrial detention facility (not a sentence): booked into the Clark County Jail" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_969/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_969/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_969/legal-proceeding> a ns2:Event,
-        ns2:LegalEvent,
-        ns6:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): booked into the Clark County Jail" ;
-    ns6:hasProceedingBeginPoint "2025-06-27T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_969/role/offender/1> a <https://cacontology.projectvic.org/legal-outcomes#DefendantRole> ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_969/event/possession> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_969/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_969/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_969/phase/charged> a ns1:LegalProcessPhase,
-        ns2:Phase ;
-    ns1:hasPhaseBeginPoint "2025-06-27T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/vancouver> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/vancouver-city-wa> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Vancouver" ;
-    ns4:name "Vancouver" .
+    rdfs:label "Vancouver city" ;
+    dcterms:identifier "fips:5374060" ;
+    skos:altLabel "Vancouver" ;
+    ns2:name "Vancouver city" .
 
-<https://w3id.org/caselinker/resource/location/wash> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/washington-wa> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Wash." ;
-    ns4:name "Wash." .
+    rdfs:label "Washington" ;
+    dcterms:identifier "fips:53" ;
+    skos:altLabel "Wash." ;
+    ns2:name "Washington" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_969/event/possession> a ns1:CSAMIncident,
-        ns2:Event ;
-    ns4:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2025_969/facet/possession> .
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/possession" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_969/phase/charged> a ns1:LegalProcessPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Legal Process Phase · phase/charged" .
 

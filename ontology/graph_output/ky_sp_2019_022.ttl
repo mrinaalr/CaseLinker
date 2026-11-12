@@ -1,85 +1,96 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://w3id.org/caselinker/resource/vocab/> .
+@prefix ns1: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/core#> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns7: <https://cacontology.projectvic.org/detection#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/core#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ky_sp_2019_022> a ns2:CACInvestigation,
-        ns3:EnduringEntity ;
-    dcterms:created "2026-10-18 05:15:33.898183" ;
+        ns4:EnduringEntity ;
+    rdfs:label "Case ky_sp_2019_022" ;
+    dcterms:created "2026-11-11T15:08:17.466434"^^xsd:dateTime ;
+    dcterms:date "2019-07-24"^^xsd:date ;
     dcterms:identifier "ky_sp_2019_022" ;
-    dcterms:modified "2026-10-18 05:15:33.898183" ;
+    dcterms:modified "2026-11-11T15:08:17.466434"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ky_sp_2019_022/provenance> ;
     dcterms:source <https://www.kentuckystatepolice.ky.gov/news/p14-7-24-19-2/>,
         "KY SP" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/ashland>,
-        <https://w3id.org/caselinker/resource/location/grayson>,
-        <https://w3id.org/caselinker/resource/location/ky> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/ashland-city-ky>,
+        <https://w3id.org/caselinker/resource/location/grayson-city-ky>,
+        <https://w3id.org/caselinker/resource/location/kentucky-ky> ;
     ns2:currentPhase <https://w3id.org/caselinker/resource/case/ky_sp_2019_022/phase/sentenced> ;
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/ky_sp_2019_022/phase/sentenced> ;
     ns2:hasStep <https://w3id.org/caselinker/resource/case/ky_sp_2019_022/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/ky_sp_2019_022/legal-step/sentenced> ;
-    ns2:investigationStatus "unknown" ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/kentucky-state-police-department> ;
-    ns1:mentionsLocation <https://w3id.org/caselinker/resource/location/ashland>,
-        <https://w3id.org/caselinker/resource/location/grayson>,
-        <https://w3id.org/caselinker/resource/location/ky> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/kentucky-state-police-department> .
 
-<https://w3id.org/caselinker/resource/case/ky_sp_2019_022/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2019-07-24T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/ky_sp_2019_022/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ky_sp_2019_022/person/offender/1/age> a ns1:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns1:ageSubject <https://w3id.org/caselinker/resource/case/ky_sp_2019_022/person/offender/1> ;
+    ns1:concernsAgeQuality ns1:Age ;
+    ns1:hasAgeInYears 25.0 .
 
-<https://w3id.org/caselinker/resource/case/ky_sp_2019_022/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2019-07-24T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/ky_sp_2019_022/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ky_sp_2019_022/role/offender/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ky_sp_2019_022/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ky_sp_2019_022/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/kentucky-state-police-department> a ns6:StateAgency .
+<https://w3id.org/caselinker/resource/agency/kentucky-state-police-department> a ns4:OrganizationLikeEntity,
+        ns5:StateAgency ;
+    rdfs:label "Kentucky State Police Department" ;
+    ns3:name "Kentucky State Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ky_sp_2019_022/legal-proceeding> a ns3:Event,
-        ns3:LegalEvent,
-        ns5:LegalProceeding ;
-    ns5:hasProceedingBeginPoint "2019-07-24T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns5:resultsSentence <https://w3id.org/caselinker/resource/case/ky_sp_2019_022/sentence/1> .
+<https://w3id.org/caselinker/resource/case/ky_sp_2019_022/legal-proceeding> a ns4:Event,
+        ns4:LegalEvent,
+        ns6:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns6:resultsSentence <https://w3id.org/caselinker/resource/case/ky_sp_2019_022/sentence/1> .
 
-<https://w3id.org/caselinker/resource/case/ky_sp_2019_022/legal-step/sentenced> a ns3:Event,
-        ns3:LegalEvent,
-        ns5:LegalProceeding,
-        ns5:SentencingHearing ;
-    ns5:hasProceedingBeginPoint "2019-07-24T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ky_sp_2019_022/legal-step/sentenced> a ns4:Event,
+        ns4:LegalEvent,
+        ns6:LegalProceeding,
+        ns6:SentencingHearing ;
+    rdfs:label "Sentencing Hearing · legal-step/sentenced" .
+
+<https://w3id.org/caselinker/resource/case/ky_sp_2019_022/sentence/1> a ns6:CriminalSentence,
+        ns6:PrisonSentence ;
+    rdfs:label "18 years" ;
+    ns4:assesses <https://w3id.org/caselinker/resource/case/ky_sp_2019_022/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/location/ashland-city-ky> a ns4:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Ashland city" ;
+    dcterms:identifier "fips:2102368" ;
+    skos:altLabel "Ashland" ;
+    ns3:name "Ashland city" .
+
+<https://w3id.org/caselinker/resource/location/grayson-city-ky> a ns4:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Grayson city" ;
+    dcterms:identifier "fips:2132572" ;
+    skos:altLabel "Grayson" ;
+    ns3:name "Grayson city" .
+
+<https://w3id.org/caselinker/resource/location/kentucky-ky> a ns4:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Kentucky" ;
+    dcterms:identifier "fips:21" ;
+    skos:altLabel "Ky." ;
+    ns3:name "Kentucky" .
 
 <https://w3id.org/caselinker/resource/case/ky_sp_2019_022/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns7:ageEstimate 25 .
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ky_sp_2019_022/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/ky_sp_2019_022/phase/sentenced> a ns4:Phase,
+        ns6:SentencingPhase ;
+    rdfs:label "Sentencing Phase · phase/sentenced" .
 
-<https://w3id.org/caselinker/resource/case/ky_sp_2019_022/sentence/1> a ns5:CriminalSentence,
-        ns5:PrisonSentence ;
-    rdfs:label "18 years" .
+<https://w3id.org/caselinker/resource/case/ky_sp_2019_022/role/offender/1> a ns2:OffenderRole ;
+    rdfs:label "Offender Role · role/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ky_sp_2019_022/phase/sentenced> a ns3:Phase,
-        ns5:SentencingPhase ;
-    ns2:hasPhaseBeginPoint "2019-07-24T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/ashland> a ns3:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Ashland" ;
-    ns4:name "Ashland" .
-
-<https://w3id.org/caselinker/resource/location/grayson> a ns3:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Grayson" ;
-    ns4:name "Grayson" .
-
-<https://w3id.org/caselinker/resource/location/ky> a ns3:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Ky." ;
-    ns4:name "Ky." .
-
-
-<https://w3id.org/caselinker/resource/case/ky_sp_2019_022> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ky_sp_2019_022/provenance> .

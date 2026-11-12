@@ -1,73 +1,71 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://w3id.org/caselinker/resource/vocab/> .
+@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://cacontology.projectvic.org/core#> .
-@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_217> a ns3:CACInvestigation,
-        ns5:EnduringEntity ;
-    dcterms:created "2026-10-17 22:21:30.452648" ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case ncmec_2023_217" ;
+    dcterms:created "2026-11-10T10:03:41.558348"^^xsd:dateTime ;
+    dcterms:date "2023-06-13"^^xsd:date ;
     dcterms:identifier "ncmec_2023_217" ;
-    dcterms:modified "2026-10-17 22:21:30.452648" ;
+    dcterms:modified "2026-11-10T10:03:41.558348"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2023_217/provenance> ;
     dcterms:source <https://www.wkbn.com/news/local-news/weathersfield-man-facing-child-porn-charges-2/>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/ohio>,
-        <https://w3id.org/caselinker/resource/location/weathersfield> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2023_217/location/weathersfield>,
+        <https://w3id.org/caselinker/resource/location/ohio-oh> ;
     ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_217/event/csam>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_217/legal-proceeding> ;
-    ns3:investigationStatus "unknown" ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/icac> ;
-    ns2:mentionsLocation <https://w3id.org/caselinker/resource/location/ohio>,
-        <https://w3id.org/caselinker/resource/location/weathersfield> .
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/icac> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_217/role/offender/1> a ns3:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns3:hasRoleBeginPoint "2023-06-13T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_217/event/csam> ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_217/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_217/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2023_217/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2023_217/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_217/role/victim/1> a ns3:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns3:hasRoleBeginPoint "2023-06-13T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_217/event/csam> ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_217/person/victim/1> .
+<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns1:name "ICAC Task Force" .
 
-<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_217/charge/1> a ns2:CSAM_Possession,
+        ns2:CriminalCharge ;
+    rdfs:label "child porn" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_217/charge/1> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
-    rdfs:label "child porn" ;
-    ns4:indictmentCounts 2 .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_217/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        ns2:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns2:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_217/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_217/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_217/legal-proceeding> a ns5:Event,
-        ns5:LegalEvent,
-        ns4:LegalProceeding ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_217/charge/1> ;
-    ns4:hasProceedingBeginPoint "2023-06-13T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_217/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_217/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/location/ohio> a ns5:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Ohio" ;
-    ns1:name "Ohio" .
-
-<https://w3id.org/caselinker/resource/location/weathersfield> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2023_217/location/weathersfield> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Weathersfield" ;
     ns1:name "Weathersfield" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2023_217/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_217/role/offender/1> a ns2:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_217/event/csam> .
+
+<https://w3id.org/caselinker/resource/location/ohio-oh> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Ohio" ;
+    dcterms:identifier "fips:39" ;
+    ns1:name "Ohio" .
+
 <https://w3id.org/caselinker/resource/case/ncmec_2023_217/event/csam> a ns3:CSAMIncident,
-        ns5:Event ;
-    ns1:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2023_217/facet/csam> .
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/csam" .
 
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_217> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2023_217/provenance> .

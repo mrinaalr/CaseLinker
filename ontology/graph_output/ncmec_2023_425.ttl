@@ -1,106 +1,112 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns3: <https://cacontology.projectvic.org/core#> .
+@prefix ns2: <https://cacontology.projectvic.org/core#> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns6: <https://cacontology.projectvic.org/detection#> .
-@prefix ns7: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_425/admission/1/extraction-confidence> a ns3:AssessmentResult ;
-    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2023_425/admission/1> ;
-    ns3:generatedBy <https://w3id.org/caselinker/resource/case/ncmec_2023_425> ;
-    ns3:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_425/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2023-12-11T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_425/event/possession> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_425/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/agency/brazos-county-sheriffs-office> a ns3:OrganizationLikeEntity,
-        ns5:LocalAgency ;
-    rdfs:label "Brazos County Sheriff's Office" .
-
-<https://w3id.org/caselinker/resource/agency/pflugerville-police-department> a ns3:OrganizationLikeEntity,
-        ns5:LocalAgency ;
-    rdfs:label "Pflugerville Police Department" .
-
 <https://w3id.org/caselinker/resource/case/ncmec_2023_425> a ns1:CACInvestigation,
-        ns3:EnduringEntity ;
-    dcterms:created "2026-10-17 22:21:33.085508" ;
+        ns2:EnduringEntity ;
+    rdfs:label "Case ncmec_2023_425" ;
+    dcterms:created "2026-11-10T10:04:53.363951"^^xsd:dateTime ;
+    dcterms:date "2023-12-11"^^xsd:date ;
     dcterms:identifier "ncmec_2023_425" ;
-    dcterms:modified "2026-10-17 22:21:33.085508" ;
+    dcterms:modified "2026-11-10T10:04:53.363951"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2023_425/provenance> ;
     dcterms:source <https://theeagle.com/news/local/crime-courts/college-station-man-charged-with-possession-of-child-pornography/article_8ae45a58-984b-11ee-af0e-33170c677121.html>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/brazos-county>,
-        <https://w3id.org/caselinker/resource/location/pflugerville> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/brazos-county-tx>,
+        <https://w3id.org/caselinker/resource/location/pflugerville-city> ;
     ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_425/phase/charged> ;
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_425/phase/charged> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_425/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2023_425/event/possession>,
+    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_425/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_425/legal-proceeding> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/brazos-county-sheriffs-office>,
-        <https://w3id.org/caselinker/resource/agency/pflugerville-police-department> ;
-    ns2:mentionsLocation <https://w3id.org/caselinker/resource/location/brazos-county>,
-        <https://w3id.org/caselinker/resource/location/pflugerville> .
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2023_425/agency/brazos-county-sheriffs-office>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2023_425/agency/pflugerville-police-department> ;
+    ns4:object <https://w3id.org/caselinker/resource/case/ncmec_2023_425/admission/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_425/charge/1> a ns7:CSAM_Possession,
-        ns7:CriminalCharge ;
-    rdfs:label "possession of child pornography" ;
-    ns7:indictmentCounts 2 .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_425/admission/1/extraction-confidence> a ns2:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/ncmec_2023_425/admission/1> ;
+    ns2:hasConfidence 0.65 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_425/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_425/assessment/semantic/possession-csam> a ns2:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns1:CSAMIncident ;
+    ns2:assesses <https://w3id.org/caselinker/resource/case/ncmec_2023_425/narrative> ;
+    ns2:hasConfidence 0.5341 ;
+    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_425/legal-proceeding> a ns3:Event,
-        ns3:LegalEvent,
-        ns7:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_425/person/offender/1/age> a ns5:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2023_425/person/offender/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 33.0 .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_425/role/offender/1/has-role> a ns4:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns4:isDirectional true ;
+    ns4:kindOfRelationship "Has_Role" ;
+    ns4:source <https://w3id.org/caselinker/resource/case/ncmec_2023_425/person/offender/1> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/ncmec_2023_425/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_425/agency/brazos-county-sheriffs-office> a ns2:OrganizationLikeEntity,
+        ns3:LocalAgency ;
+    rdfs:label "Brazos County Sheriff's Office" ;
+    ns4:name "Brazos County Sheriff's Office" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_425/agency/pflugerville-police-department> a ns2:OrganizationLikeEntity,
+        ns3:LocalAgency ;
+    rdfs:label "Pflugerville Police Department" ;
+    ns4:name "Pflugerville Police Department" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_425/charge/1> a ns6:CSAM_Possession,
+        ns6:CriminalCharge ;
+    rdfs:label "possession of child pornography" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_425/legal-proceeding> a ns2:Event,
+        ns2:LegalEvent,
+        ns6:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): Brazos County Jail" ;
-    ns7:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_425/charge/1> ;
-    ns7:hasProceedingBeginPoint "2023-12-11T00:00:00Z"^^xsd:dateTimeStamp .
+    ns6:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns6:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_425/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_425/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns6:ageEstimate 33 .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_425/role/offender/1> a ns6:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_425/event/possession> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_425/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_425/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2023-12-11T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_425/event/possession> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_425/person/offender/1> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_425/phase/charged> a ns1:LegalProcessPhase,
-        ns3:Phase ;
-    ns1:hasPhaseBeginPoint "2023-12-11T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/brazos-county> a ns3:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/brazos-county-tx> a ns2:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Brazos County" ;
+    dcterms:identifier "fips:48041" ;
     ns4:name "Brazos County" .
 
-<https://w3id.org/caselinker/resource/location/pflugerville> a ns3:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/pflugerville-city> a ns2:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Pflugerville" ;
-    ns4:name "Pflugerville" .
+    rdfs:label "Pflugerville city" ;
+    dcterms:identifier "fips:4857176" ;
+    skos:altLabel "Pflugerville" ;
+    ns4:name "Pflugerville city" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_425/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "having child pornography on a secret phone that was in a black backpack inside his residence" ;
     dcterms:source <https://theeagle.com/news/local/crime-courts/college-station-man-charged-with-possession-of-child-pornography/article_8ae45a58-984b-11ee-af0e-33170c677121.html> ;
-    ns2:admissionContext "County Sheriff’s Office arrested Dawson on behalf of the Pflugerville Police Department. After being taken into custody, officers said Da..." ;
-    ns2:admissionFrame "admitted_to" ;
-    ns2:admissionTheme "harm_conduct" ;
-    ns2:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/ncmec_2023_425/role/offender/1> ;
-    ns2:evidenceTier "press_release_stated" ;
-    ns2:quoteType "paraphrase" ;
     ns4:description "having child pornography on a secret phone that was in a black backpack inside his residence" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_425/event/possession> a ns1:CSAMIncident,
-        ns3:Event ;
-    ns1:producesArtifact <https://w3id.org/caselinker/resource/case/ncmec_2023_425/admission/1> ;
-    ns4:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2023_425/facet/possession> .
+        ns2:Event ;
+    rdfs:label "CSAMIncident · event/possession" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2023_425/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_425> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2023_425/provenance> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_425/phase/charged> a ns1:LegalProcessPhase,
+        ns2:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
+

@@ -1,94 +1,98 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://cacontology.projectvic.org/platforms#> .
 @prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://cacontology.projectvic.org/core#> .
-@prefix ns5: <https://cacontology.projectvic.org/detection#> .
-@prefix ns6: <https://w3id.org/caselinker/resource/vocab/> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_028> a ns1:CACInvestigation,
-        ns4:EnduringEntity ;
-    dcterms:created "2026-10-18 00:01:15.696768" ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case ncmec_2025_028" ;
+    dcterms:created "2026-11-10T16:31:56.728273"^^xsd:dateTime ;
+    dcterms:date "2025-03-03"^^xsd:date ;
     dcterms:identifier "ncmec_2025_028" ;
-    dcterms:modified "2026-10-18 00:01:15.696768" ;
+    dcterms:modified "2026-11-12T01:34:12.066583"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2025_028/provenance> ;
     dcterms:source <https://www.juneauempire.com/news/juneau-man-with-child-pornography-conviction-arrested-again-on-child-sexual-abuse-material-charges/>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/juneau>,
-        <https://w3id.org/caselinker/resource/location/juneau-empire> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2025_028/location/juneau-empire>,
+        <https://w3id.org/caselinker/resource/location/juneau-city> ;
     ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_028/phase/pleaded-guilty> ;
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_028/phase/pleaded-guilty> ;
     ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_028/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_028/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_028/legal-proceeding>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_028/legal-step/pleaded-guilty> ;
-    ns1:investigationStatus "unknown" ;
-    ns6:mentionsLocation <https://w3id.org/caselinker/resource/location/juneau>,
-        <https://w3id.org/caselinker/resource/location/juneau-empire> .
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_028/legal-step/pleaded-guilty> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_028/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2025-03-03T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_028/event/possession> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2025_028/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_028/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2025_028/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 25.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_028/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2025-03-03T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_028/event/possession> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2025_028/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_028/role/offender/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2025_028/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2025_028/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_028/charge/1> a ns2:CSAM_Possession,
-        ns2:CriminalCharge ;
-    rdfs:label "child pornography" ;
-    ns2:indictmentCounts 2 .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_028/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
+    rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_028/event/distribution> a ns4:Event,
-        ns2:CSAM_Distribution ;
-    ns1:severityLevel 3 .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_028/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
+        ns5:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_028/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_028/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        ns5:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns5:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_028/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_028/legal-proceeding> a ns4:Event,
-        ns4:LegalEvent,
-        ns2:LegalProceeding ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_028/charge/1> ;
-    ns2:hasProceedingBeginPoint "2025-03-03T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_028/legal-step/pleaded-guilty> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        ns5:LegalProceeding,
+        ns5:PleaBargaining ;
+    rdfs:label "Plea Bargaining · legal-step/pleaded-guilty" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_028/legal-step/pleaded-guilty> a ns4:Event,
-        ns4:LegalEvent,
-        ns2:LegalProceeding,
-        ns2:PleaBargaining ;
-    ns2:hasProceedingBeginPoint "2025-03-03T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_028/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns5:ageEstimate 25 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_028/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/platform/whatsapp> a <https://cacontology.projectvic.org/platforms#MessagingService> ;
-    rdfs:label "WhatsApp" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_028/phase/pleaded-guilty> a ns4:Phase,
-        ns2:PreTrialPhase ;
-    ns1:hasPhaseBeginPoint "2025-03-03T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/juneau> a ns4:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Juneau" ;
-    ns3:name "Juneau" .
-
-<https://w3id.org/caselinker/resource/location/juneau-empire> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2025_028/location/juneau-empire> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Juneau Empire" ;
     ns3:name "Juneau Empire" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2025_028/role/offender/1> a ns1:OffenderRole ;
+    rdfs:label "Offender Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_028/event/possession> .
+
+<https://w3id.org/caselinker/resource/location/juneau-city> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Juneau city" ;
+    dcterms:identifier "fips:5538675" ;
+    skos:altLabel "Juneau" ;
+    ns3:name "Juneau city" .
+
+<https://w3id.org/caselinker/resource/platform/whatsapp> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        ns2:MessagingService ;
+    rdfs:label "WhatsApp" ;
+    ns2:encryptionLevel "end-to-end" ;
+    ns3:name "WhatsApp" .
+
 <https://w3id.org/caselinker/resource/case/ncmec_2025_028/event/possession> a ns1:CSAMIncident,
-        ns4:Event ;
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/possession" ;
     ns1:severityLevel 3 ;
-    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/whatsapp> ;
-    ns3:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2025_028/facet/possession> .
+    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/whatsapp> .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2025_028/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_028> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2025_028/provenance> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_028/phase/pleaded-guilty> a <https://cacontology.projectvic.org/core#Phase>,
+        ns5:PreTrialPhase ;
+    rdfs:label "Pre Trial Phase · phase/pleaded-guilty" .
+

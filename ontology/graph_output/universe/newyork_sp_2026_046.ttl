@@ -1,92 +1,106 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns3: <https://cacontology.projectvic.org/detection#> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns5: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns7: <https://cacontology.projectvic.org/core#> .
+@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns6: <https://cacontology.projectvic.org/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/newyork_sp_2026_046> a ns1:CACInvestigation,
-        ns7:EnduringEntity ;
-    dcterms:created "2026-10-18 06:04:25.545847" ;
+        ns6:EnduringEntity ;
+    rdfs:label "Case newyork_sp_2026_046" ;
+    dcterms:created "2026-11-11T16:12:43.618752"^^xsd:dateTime ;
+    dcterms:date "2026-01"^^xsd:gYearMonth ;
     dcterms:identifier "newyork_sp_2026_046" ;
-    dcterms:modified "2026-10-18 06:04:25.545847" ;
+    dcterms:modified "2026-11-11T16:12:43.618752"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/newyork_sp_2026_046/provenance> ;
     dcterms:source <https://troopers.ny.gov/news/state-police-arrest-white-plains-man-possessing-child-sexual-abuse-material>,
         "NEWYORK SP" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/albany>,
-        <https://w3id.org/caselinker/resource/location/new-york>,
-        <https://w3id.org/caselinker/resource/location/white-plains> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/albany-city-ny>,
+        <https://w3id.org/caselinker/resource/location/new-york-ny>,
+        <https://w3id.org/caselinker/resource/location/white-plains-city-ny> ;
     ns1:currentPhase <https://w3id.org/caselinker/resource/case/newyork_sp_2026_046/phase/arrested> ;
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/newyork_sp_2026_046/phase/arrested> ;
     ns1:hasStep <https://w3id.org/caselinker/resource/case/newyork_sp_2026_046/event/possession>,
         <https://w3id.org/caselinker/resource/case/newyork_sp_2026_046/legal-proceeding> ;
-    ns1:investigationStatus "unknown" ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/state-police-department> ;
-    ns5:mentionsLocation <https://w3id.org/caselinker/resource/location/albany>,
-        <https://w3id.org/caselinker/resource/location/new-york>,
-        <https://w3id.org/caselinker/resource/location/white-plains> .
+    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/state-police-department-ny-unverified> .
 
-<https://w3id.org/caselinker/resource/case/newyork_sp_2026_046/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/newyork_sp_2026_046/event/possession> ;
-    ns7:hasRole <https://w3id.org/caselinker/resource/case/newyork_sp_2026_046/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/newyork_sp_2026_046/assessment/semantic/possession-csam> a ns6:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns1:CSAMIncident ;
+    ns6:assesses <https://w3id.org/caselinker/resource/case/newyork_sp_2026_046/narrative> ;
+    ns6:hasConfidence 0.5348 ;
+    ns6:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/newyork_sp_2026_046/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/newyork_sp_2026_046/event/possession> ;
-    ns7:hasRole <https://w3id.org/caselinker/resource/case/newyork_sp_2026_046/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/newyork_sp_2026_046/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/newyork_sp_2026_046/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 53.0 .
 
-<https://w3id.org/caselinker/resource/agency/state-police-department> a ns6:StateAgency .
+<https://w3id.org/caselinker/resource/case/newyork_sp_2026_046/role/offender/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/newyork_sp_2026_046/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/newyork_sp_2026_046/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/newyork_sp_2026_046/charge/1> a ns2:CSAM_Possession,
-        ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/agency/state-police-department-ny-unverified> a ns6:OrganizationLikeEntity,
+        ns2:StateAgency ;
+    rdfs:label "State Police Department" ;
+    ns3:name "State Police Department" .
+
+<https://w3id.org/caselinker/resource/case/newyork_sp_2026_046/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
     rdfs:label "child sexual abuse material" .
 
-<https://w3id.org/caselinker/resource/case/newyork_sp_2026_046/charge/2> a ns2:CriminalCharge ;
-    rdfs:label "sexual exploitation" ;
-    ns5:chargeCluster "sexual_exploitation_unspecified" .
+<https://w3id.org/caselinker/resource/case/newyork_sp_2026_046/charge/2> a ns5:CriminalCharge ;
+    rdfs:label "sexual exploitation" .
 
-<https://w3id.org/caselinker/resource/case/newyork_sp_2026_046/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/newyork_sp_2026_046/legal-proceeding> a ns6:Event,
+        ns6:LegalEvent,
+        ns5:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns5:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/newyork_sp_2026_046/charge/1>,
+        <https://w3id.org/caselinker/resource/case/newyork_sp_2026_046/charge/2> .
 
-<https://w3id.org/caselinker/resource/case/newyork_sp_2026_046/legal-proceeding> a ns7:Event,
-        ns7:LegalEvent,
-        ns2:LegalProceeding ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/newyork_sp_2026_046/charge/1>,
-        <https://w3id.org/caselinker/resource/case/newyork_sp_2026_046/charge/2> ;
-    ns2:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/newyork_sp_2026_046/role/offender/1> a ns5:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/newyork_sp_2026_046/event/possession> .
 
-<https://w3id.org/caselinker/resource/case/newyork_sp_2026_046/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns3:ageEstimate 53 .
-
-<https://w3id.org/caselinker/resource/case/newyork_sp_2026_046/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/newyork_sp_2026_046/phase/arrested> a ns1:InitialPhase,
-        ns7:Phase ;
-    ns1:hasPhaseBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/albany> a ns7:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/albany-city-ny> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Albany" ;
-    ns4:name "Albany" .
+    rdfs:label "Albany city" ;
+    dcterms:identifier "fips:3601000" ;
+    skos:altLabel "Albany" ;
+    ns3:name "Albany city" .
 
-<https://w3id.org/caselinker/resource/location/new-york> a ns7:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/new-york-ny> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "New York" ;
-    ns4:name "New York" .
+    dcterms:identifier "fips:36" ;
+    ns3:name "New York" .
 
-<https://w3id.org/caselinker/resource/location/white-plains> a ns7:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/white-plains-city-ny> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "White Plains" ;
-    ns4:name "White Plains" .
+    rdfs:label "White Plains city" ;
+    dcterms:identifier "fips:3681677" ;
+    skos:altLabel "White Plains" ;
+    ns3:name "White Plains city" .
 
 <https://w3id.org/caselinker/resource/case/newyork_sp_2026_046/event/possession> a ns1:CSAMIncident,
-        ns7:Event ;
-    ns1:severityLevel 3 ;
-    ns4:hasFacet <https://w3id.org/caselinker/resource/case/newyork_sp_2026_046/facet/possession> .
+        ns6:Event ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns1:severityLevel 3 .
+
+<https://w3id.org/caselinker/resource/case/newyork_sp_2026_046/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/newyork_sp_2026_046/phase/arrested> a ns1:InitialPhase,
+        ns6:Phase ;
+    rdfs:label "Initial Phase · phase/arrested" .
 

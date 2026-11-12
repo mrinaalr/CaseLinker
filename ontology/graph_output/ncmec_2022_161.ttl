@@ -1,70 +1,69 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/core#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns6: <https://cacontology.projectvic.org/detection#> .
+@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_161> a ns1:CACInvestigation,
-        ns3:EnduringEntity ;
-    dcterms:created "2026-10-17 21:51:21.283899" ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case ncmec_2022_161" ;
+    dcterms:created "2026-11-10T09:17:58.730354"^^xsd:dateTime ;
+    dcterms:date "2022-08-22"^^xsd:date ;
     dcterms:identifier "ncmec_2022_161" ;
-    dcterms:modified "2026-10-17 21:51:21.283899" ;
+    dcterms:modified "2026-11-10T09:17:58.730354"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2022_161/provenance> ;
     dcterms:source <https://www.wicz.com/story/47136214/earlville-man-arrested-on-child-pornography-charges>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/earlville> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2022_161/location/earlville> ;
     ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_161/phase/charged> ;
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_161/phase/charged> ;
     ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_161/event/possession>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_161/legal-proceeding> ;
-    ns1:investigationStatus "unknown" ;
-    ns5:mentionsLocation <https://w3id.org/caselinker/resource/location/earlville> .
+        <https://w3id.org/caselinker/resource/case/ncmec_2022_161/legal-proceeding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_161/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2022-08-22T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_161/event/possession> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_161/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_161/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2022_161/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 28.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_161/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2022-08-22T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_161/event/possession> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_161/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_161/role/offender/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2022_161/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2022_161/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_161/charge/1> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_161/charge/1> a ns2:CSAM_Possession,
+        ns2:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_161/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_161/legal-proceeding> a ns3:Event,
-        ns3:LegalEvent,
-        ns4:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_161/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        ns2:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): remanded to the Chenango County Correctional Facility" ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_161/charge/1> ;
-    ns4:hasProceedingBeginPoint "2022-08-22T00:00:00Z"^^xsd:dateTimeStamp .
+    ns2:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_161/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_161/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns6:ageEstimate 28 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_161/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_161/phase/charged> a ns1:LegalProcessPhase,
-        ns3:Phase ;
-    ns1:hasPhaseBeginPoint "2022-08-22T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/earlville> a ns3:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2022_161/location/earlville> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Earlville" ;
-    ns2:name "Earlville" .
+    ns3:name "Earlville" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_161/role/offender/1> a ns2:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_161/event/possession> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_161/event/possession> a ns1:CSAMIncident,
-        ns3:Event ;
-    ns2:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2022_161/facet/possession> .
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/possession" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2022_161/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_161> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2022_161/provenance> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_161/phase/charged> a ns1:LegalProcessPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Legal Process Phase · phase/charged" .
+

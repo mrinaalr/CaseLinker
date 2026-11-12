@@ -1,101 +1,131 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org/core#> .
-@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns4: <https://cacontology.projectvic.org#> .
-@prefix ns5: <https://cacontology.projectvic.org/custodial#> .
-@prefix ns6: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns7: <https://w3id.org/caselinker/resource/vocab/> .
+@prefix ns2: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org#> .
+@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/europol_2020_005> a ns4:CACInvestigation,
+<https://w3id.org/caselinker/resource/case/europol_2020_005> a ns5:CACInvestigation,
         ns1:EnduringEntity ;
-    dcterms:created "2026-10-18 04:25:58.491937" ;
+    rdfs:label "Case europol_2020_005" ;
+    dcterms:created "2026-11-11T14:12:09.377581"^^xsd:dateTime ;
+    dcterms:date "2020-04-29"^^xsd:date ;
     dcterms:identifier "europol_2020_005" ;
-    dcterms:modified "2026-10-18 04:25:58.491937" ;
+    dcterms:modified "2026-11-11T14:12:09.377581"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/europol_2020_005/provenance> ;
     dcterms:source <https://www.europol.europa.eu/media-press/newsroom/news/child-abuse-nursery-school-teacher-and-her-partner-to-be-prosecuted-in-hungary>,
         "EUROPOL" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/hungary> ;
-    ns4:hasStep <https://w3id.org/caselinker/resource/case/europol_2020_005/event/distribution>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/europol_2020_005/location/hungary> ;
+    ns5:hasStep <https://w3id.org/caselinker/resource/case/europol_2020_005/event/distribution>,
         <https://w3id.org/caselinker/resource/case/europol_2020_005/event/multi-jurisdiction>,
         <https://w3id.org/caselinker/resource/case/europol_2020_005/event/possession>,
         <https://w3id.org/caselinker/resource/case/europol_2020_005/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/europol_2020_005/legal-proceeding> ;
-    ns4:investigationStatus "unknown" ;
-    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/europol-victim-identification-task-forces>,
-        <https://w3id.org/caselinker/resource/agency/hungarian-national-police-department> ;
-    ns7:mentionsLocation <https://w3id.org/caselinker/resource/location/hungary> .
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/europol-victim-identification-task-forces>,
+        <https://w3id.org/caselinker/resource/agency/hungarian-national-police-department> .
+
+<https://w3id.org/caselinker/resource/case/europol_2020_005/assessment/semantic/exploitive-positions> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · exploitive_positions" ;
+    dcterms:subject ns2:PositionOfTrust ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/europol_2020_005/narrative> ;
+    ns1:hasConfidence 0.5492 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/europol_2020_005/assessment/semantic/possession-csam> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns5:CSAMIncident ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/europol_2020_005/narrative> ;
+    ns1:hasConfidence 0.5131 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/europol_2020_005/role/offender/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/europol_2020_005/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/europol_2020_005/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/europol_2020_005/role/victim/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/victim/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/europol_2020_005/person/victim/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/europol_2020_005/role/victim/1> .
 
 <https://w3id.org/caselinker/resource/agency/europol-victim-identification-task-forces> a ns1:OrganizationLikeEntity,
-        ns2:LocalAgency ;
-    rdfs:label "Europol Victim Identification Task Forces" .
+        ns4:LocalAgency ;
+    rdfs:label "Europol" ;
+    ns3:name "Europol" .
 
 <https://w3id.org/caselinker/resource/agency/hungarian-national-police-department> a ns1:OrganizationLikeEntity,
-        ns2:LocalAgency ;
-    rdfs:label "Hungarian National Police Department" .
+        ns4:LocalAgency ;
+    rdfs:label "Hungarian National Police Department" ;
+    ns3:name "Hungarian National Police Department" .
 
-<https://w3id.org/caselinker/resource/case/europol_2020_005/charge/1> a ns3:CSAM_Possession,
-        ns3:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/europol_2020_005/charge/1> a ns6:CSAM_Possession,
+        ns6:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/europol_2020_005/charge/2> a ns3:CriminalCharge ;
-    rdfs:label "sexual exploitation" ;
-    ns7:chargeCluster "sexual_exploitation_unspecified" .
+<https://w3id.org/caselinker/resource/case/europol_2020_005/charge/2> a ns6:CriminalCharge ;
+    rdfs:label "sexual exploitation" .
 
 <https://w3id.org/caselinker/resource/case/europol_2020_005/event/distribution> a ns1:Event,
-        ns3:CSAM_Distribution ;
-    ns4:severityLevel 3 .
+        ns6:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/europol_2020_005/event/multi-jurisdiction> a ns1:Event,
-        ns2:MultiJurisdictionalInvestigation ;
-    ns4:severityLevel 3 ;
-    ns2:crossesBorders true .
+        ns4:MultiJurisdictionalInvestigation ;
+    rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" ;
+    ns4:crossesBorders true .
 
-<https://w3id.org/caselinker/resource/case/europol_2020_005/event/trust-violation> a ns5:AuthorityAbuse,
-        ns5:TrustViolation ;
-    ns5:violatesRelationship <https://w3id.org/caselinker/resource/case/europol_2020_005/relationship/teacher> .
-
-<https://w3id.org/caselinker/resource/case/europol_2020_005/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/europol_2020_005/event/trust-violation> a ns2:AuthorityAbuse,
+        ns2:TrustViolation ;
+    rdfs:label "Authority Abuse · event/trust-violation" ;
+    ns2:perpetratedBy <https://w3id.org/caselinker/resource/case/europol_2020_005/role/offender/1> ;
+    ns2:violatesRelationship <https://w3id.org/caselinker/resource/case/europol_2020_005/relationship/teacher> .
 
 <https://w3id.org/caselinker/resource/case/europol_2020_005/legal-proceeding> a ns1:Event,
         ns1:LegalEvent,
-        ns3:LegalProceeding ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/europol_2020_005/charge/1>,
-        <https://w3id.org/caselinker/resource/case/europol_2020_005/charge/2> ;
-    ns3:hasProceedingBeginPoint "2020-04-29T00:00:00Z"^^xsd:dateTimeStamp .
+        ns6:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns6:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns6:hasCharge <https://w3id.org/caselinker/resource/case/europol_2020_005/charge/1>,
+        <https://w3id.org/caselinker/resource/case/europol_2020_005/charge/2> .
 
-<https://w3id.org/caselinker/resource/case/europol_2020_005/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/europol_2020_005/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/europol_2020_005/relationship/teacher> a ns5:CustodialRelationship,
-        ns5:Teacher ;
-    ns5:involvesChild <https://w3id.org/caselinker/resource/case/europol_2020_005/role/victim/1> ;
-    ns5:involvesCustodian <https://w3id.org/caselinker/resource/case/europol_2020_005/role/offender/1> ;
-    ns5:relationshipType "teacher" .
-
-<https://w3id.org/caselinker/resource/case/europol_2020_005/role/offender/1> a ns4:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns4:hasRoleBeginPoint "2020-04-29T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/europol_2020_005/event/possession> ;
-    ns1:hasRole <https://w3id.org/caselinker/resource/case/europol_2020_005/person/offender/1> .
-
-<https://w3id.org/caselinker/resource/case/europol_2020_005/role/victim/1> a ns4:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns4:hasRoleBeginPoint "2020-04-29T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/europol_2020_005/event/possession> ;
-    ns1:hasRole <https://w3id.org/caselinker/resource/case/europol_2020_005/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/location/hungary> a ns1:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/europol_2020_005/location/hungary> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Hungary" ;
-    ns6:name "Hungary" .
+    ns3:name "Hungary" .
 
-<https://w3id.org/caselinker/resource/case/europol_2020_005/event/possession> a ns4:CSAMIncident,
+<https://w3id.org/caselinker/resource/case/europol_2020_005/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/europol_2020_005/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
+
+<https://w3id.org/caselinker/resource/case/europol_2020_005/relationship/teacher> a ns2:CustodialRelationship,
+        ns2:Teacher ;
+    rdfs:label "Custodial Relationship · relationship/teacher" ;
+    ns2:involvesChild <https://w3id.org/caselinker/resource/case/europol_2020_005/role/victim/1> ;
+    ns2:involvesCustodian <https://w3id.org/caselinker/resource/case/europol_2020_005/role/offender/1> ;
+    ns2:relationshipType "teacher" ;
+    ns3:isDirectional true ;
+    ns3:source <https://w3id.org/caselinker/resource/case/europol_2020_005/role/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/europol_2020_005/role/victim/1> .
+
+<https://w3id.org/caselinker/resource/case/europol_2020_005/event/possession> a ns5:CSAMIncident,
         ns1:Event ;
-    ns4:severityLevel 3 ;
-    ns6:hasFacet <https://w3id.org/caselinker/resource/case/europol_2020_005/facet/possession> .
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns5:severityLevel 3 .
 
+<https://w3id.org/caselinker/resource/case/europol_2020_005/role/victim/1> a ns5:VictimRole ;
+    rdfs:label "Victim Role · role/victim/1" ;
+    ns5:participatesInEvent <https://w3id.org/caselinker/resource/case/europol_2020_005/event/possession> .
 
-<https://w3id.org/caselinker/resource/case/europol_2020_005> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/europol_2020_005/provenance> .
+<https://w3id.org/caselinker/resource/case/europol_2020_005/role/offender/1> a ns6:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns5:participatesInEvent <https://w3id.org/caselinker/resource/case/europol_2020_005/event/possession> .
+

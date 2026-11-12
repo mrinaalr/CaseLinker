@@ -1,111 +1,114 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/core#> .
-@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns7: <https://cacontology.projectvic.org/detection#> .
+@prefix ns1: <https://cacontology.projectvic.org#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns6: <https://cacontology.projectvic.org/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_242/admission/1/extraction-confidence> a ns1:AssessmentResult ;
-    ns1:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_242/admission/1> ;
-    ns1:generatedBy <https://w3id.org/caselinker/resource/case/ncmec_2025_242> ;
-    ns1:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_242/role/victim/1> a ns3:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns3:hasRoleBeginPoint "2025-05-07T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_242/event/possession> ;
-    ns1:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2025_242/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/agency/glynn-county-police-department> a ns6:LocalAgency .
-
-<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_242> a ns3:CACInvestigation,
-        ns1:EnduringEntity ;
-    dcterms:created "2026-10-18 00:01:18.078807" ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_242> a ns1:CACInvestigation,
+        ns6:EnduringEntity ;
+    rdfs:label "Case ncmec_2025_242" ;
+    dcterms:created "2026-11-10T16:33:26.326279"^^xsd:dateTime ;
+    dcterms:date "2025-05-07"^^xsd:date ;
     dcterms:identifier "ncmec_2025_242" ;
-    dcterms:modified "2026-10-18 00:01:18.078807" ;
+    dcterms:modified "2026-11-12T01:44:52.798234"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2025_242/provenance> ;
     dcterms:source <https://www.wsav.com/crime-safety/saint-simons-island-man-arrested-for-10-counts-of-sexual-exploitation-of-children/>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/ga>,
-        <https://w3id.org/caselinker/resource/location/glynn-county> ;
-    ns3:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_242/phase/charged> ;
-    ns3:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_242/phase/charged> ;
-    ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_242/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_242/event/distribution>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/georgia-ga>,
+        <https://w3id.org/caselinker/resource/location/glynn-county-ga> ;
+    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_242/phase/charged> ;
+    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_242/phase/charged> ;
+    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_242/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_242/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_242/legal-proceeding> ;
-    ns3:investigationStatus "unknown" ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/glynn-county-police-department>,
-        <https://w3id.org/caselinker/resource/agency/icac> ;
-    ns4:mentionsLocation <https://w3id.org/caselinker/resource/location/ga>,
-        <https://w3id.org/caselinker/resource/location/glynn-county> .
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_242/agency/glynn-county-police-department> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2025_242/admission/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_242/charge/1> a ns2:CriminalCharge ;
-    rdfs:label "SEXUAL EXPLOITATION OF" ;
-    ns2:indictmentCounts 11 ;
-    ns4:chargeCluster "sexual_exploitation_unspecified" .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_242/admission/1/extraction-confidence> a ns6:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns6:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_242/admission/1> ;
+    ns6:hasConfidence 0.65 ;
+    ns6:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_242/charge/2> a ns2:CSAM_Possession,
-        ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_242/person/offender/1/age> a ns5:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2025_242/person/offender/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 39.0 .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_242/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2025_242/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2025_242/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/agency/icac> a ns6:OrganizationLikeEntity,
+        <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns2:name "ICAC Task Force" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_242/agency/glynn-county-police-department> a ns6:OrganizationLikeEntity,
+        ns3:LocalAgency ;
+    rdfs:label "Glynn County Police Department" ;
+    ns2:name "Glynn County Police Department" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_242/charge/1> a ns4:CriminalCharge ;
+    rdfs:label "SEXUAL EXPLOITATION OF" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_242/charge/2> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_242/event/distribution> a ns1:Event,
-        ns2:CSAM_Distribution .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_242/event/distribution> a ns6:Event,
+        ns4:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_242/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_242/legal-proceeding> a ns6:Event,
+        ns6:LegalEvent,
+        ns4:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns4:chargeCount "12"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_242/charge/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_242/charge/2> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_242/legal-proceeding> a ns1:Event,
-        ns1:LegalEvent,
-        ns2:LegalProceeding ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_242/charge/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_242/charge/2> ;
-    ns2:hasProceedingBeginPoint "2025-05-07T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_242/role/offender/1> a ns4:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_242/event/possession> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_242/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns7:ageEstimate 39 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_242/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_242/role/offender/1> a ns3:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns3:hasRoleBeginPoint "2025-05-07T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_242/event/possession> ;
-    ns1:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2025_242/person/offender/1> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_242/phase/charged> a ns3:LegalProcessPhase,
-        ns1:Phase ;
-    ns3:hasPhaseBeginPoint "2025-05-07T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/ga> a ns1:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/georgia-ga> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Ga." ;
-    ns5:name "Ga." .
+    rdfs:label "Georgia" ;
+    dcterms:identifier "fips:13" ;
+    skos:altLabel "Ga." ;
+    ns2:name "Georgia" .
 
-<https://w3id.org/caselinker/resource/location/glynn-county> a ns1:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/glynn-county-ga> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Glynn County" ;
-    ns5:name "Glynn County" .
+    dcterms:identifier "fips:13127" ;
+    ns2:name "Glynn County" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_242/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "to possessing and distributing child pornography, a police spokesperson said" ;
     dcterms:source <https://www.wsav.com/crime-safety/saint-simons-island-man-arrested-for-10-counts-of-sexual-exploitation-of-children/> ;
-    ns4:admissionContext "e Drive Wednesday. James Waller, 39, was arrested and interviewed by detectives where he reportedly confessed to possessing and distribut..." ;
-    ns4:admissionFrame "confessed_paraphrase" ;
-    ns4:admissionTheme "harm_conduct" ;
-    ns4:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/ncmec_2025_242/role/offender/1> ;
-    ns4:evidenceTier "press_release_stated" ;
-    ns4:quoteType "paraphrase" ;
-    ns5:description "to possessing and distributing child pornography, a police spokesperson said" .
+    ns2:description "to possessing and distributing child pornography, a police spokesperson said" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_242/event/possession> a ns3:CSAMIncident,
-        ns1:Event ;
-    ns3:producesArtifact <https://w3id.org/caselinker/resource/case/ncmec_2025_242/admission/1> ;
-    ns5:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2025_242/facet/possession> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_242/event/possession> a ns1:CSAMIncident,
+        ns6:Event ;
+    rdfs:label "CSAMIncident · event/possession" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2025_242/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_242> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2025_242/provenance> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_242/phase/charged> a ns1:LegalProcessPhase,
+        ns6:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
+

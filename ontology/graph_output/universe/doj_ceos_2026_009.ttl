@@ -1,185 +1,211 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/detection#> .
-@prefix ns2: <https://cacontology.projectvic.org/core#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns7: <https://w3id.org/caselinker/resource/vocab/> .
+@prefix ns4: <https://cacontology.projectvic.org/core#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns6: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/admission/1/extraction-confidence> a ns2:AssessmentResult ;
-    ns2:assesses <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/admission/1> ;
-    ns2:generatedBy <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009> ;
-    ns2:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/role/victim/1> a ns3:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns3:hasRoleBeginPoint "2026-01-07T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/event/possession>,
-        <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/offense-event/charge-4> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/agency/ceos> a ns6:FederalAgency .
-
-<https://w3id.org/caselinker/resource/agency/doj> a ns6:FederalAgency .
-
-<https://w3id.org/caselinker/resource/agency/fbi> a ns6:FederalAgency .
-
-<https://w3id.org/caselinker/resource/agency/justice-departments-criminal-division> a ns6:LocalAgency .
-
-<https://w3id.org/caselinker/resource/agency/middletown-police-department> a ns2:OrganizationLikeEntity,
-        ns6:LocalAgency ;
-    rdfs:label "Middletown Police Department" .
-
-<https://w3id.org/caselinker/resource/agency/usao> a ns6:FederalAgency .
-
 <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009> a ns3:CACInvestigation,
-        ns2:EnduringEntity ;
-    dcterms:created "2026-10-18 01:43:40.901963" ;
+        ns4:EnduringEntity ;
+    rdfs:label "Case doj_ceos_2026_009" ;
+    dcterms:created "2026-11-10T19:05:44.450299"^^xsd:dateTime ;
+    dcterms:date "2026-01-07"^^xsd:date ;
     dcterms:identifier "doj_ceos_2026_009" ;
-    dcterms:modified "2026-10-18 13:30:11.932780" ;
+    dcterms:modified "2026-11-10T19:05:44.450299"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/provenance> ;
     dcterms:source <https://www.justice.gov/opa/pr/new-jersey-man-sentenced-promoting-child-sexual-abuse-material>,
         "DOJ CEOS" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/middletown-township>,
-        <https://w3id.org/caselinker/resource/location/new-jersey>,
-        <https://w3id.org/caselinker/resource/location/the-district-of-new-jersey> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/location/district-of-new-jersey>,
+        <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/location/middletown-township>,
+        <https://w3id.org/caselinker/resource/location/new-jersey-nj> ;
     ns3:currentPhase <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/phase/sentenced> ;
     ns3:hasPhase <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/phase/sentenced> ;
-    ns3:hasStep <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/admission/1>,
-        <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/event/distribution>,
+    ns3:hasStep <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/event/distribution>,
         <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/event/possession>,
         <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/event/project-safe-childhood>,
         <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/legal-proceeding>,
-        <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/legal-step/sentenced>,
-        <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/offense-event/charge-4> ;
-    ns3:investigationStatus "unknown" ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/ceos>,
+        <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/legal-step/sentenced> ;
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/ceos>,
         <https://w3id.org/caselinker/resource/agency/doj>,
         <https://w3id.org/caselinker/resource/agency/fbi>,
         <https://w3id.org/caselinker/resource/agency/justice-departments-criminal-division>,
-        <https://w3id.org/caselinker/resource/agency/middletown-police-department>,
-        <https://w3id.org/caselinker/resource/agency/usao> ;
-    ns7:mentionsLocation <https://w3id.org/caselinker/resource/location/middletown-township>,
-        <https://w3id.org/caselinker/resource/location/new-jersey>,
-        <https://w3id.org/caselinker/resource/location/the-district-of-new-jersey> .
+        <https://w3id.org/caselinker/resource/agency/usao>,
+        <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/agency/middletown-police-department> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/admission/1> .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/charge/1> a ns4:CriminalCharge,
-        ns4:StateCharge ;
+<https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/admission/1/extraction-confidence> a ns4:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns4:assesses <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/admission/1> ;
+    ns4:hasConfidence 0.65 ;
+    ns4:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/assessment/semantic/exploitive-positions> a ns4:AssessmentResult ;
+    rdfs:label "semantic similarity · exploitive_positions" ;
+    dcterms:subject <https://cacontology.projectvic.org/custodial#PositionOfTrust> ;
+    ns4:assesses <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/narrative> ;
+    ns4:hasConfidence 0.4971 ;
+    ns4:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/assessment/semantic/possession-csam> a ns4:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns3:CSAMIncident ;
+    ns4:assesses <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/narrative> ;
+    ns4:hasConfidence 0.5096 ;
+    ns4:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/assessment/semantic/sextortion> a ns4:AssessmentResult ;
+    rdfs:label "semantic similarity · sextortion" ;
+    dcterms:subject <https://cacontology.projectvic.org/sextortion#SextortionIncident> ;
+    ns4:assesses <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/narrative> ;
+    ns4:hasConfidence 0.461 ;
+    ns4:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/person/offender/1/age> a ns6:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns6:ageSubject <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/person/offender/1> ;
+    ns6:concernsAgeQuality ns6:Age ;
+    ns6:hasAgeInYears 39.0 .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/agency/ceos> a ns4:OrganizationLikeEntity,
+        ns5:FederalAgency ;
+    rdfs:label "CEOS" ;
+    ns1:name "CEOS" .
+
+<https://w3id.org/caselinker/resource/agency/doj> a ns4:OrganizationLikeEntity,
+        ns5:FederalAgency ;
+    rdfs:label "U.S. Department of Justice" ;
+    ns1:name "U.S. Department of Justice" .
+
+<https://w3id.org/caselinker/resource/agency/fbi> a ns4:OrganizationLikeEntity,
+        ns5:FederalAgency ;
+    rdfs:label "Federal Bureau of Investigation" ;
+    skos:altLabel "FBI",
+        "FBI Newark Child Exploitation and Human Trafficking Task Force" ;
+    ns1:name "Federal Bureau of Investigation" .
+
+<https://w3id.org/caselinker/resource/agency/justice-departments-criminal-division> a ns4:OrganizationLikeEntity,
+        ns5:LocalAgency ;
+    rdfs:label "Justice Department's Criminal Division" ;
+    ns1:name "Justice Department's Criminal Division" .
+
+<https://w3id.org/caselinker/resource/agency/usao> a ns4:OrganizationLikeEntity,
+        ns5:FederalAgency ;
+    rdfs:label "U.S. Attorney's Office" ;
+    ns1:name "U.S. Attorney's Office" .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/agency/middletown-police-department> a ns4:OrganizationLikeEntity,
+        ns5:LocalAgency ;
+    rdfs:label "Middletown Police Department" ;
+    ns1:name "Middletown Police Department" .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/charge/1> a ns2:CriminalCharge,
+        ns2:StateCharge ;
     rdfs:label "sexual exploitation of children" .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/charge/2> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
-    rdfs:label "child pornography" ;
-    ns4:indictmentCounts 2 .
+<https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/charge/2> a ns2:CSAM_Possession,
+        ns2:CriminalCharge ;
+    rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/charge/3> a ns4:CriminalCharge ;
-    rdfs:label "sexual exploitation" ;
-    ns7:chargeCluster "sexual_exploitation_unspecified" .
+<https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/charge/3> a ns2:CriminalCharge ;
+    rdfs:label "sexual exploitation" .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/charge/4> a ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/charge/4> a ns2:CriminalCharge ;
     rdfs:label "child exploitation" ;
-    rdfs:seeAlso <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/offense-event/charge-4> ;
-    ns7:chargeCluster "child_exploitation" ;
-    ns7:chargeOffenseEvent <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/offense-event/charge-4> .
+    dcterms:subject ns3:ChildSexualAbuseEvent .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/event/distribution> a ns2:Event,
-        ns4:CSAM_Distribution ;
-    ns3:severityLevel 3 .
+<https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/event/distribution> a ns4:Event,
+        ns2:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/event/project-safe-childhood> a ns2:Event,
-        ns6:ProjectSafeChildhoodOperation ;
-    ns3:severityLevel 3 .
+<https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/event/project-safe-childhood> a ns4:Event,
+        ns5:ProjectSafeChildhoodOperation ;
+    rdfs:label "Project Safe Childhood Operation · event/project-safe-childhood" .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/legal-proceeding> a ns2:Event,
-        ns2:LegalEvent,
-        ns4:LegalProceeding ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/charge/1>,
+<https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/legal-proceeding> a ns4:Event,
+        ns4:LegalEvent,
+        ns2:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns2:chargeCount "5"^^xsd:nonNegativeInteger ;
+    ns2:hasCharge <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/charge/1>,
         <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/charge/2>,
         <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/charge/3>,
         <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/charge/4> ;
-    ns4:hasProceedingBeginPoint "2026-01-07T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns4:resultsSentence <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/sentence/1>,
+    ns2:resultsSentence <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/sentence/1>,
         <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/sentence/2> .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/legal-step/sentenced> a ns2:Event,
-        ns2:LegalEvent,
-        ns4:LegalProceeding,
-        ns4:SentencingHearing ;
-    ns4:hasProceedingBeginPoint "2026-01-07T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/legal-step/sentenced> a ns4:Event,
+        ns4:LegalEvent,
+        ns2:LegalProceeding,
+        ns2:SentencingHearing ;
+    rdfs:label "Sentencing Hearing · legal-step/sentenced" .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns1:ageEstimate 39 .
+<https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/location/district-of-new-jersey> a ns4:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "District of New Jersey" ;
+    ns1:name "District of New Jersey" .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/role/offender/1> a ns3:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns3:hasRoleBeginPoint "2026-01-07T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/event/possession>,
-        <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/offense-event/charge-4> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/person/offender/1> .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/sentence/1> a ns4:CriminalSentence,
-        ns4:PrisonSentence ;
-    rdfs:label "14 years" .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/sentence/2> a ns4:CriminalSentence,
-        ns4:SupervisedRelease ;
-    rdfs:label "15 years supervised release" .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/phase/sentenced> a ns2:Phase,
-        ns4:SentencingPhase ;
-    ns3:hasPhaseBeginPoint "2026-01-07T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/middletown-township> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/location/middletown-township> a ns4:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Middletown Township" ;
-    ns5:name "Middletown Township" .
+    ns1:name "Middletown Township" .
 
-<https://w3id.org/caselinker/resource/location/new-jersey> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/sentence/1> a ns2:CriminalSentence,
+        ns2:PrisonSentence ;
+    rdfs:label "14 years" ;
+    ns4:assesses <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/sentence/2> a ns2:CriminalSentence,
+        ns2:SupervisedRelease ;
+    rdfs:label "15 years supervised release" ;
+    ns4:assesses <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/location/new-jersey-nj> a ns4:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "New Jersey" ;
-    ns5:name "New Jersey" .
+    dcterms:identifier "fips:34" ;
+    ns1:name "New Jersey" .
 
-<https://w3id.org/caselinker/resource/location/the-district-of-new-jersey> a ns2:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "the District of New Jersey" ;
-    ns5:name "the District of New Jersey" .
+<https://w3id.org/caselinker/resource/platform/dark-web> a ns4:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#DarkWebService> ;
+    rdfs:label "dark web" ;
+    ns1:name "dark web" .
 
-<https://w3id.org/caselinker/resource/platform/dark-web> a <https://cacontology.projectvic.org/platforms#DarkWebService> ;
-    rdfs:label "dark web" .
-
-<https://w3id.org/caselinker/resource/platform/tor> a <https://cacontology.projectvic.org/platforms#DarkWebService> ;
-    rdfs:label "Tor" .
+<https://w3id.org/caselinker/resource/platform/tor> a ns4:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#DarkWebService> ;
+    rdfs:label "Tor" ;
+    ns1:name "Tor" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "viewing child sexual abuse material beginning in 2014" ;
     dcterms:source <https://www.justice.gov/opa/pr/new-jersey-man-sentenced-promoting-child-sexual-abuse-material> ;
-    ns5:description "viewing child sexual abuse material beginning in 2014" ;
-    ns7:admissionContext "use material, including depictions of prepubescent children engaged in sexual acts. In an interview with law enforcement, Golden admitted..." ;
-    ns7:admissionFrame "admitted_to" ;
-    ns7:admissionTheme "harm_conduct" ;
-    ns7:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/role/offender/1> ;
-    ns7:evidenceTier "press_release_stated" ;
-    ns7:quoteType "paraphrase" .
+    ns1:description "viewing child sexual abuse material beginning in 2014" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/event/possession> a ns3:CSAMIncident,
-        ns2:Event ;
-    ns3:producesArtifact <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/admission/1> ;
+        ns4:Event ;
+    rdfs:label "CSAMIncident · event/possession" ;
     ns3:severityLevel 3 ;
     ns3:usesChannel <https://w3id.org/caselinker/resource/platform/dark-web>,
-        <https://w3id.org/caselinker/resource/platform/tor> ;
-    ns5:hasFacet <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/facet/possession> .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/offense-event/charge-4> a ns3:ChildSexualAbuseEvent,
-        ns2:Event,
-        <https://ontology.unifiedcyberontology.org/uco/action/Crime> ;
-    rdfs:label "Inferred offense from charge: child exploitation" ;
-    ns3:usesChannel <https://w3id.org/caselinker/resource/platform/dark-web>,
         <https://w3id.org/caselinker/resource/platform/tor> .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/phase/sentenced> a ns4:Phase,
+        ns2:SentencingPhase ;
+    rdfs:label "Sentencing Phase · phase/sentenced" .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/role/offender/1> a ns3:OffenderRole ;
+    rdfs:label "Offender Role · role/offender/1" ;
+    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/doj_ceos_2026_009/event/possession> .
 

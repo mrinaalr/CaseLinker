@@ -1,86 +1,110 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns3: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns4: <https://cacontology.projectvic.org/core#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/core#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns6: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_459> a ns1:CACInvestigation,
-        ns4:EnduringEntity ;
-    dcterms:created "2026-10-17 23:04:30.127322" ;
+        ns3:EnduringEntity ;
+    rdfs:label "Case ncmec_2024_459" ;
+    dcterms:created "2026-11-10T21:26:01.869052"^^xsd:dateTime ;
+    dcterms:date "2024-09-09"^^xsd:date ;
     dcterms:identifier "ncmec_2024_459" ;
-    dcterms:modified "2026-10-17 23:04:30.127322" ;
+    dcterms:modified "2026-11-12T00:32:57.399802"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_459/provenance> ;
     dcterms:source <https://www.whvoradio.com/2024/09/09/man-charged-with-distribution-of-child-pornography/news-edge/>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/hopkinsville> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/hopkinsville-city> ;
     ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_459/phase/charged> ;
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_459/phase/charged> ;
     ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_459/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_459/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_459/legal-proceeding> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/hopkinsville-police-department> ;
-    ns3:mentionsLocation <https://w3id.org/caselinker/resource/location/hopkinsville> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_459/agency/hopkinsville-police-department> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_459/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2024-09-09T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_459/event/possession> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_459/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_459/assessment/semantic/exploitive-positions> a ns3:AssessmentResult ;
+    rdfs:label "semantic similarity · exploitive_positions" ;
+    dcterms:subject <https://cacontology.projectvic.org/custodial#PositionOfTrust> ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_459/narrative> ;
+    ns3:hasConfidence 0.4713 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_459/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2024-09-09T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_459/event/possession> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_459/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_459/assessment/semantic/possession-csam> a ns3:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns1:CSAMIncident ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_459/narrative> ;
+    ns3:hasConfidence 0.533 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/agency/hopkinsville-police-department> a ns5:LocalAgency .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_459/assessment/semantic/sextortion> a ns3:AssessmentResult ;
+    rdfs:label "semantic similarity · sextortion" ;
+    dcterms:subject <https://cacontology.projectvic.org/sextortion#SextortionIncident> ;
+    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_459/narrative> ;
+    ns3:hasConfidence 0.4637 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_459/charge/1> a ns2:CSAM_Distribution,
-        ns2:CriminalCharge ;
-    rdfs:label "distribution of matter portraying a sexual performance by a" ;
-    ns2:indictmentCounts 33 .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_459/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2024_459/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2024_459/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_459/charge/2> a ns2:CSAM_Possession,
-        ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_459/agency/hopkinsville-police-department> a ns3:OrganizationLikeEntity,
+        ns5:LocalAgency ;
+    rdfs:label "Hopkinsville Police Department" ;
+    ns2:name "Hopkinsville Police Department" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_459/charge/1> a ns4:CSAM_Distribution,
+        ns4:CriminalCharge ;
+    rdfs:label "distribution of matter portraying a sexual performance by a" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_459/charge/2> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
     rdfs:label "child porn" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_459/event/distribution> a ns4:Event,
-        ns2:CSAM_Distribution ;
-    ns1:severityLevel 3 .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_459/event/distribution> a ns3:Event,
+        ns4:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_459/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_459/legal-proceeding> a ns3:Event,
+        ns3:LegalEvent,
+        ns4:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns4:chargeCount "34"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_459/charge/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_459/charge/2> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_459/legal-proceeding> a ns4:Event,
-        ns4:LegalEvent,
-        ns2:LegalProceeding ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_459/charge/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_459/charge/2> ;
-    ns2:hasProceedingBeginPoint "2024-09-09T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_459/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_459/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_459/role/offender/1> a ns4:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_459/event/possession> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_459/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/platform/kik> a <https://cacontology.projectvic.org/platforms#MessagingService> ;
-    rdfs:label "Kik" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_459/phase/charged> a ns1:LegalProcessPhase,
-        ns4:Phase ;
-    ns1:hasPhaseBeginPoint "2024-09-09T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/hopkinsville> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/hopkinsville-city> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Hopkinsville" ;
-    ns6:name "Hopkinsville" .
+    rdfs:label "Hopkinsville city" ;
+    dcterms:identifier "fips:2137918" ;
+    skos:altLabel "Hopkinsville" ;
+    ns2:name "Hopkinsville city" .
+
+<https://w3id.org/caselinker/resource/platform/kik> a ns3:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#MessagingService> ;
+    rdfs:label "Kik" ;
+    ns2:name "Kik" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_459/event/possession> a ns1:CSAMIncident,
-        ns4:Event ;
+        ns3:Event ;
+    rdfs:label "CSAMIncident · event/possession" ;
     ns1:severityLevel 3 ;
-    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/kik> ;
-    ns6:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2024_459/facet/possession> .
+    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/kik> .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2024_459/phase/charged> a ns1:LegalProcessPhase,
+        ns3:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_459> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2024_459/provenance> .

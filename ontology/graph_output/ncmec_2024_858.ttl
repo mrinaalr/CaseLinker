@@ -1,61 +1,64 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/detection#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://cacontology.projectvic.org/core#> .
+@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns4: <https://cacontology.projectvic.org#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_858> a ns3:CACInvestigation,
-        ns6:EnduringEntity ;
-    dcterms:created "2026-10-17 23:04:34.695609" ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_858> a ns4:CACInvestigation,
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case ncmec_2024_858" ;
+    dcterms:created "2026-11-10T21:28:19.397575"^^xsd:dateTime ;
+    dcterms:date "2024-07-18"^^xsd:date ;
     dcterms:identifier "ncmec_2024_858" ;
-    dcterms:modified "2026-10-17 23:04:34.695609" ;
+    dcterms:modified "2026-11-12T00:51:07.120840"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_858/provenance> ;
     dcterms:source <https://www.wfmj.com/story/50765254/warren-man-indicted-on-felony-counts-of-pandering-obscenity-involving-a-minor-and-other-charges?clienttype=generic&mobilecgbypass>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/trumbull-county> ;
-    ns3:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_858/phase/indicted> ;
-    ns3:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_858/phase/indicted> ;
-    ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_858/legal-proceeding> ;
-    ns2:mentionsLocation <https://w3id.org/caselinker/resource/location/trumbull-county> .
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/trumbull-county-oh> ;
+    ns4:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_858/phase/indicted> ;
+    ns4:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_858/phase/indicted> ;
+    ns4:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_858/legal-proceeding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_858/role/offender/1> a ns3:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns3:hasRoleBeginPoint "2024-07-18T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns6:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_858/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_858/person/offender/1/age> a ns3:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns3:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_858/person/offender/1> ;
+    ns3:concernsAgeQuality ns3:Age ;
+    ns3:hasAgeInYears 63.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_858/role/victim/1> a ns3:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns3:hasRoleBeginPoint "2024-07-18T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns6:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_858/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_858/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2024_858/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2024_858/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_858/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
-    rdfs:label "pandering obscenity involving a minor" ;
-    ns5:indictmentCounts 3 .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_858/charge/1> a ns1:CSAM_Possession,
+        ns1:CriminalCharge ;
+    rdfs:label "pandering obscenity involving a minor" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_858/legal-proceeding> a ns6:Event,
-        ns6:LegalEvent,
-        ns5:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_858/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        ns1:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): booked into the Trumbull County Jail" ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_858/charge/1> ;
-    ns5:hasProceedingBeginPoint "2024-07-18T00:00:00Z"^^xsd:dateTimeStamp .
+    ns1:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns1:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_858/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_858/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns4:ageEstimate 63 .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_858/role/offender/1> a ns1:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_858/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_858/phase/indicted> a ns3:LegalProcessPhase,
-        ns6:Phase ;
-    ns3:hasPhaseBeginPoint "2024-07-18T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/trumbull-county> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/trumbull-county-oh> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Trumbull County" ;
-    ns1:name "Trumbull County" .
+    dcterms:identifier "fips:39155" ;
+    ns2:name "Trumbull County" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2024_858/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_858> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2024_858/provenance> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_858/phase/indicted> a ns4:LegalProcessPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Legal Process Phase · phase/indicted" .
+

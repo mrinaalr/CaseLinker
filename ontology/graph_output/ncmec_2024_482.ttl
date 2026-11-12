@@ -1,83 +1,87 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
 @prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns3: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns4: <https://cacontology.projectvic.org/core#> .
-@prefix ns5: <https://cacontology.projectvic.org/detection#> .
-@prefix ns6: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_482> a ns1:CACInvestigation,
-        ns4:EnduringEntity ;
-    dcterms:created "2026-10-17 23:04:30.364404" ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case ncmec_2024_482" ;
+    dcterms:created "2026-11-10T21:26:09.663148"^^xsd:dateTime ;
+    dcterms:date "2024-01-02"^^xsd:date ;
     dcterms:identifier "ncmec_2024_482" ;
-    dcterms:modified "2026-10-17 23:04:30.364404" ;
+    dcterms:modified "2026-11-12T00:34:04.198147"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_482/provenance> ;
     dcterms:source <https://www.ktbs.com/news/benton-man-arrested-on-child-porn-charge/article_2d62fc3e-a9b9-11ee-99f7-6f2653277ce0.html>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/benton>,
-        <https://w3id.org/caselinker/resource/location/bossier-parish>,
-        <https://w3id.org/caselinker/resource/location/la> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/benton-town-la>,
+        <https://w3id.org/caselinker/resource/location/bossier-city-city>,
+        <https://w3id.org/caselinker/resource/location/louisiana-la> ;
     ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_482/phase/booked> ;
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_482/phase/booked> ;
     ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_482/event/csam>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_482/legal-proceeding> ;
-    ns3:mentionsLocation <https://w3id.org/caselinker/resource/location/benton>,
-        <https://w3id.org/caselinker/resource/location/bossier-parish>,
-        <https://w3id.org/caselinker/resource/location/la> .
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_482/legal-proceeding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_482/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2024-01-02T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_482/event/csam> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_482/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_482/person/offender/1/age> a ns3:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns3:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_482/person/offender/1> ;
+    ns3:concernsAgeQuality ns3:Age ;
+    ns3:hasAgeInYears 38.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_482/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2024-01-02T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_482/event/csam> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_482/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_482/role/offender/1/has-role> a ns4:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns4:isDirectional true ;
+    ns4:kindOfRelationship "Has_Role" ;
+    ns4:source <https://w3id.org/caselinker/resource/case/ncmec_2024_482/person/offender/1> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/ncmec_2024_482/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_482/charge/1> a ns2:CSAM_Possession,
         ns2:CriminalCharge ;
-    rdfs:label "child pornography" ;
-    ns2:indictmentCounts 2 .
+    rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_482/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_482/legal-proceeding> a ns4:Event,
-        ns4:LegalEvent,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_482/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
         ns2:LegalProceeding ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_482/charge/1> ;
-    ns2:hasProceedingBeginPoint "2024-01-02T00:00:00Z"^^xsd:dateTimeStamp .
+    rdfs:label "Event · legal-proceeding" ;
+    ns2:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_482/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_482/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns5:ageEstimate 38 .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_482/role/offender/1> a ns2:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_482/event/csam> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_482/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_482/phase/booked> a ns1:InitialPhase,
-        ns4:Phase ;
-    ns1:hasPhaseBeginPoint "2024-01-02T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/benton> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/benton-town-la> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Benton" ;
-    ns6:name "Benton" .
+    rdfs:label "Benton town" ;
+    dcterms:identifier "fips:2206925" ;
+    skos:altLabel "Benton" ;
+    ns4:name "Benton town" .
 
-<https://w3id.org/caselinker/resource/location/bossier-parish> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/bossier-city-city> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Bossier Parish" ;
-    ns6:name "Bossier Parish" .
+    rdfs:label "Bossier City city" ;
+    dcterms:identifier "fips:2208920" ;
+    skos:altLabel "Bossier Parish" ;
+    ns4:name "Bossier City city" .
 
-<https://w3id.org/caselinker/resource/location/la> a ns4:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/louisiana-la> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "La." ;
-    ns6:name "La." .
+    rdfs:label "Louisiana" ;
+    dcterms:identifier "fips:22" ;
+    skos:altLabel "La." ;
+    ns4:name "Louisiana" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_482/event/csam> a ns1:CSAMIncident,
-        ns4:Event ;
-    ns6:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2024_482/facet/csam> .
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/csam" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2024_482/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_482> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2024_482/provenance> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_482/phase/booked> a ns1:InitialPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Initial Phase · phase/booked" .
+

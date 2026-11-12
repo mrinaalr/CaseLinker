@@ -1,121 +1,156 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://w3id.org/caselinker/resource/vocab/> .
+@prefix ns1: <https://cacontology.projectvic.org/core#> .
+@prefix ns2: <https://cacontology.projectvic.org/hotlines#> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://cacontology.projectvic.org/core#> .
+@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns7: <https://cacontology.projectvic.org/detection#> .
+@prefix ns7: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/idaho_icac_2024_006> a ns3:CACInvestigation,
-        ns5:EnduringEntity ;
-    dcterms:created "2026-10-18 05:05:31.093479" ;
+        ns1:EnduringEntity ;
+    rdfs:label "Case idaho_icac_2024_006" ;
+    dcterms:created "2026-11-11T14:56:07.676123"^^xsd:dateTime ;
+    dcterms:date "2024-07-02"^^xsd:date ;
     dcterms:identifier "idaho_icac_2024_006" ;
-    dcterms:modified "2026-10-18 05:05:31.093479" ;
+    dcterms:modified "2026-11-11T14:56:07.676123"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/provenance> ;
     dcterms:source <https://www.ag.idaho.gov/newsroom/category/icac/?showall=true>,
         "Idaho ICAC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/ada-county>,
-        <https://w3id.org/caselinker/resource/location/idaho> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/ada-county-id>,
+        <https://w3id.org/caselinker/resource/location/idaho-id> ;
     ns3:currentPhase <https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/phase/sentenced> ;
     ns3:hasPhase <https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/phase/sentenced> ;
     ns3:hasStep <https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/event/possession>,
         <https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/legal-step/sentenced>,
         <https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/operation> ;
-    ns3:usesMethod <https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/tech/cybertipline> ;
     ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/icac> ;
-    ns2:mentionsLocation <https://w3id.org/caselinker/resource/location/ada-county>,
-        <https://w3id.org/caselinker/resource/location/idaho> .
+    ns4:object <https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/cybertip> .
 
-<https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/role/offender/1> a ns3:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns3:hasRoleBeginPoint "2024-07-02T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/event/possession> ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/assessment/semantic/possession-csam> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns3:CSAMIncident ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/narrative> ;
+    ns1:hasConfidence 0.5182 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/role/victim/1> a ns3:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns3:hasRoleBeginPoint "2024-07-02T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/event/possession> ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/cybertip/reporter/synchronoss/has-role> a ns4:Relationship ;
+    rdfs:label "Relationship · cybertip/reporter/synchronoss/has-role" ;
+    ns4:isDirectional true ;
+    ns4:kindOfRelationship "Has_Role" ;
+    ns4:source <https://w3id.org/caselinker/resource/esp/synchronoss> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/cybertip/reporter/synchronoss> .
 
-<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> .
+<https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/person/offender/1/age> a ns7:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns7:ageSubject <https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/person/offender/1> ;
+    ns7:concernsAgeQuality ns7:Age ;
+    ns7:hasAgeInYears 52.0 .
 
-<https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/charge/1> a ns4:CriminalCharge,
-        ns4:StateCharge ;
+<https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/role/offender/1/has-role> a ns4:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns4:isDirectional true ;
+    ns4:kindOfRelationship "Has_Role" ;
+    ns4:source <https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/person/offender/1> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/agency/icac> a ns1:OrganizationLikeEntity,
+        <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns4:name "ICAC Task Force" .
+
+<https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/charge/1> a ns5:CriminalCharge,
+        ns5:StateCharge ;
     rdfs:label "sexual exploitation of a child" .
 
-<https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/charge/2> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
-    rdfs:label "child pornography" ;
-    ns4:indictmentCounts 2 .
+<https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/charge/2> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
+    rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/charge/3> a ns4:CriminalCharge ;
-    rdfs:label "sexual exploitation" ;
-    ns2:chargeCluster "sexual_exploitation_unspecified" .
+<https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/charge/3> a ns5:CriminalCharge ;
+    rdfs:label "sexual exploitation" .
 
-<https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/cybertip> a ns2:ESPReport,
+        <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
+    rdfs:label "CyberTipline report" ;
+    ns2:reportedBy <https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/cybertip/reporter/synchronoss> ;
+    ns4:name "observe" .
 
-<https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/legal-proceeding> a ns5:Event,
-        ns5:LegalEvent,
-        ns4:LegalProceeding ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/charge/1>,
+<https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/legal-proceeding> a ns1:Event,
+        ns1:LegalEvent,
+        ns5:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns5:chargeCount "4"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/charge/1>,
         <https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/charge/2>,
         <https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/charge/3> ;
-    ns4:hasProceedingBeginPoint "2024-07-02T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns4:resultsSentence <https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/sentence/1>,
+    ns5:resultsSentence <https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/sentence/1>,
         <https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/sentence/2>,
         <https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/sentence/3> .
 
-<https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/legal-step/sentenced> a ns5:Event,
-        ns5:LegalEvent,
-        ns4:LegalProceeding,
-        ns4:SentencingHearing ;
-    ns4:hasProceedingBeginPoint "2024-07-02T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/legal-step/sentenced> a ns1:Event,
+        ns1:LegalEvent,
+        ns5:LegalProceeding,
+        ns5:SentencingHearing ;
+    rdfs:label "Sentencing Hearing · legal-step/sentenced" .
 
-<https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/operation> a ns5:Event,
-        <https://cacontology.projectvic.org/taskforce#ReactiveOperation> .
+<https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/operation> a ns1:Event,
+        <https://cacontology.projectvic.org/taskforce#ReactiveOperation> ;
+    rdfs:label "Reactive Operation · operation" .
 
-<https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns7:ageEstimate 52 .
+<https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/sentence/1> a ns5:CriminalSentence,
+        ns5:PrisonSentence ;
+    rdfs:label "Ten Years" ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/sentence/2> a ns5:CriminalSentence,
+        ns5:PrisonSentence ;
+    rdfs:label "two years" ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/sentence/1> a ns4:CriminalSentence,
-        ns4:PrisonSentence ;
-    rdfs:label "Ten Years" .
+<https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/sentence/3> a ns5:CriminalSentence,
+        ns5:PrisonSentence ;
+    rdfs:label "eight years" ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/sentence/2> a ns4:CriminalSentence,
-        ns4:PrisonSentence ;
-    rdfs:label "two years" .
+<https://w3id.org/caselinker/resource/esp/synchronoss> a <https://cacontology.projectvic.org/platforms#ElectronicServiceProvider> ;
+    rdfs:label "Synchronoss" ;
+    ns4:name "Synchronoss" .
 
-<https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/sentence/3> a ns4:CriminalSentence,
-        ns4:PrisonSentence ;
-    rdfs:label "eight years" .
-
-<https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/tech/cybertipline> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
-    rdfs:label "CyberTipline" .
-
-<https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/phase/sentenced> a ns5:Phase,
-        ns4:SentencingPhase ;
-    ns3:hasPhaseBeginPoint "2024-07-02T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/ada-county> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/ada-county-id> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Ada County" ;
-    ns1:name "Ada County" .
+    dcterms:identifier "fips:16001" ;
+    ns4:name "Ada County" .
 
-<https://w3id.org/caselinker/resource/location/idaho> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/idaho-id> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Idaho" ;
-    ns1:name "Idaho" .
+    dcterms:identifier "fips:16" ;
+    ns4:name "Idaho" .
+
+<https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/cybertip/reporter/synchronoss> a ns2:ReporterRole ;
+    rdfs:label "Reporter Role · cybertip/reporter/synchronoss" ;
+    ns2:isAnonymous false .
 
 <https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/event/possession> a ns3:CSAMIncident,
-        ns5:Event ;
-    ns3:severityLevel 3 ;
-    ns1:hasFacet <https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/facet/possession> .
+        ns1:Event ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns3:severityLevel 3 .
 
+<https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/idaho_icac_2024_006> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/provenance> .
+<https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/phase/sentenced> a ns1:Phase,
+        ns5:SentencingPhase ;
+    rdfs:label "Sentencing Phase · phase/sentenced" .
+
+<https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/role/offender/1> a ns3:OffenderRole ;
+    rdfs:label "Offender Role · role/offender/1" ;
+    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/idaho_icac_2024_006/event/possession> .
+

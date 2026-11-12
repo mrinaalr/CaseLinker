@@ -1,105 +1,105 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://w3id.org/caselinker/resource/vocab/> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/core#> .
-@prefix ns4: <https://cacontology.projectvic.org/us/ncmec#> .
-@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns6: <https://cacontology.projectvic.org/detection#> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/core#> .
+@prefix ns5: <https://cacontology.projectvic.org/hotlines#> .
+@prefix ns6: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns7: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns8: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_322/admission/1/extraction-confidence> a ns3:AssessmentResult ;
-    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2022_322/admission/1> ;
-    ns3:generatedBy <https://w3id.org/caselinker/resource/case/ncmec_2022_322> ;
-    ns3:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_322/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_322/event/possession> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_322/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/agency/pennsylvania-attorney-generals-office> a ns8:StateAgency .
-
 <https://w3id.org/caselinker/resource/case/ncmec_2022_322> a ns2:CACInvestigation,
-        ns3:EnduringEntity ;
-    dcterms:created "2026-10-17 21:51:23.208316" ;
+        ns4:EnduringEntity ;
+    rdfs:label "Case ncmec_2022_322" ;
+    dcterms:created "2026-11-10T09:18:53.113550"^^xsd:dateTime ;
+    dcterms:date "2022-01"^^xsd:gYearMonth ;
     dcterms:identifier "ncmec_2022_322" ;
-    dcterms:modified "2026-10-17 21:51:23.208316" ;
+    dcterms:modified "2026-11-10T09:18:53.113550"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2022_322/provenance> ;
     dcterms:source <https://www.lehighvalleylive.com/easton/2022/08/attorney-generals-office-charges-easton-man-with-child-porn-possession.html>,
         "NCMEC" ;
     ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_322/phase/charged> ;
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_322/phase/charged> ;
-    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_322/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_322/cybertip>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_322/event/distribution>,
+    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_322/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_322/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_322/legal-proceeding> ;
-    ns2:investigationStatus "unknown" ;
-    ns2:usesMethod <https://w3id.org/caselinker/resource/case/ncmec_2022_322/tech/cybertipline> ;
-    ns8:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
-        <https://w3id.org/caselinker/resource/agency/pennsylvania-attorney-generals-office> .
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
+        <https://w3id.org/caselinker/resource/agency/pennsylvania-attorney-generals-office> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2022_322/admission/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2022_322/cybertip> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_322/admission/1/extraction-confidence> a ns4:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns4:assesses <https://w3id.org/caselinker/resource/case/ncmec_2022_322/admission/1> ;
+    ns4:hasConfidence 0.65 ;
+    ns4:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_322/person/offender/1/age> a ns6:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns6:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2022_322/person/offender/1> ;
+    ns6:concernsAgeQuality ns6:Age ;
+    ns6:hasAgeInYears 23.0 .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_322/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2022_322/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2022_322/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/agency/pennsylvania-attorney-generals-office> a ns4:OrganizationLikeEntity,
+        ns3:StateAgency ;
+    rdfs:label "Pennsylvania Attorney General's Office" ;
+    ns1:name "Pennsylvania Attorney General's Office" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_322/charge/1> a ns7:CSAM_Possession,
         ns7:CriminalCharge ;
-    rdfs:label "possession of child pornography" ;
-    ns7:indictmentCounts 3 .
+    rdfs:label "possession of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_322/cybertip> a ns4:NCMECCybertipReport ;
-    ns4:supportedBy <https://w3id.org/caselinker/resource/agency/ncmec> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_322/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
+    rdfs:label "CyberTipline report" ;
+    ns5:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns1:name "observe" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_322/event/distribution> a ns3:Event,
+<https://w3id.org/caselinker/resource/case/ncmec_2022_322/event/distribution> a ns4:Event,
         ns7:CSAM_Distribution ;
-    ns2:severityLevel 3 .
+    rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_322/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_322/legal-proceeding> a ns3:Event,
-        ns3:LegalEvent,
+<https://w3id.org/caselinker/resource/case/ncmec_2022_322/legal-proceeding> a ns4:Event,
+        ns4:LegalEvent,
         ns7:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): held in Northampton County Prison" ;
-    ns7:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_322/charge/1> ;
-    ns7:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    ns7:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns7:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_322/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_322/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns6:ageEstimate 23 .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_322/role/offender/1> a ns7:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_322/event/possession> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_322/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_322/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_322/event/possession> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_322/person/offender/1> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_322/tech/cybertipline> a ns4:NCMECCybertipReport ;
-    rdfs:label "CyberTipline" .
-
-<https://w3id.org/caselinker/resource/agency/ncmec> a ns8:FederalAgency .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_322/phase/charged> a ns2:LegalProcessPhase,
-        ns3:Phase ;
-    ns2:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/agency/ncmec> a ns4:OrganizationLikeEntity,
+        ns5:HotlineOrganization,
+        ns3:FederalAgency ;
+    rdfs:label "National Center for Missing and Exploited Children" ;
+    skos:altLabel "NCMEC" ;
+    ns1:name "National Center for Missing and Exploited Children" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_322/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "logging into the cloud storage account that was the focus of the CyberTip in March “to try and delete some of the chi..." ;
     dcterms:source <https://www.lehighvalleylive.com/easton/2022/08/attorney-generals-office-charges-easton-man-with-child-porn-possession.html> ;
-    ns1:admissionContext "ant about 6:42 a.m. Wednesday at his home, according to the affidavit of probable cause. Wheeler admitted to logging into the cloud stora..." ;
-    ns1:admissionFrame "admitted_to" ;
-    ns1:admissionTheme "harm_conduct",
-        "tech_use" ;
-    ns1:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/ncmec_2022_322/role/offender/1> ;
-    ns1:evidenceTier "press_release_stated" ;
-    ns1:quoteType "paraphrase" ;
-    ns5:description "logging into the cloud storage account that was the focus of the CyberTip in March “to try and delete some of the child pornography that he knew was in the account,” investigators wrote; at that time" .
+    ns1:description "logging into the cloud storage account that was the focus of the CyberTip in March “to try and delete some of the child pornography that he knew was in the account,” investigators wrote; at that time" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_322/event/possession> a ns2:CSAMIncident,
-        ns3:Event ;
-    ns2:producesArtifact <https://w3id.org/caselinker/resource/case/ncmec_2022_322/admission/1> ;
-    ns2:severityLevel 3 ;
-    ns5:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2022_322/facet/possession> .
+        ns4:Event ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns2:severityLevel 3 .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2022_322/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_322> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2022_322/provenance> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_322/phase/charged> a ns2:LegalProcessPhase,
+        ns4:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
+

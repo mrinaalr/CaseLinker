@@ -1,94 +1,95 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://w3id.org/caselinker/resource/vocab/> .
+@prefix ns1: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/core#> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns7: <https://cacontology.projectvic.org/detection#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_271> a ns2:CACInvestigation,
-        ns3:EnduringEntity ;
-    dcterms:created "2026-10-17 21:51:22.674105" ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case ncmec_2022_271" ;
+    dcterms:created "2026-11-10T09:18:35.881042"^^xsd:dateTime ;
+    dcterms:date "2022-01"^^xsd:gYearMonth ;
     dcterms:identifier "ncmec_2022_271" ;
-    dcterms:modified "2026-10-17 21:51:22.674105" ;
+    dcterms:modified "2026-11-10T09:18:35.881042"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2022_271/provenance> ;
     dcterms:source <https://wausaupilotandreview.com/2022/04/11/google-tip-leads-to-multiple-charges-for-wausau-area-man/>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/schofield>,
-        <https://w3id.org/caselinker/resource/location/wausau> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2022_271/location/wausau>,
+        <https://w3id.org/caselinker/resource/location/schofield-city> ;
     ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_271/phase/arrested> ;
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_271/phase/arrested> ;
     ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_271/event/hands-on>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_271/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_271/legal-proceeding> ;
-    ns2:investigationStatus "unknown" ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/everest-metro-police-department>,
-        <https://w3id.org/caselinker/resource/agency/icac> ;
-    ns1:mentionsLocation <https://w3id.org/caselinker/resource/location/schofield>,
-        <https://w3id.org/caselinker/resource/location/wausau> .
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2022_271/agency/everest-metro-police-department> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_271/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_271/event/hands-on>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_271/event/possession> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_271/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_271/person/offender/1/age> a ns1:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns1:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2022_271/person/offender/1> ;
+    ns1:concernsAgeQuality ns1:Age ;
+    ns1:hasAgeInYears 54.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_271/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_271/event/hands-on>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_271/event/possession> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2022_271/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_271/role/offender/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2022_271/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2022_271/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/everest-metro-police-department> a ns3:OrganizationLikeEntity,
-        ns6:LocalAgency ;
-    rdfs:label "Everest Metro Police Department" .
+<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns3:name "ICAC Task Force" .
 
-<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_271/agency/everest-metro-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns4:LocalAgency ;
+    rdfs:label "Everest Metro Police Department" ;
+    ns3:name "Everest Metro Police Department" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_271/charge/1> a ns5:CSAM_Possession,
         ns5:CriminalCharge ;
-    rdfs:label "possession of child pornography in" ;
-    ns5:indictmentCounts 13 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_271/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_271/legal-proceeding> a ns3:Event,
-        ns3:LegalEvent,
-        ns5:LegalProceeding ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_271/charge/1> ;
-    ns5:hasProceedingBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_271/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns7:ageEstimate 54 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_271/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_271/phase/arrested> a ns2:InitialPhase,
-        ns3:Phase ;
-    ns2:hasPhaseBeginPoint "2022-01-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/schofield> a ns3:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Schofield" ;
-    ns4:name "Schofield" .
-
-<https://w3id.org/caselinker/resource/location/wausau> a ns3:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Wausau" ;
-    ns4:name "Wausau" .
+    rdfs:label "possession of child pornography in" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_271/event/hands-on> a ns2:ChildSexualAbuseEvent,
-        ns3:Event ;
-    ns2:severityLevel 3 .
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "Child Sexual Abuse Event · event/hands-on" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_271/event/possession> a ns2:CSAMIncident,
-        ns3:Event ;
-    ns2:severityLevel 3 ;
-    ns4:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2022_271/facet/possession> .
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/possession" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2022_271/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        ns5:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns5:chargeCount "13"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_271/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_271> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2022_271/provenance> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_271/location/wausau> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Wausau" ;
+    ns3:name "Wausau" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_271/role/offender/1> a ns5:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" .
+
+<https://w3id.org/caselinker/resource/location/schofield-city> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Schofield city" ;
+    dcterms:identifier "fips:5572150" ;
+    skos:altLabel "Schofield" ;
+    ns3:name "Schofield city" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_271/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_271/phase/arrested> a ns2:InitialPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Initial Phase · phase/arrested" .
+

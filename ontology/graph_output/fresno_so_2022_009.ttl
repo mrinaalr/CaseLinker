@@ -1,65 +1,73 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/detection#> .
-@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/core#> .
-@prefix ns5: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns7: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns4: <https://cacontology.projectvic.org#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/fresno_so_2022_009> a ns3:CACInvestigation,
-        ns4:EnduringEntity ;
-    dcterms:created "2026-10-18 04:30:18.809441" ;
+<https://w3id.org/caselinker/resource/case/fresno_so_2022_009> a ns4:CACInvestigation,
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case fresno_so_2022_009" ;
+    dcterms:created "2026-11-11T14:17:30.314974"^^xsd:dateTime ;
+    dcterms:date "2022-10-07"^^xsd:date ;
     dcterms:identifier "fresno_so_2022_009" ;
-    dcterms:modified "2026-10-18 04:30:18.809441" ;
+    dcterms:modified "2026-11-11T14:17:30.314974"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/fresno_so_2022_009/provenance> ;
     dcterms:source <https://www.fresnosheriff.org/media-relations/detectives-seek-more-potential-sexual-abuse-victims-linked-to-auberry-man.html>,
         "FRESNO SO" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/auberry> ;
-    ns3:currentPhase <https://w3id.org/caselinker/resource/case/fresno_so_2022_009/phase/booked> ;
-    ns3:hasPhase <https://w3id.org/caselinker/resource/case/fresno_so_2022_009/phase/booked> ;
-    ns3:hasStep <https://w3id.org/caselinker/resource/case/fresno_so_2022_009/legal-proceeding> ;
-    ns3:investigationStatus "unknown" ;
-    ns7:involvesAgency <https://w3id.org/caselinker/resource/agency/auberry-volunteer-fire-department>,
-        <https://w3id.org/caselinker/resource/agency/fresno-county-sheriffs-office> ;
-    ns5:mentionsLocation <https://w3id.org/caselinker/resource/location/auberry> .
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/auberry-cdp-ca> ;
+    ns4:currentPhase <https://w3id.org/caselinker/resource/case/fresno_so_2022_009/phase/booked> ;
+    ns4:hasPhase <https://w3id.org/caselinker/resource/case/fresno_so_2022_009/phase/booked> ;
+    ns4:hasStep <https://w3id.org/caselinker/resource/case/fresno_so_2022_009/legal-proceeding> ;
+    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/auberry-volunteer-fire-department-ca-unverified>,
+        <https://w3id.org/caselinker/resource/agency/fresno-county-sheriff-s-office-ca> .
 
-<https://w3id.org/caselinker/resource/case/fresno_so_2022_009/role/offender/1> a ns3:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns3:hasRoleBeginPoint "2022-10-07T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/fresno_so_2022_009/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/fresno_so_2022_009/person/offender/1/age> a ns3:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns3:ageSubject <https://w3id.org/caselinker/resource/case/fresno_so_2022_009/person/offender/1> ;
+    ns3:concernsAgeQuality ns3:Age ;
+    ns3:hasAgeInYears 81.0 .
 
-<https://w3id.org/caselinker/resource/case/fresno_so_2022_009/role/victim/1> a ns3:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns3:hasRoleBeginPoint "2022-10-07T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/fresno_so_2022_009/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/fresno_so_2022_009/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/fresno_so_2022_009/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/fresno_so_2022_009/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/auberry-volunteer-fire-department> a ns4:OrganizationLikeEntity,
-        ns7:LocalAgency ;
-    rdfs:label "Auberry Volunteer Fire Department" .
+<https://w3id.org/caselinker/resource/agency/auberry-volunteer-fire-department-ca-unverified> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns2:LocalAgency ;
+    rdfs:label "Auberry Volunteer Fire Department" ;
+    ns1:name "Auberry Volunteer Fire Department" .
 
-<https://w3id.org/caselinker/resource/agency/fresno-county-sheriffs-office> a ns7:LocalAgency .
+<https://w3id.org/caselinker/resource/agency/fresno-county-sheriff-s-office-ca> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns2:LocalAgency ;
+    rdfs:label "Fresno County Sheriff's Office" ;
+    dcterms:identifier "ori:CA0100000" ;
+    ns1:name "Fresno County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/case/fresno_so_2022_009/legal-proceeding> a ns4:Event,
-        ns4:LegalEvent,
-        ns6:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): booked into the Fresno County Jail" ;
-    ns6:hasProceedingBeginPoint "2022-10-07T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/fresno_so_2022_009/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        <https://cacontology.projectvic.org/legal-outcomes#LegalProceeding> ;
+    rdfs:label "Event · legal-proceeding" ;
+    rdfs:comment "Pretrial detention facility (not a sentence): booked into the Fresno County Jail" .
+
+<https://w3id.org/caselinker/resource/case/fresno_so_2022_009/role/offender/1> a <https://cacontology.projectvic.org/legal-outcomes#DefendantRole> ;
+    rdfs:label "Defendant Role · role/offender/1" .
+
+<https://w3id.org/caselinker/resource/location/auberry-cdp-ca> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Auberry CDP" ;
+    dcterms:identifier "fips:0603190" ;
+    skos:altLabel "Auberry" ;
+    ns1:name "Auberry CDP" .
 
 <https://w3id.org/caselinker/resource/case/fresno_so_2022_009/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns1:ageEstimate 81 .
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/fresno_so_2022_009/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/fresno_so_2022_009/phase/booked> a ns4:InitialPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Initial Phase · phase/booked" .
 
-<https://w3id.org/caselinker/resource/case/fresno_so_2022_009/phase/booked> a ns3:InitialPhase,
-        ns4:Phase ;
-    ns3:hasPhaseBeginPoint "2022-10-07T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/auberry> a ns4:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Auberry" ;
-    ns2:name "Auberry" .
-
-
-<https://w3id.org/caselinker/resource/case/fresno_so_2022_009> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/fresno_so_2022_009/provenance> .

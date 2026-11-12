@@ -1,99 +1,114 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns4: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns6: <https://cacontology.projectvic.org/detection#> .
-@prefix ns7: <https://cacontology.projectvic.org/core#> .
+@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/wi_doj_2022_001> a ns1:CACInvestigation,
-        ns7:EnduringEntity ;
-    dcterms:created "2026-10-18 13:53:00.012392" ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case wi_doj_2022_001" ;
+    dcterms:created "2026-11-11T18:42:42.532354"^^xsd:dateTime ;
+    dcterms:date "2022-12"^^xsd:gYearMonth ;
     dcterms:identifier "wi_doj_2022_001" ;
-    dcterms:modified "2026-10-18 13:53:00.012392" ;
+    dcterms:modified "2026-11-11T18:42:42.532354"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/wi_doj_2022_001/provenance> ;
     dcterms:source <https://www.wisdoj.gov/PressReleases/11.30.22_MKE_Co_CSAM_0.pdf>,
         "WI DOJ" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/milwaukee>,
-        <https://w3id.org/caselinker/resource/location/west-allis>,
-        <https://w3id.org/caselinker/resource/location/wis> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/milwaukee-city-wi>,
+        <https://w3id.org/caselinker/resource/location/west-allis-city-wi>,
+        <https://w3id.org/caselinker/resource/location/wisconsin-wi> ;
     ns1:currentPhase <https://w3id.org/caselinker/resource/case/wi_doj_2022_001/phase/arrested> ;
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/wi_doj_2022_001/phase/arrested> ;
     ns1:hasStep <https://w3id.org/caselinker/resource/case/wi_doj_2022_001/event/possession>,
         <https://w3id.org/caselinker/resource/case/wi_doj_2022_001/legal-proceeding> ;
-    ns1:investigationStatus "unknown" ;
-    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
-        <https://w3id.org/caselinker/resource/agency/milwaukee-county-district-attorneys-office>,
-        <https://w3id.org/caselinker/resource/agency/us-department-of-justice>,
-        <https://w3id.org/caselinker/resource/agency/wisconsin-department-of-justice> ;
-    ns4:mentionsLocation <https://w3id.org/caselinker/resource/location/milwaukee>,
-        <https://w3id.org/caselinker/resource/location/west-allis>,
-        <https://w3id.org/caselinker/resource/location/wis> .
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/doj>,
+        <https://w3id.org/caselinker/resource/agency/icac>,
+        <https://w3id.org/caselinker/resource/agency/milwaukee-county-district-attorneys-office-wi-unverified>,
+        <https://w3id.org/caselinker/resource/agency/wisconsin-department-of-justice> .
 
-<https://w3id.org/caselinker/resource/case/wi_doj_2022_001/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2022-12-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/wi_doj_2022_001/event/possession> ;
-    ns7:hasRole <https://w3id.org/caselinker/resource/case/wi_doj_2022_001/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/wi_doj_2022_001/person/offender/1/age> a ns2:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns2:ageSubject <https://w3id.org/caselinker/resource/case/wi_doj_2022_001/person/offender/1> ;
+    ns2:concernsAgeQuality ns2:Age ;
+    ns2:hasAgeInYears 73.0 .
 
-<https://w3id.org/caselinker/resource/case/wi_doj_2022_001/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2022-12-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/wi_doj_2022_001/event/possession> ;
-    ns7:hasRole <https://w3id.org/caselinker/resource/case/wi_doj_2022_001/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/wi_doj_2022_001/role/offender/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/wi_doj_2022_001/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/wi_doj_2022_001/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> .
+<https://w3id.org/caselinker/resource/agency/doj> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns4:LocalAgency ;
+    rdfs:label "U.S. Department of Justice" ;
+    ns3:name "U.S. Department of Justice" .
 
-<https://w3id.org/caselinker/resource/agency/milwaukee-county-district-attorneys-office> a ns7:OrganizationLikeEntity,
-        ns2:StateAgency ;
-    rdfs:label "Milwaukee County District Attorney's Office" .
+<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns3:name "ICAC Task Force" .
 
-<https://w3id.org/caselinker/resource/agency/us-department-of-justice> a ns2:LocalAgency .
+<https://w3id.org/caselinker/resource/agency/milwaukee-county-district-attorneys-office-wi-unverified> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns4:StateAgency ;
+    rdfs:label "Milwaukee County District Attorney's Office" ;
+    ns3:name "Milwaukee County District Attorney's Office" .
 
-<https://w3id.org/caselinker/resource/agency/wisconsin-department-of-justice> a ns2:StateAgency .
+<https://w3id.org/caselinker/resource/agency/wisconsin-department-of-justice> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns4:StateAgency ;
+    rdfs:label "Wisconsin Department of Justice" ;
+    ns3:name "Wisconsin Department of Justice" .
 
-<https://w3id.org/caselinker/resource/case/wi_doj_2022_001/charge/1> a ns3:CSAM_Possession,
-        ns3:CriminalCharge ;
-    rdfs:label "possession of child pornography" ;
-    ns3:indictmentCounts 2 .
+<https://w3id.org/caselinker/resource/case/wi_doj_2022_001/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
+    rdfs:label "possession of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/wi_doj_2022_001/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/wi_doj_2022_001/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        ns5:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns5:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/wi_doj_2022_001/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/wi_doj_2022_001/legal-proceeding> a ns7:Event,
-        ns7:LegalEvent,
-        ns3:LegalProceeding ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/wi_doj_2022_001/charge/1> ;
-    ns3:hasProceedingBeginPoint "2022-12-01T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/wi_doj_2022_001/role/offender/1> a ns5:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/wi_doj_2022_001/event/possession> .
 
-<https://w3id.org/caselinker/resource/case/wi_doj_2022_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns6:ageEstimate 73 .
-
-<https://w3id.org/caselinker/resource/case/wi_doj_2022_001/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/wi_doj_2022_001/phase/arrested> a ns1:InitialPhase,
-        ns7:Phase ;
-    ns1:hasPhaseBeginPoint "2022-12-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/milwaukee> a ns7:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/milwaukee-city-wi> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Milwaukee" ;
-    ns5:name "Milwaukee" .
+    rdfs:label "Milwaukee city" ;
+    dcterms:identifier "fips:5553000" ;
+    skos:altLabel "Milwaukee" ;
+    ns3:name "Milwaukee city" .
 
-<https://w3id.org/caselinker/resource/location/west-allis> a ns7:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/west-allis-city-wi> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "West Allis" ;
-    ns5:name "West Allis" .
+    rdfs:label "West Allis city" ;
+    dcterms:identifier "fips:5585300" ;
+    skos:altLabel "West Allis" ;
+    ns3:name "West Allis city" .
 
-<https://w3id.org/caselinker/resource/location/wis> a ns7:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/wisconsin-wi> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Wis." ;
-    ns5:name "Wis." .
+    rdfs:label "Wisconsin" ;
+    dcterms:identifier "fips:55" ;
+    skos:altLabel "Wis." ;
+    ns3:name "Wisconsin" .
 
 <https://w3id.org/caselinker/resource/case/wi_doj_2022_001/event/possession> a ns1:CSAMIncident,
-        ns7:Event ;
-    ns1:severityLevel 3 ;
-    ns5:hasFacet <https://w3id.org/caselinker/resource/case/wi_doj_2022_001/facet/possession> .
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns1:severityLevel 3 .
+
+<https://w3id.org/caselinker/resource/case/wi_doj_2022_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/wi_doj_2022_001/phase/arrested> a ns1:InitialPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Initial Phase · phase/arrested" .
 

@@ -1,46 +1,58 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/core#> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns4: <https://cacontology.projectvic.org/detection#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns3: <https://cacontology.projectvic.org#> .
+@prefix ns4: <https://cacontology.projectvic.org/platforms#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/cspd_2021_003> a ns1:CACInvestigation,
-        ns2:EnduringEntity ;
-    dcterms:created "2026-10-18 00:58:26.198682" ;
+<https://w3id.org/caselinker/resource/case/cspd_2021_003> a ns3:CACInvestigation,
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case cspd_2021_003" ;
+    dcterms:created "2026-11-10T18:09:20.684159"^^xsd:dateTime ;
+    dcterms:date "2021-12-08"^^xsd:date ;
     dcterms:identifier "cspd_2021_003" ;
-    dcterms:modified "2026-10-18 00:58:26.198682" ;
+    dcterms:modified "2026-11-10T18:09:20.684159"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/cspd_2021_003/provenance> ;
     dcterms:source <https://coloradosprings.gov/police-department/article/news/sexual-assault-child-arrest-0>,
         "CSPD" ;
-    ns1:currentPhase <https://w3id.org/caselinker/resource/case/cspd_2021_003/phase/charged> ;
-    ns1:hasPhase <https://w3id.org/caselinker/resource/case/cspd_2021_003/phase/charged> ;
-    ns1:investigationStatus "unknown" ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/colorado-springs-police-department> .
+    ns3:currentPhase <https://w3id.org/caselinker/resource/case/cspd_2021_003/phase/charged> ;
+    ns3:hasPhase <https://w3id.org/caselinker/resource/case/cspd_2021_003/phase/charged> ;
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/colorado-springs-police-department-co> .
 
-<https://w3id.org/caselinker/resource/case/cspd_2021_003/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2021-12-08T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/cspd_2021_003/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/cspd_2021_003/person/offender/1/age> a ns2:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns2:ageSubject <https://w3id.org/caselinker/resource/case/cspd_2021_003/person/offender/1> ;
+    ns2:concernsAgeQuality ns2:Age ;
+    ns2:hasAgeInYears 28.0 .
 
-<https://w3id.org/caselinker/resource/case/cspd_2021_003/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2021-12-08T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/cspd_2021_003/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/cspd_2021_003/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/cspd_2021_003/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/cspd_2021_003/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/platform/snapchat> a <https://cacontology.projectvic.org/platforms#MessagingService> ;
-    rdfs:label "Snapchat" .
+<https://w3id.org/caselinker/resource/platform/snapchat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        ns4:MessagingService ;
+    rdfs:label "Snapchat" ;
+    ns4:encryptionLevel "end-to-end" ;
+    ns1:name "Snapchat" .
 
-<https://w3id.org/caselinker/resource/agency/colorado-springs-police-department> a ns3:LocalAgency .
+<https://w3id.org/caselinker/resource/agency/colorado-springs-police-department-co> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns5:LocalAgency ;
+    rdfs:label "Colorado Springs Police Department" ;
+    dcterms:identifier "ori:CO0210100" ;
+    ns1:name "Colorado Springs Police Department" .
+
+<https://w3id.org/caselinker/resource/case/cspd_2021_003/role/offender/1> a <https://cacontology.projectvic.org/legal-outcomes#DefendantRole> ;
+    rdfs:label "Defendant Role · role/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/cspd_2021_003/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns4:ageEstimate 28 .
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/cspd_2021_003/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/cspd_2021_003/phase/charged> a ns3:LegalProcessPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Legal Process Phase · phase/charged" .
 
-<https://w3id.org/caselinker/resource/case/cspd_2021_003/phase/charged> a ns1:LegalProcessPhase,
-        ns2:Phase ;
-    ns1:hasPhaseBeginPoint "2021-12-08T00:00:00Z"^^xsd:dateTimeStamp .
-
-
-<https://w3id.org/caselinker/resource/case/cspd_2021_003> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/cspd_2021_003/provenance> .

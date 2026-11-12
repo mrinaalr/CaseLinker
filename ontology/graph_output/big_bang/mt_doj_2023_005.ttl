@@ -1,67 +1,76 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/core#> .
-@prefix ns4: <https://cacontology.projectvic.org/detection#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns3: <https://cacontology.projectvic.org#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/mt_doj_2023_005> a ns2:CACInvestigation,
-        ns3:EnduringEntity ;
-    dcterms:created "2026-10-18 05:35:36.761423" ;
+<https://w3id.org/caselinker/resource/case/mt_doj_2023_005> a ns3:CACInvestigation,
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case mt_doj_2023_005" ;
+    dcterms:created "2026-11-11T15:39:09.318196"^^xsd:dateTime ;
+    dcterms:date "2023-09-26"^^xsd:date ;
     dcterms:identifier "mt_doj_2023_005" ;
-    dcterms:modified "2026-10-18 05:35:36.761423" ;
+    dcterms:modified "2026-11-11T15:39:09.318196"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/mt_doj_2023_005/provenance> ;
     dcterms:source <https://dojmt.gov/attorney-generals-office-charges-polson-police-officer-with-sexual-abuse-of-children/>,
         "MT DOJ" ;
-    ns2:currentPhase <https://w3id.org/caselinker/resource/case/mt_doj_2023_005/phase/convicted> ;
-    ns2:hasPhase <https://w3id.org/caselinker/resource/case/mt_doj_2023_005/phase/convicted> ;
-    ns2:hasStep <https://w3id.org/caselinker/resource/case/mt_doj_2023_005/legal-step/convicted> ;
-    ns2:investigationStatus "unknown" ;
-    ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/attorney-generals-office>,
-        <https://w3id.org/caselinker/resource/agency/division-of-criminal-investigation>,
-        <https://w3id.org/caselinker/resource/agency/lake-county-sheriffs-office>,
-        <https://w3id.org/caselinker/resource/agency/polson-police-department>,
-        <https://w3id.org/caselinker/resource/agency/prosecution-services-bureau> .
+    ns3:currentPhase <https://w3id.org/caselinker/resource/case/mt_doj_2023_005/phase/charged> ;
+    ns3:hasPhase <https://w3id.org/caselinker/resource/case/mt_doj_2023_005/phase/charged> ;
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/attorney-generals-office-mt-unverified>,
+        <https://w3id.org/caselinker/resource/agency/division-of-criminal-investigation-mt-unverified>,
+        <https://w3id.org/caselinker/resource/agency/lake-county-sheriff-s-office-mt>,
+        <https://w3id.org/caselinker/resource/agency/polson-police-department-mt>,
+        <https://w3id.org/caselinker/resource/agency/prosecution-services-bureau-mt-unverified> .
 
-<https://w3id.org/caselinker/resource/case/mt_doj_2023_005/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2023-09-26T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/mt_doj_2023_005/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/mt_doj_2023_005/person/offender/1/age> a ns2:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns2:ageSubject <https://w3id.org/caselinker/resource/case/mt_doj_2023_005/person/offender/1> ;
+    ns2:concernsAgeQuality ns2:Age ;
+    ns2:hasAgeInYears 42.0 .
 
-<https://w3id.org/caselinker/resource/case/mt_doj_2023_005/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2023-09-26T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/mt_doj_2023_005/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/mt_doj_2023_005/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/mt_doj_2023_005/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/mt_doj_2023_005/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/attorney-generals-office> a ns1:StateAgency .
+<https://w3id.org/caselinker/resource/agency/attorney-generals-office-mt-unverified> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns4:StateAgency ;
+    rdfs:label "Attorney General's Office" ;
+    ns1:name "Attorney General's Office" .
 
-<https://w3id.org/caselinker/resource/agency/division-of-criminal-investigation> a ns1:LocalAgency .
+<https://w3id.org/caselinker/resource/agency/division-of-criminal-investigation-mt-unverified> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns4:LocalAgency ;
+    rdfs:label "Division of Criminal Investigation" ;
+    ns1:name "Division of Criminal Investigation" .
 
-<https://w3id.org/caselinker/resource/agency/lake-county-sheriffs-office> a ns3:OrganizationLikeEntity,
-        ns1:LocalAgency ;
-    rdfs:label "Lake County Sheriff's Office" .
+<https://w3id.org/caselinker/resource/agency/lake-county-sheriff-s-office-mt> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns4:LocalAgency ;
+    rdfs:label "Lake County Sheriff's Office" ;
+    dcterms:identifier "ori:MT0240000" ;
+    ns1:name "Lake County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/agency/polson-police-department> a ns3:OrganizationLikeEntity,
-        ns1:LocalAgency ;
-    rdfs:label "Polson Police Department" .
+<https://w3id.org/caselinker/resource/agency/polson-police-department-mt> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns4:LocalAgency ;
+    rdfs:label "Polson Police Department" ;
+    dcterms:identifier "ori:MT0240100" ;
+    ns1:name "Polson Police Department" .
 
-<https://w3id.org/caselinker/resource/agency/prosecution-services-bureau> a ns1:LocalAgency .
+<https://w3id.org/caselinker/resource/agency/prosecution-services-bureau-mt-unverified> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns4:LocalAgency ;
+    rdfs:label "Prosecution Services Bureau" ;
+    ns1:name "Prosecution Services Bureau" .
 
-<https://w3id.org/caselinker/resource/case/mt_doj_2023_005/legal-step/convicted> a ns3:Event,
-        ns3:LegalEvent,
-        ns5:LegalProceeding,
-        ns5:SentencingHearing ;
-    ns5:hasProceedingBeginPoint "2023-09-26T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/mt_doj_2023_005/role/offender/1> a <https://cacontology.projectvic.org/legal-outcomes#DefendantRole> ;
+    rdfs:label "Defendant Role · role/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/mt_doj_2023_005/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns4:ageEstimate 42 .
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/mt_doj_2023_005/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/mt_doj_2023_005/phase/charged> a ns3:LegalProcessPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Legal Process Phase · phase/charged" .
 
-<https://w3id.org/caselinker/resource/case/mt_doj_2023_005/phase/convicted> a ns3:Phase,
-        ns5:SentencingPhase ;
-    ns2:hasPhaseBeginPoint "2023-09-26T00:00:00Z"^^xsd:dateTimeStamp .
-
-
-<https://w3id.org/caselinker/resource/case/mt_doj_2023_005> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/mt_doj_2023_005/provenance> .

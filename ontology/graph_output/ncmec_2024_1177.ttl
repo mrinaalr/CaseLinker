@@ -1,100 +1,119 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns4: <https://cacontology.projectvic.org/detection#> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns6: <https://cacontology.projectvic.org/us/ncmec#> .
-@prefix ns7: <https://cacontology.projectvic.org/core#> .
-@prefix ns8: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns1: <https://cacontology.projectvic.org/core#> .
+@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org#> .
+@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1177> a ns1:CACInvestigation,
-        ns7:EnduringEntity ;
-    dcterms:created "2026-10-17 23:04:39.262213" ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1177> a ns5:CACInvestigation,
+        ns1:EnduringEntity ;
+    rdfs:label "Case ncmec_2024_1177" ;
+    dcterms:created "2026-11-11T23:57:50.256260"^^xsd:dateTime ;
+    dcterms:date "2024-04"^^xsd:gYearMonth ;
     dcterms:identifier "ncmec_2024_1177" ;
-    dcterms:modified "2026-10-17 23:04:39.262213" ;
+    dcterms:modified "2026-11-11T23:57:50.256260"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_1177/provenance> ;
     dcterms:source <https://www.yahoo.com/news/child-pornography-case-advances-douglas-124800576.html>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/douglas-county> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_1177/cybertip>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_1177/event/online-only>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2024_1177/location/douglas-county> ;
+    ns5:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_1177/event/online-only>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_1177/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_1177/legal-proceeding> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/ncmec>,
-        <https://w3id.org/caselinker/resource/agency/superior-police-department> ;
-    ns2:mentionsLocation <https://w3id.org/caselinker/resource/location/douglas-county> .
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_1177/agency/superior-police-department> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1177/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2024-04-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_1177/event/online-only>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_1177/event/possession> ;
-    ns7:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_1177/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1177/assessment/semantic/exploitive-positions> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · exploitive_positions" ;
+    dcterms:subject <https://cacontology.projectvic.org/custodial#PositionOfTrust> ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_1177/narrative> ;
+    ns1:hasConfidence 0.4587 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1177/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2024-04-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_1177/event/online-only>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_1177/event/possession> ;
-    ns7:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_1177/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1177/assessment/semantic/possession-csam> a ns1:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns5:CSAMIncident ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_1177/narrative> ;
+    ns1:hasConfidence 0.5427 ;
+    ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1177/person/offender/1/age> a ns2:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns2:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_1177/person/offender/1> ;
+    ns2:concernsAgeQuality ns2:Age ;
+    ns2:hasAgeInYears 21.0 .
 
-<https://w3id.org/caselinker/resource/agency/superior-police-department> a ns5:LocalAgency .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1177/role/offender/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2024_1177/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2024_1177/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1177/charge/1> a ns3:CSAM_Possession,
-        ns3:CriminalCharge ;
-    rdfs:label "possession of child pornography" ;
-    ns3:indictmentCounts 2 .
+<https://w3id.org/caselinker/resource/platform/chat> a ns1:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
+    rdfs:label "chat" ;
+    ns3:name "chat" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1177/cybertip> a ns6:NCMECCybertipReport ;
-    ns6:supportedBy <https://w3id.org/caselinker/resource/agency/ncmec> .
+<https://w3id.org/caselinker/resource/platform/discord> a ns1:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#MessagingService> ;
+    rdfs:label "Discord" ;
+    ns3:name "Discord" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1177/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/platform/twitter-x> a ns1:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "Twitter / X" ;
+    ns3:name "Twitter / X" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1177/legal-proceeding> a ns7:Event,
-        ns7:LegalEvent,
-        ns3:LegalProceeding ;
+<https://w3id.org/caselinker/resource/agency/icac> a ns1:OrganizationLikeEntity,
+        <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns3:name "ICAC Task Force" .
+
+<https://w3id.org/caselinker/resource/agency/ncmec> a ns1:OrganizationLikeEntity,
+        ns6:FederalAgency ;
+    rdfs:label "National Center for Missing and Exploited Children" ;
+    skos:altLabel "NCMEC" ;
+    ns3:name "National Center for Missing and Exploited Children" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1177/agency/superior-police-department> a ns1:OrganizationLikeEntity,
+        ns6:LocalAgency ;
+    rdfs:label "Superior Police Department" ;
+    ns3:name "Superior Police Department" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1177/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
+    rdfs:label "possession of child pornography" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1177/event/online-only> a ns5:ChildSexualAbuseEvent,
+        ns1:Event ;
+    rdfs:label "Child Sexual Abuse Event · event/online-only" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1177/event/possession> a ns5:CSAMIncident,
+        ns1:Event ;
+    rdfs:label "CSAMIncident · event/possession" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1177/legal-proceeding> a ns1:Event,
+        ns1:LegalEvent,
+        ns4:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): remained in custody" ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_1177/charge/1> ;
-    ns3:hasProceedingBeginPoint "2024-04-01T00:00:00Z"^^xsd:dateTimeStamp .
+    ns4:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_1177/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1177/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns4:ageEstimate 21 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1177/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/agency/ncmec> a ns5:FederalAgency .
-
-<https://w3id.org/caselinker/resource/location/douglas-county> a ns7:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1177/location/douglas-county> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Douglas County" ;
-    ns8:name "Douglas County" .
+    ns3:name "Douglas County" .
 
-<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
-    rdfs:label "chat" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1177/role/offender/1> a ns4:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" .
 
-<https://w3id.org/caselinker/resource/platform/discord> a <https://cacontology.projectvic.org/platforms#MessagingService> ;
-    rdfs:label "Discord" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1177/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/platform/twitter-x> a <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "Twitter / X" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1177/event/online-only> a ns1:ChildSexualAbuseEvent,
-        ns7:Event ;
-    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/chat>,
-        <https://w3id.org/caselinker/resource/platform/discord>,
-        <https://w3id.org/caselinker/resource/platform/twitter-x> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1177/event/possession> a ns1:CSAMIncident,
-        ns7:Event ;
-    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/chat>,
-        <https://w3id.org/caselinker/resource/platform/discord>,
-        <https://w3id.org/caselinker/resource/platform/twitter-x> ;
-    ns8:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2024_1177/facet/possession> .
-
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1177> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2024_1177/provenance> .

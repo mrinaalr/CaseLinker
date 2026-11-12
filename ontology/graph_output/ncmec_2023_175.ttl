@@ -1,74 +1,68 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://cacontology.projectvic.org/core#> .
+@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_175> a ns2:CACInvestigation,
-        ns5:EnduringEntity ;
-    dcterms:created "2026-10-17 22:21:29.949888" ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_175> a ns3:CACInvestigation,
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case ncmec_2023_175" ;
+    dcterms:created "2026-11-10T10:03:27.116091"^^xsd:dateTime ;
+    dcterms:date "2020-05"^^xsd:gYearMonth ;
     dcterms:identifier "ncmec_2023_175" ;
-    dcterms:modified "2026-10-17 22:21:29.949888" ;
+    dcterms:modified "2026-11-10T10:03:27.116091"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2023_175/provenance> ;
     dcterms:source <https://www.geaugamapleleaf.com/news/news-briefs-99/>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/geauga-county>,
-        <https://w3id.org/caselinker/resource/location/newbury-township> ;
-    ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_175/phase/indicted> ;
-    ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_175/phase/indicted> ;
-    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_175/event/csam>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2023_175/legal-proceeding> ;
-    ns1:mentionsLocation <https://w3id.org/caselinker/resource/location/geauga-county>,
-        <https://w3id.org/caselinker/resource/location/newbury-township> .
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2023_175/location/newbury-township>,
+        <https://w3id.org/caselinker/resource/location/geauga-county-oh> ;
+    ns3:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_175/phase/indicted> ;
+    ns3:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_175/phase/indicted> ;
+    ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_175/event/csam>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2023_175/legal-proceeding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_175/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2020-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_175/event/csam> ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_175/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_175/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2023_175/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2023_175/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_175/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2020-05-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_175/event/csam> ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_175/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_175/charge/1> a ns1:CSAM_Possession,
+        ns1:CriminalCharge ;
+    rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_175/charge/1> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
-    rdfs:label "child pornography" ;
-    ns4:indictmentCounts 3 .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_175/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        ns1:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns1:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns1:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_175/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_175/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_175/legal-proceeding> a ns5:Event,
-        ns5:LegalEvent,
-        ns4:LegalProceeding ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_175/charge/1> ;
-    ns4:hasProceedingBeginPoint "2020-05-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_175/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_175/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_175/phase/indicted> a ns2:LegalProcessPhase,
-        ns5:Phase ;
-    ns2:hasPhaseBeginPoint "2020-05-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/geauga-county> a ns5:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Geauga County" ;
-    ns3:name "Geauga County" .
-
-<https://w3id.org/caselinker/resource/location/newbury-township> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2023_175/location/newbury-township> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Newbury Township" ;
-    ns3:name "Newbury Township" .
+    ns2:name "Newbury Township" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_175/event/csam> a ns2:CSAMIncident,
-        ns5:Event ;
-    ns3:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2023_175/facet/csam> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_175/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2023_175/role/offender/1> a ns1:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_175/event/csam> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_175> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2023_175/provenance> .
+<https://w3id.org/caselinker/resource/location/geauga-county-oh> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Geauga County" ;
+    dcterms:identifier "fips:39055" ;
+    ns2:name "Geauga County" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_175/event/csam> a ns3:CSAMIncident,
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/csam" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_175/phase/indicted> a ns3:LegalProcessPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Legal Process Phase · phase/indicted" .
+

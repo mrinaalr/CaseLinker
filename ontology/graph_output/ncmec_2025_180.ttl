@@ -1,94 +1,102 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns3: <https://cacontology.projectvic.org/core#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns6: <https://cacontology.projectvic.org/detection#> .
-@prefix ns7: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns8: <https://cacontology.projectvic.org/us/ncmec#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org#> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_180> a ns1:CACInvestigation,
-        ns3:EnduringEntity ;
-    dcterms:created "2026-10-18 00:01:17.441870" ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_180> a ns2:CACInvestigation,
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case ncmec_2025_180" ;
+    dcterms:created "2026-11-10T16:33:01.451539"^^xsd:dateTime ;
+    dcterms:date "2025-05-13"^^xsd:date ;
     dcterms:identifier "ncmec_2025_180" ;
-    dcterms:modified "2026-10-18 00:01:17.441870" ;
+    dcterms:modified "2026-11-12T01:41:30.318456"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2025_180/provenance> ;
     dcterms:source <https://cbs12.com/news/local/social-media-tip-nabs-loxahatchee-teen-with-300-files-of-child-pornography-national-center-of-missing-an-exploited-children-human-explotation-and-trafficking-unit-67th-street-may-13-2025>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/fla>,
-        <https://w3id.org/caselinker/resource/location/loxahatchee> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_180/cybertip>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_180/event/csam>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2025_180/location/loxahatchee>,
+        <https://w3id.org/caselinker/resource/location/florida-fl> ;
+    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_180/event/csam>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_180/event/trafficking>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_180/legal-proceeding> ;
-    ns7:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
-        <https://w3id.org/caselinker/resource/agency/palm-beach-county-sheriffs-office> ;
-    ns2:mentionsLocation <https://w3id.org/caselinker/resource/location/fla>,
-        <https://w3id.org/caselinker/resource/location/loxahatchee> .
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_180/agency/palm-beach-county-sheriffs-office> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_180/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2025-05-13T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_180/event/csam> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2025_180/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_180/person/offender/1/age> a ns5:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2025_180/person/offender/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 18.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_180/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2025-05-13T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_180/event/csam> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2025_180/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_180/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2025_180/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2025_180/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/palm-beach-county-sheriffs-office> a ns7:LocalAgency .
+<https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns4:FederalAgency ;
+    rdfs:label "National Center for Missing and Exploited Children" ;
+    skos:altLabel "NCMEC" ;
+    ns1:name "National Center for Missing and Exploited Children" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_180/charge/1> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
-    rdfs:label "10 or more files of child pornography" ;
-    ns4:indictmentCounts 31 .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_180/agency/palm-beach-county-sheriffs-office> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns4:LocalAgency ;
+    rdfs:label "Palm Beach County Sheriff's Office" ;
+    ns1:name "Palm Beach County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_180/cybertip> a ns8:NCMECCybertipReport ;
-    ns8:supportedBy <https://w3id.org/caselinker/resource/agency/ncmec> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_180/charge/1> a ns3:CSAM_Possession,
+        ns3:CriminalCharge ;
+    rdfs:label "10 or more files of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_180/event/trafficking> a ns3:Event,
-        ns4:SexTrafficking .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_180/event/trafficking> a <https://cacontology.projectvic.org/core#Event>,
+        ns3:SexTrafficking ;
+    rdfs:label "Sex Trafficking · event/trafficking" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_180/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_180/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        ns3:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns3:chargeCount "31"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_180/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_180/legal-proceeding> a ns3:Event,
-        ns3:LegalEvent,
-        ns4:LegalProceeding ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_180/charge/1> ;
-    ns4:hasProceedingBeginPoint "2025-05-13T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_180/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns6:ageEstimate 18 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_180/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/platform/kik> a <https://cacontology.projectvic.org/platforms#MessagingService> ;
-    rdfs:label "Kik" .
-
-<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "social media" .
-
-<https://w3id.org/caselinker/resource/agency/ncmec> a ns7:FederalAgency .
-
-<https://w3id.org/caselinker/resource/location/fla> a ns3:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Fla." ;
-    ns5:name "Fla." .
-
-<https://w3id.org/caselinker/resource/location/loxahatchee> a ns3:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2025_180/location/loxahatchee> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Loxahatchee" ;
-    ns5:name "Loxahatchee" .
+    ns1:name "Loxahatchee" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_180/event/csam> a ns1:CSAMIncident,
-        ns3:Event ;
-    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/kik>,
-        <https://w3id.org/caselinker/resource/platform/social-media> ;
-    ns5:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2025_180/facet/csam> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_180/role/offender/1> a ns3:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_180/event/csam> .
 
+<https://w3id.org/caselinker/resource/location/florida-fl> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Florida" ;
+    dcterms:identifier "fips:12" ;
+    skos:altLabel "Fla." ;
+    ns1:name "Florida" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_180> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2025_180/provenance> .
+<https://w3id.org/caselinker/resource/platform/kik> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#MessagingService> ;
+    rdfs:label "Kik" ;
+    ns1:name "Kik" .
+
+<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "social media" ;
+    ns1:name "social media" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_180/event/csam> a ns2:CSAMIncident,
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/csam" ;
+    ns2:usesChannel <https://w3id.org/caselinker/resource/platform/kik>,
+        <https://w3id.org/caselinker/resource/platform/social-media> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_180/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+

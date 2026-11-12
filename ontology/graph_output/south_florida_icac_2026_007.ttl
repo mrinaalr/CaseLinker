@@ -1,76 +1,79 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/core#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns6: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://cacontology.projectvic.org/platforms#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/south_florida_icac_2026_007> a ns2:CACInvestigation,
-        ns1:EnduringEntity ;
-    dcterms:created "2026-10-18 07:13:25.909016" ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case south_florida_icac_2026_007" ;
+    dcterms:created "2026-11-11T17:56:32.443773"^^xsd:dateTime ;
+    dcterms:date "2026-01"^^xsd:gYearMonth ;
     dcterms:identifier "south_florida_icac_2026_007" ;
-    dcterms:modified "2026-10-18 07:13:25.909016" ;
+    dcterms:modified "2026-11-11T17:56:32.443773"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/south_florida_icac_2026_007/provenance> ;
     dcterms:source <https://coconutcreektalk.com/news/snapchat-man-arrested-child-pornography/>,
         "SOUTH FLORIDA ICAC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/coconut-creek> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/coconut-creek-city-fl> ;
     ns2:hasStep <https://w3id.org/caselinker/resource/case/south_florida_icac_2026_007/event/csam>,
         <https://w3id.org/caselinker/resource/case/south_florida_icac_2026_007/event/distribution>,
         <https://w3id.org/caselinker/resource/case/south_florida_icac_2026_007/legal-proceeding> ;
-    ns2:usesMethod <https://w3id.org/caselinker/resource/case/south_florida_icac_2026_007/tech/cybertipline> ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/icac> ;
-    ns5:mentionsLocation <https://w3id.org/caselinker/resource/location/coconut-creek> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/icac> .
 
-<https://w3id.org/caselinker/resource/case/south_florida_icac_2026_007/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/south_florida_icac_2026_007/event/csam> ;
-    ns1:hasRole <https://w3id.org/caselinker/resource/case/south_florida_icac_2026_007/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/south_florida_icac_2026_007/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/south_florida_icac_2026_007/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/south_florida_icac_2026_007/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/south_florida_icac_2026_007/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/south_florida_icac_2026_007/event/csam> ;
-    ns1:hasRole <https://w3id.org/caselinker/resource/case/south_florida_icac_2026_007/person/victim/1> .
+<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns1:name "ICAC Task Force" .
 
-<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> .
-
-<https://w3id.org/caselinker/resource/case/south_florida_icac_2026_007/charge/1> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/south_florida_icac_2026_007/charge/1> a ns3:CSAM_Possession,
+        ns3:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/south_florida_icac_2026_007/event/distribution> a ns1:Event,
-        ns4:CSAM_Distribution .
+<https://w3id.org/caselinker/resource/case/south_florida_icac_2026_007/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
+        ns3:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/south_florida_icac_2026_007/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/south_florida_icac_2026_007/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        ns3:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns3:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/south_florida_icac_2026_007/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/south_florida_icac_2026_007/legal-proceeding> a ns1:Event,
-        ns1:LegalEvent,
-        ns4:LegalProceeding ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/south_florida_icac_2026_007/charge/1> ;
-    ns4:hasProceedingBeginPoint "2026-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/south_florida_icac_2026_007/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/south_florida_icac_2026_007/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/south_florida_icac_2026_007/role/offender/1> a ns3:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/south_florida_icac_2026_007/event/csam> .
 
-<https://w3id.org/caselinker/resource/case/south_florida_icac_2026_007/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/south_florida_icac_2026_007/tech/cybertipline> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
-    rdfs:label "CyberTipline" .
-
-<https://w3id.org/caselinker/resource/platform/snapchat> a <https://cacontology.projectvic.org/platforms#MessagingService> ;
-    rdfs:label "Snapchat" .
-
-<https://w3id.org/caselinker/resource/location/coconut-creek> a ns1:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/coconut-creek-city-fl> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Coconut Creek" ;
-    ns6:name "Coconut Creek" .
+    rdfs:label "Coconut Creek city" ;
+    dcterms:identifier "fips:1213275" ;
+    skos:altLabel "Coconut Creek" ;
+    ns1:name "Coconut Creek city" .
+
+<https://w3id.org/caselinker/resource/platform/snapchat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        ns4:MessagingService ;
+    rdfs:label "Snapchat" ;
+    ns4:encryptionLevel "end-to-end" ;
+    ns1:name "Snapchat" .
 
 <https://w3id.org/caselinker/resource/case/south_florida_icac_2026_007/event/csam> a ns2:CSAMIncident,
-        ns1:Event ;
-    ns2:usesChannel <https://w3id.org/caselinker/resource/platform/snapchat> ;
-    ns6:hasFacet <https://w3id.org/caselinker/resource/case/south_florida_icac_2026_007/facet/csam> .
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/csam" ;
+    ns2:usesChannel <https://w3id.org/caselinker/resource/platform/snapchat> .
 
-
-<https://w3id.org/caselinker/resource/case/south_florida_icac_2026_007> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/south_florida_icac_2026_007/provenance> .

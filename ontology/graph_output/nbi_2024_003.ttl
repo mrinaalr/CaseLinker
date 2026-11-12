@@ -1,82 +1,100 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/custodial#> .
-@prefix ns3: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns5: <https://cacontology.projectvic.org/core#> .
-@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/nbi_2024_003> a ns1:CACInvestigation,
-        ns5:EnduringEntity ;
-    dcterms:created "2026-10-18 14:24:47.606850" ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case nbi_2024_003" ;
+    dcterms:created "2026-11-11T15:44:14.852019"^^xsd:dateTime ;
+    dcterms:date "2024-10-11"^^xsd:date ;
     dcterms:identifier "nbi_2024_003" ;
-    dcterms:modified "2026-10-18 14:24:47.606850" ;
+    dcterms:modified "2026-11-11T15:44:14.852019"^^xsd:dateTime ;
     dcterms:provenance <https://w3id.org/caselinker/resource/case/nbi_2024_003/provenance> ;
     dcterms:source <https://nbi.gov.ph/press_releases/2024/10112024/7085/>,
         "NBI" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/cabiao>,
-        <https://w3id.org/caselinker/resource/location/nueva-ecija>,
-        <https://w3id.org/caselinker/resource/location/san-gregorio> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/nbi_2024_003/location/cabiao>,
+        <https://w3id.org/caselinker/resource/case/nbi_2024_003/location/nueva-ecija>,
+        <https://w3id.org/caselinker/resource/case/nbi_2024_003/location/san-gregorio> ;
     ns1:currentPhase <https://w3id.org/caselinker/resource/case/nbi_2024_003/phase/arrested> ;
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/nbi_2024_003/phase/arrested> ;
     ns1:hasStep <https://w3id.org/caselinker/resource/case/nbi_2024_003/event/hands-on>,
         <https://w3id.org/caselinker/resource/case/nbi_2024_003/event/trust-violation> ;
-    ns1:investigationStatus "unknown" ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/national-bureau-of-investigation> ;
-    ns3:mentionsLocation <https://w3id.org/caselinker/resource/location/cabiao>,
-        <https://w3id.org/caselinker/resource/location/nueva-ecija>,
-        <https://w3id.org/caselinker/resource/location/san-gregorio> .
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/national-bureau-of-investigation> .
 
-<https://w3id.org/caselinker/resource/agency/national-bureau-of-investigation> a ns6:StateAgency .
+<https://w3id.org/caselinker/resource/case/nbi_2024_003/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/nbi_2024_003/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/nbi_2024_003/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/nbi_2024_003/event/trust-violation> a ns2:CustodialAbuse,
-        ns2:TrustViolation ;
-    ns2:violatesRelationship <https://w3id.org/caselinker/resource/case/nbi_2024_003/relationship/mother> .
+<https://w3id.org/caselinker/resource/case/nbi_2024_003/role/victim/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/victim/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/nbi_2024_003/person/victim/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/nbi_2024_003/role/victim/1> .
 
-<https://w3id.org/caselinker/resource/case/nbi_2024_003/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/agency/national-bureau-of-investigation> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns4:StateAgency ;
+    rdfs:label "Philippines NBI" ;
+    ns2:name "Philippines NBI" .
 
-<https://w3id.org/caselinker/resource/case/nbi_2024_003/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
+<https://w3id.org/caselinker/resource/case/nbi_2024_003/event/trust-violation> a ns3:CustodialAbuse,
+        ns3:TrustViolation ;
+    rdfs:label "Custodial Abuse · event/trust-violation" ;
+    ns3:perpetratedBy <https://w3id.org/caselinker/resource/case/nbi_2024_003/role/offender/1> ;
+    ns3:violatesRelationship <https://w3id.org/caselinker/resource/case/nbi_2024_003/relationship/mother> .
 
-<https://w3id.org/caselinker/resource/case/nbi_2024_003/relationship/mother> a ns2:CustodialRelationship,
-        ns2:FamilialRelationship ;
-    ns2:involvesChild <https://w3id.org/caselinker/resource/case/nbi_2024_003/role/victim/1> ;
-    ns2:involvesCustodian <https://w3id.org/caselinker/resource/case/nbi_2024_003/role/offender/1> ;
-    ns2:relationshipType "mother" .
-
-<https://w3id.org/caselinker/resource/case/nbi_2024_003/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2024-10-11T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/nbi_2024_003/event/hands-on> ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/nbi_2024_003/person/offender/1> .
-
-<https://w3id.org/caselinker/resource/case/nbi_2024_003/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2024-10-11T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/nbi_2024_003/event/hands-on> ;
-    ns5:hasRole <https://w3id.org/caselinker/resource/case/nbi_2024_003/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/case/nbi_2024_003/phase/arrested> a ns1:InitialPhase,
-        ns5:Phase ;
-    ns1:hasPhaseBeginPoint "2024-10-11T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/cabiao> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/nbi_2024_003/location/cabiao> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Cabiao" ;
-    ns4:name "Cabiao" .
+    ns2:name "Cabiao" .
 
-<https://w3id.org/caselinker/resource/location/nueva-ecija> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/nbi_2024_003/location/nueva-ecija> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Nueva Ecija" ;
-    ns4:name "Nueva Ecija" .
+    ns2:name "Nueva Ecija" .
 
-<https://w3id.org/caselinker/resource/location/san-gregorio> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/nbi_2024_003/location/san-gregorio> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "San Gregorio" ;
-    ns4:name "San Gregorio" .
+    ns2:name "San Gregorio" .
+
+<https://w3id.org/caselinker/resource/case/nbi_2024_003/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/nbi_2024_003/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
+
+<https://w3id.org/caselinker/resource/case/nbi_2024_003/relationship/mother> a ns3:CustodialRelationship,
+        ns3:FamilialRelationship ;
+    rdfs:label "Custodial Relationship · relationship/mother" ;
+    ns3:involvesChild <https://w3id.org/caselinker/resource/case/nbi_2024_003/role/victim/1> ;
+    ns3:involvesCustodian <https://w3id.org/caselinker/resource/case/nbi_2024_003/role/offender/1> ;
+    ns3:relationshipType "parent" ;
+    ns2:isDirectional true ;
+    ns2:source <https://w3id.org/caselinker/resource/case/nbi_2024_003/role/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/nbi_2024_003/role/victim/1> .
+
+<https://w3id.org/caselinker/resource/case/nbi_2024_003/phase/arrested> a ns1:InitialPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Initial Phase · phase/arrested" .
 
 <https://w3id.org/caselinker/resource/case/nbi_2024_003/event/hands-on> a ns1:ChildSexualAbuseEvent,
-        ns5:Event ;
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "Child Sexual Abuse Event · event/hands-on" ;
     ns1:severityLevel 3 .
+
+<https://w3id.org/caselinker/resource/case/nbi_2024_003/role/victim/1> a ns1:VictimRole ;
+    rdfs:label "Victim Role · role/victim/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/nbi_2024_003/event/hands-on> .
+
+<https://w3id.org/caselinker/resource/case/nbi_2024_003/role/offender/1> a <https://cacontology.projectvic.org/legal-outcomes#DefendantRole> ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/nbi_2024_003/event/hands-on> .
 

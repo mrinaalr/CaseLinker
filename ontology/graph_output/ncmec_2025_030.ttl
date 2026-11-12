@@ -1,192 +1,166 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns3: <https://cacontology.projectvic.org/core#> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns7: <https://cacontology.projectvic.org/detection#> .
-@prefix ns8: <https://cacontology.projectvic.org/us/ncmec#> .
+@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns2: <https://cacontology.projectvic.org#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/core#> .
+@prefix ns6: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_030/admission/1/extraction-confidence> a ns3:AssessmentResult ;
-    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_030/admission/1> ;
-    ns3:generatedBy <https://w3id.org/caselinker/resource/case/ncmec_2025_030> ;
-    ns3:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_030/admission/2/extraction-confidence> a ns3:AssessmentResult ;
-    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_030/admission/2> ;
-    ns3:generatedBy <https://w3id.org/caselinker/resource/case/ncmec_2025_030> ;
-    ns3:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_030/admission/3/extraction-confidence> a ns3:AssessmentResult ;
-    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_030/admission/3> ;
-    ns3:generatedBy <https://w3id.org/caselinker/resource/case/ncmec_2025_030> ;
-    ns3:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_030/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2025-01-14T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_030/event/csam>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_030/offense-event/charge-2> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2025_030/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/agency/department-of-defense> a ns4:LocalAgency .
-
-<https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> .
-
-<https://w3id.org/caselinker/resource/agency/maricopa-police-department> a ns4:LocalAgency .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_030/charge/1> a ns6:CSAM_Possession,
-        ns6:CriminalCharge ;
-    rdfs:label "child pornography" ;
-    ns6:indictmentCounts 2 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_030/charge/2> a ns6:CriminalCharge ;
-    rdfs:label "child exploitation" ;
-    rdfs:seeAlso <https://w3id.org/caselinker/resource/case/ncmec_2025_030/offense-event/charge-2> ;
-    ns2:chargeCluster "child_exploitation" ;
-    ns2:chargeOffenseEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_030/offense-event/charge-2> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_030/cybertip> a ns8:NCMECCybertipReport ;
-    ns8:supportedBy <https://w3id.org/caselinker/resource/agency/ncmec> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_030/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_030/legal-proceeding> a ns3:Event,
-        ns3:LegalEvent,
-        ns6:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): booked Grove into the Pinal County jail" ;
-    ns6:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_030/charge/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_030/charge/2> ;
-    ns6:hasProceedingBeginPoint "2025-01-14T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_030/legal-step/convicted> a ns3:Event,
-        ns3:LegalEvent,
-        ns6:LegalProceeding,
-        ns6:SentencingHearing ;
-    ns6:hasProceedingBeginPoint "2025-01-14T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_030/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns7:ageEstimate 24 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_030/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/agency/ncmec> a ns4:FederalAgency .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_030/phase/convicted> a ns3:Phase,
-        ns6:SentencingPhase ;
-    ns1:hasPhaseBeginPoint "2025-01-14T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/arizona> a ns3:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Arizona" ;
-    ns5:name "Arizona" .
-
-<https://w3id.org/caselinker/resource/location/grove> a ns3:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Grove" ;
-    ns5:name "Grove" .
-
-<https://w3id.org/caselinker/resource/location/pinal-county> a ns3:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Pinal County" ;
-    ns5:name "Pinal County" .
-
-<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
-    rdfs:label "chat" .
-
-<https://w3id.org/caselinker/resource/platform/kik> a <https://cacontology.projectvic.org/platforms#MessagingService> ;
-    rdfs:label "Kik" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_030> a ns1:CACInvestigation,
-        ns3:EnduringEntity ;
-    dcterms:created "2026-10-18 00:01:15.719612" ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_030> a ns2:CACInvestigation,
+        ns5:EnduringEntity ;
+    rdfs:label "Case ncmec_2025_030" ;
+    dcterms:created "2026-11-10T16:31:57.580074"^^xsd:dateTime ;
+    dcterms:date "2025-01-14"^^xsd:date ;
     dcterms:identifier "ncmec_2025_030" ;
-    dcterms:modified "2026-10-18 00:01:15.719612" ;
+    dcterms:modified "2026-11-12T01:34:17.638358"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2025_030/provenance> ;
     dcterms:source <https://www.inmaricopa.com/police-uncovered-a-decades-worth-of-child-porn-in-cobblestone-farms/>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/arizona>,
-        <https://w3id.org/caselinker/resource/location/grove>,
-        <https://w3id.org/caselinker/resource/location/pinal-county> ;
-    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_030/phase/convicted> ;
-    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_030/phase/convicted> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_030/admission/1>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2025_030/location/grove>,
+        <https://w3id.org/caselinker/resource/location/arizona-az>,
+        <https://w3id.org/caselinker/resource/location/pinal-county-az> ;
+    ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_030/phase/booked> ;
+    ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_030/phase/booked> ;
+    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_030/event/csam>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_030/legal-proceeding> ;
+    ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+        <https://w3id.org/caselinker/resource/agency/ncmec>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_030/agency/department-of-defense>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_030/agency/maricopa-police-department> ;
+    ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2025_030/admission/1>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_030/admission/2>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_030/admission/3>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_030/cybertip>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_030/event/csam>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_030/legal-proceeding>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_030/legal-step/convicted>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_030/offense-event/charge-2> ;
-    ns1:investigationStatus "unknown" ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/department-of-defense>,
-        <https://w3id.org/caselinker/resource/agency/icac>,
-        <https://w3id.org/caselinker/resource/agency/maricopa-police-department>,
-        <https://w3id.org/caselinker/resource/agency/ncmec> ;
-    ns2:mentionsLocation <https://w3id.org/caselinker/resource/location/arizona>,
-        <https://w3id.org/caselinker/resource/location/grove>,
-        <https://w3id.org/caselinker/resource/location/pinal-county> .
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_030/admission/3> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_030/admission/1/extraction-confidence> a ns5:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns5:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_030/admission/1> ;
+    ns5:hasConfidence 0.65 ;
+    ns5:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_030/admission/2/extraction-confidence> a ns5:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/2/extraction-confidence" ;
+    ns5:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_030/admission/2> ;
+    ns5:hasConfidence 0.65 ;
+    ns5:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_030/admission/3/extraction-confidence> a ns5:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/3/extraction-confidence" ;
+    ns5:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_030/admission/3> ;
+    ns5:hasConfidence 0.65 ;
+    ns5:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_030/person/offender/1/age> a ns6:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns6:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2025_030/person/offender/1> ;
+    ns6:concernsAgeQuality ns6:Age ;
+    ns6:hasAgeInYears 24.0 .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_030/role/offender/1/has-role> a ns3:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2025_030/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2025_030/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/agency/icac> a ns5:OrganizationLikeEntity,
+        <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
+    rdfs:label "ICAC Task Force" ;
+    skos:altLabel "ICAC" ;
+    ns3:name "ICAC Task Force" .
+
+<https://w3id.org/caselinker/resource/agency/ncmec> a ns5:OrganizationLikeEntity,
+        ns1:FederalAgency ;
+    rdfs:label "National Center for Missing and Exploited Children" ;
+    skos:altLabel "NCMEC" ;
+    ns3:name "National Center for Missing and Exploited Children" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_030/agency/department-of-defense> a ns5:OrganizationLikeEntity,
+        ns1:LocalAgency ;
+    rdfs:label "Department of Defense" ;
+    ns3:name "Department of Defense" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_030/agency/maricopa-police-department> a ns5:OrganizationLikeEntity,
+        ns1:LocalAgency ;
+    rdfs:label "Maricopa Police Department" ;
+    ns3:name "Maricopa Police Department" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_030/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
+    rdfs:label "child pornography" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_030/charge/2> a ns4:CriminalCharge ;
+    rdfs:label "child exploitation" ;
+    dcterms:subject ns2:ChildSexualAbuseEvent .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_030/legal-proceeding> a ns5:Event,
+        ns5:LegalEvent,
+        ns4:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    rdfs:comment "Pretrial detention facility (not a sentence): booked Grove into the Pinal County jail" ;
+    ns4:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_030/charge/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_030/charge/2> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_030/location/grove> a ns5:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Grove" ;
+    ns3:name "Grove" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_030/role/offender/1> a ns4:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_030/event/csam> .
+
+<https://w3id.org/caselinker/resource/location/arizona-az> a ns5:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Arizona" ;
+    dcterms:identifier "fips:04" ;
+    ns3:name "Arizona" .
+
+<https://w3id.org/caselinker/resource/location/pinal-county-az> a ns5:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Pinal County" ;
+    dcterms:identifier "fips:04021" ;
+    ns3:name "Pinal County" .
+
+<https://w3id.org/caselinker/resource/platform/chat> a ns5:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
+    rdfs:label "chat" ;
+    ns3:name "chat" .
+
+<https://w3id.org/caselinker/resource/platform/kik> a ns5:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#MessagingService> ;
+    rdfs:label "Kik" ;
+    ns3:name "Kik" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_030/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "had more child pornography on his cell phone, and when officers checked they found more than 50 files dated November ..." ;
     dcterms:source <https://www.inmaricopa.com/police-uncovered-a-decades-worth-of-child-porn-in-cobblestone-farms/> ;
-    ns2:admissionContext "ases the material from people in Kik group chats for anywhere between $20 to $40 a file. Grove admitted he had more child pornography on..." ;
-    ns2:admissionFrame "admitted_he_she" ;
-    ns2:admissionTheme "harm_conduct" ;
-    ns2:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/ncmec_2025_030/role/offender/1> ;
-    ns2:evidenceTier "press_release_stated" ;
-    ns2:quoteType "paraphrase" ;
-    ns5:description "had more child pornography on his cell phone, and when officers checked they found more than 50 files dated November 2015 through November 2024" .
+    ns3:description "had more child pornography on his cell phone, and when officers checked they found more than 50 files dated November 2015 through November 2024" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_030/admission/2> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "uploading illegal porn on the Kik account for a long time before being recently banned" ;
     dcterms:source <https://www.inmaricopa.com/police-uncovered-a-decades-worth-of-child-porn-in-cobblestone-farms/> ;
-    ns2:admissionContext "ve near his Cobblestone Farms home on Celtic Avenue, where he reportedly said he has been addicted to child porn for the last four years,..." ;
-    ns2:admissionFrame "admitted_to" ;
-    ns2:admissionTheme "harm_conduct",
-        "tech_use" ;
-    ns2:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/ncmec_2025_030/role/offender/1> ;
-    ns2:evidenceTier "press_release_stated" ;
-    ns2:quoteType "paraphrase" ;
-    ns5:description "uploading illegal porn on the Kik account for a long time before being recently banned" .
+    ns3:description "uploading illegal porn on the Kik account for a long time before being recently banned" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_030/admission/3> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "has been addicted to child porn for the last four years, and admitted to uploading illegal porn on the Kik account fo..." ;
     dcterms:source <https://www.inmaricopa.com/police-uncovered-a-decades-worth-of-child-porn-in-cobblestone-farms/> ;
-    ns2:admissionContext "rove. Officers arrested Grove near his Cobblestone Farms home on Celtic Avenue, where he reportedly said he has been addicted to child po..." ;
-    ns2:admissionFrame "said_paraphrase" ;
-    ns2:admissionTheme "harm_conduct",
-        "tech_use" ;
-    ns2:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/ncmec_2025_030/role/offender/1> ;
-    ns2:evidenceTier "press_release_stated" ;
-    ns2:quoteType "paraphrase" ;
-    ns5:description "has been addicted to child porn for the last four years, and admitted to uploading illegal porn on the Kik account for a long time before being recently banned" .
+    ns3:description "has been addicted to child porn for the last four years, and admitted to uploading illegal porn on the Kik account for a long time before being recently banned" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_030/event/csam> a ns1:CSAMIncident,
-        ns3:Event ;
-    ns1:producesArtifact <https://w3id.org/caselinker/resource/case/ncmec_2025_030/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_030/admission/2>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_030/admission/3> ;
-    ns1:severityLevel 3 ;
-    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/chat>,
-        <https://w3id.org/caselinker/resource/platform/kik> ;
-    ns5:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2025_030/facet/csam> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_030/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2025-01-14T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2025_030/event/csam>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_030/offense-event/charge-2> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2025_030/person/offender/1> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_030/offense-event/charge-2> a ns1:ChildSexualAbuseEvent,
-        ns3:Event,
-        <https://ontology.unifiedcyberontology.org/uco/action/Crime> ;
-    rdfs:label "Inferred offense from charge: child exploitation" ;
-    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/chat>,
+<https://w3id.org/caselinker/resource/case/ncmec_2025_030/event/csam> a ns2:CSAMIncident,
+        ns5:Event ;
+    rdfs:label "CSAMIncident · event/csam" ;
+    ns2:severityLevel 3 ;
+    ns2:usesChannel <https://w3id.org/caselinker/resource/platform/chat>,
         <https://w3id.org/caselinker/resource/platform/kik> .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2025_030/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_030> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2025_030/provenance> .
+<https://w3id.org/caselinker/resource/case/ncmec_2025_030/phase/booked> a ns2:InitialPhase,
+        ns5:Phase ;
+    rdfs:label "Initial Phase · phase/booked" .
+

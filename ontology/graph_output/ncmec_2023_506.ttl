@@ -1,95 +1,94 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://w3id.org/caselinker/resource/vocab/> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/core#> .
+@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://cacontology.projectvic.org/detection#> .
+@prefix ns5: <https://cacontology.projectvic.org/core#> .
 @prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns7: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_506/admission/1/extraction-confidence> a ns3:AssessmentResult ;
-    ns3:assesses <https://w3id.org/caselinker/resource/case/ncmec_2023_506/admission/1> ;
-    ns3:generatedBy <https://w3id.org/caselinker/resource/case/ncmec_2023_506> ;
-    ns3:hasConfidence 0.65 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_506/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_506/event/possession> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_506/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/agency/washington-county-sheriffs-office> a ns6:LocalAgency .
-
 <https://w3id.org/caselinker/resource/case/ncmec_2023_506> a ns2:CACInvestigation,
-        ns3:EnduringEntity ;
-    dcterms:created "2026-10-17 22:21:34.070646" ;
+        ns5:EnduringEntity ;
+    rdfs:label "Case ncmec_2023_506" ;
+    dcterms:created "2026-11-10T10:05:21.058710"^^xsd:dateTime ;
+    dcterms:date "2023-01"^^xsd:gYearMonth ;
     dcterms:identifier "ncmec_2023_506" ;
-    dcterms:modified "2026-10-17 22:21:34.070646" ;
+    dcterms:modified "2026-11-10T10:05:21.058710"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2023_506/provenance> ;
     dcterms:source <https://www.johnsoncitypress.com/news/crime/johnson-city-man-accused-of-possessing-child-pornography/article_65e931d8-7825-11ee-a4b5-fbb1d20422e4.html>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/johnson-city> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2023_506/location/johnson-city> ;
     ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_506/phase/charged> ;
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_506/phase/charged> ;
-    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_506/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2023_506/event/distribution>,
+    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_506/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_506/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_506/legal-proceeding> ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/washington-county-sheriffs-office> ;
-    ns1:mentionsLocation <https://w3id.org/caselinker/resource/location/johnson-city> .
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2023_506/agency/washington-county-sheriffs-office> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2023_506/admission/1> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_506/admission/1/extraction-confidence> a ns5:AssessmentResult ;
+    rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
+    ns5:assesses <https://w3id.org/caselinker/resource/case/ncmec_2023_506/admission/1> ;
+    ns5:hasConfidence 0.65 ;
+    ns5:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_506/person/offender/1/age> a ns3:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns3:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2023_506/person/offender/1> ;
+    ns3:concernsAgeQuality ns3:Age ;
+    ns3:hasAgeInYears 20.0 .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_506/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2023_506/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2023_506/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_506/agency/washington-county-sheriffs-office> a ns5:OrganizationLikeEntity,
+        ns6:LocalAgency ;
+    rdfs:label "Washington County Sheriff's Office" ;
+    ns1:name "Washington County Sheriff's Office" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_506/charge/1> a ns4:CSAM_Possession,
         ns4:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_506/event/distribution> a ns3:Event,
-        ns4:CSAM_Distribution .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_506/event/distribution> a ns5:Event,
+        ns4:CSAM_Distribution ;
+    rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_506/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_506/legal-proceeding> a ns3:Event,
-        ns3:LegalEvent,
+<https://w3id.org/caselinker/resource/case/ncmec_2023_506/legal-proceeding> a ns5:Event,
+        ns5:LegalEvent,
         ns4:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): held at the Washington County Detention Center" ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_506/charge/1> ;
-    ns4:hasProceedingBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
+    ns4:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_506/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_506/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns5:ageEstimate 20 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_506/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_506/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_506/event/possession> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_506/person/offender/1> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_506/phase/charged> a ns2:LegalProcessPhase,
-        ns3:Phase ;
-    ns2:hasPhaseBeginPoint "2023-01-01T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/johnson-city> a ns3:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2023_506/location/johnson-city> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Johnson City" ;
-    ns7:name "Johnson City" .
+    ns1:name "Johnson City" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_506/role/offender/1> a ns4:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_506/event/possession> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_506/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "possessing, receiving and distributing child pornography" ;
     dcterms:source <https://www.johnsoncitypress.com/news/crime/johnson-city-man-accused-of-possessing-child-pornography/article_65e931d8-7825-11ee-a4b5-fbb1d20422e4.html> ;
-    ns1:admissionContext "in the 2400 block of Sinking Creek Road in Johnson City where they interviewed Brown. The deputies claim during that interview Brown admi..." ;
-    ns1:admissionFrame "admitted_to" ;
-    ns1:admissionTheme "harm_conduct" ;
-    ns1:attributedToOffenderRole <https://w3id.org/caselinker/resource/case/ncmec_2023_506/role/offender/1> ;
-    ns1:evidenceTier "press_release_stated" ;
-    ns1:quoteType "paraphrase" ;
-    ns7:description "possessing, receiving and distributing child pornography" .
+    ns1:description "possessing, receiving and distributing child pornography" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_506/event/possession> a ns2:CSAMIncident,
-        ns3:Event ;
-    ns2:producesArtifact <https://w3id.org/caselinker/resource/case/ncmec_2023_506/admission/1> ;
-    ns7:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2023_506/facet/possession> .
+        ns5:Event ;
+    rdfs:label "CSAMIncident · event/possession" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2023_506/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_506> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2023_506/provenance> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_506/phase/charged> a ns2:LegalProcessPhase,
+        ns5:Phase ;
+    rdfs:label "Legal Process Phase · phase/charged" .
+

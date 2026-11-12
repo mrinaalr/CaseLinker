@@ -1,76 +1,87 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns4: <https://cacontology.projectvic.org/core#> .
-@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns6: <https://cacontology.projectvic.org/detection#> .
-@prefix ns7: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns8: <https://cacontology.projectvic.org/us/ncmec#> .
+@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://cacontology.projectvic.org#> .
+@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns5: <https://cacontology.projectvic.org/core#> .
+@prefix ns6: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_067> a ns1:CACInvestigation,
-        ns4:EnduringEntity ;
-    dcterms:created "2026-10-17 22:21:28.364859" ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_067> a ns3:CACInvestigation,
+        ns5:EnduringEntity ;
+    rdfs:label "Case ncmec_2023_067" ;
+    dcterms:created "2026-11-10T10:02:51.782991"^^xsd:dateTime ;
+    dcterms:date "2023-12-26"^^xsd:date ;
     dcterms:identifier "ncmec_2023_067" ;
-    dcterms:modified "2026-10-17 22:21:28.364859" ;
+    dcterms:modified "2026-11-10T10:02:51.782991"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2023_067/provenance> ;
     dcterms:source <https://www.havasunews.com/news/new-information-released-in-child-porn-arrest/article_3b8389ac-a444-11ee-a7a8-675277c11fd2.html>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/lake-havasu-city> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_067/cybertip>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2023_067/event/possession>,
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/lake-havasu-city-city> ;
+    ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_067/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_067/legal-proceeding> ;
-    ns1:investigationStatus "unknown" ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/azicac-task-force>,
-        <https://w3id.org/caselinker/resource/agency/ncmec> ;
-    ns2:mentionsLocation <https://w3id.org/caselinker/resource/location/lake-havasu-city> .
+    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2023_067/agency/azicac-task-force> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_067/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2023-12-26T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_067/event/possession> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_067/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_067/assessment/semantic/possession-csam> a ns5:AssessmentResult ;
+    rdfs:label "semantic similarity · possession_csam" ;
+    dcterms:subject ns3:CSAMIncident ;
+    ns5:assesses <https://w3id.org/caselinker/resource/case/ncmec_2023_067/narrative> ;
+    ns5:hasConfidence 0.529 ;
+    ns5:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_067/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2023-12-26T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_067/event/possession> ;
-    ns4:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2023_067/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_067/person/offender/1/age> a ns6:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns6:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2023_067/person/offender/1> ;
+    ns6:concernsAgeQuality ns6:Age ;
+    ns6:hasAgeInYears 50.0 .
 
-<https://w3id.org/caselinker/resource/agency/azicac-task-force> a <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_067/role/offender/1/has-role> a ns4:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns4:isDirectional true ;
+    ns4:kindOfRelationship "Has_Role" ;
+    ns4:source <https://w3id.org/caselinker/resource/case/ncmec_2023_067/person/offender/1> ;
+    ns4:target <https://w3id.org/caselinker/resource/case/ncmec_2023_067/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_067/charge/1> a ns7:CSAM_Possession,
-        ns7:CriminalCharge ;
-    rdfs:label "child pornography" ;
-    ns7:indictmentCounts 2 .
+<https://w3id.org/caselinker/resource/agency/ncmec> a ns5:OrganizationLikeEntity,
+        ns2:FederalAgency ;
+    rdfs:label "National Center for Missing and Exploited Children" ;
+    skos:altLabel "NCMEC" ;
+    ns4:name "National Center for Missing and Exploited Children" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_067/cybertip> a ns8:NCMECCybertipReport ;
-    ns8:supportedBy <https://w3id.org/caselinker/resource/agency/ncmec> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_067/agency/azicac-task-force> a ns5:OrganizationLikeEntity,
+        <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
+    rdfs:label "AZICAC Task Force" ;
+    ns4:name "AZICAC Task Force" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_067/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_067/charge/1> a ns1:CSAM_Possession,
+        ns1:CriminalCharge ;
+    rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_067/legal-proceeding> a ns4:Event,
-        ns4:LegalEvent,
-        ns7:LegalProceeding ;
-    ns7:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_067/charge/1> ;
-    ns7:hasProceedingBeginPoint "2023-12-26T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/ncmec_2023_067/legal-proceeding> a ns5:Event,
+        ns5:LegalEvent,
+        ns1:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns1:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns1:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_067/charge/1> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_067/role/offender/1> a ns1:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_067/event/possession> .
+
+<https://w3id.org/caselinker/resource/location/lake-havasu-city-city> a ns5:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Lake Havasu City city" ;
+    dcterms:identifier "fips:0439370" ;
+    skos:altLabel "Lake Havasu City" ;
+    ns4:name "Lake Havasu City city" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_067/event/possession> a ns3:CSAMIncident,
+        ns5:Event ;
+    rdfs:label "CSAMIncident · event/possession" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_067/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns6:ageEstimate 50 .
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_067/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/agency/ncmec> a ns3:FederalAgency .
-
-<https://w3id.org/caselinker/resource/location/lake-havasu-city> a ns4:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Lake Havasu City" ;
-    ns5:name "Lake Havasu City" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_067/event/possession> a ns1:CSAMIncident,
-        ns4:Event ;
-    ns5:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2023_067/facet/possession> .
-
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_067> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2023_067/provenance> .

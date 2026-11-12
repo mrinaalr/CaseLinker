@@ -1,72 +1,65 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns3: <https://cacontology.projectvic.org/core#> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns5: <https://cacontology.projectvic.org/detection#> .
-@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_324> a ns1:CACInvestigation,
-        ns3:EnduringEntity ;
-    dcterms:created "2026-10-17 23:04:28.534143" ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case ncmec_2024_324" ;
+    dcterms:created "2026-11-10T21:25:14.220009"^^xsd:dateTime ;
+    dcterms:date "2024-10-08"^^xsd:date ;
     dcterms:identifier "ncmec_2024_324" ;
-    dcterms:modified "2026-10-17 23:04:28.534143" ;
+    dcterms:modified "2026-11-12T00:26:23.294311"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ncmec_2024_324/provenance> ;
     dcterms:source <https://www.shawlocal.com/northwest-herald/2024/10/08/island-lake-man-19-accused-of-possessing-images-of-child-sexual-abuse/>,
         "NCMEC" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/island-lake>,
-        <https://w3id.org/caselinker/resource/location/mchenry-county> ;
-    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_324/phase/convicted> ;
-    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_324/phase/convicted> ;
-    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_324/event/possession>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_324/legal-step/convicted> ;
-    ns2:mentionsLocation <https://w3id.org/caselinker/resource/location/island-lake>,
-        <https://w3id.org/caselinker/resource/location/mchenry-county> .
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2024_324/location/mchenry-county>,
+        <https://w3id.org/caselinker/resource/location/island-lake-village> ;
+    ns1:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_324/phase/charged> ;
+    ns1:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_324/phase/charged> ;
+    ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_324/event/possession> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_324/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2024-10-08T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_324/event/possession> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_324/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_324/person/offender/1/age> a ns3:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns3:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_324/person/offender/1> ;
+    ns3:concernsAgeQuality ns3:Age ;
+    ns3:hasAgeInYears 19.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_324/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2024-10-08T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_324/event/possession> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/ncmec_2024_324/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_324/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2024_324/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2024_324/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_324/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_324/legal-step/convicted> a ns3:Event,
-        ns3:LegalEvent,
-        ns6:LegalProceeding,
-        ns6:SentencingHearing ;
-    ns6:hasProceedingBeginPoint "2024-10-08T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_324/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns5:ageEstimate 19 .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_324/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_324/phase/convicted> a ns3:Phase,
-        ns6:SentencingPhase ;
-    ns1:hasPhaseBeginPoint "2024-10-08T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/island-lake> a ns3:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Island Lake" ;
-    ns4:name "Island Lake" .
-
-<https://w3id.org/caselinker/resource/location/mchenry-county> a ns3:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_324/location/mchenry-county> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Mchenry County" ;
-    ns4:name "Mchenry County" .
+    ns2:name "Mchenry County" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_324/role/offender/1> a <https://cacontology.projectvic.org/legal-outcomes#DefendantRole> ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_324/event/possession> .
+
+<https://w3id.org/caselinker/resource/location/island-lake-village> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Island Lake village" ;
+    dcterms:identifier "fips:1737894" ;
+    skos:altLabel "Island Lake" ;
+    ns2:name "Island Lake village" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_324/event/possession> a ns1:CSAMIncident,
-        ns3:Event ;
-    ns1:severityLevel 3 ;
-    ns4:hasFacet <https://w3id.org/caselinker/resource/case/ncmec_2024_324/facet/possession> .
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/possession" ;
+    ns1:severityLevel 3 .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2024_324/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_324> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ncmec_2024_324/provenance> .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_324/phase/charged> a ns1:LegalProcessPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Legal Process Phase · phase/charged" .
+

@@ -1,85 +1,90 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/core#> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns4: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/de_ag_2015_003> a ns1:CACInvestigation,
-        ns2:EnduringEntity ;
-    dcterms:created "2026-10-18 01:01:30.604917" ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case de_ag_2015_003" ;
+    dcterms:created "2026-11-10T18:11:32.844866"^^xsd:dateTime ;
+    dcterms:date "2015-01-16"^^xsd:date ;
     dcterms:identifier "de_ag_2015_003" ;
-    dcterms:modified "2026-10-18 01:01:30.604917" ;
+    dcterms:modified "2026-11-10T18:11:32.844866"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/de_ag_2015_003/provenance> ;
     dcterms:source <https://news.delaware.gov/2015/01/16/child-predator-task-force-investigation-leads-to-arrest>,
         "DE AG" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/delaware>,
-        <https://w3id.org/caselinker/resource/location/little-creek> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/delaware-de>,
+        <https://w3id.org/caselinker/resource/location/little-creek-town-de> ;
     ns1:currentPhase <https://w3id.org/caselinker/resource/case/de_ag_2015_003/phase/charged> ;
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/de_ag_2015_003/phase/charged> ;
     ns1:hasStep <https://w3id.org/caselinker/resource/case/de_ag_2015_003/event/csam>,
         <https://w3id.org/caselinker/resource/case/de_ag_2015_003/legal-proceeding> ;
-    ns1:investigationStatus "unknown" ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/child-predator-task-force>,
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/child-predator-task-force-de-unverified>,
         <https://w3id.org/caselinker/resource/agency/delaware-child-predator-task-force>,
-        <https://w3id.org/caselinker/resource/agency/us-department-of-justice> ;
-    ns4:mentionsLocation <https://w3id.org/caselinker/resource/location/delaware>,
-        <https://w3id.org/caselinker/resource/location/little-creek> .
+        <https://w3id.org/caselinker/resource/agency/doj> .
 
-<https://w3id.org/caselinker/resource/case/de_ag_2015_003/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2015-01-16T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/de_ag_2015_003/event/csam> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/de_ag_2015_003/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/de_ag_2015_003/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/de_ag_2015_003/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/de_ag_2015_003/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/de_ag_2015_003/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2015-01-16T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/de_ag_2015_003/event/csam> ;
-    ns2:hasRole <https://w3id.org/caselinker/resource/case/de_ag_2015_003/person/victim/1> .
+<https://w3id.org/caselinker/resource/agency/child-predator-task-force-de-unverified> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns4:LocalAgency ;
+    rdfs:label "Child Predator Task Force" ;
+    ns2:name "Child Predator Task Force" .
 
-<https://w3id.org/caselinker/resource/agency/child-predator-task-force> a ns3:LocalAgency .
+<https://w3id.org/caselinker/resource/agency/delaware-child-predator-task-force> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns4:LocalAgency ;
+    rdfs:label "Delaware Child Predator Task Force" ;
+    ns2:name "Delaware Child Predator Task Force" .
 
-<https://w3id.org/caselinker/resource/agency/delaware-child-predator-task-force> a ns3:LocalAgency .
+<https://w3id.org/caselinker/resource/agency/doj> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns4:LocalAgency ;
+    rdfs:label "U.S. Department of Justice" ;
+    ns2:name "U.S. Department of Justice" .
 
-<https://w3id.org/caselinker/resource/agency/us-department-of-justice> a ns3:LocalAgency .
+<https://w3id.org/caselinker/resource/case/de_ag_2015_003/charge/1> a ns3:CSAM_Possession,
+        ns3:CriminalCharge ;
+    rdfs:label "dealing in child pornography" .
 
-<https://w3id.org/caselinker/resource/case/de_ag_2015_003/charge/1> a ns6:CSAM_Possession,
-        ns6:CriminalCharge ;
-    rdfs:label "dealing in child pornography" ;
-    ns6:indictmentCounts 11 .
+<https://w3id.org/caselinker/resource/case/de_ag_2015_003/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        ns3:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns3:chargeCount "11"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/de_ag_2015_003/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/de_ag_2015_003/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
+<https://w3id.org/caselinker/resource/case/de_ag_2015_003/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/de_ag_2015_003/legal-proceeding> a ns2:Event,
-        ns2:LegalEvent,
-        ns6:LegalProceeding ;
-    ns6:hasCharge <https://w3id.org/caselinker/resource/case/de_ag_2015_003/charge/1> ;
-    ns6:hasProceedingBeginPoint "2015-01-16T00:00:00Z"^^xsd:dateTimeStamp .
+<https://w3id.org/caselinker/resource/case/de_ag_2015_003/role/offender/1> a ns3:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" ;
+    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/de_ag_2015_003/event/csam> .
 
-<https://w3id.org/caselinker/resource/case/de_ag_2015_003/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/de_ag_2015_003/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/de_ag_2015_003/phase/charged> a ns1:LegalProcessPhase,
-        ns2:Phase ;
-    ns1:hasPhaseBeginPoint "2015-01-16T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/delaware> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/delaware-de> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Delaware" ;
-    ns5:name "Delaware" .
+    dcterms:identifier "fips:10" ;
+    ns2:name "Delaware" .
 
-<https://w3id.org/caselinker/resource/location/little-creek> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/little-creek-town-de> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Little Creek" ;
-    ns5:name "Little Creek" .
+    rdfs:label "Little Creek town" ;
+    dcterms:identifier "fips:1042870" ;
+    skos:altLabel "Little Creek" ;
+    ns2:name "Little Creek town" .
 
 <https://w3id.org/caselinker/resource/case/de_ag_2015_003/event/csam> a ns1:CSAMIncident,
-        ns2:Event ;
-    ns5:hasFacet <https://w3id.org/caselinker/resource/case/de_ag_2015_003/facet/csam> .
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/csam" .
 
+<https://w3id.org/caselinker/resource/case/de_ag_2015_003/phase/charged> a ns1:LegalProcessPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Legal Process Phase · phase/charged" .
 
-<https://w3id.org/caselinker/resource/case/de_ag_2015_003> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/de_ag_2015_003/provenance> .

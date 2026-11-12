@@ -1,23 +1,24 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/core#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns5: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns6: <https://cacontology.projectvic.org/detection#> .
-@prefix ns7: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ky_sp_2019_025> a ns2:CACInvestigation,
-        ns1:EnduringEntity ;
-    dcterms:created "2026-10-18 05:15:33.922815" ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case ky_sp_2019_025" ;
+    dcterms:created "2026-11-11T15:08:18.595945"^^xsd:dateTime ;
+    dcterms:date "2019-07-12"^^xsd:date ;
     dcterms:identifier "ky_sp_2019_025" ;
-    dcterms:modified "2026-10-18 05:15:33.922815" ;
+    dcterms:modified "2026-11-11T15:08:18.595945"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/ky_sp_2019_025/provenance> ;
     dcterms:source <https://www.kentuckystatepolice.ky.gov/news/hq-7-12-19/>,
         "KY SP" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/campbellsville>,
-        <https://w3id.org/caselinker/resource/location/ky> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/campbellsville-city-ky>,
+        <https://w3id.org/caselinker/resource/location/kentucky-ky> ;
     ns2:currentPhase <https://w3id.org/caselinker/resource/case/ky_sp_2019_025/phase/charged> ;
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/ky_sp_2019_025/phase/charged> ;
     ns2:hasStep <https://w3id.org/caselinker/resource/case/ky_sp_2019_025/event/distribution>,
@@ -25,65 +26,69 @@
         <https://w3id.org/caselinker/resource/case/ky_sp_2019_025/event/possession>,
         <https://w3id.org/caselinker/resource/case/ky_sp_2019_025/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/ky_sp_2019_025/operation> ;
-    ns7:involvesAgency <https://w3id.org/caselinker/resource/agency/kentucky-state-police-department> ;
-    ns5:mentionsLocation <https://w3id.org/caselinker/resource/location/campbellsville>,
-        <https://w3id.org/caselinker/resource/location/ky> .
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/kentucky-state-police-department> .
 
-<https://w3id.org/caselinker/resource/case/ky_sp_2019_025/role/offender/1> a ns2:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns2:hasRoleBeginPoint "2019-07-12T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ky_sp_2019_025/event/online-only>,
-        <https://w3id.org/caselinker/resource/case/ky_sp_2019_025/event/possession> ;
-    ns1:hasRole <https://w3id.org/caselinker/resource/case/ky_sp_2019_025/person/offender/1> .
+<https://w3id.org/caselinker/resource/case/ky_sp_2019_025/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ky_sp_2019_025/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 53.0 .
 
-<https://w3id.org/caselinker/resource/case/ky_sp_2019_025/role/victim/1> a ns2:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns2:hasRoleBeginPoint "2019-07-12T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ky_sp_2019_025/event/online-only>,
-        <https://w3id.org/caselinker/resource/case/ky_sp_2019_025/event/possession> ;
-    ns1:hasRole <https://w3id.org/caselinker/resource/case/ky_sp_2019_025/person/victim/1> .
+<https://w3id.org/caselinker/resource/case/ky_sp_2019_025/role/offender/1/has-role> a ns1:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ky_sp_2019_025/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ky_sp_2019_025/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/kentucky-state-police-department> a ns7:StateAgency .
+<https://w3id.org/caselinker/resource/agency/kentucky-state-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns3:StateAgency ;
+    rdfs:label "Kentucky State Police Department" ;
+    ns1:name "Kentucky State Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ky_sp_2019_025/event/distribution> a ns1:Event,
-        ns3:CSAM_Distribution .
-
-<https://w3id.org/caselinker/resource/case/ky_sp_2019_025/facet/possession> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/ky_sp_2019_025/legal-proceeding> a ns1:Event,
-        ns1:LegalEvent,
-        ns3:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): lodged in the Taylor County Detention Center" ;
-    ns3:hasProceedingBeginPoint "2019-07-12T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/ky_sp_2019_025/operation> a ns1:Event,
-        <https://cacontology.projectvic.org/taskforce#UndercoverUnit> .
-
-<https://w3id.org/caselinker/resource/case/ky_sp_2019_025/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns6:ageEstimate 53 .
-
-<https://w3id.org/caselinker/resource/case/ky_sp_2019_025/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/ky_sp_2019_025/phase/charged> a ns2:LegalProcessPhase,
-        ns1:Phase ;
-    ns2:hasPhaseBeginPoint "2019-07-12T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/campbellsville> a ns1:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Campbellsville" ;
-    ns4:name "Campbellsville" .
-
-<https://w3id.org/caselinker/resource/location/ky> a ns1:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Ky." ;
-    ns4:name "Ky." .
+<https://w3id.org/caselinker/resource/case/ky_sp_2019_025/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/legal-outcomes#CSAM_Distribution> ;
+    rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/ky_sp_2019_025/event/online-only> a ns2:ChildSexualAbuseEvent,
-        ns1:Event .
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "Child Sexual Abuse Event · event/online-only" .
 
 <https://w3id.org/caselinker/resource/case/ky_sp_2019_025/event/possession> a ns2:CSAMIncident,
-        ns1:Event ;
-    ns4:hasFacet <https://w3id.org/caselinker/resource/case/ky_sp_2019_025/facet/possession> .
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/possession" .
 
+<https://w3id.org/caselinker/resource/case/ky_sp_2019_025/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        <https://cacontology.projectvic.org/legal-outcomes#LegalProceeding> ;
+    rdfs:label "Event · legal-proceeding" ;
+    rdfs:comment "Pretrial detention facility (not a sentence): lodged in the Taylor County Detention Center" .
 
-<https://w3id.org/caselinker/resource/case/ky_sp_2019_025> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/ky_sp_2019_025/provenance> .
+<https://w3id.org/caselinker/resource/case/ky_sp_2019_025/operation> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/undercover#UndercoverOperation> ;
+    rdfs:label "Undercover Operation · operation" .
+
+<https://w3id.org/caselinker/resource/case/ky_sp_2019_025/role/offender/1> a <https://cacontology.projectvic.org/legal-outcomes#DefendantRole> ;
+    rdfs:label "Defendant Role · role/offender/1" .
+
+<https://w3id.org/caselinker/resource/location/campbellsville-city-ky> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Campbellsville city" ;
+    dcterms:identifier "fips:2112160" ;
+    skos:altLabel "Campbellsville" ;
+    ns1:name "Campbellsville city" .
+
+<https://w3id.org/caselinker/resource/location/kentucky-ky> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Kentucky" ;
+    dcterms:identifier "fips:21" ;
+    skos:altLabel "Ky." ;
+    ns1:name "Kentucky" .
+
+<https://w3id.org/caselinker/resource/case/ky_sp_2019_025/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/ky_sp_2019_025/phase/charged> a ns2:LegalProcessPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Legal Process Phase · phase/charged" .
+

@@ -1,26 +1,28 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns3: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns6: <https://cacontology.projectvic.org/detection#> .
-@prefix ns7: <https://cacontology.projectvic.org/custodial#> .
-@prefix ns8: <https://cacontology.projectvic.org/core#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/de_ag_2016_005> a ns1:CACInvestigation,
-        ns8:EnduringEntity ;
-    dcterms:created "2026-10-18 01:01:29.276851" ;
+        <https://cacontology.projectvic.org/core#EnduringEntity> ;
+    rdfs:label "Case de_ag_2016_005" ;
+    dcterms:created "2026-11-10T18:11:00.490790"^^xsd:dateTime ;
+    dcterms:date "2016-03-18"^^xsd:date ;
     dcterms:identifier "de_ag_2016_005" ;
-    dcterms:modified "2026-10-18 01:01:29.276851" ;
+    dcterms:modified "2026-11-10T18:11:00.490790"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/de_ag_2016_005/provenance> ;
     dcterms:source <https://news.delaware.gov/2016/03/18/rutherfordarrest>,
         "DE AG" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/camden>,
-        <https://w3id.org/caselinker/resource/location/delaware>,
-        <https://w3id.org/caselinker/resource/location/dover>,
-        <https://w3id.org/caselinker/resource/location/wyoming> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/location/camden-town-de>,
+        <https://w3id.org/caselinker/resource/location/delaware-de>,
+        <https://w3id.org/caselinker/resource/location/dover-city-de>,
+        <https://w3id.org/caselinker/resource/location/wyoming-wy> ;
     ns1:currentPhase <https://w3id.org/caselinker/resource/case/de_ag_2016_005/phase/charged> ;
     ns1:hasPhase <https://w3id.org/caselinker/resource/case/de_ag_2016_005/phase/charged> ;
     ns1:hasStep <https://w3id.org/caselinker/resource/case/de_ag_2016_005/event/csam>,
@@ -29,108 +31,138 @@
         <https://w3id.org/caselinker/resource/case/de_ag_2016_005/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/de_ag_2016_005/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/de_ag_2016_005/operation> ;
-    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/child-predator-task-force>,
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/child-predator-task-force-de-unverified>,
         <https://w3id.org/caselinker/resource/agency/delaware-child-predator-task-force>,
-        <https://w3id.org/caselinker/resource/agency/delaware-state-police-department> ;
-    ns3:mentionsLocation <https://w3id.org/caselinker/resource/location/camden>,
-        <https://w3id.org/caselinker/resource/location/delaware>,
-        <https://w3id.org/caselinker/resource/location/dover>,
-        <https://w3id.org/caselinker/resource/location/wyoming> .
+        <https://w3id.org/caselinker/resource/agency/delaware-state-police-department> .
 
-<https://w3id.org/caselinker/resource/agency/child-predator-task-force> a ns2:LocalAgency .
+<https://w3id.org/caselinker/resource/case/de_ag_2016_005/person/offender/1/age> a ns5:AgeAtTimeSituation ;
+    rdfs:label "Age At Time Situation · person/offender/1/age" ;
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/de_ag_2016_005/person/offender/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 35.0 .
 
-<https://w3id.org/caselinker/resource/agency/delaware-child-predator-task-force> a ns2:LocalAgency .
+<https://w3id.org/caselinker/resource/case/de_ag_2016_005/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/de_ag_2016_005/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/de_ag_2016_005/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/delaware-state-police-department> a ns2:StateAgency .
+<https://w3id.org/caselinker/resource/case/de_ag_2016_005/role/victim/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/victim/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/de_ag_2016_005/person/victim/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/de_ag_2016_005/role/victim/1> .
 
-<https://w3id.org/caselinker/resource/case/de_ag_2016_005/charge/1> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
+    rdfs:label "chat" ;
+    ns2:name "chat" .
+
+<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "social media" ;
+    ns2:name "social media" .
+
+<https://w3id.org/caselinker/resource/agency/child-predator-task-force-de-unverified> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns3:LocalAgency ;
+    rdfs:label "Child Predator Task Force" ;
+    ns2:name "Child Predator Task Force" .
+
+<https://w3id.org/caselinker/resource/agency/delaware-child-predator-task-force> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns3:LocalAgency ;
+    rdfs:label "Delaware Child Predator Task Force" ;
+    ns2:name "Delaware Child Predator Task Force" .
+
+<https://w3id.org/caselinker/resource/agency/delaware-state-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
+        ns3:StateAgency ;
+    rdfs:label "Delaware State Police Department" ;
+    ns2:name "Delaware State Police Department" .
+
+<https://w3id.org/caselinker/resource/case/de_ag_2016_005/charge/1> a ns6:CSAM_Possession,
+        ns6:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/de_ag_2016_005/event/multi-jurisdiction> a ns8:Event,
-        ns2:MultiJurisdictionalInvestigation .
-
-<https://w3id.org/caselinker/resource/case/de_ag_2016_005/event/trust-violation> a ns7:CustodialAbuse,
-        ns7:TrustViolation ;
-    ns7:violatesRelationship <https://w3id.org/caselinker/resource/case/de_ag_2016_005/relationship/father> .
-
-<https://w3id.org/caselinker/resource/case/de_ag_2016_005/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/de_ag_2016_005/legal-proceeding> a ns8:Event,
-        ns8:LegalEvent,
-        ns4:LegalProceeding ;
-    rdfs:comment "Pretrial detention facility (not a sentence): held at the James T. Vaughn Correctional Center" ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/de_ag_2016_005/charge/1> ;
-    ns4:hasProceedingBeginPoint "2016-03-18T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/de_ag_2016_005/operation> a ns8:Event,
-        <https://cacontology.projectvic.org/taskforce#UndercoverUnit> .
-
-<https://w3id.org/caselinker/resource/case/de_ag_2016_005/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    ns6:ageEstimate 35 .
-
-<https://w3id.org/caselinker/resource/case/de_ag_2016_005/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/de_ag_2016_005/relationship/father> a ns7:CustodialRelationship,
-        ns7:FamilialRelationship ;
-    ns7:involvesChild <https://w3id.org/caselinker/resource/case/de_ag_2016_005/role/victim/1> ;
-    ns7:involvesCustodian <https://w3id.org/caselinker/resource/case/de_ag_2016_005/role/offender/1> ;
-    ns7:relationshipType "father" .
-
-<https://w3id.org/caselinker/resource/case/de_ag_2016_005/role/offender/1> a ns1:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns1:hasRoleBeginPoint "2016-03-18T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/de_ag_2016_005/event/csam>,
-        <https://w3id.org/caselinker/resource/case/de_ag_2016_005/event/online-only> ;
-    ns8:hasRole <https://w3id.org/caselinker/resource/case/de_ag_2016_005/person/offender/1> .
-
-<https://w3id.org/caselinker/resource/case/de_ag_2016_005/role/victim/1> a ns1:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns1:hasRoleBeginPoint "2016-03-18T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/de_ag_2016_005/event/csam>,
-        <https://w3id.org/caselinker/resource/case/de_ag_2016_005/event/online-only> ;
-    ns8:hasRole <https://w3id.org/caselinker/resource/case/de_ag_2016_005/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/case/de_ag_2016_005/phase/charged> a ns1:LegalProcessPhase,
-        ns8:Phase ;
-    ns1:hasPhaseBeginPoint "2016-03-18T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/location/camden> a ns8:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Camden" ;
-    ns5:name "Camden" .
-
-<https://w3id.org/caselinker/resource/location/delaware> a ns8:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Delaware" ;
-    ns5:name "Delaware" .
-
-<https://w3id.org/caselinker/resource/location/dover> a ns8:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Dover" ;
-    ns5:name "Dover" .
-
-<https://w3id.org/caselinker/resource/location/wyoming> a ns8:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Wyoming" ;
-    ns5:name "Wyoming" .
-
-<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
-    rdfs:label "chat" .
-
-<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "social media" .
-
 <https://w3id.org/caselinker/resource/case/de_ag_2016_005/event/csam> a ns1:CSAMIncident,
-        ns8:Event ;
-    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/chat>,
-        <https://w3id.org/caselinker/resource/platform/social-media> ;
-    ns5:hasFacet <https://w3id.org/caselinker/resource/case/de_ag_2016_005/facet/csam> .
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "CSAMIncident · event/csam" .
+
+<https://w3id.org/caselinker/resource/case/de_ag_2016_005/event/multi-jurisdiction> a <https://cacontology.projectvic.org/core#Event>,
+        ns3:MultiJurisdictionalInvestigation ;
+    rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" .
 
 <https://w3id.org/caselinker/resource/case/de_ag_2016_005/event/online-only> a ns1:ChildSexualAbuseEvent,
-        ns8:Event ;
-    ns1:usesChannel <https://w3id.org/caselinker/resource/platform/chat>,
-        <https://w3id.org/caselinker/resource/platform/social-media> .
+        <https://cacontology.projectvic.org/core#Event> ;
+    rdfs:label "Child Sexual Abuse Event · event/online-only" .
 
+<https://w3id.org/caselinker/resource/case/de_ag_2016_005/event/trust-violation> a ns4:CustodialAbuse,
+        ns4:TrustViolation ;
+    rdfs:label "Custodial Abuse · event/trust-violation" ;
+    ns4:perpetratedBy <https://w3id.org/caselinker/resource/case/de_ag_2016_005/role/offender/1> ;
+    ns4:violatesRelationship <https://w3id.org/caselinker/resource/case/de_ag_2016_005/relationship/father> .
 
-<https://w3id.org/caselinker/resource/case/de_ag_2016_005> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/de_ag_2016_005/provenance> .
+<https://w3id.org/caselinker/resource/case/de_ag_2016_005/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/core#LegalEvent>,
+        ns6:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    rdfs:comment "Pretrial detention facility (not a sentence): held at the James T. Vaughn Correctional Center" ;
+    ns6:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns6:hasCharge <https://w3id.org/caselinker/resource/case/de_ag_2016_005/charge/1> .
+
+<https://w3id.org/caselinker/resource/case/de_ag_2016_005/operation> a <https://cacontology.projectvic.org/core#Event>,
+        <https://cacontology.projectvic.org/undercover#UndercoverOperation> ;
+    rdfs:label "Undercover Operation · operation" .
+
+<https://w3id.org/caselinker/resource/case/de_ag_2016_005/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
+
+<https://w3id.org/caselinker/resource/case/de_ag_2016_005/relationship/father> a ns4:CustodialRelationship,
+        ns4:FamilialRelationship ;
+    rdfs:label "Custodial Relationship · relationship/father" ;
+    ns4:involvesChild <https://w3id.org/caselinker/resource/case/de_ag_2016_005/role/victim/1> ;
+    ns4:involvesCustodian <https://w3id.org/caselinker/resource/case/de_ag_2016_005/role/offender/1> ;
+    ns4:relationshipType "parent" ;
+    ns2:isDirectional true ;
+    ns2:source <https://w3id.org/caselinker/resource/case/de_ag_2016_005/role/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/de_ag_2016_005/role/victim/1> .
+
+<https://w3id.org/caselinker/resource/location/camden-town-de> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Camden town" ;
+    dcterms:identifier "fips:1010760" ;
+    skos:altLabel "Camden" ;
+    ns2:name "Camden town" .
+
+<https://w3id.org/caselinker/resource/location/delaware-de> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Delaware" ;
+    dcterms:identifier "fips:10" ;
+    ns2:name "Delaware" .
+
+<https://w3id.org/caselinker/resource/location/dover-city-de> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Dover city" ;
+    dcterms:identifier "fips:1021200" ;
+    skos:altLabel "Dover" ;
+    ns2:name "Dover city" .
+
+<https://w3id.org/caselinker/resource/location/wyoming-wy> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Wyoming" ;
+    dcterms:identifier "fips:56" ;
+    ns2:name "Wyoming" .
+
+<https://w3id.org/caselinker/resource/case/de_ag_2016_005/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/de_ag_2016_005/phase/charged> a ns1:LegalProcessPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Legal Process Phase · phase/charged" .
+
+<https://w3id.org/caselinker/resource/case/de_ag_2016_005/role/victim/1> a ns1:VictimRole ;
+    rdfs:label "Victim Role · role/victim/1" .
+
+<https://w3id.org/caselinker/resource/case/de_ag_2016_005/role/offender/1> a ns6:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" .
+

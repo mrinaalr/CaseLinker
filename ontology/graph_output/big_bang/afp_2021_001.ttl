@@ -1,113 +1,125 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns3: <https://cacontology.projectvic.org/core#> .
+@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/custodial#> .
 @prefix ns4: <https://cacontology.projectvic.org#> .
-@prefix ns5: <https://w3id.org/caselinker/resource/vocab/> .
-@prefix ns6: <https://cacontology.projectvic.org/custodial#> .
-@prefix ns7: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns6: <https://cacontology.projectvic.org/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/afp_2021_001> a ns4:CACInvestigation,
-        ns3:EnduringEntity ;
-    dcterms:created "2026-10-18 00:36:29.602129" ;
+        ns6:EnduringEntity ;
+    rdfs:label "Case afp_2021_001" ;
+    dcterms:created "2026-11-10T17:41:05.478124"^^xsd:dateTime ;
+    dcterms:date "2021-11-04"^^xsd:date ;
     dcterms:identifier "afp_2021_001" ;
-    dcterms:modified "2026-10-18 00:36:29.602129" ;
+    dcterms:modified "2026-11-10T17:41:05.478124"^^xsd:dateTime ;
+    dcterms:provenance <https://w3id.org/caselinker/resource/case/afp_2021_001/provenance> ;
     dcterms:source <https://www.afp.gov.au/news-centre/media-release/online-child-exploitation-podcast-nominated-award>,
         "AFP" ;
-    dcterms:spatial <https://w3id.org/caselinker/resource/location/australia> ;
+    dcterms:spatial <https://w3id.org/caselinker/resource/case/afp_2021_001/location/australia> ;
     ns4:hasStep <https://w3id.org/caselinker/resource/case/afp_2021_001/event/csam>,
         <https://w3id.org/caselinker/resource/case/afp_2021_001/event/multi-jurisdiction>,
         <https://w3id.org/caselinker/resource/case/afp_2021_001/event/online-only>,
         <https://w3id.org/caselinker/resource/case/afp_2021_001/event/sextortion>,
         <https://w3id.org/caselinker/resource/case/afp_2021_001/event/trust-violation>,
-        <https://w3id.org/caselinker/resource/case/afp_2021_001/legal-proceeding>,
-        <https://w3id.org/caselinker/resource/case/afp_2021_001/offense-event/charge-3> ;
-    ns7:involvesAgency <https://w3id.org/caselinker/resource/agency/australian-federal-police-department> ;
-    ns5:mentionsLocation <https://w3id.org/caselinker/resource/location/australia> .
+        <https://w3id.org/caselinker/resource/case/afp_2021_001/legal-proceeding> ;
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/australian-federal-police-department> .
 
-<https://w3id.org/caselinker/resource/agency/australian-federal-police-department> a ns7:LocalAgency .
+<https://w3id.org/caselinker/resource/case/afp_2021_001/assessment/semantic/exploitive-positions> a ns6:AssessmentResult ;
+    rdfs:label "semantic similarity · exploitive_positions" ;
+    dcterms:subject ns3:PositionOfTrust ;
+    ns6:assesses <https://w3id.org/caselinker/resource/case/afp_2021_001/narrative> ;
+    ns6:hasConfidence 0.4871 ;
+    ns6:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/afp_2021_001/charge/1> a ns2:CSAM_Possession,
-        ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/afp_2021_001/role/offender/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/offender/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/afp_2021_001/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/afp_2021_001/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/afp_2021_001/role/victim/1/has-role> a ns2:Relationship ;
+    rdfs:label "Relationship · role/victim/1/has-role" ;
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/afp_2021_001/person/victim/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/afp_2021_001/role/victim/1> .
+
+<https://w3id.org/caselinker/resource/agency/australian-federal-police-department> a ns6:OrganizationLikeEntity,
+        ns5:LocalAgency ;
+    rdfs:label "Australian Federal Police" ;
+    ns2:name "Australian Federal Police" .
+
+<https://w3id.org/caselinker/resource/case/afp_2021_001/charge/1> a ns1:CSAM_Possession,
+        ns1:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/afp_2021_001/charge/2> a ns2:CriminalCharge ;
-    rdfs:label "sexual exploitation" ;
-    ns5:chargeCluster "sexual_exploitation_unspecified" .
+<https://w3id.org/caselinker/resource/case/afp_2021_001/charge/2> a ns1:CriminalCharge ;
+    rdfs:label "sexual exploitation" .
 
-<https://w3id.org/caselinker/resource/case/afp_2021_001/charge/3> a ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/afp_2021_001/charge/3> a ns1:CriminalCharge ;
     rdfs:label "child exploitation" ;
-    rdfs:seeAlso <https://w3id.org/caselinker/resource/case/afp_2021_001/offense-event/charge-3> ;
-    ns5:chargeCluster "child_exploitation" ;
-    ns5:chargeOffenseEvent <https://w3id.org/caselinker/resource/case/afp_2021_001/offense-event/charge-3> .
-
-<https://w3id.org/caselinker/resource/case/afp_2021_001/event/multi-jurisdiction> a ns3:Event,
-        ns7:MultiJurisdictionalInvestigation ;
-    ns7:crossesBorders true .
-
-<https://w3id.org/caselinker/resource/case/afp_2021_001/event/trust-violation> a ns6:CustodialAbuse,
-        ns6:TrustViolation ;
-    ns6:violatesRelationship <https://w3id.org/caselinker/resource/case/afp_2021_001/relationship/father> .
-
-<https://w3id.org/caselinker/resource/case/afp_2021_001/facet/csam> a <https://ontology.unifiedcyberontology.org/uco/observable/ContentDataFacet> .
-
-<https://w3id.org/caselinker/resource/case/afp_2021_001/legal-proceeding> a ns3:Event,
-        ns3:LegalEvent,
-        ns2:LegalProceeding ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/afp_2021_001/charge/1>,
-        <https://w3id.org/caselinker/resource/case/afp_2021_001/charge/2>,
-        <https://w3id.org/caselinker/resource/case/afp_2021_001/charge/3> ;
-    ns2:hasProceedingBeginPoint "2021-11-04T00:00:00Z"^^xsd:dateTimeStamp .
-
-<https://w3id.org/caselinker/resource/case/afp_2021_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/afp_2021_001/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> .
-
-<https://w3id.org/caselinker/resource/case/afp_2021_001/relationship/father> a ns6:CustodialRelationship,
-        ns6:FamilialRelationship ;
-    ns6:involvesChild <https://w3id.org/caselinker/resource/case/afp_2021_001/role/victim/1> ;
-    ns6:involvesCustodian <https://w3id.org/caselinker/resource/case/afp_2021_001/role/offender/1> ;
-    ns6:relationshipType "father" .
-
-<https://w3id.org/caselinker/resource/case/afp_2021_001/role/offender/1> a ns4:OffenderRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/OffenderRole> ;
-    ns4:hasRoleBeginPoint "2021-11-04T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/afp_2021_001/event/csam>,
-        <https://w3id.org/caselinker/resource/case/afp_2021_001/event/online-only>,
-        <https://w3id.org/caselinker/resource/case/afp_2021_001/event/sextortion>,
-        <https://w3id.org/caselinker/resource/case/afp_2021_001/offense-event/charge-3> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/afp_2021_001/person/offender/1> .
-
-<https://w3id.org/caselinker/resource/case/afp_2021_001/role/victim/1> a ns4:VictimRole,
-        <https://ontology.unifiedcyberontology.org/uco/role/VictimRole> ;
-    ns4:hasRoleBeginPoint "2021-11-04T00:00:00Z"^^xsd:dateTimeStamp ;
-    ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/afp_2021_001/event/csam>,
-        <https://w3id.org/caselinker/resource/case/afp_2021_001/event/online-only>,
-        <https://w3id.org/caselinker/resource/case/afp_2021_001/event/sextortion>,
-        <https://w3id.org/caselinker/resource/case/afp_2021_001/offense-event/charge-3> ;
-    ns3:hasRole <https://w3id.org/caselinker/resource/case/afp_2021_001/person/victim/1> .
-
-<https://w3id.org/caselinker/resource/location/australia> a ns3:PlaceLikeEntity,
-        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
-    rdfs:label "Australia" ;
-    ns1:name "Australia" .
+    dcterms:subject ns4:ChildSexualAbuseEvent .
 
 <https://w3id.org/caselinker/resource/case/afp_2021_001/event/csam> a ns4:CSAMIncident,
-        ns3:Event ;
-    ns1:hasFacet <https://w3id.org/caselinker/resource/case/afp_2021_001/facet/csam> .
+        ns6:Event ;
+    rdfs:label "CSAMIncident · event/csam" .
+
+<https://w3id.org/caselinker/resource/case/afp_2021_001/event/multi-jurisdiction> a ns6:Event,
+        ns5:MultiJurisdictionalInvestigation ;
+    rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" ;
+    ns5:crossesBorders true .
 
 <https://w3id.org/caselinker/resource/case/afp_2021_001/event/online-only> a ns4:ChildSexualAbuseEvent,
-        ns3:Event .
+        ns6:Event ;
+    rdfs:label "Child Sexual Abuse Event · event/online-only" .
 
-<https://w3id.org/caselinker/resource/case/afp_2021_001/event/sextortion> a ns3:Event,
-        <https://cacontology.projectvic.org/sextortion#SextortionIncident> .
+<https://w3id.org/caselinker/resource/case/afp_2021_001/event/sextortion> a ns6:Event,
+        <https://cacontology.projectvic.org/sextortion#SextortionIncident> ;
+    rdfs:label "Sextortion Incident · event/sextortion" .
 
-<https://w3id.org/caselinker/resource/case/afp_2021_001/offense-event/charge-3> a ns4:ChildSexualAbuseEvent,
-        ns3:Event,
-        <https://ontology.unifiedcyberontology.org/uco/action/Crime> ;
-    rdfs:label "Inferred offense from charge: child exploitation" .
+<https://w3id.org/caselinker/resource/case/afp_2021_001/event/trust-violation> a ns3:CustodialAbuse,
+        ns3:TrustViolation ;
+    rdfs:label "Custodial Abuse · event/trust-violation" ;
+    ns3:perpetratedBy <https://w3id.org/caselinker/resource/case/afp_2021_001/role/offender/1> ;
+    ns3:violatesRelationship <https://w3id.org/caselinker/resource/case/afp_2021_001/relationship/father> .
 
+<https://w3id.org/caselinker/resource/case/afp_2021_001/legal-proceeding> a ns6:Event,
+        ns6:LegalEvent,
+        ns1:LegalProceeding ;
+    rdfs:label "Event · legal-proceeding" ;
+    ns1:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns1:hasCharge <https://w3id.org/caselinker/resource/case/afp_2021_001/charge/1>,
+        <https://w3id.org/caselinker/resource/case/afp_2021_001/charge/2>,
+        <https://w3id.org/caselinker/resource/case/afp_2021_001/charge/3> .
 
-<https://w3id.org/caselinker/resource/case/afp_2021_001> <http://purl.org/dc/terms/provenance> <https://w3id.org/caselinker/resource/case/afp_2021_001/provenance> .
+<https://w3id.org/caselinker/resource/case/afp_2021_001/location/australia> a ns6:PlaceLikeEntity,
+        <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
+    rdfs:label "Australia" ;
+    ns2:name "Australia" .
+
+<https://w3id.org/caselinker/resource/case/afp_2021_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/afp_2021_001/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
+
+<https://w3id.org/caselinker/resource/case/afp_2021_001/relationship/father> a ns3:CustodialRelationship,
+        ns3:FamilialRelationship ;
+    rdfs:label "Custodial Relationship · relationship/father" ;
+    ns3:involvesChild <https://w3id.org/caselinker/resource/case/afp_2021_001/role/victim/1> ;
+    ns3:involvesCustodian <https://w3id.org/caselinker/resource/case/afp_2021_001/role/offender/1> ;
+    ns3:relationshipType "parent" ;
+    ns2:isDirectional true ;
+    ns2:source <https://w3id.org/caselinker/resource/case/afp_2021_001/role/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/afp_2021_001/role/victim/1> .
+
+<https://w3id.org/caselinker/resource/case/afp_2021_001/role/victim/1> a ns4:VictimRole ;
+    rdfs:label "Victim Role · role/victim/1" .
+
+<https://w3id.org/caselinker/resource/case/afp_2021_001/role/offender/1> a ns1:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" .
+
