@@ -51,7 +51,7 @@ _LEADING_CHROME = re.compile(
     re.IGNORECASE,
 )
 
-_ORDINAL = re.compile(r"^(?P<prefix>.+)_(?P<num>\d{3})$")
+_ORDINAL = re.compile(r"^(?P<prefix>.+)_(?P<num>\d{3,})$")
 
 
 class FingerprintVersionMismatch(RuntimeError):
