@@ -150,3 +150,43 @@ def test_describe_backends_exposes_limits():
     assert info["default_limit"] == 1000
     assert info["max_limit"] == 10_000
     assert info["default_timeout_s"] == 90.0
+
+
+def _fake_post(monkeypatch, status_code: int, body: str):
+    import httpx
+
+    from caselinker_mcp import sparql_tool
+
+    def handler(request):
+        return httpx.Response(status_code, text=body)
+
+    real = httpx.AsyncClient
+
+    def client(**kwargs):
+        return real(transport=httpx.MockTransport(handler), **kwargs)
+
+    monkeypatch.setattr(sparql_tool.httpx, "AsyncClient", client)
+    return sparql_tool
+
+
+def test_cancelled_query_is_an_error_not_partial_rows(monkeypatch):
+    # What hosted Oxigraph sends when it stops a long query: HTTP 200, half a document.
+    body = '{"head":{"vars":["a"]},"results":{"bindings":[The SPARQL operation has been cancelled'
+    tool = _fake_post(monkeypatch, 200, body)
+    out = asyncio.run(tool.run_sparql("SELECT ?a WHERE { ?a ?b ?c }", backend="live"))
+    assert "error" in out and "raw" not in out
+    assert "GRAPH ?g" in out["hint"]
+
+
+def test_complete_result_still_passes_through(monkeypatch):
+    body = '{"head":{"vars":["a"]},"results":{"bindings":[]}}'
+    tool = _fake_post(monkeypatch, 200, body)
+    out = asyncio.run(tool.run_sparql("SELECT ?a WHERE { ?a ?b ?c }", backend="live"))
+    assert "error" not in out and out["results"] == {"bindings": []}
+
+
+def test_unconfigured_store_says_where_to_query(monkeypatch):
+    body = '{"detail":"SPARQL store is not configured (set OXIGRAPH_URL)."}'
+    tool = _fake_post(monkeypatch, 503, body)
+    out = asyncio.run(tool.run_sparql("SELECT ?a WHERE { ?a ?b ?c }", backend="live"))
+    assert out["status_code"] == 503 and tool.PUBLIC_SPARQL_URL in out["hint"]

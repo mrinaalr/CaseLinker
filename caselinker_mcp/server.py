@@ -1670,6 +1670,15 @@ async def sparql_query(
     the public ``/sparql`` route: Update (INSERT/DELETE/LOAD/DROP/…) and SERVICE
     rejected; default outer LIMIT 1000 (max 10_000); default timeout 90s
     (clamped 1–600).
+
+    Graph layout: each case is one named graph ``…/resource/case/{id}``; its
+    evidence is in ``…/case/{id}/provenance``. Keep a join inside
+    ``GRAPH ?g { ... }`` and count ``DISTINCT ?g``; a join across the union
+    default graph fans out over shared platform / agency / location nodes and
+    can time out. A query the store stops returns ``error`` plus ``hint``, never
+    partial rows. The case's people and platforms are ``uco-core:object`` of the
+    case node; ``cac:usesChannel`` and ``cac:participatesInEvent`` exist only
+    where the case has a single offense event.
     """
     try:
         from caselinker_mcp.sparql_tool import run_sparql

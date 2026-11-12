@@ -182,3 +182,38 @@ def test_no_caselinker_shacl_violations_under_full_validation():
     for case in FX.CASES:
         buckets = full_validate(flatten_dataset(CaseToCAC().map_case(FX.case(case["id"]))[0]))
         assert dict(buckets["caselinker"]) == {}, case["id"]
+
+
+def _reachable_from_case(g, case_id):
+    """Nodes joined to the case IRI by any chain of edges, in either direction."""
+    start = BASE[f"case/{case_id}"]
+    adjacent = {}
+    for s, p, o in g:
+        if p != RDF.type and isinstance(o, URIRef):
+            adjacent.setdefault(s, set()).add(o)
+            adjacent.setdefault(o, set()).add(s)
+    seen, stack = {start}, [start]
+    while stack:
+        for nxt in adjacent.get(stack.pop(), ()):
+            if nxt not in seen:
+                seen.add(nxt)
+                stack.append(nxt)
+    return seen
+
+
+@pytest.mark.parametrize("case_id", ["fixture_full_001", "fixture_arrest_002"])
+def test_people_and_platforms_are_objects_of_the_investigation(case_id):
+    # fixture_full_001 has several CSA events, so nothing is paired with an event;
+    # its people and platforms must still hang off the case, not float beside it.
+    graph, g = _graph(case_id)
+    inv = BASE[f"case/{case_id}"]
+    objects = set(g.objects(inv, UCO_CORE.object))
+    people = _typed(g, URIRef("https://ontology.unifiedcyberontology.org/uco/identity/Person"))
+    platforms = _typed(g, CAC_CORE.DigitalSystemEntity)
+    assert people and platforms
+    assert people <= objects
+    assert platforms <= objects
+    reached = _reachable_from_case(g, case_id)
+    nlp_nodes = set(graph.get_context(GRAPH_NLP).subjects())
+    floating = {s for s in set(g.subjects()) if isinstance(s, URIRef)} - reached - nlp_nodes
+    assert floating == set(), sorted(floating)

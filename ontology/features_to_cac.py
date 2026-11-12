@@ -1005,6 +1005,7 @@ class CaseToCAC:
         self._link_to_single_event(
             det_g, case, event_uris, victim_uris, offender_uris, platform_uris
         )
+        self._link_to_case(det_g, inv_uri, victim_uris, offender_uris, platform_uris)
 
         # --- NLP mapping (separate named graph) ---
         self.map_nlp_features(nlp_g, case, inv_uri, warnings)
@@ -1184,7 +1185,7 @@ class CaseToCAC:
         case: Dict[str, Any],
         warnings: List[str],
     ) -> List[URIRef]:
-        """Create platform nodes (shared singletons). Linking is ``_link_to_single_event``."""
+        """Create platform nodes (shared singletons). Linking is ``_link_to_case`` and ``_link_to_single_event``."""
         platforms_raw = case.get("platforms_used") or []
         if isinstance(platforms_raw, str):
             try:
@@ -2439,6 +2440,35 @@ class CaseToCAC:
         levels = [SEVERITY_MAP[i][0] for i in severity_raw if i in SEVERITY_MAP]
         if levels and max(levels) > 0:
             g.add((evt_uri, CAC.severityLevel, Literal(max(levels), datatype=XSD.integer)))
+
+    def _link_to_case(
+        self,
+        g: Graph,
+        inv_uri: URIRef,
+        victim_uris: List[URIRef],
+        offender_uris: List[URIRef],
+        platform_uris: List[URIRef],
+    ) -> None:
+        """
+        List the case's people and platforms as objects of the investigation.
+
+        People and platforms are extracted per case, so the case is the scope
+        the release states for them. ``_link_to_single_event`` adds the event
+        edge only when the case has one CSA event; with none or several, these
+        nodes had no edge to the investigation at all and a query starting from
+        the case could not reach them. ``uco-core:object`` is the edge the
+        CyberTip report and admissions already use: a CASE investigation is a
+        ``ContextualCompilation`` of the objects it concerns. It says "this
+        case concerns this person / platform", never which act used which.
+        """
+        roles = set(victim_uris + offender_uris)
+        for rel in g.subjects(RDF.type, UCO_CORE.Relationship):
+            if g.value(rel, UCO_CORE.target) in roles:
+                person = g.value(rel, UCO_CORE.source)
+                if person is not None:
+                    g.add((inv_uri, UCO_CORE.object, person))
+        for p_uri in dict.fromkeys(platform_uris):
+            g.add((inv_uri, UCO_CORE.object, p_uri))
 
     def map_cybertip(
         self,

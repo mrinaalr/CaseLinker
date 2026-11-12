@@ -37,6 +37,14 @@ from sparql_proxy import (
 )
 
 _DEFAULT_LOCAL_OXIGRAPH = "http://127.0.0.1:7878"
+PUBLIC_SPARQL_URL = "https://caselinker.up.railway.app/sparql"
+_CANCELLED_MARK = "operation has been cancelled"
+_SCOPE_HINT = (
+    "Each case is one named graph. Put the join inside GRAPH ?g { ... } so it "
+    "stays within a case, start from a selective class, and aggregate with "
+    "COUNT(DISTINCT ?g). Joins across the union default graph fan out over "
+    "shared platform, agency and location nodes."
+)
 _DEFAULT_TIMEOUT_S = 90.0
 _MIN_TIMEOUT_S = 1.0
 _MAX_TIMEOUT_S = 600.0
@@ -238,16 +246,39 @@ async def _run_http(
     try:
         payload = response.json()
     except ValueError:
+        # Oxigraph streams results: a query it stops mid-way arrives as HTTP 200
+        # with half a JSON document. That is a failed query, not a result.
+        if response.status_code < 400 and (
+            _CANCELLED_MARK in body_text or body_text.lstrip().startswith('{"head"')
+        ):
+            return {
+                "error": (
+                    "The SPARQL store stopped the query before it finished "
+                    "(timeout or cancel). No rows are returned; the partial "
+                    "result is not usable."
+                ),
+                "hint": _SCOPE_HINT,
+                "backend": backend,
+                "endpoint": url,
+                "status_code": response.status_code,
+            }
         payload = {"raw": body_text[:4000]}
 
     if response.status_code >= 400:
-        return {
+        out = {
             "error": f"HTTP {response.status_code}",
             "detail": payload if isinstance(payload, dict) else body_text[:2000],
             "backend": backend,
             "endpoint": url,
             "status_code": response.status_code,
         }
+        if response.status_code == 503 and "not configured" in body_text:
+            out["hint"] = (
+                "This API has no SPARQL store behind it. Start a local Oxigraph on "
+                f"127.0.0.1:7878, or pass endpoint='{PUBLIC_SPARQL_URL}' to query "
+                "the hosted corpus."
+            )
+        return out
 
     if isinstance(payload, dict):
         out = dict(payload)
