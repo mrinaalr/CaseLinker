@@ -534,7 +534,7 @@
         title: "What CaseLinker is",
         lede: "CaseLinker is a project designed to aggregate, structure, and visualize statistical and contextual information from ICAC cases.",
         points: [
-          ["Corpus (documentation)", "10,711 case narratives, 131,339 extracted features, 4,428 distinct law-enforcement agencies, 70 sources. Per-source coverage is on Sources."],
+          ["Corpus (documentation)", "10,711 case narratives, 131,339 extracted features, 4,428 distinct law-enforcement agencies, 76 sources. Per-source coverage is on Sources."],
           ["Emphasis", "Feature extraction; clustering and linking; visualization — with particular attention to tasteful presentation of case content."],
           ["Architecture", "Five layers: Ingestion, Processing, Storage, Clustering & Analysis, Visualization."]
         ],
@@ -1474,6 +1474,15 @@
       setMode("atlas");
     }
     boot();
+    /* Corpus line reads live totals; the numbers written above are only the fallback. */
+    fetch("/api/stats").then((r) => (r.ok ? r.json() : null)).then((st) => {
+      const keys = ["total_cases", "unique_features", "unique_organizations", "source_count"];
+      if (!st || keys.some((k) => st[k] == null)) return;
+      const f = (n) => Number(n).toLocaleString("en-US");
+      const line = SLIDES.find((x) => x.id === "what").points[0];
+      line[1] = `${f(st.total_cases)} case narratives, ${f(st.unique_features)} extracted features, ${f(st.unique_organizations)} distinct law-enforcement agencies, ${f(st.source_count)} sources. Per-source coverage is on Sources.`;
+      if (SLIDES[state.i] && SLIDES[state.i].id === "what") renderSlide();
+    }).catch(() => {});
   </script>
 </body>
 </html>

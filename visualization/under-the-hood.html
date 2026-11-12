@@ -67,10 +67,10 @@
           <div class="source__s">press releases, dockets, PDFs</div>
         </div>
         <div class="detail" id="d-source">
-          <strong>Public case reports from 70 agencies and task forces</strong>
+          <strong>Public case reports from <span data-k="source_count">76</span> agencies and task forces</strong>
           <p>ICAC task force and police releases, state attorneys general, DOJ and NCMEC reports, and federal court records from PACER. Everything was public before CaseLinker read it.</p>
           <ul>
-            <li>70 sources. Each listing is fetched, every URL probed, and only public documents are downloaded</li>
+            <li><span data-k="source_count">76</span> sources. Each listing is fetched, every URL probed, and only public documents are downloaded</li>
             <li>Each case keeps its source, URL and fetch time, so any value can be traced back to a document</li>
           </ul>
         </div>
@@ -205,6 +205,12 @@ https://w3id.org/caselinker/resource/case/{id}/provenance  <span class="c"># oa:
     </div>
   </main>
 
+<script>
+  fetch('/api/stats').then(function (r) { return r.ok ? r.json() : null; }).then(function (s) {
+    if (!s) return;
+    document.querySelectorAll('[data-k]').forEach(function (el) { var v = s[el.getAttribute('data-k')]; if (v != null) el.textContent = Number(v).toLocaleString('en-US'); });
+  }).catch(function () {});
+</script>
 <script>
 (function () {
   var items = Array.prototype.slice.call(document.querySelectorAll('[data-layer]'));
