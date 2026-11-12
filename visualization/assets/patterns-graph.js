@@ -847,7 +847,7 @@
                 /* A click must not move the graph: the simulation is only reheated once the pointer actually drags. */
                 .on('start', (event, d) => { d.fx = d.x; d.fy = d.y; d._dragged = false; })
                 .on('drag', (event, d) => {
-                    if (!d._dragged) { d._dragged = true; if (!event.active) simulation.alphaTarget(0.06).restart(); }
+                    if (!d._dragged) { d._dragged = true; simulation.alphaTarget(0.3).restart(); }
                     d.fx = event.x; d.fy = event.y;
                 })
                 .on('end', (event, d) => {
@@ -947,7 +947,7 @@
         fitToView(false);
         g.attr('class', 'gx-reveal');
         requestAnimationFrame(() => requestAnimationFrame(() => g.classed('is-in', true)));
-        simulation.alpha(0.08).alphaTarget(0).velocityDecay(0.6).on('tick', paint);
+        simulation.alpha(0.08).alphaTarget(0).velocityDecay(0.4).on('tick', paint);
         simulation.restart();
 
         window.addEventListener('resize', () => {
