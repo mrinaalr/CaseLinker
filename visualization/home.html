@@ -73,13 +73,13 @@
       <a class="tool" href="/visualization"><div class="t">Platform affordances</div><div class="d">Affordance → misuse → harm, with the passages behind each</div></a>
       <a class="tool" href="/search"><div class="t">Search</div><div class="d">Facet partition into cohorts</div></a>
       <a class="tool" href="/audit"><div class="t">Audit</div><div class="d">Every extracted value against its span</div></a>
-      <a class="tool" href="/sources"><div class="t">Sources</div><div class="d">70 agencies and task forces the cases come from</div></a>
+      <a class="tool" href="/sources"><div class="t">Sources</div><div class="d"><span data-k="source_count">76</span> agencies and task forces the cases come from</div></a>
       <a class="tool" href="/under-the-hood"><div class="t">Under the hood</div><div class="d">Pipeline, stores, API, MCP</div></a>
     </nav>
 
     <div class="meta" id="stats">
       <span><b data-k="total_cases">10,711</b> cases</span>
-      <span><b data-k="source_count">70</b> sources</span>
+      <span><b data-k="source_count">76</b> sources</span>
       <span><b data-k="unique_organizations">4,238</b> agencies</span>
       <span><b data-k="unique_features">131,332</b> extracted features</span>
       <span><a href="https://caseontology.org" rel="noopener" title="Cyber-investigation Analysis Standard Expression">CASE</a> · <a href="https://unifiedcyberontology.org" rel="noopener" title="Unified Cyber Ontology">UCO</a> · <a href="https://github.com/Project-VIC-International/CAC-Ontology" rel="noopener" title="Crimes Against Children Ontology (Project VIC)">CAC</a></span>
@@ -90,7 +90,7 @@
 <script>
   fetch('/api/stats').then(function (r) { return r.ok ? r.json() : null; }).then(function (s) {
     if (!s) return;
-    document.querySelectorAll('#stats [data-k]').forEach(function (el) { var v = s[el.getAttribute('data-k')]; if (v != null) el.textContent = Number(v).toLocaleString('en-US'); });
+    document.querySelectorAll('[data-k]').forEach(function (el) { var v = s[el.getAttribute('data-k')]; if (v != null) el.textContent = Number(v).toLocaleString('en-US'); });
   }).catch(function () {});
 </script>
 </body>

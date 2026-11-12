@@ -174,9 +174,9 @@ Visit the **Sources** page for agency links and what is already in the corpus: [
 Processed sources include:
 
 - **ICAC task forces / regional units** — Arizona ICAC, Silicon Valley ICAC, South Florida ICAC, NOVA-DC ICAC, plus ICAC-tagged feeds from state and local newsrooms
-- **State Attorneys General / state DOJs** — e.g. Texas, Illinois, Pennsylvania, New Jersey, Florida, Ohio, Washington, Oregon, Utah, New Mexico, Mississippi, Louisiana, South Carolina, Hawaii, Vermont, Rhode Island, Delaware, Montana, South Dakota, Wisconsin, Idaho
-- **State police / investigative bureaus** — e.g. Michigan SP, New York SP, TBI, GBI, NC SBI, Kentucky SP, Nebraska SP, Wyoming DCI, Iowa DCI, ALEA, Maryland SP, Minnesota BCA, Arkansas DPS
-- **Local police / sheriffs / prosecutors** — e.g. LAPD, SJPD, SDPD, SPD, LVMPD, CSPD, Anchorage PD; Fresno / Osceola / Washoe / Sedgwick sheriffs; Cook County State's Attorney
+- **State Attorneys General / state DOJs** — e.g. Texas, Illinois, Pennsylvania, New Jersey, Florida, Ohio, Washington, Oregon, Utah, New Mexico, Mississippi, Louisiana, South Carolina, Hawaii, Vermont, Rhode Island, Delaware, Montana, South Dakota, Wisconsin, Idaho, Kentucky
+- **State police / investigative bureaus** — e.g. Michigan SP, New York SP, TBI, GBI, NC SBI, Kentucky SP, Nebraska SP, Wyoming DCI, Iowa DCI, ALEA, Maryland SP, Minnesota BCA, Arkansas DPS, Louisiana SP
+- **Local police / sheriffs / prosecutors** — e.g. LAPD, SJPD, SDPD, SPD, LVMPD, CSPD, Anchorage PD, Metro Nashville PD; Fresno / Osceola / Washoe / Sedgwick / Sacramento sheriffs; Cook County State's Attorney; Ocean County (NJ) Prosecutor; Maricopa County (AZ) Attorney
 - **NCMEC** — public case summaries and CyberTipline-related publications
 - **Federal** — DOJ CEOS (incl. 2002–2008 archives); ICE/HSI; CBP; NCIS; Army CID; AF OSI; USSS; U.S. Marshals Service
 - **International** — Australian Federal Police; Queensland Police; Brazil Federal Police; Europol; UK NCA; New Zealand DIA; Police Scotland; Philippines NBI; Alberta ALERT ICE; An Garda Síochána
