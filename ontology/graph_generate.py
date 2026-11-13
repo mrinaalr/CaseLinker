@@ -70,7 +70,7 @@ def generate_graphs(
     storage: Any = None,
 ) -> Dict[str, Any]:
     from features_to_cac import CaseToCAC, flatten_dataset, _write_serialized  # noqa: E402
-    from provenance_export import export_stored_case  # noqa: E402
+    from provenance_export import evidence_coverage, export_stored_case  # noqa: E402
 
     out_dir.mkdir(parents=True, exist_ok=True)
     done_path = out_dir / "done.txt"
@@ -87,6 +87,9 @@ def generate_graphs(
     no_provenance: List[str] = []
     shacl_ok: List[str] = []
     shacl_fail: List[Dict[str, Any]] = []
+    # Cases whose age, sentence or CyberTip nodes lack a linked annotation (#73).
+    # Reported, not fatal: an old resolution without winning ids links nothing.
+    coverage_gaps: List[Dict[str, str]] = []
 
     for i, cid in enumerate(ids, 1):
         if cid in already:
@@ -115,12 +118,18 @@ def generate_graphs(
             _reject_bad_iris(turtle, cid, "case graph")
 
             if provenance:
-                prov = export_stored_case(cid, out_dir, storage)
+                prov = export_stored_case(cid, out_dir, storage, evidence_nodes=getattr(mapper, "evidence_nodes", None))
                 if prov is None:
                     no_provenance.append(cid)
                     print(f"  NO_PROV {cid}", flush=True)
                 else:
-                    _reject_bad_iris(Path(prov).read_text(), cid, "provenance")
+                    prov_text = Path(prov).read_text()
+                    _reject_bad_iris(prov_text, cid, "provenance")
+                    from rdflib import Graph as _Graph  # noqa: E402
+
+                    covered, coverage_report = evidence_coverage(flat, _Graph().parse(data=prov_text, format="turtle"))
+                    if not covered:
+                        coverage_gaps.append({"case_id": cid, "report": coverage_report[:2000]})
 
             with done_path.open("a") as fh:
                 fh.write(cid + "\n")
@@ -151,6 +160,7 @@ def generate_graphs(
         "no_provenance": no_provenance,
         "shacl_ok": shacl_ok,
         "shacl_fail": shacl_fail,
+        "coverage_gaps": coverage_gaps,
         "out_dir": str(out_dir),
     }
 
@@ -289,9 +299,12 @@ def main(argv: Optional[List[str]] = None) -> int:
     )
     print(
         f"DONE generated={len(result['generated'])} skipped={len(result['skipped'])} "
-        f"fail={len(result['failed'])} no_provenance={len(result['no_provenance'])}",
+        f"fail={len(result['failed'])} no_provenance={len(result['no_provenance'])} "
+        f"coverage_gaps={len(result['coverage_gaps'])}",
         flush=True,
     )
+    for gap in result["coverage_gaps"][:20]:
+        print(f"  COVERAGE {gap['case_id']}", flush=True)
     return 1 if result["failed"] else 0
 
 
