@@ -1678,16 +1678,18 @@ async def sparql_query(
     can time out. A query the store reports as cancelled returns ``error`` plus
     ``hint`` instead of partial rows.
 
-    Reaching a case's people and platforms: ``cac:usesChannel`` and
-    ``cac:participatesInEvent`` exist only where the case has a single offense
-    event. Graphs generated since PR 82 also list every person and platform as
-    ``uco-core:object`` of the case node; a store loaded before that has the
-    edge for CyberTip reports and admissions only. Check which layout you are
-    querying before relying on it:
-    ``ASK { ?c <https://ontology.unifiedcyberontology.org/uco/core/object> ?p .
-    ?p a <https://ontology.unifiedcyberontology.org/uco/identity/Person> }``.
-    If it is false, find them inside the case's named graph instead
-    (``GRAPH ?g { ?p a uco-identity:Person }``).
+    The case node ``?case a cac:CACInvestigation`` has ``uco-core:object``
+    edges to every person, platform, CyberTip report and admission in the case.
+    ``cac:usesChannel`` (event → platform) and ``cac:participatesInEvent``
+    (role → event) exist only when the case has one offense event, because the
+    release states platforms and roles per case, not per act.
+
+    Evidence: in the provenance graph, an ``oa:Annotation`` that a resolution
+    used carries ``uco-core:object`` pointing at the case node it supports
+    (``person/{offender,victim}/N/age``, ``sentence/N``, ``cybertip``,
+    ``cybertip/reporter/{esp}``); its quote is ``oa:hasTarget/oa:hasSelector``
+    with ``oa:exact`` and ``oa:start``/``oa:end`` into the release text. Filter
+    ``?ann a oa:Annotation``: the case node uses ``uco-core:object`` too.
     """
     try:
         from caselinker_mcp.sparql_tool import run_sparql

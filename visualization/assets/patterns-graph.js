@@ -1496,7 +1496,7 @@
             'PREFIX cac: <https://cacontology.projectvic.org#>',
             'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>',
             'PREFIX dcterms: <http://purl.org/dc/terms/>',
-            'SELECT DISTINCT ?caseId WHERE {',
+            'SELECT DISTINCT ?caseId WHERE { GRAPH ?g {',
             '  ?inv a cac:CACInvestigation ; dcterms:identifier ?caseId .'
         ];
         if (classIri) {
@@ -1515,7 +1515,7 @@
             parts.push('  FILTER(CONTAINS(LCASE(STR(?agencyLabel)), "' + sparqlEscape(opts.agency.toLowerCase()) + '"))');
             parts.push('  { ?inv ?ra ?agency } UNION { ?x ?ra2 ?agency . ?inv ?rx ?x } .');
         }
-        parts.push('}');
+        parts.push('} }');
         parts.push('LIMIT 80');
         return parts.join('\n');
     }

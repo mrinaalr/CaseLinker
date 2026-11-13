@@ -157,3 +157,26 @@ def test_linked_provenance_still_passes_its_own_shapes(tmp_path, case_id, text):
     _result, out = _generate(tmp_path, {case_id: text})
     conforms, report = validate_provenance(Graph().parse(out / f"{case_id}.provenance.ttl", format="turtle"))
     assert conforms, report
+
+
+def test_the_case_node_object_edge_does_not_count_as_evidence():
+    # The case node lists its CyberTip report with uco-core:object too. Only an
+    # annotation pointing at the report is evidence for it.
+    from rdflib import Graph, Literal, Namespace, RDF, URIRef
+    from provenance_export import evidence_coverage
+
+    uco = Namespace("https://ontology.unifiedcyberontology.org/uco/core/")
+    ncmec = Namespace("https://cacontology.projectvic.org/us/ncmec#")
+    oa = Namespace("http://www.w3.org/ns/oa#")
+    case, tip = URIRef("urn:t:case"), URIRef("urn:t:case/cybertip")
+    case_graph = Graph()
+    case_graph.add((tip, RDF.type, ncmec.NCMECCybertipReport))
+    case_graph.add((case, uco.object, tip))
+    ok, _ = evidence_coverage(case_graph, Graph())
+    assert not ok
+    prov = Graph()
+    ann = URIRef("urn:t:case/assertion/1")
+    prov.add((ann, RDF.type, oa.Annotation))
+    prov.add((ann, uco.object, tip))
+    ok, report = evidence_coverage(case_graph, prov)
+    assert ok, report
