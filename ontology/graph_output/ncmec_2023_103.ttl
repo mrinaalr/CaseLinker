@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -25,13 +25,14 @@
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2023_103/phase/arrested> ;
     ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2023_103/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_103/legal-proceeding> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/illinois-state-police-department> .
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/illinois-state-police-department> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2023_103/person/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_103/person/offender/1/age> a ns3:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_103/person/offender/1/age> a ns5:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns3:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2023_103/person/offender/1> ;
-    ns3:concernsAgeQuality ns3:Age ;
-    ns3:hasAgeInYears 36.0 .
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2023_103/person/offender/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 36.0 .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_103/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -41,23 +42,23 @@
     ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2023_103/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/illinois-state-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:StateAgency ;
+        ns3:StateAgency ;
     rdfs:label "Illinois State Police Department" ;
     ns1:name "Illinois State Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_103/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_103/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
     rdfs:label "possession of child pornography" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_103/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns5:LegalProceeding ;
+        ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): Kalb County Jail" ;
-    ns5:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_103/charge/1> .
+    ns4:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_103/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_103/role/offender/1> a ns5:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_103/role/offender/1> a ns4:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2023_103/event/possession> .
 
@@ -86,10 +87,10 @@
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "CSAMIncident · event/possession" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_103/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
 <https://w3id.org/caselinker/resource/case/ncmec_2023_103/phase/arrested> a ns2:InitialPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Initial Phase · phase/arrested" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_103/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

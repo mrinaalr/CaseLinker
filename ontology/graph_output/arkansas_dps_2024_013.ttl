@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns1: <https://cacontology.projectvic.org/custodial#> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns4: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns5: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -26,9 +26,11 @@
     ns2:hasStep <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_013/event/distribution>,
         <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_013/event/possession>,
         <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_013/event/trust-violation> ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/arkansas-state-police-department>,
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/arkansas-state-police-department>,
         <https://w3id.org/caselinker/resource/agency/icac>,
-        <https://w3id.org/caselinker/resource/agency/nevada-county-sheriff-s-office-ar> .
+        <https://w3id.org/caselinker/resource/agency/nevada-county-sheriff-s-office-ar> ;
+    ns3:object <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_013/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_013/person/victim/1> .
 
 <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_013/person/offender/1/age> a ns4:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
@@ -36,82 +38,79 @@
     ns4:concernsAgeQuality ns4:Age ;
     ns4:hasAgeInYears 34.0 .
 
-<https://w3id.org/caselinker/resource/case/arkansas_dps_2024_013/role/offender/1/has-role> a ns1:Relationship ;
+<https://w3id.org/caselinker/resource/case/arkansas_dps_2024_013/role/offender/1/has-role> a ns3:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns1:isDirectional true ;
-    ns1:kindOfRelationship "Has_Role" ;
-    ns1:source <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_013/person/offender/1> ;
-    ns1:target <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_013/role/offender/1> .
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_013/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_013/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/arkansas_dps_2024_013/role/victim/1/has-role> a ns1:Relationship ;
+<https://w3id.org/caselinker/resource/case/arkansas_dps_2024_013/role/victim/1/has-role> a ns3:Relationship ;
     rdfs:label "Relationship · role/victim/1/has-role" ;
-    ns1:isDirectional true ;
-    ns1:kindOfRelationship "Has_Role" ;
-    ns1:source <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_013/person/victim/1> ;
-    ns1:target <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_013/role/victim/1> .
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_013/person/victim/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_013/role/victim/1> .
 
 <https://w3id.org/caselinker/resource/agency/arkansas-state-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:StateAgency ;
+        ns5:StateAgency ;
     rdfs:label "Arkansas State Police Department" ;
-    ns1:name "Arkansas State Police Department" .
+    ns3:name "Arkansas State Police Department" .
 
 <https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
         <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
     rdfs:label "ICAC Task Force" ;
     skos:altLabel "ICAC" ;
-    ns1:name "ICAC Task Force" .
+    ns3:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/agency/nevada-county-sheriff-s-office-ar> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:LocalAgency ;
+        ns5:LocalAgency ;
     rdfs:label "Nevada County Sheriff's Office" ;
     dcterms:identifier "ori:AR0500000" ;
-    ns1:name "Nevada County Sheriff's Office" .
+    ns3:name "Nevada County Sheriff's Office" .
 
 <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_013/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/legal-outcomes#CSAM_Distribution> ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/arkansas_dps_2024_013/event/trust-violation> a ns5:AuthorityAbuse,
-        ns5:TrustViolation ;
+<https://w3id.org/caselinker/resource/case/arkansas_dps_2024_013/event/trust-violation> a ns1:AuthorityAbuse,
+        ns1:TrustViolation ;
     rdfs:label "Authority Abuse · event/trust-violation" ;
-    ns5:perpetratedBy <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_013/role/offender/1> ;
-    ns5:violatesRelationship <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_013/relationship/coach> .
+    ns1:perpetratedBy <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_013/role/offender/1> ;
+    ns1:violatesRelationship <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_013/relationship/coach> .
 
-<https://w3id.org/caselinker/resource/case/arkansas_dps_2024_013/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
-
-<https://w3id.org/caselinker/resource/case/arkansas_dps_2024_013/relationship/coach> a ns5:Coach,
-        ns5:CustodialRelationship ;
+<https://w3id.org/caselinker/resource/case/arkansas_dps_2024_013/relationship/coach> a ns1:Coach,
+        ns1:CustodialRelationship ;
     rdfs:label "Coach · relationship/coach" ;
-    ns5:involvesChild <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_013/role/victim/1> ;
-    ns5:involvesCustodian <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_013/role/offender/1> ;
-    ns5:relationshipType "coach" ;
-    ns1:isDirectional true ;
-    ns1:source <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_013/role/offender/1> ;
-    ns1:target <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_013/role/victim/1> .
+    ns1:involvesChild <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_013/role/victim/1> ;
+    ns1:involvesCustodian <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_013/role/offender/1> ;
+    ns1:relationshipType "coach" ;
+    ns3:isDirectional true ;
+    ns3:source <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_013/role/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_013/role/victim/1> .
 
 <https://w3id.org/caselinker/resource/location/arkansas-ar> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Arkansas" ;
     dcterms:identifier "fips:05" ;
-    ns1:name "Arkansas" .
+    ns3:name "Arkansas" .
 
 <https://w3id.org/caselinker/resource/location/prescott-city-ar> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Prescott city" ;
     dcterms:identifier "fips:0557260" ;
     skos:altLabel "Prescott, Ark." ;
-    ns1:name "Prescott city" .
+    ns3:name "Prescott city" .
 
 <https://w3id.org/caselinker/resource/location/texarkana-city-ar> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Texarkana city" ;
     dcterms:identifier "fips:0568810" ;
     skos:altLabel "Texarkana" ;
-    ns1:name "Texarkana city" .
+    ns3:name "Texarkana city" .
 
-<https://w3id.org/caselinker/resource/case/arkansas_dps_2024_013/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+<https://w3id.org/caselinker/resource/case/arkansas_dps_2024_013/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
 
 <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_013/phase/arrested> a ns2:InitialPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
@@ -120,6 +119,9 @@
 <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_013/event/possession> a ns2:CSAMIncident,
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "CSAMIncident · event/possession" .
+
+<https://w3id.org/caselinker/resource/case/arkansas_dps_2024_013/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_013/role/victim/1> a ns2:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" ;

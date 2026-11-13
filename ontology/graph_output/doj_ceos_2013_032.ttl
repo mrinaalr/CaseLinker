@@ -1,10 +1,10 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns1: <https://cacontology.projectvic.org/platforms#> .
+@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns4: <https://cacontology.projectvic.org#> .
-@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns6: <https://cacontology.projectvic.org/platforms#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -35,80 +35,72 @@
         <https://w3id.org/caselinker/resource/case/doj_ceos_2013_032/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/doj_ceos_2013_032/legal-step/pleaded-guilty>,
         <https://w3id.org/caselinker/resource/case/doj_ceos_2013_032/operation> ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/ceos>,
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/ceos>,
         <https://w3id.org/caselinker/resource/agency/doj>,
         <https://w3id.org/caselinker/resource/agency/fbi>,
         <https://w3id.org/caselinker/resource/agency/pennsylvania-state-police-department>,
         <https://w3id.org/caselinker/resource/agency/usao>,
-        <https://w3id.org/caselinker/resource/case/doj_ceos_2013_032/agency/largo-police-department> .
+        <https://w3id.org/caselinker/resource/case/doj_ceos_2013_032/agency/largo-police-department> ;
+    ns3:object <https://w3id.org/caselinker/resource/case/doj_ceos_2013_032/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/chat>,
+        <https://w3id.org/caselinker/resource/platform/yahoo-chat> .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_032/person/offender/1/age> a ns5:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_032/person/offender/1/age> a ns2:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns5:ageSubject <https://w3id.org/caselinker/resource/case/doj_ceos_2013_032/person/offender/1> ;
-    ns5:concernsAgeQuality ns5:Age ;
-    ns5:hasAgeInYears 42.0 .
+    ns2:ageSubject <https://w3id.org/caselinker/resource/case/doj_ceos_2013_032/person/offender/1> ;
+    ns2:concernsAgeQuality ns2:Age ;
+    ns2:hasAgeInYears 42.0 .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_032/role/offender/1/has-role> a ns2:Relationship ;
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_032/role/offender/1/has-role> a ns3:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns2:isDirectional true ;
-    ns2:kindOfRelationship "Has_Role" ;
-    ns2:source <https://w3id.org/caselinker/resource/case/doj_ceos_2013_032/person/offender/1> ;
-    ns2:target <https://w3id.org/caselinker/resource/case/doj_ceos_2013_032/role/offender/1> .
-
-<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        ns6:AnonymousChatPlatform ;
-    rdfs:label "chat" ;
-    ns2:name "chat" .
-
-<https://w3id.org/caselinker/resource/platform/yahoo-chat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        ns6:MessagingService ;
-    rdfs:label "Yahoo Chat" ;
-    ns6:platformType "legacy" ;
-    ns2:name "Yahoo Chat" .
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/doj_ceos_2013_032/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/doj_ceos_2013_032/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/ceos> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:FederalAgency ;
+        ns5:FederalAgency ;
     rdfs:label "CEOS" ;
-    ns2:name "CEOS" .
+    ns3:name "CEOS" .
 
 <https://w3id.org/caselinker/resource/agency/doj> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:FederalAgency ;
+        ns5:FederalAgency ;
     rdfs:label "U.S. Department of Justice" ;
-    ns2:name "U.S. Department of Justice" .
+    ns3:name "U.S. Department of Justice" .
 
 <https://w3id.org/caselinker/resource/agency/fbi> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:FederalAgency ;
+        ns5:FederalAgency ;
     rdfs:label "Federal Bureau of Investigation" ;
     skos:altLabel "FBI" ;
-    ns2:name "Federal Bureau of Investigation" .
+    ns3:name "Federal Bureau of Investigation" .
 
 <https://w3id.org/caselinker/resource/agency/pennsylvania-state-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:StateAgency ;
+        ns5:StateAgency ;
     rdfs:label "Pennsylvania State Police Department" ;
-    ns2:name "Pennsylvania State Police Department" .
+    ns3:name "Pennsylvania State Police Department" .
 
 <https://w3id.org/caselinker/resource/agency/usao> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:FederalAgency ;
+        ns5:FederalAgency ;
     rdfs:label "U.S. Attorney's Office" ;
-    ns2:name "U.S. Attorney's Office" .
+    ns3:name "U.S. Attorney's Office" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_032/agency/largo-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:LocalAgency ;
+        ns5:LocalAgency ;
     rdfs:label "Largo Police Department" ;
-    ns2:name "Largo Police Department" .
+    ns3:name "Largo Police Department" .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_032/charge/1> a ns1:CSAM_Possession,
-        ns1:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_032/charge/1> a ns6:CSAM_Possession,
+        ns6:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_032/charge/2> a ns1:CSAM_Production,
-        ns1:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_032/charge/2> a ns6:CSAM_Production,
+        ns6:CriminalCharge ;
     rdfs:label "production of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_032/charge/3> a ns1:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_032/charge/3> a ns6:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_032/charge/4> a ns1:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_032/charge/4> a ns6:CriminalCharge ;
     rdfs:label "child exploitation" ;
     dcterms:subject ns4:ChildSexualAbuseEvent .
 
@@ -125,39 +117,39 @@
     rdfs:label "Production Offense · event/production" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_032/event/project-safe-childhood> a <https://cacontology.projectvic.org/core#Event>,
-        ns3:ProjectSafeChildhoodOperation ;
+        ns5:ProjectSafeChildhoodOperation ;
     rdfs:label "Project Safe Childhood Operation · event/project-safe-childhood" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_032/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns1:LegalProceeding ;
+        ns6:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns1:chargeCount "4"^^xsd:nonNegativeInteger ;
-    ns1:hasCharge <https://w3id.org/caselinker/resource/case/doj_ceos_2013_032/charge/1>,
+    ns6:chargeCount "4"^^xsd:nonNegativeInteger ;
+    ns6:hasCharge <https://w3id.org/caselinker/resource/case/doj_ceos_2013_032/charge/1>,
         <https://w3id.org/caselinker/resource/case/doj_ceos_2013_032/charge/2>,
         <https://w3id.org/caselinker/resource/case/doj_ceos_2013_032/charge/3>,
         <https://w3id.org/caselinker/resource/case/doj_ceos_2013_032/charge/4> .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_032/legal-step/pleaded-guilty> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns1:LegalProceeding,
-        ns1:PleaBargaining ;
+        ns6:LegalProceeding,
+        ns6:PleaBargaining ;
     rdfs:label "Plea Bargaining · legal-step/pleaded-guilty" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_032/location/kenton-county> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Kenton County" ;
-    ns2:name "Kenton County" .
+    ns3:name "Kenton County" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_032/location/riverview> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Riverview" ;
-    ns2:name "Riverview" .
+    ns3:name "Riverview" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_032/location/united-states> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "United States" ;
-    ns2:name "United States" .
+    ns3:name "United States" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_032/operation> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/undercover#UndercoverOperation> ;
@@ -170,31 +162,42 @@
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Florida" ;
     dcterms:identifier "fips:12" ;
-    ns2:name "Florida" .
+    ns3:name "Florida" .
 
 <https://w3id.org/caselinker/resource/location/kentucky-ky> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Kentucky" ;
     dcterms:identifier "fips:21" ;
-    ns2:name "Kentucky" .
+    ns3:name "Kentucky" .
 
 <https://w3id.org/caselinker/resource/location/pennsylvania-pa> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Pennsylvania" ;
     dcterms:identifier "fips:42" ;
-    ns2:name "Pennsylvania" .
+    ns3:name "Pennsylvania" .
 
 <https://w3id.org/caselinker/resource/location/tampa-city-fl> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Tampa city" ;
     dcterms:identifier "fips:1271000" ;
     skos:altLabel "Tampa" ;
-    ns2:name "Tampa city" .
+    ns3:name "Tampa city" .
+
+<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        ns1:AnonymousChatPlatform ;
+    rdfs:label "chat" ;
+    ns3:name "chat" .
+
+<https://w3id.org/caselinker/resource/platform/yahoo-chat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        ns1:MessagingService ;
+    rdfs:label "Yahoo Chat" ;
+    ns1:platformType "legacy" ;
+    ns3:name "Yahoo Chat" .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_032/phase/pleaded-guilty> a <https://cacontology.projectvic.org/core#Phase>,
+        ns6:PreTrialPhase ;
+    rdfs:label "Pre Trial Phase · phase/pleaded-guilty" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_032/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_032/phase/pleaded-guilty> a <https://cacontology.projectvic.org/core#Phase>,
-        ns1:PreTrialPhase ;
-    rdfs:label "Pre Trial Phase · phase/pleaded-guilty" .
 

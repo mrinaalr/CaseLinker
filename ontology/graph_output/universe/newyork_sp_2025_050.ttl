@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns2: <https://cacontology.projectvic.org/hotlines#> .
+@prefix ns1: <https://cacontology.projectvic.org/hotlines#> .
+@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns6: <https://cacontology.projectvic.org#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
@@ -30,13 +30,14 @@
         <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/ncmec>,
         <https://w3id.org/caselinker/resource/agency/state-police-department-ny-unverified> ;
-    ns4:object <https://w3id.org/caselinker/resource/case/newyork_sp_2025_050/cybertip> .
+    ns4:object <https://w3id.org/caselinker/resource/case/newyork_sp_2025_050/cybertip>,
+        <https://w3id.org/caselinker/resource/case/newyork_sp_2025_050/person/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/newyork_sp_2025_050/person/offender/1/age> a ns5:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/newyork_sp_2025_050/person/offender/1/age> a ns2:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns5:ageSubject <https://w3id.org/caselinker/resource/case/newyork_sp_2025_050/person/offender/1> ;
-    ns5:concernsAgeQuality ns5:Age ;
-    ns5:hasAgeInYears 61.0 .
+    ns2:ageSubject <https://w3id.org/caselinker/resource/case/newyork_sp_2025_050/person/offender/1> ;
+    ns2:concernsAgeQuality ns2:Age ;
+    ns2:hasAgeInYears 61.0 .
 
 <https://w3id.org/caselinker/resource/case/newyork_sp_2025_050/role/offender/1/has-role> a ns4:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -61,24 +62,24 @@
     rdfs:label "State Police Department" ;
     ns4:name "State Police Department" .
 
-<https://w3id.org/caselinker/resource/case/newyork_sp_2025_050/charge/1> a ns1:CSAM_Possession,
-        ns1:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/newyork_sp_2025_050/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/newyork_sp_2025_050/charge/2> a ns1:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/newyork_sp_2025_050/charge/2> a ns5:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
 <https://w3id.org/caselinker/resource/case/newyork_sp_2025_050/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
     rdfs:label "CyberTipline report" ;
-    ns2:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns1:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
     ns4:name "observe" .
 
 <https://w3id.org/caselinker/resource/case/newyork_sp_2025_050/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns1:LegalProceeding ;
+        ns5:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns1:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns1:hasCharge <https://w3id.org/caselinker/resource/case/newyork_sp_2025_050/charge/1>,
+    ns5:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/newyork_sp_2025_050/charge/1>,
         <https://w3id.org/caselinker/resource/case/newyork_sp_2025_050/charge/2> .
 
 <https://w3id.org/caselinker/resource/case/newyork_sp_2025_050/location/sp-latham> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
@@ -86,7 +87,7 @@
     rdfs:label "Sp Latham" ;
     ns4:name "Sp Latham" .
 
-<https://w3id.org/caselinker/resource/case/newyork_sp_2025_050/role/offender/1> a ns1:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/newyork_sp_2025_050/role/offender/1> a ns5:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns6:participatesInEvent <https://w3id.org/caselinker/resource/case/newyork_sp_2025_050/event/possession> .
 
@@ -104,7 +105,7 @@
     ns4:name "New York" .
 
 <https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:HotlineOrganization,
+        ns1:HotlineOrganization,
         ns3:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
@@ -114,10 +115,10 @@
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "CSAMIncident · event/possession" .
 
-<https://w3id.org/caselinker/resource/case/newyork_sp_2025_050/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
 <https://w3id.org/caselinker/resource/case/newyork_sp_2025_050/phase/arrested> a ns6:InitialPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Initial Phase · phase/arrested" .
+
+<https://w3id.org/caselinker/resource/case/newyork_sp_2025_050/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

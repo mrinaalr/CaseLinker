@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns2: <https://cacontology.projectvic.org/custodial#> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns5: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -32,21 +32,23 @@
         <https://w3id.org/caselinker/resource/case/us_marshals_2022_001/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/us_marshals_2022_001/legal-step/sentenced>,
         <https://w3id.org/caselinker/resource/case/us_marshals_2022_001/operation> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/federal-probation>,
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/federal-probation>,
         <https://w3id.org/caselinker/resource/agency/united-states-marshals>,
-        <https://w3id.org/caselinker/resource/agency/usms> .
+        <https://w3id.org/caselinker/resource/agency/usms> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/us_marshals_2022_001/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/us_marshals_2022_001/person/victim/1> .
 
-<https://w3id.org/caselinker/resource/case/us_marshals_2022_001/person/offender/1/age> a ns2:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/us_marshals_2022_001/person/offender/1/age> a ns4:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns2:ageSubject <https://w3id.org/caselinker/resource/case/us_marshals_2022_001/person/offender/1> ;
-    ns2:concernsAgeQuality ns2:Age ;
-    ns2:hasAgeInYears 58.0 .
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/us_marshals_2022_001/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 58.0 .
 
-<https://w3id.org/caselinker/resource/case/us_marshals_2022_001/person/victim/1/age> a ns2:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/us_marshals_2022_001/person/victim/1/age> a ns4:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/victim/1/age" ;
-    ns2:ageSubject <https://w3id.org/caselinker/resource/case/us_marshals_2022_001/person/victim/1> ;
-    ns2:concernsAgeQuality ns2:Age ;
-    ns2:hasAgeInYears 9.0 .
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/us_marshals_2022_001/person/victim/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 9.0 .
 
 <https://w3id.org/caselinker/resource/case/us_marshals_2022_001/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -63,31 +65,31 @@
     ns1:target <https://w3id.org/caselinker/resource/case/us_marshals_2022_001/role/victim/1> .
 
 <https://w3id.org/caselinker/resource/agency/federal-probation> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:LocalAgency ;
+        ns5:LocalAgency ;
     rdfs:label "Federal Probation" ;
     ns1:name "Federal Probation" .
 
 <https://w3id.org/caselinker/resource/agency/united-states-marshals> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:LocalAgency ;
+        ns5:LocalAgency ;
     rdfs:label "United States Marshals" ;
     ns1:name "United States Marshals" .
 
 <https://w3id.org/caselinker/resource/agency/usms> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:FederalAgency ;
+        ns5:FederalAgency ;
     rdfs:label "U.S. Marshals Service" ;
     skos:altLabel "U.S. Marshals" ;
     ns1:name "U.S. Marshals Service" .
 
 <https://w3id.org/caselinker/resource/case/us_marshals_2022_001/event/multi-jurisdiction> a <https://cacontology.projectvic.org/core#Event>,
-        ns4:MultiJurisdictionalInvestigation ;
+        ns5:MultiJurisdictionalInvestigation ;
     rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" ;
-    ns4:crossesBorders true .
+    ns5:crossesBorders true .
 
-<https://w3id.org/caselinker/resource/case/us_marshals_2022_001/event/trust-violation> a ns5:AuthorityAbuse,
-        ns5:TrustViolation ;
+<https://w3id.org/caselinker/resource/case/us_marshals_2022_001/event/trust-violation> a ns2:AuthorityAbuse,
+        ns2:TrustViolation ;
     rdfs:label "Authority Abuse · event/trust-violation" ;
-    ns5:perpetratedBy <https://w3id.org/caselinker/resource/case/us_marshals_2022_001/role/offender/1> ;
-    ns5:violatesRelationship <https://w3id.org/caselinker/resource/case/us_marshals_2022_001/relationship/teacher> .
+    ns2:perpetratedBy <https://w3id.org/caselinker/resource/case/us_marshals_2022_001/role/offender/1> ;
+    ns2:violatesRelationship <https://w3id.org/caselinker/resource/case/us_marshals_2022_001/relationship/teacher> .
 
 <https://w3id.org/caselinker/resource/case/us_marshals_2022_001/legal-step/sentenced> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
@@ -119,12 +121,12 @@
         <https://cacontology.projectvic.org/taskforce#TaskForceOperation> ;
     rdfs:label "Task Force Operation · operation" .
 
-<https://w3id.org/caselinker/resource/case/us_marshals_2022_001/relationship/teacher> a ns5:CustodialRelationship,
-        ns5:Teacher ;
+<https://w3id.org/caselinker/resource/case/us_marshals_2022_001/relationship/teacher> a ns2:CustodialRelationship,
+        ns2:Teacher ;
     rdfs:label "Custodial Relationship · relationship/teacher" ;
-    ns5:involvesChild <https://w3id.org/caselinker/resource/case/us_marshals_2022_001/role/victim/1> ;
-    ns5:involvesCustodian <https://w3id.org/caselinker/resource/case/us_marshals_2022_001/role/offender/1> ;
-    ns5:relationshipType "teacher" ;
+    ns2:involvesChild <https://w3id.org/caselinker/resource/case/us_marshals_2022_001/role/victim/1> ;
+    ns2:involvesCustodian <https://w3id.org/caselinker/resource/case/us_marshals_2022_001/role/offender/1> ;
+    ns2:relationshipType "teacher" ;
     ns1:isDirectional true ;
     ns1:source <https://w3id.org/caselinker/resource/case/us_marshals_2022_001/role/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/us_marshals_2022_001/role/victim/1> .
@@ -148,12 +150,6 @@
     dcterms:identifier "fips:13135" ;
     ns1:name "Gwinnett County" .
 
-<https://w3id.org/caselinker/resource/case/us_marshals_2022_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/us_marshals_2022_001/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
-
 <https://w3id.org/caselinker/resource/case/us_marshals_2022_001/phase/sentenced> a <https://cacontology.projectvic.org/core#Phase>,
         <https://cacontology.projectvic.org/legal-outcomes#SentencingPhase> ;
     rdfs:label "Sentencing Phase · phase/sentenced" .
@@ -161,6 +157,12 @@
 <https://w3id.org/caselinker/resource/case/us_marshals_2022_001/event/online-only> a ns3:ChildSexualAbuseEvent,
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "Child Sexual Abuse Event · event/online-only" .
+
+<https://w3id.org/caselinker/resource/case/us_marshals_2022_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/us_marshals_2022_001/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
 
 <https://w3id.org/caselinker/resource/case/us_marshals_2022_001/role/victim/1> a ns3:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" ;

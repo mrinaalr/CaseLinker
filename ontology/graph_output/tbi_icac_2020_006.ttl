@@ -1,7 +1,7 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns4: <https://cacontology.projectvic.org#> .
 @prefix ns5: <https://cacontology.projectvic.org/hotlines#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -24,39 +24,40 @@
     ns4:hasPhase <https://w3id.org/caselinker/resource/case/tbi_icac_2020_006/phase/charged> ;
     ns4:hasStep <https://w3id.org/caselinker/resource/case/tbi_icac_2020_006/event/possession>,
         <https://w3id.org/caselinker/resource/case/tbi_icac_2020_006/legal-proceeding> ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
+    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
         <https://w3id.org/caselinker/resource/agency/tennessee-bureau-of-investigation-tn>,
         <https://w3id.org/caselinker/resource/agency/warren-county-sheriff-s-office-tn> ;
-    ns2:object <https://w3id.org/caselinker/resource/case/tbi_icac_2020_006/cybertip> .
+    ns1:object <https://w3id.org/caselinker/resource/case/tbi_icac_2020_006/cybertip>,
+        <https://w3id.org/caselinker/resource/case/tbi_icac_2020_006/person/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/tbi_icac_2020_006/role/offender/1/has-role> a ns2:Relationship ;
+<https://w3id.org/caselinker/resource/case/tbi_icac_2020_006/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns2:isDirectional true ;
-    ns2:kindOfRelationship "Has_Role" ;
-    ns2:source <https://w3id.org/caselinker/resource/case/tbi_icac_2020_006/person/offender/1> ;
-    ns2:target <https://w3id.org/caselinker/resource/case/tbi_icac_2020_006/role/offender/1> .
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/tbi_icac_2020_006/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/tbi_icac_2020_006/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/tennessee-bureau-of-investigation-tn> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:StateAgency ;
+        ns2:StateAgency ;
     rdfs:label "Tennessee Bureau of Investigation" ;
     dcterms:identifier "ori:TNTBI0000" ;
-    ns2:name "Tennessee Bureau of Investigation" .
+    ns1:name "Tennessee Bureau of Investigation" .
 
 <https://w3id.org/caselinker/resource/agency/warren-county-sheriff-s-office-tn> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:LocalAgency ;
+        ns2:LocalAgency ;
     rdfs:label "Warren County Sheriff's Office" ;
     dcterms:identifier "ori:TN0890000" ;
-    ns2:name "Warren County Sheriff's Office" .
+    ns1:name "Warren County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/case/tbi_icac_2020_006/charge/1> a ns1:CriminalCharge,
-        ns1:StateCharge ;
+<https://w3id.org/caselinker/resource/case/tbi_icac_2020_006/charge/1> a ns3:CriminalCharge,
+        ns3:StateCharge ;
     rdfs:label "sexual exploitation of a minor" .
 
-<https://w3id.org/caselinker/resource/case/tbi_icac_2020_006/charge/2> a ns1:CSAM_Possession,
-        ns1:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/tbi_icac_2020_006/charge/2> a ns3:CSAM_Possession,
+        ns3:CriminalCharge ;
     rdfs:label "child sexual abuse material" .
 
-<https://w3id.org/caselinker/resource/case/tbi_icac_2020_006/charge/3> a ns1:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/tbi_icac_2020_006/charge/3> a ns3:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
 <https://w3id.org/caselinker/resource/case/tbi_icac_2020_006/cybertip> a ns5:ESPReport,
@@ -64,22 +65,19 @@
     rdfs:label "CyberTipline report" ;
     rdfs:comment "Reported by an unnamed electronic service provider" ;
     ns5:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
-    ns2:name "observe" .
+    ns1:name "observe" .
 
 <https://w3id.org/caselinker/resource/case/tbi_icac_2020_006/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns1:LegalProceeding ;
+        ns3:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): booked into the Warren County Jail" ;
-    ns1:chargeCount "3"^^xsd:nonNegativeInteger ;
-    ns1:hasCharge <https://w3id.org/caselinker/resource/case/tbi_icac_2020_006/charge/1>,
+    ns3:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/tbi_icac_2020_006/charge/1>,
         <https://w3id.org/caselinker/resource/case/tbi_icac_2020_006/charge/2>,
         <https://w3id.org/caselinker/resource/case/tbi_icac_2020_006/charge/3> .
 
-<https://w3id.org/caselinker/resource/case/tbi_icac_2020_006/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/tbi_icac_2020_006/role/offender/1> a ns1:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/tbi_icac_2020_006/role/offender/1> a ns3:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/tbi_icac_2020_006/event/possession> .
 
@@ -88,25 +86,28 @@
     rdfs:label "McMinnville city" ;
     dcterms:identifier "fips:4745100" ;
     skos:altLabel "Mcminnville" ;
-    ns2:name "McMinnville city" .
+    ns1:name "McMinnville city" .
 
 <https://w3id.org/caselinker/resource/location/warren-county-tn> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Warren County" ;
     dcterms:identifier "fips:47177" ;
-    ns2:name "Warren County" .
+    ns1:name "Warren County" .
 
 <https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
         ns5:HotlineOrganization,
-        ns3:FederalAgency ;
+        ns2:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
-    ns2:name "National Center for Missing and Exploited Children" .
+    ns1:name "National Center for Missing and Exploited Children" .
 
 <https://w3id.org/caselinker/resource/case/tbi_icac_2020_006/event/possession> a ns4:CSAMIncident,
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "CSAMIncident · event/possession" ;
     ns4:severityLevel 3 .
+
+<https://w3id.org/caselinker/resource/case/tbi_icac_2020_006/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/tbi_icac_2020_006/phase/charged> a ns4:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;

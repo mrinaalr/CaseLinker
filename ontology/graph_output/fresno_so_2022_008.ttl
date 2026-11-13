@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns5: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -25,13 +25,16 @@
     ns2:hasStep <https://w3id.org/caselinker/resource/case/fresno_so_2022_008/event/hands-on>,
         <https://w3id.org/caselinker/resource/case/fresno_so_2022_008/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/fresno_so_2022_008/legal-proceeding> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/icac> .
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/icac> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/fresno_so_2022_008/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/fresno_so_2022_008/person/victim/1>,
+        <https://w3id.org/caselinker/resource/platform/social-media> .
 
-<https://w3id.org/caselinker/resource/case/fresno_so_2022_008/person/offender/1/age> a ns3:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/fresno_so_2022_008/person/offender/1/age> a ns5:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns3:ageSubject <https://w3id.org/caselinker/resource/case/fresno_so_2022_008/person/offender/1> ;
-    ns3:concernsAgeQuality ns3:Age ;
-    ns3:hasAgeInYears 22.0 .
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/fresno_so_2022_008/person/offender/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 22.0 .
 
 <https://w3id.org/caselinker/resource/case/fresno_so_2022_008/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -53,11 +56,11 @@
     skos:altLabel "ICAC" ;
     ns1:name "ICAC Task Force" .
 
-<https://w3id.org/caselinker/resource/case/fresno_so_2022_008/event/trust-violation> a ns5:AuthorityAbuse,
-        ns5:TrustViolation ;
+<https://w3id.org/caselinker/resource/case/fresno_so_2022_008/event/trust-violation> a ns4:AuthorityAbuse,
+        ns4:TrustViolation ;
     rdfs:label "Authority Abuse · event/trust-violation" ;
-    ns5:perpetratedBy <https://w3id.org/caselinker/resource/case/fresno_so_2022_008/role/offender/1> ;
-    ns5:violatesRelationship <https://w3id.org/caselinker/resource/case/fresno_so_2022_008/relationship/teacher> .
+    ns4:perpetratedBy <https://w3id.org/caselinker/resource/case/fresno_so_2022_008/role/offender/1> ;
+    ns4:violatesRelationship <https://w3id.org/caselinker/resource/case/fresno_so_2022_008/relationship/teacher> .
 
 <https://w3id.org/caselinker/resource/case/fresno_so_2022_008/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
@@ -70,15 +73,12 @@
     rdfs:label "Juarez" ;
     ns1:name "Juarez" .
 
-<https://w3id.org/caselinker/resource/case/fresno_so_2022_008/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
-
-<https://w3id.org/caselinker/resource/case/fresno_so_2022_008/relationship/teacher> a ns5:CustodialRelationship,
-        ns5:Teacher ;
+<https://w3id.org/caselinker/resource/case/fresno_so_2022_008/relationship/teacher> a ns4:CustodialRelationship,
+        ns4:Teacher ;
     rdfs:label "Custodial Relationship · relationship/teacher" ;
-    ns5:involvesChild <https://w3id.org/caselinker/resource/case/fresno_so_2022_008/role/victim/1> ;
-    ns5:involvesCustodian <https://w3id.org/caselinker/resource/case/fresno_so_2022_008/role/offender/1> ;
-    ns5:relationshipType "teacher" ;
+    ns4:involvesChild <https://w3id.org/caselinker/resource/case/fresno_so_2022_008/role/victim/1> ;
+    ns4:involvesCustodian <https://w3id.org/caselinker/resource/case/fresno_so_2022_008/role/offender/1> ;
+    ns4:relationshipType "teacher" ;
     ns1:isDirectional true ;
     ns1:source <https://w3id.org/caselinker/resource/case/fresno_so_2022_008/role/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/fresno_so_2022_008/role/victim/1> .
@@ -90,23 +90,26 @@
     skos:altLabel "Fresno" ;
     ns1:name "Fresno city" .
 
-<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "social media" ;
-    ns1:name "social media" .
-
-<https://w3id.org/caselinker/resource/case/fresno_so_2022_008/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+<https://w3id.org/caselinker/resource/case/fresno_so_2022_008/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
 
 <https://w3id.org/caselinker/resource/case/fresno_so_2022_008/phase/booked> a ns2:InitialPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Initial Phase · phase/booked" .
+
+<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "social media" ;
+    ns1:name "social media" .
 
 <https://w3id.org/caselinker/resource/case/fresno_so_2022_008/event/hands-on> a ns2:ChildSexualAbuseEvent,
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "Child Sexual Abuse Event · event/hands-on" ;
     ns2:severityLevel 3 ;
     ns2:usesChannel <https://w3id.org/caselinker/resource/platform/social-media> .
+
+<https://w3id.org/caselinker/resource/case/fresno_so_2022_008/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/fresno_so_2022_008/role/victim/1> a ns2:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" ;

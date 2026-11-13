@@ -1,8 +1,8 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/custodial#> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns5: <https://cacontology.projectvic.org#> .
 @prefix ns6: <https://cacontology.projectvic.org/core#> .
 @prefix ns7: <https://cacontology.projectvic.org/platforms#> .
@@ -51,11 +51,16 @@
         <https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/legal-step/sentenced>,
         <https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/operation> ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/ceos>,
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/ceos>,
         <https://w3id.org/caselinker/resource/agency/doj>,
         <https://w3id.org/caselinker/resource/agency/fbi>,
         <https://w3id.org/caselinker/resource/agency/michigan-state-university-police-department>,
-        <https://w3id.org/caselinker/resource/agency/usao> .
+        <https://w3id.org/caselinker/resource/agency/usao> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/person/victim/1>,
+        <https://w3id.org/caselinker/resource/platform/facebook>,
+        <https://w3id.org/caselinker/resource/platform/skype>,
+        <https://w3id.org/caselinker/resource/platform/webcam-platform> .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -71,60 +76,44 @@
     ns1:source <https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/person/victim/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/role/victim/1> .
 
-<https://w3id.org/caselinker/resource/platform/facebook> a ns6:DigitalSystemEntity,
-        ns7:SocialMediaPlatform ;
-    rdfs:label "Facebook" ;
-    ns1:name "Facebook" .
-
-<https://w3id.org/caselinker/resource/platform/skype> a ns6:DigitalSystemEntity,
-        ns7:MessagingService ;
-    rdfs:label "Skype" ;
-    ns1:name "Skype" .
-
-<https://w3id.org/caselinker/resource/platform/webcam-platform> a ns6:DigitalSystemEntity,
-        ns7:VideoStreamingPlatform ;
-    rdfs:label "Webcam platform" ;
-    ns7:allowsAnonymousChat "true" ;
-    ns1:name "Webcam platform" .
-
 <https://w3id.org/caselinker/resource/agency/ceos> a ns6:OrganizationLikeEntity,
-        ns3:FederalAgency ;
+        ns4:FederalAgency ;
     rdfs:label "CEOS" ;
     ns1:name "CEOS" .
 
 <https://w3id.org/caselinker/resource/agency/doj> a ns6:OrganizationLikeEntity,
-        ns3:FederalAgency ;
+        ns4:FederalAgency ;
     rdfs:label "U.S. Department of Justice" ;
     ns1:name "U.S. Department of Justice" .
 
 <https://w3id.org/caselinker/resource/agency/fbi> a ns6:OrganizationLikeEntity,
-        ns3:FederalAgency ;
+        ns4:FederalAgency ;
     rdfs:label "Federal Bureau of Investigation" ;
     skos:altLabel "FBI" ;
     ns1:name "Federal Bureau of Investigation" .
 
 <https://w3id.org/caselinker/resource/agency/michigan-state-university-police-department> a ns6:OrganizationLikeEntity,
-        ns3:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "Michigan State University Police Department" ;
     ns1:name "Michigan State University Police Department" .
 
 <https://w3id.org/caselinker/resource/agency/usao> a ns6:OrganizationLikeEntity,
-        ns3:FederalAgency ;
+        ns4:FederalAgency ;
     rdfs:label "U.S. Attorney's Office" ;
     ns1:name "U.S. Attorney's Office" .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/charge/1> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/charge/1> a ns2:CSAM_Possession,
+        ns2:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/charge/2> a ns4:CSAM_Production,
-        ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/charge/2> a ns2:CSAM_Production,
+        ns2:CriminalCharge ;
     rdfs:label "production of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/charge/3> a ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/charge/3> a ns2:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/charge/4> a ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/charge/4> a ns2:CriminalCharge ;
     rdfs:label "child exploitation" ;
     dcterms:subject ns5:ChildSexualAbuseEvent .
 
@@ -133,7 +122,7 @@
     rdfs:label "CSAMIncident · event/csam" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/event/multi-jurisdiction> a ns6:Event,
-        ns3:MultiJurisdictionalInvestigation ;
+        ns4:MultiJurisdictionalInvestigation ;
     rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/event/online-only> a ns5:ChildSexualAbuseEvent,
@@ -145,32 +134,32 @@
     rdfs:label "Production Offense · event/production" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/event/project-safe-childhood> a ns6:Event,
-        ns3:ProjectSafeChildhoodOperation ;
+        ns4:ProjectSafeChildhoodOperation ;
     rdfs:label "Project Safe Childhood Operation · event/project-safe-childhood" .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/event/trust-violation> a ns2:AuthorityAbuse,
-        ns2:TrustViolation ;
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/event/trust-violation> a ns3:AuthorityAbuse,
+        ns3:TrustViolation ;
     rdfs:label "Authority Abuse · event/trust-violation" ;
-    ns2:perpetratedBy <https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/role/offender/1> ;
-    ns2:violatesRelationship <https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/relationship/coach> .
+    ns3:perpetratedBy <https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/role/offender/1> ;
+    ns3:violatesRelationship <https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/relationship/coach> .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/legal-proceeding> a ns6:Event,
         ns6:LegalEvent,
-        ns4:LegalProceeding ;
+        ns2:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns4:chargeCount "4"^^xsd:nonNegativeInteger ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/charge/1>,
+    ns2:chargeCount "4"^^xsd:nonNegativeInteger ;
+    ns2:hasCharge <https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/charge/1>,
         <https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/charge/2>,
         <https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/charge/3>,
         <https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/charge/4> ;
-    ns4:resultsSentence <https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/sentence/1>,
+    ns2:resultsSentence <https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/sentence/1>,
         <https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/sentence/2>,
         <https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/sentence/3> .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/legal-step/sentenced> a ns6:Event,
         ns6:LegalEvent,
-        ns4:LegalProceeding,
-        ns4:SentencingHearing ;
+        ns2:LegalProceeding,
+        ns2:SentencingHearing ;
     rdfs:label "Sentencing Hearing · legal-step/sentenced" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/location/middle-district-of-pennsylvania> a ns6:PlaceLikeEntity,
@@ -197,34 +186,28 @@
         <https://cacontology.projectvic.org/taskforce#TaskForceOperation> ;
     rdfs:label "Task Force Operation · operation" .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/relationship/coach> a ns2:Coach,
-        ns2:CustodialRelationship ;
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/relationship/coach> a ns3:Coach,
+        ns3:CustodialRelationship ;
     rdfs:label "Coach · relationship/coach" ;
-    ns2:involvesChild <https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/role/victim/1> ;
-    ns2:involvesCustodian <https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/role/offender/1> ;
-    ns2:relationshipType "coach" ;
+    ns3:involvesChild <https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/role/victim/1> ;
+    ns3:involvesCustodian <https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/role/offender/1> ;
+    ns3:relationshipType "coach" ;
     ns1:isDirectional true ;
     ns1:source <https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/role/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/role/victim/1> .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/sentence/1> a ns4:CriminalSentence,
-        ns4:PrisonSentence ;
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/sentence/1> a ns2:CriminalSentence,
+        ns2:PrisonSentence ;
     rdfs:label "25 Years" ;
     ns6:assesses <https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/sentence/2> a ns4:CriminalSentence,
-        ns4:MonetaryPenalty ;
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/sentence/2> a ns2:CriminalSentence,
+        ns2:MonetaryPenalty ;
     rdfs:label "$1500" ;
     ns6:assesses <https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/sentence/3> a ns4:CriminalSentence,
-        ns4:MonetaryPenalty ;
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/sentence/3> a ns2:CriminalSentence,
+        ns2:MonetaryPenalty ;
     rdfs:label "$300" ;
     ns6:assesses <https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/role/offender/1> .
 
@@ -326,8 +309,30 @@
     skos:altLabel "Wilkes-barre" ;
     ns1:name "Wilkes-Barre city" .
 
+<https://w3id.org/caselinker/resource/platform/facebook> a ns6:DigitalSystemEntity,
+        ns7:SocialMediaPlatform ;
+    rdfs:label "Facebook" ;
+    ns1:name "Facebook" .
+
+<https://w3id.org/caselinker/resource/platform/skype> a ns6:DigitalSystemEntity,
+        ns7:MessagingService ;
+    rdfs:label "Skype" ;
+    ns1:name "Skype" .
+
+<https://w3id.org/caselinker/resource/platform/webcam-platform> a ns6:DigitalSystemEntity,
+        ns7:VideoStreamingPlatform ;
+    rdfs:label "Webcam platform" ;
+    ns7:allowsAnonymousChat "true" ;
+    ns1:name "Webcam platform" .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
+
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/phase/sentenced> a ns6:Phase,
-        ns4:SentencingPhase ;
+        ns2:SentencingPhase ;
     rdfs:label "Sentencing Phase · phase/sentenced" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_080/role/victim/1> a ns5:VictimRole ;

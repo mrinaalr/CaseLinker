@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns2: <https://cacontology.projectvic.org/custodial#> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
 @prefix ns4: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns5: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -29,10 +29,12 @@
         <https://w3id.org/caselinker/resource/case/nj_ag_2016_012/event/multi-jurisdiction>,
         <https://w3id.org/caselinker/resource/case/nj_ag_2016_012/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/nj_ag_2016_012/legal-proceeding> ;
-    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/department-of-children-and-families-nj-unverified>,
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/department-of-children-and-families-nj-unverified>,
         <https://w3id.org/caselinker/resource/agency/division-of-criminal-justice-corruption-bureau-nj-unverified>,
         <https://w3id.org/caselinker/resource/agency/new-jersey-attorney-generals-office>,
-        <https://w3id.org/caselinker/resource/agency/new-jersey-state-police-department> .
+        <https://w3id.org/caselinker/resource/agency/new-jersey-state-police-department> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/nj_ag_2016_012/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/nj_ag_2016_012/person/victim/1> .
 
 <https://w3id.org/caselinker/resource/case/nj_ag_2016_012/person/offender/1/age> a ns4:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
@@ -55,34 +57,34 @@
     ns1:target <https://w3id.org/caselinker/resource/case/nj_ag_2016_012/role/victim/1> .
 
 <https://w3id.org/caselinker/resource/agency/department-of-children-and-families-nj-unverified> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:LocalAgency ;
+        ns5:LocalAgency ;
     rdfs:label "Department of Children and Families" ;
     ns1:name "Department of Children and Families" .
 
 <https://w3id.org/caselinker/resource/agency/division-of-criminal-justice-corruption-bureau-nj-unverified> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:LocalAgency ;
+        ns5:LocalAgency ;
     rdfs:label "Division of Criminal Justice Corruption Bureau" ;
     ns1:name "Division of Criminal Justice Corruption Bureau" .
 
 <https://w3id.org/caselinker/resource/agency/new-jersey-attorney-generals-office> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:StateAgency ;
+        ns5:StateAgency ;
     rdfs:label "New Jersey Attorney General's Office" ;
     ns1:name "New Jersey Attorney General's Office" .
 
 <https://w3id.org/caselinker/resource/agency/new-jersey-state-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:StateAgency ;
+        ns5:StateAgency ;
     rdfs:label "New Jersey State Police Department" ;
     ns1:name "New Jersey State Police Department" .
 
 <https://w3id.org/caselinker/resource/case/nj_ag_2016_012/event/multi-jurisdiction> a <https://cacontology.projectvic.org/core#Event>,
-        ns2:MultiJurisdictionalInvestigation ;
+        ns5:MultiJurisdictionalInvestigation ;
     rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" .
 
-<https://w3id.org/caselinker/resource/case/nj_ag_2016_012/event/trust-violation> a ns5:CustodialAbuse,
-        ns5:TrustViolation ;
+<https://w3id.org/caselinker/resource/case/nj_ag_2016_012/event/trust-violation> a ns2:CustodialAbuse,
+        ns2:TrustViolation ;
     rdfs:label "Custodial Abuse · event/trust-violation" ;
-    ns5:perpetratedBy <https://w3id.org/caselinker/resource/case/nj_ag_2016_012/role/offender/1> ;
-    ns5:violatesRelationship <https://w3id.org/caselinker/resource/case/nj_ag_2016_012/relationship/mother> .
+    ns2:perpetratedBy <https://w3id.org/caselinker/resource/case/nj_ag_2016_012/role/offender/1> ;
+    ns2:violatesRelationship <https://w3id.org/caselinker/resource/case/nj_ag_2016_012/relationship/mother> .
 
 <https://w3id.org/caselinker/resource/case/nj_ag_2016_012/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
@@ -90,15 +92,12 @@
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): lodged in the Mercer County Jail" .
 
-<https://w3id.org/caselinker/resource/case/nj_ag_2016_012/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
-
-<https://w3id.org/caselinker/resource/case/nj_ag_2016_012/relationship/mother> a ns5:CustodialRelationship,
-        ns5:FamilialRelationship ;
+<https://w3id.org/caselinker/resource/case/nj_ag_2016_012/relationship/mother> a ns2:CustodialRelationship,
+        ns2:FamilialRelationship ;
     rdfs:label "Custodial Relationship · relationship/mother" ;
-    ns5:involvesChild <https://w3id.org/caselinker/resource/case/nj_ag_2016_012/role/victim/1> ;
-    ns5:involvesCustodian <https://w3id.org/caselinker/resource/case/nj_ag_2016_012/role/offender/1> ;
-    ns5:relationshipType "parent" ;
+    ns2:involvesChild <https://w3id.org/caselinker/resource/case/nj_ag_2016_012/role/victim/1> ;
+    ns2:involvesCustodian <https://w3id.org/caselinker/resource/case/nj_ag_2016_012/role/offender/1> ;
+    ns2:relationshipType "parent" ;
     ns1:isDirectional true ;
     ns1:source <https://w3id.org/caselinker/resource/case/nj_ag_2016_012/role/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/nj_ag_2016_012/role/victim/1> .
@@ -135,8 +134,8 @@
     skos:altLabel "Trenton" ;
     ns1:name "Trenton city" .
 
-<https://w3id.org/caselinker/resource/case/nj_ag_2016_012/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+<https://w3id.org/caselinker/resource/case/nj_ag_2016_012/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
 
 <https://w3id.org/caselinker/resource/case/nj_ag_2016_012/phase/charged> a ns3:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
@@ -146,6 +145,9 @@
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "Child Sexual Abuse Event · event/hands-on" ;
     ns3:severityLevel 3 .
+
+<https://w3id.org/caselinker/resource/case/nj_ag_2016_012/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/nj_ag_2016_012/role/victim/1> a ns3:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" ;

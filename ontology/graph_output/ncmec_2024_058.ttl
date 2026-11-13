@@ -2,8 +2,8 @@
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
 @prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://cacontology.projectvic.org/hotlines#> .
+@prefix ns4: <https://cacontology.projectvic.org/hotlines#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -31,7 +31,8 @@
         <https://w3id.org/caselinker/resource/case/ncmec_2024_058/agency/district-attorneys-office-child-exploitation-and-human-trafficking-unit>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_058/agency/district-attorneys-office-special-prosecutions-fraud-and-technology-crimes-unit>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_058/agency/oxnard-police-department> ;
-    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2024_058/cybertip> .
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2024_058/cybertip>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_058/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_058/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -60,32 +61,29 @@
     rdfs:label "Oxnard Police Department" ;
     ns1:name "Oxnard Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_058/charge/1> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_058/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
     rdfs:label "child sexual abuse material" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_058/charge/2> a ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_058/charge/2> a ns5:CriminalCharge ;
     rdfs:label "child exploitation" ;
     dcterms:subject ns2:ChildSexualAbuseEvent .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_058/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
     rdfs:label "CyberTipline report" ;
-    ns5:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns4:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
     ns1:name "observe" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_058/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns4:LegalProceeding ;
+        ns5:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): booked into Ventura County Jail" ;
-    ns4:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_058/charge/1>,
+    ns5:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_058/charge/1>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_058/charge/2> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_058/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_058/role/offender/1> a ns4:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_058/role/offender/1> a ns5:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_058/event/possession> .
 
@@ -117,7 +115,7 @@
     ns1:name "Ventura County" .
 
 <https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:HotlineOrganization,
+        ns4:HotlineOrganization,
         ns3:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
@@ -127,6 +125,9 @@
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "CSAMIncident · event/possession" ;
     ns2:severityLevel 3 .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_058/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_058/phase/charged> a ns2:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;

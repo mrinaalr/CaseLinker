@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns4: <https://cacontology.projectvic.org#> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -34,19 +34,21 @@
         <https://w3id.org/caselinker/resource/case/illinois_ag_2008_004/event/project-safe-childhood>,
         <https://w3id.org/caselinker/resource/case/illinois_ag_2008_004/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/illinois_ag_2008_004/operation> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/chicago-ice-office-of-investigations>,
+    ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/chicago-ice-office-of-investigations>,
         <https://w3id.org/caselinker/resource/agency/east-galesburg-police-department-il-unverified>,
         <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/ice>,
         <https://w3id.org/caselinker/resource/agency/knox-county-sheriff-s-office-il>,
         <https://w3id.org/caselinker/resource/agency/usao>,
-        <https://w3id.org/caselinker/resource/agency/usms> .
+        <https://w3id.org/caselinker/resource/agency/usms> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/illinois_ag_2008_004/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/chat> .
 
-<https://w3id.org/caselinker/resource/case/illinois_ag_2008_004/person/offender/1/age> a ns3:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/illinois_ag_2008_004/person/offender/1/age> a ns5:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns3:ageSubject <https://w3id.org/caselinker/resource/case/illinois_ag_2008_004/person/offender/1> ;
-    ns3:concernsAgeQuality ns3:Age ;
-    ns3:hasAgeInYears 38.0 .
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/illinois_ag_2008_004/person/offender/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 38.0 .
 
 <https://w3id.org/caselinker/resource/case/illinois_ag_2008_004/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -55,18 +57,13 @@
     ns2:source <https://w3id.org/caselinker/resource/case/illinois_ag_2008_004/person/offender/1> ;
     ns2:target <https://w3id.org/caselinker/resource/case/illinois_ag_2008_004/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
-    rdfs:label "chat" ;
-    ns2:name "chat" .
-
 <https://w3id.org/caselinker/resource/agency/chicago-ice-office-of-investigations> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:FederalAgency ;
+        ns1:FederalAgency ;
     rdfs:label "Chicago ICE Office of Investigations" ;
     ns2:name "Chicago ICE Office of Investigations" .
 
 <https://w3id.org/caselinker/resource/agency/east-galesburg-police-department-il-unverified> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:LocalAgency ;
+        ns1:LocalAgency ;
     rdfs:label "East Galesburg Police Department" ;
     ns2:name "East Galesburg Police Department" .
 
@@ -77,43 +74,43 @@
     ns2:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/agency/ice> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:FederalAgency ;
+        ns1:FederalAgency ;
     rdfs:label "ICE" ;
     ns2:name "ICE" .
 
 <https://w3id.org/caselinker/resource/agency/knox-county-sheriff-s-office-il> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:LocalAgency ;
+        ns1:LocalAgency ;
     rdfs:label "Knox County Sheriff's Office" ;
     dcterms:identifier "ori:IL0480000" ;
     ns2:name "Knox County Sheriff's Office" .
 
 <https://w3id.org/caselinker/resource/agency/usao> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:FederalAgency ;
+        ns1:FederalAgency ;
     rdfs:label "U.S. Attorney's Office" ;
     ns2:name "U.S. Attorney's Office" .
 
 <https://w3id.org/caselinker/resource/agency/usms> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:FederalAgency ;
+        ns1:FederalAgency ;
     rdfs:label "U.S. Marshals Service" ;
     ns2:name "U.S. Marshals Service" .
 
-<https://w3id.org/caselinker/resource/case/illinois_ag_2008_004/charge/1> a ns1:CSAM_Possession,
-        ns1:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/illinois_ag_2008_004/charge/1> a ns3:CSAM_Possession,
+        ns3:CriminalCharge ;
     rdfs:label "possession of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/illinois_ag_2008_004/charge/2> a ns1:CSAM_Distribution,
-        ns1:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/illinois_ag_2008_004/charge/2> a ns3:CSAM_Distribution,
+        ns3:CriminalCharge ;
     rdfs:label "distribution of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/illinois_ag_2008_004/charge/3> a ns1:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/illinois_ag_2008_004/charge/3> a ns3:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
-<https://w3id.org/caselinker/resource/case/illinois_ag_2008_004/charge/4> a ns1:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/illinois_ag_2008_004/charge/4> a ns3:CriminalCharge ;
     rdfs:label "child exploitation" ;
     dcterms:subject ns4:ChildSexualAbuseEvent .
 
 <https://w3id.org/caselinker/resource/case/illinois_ag_2008_004/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
-        ns1:CSAM_Distribution ;
+        ns3:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/illinois_ag_2008_004/event/online-only> a ns4:ChildSexualAbuseEvent,
@@ -125,16 +122,16 @@
     rdfs:label "CSAMIncident · event/possession" .
 
 <https://w3id.org/caselinker/resource/case/illinois_ag_2008_004/event/project-safe-childhood> a <https://cacontology.projectvic.org/core#Event>,
-        ns5:ProjectSafeChildhoodOperation ;
+        ns1:ProjectSafeChildhoodOperation ;
     rdfs:label "Project Safe Childhood Operation · event/project-safe-childhood" .
 
 <https://w3id.org/caselinker/resource/case/illinois_ag_2008_004/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns1:LegalProceeding ;
+        ns3:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): remain detained in the custody" ;
-    ns1:chargeCount "5"^^xsd:nonNegativeInteger ;
-    ns1:hasCharge <https://w3id.org/caselinker/resource/case/illinois_ag_2008_004/charge/1>,
+    ns3:chargeCount "5"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/illinois_ag_2008_004/charge/1>,
         <https://w3id.org/caselinker/resource/case/illinois_ag_2008_004/charge/2>,
         <https://w3id.org/caselinker/resource/case/illinois_ag_2008_004/charge/3>,
         <https://w3id.org/caselinker/resource/case/illinois_ag_2008_004/charge/4> .
@@ -158,7 +155,7 @@
         <https://cacontology.projectvic.org/undercover#UndercoverOperation> ;
     rdfs:label "Undercover Operation · operation" .
 
-<https://w3id.org/caselinker/resource/case/illinois_ag_2008_004/role/offender/1> a ns1:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/illinois_ag_2008_004/role/offender/1> a ns3:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 
 <https://w3id.org/caselinker/resource/location/east-galesburg-village-il> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
@@ -194,10 +191,15 @@
     dcterms:identifier "fips:45" ;
     ns2:name "South Carolina" .
 
-<https://w3id.org/caselinker/resource/case/illinois_ag_2008_004/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
+    rdfs:label "chat" ;
+    ns2:name "chat" .
 
 <https://w3id.org/caselinker/resource/case/illinois_ag_2008_004/phase/charged> a ns4:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/charged" .
+
+<https://w3id.org/caselinker/resource/case/illinois_ag_2008_004/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

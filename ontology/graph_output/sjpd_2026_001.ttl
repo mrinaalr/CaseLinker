@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns1: <https://cacontology.projectvic.org/custodial#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns4: <https://cacontology.projectvic.org#> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -26,8 +26,10 @@
     ns4:hasStep <https://w3id.org/caselinker/resource/case/sjpd_2026_001/event/hands-on>,
         <https://w3id.org/caselinker/resource/case/sjpd_2026_001/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/sjpd_2026_001/legal-proceeding> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
-        <https://w3id.org/caselinker/resource/agency/san-josé-police-department-ca-unverified> .
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+        <https://w3id.org/caselinker/resource/agency/san-josé-police-department-ca-unverified> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/sjpd_2026_001/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/sjpd_2026_001/person/victim/1> .
 
 <https://w3id.org/caselinker/resource/case/sjpd_2026_001/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -50,45 +52,39 @@
     ns2:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/agency/san-josé-police-department-ca-unverified> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:LocalAgency ;
+        ns3:LocalAgency ;
     rdfs:label "San José Police Department" ;
     ns2:name "San José Police Department" .
 
-<https://w3id.org/caselinker/resource/case/sjpd_2026_001/charge/1> a ns1:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/sjpd_2026_001/charge/1> a ns5:CriminalCharge ;
     rdfs:label "child exploitation" ;
     dcterms:subject ns4:ChildSexualAbuseEvent .
 
-<https://w3id.org/caselinker/resource/case/sjpd_2026_001/event/trust-violation> a ns3:CustodialAbuse,
-        ns3:TrustViolation ;
+<https://w3id.org/caselinker/resource/case/sjpd_2026_001/event/trust-violation> a ns1:CustodialAbuse,
+        ns1:TrustViolation ;
     rdfs:label "Custodial Abuse · event/trust-violation" ;
-    ns3:perpetratedBy <https://w3id.org/caselinker/resource/case/sjpd_2026_001/role/offender/1> ;
-    ns3:violatesRelationship <https://w3id.org/caselinker/resource/case/sjpd_2026_001/relationship/mother> .
+    ns1:perpetratedBy <https://w3id.org/caselinker/resource/case/sjpd_2026_001/role/offender/1> ;
+    ns1:violatesRelationship <https://w3id.org/caselinker/resource/case/sjpd_2026_001/relationship/mother> .
 
 <https://w3id.org/caselinker/resource/case/sjpd_2026_001/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns1:LegalProceeding ;
+        ns5:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): booked into Santa Clara County Main Jail" ;
-    ns1:chargeCount "1"^^xsd:nonNegativeInteger ;
-    ns1:hasCharge <https://w3id.org/caselinker/resource/case/sjpd_2026_001/charge/1> .
+    ns5:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/sjpd_2026_001/charge/1> .
 
 <https://w3id.org/caselinker/resource/case/sjpd_2026_001/location/san-josé> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "San José" ;
     ns2:name "San José" .
 
-<https://w3id.org/caselinker/resource/case/sjpd_2026_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/sjpd_2026_001/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
-
-<https://w3id.org/caselinker/resource/case/sjpd_2026_001/relationship/mother> a ns3:CustodialRelationship,
-        ns3:FamilialRelationship ;
+<https://w3id.org/caselinker/resource/case/sjpd_2026_001/relationship/mother> a ns1:CustodialRelationship,
+        ns1:FamilialRelationship ;
     rdfs:label "Custodial Relationship · relationship/mother" ;
-    ns3:involvesChild <https://w3id.org/caselinker/resource/case/sjpd_2026_001/role/victim/1> ;
-    ns3:involvesCustodian <https://w3id.org/caselinker/resource/case/sjpd_2026_001/role/offender/1> ;
-    ns3:relationshipType "parent" ;
+    ns1:involvesChild <https://w3id.org/caselinker/resource/case/sjpd_2026_001/role/victim/1> ;
+    ns1:involvesCustodian <https://w3id.org/caselinker/resource/case/sjpd_2026_001/role/offender/1> ;
+    ns1:relationshipType "parent" ;
     ns2:isDirectional true ;
     ns2:source <https://w3id.org/caselinker/resource/case/sjpd_2026_001/role/offender/1> ;
     ns2:target <https://w3id.org/caselinker/resource/case/sjpd_2026_001/role/victim/1> .
@@ -107,6 +103,12 @@
     skos:altLabel "San Mateo" ;
     ns2:name "San Mateo city" .
 
+<https://w3id.org/caselinker/resource/case/sjpd_2026_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/sjpd_2026_001/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
+
 <https://w3id.org/caselinker/resource/case/sjpd_2026_001/phase/booked> a ns4:InitialPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Initial Phase · phase/booked" .
@@ -120,7 +122,7 @@
     rdfs:label "Victim Role · role/victim/1" ;
     ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/sjpd_2026_001/event/hands-on> .
 
-<https://w3id.org/caselinker/resource/case/sjpd_2026_001/role/offender/1> a ns1:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/sjpd_2026_001/role/offender/1> a ns5:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/sjpd_2026_001/event/hands-on> .
 

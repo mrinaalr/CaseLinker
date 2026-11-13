@@ -1,7 +1,7 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns4: <https://cacontology.projectvic.org#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
@@ -23,21 +23,24 @@
     ns4:currentPhase <https://w3id.org/caselinker/resource/case/fresno_so_2013_004/phase/booked> ;
     ns4:hasPhase <https://w3id.org/caselinker/resource/case/fresno_so_2013_004/phase/booked> ;
     ns4:hasStep <https://w3id.org/caselinker/resource/case/fresno_so_2013_004/legal-proceeding> ;
-    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/firebaugh-police-department-ca>,
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/firebaugh-police-department-ca>,
         <https://w3id.org/caselinker/resource/agency/hsi>,
-        <https://w3id.org/caselinker/resource/agency/icac> .
+        <https://w3id.org/caselinker/resource/agency/icac> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/fresno_so_2013_004/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/fresno_so_2013_004/person/victim/1>,
+        <https://w3id.org/caselinker/resource/platform/social-media> .
 
-<https://w3id.org/caselinker/resource/case/fresno_so_2013_004/person/offender/1/age> a ns3:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/fresno_so_2013_004/person/offender/1/age> a ns2:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns3:ageSubject <https://w3id.org/caselinker/resource/case/fresno_so_2013_004/person/offender/1> ;
-    ns3:concernsAgeQuality ns3:Age ;
-    ns3:hasAgeInYears 25.0 .
+    ns2:ageSubject <https://w3id.org/caselinker/resource/case/fresno_so_2013_004/person/offender/1> ;
+    ns2:concernsAgeQuality ns2:Age ;
+    ns2:hasAgeInYears 25.0 .
 
-<https://w3id.org/caselinker/resource/case/fresno_so_2013_004/person/victim/1/age> a ns3:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/fresno_so_2013_004/person/victim/1/age> a ns2:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/victim/1/age" ;
-    ns3:ageSubject <https://w3id.org/caselinker/resource/case/fresno_so_2013_004/person/victim/1> ;
-    ns3:concernsAgeQuality ns3:Age ;
-    ns3:hasAgeInYears 13.0 .
+    ns2:ageSubject <https://w3id.org/caselinker/resource/case/fresno_so_2013_004/person/victim/1> ;
+    ns2:concernsAgeQuality ns2:Age ;
+    ns2:hasAgeInYears 13.0 .
 
 <https://w3id.org/caselinker/resource/case/fresno_so_2013_004/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -53,19 +56,14 @@
     ns1:source <https://w3id.org/caselinker/resource/case/fresno_so_2013_004/person/victim/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/fresno_so_2013_004/role/victim/1> .
 
-<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "social media" ;
-    ns1:name "social media" .
-
 <https://w3id.org/caselinker/resource/agency/firebaugh-police-department-ca> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:LocalAgency ;
+        ns3:LocalAgency ;
     rdfs:label "Firebaugh Police Department" ;
     dcterms:identifier "ori:CA0100300" ;
     ns1:name "Firebaugh Police Department" .
 
 <https://w3id.org/caselinker/resource/agency/hsi> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:FederalAgency ;
+        ns3:FederalAgency ;
     rdfs:label "Homeland Security Investigations" ;
     ns1:name "Homeland Security Investigations" .
 
@@ -104,13 +102,18 @@
     skos:altLabel "Firebaugh" ;
     ns1:name "Firebaugh city" .
 
+<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "social media" ;
+    ns1:name "social media" .
+
+<https://w3id.org/caselinker/resource/case/fresno_so_2013_004/phase/booked> a ns4:InitialPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Initial Phase · phase/booked" .
+
 <https://w3id.org/caselinker/resource/case/fresno_so_2013_004/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/fresno_so_2013_004/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/victim/1" .
-
-<https://w3id.org/caselinker/resource/case/fresno_so_2013_004/phase/booked> a ns4:InitialPhase,
-        <https://cacontology.projectvic.org/core#Phase> ;
-    rdfs:label "Initial Phase · phase/booked" .
 

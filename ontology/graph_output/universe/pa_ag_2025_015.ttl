@@ -1,7 +1,7 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org/custodial#> .
-@prefix ns2: <https://cacontology.projectvic.org/core#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/core#> .
 @prefix ns4: <https://cacontology.projectvic.org#> .
 @prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns6: <https://cacontology.projectvic.org/temporal#> .
@@ -10,7 +10,7 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/pa_ag_2025_015> a ns4:CACInvestigation,
-        ns2:EnduringEntity ;
+        ns3:EnduringEntity ;
     rdfs:label "Case pa_ag_2025_015" ;
     dcterms:created "2026-11-11T16:48:55.967421"^^xsd:dateTime ;
     dcterms:date "2025-12-23"^^xsd:date ;
@@ -26,14 +26,16 @@
     ns4:hasPhase <https://w3id.org/caselinker/resource/case/pa_ag_2025_015/phase/sentenced> ;
     ns4:hasStep <https://w3id.org/caselinker/resource/case/pa_ag_2025_015/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/pa_ag_2025_015/legal-proceeding>,
-        <https://w3id.org/caselinker/resource/case/pa_ag_2025_015/legal-step/sentenced> .
+        <https://w3id.org/caselinker/resource/case/pa_ag_2025_015/legal-step/sentenced> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/pa_ag_2025_015/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/pa_ag_2025_015/person/victim/1> .
 
-<https://w3id.org/caselinker/resource/case/pa_ag_2025_015/assessment/semantic/registered-sex-offender> a ns2:AssessmentResult ;
+<https://w3id.org/caselinker/resource/case/pa_ag_2025_015/assessment/semantic/registered-sex-offender> a ns3:AssessmentResult ;
     rdfs:label "semantic similarity · registered_sex_offender" ;
     dcterms:subject <https://cacontology.projectvic.org/sex-offender-registry#RegisteredSexOffender> ;
-    ns2:assesses <https://w3id.org/caselinker/resource/case/pa_ag_2025_015/narrative> ;
-    ns2:hasConfidence 0.4824 ;
-    ns2:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+    ns3:assesses <https://w3id.org/caselinker/resource/case/pa_ag_2025_015/narrative> ;
+    ns3:hasConfidence 0.4824 ;
+    ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
 <https://w3id.org/caselinker/resource/case/pa_ag_2025_015/person/offender/1/age> a ns6:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
@@ -41,19 +43,19 @@
     ns6:concernsAgeQuality ns6:Age ;
     ns6:hasAgeInYears 39.0 .
 
-<https://w3id.org/caselinker/resource/case/pa_ag_2025_015/role/offender/1/has-role> a ns3:Relationship ;
+<https://w3id.org/caselinker/resource/case/pa_ag_2025_015/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns3:isDirectional true ;
-    ns3:kindOfRelationship "Has_Role" ;
-    ns3:source <https://w3id.org/caselinker/resource/case/pa_ag_2025_015/person/offender/1> ;
-    ns3:target <https://w3id.org/caselinker/resource/case/pa_ag_2025_015/role/offender/1> .
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/pa_ag_2025_015/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/pa_ag_2025_015/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/pa_ag_2025_015/role/victim/1/has-role> a ns3:Relationship ;
+<https://w3id.org/caselinker/resource/case/pa_ag_2025_015/role/victim/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/victim/1/has-role" ;
-    ns3:isDirectional true ;
-    ns3:kindOfRelationship "Has_Role" ;
-    ns3:source <https://w3id.org/caselinker/resource/case/pa_ag_2025_015/person/victim/1> ;
-    ns3:target <https://w3id.org/caselinker/resource/case/pa_ag_2025_015/role/victim/1> .
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/pa_ag_2025_015/person/victim/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/pa_ag_2025_015/role/victim/1> .
 
 <https://w3id.org/caselinker/resource/case/pa_ag_2025_015/event/trust-violation> a ns1:CustodialAbuse,
         ns1:TrustViolation ;
@@ -61,20 +63,17 @@
     ns1:perpetratedBy <https://w3id.org/caselinker/resource/case/pa_ag_2025_015/role/offender/1> ;
     ns1:violatesRelationship <https://w3id.org/caselinker/resource/case/pa_ag_2025_015/relationship/mother> .
 
-<https://w3id.org/caselinker/resource/case/pa_ag_2025_015/legal-proceeding> a ns2:Event,
-        ns2:LegalEvent,
+<https://w3id.org/caselinker/resource/case/pa_ag_2025_015/legal-proceeding> a ns3:Event,
+        ns3:LegalEvent,
         ns5:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     ns5:resultsSentence <https://w3id.org/caselinker/resource/case/pa_ag_2025_015/sentence/1> .
 
-<https://w3id.org/caselinker/resource/case/pa_ag_2025_015/legal-step/sentenced> a ns2:Event,
-        ns2:LegalEvent,
+<https://w3id.org/caselinker/resource/case/pa_ag_2025_015/legal-step/sentenced> a ns3:Event,
+        ns3:LegalEvent,
         ns5:LegalProceeding,
         ns5:SentencingHearing ;
     rdfs:label "Sentencing Hearing · legal-step/sentenced" .
-
-<https://w3id.org/caselinker/resource/case/pa_ag_2025_015/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
 
 <https://w3id.org/caselinker/resource/case/pa_ag_2025_015/relationship/mother> a ns1:CustodialRelationship,
         ns1:FamilialRelationship ;
@@ -82,41 +81,44 @@
     ns1:involvesChild <https://w3id.org/caselinker/resource/case/pa_ag_2025_015/role/victim/1> ;
     ns1:involvesCustodian <https://w3id.org/caselinker/resource/case/pa_ag_2025_015/role/offender/1> ;
     ns1:relationshipType "parent" ;
-    ns3:isDirectional true ;
-    ns3:source <https://w3id.org/caselinker/resource/case/pa_ag_2025_015/role/offender/1> ;
-    ns3:target <https://w3id.org/caselinker/resource/case/pa_ag_2025_015/role/victim/1> .
+    ns2:isDirectional true ;
+    ns2:source <https://w3id.org/caselinker/resource/case/pa_ag_2025_015/role/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/pa_ag_2025_015/role/victim/1> .
 
 <https://w3id.org/caselinker/resource/case/pa_ag_2025_015/sentence/1> a ns5:CriminalSentence,
         ns5:PrisonSentence ;
     rdfs:label "eight to 20 years" ;
-    ns2:assesses <https://w3id.org/caselinker/resource/case/pa_ag_2025_015/role/offender/1> .
+    ns3:assesses <https://w3id.org/caselinker/resource/case/pa_ag_2025_015/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/location/blossburg-borough-pa> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/blossburg-borough-pa> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Blossburg borough" ;
     dcterms:identifier "fips:4207160" ;
     skos:altLabel "Blossburg" ;
-    ns3:name "Blossburg borough" .
+    ns2:name "Blossburg borough" .
 
-<https://w3id.org/caselinker/resource/location/harrisburg-city-pa> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/harrisburg-city-pa> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Harrisburg city" ;
     dcterms:identifier "fips:4232800" ;
     skos:altLabel "Harrisburg" ;
-    ns3:name "Harrisburg city" .
+    ns2:name "Harrisburg city" .
 
-<https://w3id.org/caselinker/resource/location/tioga-county-pa> a ns2:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/tioga-county-pa> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Tioga County" ;
     dcterms:identifier "fips:42117" ;
-    ns3:name "Tioga County" .
+    ns2:name "Tioga County" .
+
+<https://w3id.org/caselinker/resource/case/pa_ag_2025_015/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
+
+<https://w3id.org/caselinker/resource/case/pa_ag_2025_015/phase/sentenced> a ns3:Phase,
+        ns5:SentencingPhase ;
+    rdfs:label "Sentencing Phase · phase/sentenced" .
 
 <https://w3id.org/caselinker/resource/case/pa_ag_2025_015/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/pa_ag_2025_015/phase/sentenced> a ns2:Phase,
-        ns5:SentencingPhase ;
-    rdfs:label "Sentencing Phase · phase/sentenced" .
 
 <https://w3id.org/caselinker/resource/case/pa_ag_2025_015/role/victim/1> a ns4:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" .

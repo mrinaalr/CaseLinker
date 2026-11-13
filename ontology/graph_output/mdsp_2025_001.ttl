@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns4: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -26,10 +26,11 @@
     ns2:hasStep <https://w3id.org/caselinker/resource/case/mdsp_2025_001/event/possession>,
         <https://w3id.org/caselinker/resource/case/mdsp_2025_001/event/production>,
         <https://w3id.org/caselinker/resource/case/mdsp_2025_001/legal-proceeding> ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/department-of-homeland-security>,
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/department-of-homeland-security>,
         <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/maryland-state-police-department>,
-        <https://w3id.org/caselinker/resource/agency/prince-george-s-county-police-department-md> .
+        <https://w3id.org/caselinker/resource/agency/prince-george-s-county-police-department-md> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/mdsp_2025_001/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/mdsp_2025_001/person/offender/1/age> a ns4:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
@@ -45,7 +46,7 @@
     ns1:target <https://w3id.org/caselinker/resource/case/mdsp_2025_001/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/department-of-homeland-security> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:LocalAgency ;
+        ns5:LocalAgency ;
     rdfs:label "Department of Homeland Security" ;
     ns1:name "Department of Homeland Security" .
 
@@ -56,22 +57,22 @@
     ns1:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/agency/maryland-state-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:StateAgency ;
+        ns5:StateAgency ;
     rdfs:label "Maryland State Police Department" ;
     ns1:name "Maryland State Police Department" .
 
 <https://w3id.org/caselinker/resource/agency/prince-george-s-county-police-department-md> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:LocalAgency ;
+        ns5:LocalAgency ;
     rdfs:label "Prince George's County Police Department" ;
     dcterms:identifier "ori:MD0172100" ;
     ns1:name "Prince George's County Police Department" .
 
-<https://w3id.org/caselinker/resource/case/mdsp_2025_001/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/mdsp_2025_001/charge/1> a ns3:CSAM_Possession,
+        ns3:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/mdsp_2025_001/charge/2> a ns5:CSAM_Production,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/mdsp_2025_001/charge/2> a ns3:CSAM_Production,
+        ns3:CriminalCharge ;
     rdfs:label "production of child pornography" .
 
 <https://w3id.org/caselinker/resource/case/mdsp_2025_001/event/possession> a ns2:CSAMIncident,
@@ -84,10 +85,10 @@
 
 <https://w3id.org/caselinker/resource/case/mdsp_2025_001/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns5:LegalProceeding ;
+        ns3:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns5:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/mdsp_2025_001/charge/1>,
+    ns3:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/mdsp_2025_001/charge/1>,
         <https://w3id.org/caselinker/resource/case/mdsp_2025_001/charge/2> .
 
 <https://w3id.org/caselinker/resource/case/mdsp_2025_001/location/georges-county> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
@@ -95,7 +96,7 @@
     rdfs:label "George’s County" ;
     ns1:name "George’s County" .
 
-<https://w3id.org/caselinker/resource/case/mdsp_2025_001/role/offender/1> a ns5:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/mdsp_2025_001/role/offender/1> a ns3:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 
 <https://w3id.org/caselinker/resource/location/beltsville-cdp-md> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
@@ -111,10 +112,10 @@
     dcterms:identifier "fips:24" ;
     ns1:name "Maryland" .
 
-<https://w3id.org/caselinker/resource/case/mdsp_2025_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
 <https://w3id.org/caselinker/resource/case/mdsp_2025_001/phase/charged> a ns2:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/charged" .
+
+<https://w3id.org/caselinker/resource/case/mdsp_2025_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

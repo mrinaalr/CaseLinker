@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns6: <https://cacontology.projectvic.org/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
@@ -30,8 +30,9 @@
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_522/event/project-safe-childhood>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_522/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_522/legal-step/sentenced> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/doj>,
-        <https://w3id.org/caselinker/resource/agency/fbi> .
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/doj>,
+        <https://w3id.org/caselinker/resource/agency/fbi> ;
+    ns5:object <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_522/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_522/assessment/semantic/possession-csam> a ns6:AssessmentResult ;
     rdfs:label "semantic similarity · possession_csam" ;
@@ -40,30 +41,30 @@
     ns6:hasConfidence 0.5223 ;
     ns6:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_522/person/offender/1/age> a ns3:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_522/person/offender/1/age> a ns2:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns3:ageSubject <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_522/person/offender/1> ;
-    ns3:concernsAgeQuality ns3:Age ;
-    ns3:hasAgeInYears 35.0 .
+    ns2:ageSubject <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_522/person/offender/1> ;
+    ns2:concernsAgeQuality ns2:Age ;
+    ns2:hasAgeInYears 35.0 .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_522/role/offender/1/has-role> a ns2:Relationship ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_522/role/offender/1/has-role> a ns5:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns2:isDirectional true ;
-    ns2:kindOfRelationship "Has_Role" ;
-    ns2:source <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_522/person/offender/1> ;
-    ns2:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_522/role/offender/1> .
+    ns5:isDirectional true ;
+    ns5:kindOfRelationship "Has_Role" ;
+    ns5:source <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_522/person/offender/1> ;
+    ns5:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_522/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/doj> a ns6:OrganizationLikeEntity,
-        ns5:FederalAgency ;
+        ns3:FederalAgency ;
     rdfs:label "U.S. Department of Justice" ;
-    ns2:name "U.S. Department of Justice" .
+    ns5:name "U.S. Department of Justice" .
 
 <https://w3id.org/caselinker/resource/agency/fbi> a ns6:OrganizationLikeEntity,
-        ns5:FederalAgency ;
+        ns3:FederalAgency ;
     rdfs:label "Federal Bureau of Investigation" ;
     skos:altLabel "FBI",
         "FBI Washington Field Office" ;
-    ns2:name "Federal Bureau of Investigation" .
+    ns5:name "Federal Bureau of Investigation" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_522/charge/1> a ns4:CSAM_Possession,
         ns4:CriminalCharge ;
@@ -81,11 +82,11 @@
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_522/event/multi-jurisdiction> a ns6:Event,
-        ns5:MultiJurisdictionalInvestigation ;
+        ns3:MultiJurisdictionalInvestigation ;
     rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_522/event/project-safe-childhood> a ns6:Event,
-        ns5:ProjectSafeChildhoodOperation ;
+        ns3:ProjectSafeChildhoodOperation ;
     rdfs:label "Project Safe Childhood Operation · event/project-safe-childhood" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_522/legal-proceeding> a ns6:Event,
@@ -112,30 +113,30 @@
     rdfs:label "Alexandria city" ;
     dcterms:identifier "fips:5101000" ;
     skos:altLabel "Alexandria" ;
-    ns2:name "Alexandria city" .
+    ns5:name "Alexandria city" .
 
 <https://w3id.org/caselinker/resource/location/virginia-va> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Virginia" ;
     dcterms:identifier "fips:51" ;
     skos:altLabel "Va." ;
-    ns2:name "Virginia" .
+    ns5:name "Virginia" .
 
 <https://w3id.org/caselinker/resource/location/virginia-va-51> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Virginia" ;
     dcterms:identifier "fips:51" ;
-    ns2:name "Virginia" .
+    ns5:name "Virginia" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_522/event/possession> a ns1:CSAMIncident,
         ns6:Event ;
     rdfs:label "CSAMIncident · event/possession" ;
     ns1:severityLevel 3 .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_522/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_522/phase/sentenced> a ns6:Phase,
         ns4:SentencingPhase ;
     rdfs:label "Sentencing Phase · phase/sentenced" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_522/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

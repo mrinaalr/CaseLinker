@@ -1,11 +1,11 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/platforms#> .
+@prefix ns1: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
 @prefix ns3: <https://cacontology.projectvic.org/custodial#> .
 @prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns7: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns7: <https://cacontology.projectvic.org/platforms#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -30,13 +30,16 @@
         <https://w3id.org/caselinker/resource/case/ncmec_2024_246/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_246/legal-proceeding> ;
     ns5:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_246/agency/pinellas-county-sheriffs-office>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_246/agency/sheriffs-office-investigative-operations-bureau> .
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_246/agency/sheriffs-office-investigative-operations-bureau> ;
+    ns4:object <https://w3id.org/caselinker/resource/case/ncmec_2024_246/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_246/person/victim/1>,
+        <https://w3id.org/caselinker/resource/platform/gen-ai> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_246/person/offender/1/age> a ns7:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_246/person/offender/1/age> a ns1:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns7:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_246/person/offender/1> ;
-    ns7:concernsAgeQuality ns7:Age ;
-    ns7:hasAgeInYears 36.0 .
+    ns1:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_246/person/offender/1> ;
+    ns1:concernsAgeQuality ns1:Age ;
+    ns1:hasAgeInYears 36.0 .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_246/role/offender/1/has-role> a ns4:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -89,9 +92,6 @@
     ns6:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_246/charge/1>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_246/charge/2> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_246/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
-
 <https://w3id.org/caselinker/resource/case/ncmec_2024_246/relationship/teacher> a ns3:CustodialRelationship,
         ns3:Teacher ;
     rdfs:label "Custodial Relationship · relationship/teacher" ;
@@ -121,23 +121,26 @@
     skos:altLabel "St. Pete Beach" ;
     ns4:name "St. Pete Beach city" .
 
-<https://w3id.org/caselinker/resource/platform/gen-ai> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        ns1:FileHostingService ;
-    rdfs:label "Gen AI" ;
-    ns1:platformType "generative-ai" ;
-    ns4:name "Gen AI" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_246/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_246/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_246/phase/charged> a ns2:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/charged" .
 
+<https://w3id.org/caselinker/resource/platform/gen-ai> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        ns7:FileHostingService ;
+    rdfs:label "Gen AI" ;
+    ns7:platformType "generative-ai" ;
+    ns4:name "Gen AI" .
+
 <https://w3id.org/caselinker/resource/case/ncmec_2024_246/event/possession> a ns2:CSAMIncident,
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "CSAMIncident · event/possession" ;
     ns2:usesChannel <https://w3id.org/caselinker/resource/platform/gen-ai> .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_246/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_246/role/victim/1> a ns2:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" ;

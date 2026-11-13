@@ -1,14 +1,14 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns1: <https://cacontology.projectvic.org/custodial#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns3: <https://cacontology.projectvic.org#> .
 @prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://cacontology.projectvic.org#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/sjpd_2023_004> a ns5:CACInvestigation,
+<https://w3id.org/caselinker/resource/case/sjpd_2023_004> a ns3:CACInvestigation,
         <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case sjpd_2023_004" ;
     dcterms:created "2026-11-11T17:44:22.314806"^^xsd:dateTime ;
@@ -18,12 +18,14 @@
     dcterms:provenance <https://w3id.org/caselinker/resource/case/sjpd_2023_004/provenance> ;
     dcterms:source <https://www.sjpd.org/Home/Components/News/News/1076/>,
         "SJPD" ;
-    ns5:currentPhase <https://w3id.org/caselinker/resource/case/sjpd_2023_004/phase/booked> ;
-    ns5:hasPhase <https://w3id.org/caselinker/resource/case/sjpd_2023_004/phase/booked> ;
-    ns5:hasStep <https://w3id.org/caselinker/resource/case/sjpd_2023_004/event/trust-violation>,
+    ns3:currentPhase <https://w3id.org/caselinker/resource/case/sjpd_2023_004/phase/booked> ;
+    ns3:hasPhase <https://w3id.org/caselinker/resource/case/sjpd_2023_004/phase/booked> ;
+    ns3:hasStep <https://w3id.org/caselinker/resource/case/sjpd_2023_004/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/sjpd_2023_004/legal-proceeding> ;
-    ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/ced-task-force-ca-unverified>,
-        <https://w3id.org/caselinker/resource/agency/icac> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/ced-task-force-ca-unverified>,
+        <https://w3id.org/caselinker/resource/agency/icac> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/sjpd_2023_004/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/sjpd_2023_004/person/victim/1> .
 
 <https://w3id.org/caselinker/resource/case/sjpd_2023_004/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -40,7 +42,7 @@
     ns2:target <https://w3id.org/caselinker/resource/case/sjpd_2023_004/role/victim/1> .
 
 <https://w3id.org/caselinker/resource/agency/ced-task-force-ca-unverified> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns1:LocalAgency ;
+        ns5:LocalAgency ;
     rdfs:label "CED Task Force" ;
     ns2:name "CED Task Force" .
 
@@ -52,13 +54,13 @@
 
 <https://w3id.org/caselinker/resource/case/sjpd_2023_004/charge/1> a ns4:CriminalCharge ;
     rdfs:label "child exploitation" ;
-    dcterms:subject ns5:ChildSexualAbuseEvent .
+    dcterms:subject ns3:ChildSexualAbuseEvent .
 
-<https://w3id.org/caselinker/resource/case/sjpd_2023_004/event/trust-violation> a ns3:CustodialAbuse,
-        ns3:TrustViolation ;
+<https://w3id.org/caselinker/resource/case/sjpd_2023_004/event/trust-violation> a ns1:CustodialAbuse,
+        ns1:TrustViolation ;
     rdfs:label "Custodial Abuse · event/trust-violation" ;
-    ns3:perpetratedBy <https://w3id.org/caselinker/resource/case/sjpd_2023_004/role/offender/1> ;
-    ns3:violatesRelationship <https://w3id.org/caselinker/resource/case/sjpd_2023_004/relationship/mother> .
+    ns1:perpetratedBy <https://w3id.org/caselinker/resource/case/sjpd_2023_004/role/offender/1> ;
+    ns1:violatesRelationship <https://w3id.org/caselinker/resource/case/sjpd_2023_004/relationship/mother> .
 
 <https://w3id.org/caselinker/resource/case/sjpd_2023_004/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
@@ -68,27 +70,27 @@
     ns4:chargeCount "1"^^xsd:nonNegativeInteger ;
     ns4:hasCharge <https://w3id.org/caselinker/resource/case/sjpd_2023_004/charge/1> .
 
+<https://w3id.org/caselinker/resource/case/sjpd_2023_004/relationship/mother> a ns1:CustodialRelationship,
+        ns1:FamilialRelationship ;
+    rdfs:label "Custodial Relationship · relationship/mother" ;
+    ns1:involvesChild <https://w3id.org/caselinker/resource/case/sjpd_2023_004/role/victim/1> ;
+    ns1:involvesCustodian <https://w3id.org/caselinker/resource/case/sjpd_2023_004/role/offender/1> ;
+    ns1:relationshipType "parent" ;
+    ns2:isDirectional true ;
+    ns2:source <https://w3id.org/caselinker/resource/case/sjpd_2023_004/role/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/sjpd_2023_004/role/victim/1> .
+
 <https://w3id.org/caselinker/resource/case/sjpd_2023_004/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/sjpd_2023_004/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/victim/1" .
 
-<https://w3id.org/caselinker/resource/case/sjpd_2023_004/relationship/mother> a ns3:CustodialRelationship,
-        ns3:FamilialRelationship ;
-    rdfs:label "Custodial Relationship · relationship/mother" ;
-    ns3:involvesChild <https://w3id.org/caselinker/resource/case/sjpd_2023_004/role/victim/1> ;
-    ns3:involvesCustodian <https://w3id.org/caselinker/resource/case/sjpd_2023_004/role/offender/1> ;
-    ns3:relationshipType "parent" ;
-    ns2:isDirectional true ;
-    ns2:source <https://w3id.org/caselinker/resource/case/sjpd_2023_004/role/offender/1> ;
-    ns2:target <https://w3id.org/caselinker/resource/case/sjpd_2023_004/role/victim/1> .
-
-<https://w3id.org/caselinker/resource/case/sjpd_2023_004/phase/booked> a ns5:InitialPhase,
+<https://w3id.org/caselinker/resource/case/sjpd_2023_004/phase/booked> a ns3:InitialPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Initial Phase · phase/booked" .
 
-<https://w3id.org/caselinker/resource/case/sjpd_2023_004/role/victim/1> a ns5:VictimRole ;
+<https://w3id.org/caselinker/resource/case/sjpd_2023_004/role/victim/1> a ns3:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" .
 
 <https://w3id.org/caselinker/resource/case/sjpd_2023_004/role/offender/1> a ns4:DefendantRole ;

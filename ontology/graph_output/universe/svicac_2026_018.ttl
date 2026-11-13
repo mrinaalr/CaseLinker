@@ -2,9 +2,9 @@
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
 @prefix ns3: <https://cacontology.projectvic.org/custodial#> .
-@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns6: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -31,13 +31,15 @@
     ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/san-mateo-county-sheriff-s-office-ca>,
         <https://w3id.org/caselinker/resource/agency/sheriffs-office-detective-bureau-ca-unverified> ;
-    ns1:object <https://w3id.org/caselinker/resource/case/svicac_2026_018/cybertip> .
+    ns1:object <https://w3id.org/caselinker/resource/case/svicac_2026_018/cybertip>,
+        <https://w3id.org/caselinker/resource/case/svicac_2026_018/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/svicac_2026_018/person/victim/1> .
 
-<https://w3id.org/caselinker/resource/case/svicac_2026_018/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/svicac_2026_018/person/offender/1/age> a ns6:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns4:ageSubject <https://w3id.org/caselinker/resource/case/svicac_2026_018/person/offender/1> ;
-    ns4:concernsAgeQuality ns4:Age ;
-    ns4:hasAgeInYears 32.0 .
+    ns6:ageSubject <https://w3id.org/caselinker/resource/case/svicac_2026_018/person/offender/1> ;
+    ns6:concernsAgeQuality ns6:Age ;
+    ns6:hasAgeInYears 32.0 .
 
 <https://w3id.org/caselinker/resource/case/svicac_2026_018/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -70,8 +72,8 @@
     rdfs:label "Sheriff's Office Detective Bureau" ;
     ns1:name "Sheriff's Office Detective Bureau" .
 
-<https://w3id.org/caselinker/resource/case/svicac_2026_018/charge/1> a ns6:CSAM_Possession,
-        ns6:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/svicac_2026_018/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
     rdfs:label "child porn" .
 
 <https://w3id.org/caselinker/resource/case/svicac_2026_018/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
@@ -79,7 +81,7 @@
     ns1:name "observe" .
 
 <https://w3id.org/caselinker/resource/case/svicac_2026_018/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
-        ns6:CSAM_Distribution ;
+        ns4:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/svicac_2026_018/event/trust-violation> a ns3:AuthorityAbuse,
@@ -90,10 +92,10 @@
 
 <https://w3id.org/caselinker/resource/case/svicac_2026_018/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns6:LegalProceeding ;
+        ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns6:chargeCount "1"^^xsd:nonNegativeInteger ;
-    ns6:hasCharge <https://w3id.org/caselinker/resource/case/svicac_2026_018/charge/1> .
+    ns4:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/svicac_2026_018/charge/1> .
 
 <https://w3id.org/caselinker/resource/case/svicac_2026_018/location/sylvan-way> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
@@ -103,9 +105,6 @@
 <https://w3id.org/caselinker/resource/case/svicac_2026_018/operation> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/taskforce#ReactiveOperation> ;
     rdfs:label "Reactive Operation · operation" .
-
-<https://w3id.org/caselinker/resource/case/svicac_2026_018/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
 
 <https://w3id.org/caselinker/resource/case/svicac_2026_018/relationship/teacher> a ns3:CustodialRelationship,
         ns3:Teacher ;
@@ -124,8 +123,8 @@
     skos:altLabel "Redwood City" ;
     ns1:name "Redwood City city" .
 
-<https://w3id.org/caselinker/resource/case/svicac_2026_018/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+<https://w3id.org/caselinker/resource/case/svicac_2026_018/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
 
 <https://w3id.org/caselinker/resource/case/svicac_2026_018/phase/arrested> a ns2:InitialPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
@@ -135,11 +134,14 @@
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "CSAMIncident · event/possession" .
 
+<https://w3id.org/caselinker/resource/case/svicac_2026_018/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
 <https://w3id.org/caselinker/resource/case/svicac_2026_018/role/victim/1> a ns2:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" ;
     ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/svicac_2026_018/event/possession> .
 
-<https://w3id.org/caselinker/resource/case/svicac_2026_018/role/offender/1> a ns6:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/svicac_2026_018/role/offender/1> a ns4:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/svicac_2026_018/event/possession> .
 

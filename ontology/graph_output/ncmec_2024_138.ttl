@@ -1,8 +1,8 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns5: <https://cacontology.projectvic.org/hotlines#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
@@ -28,10 +28,13 @@
         <https://w3id.org/caselinker/resource/case/ncmec_2024_138/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_138/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_138/operation> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_138/agency/millen-police-department>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_138/agency/ocala-police-department> ;
-    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2024_138/cybertip> .
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2024_138/cybertip>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_138/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/chat>,
+        <https://w3id.org/caselinker/resource/platform/social-media> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_138/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -41,17 +44,17 @@
     ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_138/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_138/agency/millen-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:LocalAgency ;
+        ns3:LocalAgency ;
     rdfs:label "Millen Police Department" ;
     ns1:name "Millen Police Department" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_138/agency/ocala-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:LocalAgency ;
+        ns3:LocalAgency ;
     rdfs:label "Ocala Police Department" ;
     ns1:name "Ocala Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_138/charge/1> a ns3:CSAM_Possession,
-        ns3:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_138/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
     rdfs:label "possession of child" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_138/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
@@ -60,16 +63,16 @@
     ns1:name "observe" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_138/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
-        ns3:CSAM_Distribution ;
+        ns4:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_138/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns3:LegalProceeding ;
+        ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): held at Marion County Jail" ;
-    ns3:chargeCount "10"^^xsd:nonNegativeInteger ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_138/charge/1> .
+    ns4:chargeCount "10"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_138/charge/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_138/location/marion> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
@@ -80,10 +83,7 @@
         <https://cacontology.projectvic.org/undercover#UndercoverOperation> ;
     rdfs:label "Undercover Operation · operation" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_138/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_138/role/offender/1> a ns3:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_138/role/offender/1> a ns4:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_138/event/possession> .
 
@@ -107,19 +107,9 @@
     skos:altLabel "Ocala" ;
     ns1:name "Ocala city" .
 
-<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
-    rdfs:label "chat" ;
-    ns1:name "chat" .
-
-<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "social media" ;
-    ns1:name "social media" .
-
 <https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
         ns5:HotlineOrganization,
-        ns4:FederalAgency ;
+        ns3:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
     ns1:name "National Center for Missing and Exploited Children" .
@@ -131,7 +121,20 @@
     ns2:usesChannel <https://w3id.org/caselinker/resource/platform/chat>,
         <https://w3id.org/caselinker/resource/platform/social-media> .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2024_138/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
 <https://w3id.org/caselinker/resource/case/ncmec_2024_138/phase/arrested> a ns2:InitialPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Initial Phase · phase/arrested" .
+
+<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
+    rdfs:label "chat" ;
+    ns1:name "chat" .
+
+<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "social media" ;
+    ns1:name "social media" .
 

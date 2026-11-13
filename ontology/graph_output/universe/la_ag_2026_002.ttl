@@ -1,8 +1,8 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns4: <https://cacontology.projectvic.org/custodial#> .
 @prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -26,13 +26,15 @@
     ns3:hasStep <https://w3id.org/caselinker/resource/case/la_ag_2026_002/event/ai-csam>,
         <https://w3id.org/caselinker/resource/case/la_ag_2026_002/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/la_ag_2026_002/legal-proceeding> ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/louisiana-bureau-of-investigation> .
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/louisiana-bureau-of-investigation> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/la_ag_2026_002/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/la_ag_2026_002/person/victim/1> .
 
-<https://w3id.org/caselinker/resource/case/la_ag_2026_002/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/la_ag_2026_002/person/offender/1/age> a ns2:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns4:ageSubject <https://w3id.org/caselinker/resource/case/la_ag_2026_002/person/offender/1> ;
-    ns4:concernsAgeQuality ns4:Age ;
-    ns4:hasAgeInYears 49.0 .
+    ns2:ageSubject <https://w3id.org/caselinker/resource/case/la_ag_2026_002/person/offender/1> ;
+    ns2:concernsAgeQuality ns2:Age ;
+    ns2:hasAgeInYears 49.0 .
 
 <https://w3id.org/caselinker/resource/case/la_ag_2026_002/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -57,11 +59,11 @@
         ns5:CriminalCharge ;
     rdfs:label "Unlawful Deepfakes" .
 
-<https://w3id.org/caselinker/resource/case/la_ag_2026_002/event/trust-violation> a ns2:AuthorityAbuse,
-        ns2:TrustViolation ;
+<https://w3id.org/caselinker/resource/case/la_ag_2026_002/event/trust-violation> a ns4:AuthorityAbuse,
+        ns4:TrustViolation ;
     rdfs:label "Authority Abuse · event/trust-violation" ;
-    ns2:perpetratedBy <https://w3id.org/caselinker/resource/case/la_ag_2026_002/role/offender/1> ;
-    ns2:violatesRelationship <https://w3id.org/caselinker/resource/case/la_ag_2026_002/relationship/teacher> .
+    ns4:perpetratedBy <https://w3id.org/caselinker/resource/case/la_ag_2026_002/role/offender/1> ;
+    ns4:violatesRelationship <https://w3id.org/caselinker/resource/case/la_ag_2026_002/relationship/teacher> .
 
 <https://w3id.org/caselinker/resource/case/la_ag_2026_002/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
@@ -76,15 +78,12 @@
     rdfs:label "United States" ;
     ns1:name "United States" .
 
-<https://w3id.org/caselinker/resource/case/la_ag_2026_002/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
-
-<https://w3id.org/caselinker/resource/case/la_ag_2026_002/relationship/teacher> a ns2:CustodialRelationship,
-        ns2:Teacher ;
+<https://w3id.org/caselinker/resource/case/la_ag_2026_002/relationship/teacher> a ns4:CustodialRelationship,
+        ns4:Teacher ;
     rdfs:label "Custodial Relationship · relationship/teacher" ;
-    ns2:involvesChild <https://w3id.org/caselinker/resource/case/la_ag_2026_002/role/victim/1> ;
-    ns2:involvesCustodian <https://w3id.org/caselinker/resource/case/la_ag_2026_002/role/offender/1> ;
-    ns2:relationshipType "teacher" ;
+    ns4:involvesChild <https://w3id.org/caselinker/resource/case/la_ag_2026_002/role/victim/1> ;
+    ns4:involvesCustodian <https://w3id.org/caselinker/resource/case/la_ag_2026_002/role/offender/1> ;
+    ns4:relationshipType "teacher" ;
     ns1:isDirectional true ;
     ns1:source <https://w3id.org/caselinker/resource/case/la_ag_2026_002/role/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/la_ag_2026_002/role/victim/1> .
@@ -96,8 +95,8 @@
     skos:altLabel "New Orleans" ;
     ns1:name "New Orleans city" .
 
-<https://w3id.org/caselinker/resource/case/la_ag_2026_002/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+<https://w3id.org/caselinker/resource/case/la_ag_2026_002/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
 
 <https://w3id.org/caselinker/resource/case/la_ag_2026_002/phase/arrested> a ns3:InitialPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
@@ -107,6 +106,9 @@
         <https://cacontology.projectvic.org/ai-csam#AIGeneratedCSAM>,
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "Digitally Generated CSAMIncident · event/ai-csam" .
+
+<https://w3id.org/caselinker/resource/case/la_ag_2026_002/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/la_ag_2026_002/role/victim/1> a ns3:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" ;

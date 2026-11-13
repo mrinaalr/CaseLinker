@@ -1,10 +1,10 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/hotlines#> .
+@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns4: <https://cacontology.projectvic.org#> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns6: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns6: <https://cacontology.projectvic.org/hotlines#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -27,16 +27,17 @@
     ns4:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_650/phase/charged> ;
     ns4:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_650/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_650/legal-proceeding> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
+    ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_650/agency/flemington-borough-police-department>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_650/agency/raritan-township-police-department> ;
-    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2024_650/cybertip> .
+    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2024_650/cybertip>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_650/person/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_650/person/offender/1/age> a ns6:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_650/person/offender/1/age> a ns3:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns6:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_650/person/offender/1> ;
-    ns6:concernsAgeQuality ns6:Age ;
-    ns6:hasAgeInYears 31.0 .
+    ns3:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_650/person/offender/1> ;
+    ns3:concernsAgeQuality ns3:Age ;
+    ns3:hasAgeInYears 31.0 .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_650/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -46,33 +47,33 @@
     ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2024_650/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_650/agency/flemington-borough-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:LocalAgency ;
+        ns1:LocalAgency ;
     rdfs:label "Flemington Borough Police Department" ;
     ns2:name "Flemington Borough Police Department" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_650/agency/raritan-township-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:LocalAgency ;
+        ns1:LocalAgency ;
     rdfs:label "Raritan Township Police Department" ;
     ns2:name "Raritan Township Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_650/charge/1> a ns3:CSAM_Possession,
-        ns3:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_650/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
     rdfs:label "child pornography" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_650/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
     rdfs:label "CyberTipline report" ;
-    ns1:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns6:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
     ns2:name "observe" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_650/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns3:LegalProceeding ;
+        ns5:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): Warren County Jail" ;
-    ns3:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_650/charge/1> .
+    ns5:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_650/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_650/role/offender/1> a ns3:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_650/role/offender/1> a ns5:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_650/event/possession> .
 
@@ -103,8 +104,8 @@
     ns2:name "New Jersey" .
 
 <https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns1:HotlineOrganization,
-        ns5:FederalAgency ;
+        ns6:HotlineOrganization,
+        ns1:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
     ns2:name "National Center for Missing and Exploited Children" .
@@ -114,10 +115,10 @@
     rdfs:label "CSAMIncident · event/possession" ;
     ns4:severityLevel 3 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_650/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
 <https://w3id.org/caselinker/resource/case/ncmec_2024_650/phase/charged> a ns4:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/charged" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_650/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

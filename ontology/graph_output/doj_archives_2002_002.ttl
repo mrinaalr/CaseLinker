@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/platforms#> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/platforms#> .
 @prefix ns6: <https://cacontology.projectvic.org/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
@@ -52,7 +52,9 @@
         <https://w3id.org/caselinker/resource/case/doj_archives_2002_002/legal-proceeding> ;
     ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/doj>,
         <https://w3id.org/caselinker/resource/agency/german-national-police-department>,
-        <https://w3id.org/caselinker/resource/agency/ncmec> .
+        <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/doj_archives_2002_002/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/irc> .
 
 <https://w3id.org/caselinker/resource/case/doj_archives_2002_002/assessment/semantic/evidence-seizure> a ns6:AssessmentResult ;
     rdfs:label "semantic similarity · evidence_seizure" ;
@@ -67,12 +69,6 @@
     ns1:kindOfRelationship "Has_Role" ;
     ns1:source <https://w3id.org/caselinker/resource/case/doj_archives_2002_002/person/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/doj_archives_2002_002/role/offender/1> .
-
-<https://w3id.org/caselinker/resource/platform/irc> a ns6:DigitalSystemEntity,
-        ns3:AnonymousChatPlatform ;
-    rdfs:label "IRC" ;
-    ns3:platformType "legacy" ;
-    ns1:name "IRC" .
 
 <https://w3id.org/caselinker/resource/agency/doj> a ns6:OrganizationLikeEntity,
         ns4:FederalAgency ;
@@ -90,20 +86,20 @@
     skos:altLabel "NCMEC" ;
     ns1:name "National Center for Missing and Exploited Children" .
 
-<https://w3id.org/caselinker/resource/case/doj_archives_2002_002/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_archives_2002_002/charge/1> a ns3:CSAM_Possession,
+        ns3:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/doj_archives_2002_002/charge/2> a ns5:CSAM_Production,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_archives_2002_002/charge/2> a ns3:CSAM_Production,
+        ns3:CriminalCharge ;
     rdfs:label "production of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/doj_archives_2002_002/charge/3> a ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_archives_2002_002/charge/3> a ns3:CriminalCharge ;
     rdfs:label "child exploitation" ;
     dcterms:subject ns2:ChildSexualAbuseEvent .
 
 <https://w3id.org/caselinker/resource/case/doj_archives_2002_002/event/distribution> a ns6:Event,
-        ns5:CSAM_Distribution ;
+        ns3:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/doj_archives_2002_002/event/multi-jurisdiction> a ns6:Event,
@@ -125,10 +121,10 @@
 
 <https://w3id.org/caselinker/resource/case/doj_archives_2002_002/legal-proceeding> a ns6:Event,
         ns6:LegalEvent,
-        ns5:LegalProceeding ;
+        ns3:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns5:chargeCount "3"^^xsd:nonNegativeInteger ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/doj_archives_2002_002/charge/1>,
+    ns3:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/doj_archives_2002_002/charge/1>,
         <https://w3id.org/caselinker/resource/case/doj_archives_2002_002/charge/2>,
         <https://w3id.org/caselinker/resource/case/doj_archives_2002_002/charge/3> .
 
@@ -187,10 +183,7 @@
     rdfs:label "United States" ;
     ns1:name "United States" .
 
-<https://w3id.org/caselinker/resource/case/doj_archives_2002_002/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/doj_archives_2002_002/role/offender/1> a ns5:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/doj_archives_2002_002/role/offender/1> a ns3:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 
 <https://w3id.org/caselinker/resource/location/alaska-ak> a ns6:PlaceLikeEntity,
@@ -283,4 +276,13 @@
     rdfs:label "Virginia" ;
     dcterms:identifier "fips:51" ;
     ns1:name "Virginia" .
+
+<https://w3id.org/caselinker/resource/platform/irc> a ns6:DigitalSystemEntity,
+        ns5:AnonymousChatPlatform ;
+    rdfs:label "IRC" ;
+    ns5:platformType "legacy" ;
+    ns1:name "IRC" .
+
+<https://w3id.org/caselinker/resource/case/doj_archives_2002_002/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

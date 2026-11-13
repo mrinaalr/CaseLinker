@@ -2,9 +2,9 @@
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
 @prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/hotlines#> .
 @prefix ns5: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns6: <https://cacontology.projectvic.org/hotlines#> .
+@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -31,12 +31,15 @@
         <https://w3id.org/caselinker/resource/case/nj_ag_2018_008/event/distribution>,
         <https://w3id.org/caselinker/resource/case/nj_ag_2018_008/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/nj_ag_2018_008/operation> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/division-of-criminal-justice-financial-computer-crimes-bureau-nj-unverified>,
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/division-of-criminal-justice-financial-computer-crimes-bureau-nj-unverified>,
         <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/ncmec>,
         <https://w3id.org/caselinker/resource/agency/new-jersey-attorney-generals-office>,
         <https://w3id.org/caselinker/resource/agency/new-jersey-state-police-department> ;
-    ns1:object <https://w3id.org/caselinker/resource/case/nj_ag_2018_008/cybertip> .
+    ns1:object <https://w3id.org/caselinker/resource/case/nj_ag_2018_008/cybertip>,
+        <https://w3id.org/caselinker/resource/case/nj_ag_2018_008/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/chat>,
+        <https://w3id.org/caselinker/resource/platform/social-media> .
 
 <https://w3id.org/caselinker/resource/case/nj_ag_2018_008/person/offender/1/age> a ns5:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
@@ -52,7 +55,7 @@
     ns1:target <https://w3id.org/caselinker/resource/case/nj_ag_2018_008/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/division-of-criminal-justice-financial-computer-crimes-bureau-nj-unverified> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:LocalAgency ;
+        ns6:LocalAgency ;
     rdfs:label "Division of Criminal Justice Financial & Computer Crimes Bureau" ;
     ns1:name "Division of Criminal Justice Financial & Computer Crimes Bureau" .
 
@@ -63,12 +66,12 @@
     ns1:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/agency/new-jersey-attorney-generals-office> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:StateAgency ;
+        ns6:StateAgency ;
     rdfs:label "New Jersey Attorney General's Office" ;
     ns1:name "New Jersey Attorney General's Office" .
 
 <https://w3id.org/caselinker/resource/agency/new-jersey-state-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:StateAgency ;
+        ns6:StateAgency ;
     rdfs:label "New Jersey State Police Department" ;
     ns1:name "New Jersey State Police Department" .
 
@@ -78,7 +81,7 @@
 
 <https://w3id.org/caselinker/resource/case/nj_ag_2018_008/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
     rdfs:label "CyberTipline report" ;
-    ns6:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns4:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
     ns1:name "observe" .
 
 <https://w3id.org/caselinker/resource/case/nj_ag_2018_008/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
@@ -141,19 +144,9 @@
     skos:altLabel "Trenton" ;
     ns1:name "Trenton city" .
 
-<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
-    rdfs:label "chat" ;
-    ns1:name "chat" .
-
-<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "social media" ;
-    ns1:name "social media" .
-
 <https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns6:HotlineOrganization,
-        ns4:FederalAgency ;
+        ns4:HotlineOrganization,
+        ns6:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
     ns1:name "National Center for Missing and Exploited Children" .
@@ -165,10 +158,20 @@
     ns2:usesChannel <https://w3id.org/caselinker/resource/platform/chat>,
         <https://w3id.org/caselinker/resource/platform/social-media> .
 
-<https://w3id.org/caselinker/resource/case/nj_ag_2018_008/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
 <https://w3id.org/caselinker/resource/case/nj_ag_2018_008/phase/arrested> a ns2:InitialPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Initial Phase · phase/arrested" .
+
+<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
+    rdfs:label "chat" ;
+    ns1:name "chat" .
+
+<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "social media" ;
+    ns1:name "social media" .
+
+<https://w3id.org/caselinker/resource/case/nj_ag_2018_008/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

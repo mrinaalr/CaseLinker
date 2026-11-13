@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns1: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -26,41 +26,42 @@
         <https://w3id.org/caselinker/resource/case/la_ag_2026_014/event/possession>,
         <https://w3id.org/caselinker/resource/case/la_ag_2026_014/event/production>,
         <https://w3id.org/caselinker/resource/case/la_ag_2026_014/legal-proceeding> ;
-    ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/hammond-police-department-la>,
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/hammond-police-department-la>,
         <https://w3id.org/caselinker/resource/agency/hsi>,
-        <https://w3id.org/caselinker/resource/agency/louisiana-bureau-of-investigation> .
+        <https://w3id.org/caselinker/resource/agency/louisiana-bureau-of-investigation> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/la_ag_2026_014/person/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/la_ag_2026_014/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/la_ag_2026_014/person/offender/1/age> a ns1:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns4:ageSubject <https://w3id.org/caselinker/resource/case/la_ag_2026_014/person/offender/1> ;
-    ns4:concernsAgeQuality ns4:Age ;
-    ns4:hasAgeInYears 26.0 .
+    ns1:ageSubject <https://w3id.org/caselinker/resource/case/la_ag_2026_014/person/offender/1> ;
+    ns1:concernsAgeQuality ns1:Age ;
+    ns1:hasAgeInYears 26.0 .
 
-<https://w3id.org/caselinker/resource/case/la_ag_2026_014/role/offender/1/has-role> a ns5:Relationship ;
+<https://w3id.org/caselinker/resource/case/la_ag_2026_014/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns5:isDirectional true ;
-    ns5:kindOfRelationship "Has_Role" ;
-    ns5:source <https://w3id.org/caselinker/resource/case/la_ag_2026_014/person/offender/1> ;
-    ns5:target <https://w3id.org/caselinker/resource/case/la_ag_2026_014/role/offender/1> .
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/la_ag_2026_014/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/la_ag_2026_014/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/hammond-police-department-la> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns1:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "Hammond Police Department" ;
     dcterms:identifier "ori:LA0530100" ;
-    ns5:name "Hammond Police Department" .
+    ns2:name "Hammond Police Department" .
 
 <https://w3id.org/caselinker/resource/agency/hsi> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns1:FederalAgency ;
+        ns4:FederalAgency ;
     rdfs:label "Homeland Security Investigations" ;
-    ns5:name "Homeland Security Investigations" .
+    ns2:name "Homeland Security Investigations" .
 
 <https://w3id.org/caselinker/resource/agency/louisiana-bureau-of-investigation> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns1:StateAgency ;
+        ns4:StateAgency ;
     rdfs:label "Louisiana Bureau of Investigation" ;
-    ns5:name "Louisiana Bureau of Investigation" .
+    ns2:name "Louisiana Bureau of Investigation" .
 
-<https://w3id.org/caselinker/resource/case/la_ag_2026_014/charge/1> a ns2:CSAM_Possession,
-        ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/la_ag_2026_014/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
     rdfs:label "child sexual abuse material" .
 
 <https://w3id.org/caselinker/resource/case/la_ag_2026_014/event/hands-on> a ns3:ChildSexualAbuseEvent,
@@ -77,13 +78,13 @@
 
 <https://w3id.org/caselinker/resource/case/la_ag_2026_014/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns2:LegalProceeding ;
+        ns5:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): booked into the Hammond City Jail" ;
-    ns2:chargeCount "1"^^xsd:nonNegativeInteger ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/la_ag_2026_014/charge/1> .
+    ns5:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/la_ag_2026_014/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/la_ag_2026_014/role/offender/1> a ns2:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/la_ag_2026_014/role/offender/1> a ns5:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 
 <https://w3id.org/caselinker/resource/location/hammond-city-la> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
@@ -91,18 +92,18 @@
     rdfs:label "Hammond city" ;
     dcterms:identifier "fips:2232755" ;
     skos:altLabel "Hammond" ;
-    ns5:name "Hammond city" .
+    ns2:name "Hammond city" .
 
 <https://w3id.org/caselinker/resource/location/louisiana-la> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Louisiana" ;
     dcterms:identifier "fips:22" ;
-    ns5:name "Louisiana" .
-
-<https://w3id.org/caselinker/resource/case/la_ag_2026_014/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+    ns2:name "Louisiana" .
 
 <https://w3id.org/caselinker/resource/case/la_ag_2026_014/phase/booked> a ns3:InitialPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Initial Phase · phase/booked" .
+
+<https://w3id.org/caselinker/resource/case/la_ag_2026_014/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

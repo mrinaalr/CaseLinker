@@ -1,10 +1,10 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns4: <https://cacontology.projectvic.org#> .
 @prefix ns5: <https://cacontology.projectvic.org/custodial#> .
-@prefix ns6: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns7: <https://cacontology.projectvic.org/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
@@ -39,15 +39,17 @@
         <https://w3id.org/caselinker/resource/case/doj_archives_2008_030/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/doj_archives_2008_030/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/doj_archives_2008_030/legal-step/sentenced> ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/arkansas-department-of-human-services>,
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/arkansas-department-of-human-services>,
         <https://w3id.org/caselinker/resource/agency/department-of-homeland-security>,
-        <https://w3id.org/caselinker/resource/case/doj_archives_2008_030/agency/bella-vista-police-department> .
+        <https://w3id.org/caselinker/resource/case/doj_archives_2008_030/agency/bella-vista-police-department> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/doj_archives_2008_030/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/doj_archives_2008_030/person/victim/1> .
 
-<https://w3id.org/caselinker/resource/case/doj_archives_2008_030/person/offender/1/age> a ns6:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/doj_archives_2008_030/person/offender/1/age> a ns3:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns6:ageSubject <https://w3id.org/caselinker/resource/case/doj_archives_2008_030/person/offender/1> ;
-    ns6:concernsAgeQuality ns6:Age ;
-    ns6:hasAgeInYears 45.0 .
+    ns3:ageSubject <https://w3id.org/caselinker/resource/case/doj_archives_2008_030/person/offender/1> ;
+    ns3:concernsAgeQuality ns3:Age ;
+    ns3:hasAgeInYears 45.0 .
 
 <https://w3id.org/caselinker/resource/case/doj_archives_2008_030/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -64,17 +66,17 @@
     ns1:target <https://w3id.org/caselinker/resource/case/doj_archives_2008_030/role/victim/1> .
 
 <https://w3id.org/caselinker/resource/agency/arkansas-department-of-human-services> a ns7:OrganizationLikeEntity,
-        ns3:LocalAgency ;
+        ns6:LocalAgency ;
     rdfs:label "Arkansas Department of Human Services" ;
     ns1:name "Arkansas Department of Human Services" .
 
 <https://w3id.org/caselinker/resource/agency/department-of-homeland-security> a ns7:OrganizationLikeEntity,
-        ns3:LocalAgency ;
+        ns6:LocalAgency ;
     rdfs:label "Department of Homeland Security" ;
     ns1:name "Department of Homeland Security" .
 
 <https://w3id.org/caselinker/resource/case/doj_archives_2008_030/agency/bella-vista-police-department> a ns7:OrganizationLikeEntity,
-        ns3:LocalAgency ;
+        ns6:LocalAgency ;
     rdfs:label "Bella Vista Police Department" ;
     ns1:name "Bella Vista Police Department" .
 
@@ -95,7 +97,7 @@
     rdfs:label "CSAMIncident · event/csam" .
 
 <https://w3id.org/caselinker/resource/case/doj_archives_2008_030/event/multi-jurisdiction> a ns7:Event,
-        ns3:MultiJurisdictionalInvestigation ;
+        ns6:MultiJurisdictionalInvestigation ;
     rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" .
 
 <https://w3id.org/caselinker/resource/case/doj_archives_2008_030/event/production> a ns7:Event,
@@ -139,9 +141,6 @@
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Western District of Arkansas" ;
     ns1:name "Western District of Arkansas" .
-
-<https://w3id.org/caselinker/resource/case/doj_archives_2008_030/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
 
 <https://w3id.org/caselinker/resource/case/doj_archives_2008_030/relationship/parent> a ns5:CaregiverRelationship,
         ns5:CustodialRelationship ;
@@ -215,12 +214,15 @@
     dcterms:identifier "fips:53" ;
     ns1:name "Washington" .
 
-<https://w3id.org/caselinker/resource/case/doj_archives_2008_030/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+<https://w3id.org/caselinker/resource/case/doj_archives_2008_030/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
 
 <https://w3id.org/caselinker/resource/case/doj_archives_2008_030/phase/sentenced> a ns7:Phase,
         ns2:SentencingPhase ;
     rdfs:label "Sentencing Phase · phase/sentenced" .
+
+<https://w3id.org/caselinker/resource/case/doj_archives_2008_030/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/doj_archives_2008_030/role/victim/1> a ns4:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" .

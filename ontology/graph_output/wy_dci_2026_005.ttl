@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns6: <https://cacontology.projectvic.org/platforms#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
@@ -30,14 +30,18 @@
         <https://w3id.org/caselinker/resource/case/wy_dci_2026_005/event/possession>,
         <https://w3id.org/caselinker/resource/case/wy_dci_2026_005/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/wy_dci_2026_005/legal-step/convicted> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/hsi>,
-        <https://w3id.org/caselinker/resource/agency/icac> .
+    ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/hsi>,
+        <https://w3id.org/caselinker/resource/agency/icac> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/wy_dci_2026_005/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/chat>,
+        <https://w3id.org/caselinker/resource/platform/gen-ai>,
+        <https://w3id.org/caselinker/resource/platform/telegram> .
 
-<https://w3id.org/caselinker/resource/case/wy_dci_2026_005/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/wy_dci_2026_005/person/offender/1/age> a ns5:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns4:ageSubject <https://w3id.org/caselinker/resource/case/wy_dci_2026_005/person/offender/1> ;
-    ns4:concernsAgeQuality ns4:Age ;
-    ns4:hasAgeInYears 61.0 .
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/wy_dci_2026_005/person/offender/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 61.0 .
 
 <https://w3id.org/caselinker/resource/case/wy_dci_2026_005/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -46,24 +50,8 @@
     ns2:source <https://w3id.org/caselinker/resource/case/wy_dci_2026_005/person/offender/1> ;
     ns2:target <https://w3id.org/caselinker/resource/case/wy_dci_2026_005/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        ns6:AnonymousChatPlatform ;
-    rdfs:label "chat" ;
-    ns2:name "chat" .
-
-<https://w3id.org/caselinker/resource/platform/gen-ai> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        ns6:FileHostingService ;
-    rdfs:label "Gen AI" ;
-    ns6:platformType "generative-ai" ;
-    ns2:name "Gen AI" .
-
-<https://w3id.org/caselinker/resource/platform/telegram> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        ns6:MessagingService ;
-    rdfs:label "Telegram" ;
-    ns2:name "Telegram" .
-
 <https://w3id.org/caselinker/resource/agency/hsi> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:FederalAgency ;
+        ns1:FederalAgency ;
     rdfs:label "Homeland Security Investigations" ;
     ns2:name "Homeland Security Investigations" .
 
@@ -73,7 +61,7 @@
     skos:altLabel "ICAC" ;
     ns2:name "ICAC Task Force" .
 
-<https://w3id.org/caselinker/resource/case/wy_dci_2026_005/charge/1> a ns1:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/wy_dci_2026_005/charge/1> a ns4:CriminalCharge ;
     rdfs:label "the same crime in Natrona County District Court" .
 
 <https://w3id.org/caselinker/resource/case/wy_dci_2026_005/event/ai-csam> a ns3:DigitallyGeneratedCSAMIncident,
@@ -82,7 +70,7 @@
     rdfs:label "Digitally Generated CSAMIncident · event/ai-csam" .
 
 <https://w3id.org/caselinker/resource/case/wy_dci_2026_005/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
-        ns1:CSAM_Distribution ;
+        ns4:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/wy_dci_2026_005/event/possession> a ns3:CSAMIncident,
@@ -91,15 +79,15 @@
 
 <https://w3id.org/caselinker/resource/case/wy_dci_2026_005/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns1:LegalProceeding ;
+        ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns1:chargeCount "17"^^xsd:nonNegativeInteger ;
-    ns1:hasCharge <https://w3id.org/caselinker/resource/case/wy_dci_2026_005/charge/1> .
+    ns4:chargeCount "17"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/wy_dci_2026_005/charge/1> .
 
 <https://w3id.org/caselinker/resource/case/wy_dci_2026_005/legal-step/convicted> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns1:LegalProceeding,
-        ns1:SentencingHearing ;
+        ns4:LegalProceeding,
+        ns4:SentencingHearing ;
     rdfs:label "Sentencing Hearing · legal-step/convicted" .
 
 <https://w3id.org/caselinker/resource/case/wy_dci_2026_005/location/natrona-county> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
@@ -130,10 +118,26 @@
     dcterms:identifier "fips:56" ;
     ns2:name "Wyoming" .
 
-<https://w3id.org/caselinker/resource/case/wy_dci_2026_005/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+<https://w3id.org/caselinker/resource/platform/chat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        ns6:AnonymousChatPlatform ;
+    rdfs:label "chat" ;
+    ns2:name "chat" .
+
+<https://w3id.org/caselinker/resource/platform/gen-ai> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        ns6:FileHostingService ;
+    rdfs:label "Gen AI" ;
+    ns6:platformType "generative-ai" ;
+    ns2:name "Gen AI" .
+
+<https://w3id.org/caselinker/resource/platform/telegram> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        ns6:MessagingService ;
+    rdfs:label "Telegram" ;
+    ns2:name "Telegram" .
 
 <https://w3id.org/caselinker/resource/case/wy_dci_2026_005/phase/convicted> a <https://cacontology.projectvic.org/core#Phase>,
-        ns1:SentencingPhase ;
+        ns4:SentencingPhase ;
     rdfs:label "Sentencing Phase · phase/convicted" .
+
+<https://w3id.org/caselinker/resource/case/wy_dci_2026_005/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

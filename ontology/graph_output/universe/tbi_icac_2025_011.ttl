@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://cacontology.projectvic.org/platforms#> .
 @prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns4: <https://cacontology.projectvic.org#> .
-@prefix ns5: <https://cacontology.projectvic.org/platforms#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -31,7 +31,9 @@
         <https://w3id.org/caselinker/resource/agency/ncmec>,
         <https://w3id.org/caselinker/resource/agency/tennessee-bureau-of-investigation-tipline>,
         <https://w3id.org/caselinker/resource/agency/tennessee-bureau-of-investigation-tn>,
-        <https://w3id.org/caselinker/resource/agency/white-county-sheriff-s-office-tn> .
+        <https://w3id.org/caselinker/resource/agency/white-county-sheriff-s-office-tn> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/tbi_icac_2025_011/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/snapchat> .
 
 <https://w3id.org/caselinker/resource/case/tbi_icac_2025_011/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -75,35 +77,32 @@
     dcterms:identifier "ori:TN0930000" ;
     ns1:name "White County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/case/tbi_icac_2025_011/charge/1> a ns2:CSAM_Possession,
-        ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/tbi_icac_2025_011/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
     rdfs:label "child sexual abuse material" .
 
-<https://w3id.org/caselinker/resource/case/tbi_icac_2025_011/charge/2> a ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/tbi_icac_2025_011/charge/2> a ns5:CriminalCharge ;
     rdfs:label "child exploitation" ;
     dcterms:subject ns4:ChildSexualAbuseEvent .
 
 <https://w3id.org/caselinker/resource/case/tbi_icac_2025_011/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns2:LegalProceeding ;
+        ns5:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): booked Rankin into the White County Jail" ;
-    ns2:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/tbi_icac_2025_011/charge/1>,
+    ns5:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/tbi_icac_2025_011/charge/1>,
         <https://w3id.org/caselinker/resource/case/tbi_icac_2025_011/charge/2> .
 
 <https://w3id.org/caselinker/resource/case/tbi_icac_2025_011/legal-step/convicted> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns2:LegalProceeding,
-        ns2:SentencingHearing ;
+        ns5:LegalProceeding,
+        ns5:SentencingHearing ;
     rdfs:label "Sentencing Hearing · legal-step/convicted" .
 
 <https://w3id.org/caselinker/resource/case/tbi_icac_2025_011/operation> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/taskforce#TaskForceOperation> ;
     rdfs:label "Task Force Operation · operation" .
-
-<https://w3id.org/caselinker/resource/case/tbi_icac_2025_011/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/tbi_icac_2025_011/role/offender/1> a ns4:OffenderRole ;
     rdfs:label "Offender Role · role/offender/1" ;
@@ -122,19 +121,22 @@
     dcterms:identifier "fips:47185" ;
     ns1:name "White County" .
 
-<https://w3id.org/caselinker/resource/platform/snapchat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        ns5:MessagingService ;
-    rdfs:label "Snapchat" ;
-    ns5:encryptionLevel "end-to-end" ;
-    ns1:name "Snapchat" .
-
 <https://w3id.org/caselinker/resource/case/tbi_icac_2025_011/event/csam> a ns4:CSAMIncident,
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "CSAMIncident · event/csam" ;
     ns4:severityLevel 3 ;
     ns4:usesChannel <https://w3id.org/caselinker/resource/platform/snapchat> .
 
+<https://w3id.org/caselinker/resource/case/tbi_icac_2025_011/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
 <https://w3id.org/caselinker/resource/case/tbi_icac_2025_011/phase/convicted> a <https://cacontology.projectvic.org/core#Phase>,
-        ns2:SentencingPhase ;
+        ns5:SentencingPhase ;
     rdfs:label "Sentencing Phase · phase/convicted" .
+
+<https://w3id.org/caselinker/resource/platform/snapchat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        ns2:MessagingService ;
+    rdfs:label "Snapchat" ;
+    ns2:encryptionLevel "end-to-end" ;
+    ns1:name "Snapchat" .
 

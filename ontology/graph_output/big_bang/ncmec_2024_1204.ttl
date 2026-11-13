@@ -1,17 +1,17 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/platforms#> .
-@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://cacontology.projectvic.org/custodial#> .
-@prefix ns7: <https://cacontology.projectvic.org/core#> .
+@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns4: <https://cacontology.projectvic.org/platforms#> .
+@prefix ns5: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns6: <https://cacontology.projectvic.org/core#> .
+@prefix ns7: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_1204> a ns2:CACInvestigation,
-        ns7:EnduringEntity ;
+        ns6:EnduringEntity ;
     rdfs:label "Case ncmec_2024_1204" ;
     dcterms:created "2026-11-11T23:58:00.470391"^^xsd:dateTime ;
     dcterms:date "2024-09-30"^^xsd:date ;
@@ -31,19 +31,23 @@
         <https://w3id.org/caselinker/resource/case/ncmec_2024_1204/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_1204/operation> ;
     ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2024_1204/admission/1>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_1204/cybertip> .
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_1204/cybertip>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_1204/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_1204/person/victim/1>,
+        <https://w3id.org/caselinker/resource/platform/facebook>,
+        <https://w3id.org/caselinker/resource/platform/gen-ai> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1204/admission/1/extraction-confidence> a ns7:AssessmentResult ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1204/admission/1/extraction-confidence> a ns6:AssessmentResult ;
     rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
-    ns7:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_1204/admission/1> ;
-    ns7:hasConfidence 0.65 ;
-    ns7:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
+    ns6:assesses <https://w3id.org/caselinker/resource/case/ncmec_2024_1204/admission/1> ;
+    ns6:hasConfidence 0.65 ;
+    ns6:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1204/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1204/person/offender/1/age> a ns3:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_1204/person/offender/1> ;
-    ns4:concernsAgeQuality ns4:Age ;
-    ns4:hasAgeInYears 45.0 .
+    ns3:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_1204/person/offender/1> ;
+    ns3:concernsAgeQuality ns3:Age ;
+    ns3:hasAgeInYears 45.0 .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_1204/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -59,19 +63,8 @@
     ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_1204/person/victim/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_1204/role/victim/1> .
 
-<https://w3id.org/caselinker/resource/platform/facebook> a ns7:DigitalSystemEntity,
-        ns3:SocialMediaPlatform ;
-    rdfs:label "Facebook" ;
-    ns1:name "Facebook" .
-
-<https://w3id.org/caselinker/resource/platform/gen-ai> a ns7:DigitalSystemEntity,
-        ns3:FileHostingService ;
-    rdfs:label "Gen AI" ;
-    ns3:platformType "generative-ai" ;
-    ns1:name "Gen AI" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1204/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1204/charge/1> a ns7:CSAM_Possession,
+        ns7:CriminalCharge ;
     rdfs:label "child pornography" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_1204/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
@@ -80,75 +73,86 @@
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_1204/event/ai-csam> a ns2:DigitallyGeneratedCSAMIncident,
         <https://cacontology.projectvic.org/ai-csam#AIGeneratedCSAM>,
-        ns7:Event ;
+        ns6:Event ;
     rdfs:label "Digitally Generated CSAMIncident · event/ai-csam" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_1204/event/possession> a ns2:CSAMIncident,
-        ns7:Event ;
+        ns6:Event ;
     rdfs:label "CSAMIncident · event/possession" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1204/event/trust-violation> a ns6:AuthorityAbuse,
-        ns6:TrustViolation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1204/event/trust-violation> a ns5:AuthorityAbuse,
+        ns5:TrustViolation ;
     rdfs:label "Authority Abuse · event/trust-violation" ;
-    ns6:perpetratedBy <https://w3id.org/caselinker/resource/case/ncmec_2024_1204/role/offender/1> ;
-    ns6:violatesRelationship <https://w3id.org/caselinker/resource/case/ncmec_2024_1204/relationship/teacher> .
+    ns5:perpetratedBy <https://w3id.org/caselinker/resource/case/ncmec_2024_1204/role/offender/1> ;
+    ns5:violatesRelationship <https://w3id.org/caselinker/resource/case/ncmec_2024_1204/relationship/teacher> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1204/legal-proceeding> a ns7:Event,
-        ns7:LegalEvent,
-        ns5:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1204/legal-proceeding> a ns6:Event,
+        ns6:LegalEvent,
+        ns7:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns5:chargeCount "1"^^xsd:nonNegativeInteger ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_1204/charge/1> .
+    ns7:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns7:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_1204/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1204/location/amherst> a ns7:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1204/location/amherst> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Amherst" ;
     ns1:name "Amherst" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1204/location/portage-county> a ns7:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1204/location/portage-county> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Portage County" ;
     ns1:name "Portage County" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1204/operation> a ns7:Event,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1204/operation> a ns6:Event,
         <https://cacontology.projectvic.org/taskforce#ReactiveOperation> ;
     rdfs:label "Reactive Operation · operation" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1204/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1204/relationship/teacher> a ns6:CustodialRelationship,
-        ns6:Teacher ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1204/relationship/teacher> a ns5:CustodialRelationship,
+        ns5:Teacher ;
     rdfs:label "Custodial Relationship · relationship/teacher" ;
-    ns6:involvesChild <https://w3id.org/caselinker/resource/case/ncmec_2024_1204/role/victim/1> ;
-    ns6:involvesCustodian <https://w3id.org/caselinker/resource/case/ncmec_2024_1204/role/offender/1> ;
-    ns6:relationshipType "teacher" ;
+    ns5:involvesChild <https://w3id.org/caselinker/resource/case/ncmec_2024_1204/role/victim/1> ;
+    ns5:involvesCustodian <https://w3id.org/caselinker/resource/case/ncmec_2024_1204/role/offender/1> ;
+    ns5:relationshipType "teacher" ;
     ns1:isDirectional true ;
     ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_1204/role/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_1204/role/victim/1> .
 
-<https://w3id.org/caselinker/resource/location/stevens-point-city> a ns7:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/stevens-point-city> a ns6:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Stevens Point city" ;
     dcterms:identifier "fips:5577200" ;
     skos:altLabel "Stevens Point" ;
     ns1:name "Stevens Point city" .
 
+<https://w3id.org/caselinker/resource/platform/facebook> a ns6:DigitalSystemEntity,
+        ns4:SocialMediaPlatform ;
+    rdfs:label "Facebook" ;
+    ns1:name "Facebook" .
+
+<https://w3id.org/caselinker/resource/platform/gen-ai> a ns6:DigitalSystemEntity,
+        ns4:FileHostingService ;
+    rdfs:label "Gen AI" ;
+    ns4:platformType "generative-ai" ;
+    ns1:name "Gen AI" .
+
 <https://w3id.org/caselinker/resource/case/ncmec_2024_1204/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "watching child pornography, but he said it was in 2019 or 2020, when he was going through a divorce" ;
     dcterms:source <https://www.stevenspointjournal.com/story/news/crime/2024/09/30/stevens-point-martial-arts-teacher-stephen-decker-charged-with-child-pornography-possession/75452069007/> ;
     ns1:description "watching child pornography, but he said it was in 2019 or 2020, when he was going through a divorce" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1204/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1204/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_1204/phase/charged> a ns2:LegalProcessPhase,
-        ns7:Phase ;
+        ns6:Phase ;
     rdfs:label "Legal Process Phase · phase/charged" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1204/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_1204/role/victim/1> a ns2:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_1204/role/offender/1> a ns5:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_1204/role/offender/1> a ns7:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 

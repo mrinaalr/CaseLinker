@@ -1,10 +1,10 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns4: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns5: <https://cacontology.projectvic.org/core#> .
-@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -28,7 +28,8 @@
         <https://w3id.org/caselinker/resource/case/pa_ag_2026_019/event/trafficking>,
         <https://w3id.org/caselinker/resource/case/pa_ag_2026_019/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/pa_ag_2026_019/legal-step/pleaded-guilty> ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/office-of-the-attorney-general-pa-unverified> .
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/office-of-the-attorney-general-pa-unverified> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/pa_ag_2026_019/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/pa_ag_2026_019/assessment/semantic/registered-sex-offender> a ns5:AssessmentResult ;
     rdfs:label "semantic similarity · registered_sex_offender" ;
@@ -51,12 +52,12 @@
     ns2:target <https://w3id.org/caselinker/resource/case/pa_ag_2026_019/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/office-of-the-attorney-general-pa-unverified> a ns5:OrganizationLikeEntity,
-        ns3:StateAgency ;
+        ns6:StateAgency ;
     rdfs:label "Office of the Attorney General" ;
     ns2:name "Office of the Attorney General" .
 
-<https://w3id.org/caselinker/resource/case/pa_ag_2026_019/charge/1> a ns6:CSAM_Possession,
-        ns6:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/pa_ag_2026_019/charge/1> a ns3:CSAM_Possession,
+        ns3:CriminalCharge ;
     rdfs:label "child pornography" .
 
 <https://w3id.org/caselinker/resource/case/pa_ag_2026_019/event/csam> a ns1:CSAMIncident,
@@ -68,20 +69,20 @@
     rdfs:label "Child Sexual Abuse Event · event/hands-on" .
 
 <https://w3id.org/caselinker/resource/case/pa_ag_2026_019/event/trafficking> a ns5:Event,
-        ns6:SexTrafficking ;
+        ns3:SexTrafficking ;
     rdfs:label "Sex Trafficking · event/trafficking" .
 
 <https://w3id.org/caselinker/resource/case/pa_ag_2026_019/legal-proceeding> a ns5:Event,
         ns5:LegalEvent,
-        ns6:LegalProceeding ;
+        ns3:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns6:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns6:hasCharge <https://w3id.org/caselinker/resource/case/pa_ag_2026_019/charge/1> .
+    ns3:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/pa_ag_2026_019/charge/1> .
 
 <https://w3id.org/caselinker/resource/case/pa_ag_2026_019/legal-step/pleaded-guilty> a ns5:Event,
         ns5:LegalEvent,
-        ns6:LegalProceeding,
-        ns6:PleaBargaining ;
+        ns3:LegalProceeding,
+        ns3:PleaBargaining ;
     rdfs:label "Plea Bargaining · legal-step/pleaded-guilty" .
 
 <https://w3id.org/caselinker/resource/case/pa_ag_2026_019/role/offender/1> a ns1:OffenderRole ;
@@ -101,10 +102,10 @@
     skos:altLabel "Philadelphia" ;
     ns2:name "Philadelphia city" .
 
+<https://w3id.org/caselinker/resource/case/pa_ag_2026_019/phase/pleaded-guilty> a ns5:Phase,
+        ns3:PreTrialPhase ;
+    rdfs:label "Pre Trial Phase · phase/pleaded-guilty" .
+
 <https://w3id.org/caselinker/resource/case/pa_ag_2026_019/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/pa_ag_2026_019/phase/pleaded-guilty> a ns5:Phase,
-        ns6:PreTrialPhase ;
-    rdfs:label "Pre Trial Phase · phase/pleaded-guilty" .
 

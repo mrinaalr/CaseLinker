@@ -1,10 +1,10 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://cacontology.projectvic.org/hotlines#> .
 @prefix ns4: <https://cacontology.projectvic.org/core#> .
-@prefix ns5: <https://cacontology.projectvic.org/hotlines#> .
-@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -27,10 +27,11 @@
         <https://w3id.org/caselinker/resource/case/gbi_2012_001/event/online-only>,
         <https://w3id.org/caselinker/resource/case/gbi_2012_001/event/possession>,
         <https://w3id.org/caselinker/resource/case/gbi_2012_001/legal-proceeding> ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/gwinnett-county-police-department-ga>,
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/gwinnett-county-police-department-ga>,
         <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/ncmec> ;
-    ns2:object <https://w3id.org/caselinker/resource/case/gbi_2012_001/cybertip> .
+    ns2:object <https://w3id.org/caselinker/resource/case/gbi_2012_001/cybertip>,
+        <https://w3id.org/caselinker/resource/case/gbi_2012_001/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/gbi_2012_001/assessment/semantic/evidence-seizure> a ns4:AssessmentResult ;
     rdfs:label "semantic similarity · evidence_seizure" ;
@@ -54,7 +55,7 @@
     ns2:target <https://w3id.org/caselinker/resource/case/gbi_2012_001/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/gwinnett-county-police-department-ga> a ns4:OrganizationLikeEntity,
-        ns6:LocalAgency ;
+        ns5:LocalAgency ;
     rdfs:label "Gwinnett County Police Department" ;
     dcterms:identifier "ori:GA0670200" ;
     ns2:name "Gwinnett County Police Department" .
@@ -65,21 +66,21 @@
     skos:altLabel "ICAC" ;
     ns2:name "ICAC Task Force" .
 
-<https://w3id.org/caselinker/resource/case/gbi_2012_001/charge/1> a ns3:CSAM_Possession,
-        ns3:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/gbi_2012_001/charge/1> a ns6:CSAM_Possession,
+        ns6:CriminalCharge ;
     rdfs:label "Possession of Child Pornography (OCGA 16-12-100 (b) (8) after images" .
 
-<https://w3id.org/caselinker/resource/case/gbi_2012_001/charge/2> a ns3:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/gbi_2012_001/charge/2> a ns6:CriminalCharge ;
     rdfs:label "child exploitation" ;
     dcterms:subject ns1:ChildSexualAbuseEvent .
 
 <https://w3id.org/caselinker/resource/case/gbi_2012_001/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
     rdfs:label "CyberTipline report" ;
-    ns5:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns3:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
     ns2:name "observe" .
 
 <https://w3id.org/caselinker/resource/case/gbi_2012_001/event/distribution> a ns4:Event,
-        ns3:CSAM_Distribution ;
+        ns6:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/gbi_2012_001/event/online-only> a ns1:ChildSexualAbuseEvent,
@@ -92,17 +93,14 @@
 
 <https://w3id.org/caselinker/resource/case/gbi_2012_001/legal-proceeding> a ns4:Event,
         ns4:LegalEvent,
-        ns3:LegalProceeding ;
+        ns6:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): Gwinnett County Jail" ;
-    ns3:chargeCount "5"^^xsd:nonNegativeInteger ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/gbi_2012_001/charge/1>,
+    ns6:chargeCount "5"^^xsd:nonNegativeInteger ;
+    ns6:hasCharge <https://w3id.org/caselinker/resource/case/gbi_2012_001/charge/1>,
         <https://w3id.org/caselinker/resource/case/gbi_2012_001/charge/2> .
 
-<https://w3id.org/caselinker/resource/case/gbi_2012_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/gbi_2012_001/role/offender/1> a ns3:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/gbi_2012_001/role/offender/1> a ns6:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 
 <https://w3id.org/caselinker/resource/location/auburn-city-ga> a ns4:PlaceLikeEntity,
@@ -119,11 +117,14 @@
     ns2:name "Georgia" .
 
 <https://w3id.org/caselinker/resource/agency/ncmec> a ns4:OrganizationLikeEntity,
-        ns5:HotlineOrganization,
-        ns6:FederalAgency ;
+        ns3:HotlineOrganization,
+        ns5:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
     ns2:name "National Center for Missing and Exploited Children" .
+
+<https://w3id.org/caselinker/resource/case/gbi_2012_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/gbi_2012_001/phase/charged> a ns1:LegalProcessPhase,
         ns4:Phase ;

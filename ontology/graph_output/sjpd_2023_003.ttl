@@ -1,13 +1,13 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org#> .
+@prefix ns2: <https://cacontology.projectvic.org/custodial#> .
 @prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns4: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns4: <https://cacontology.projectvic.org#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/sjpd_2023_003> a ns2:CACInvestigation,
+<https://w3id.org/caselinker/resource/case/sjpd_2023_003> a ns4:CACInvestigation,
         <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case sjpd_2023_003" ;
     dcterms:created "2026-11-11T17:44:20.570505"^^xsd:dateTime ;
@@ -20,12 +20,14 @@
     dcterms:spatial <https://w3id.org/caselinker/resource/case/sjpd_2023_003/location/san-josé>,
         <https://w3id.org/caselinker/resource/location/campbell-city-ca>,
         <https://w3id.org/caselinker/resource/location/santa-clara-county-ca> ;
-    ns2:currentPhase <https://w3id.org/caselinker/resource/case/sjpd_2023_003/phase/booked> ;
-    ns2:hasPhase <https://w3id.org/caselinker/resource/case/sjpd_2023_003/phase/booked> ;
-    ns2:hasStep <https://w3id.org/caselinker/resource/case/sjpd_2023_003/event/trust-violation>,
+    ns4:currentPhase <https://w3id.org/caselinker/resource/case/sjpd_2023_003/phase/booked> ;
+    ns4:hasPhase <https://w3id.org/caselinker/resource/case/sjpd_2023_003/phase/booked> ;
+    ns4:hasStep <https://w3id.org/caselinker/resource/case/sjpd_2023_003/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/sjpd_2023_003/legal-proceeding> ;
     ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
-        <https://w3id.org/caselinker/resource/agency/san-josé-police-department-ca-unverified> .
+        <https://w3id.org/caselinker/resource/agency/san-josé-police-department-ca-unverified> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/sjpd_2023_003/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/sjpd_2023_003/person/victim/1> .
 
 <https://w3id.org/caselinker/resource/case/sjpd_2023_003/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -52,11 +54,11 @@
     rdfs:label "San José Police Department" ;
     ns1:name "San José Police Department" .
 
-<https://w3id.org/caselinker/resource/case/sjpd_2023_003/event/trust-violation> a ns4:AuthorityAbuse,
-        ns4:TrustViolation ;
+<https://w3id.org/caselinker/resource/case/sjpd_2023_003/event/trust-violation> a ns2:AuthorityAbuse,
+        ns2:TrustViolation ;
     rdfs:label "Authority Abuse · event/trust-violation" ;
-    ns4:perpetratedBy <https://w3id.org/caselinker/resource/case/sjpd_2023_003/role/offender/1> ;
-    ns4:violatesRelationship <https://w3id.org/caselinker/resource/case/sjpd_2023_003/relationship/teacher> .
+    ns2:perpetratedBy <https://w3id.org/caselinker/resource/case/sjpd_2023_003/role/offender/1> ;
+    ns2:violatesRelationship <https://w3id.org/caselinker/resource/case/sjpd_2023_003/relationship/teacher> .
 
 <https://w3id.org/caselinker/resource/case/sjpd_2023_003/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
@@ -69,18 +71,12 @@
     rdfs:label "San José" ;
     ns1:name "San José" .
 
-<https://w3id.org/caselinker/resource/case/sjpd_2023_003/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/sjpd_2023_003/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
-
-<https://w3id.org/caselinker/resource/case/sjpd_2023_003/relationship/teacher> a ns4:CustodialRelationship,
-        ns4:Teacher ;
+<https://w3id.org/caselinker/resource/case/sjpd_2023_003/relationship/teacher> a ns2:CustodialRelationship,
+        ns2:Teacher ;
     rdfs:label "Custodial Relationship · relationship/teacher" ;
-    ns4:involvesChild <https://w3id.org/caselinker/resource/case/sjpd_2023_003/role/victim/1> ;
-    ns4:involvesCustodian <https://w3id.org/caselinker/resource/case/sjpd_2023_003/role/offender/1> ;
-    ns4:relationshipType "teacher" ;
+    ns2:involvesChild <https://w3id.org/caselinker/resource/case/sjpd_2023_003/role/victim/1> ;
+    ns2:involvesCustodian <https://w3id.org/caselinker/resource/case/sjpd_2023_003/role/offender/1> ;
+    ns2:relationshipType "teacher" ;
     ns1:isDirectional true ;
     ns1:source <https://w3id.org/caselinker/resource/case/sjpd_2023_003/role/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/sjpd_2023_003/role/victim/1> .
@@ -98,11 +94,17 @@
     dcterms:identifier "fips:06085" ;
     ns1:name "Santa Clara County" .
 
-<https://w3id.org/caselinker/resource/case/sjpd_2023_003/phase/booked> a ns2:InitialPhase,
+<https://w3id.org/caselinker/resource/case/sjpd_2023_003/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/sjpd_2023_003/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
+
+<https://w3id.org/caselinker/resource/case/sjpd_2023_003/phase/booked> a ns4:InitialPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Initial Phase · phase/booked" .
 
-<https://w3id.org/caselinker/resource/case/sjpd_2023_003/role/victim/1> a ns2:VictimRole ;
+<https://w3id.org/caselinker/resource/case/sjpd_2023_003/role/victim/1> a ns4:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" .
 
 <https://w3id.org/caselinker/resource/case/sjpd_2023_003/role/offender/1> a <https://cacontology.projectvic.org/legal-outcomes#DefendantRole> ;

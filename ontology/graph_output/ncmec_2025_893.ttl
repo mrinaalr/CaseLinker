@@ -3,9 +3,9 @@
 @prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns4: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/platforms#> .
 @prefix ns6: <https://cacontology.projectvic.org/core#> .
-@prefix ns7: <https://cacontology.projectvic.org/platforms#> .
+@prefix ns7: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -32,12 +32,17 @@
         <https://w3id.org/caselinker/resource/case/ncmec_2025_893/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_893/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_893/legal-step/sentenced> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/department-of-homeland-security>,
+    ns7:involvesAgency <https://w3id.org/caselinker/resource/agency/department-of-homeland-security>,
         <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_893/agency/brazoria-county-sheriffs-office>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_893/agency/pearland-police-department>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_893/agency/smith-county-sheriffs-office> ;
-    ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2025_893/admission/1> .
+    ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2025_893/admission/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_893/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_893/person/offender/2>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_893/person/victim/1>,
+        <https://w3id.org/caselinker/resource/platform/chat>,
+        <https://w3id.org/caselinker/resource/platform/snapchat> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_893/admission/1/extraction-confidence> a ns6:AssessmentResult ;
     rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
@@ -84,19 +89,8 @@
     ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2025_893/person/victim/1> ;
     ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2025_893/role/victim/1> .
 
-<https://w3id.org/caselinker/resource/platform/chat> a ns6:DigitalSystemEntity,
-        ns7:AnonymousChatPlatform ;
-    rdfs:label "chat" ;
-    ns3:name "chat" .
-
-<https://w3id.org/caselinker/resource/platform/snapchat> a ns6:DigitalSystemEntity,
-        ns7:MessagingService ;
-    rdfs:label "Snapchat" ;
-    ns7:encryptionLevel "end-to-end" ;
-    ns3:name "Snapchat" .
-
 <https://w3id.org/caselinker/resource/agency/department-of-homeland-security> a ns6:OrganizationLikeEntity,
-        ns5:LocalAgency ;
+        ns7:LocalAgency ;
     rdfs:label "Department of Homeland Security" ;
     ns3:name "Department of Homeland Security" .
 
@@ -107,17 +101,17 @@
     ns3:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_893/agency/brazoria-county-sheriffs-office> a ns6:OrganizationLikeEntity,
-        ns5:LocalAgency ;
+        ns7:LocalAgency ;
     rdfs:label "Brazoria County Sheriff's Office" ;
     ns3:name "Brazoria County Sheriff's Office" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_893/agency/pearland-police-department> a ns6:OrganizationLikeEntity,
-        ns5:LocalAgency ;
+        ns7:LocalAgency ;
     rdfs:label "Pearland Police Department" ;
     ns3:name "Pearland Police Department" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_893/agency/smith-county-sheriffs-office> a ns6:OrganizationLikeEntity,
-        ns5:LocalAgency ;
+        ns7:LocalAgency ;
     rdfs:label "Smith County Sheriff's Office" ;
     ns3:name "Smith County Sheriff's Office" .
 
@@ -189,10 +183,25 @@
     dcterms:identifier "fips:48" ;
     ns3:name "Texas" .
 
+<https://w3id.org/caselinker/resource/platform/chat> a ns6:DigitalSystemEntity,
+        ns5:AnonymousChatPlatform ;
+    rdfs:label "chat" ;
+    ns3:name "chat" .
+
+<https://w3id.org/caselinker/resource/platform/snapchat> a ns6:DigitalSystemEntity,
+        ns5:MessagingService ;
+    rdfs:label "Snapchat" ;
+    ns5:encryptionLevel "end-to-end" ;
+    ns3:name "Snapchat" .
+
 <https://w3id.org/caselinker/resource/case/ncmec_2025_893/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "didn't have access to children, but he would have online conversations either acting as a child or pretending to have..." ;
     dcterms:source <https://www.cbs19.tv/article/news/local/east-texas-man-accused-of-posing-as-young-girl-snapchat-facing-charges/501-0eebe610-166d-4fb8-8a38-961361cc79cf> ;
     ns3:description "didn't have access to children, but he would have online conversations either acting as a child or pretending to have a child" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_893/phase/sentenced> a ns6:Phase,
+        ns2:SentencingPhase ;
+    rdfs:label "Sentencing Phase · phase/sentenced" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_893/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
@@ -202,8 +211,4 @@
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_893/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/victim/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_893/phase/sentenced> a ns6:Phase,
-        ns2:SentencingPhase ;
-    rdfs:label "Sentencing Phase · phase/sentenced" .
 

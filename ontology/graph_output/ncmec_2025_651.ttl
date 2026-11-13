@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://cacontology.projectvic.org/hotlines#> .
 @prefix ns4: <https://cacontology.projectvic.org#> .
-@prefix ns5: <https://cacontology.projectvic.org/hotlines#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -24,9 +24,10 @@
     ns4:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_651/phase/charged> ;
     ns4:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_651/phase/charged> ;
     ns4:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_651/legal-proceeding> ;
-    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_651/agency/invictus-task-force> ;
-    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2025_651/cybertip> .
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2025_651/cybertip>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_651/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_651/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -36,33 +37,33 @@
     ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2025_651/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_651/agency/invictus-task-force> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:LocalAgency ;
+        ns5:LocalAgency ;
     rdfs:label "Invictus Task Force" ;
     ns1:name "Invictus Task Force" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_651/charge/1> a ns3:CriminalCharge,
-        ns3:StateCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_651/charge/1> a ns2:CriminalCharge,
+        ns2:StateCharge ;
     rdfs:label "sexual exploitation of a minor" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_651/charge/2> a ns3:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_651/charge/2> a ns2:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_651/charge/3> a ns3:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_651/charge/3> a ns2:CriminalCharge ;
     rdfs:label "child exploitation" ;
     dcterms:subject ns4:ChildSexualAbuseEvent .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_651/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
     rdfs:label "CyberTipline report" ;
-    ns5:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns3:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
     ns1:name "observe" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_651/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns3:LegalProceeding ;
+        ns2:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): held at the Randolph County Detention Center" ;
-    ns3:chargeCount "3"^^xsd:nonNegativeInteger ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_651/charge/1>,
+    ns2:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_651/charge/1>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_651/charge/2>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_651/charge/3> .
 
@@ -71,10 +72,7 @@
     rdfs:label "Randolph County" ;
     ns1:name "Randolph County" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_651/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_651/role/offender/1> a ns3:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_651/role/offender/1> a ns2:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 
 <https://w3id.org/caselinker/resource/location/north-carolina-nc> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
@@ -92,11 +90,14 @@
     ns1:name "Rivers CDP" .
 
 <https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:HotlineOrganization,
-        ns2:FederalAgency ;
+        ns3:HotlineOrganization,
+        ns5:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
     ns1:name "National Center for Missing and Exploited Children" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_651/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_651/phase/charged> a ns4:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;

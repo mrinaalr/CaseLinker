@@ -2,9 +2,9 @@
 @prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://cacontology.projectvic.org/platforms#> .
-@prefix ns6: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns6: <https://cacontology.projectvic.org/platforms#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -35,13 +35,15 @@
     ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/mcso-ca-unverified>,
         <https://w3id.org/caselinker/resource/agency/monterey-county-sheriff-s-office-ca>,
-        <https://w3id.org/caselinker/resource/agency/ncmec> .
+        <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/svicac_2023_007/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/snapchat> .
 
-<https://w3id.org/caselinker/resource/case/svicac_2023_007/person/offender/1/age> a ns6:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/svicac_2023_007/person/offender/1/age> a ns4:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns6:ageSubject <https://w3id.org/caselinker/resource/case/svicac_2023_007/person/offender/1> ;
-    ns6:concernsAgeQuality ns6:Age ;
-    ns6:hasAgeInYears 19.0 .
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/svicac_2023_007/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 19.0 .
 
 <https://w3id.org/caselinker/resource/case/svicac_2023_007/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -49,12 +51,6 @@
     ns2:kindOfRelationship "Has_Role" ;
     ns2:source <https://w3id.org/caselinker/resource/case/svicac_2023_007/person/offender/1> ;
     ns2:target <https://w3id.org/caselinker/resource/case/svicac_2023_007/role/offender/1> .
-
-<https://w3id.org/caselinker/resource/platform/snapchat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        ns5:MessagingService ;
-    rdfs:label "Snapchat" ;
-    ns5:encryptionLevel "end-to-end" ;
-    ns2:name "Snapchat" .
 
 <https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
         <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
@@ -79,12 +75,12 @@
     skos:altLabel "NCMEC" ;
     ns2:name "National Center for Missing and Exploited Children" .
 
-<https://w3id.org/caselinker/resource/case/svicac_2023_007/charge/1> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/svicac_2023_007/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
     rdfs:label "possession of child pornography" .
 
 <https://w3id.org/caselinker/resource/case/svicac_2023_007/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
-        ns4:CSAM_Distribution ;
+        ns5:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/svicac_2023_007/event/hands-on> a ns3:ChildSexualAbuseEvent,
@@ -97,12 +93,12 @@
 
 <https://w3id.org/caselinker/resource/case/svicac_2023_007/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns4:LegalProceeding ;
+        ns5:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns4:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/svicac_2023_007/charge/1> .
+    ns5:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/svicac_2023_007/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/svicac_2023_007/role/offender/1> a ns4:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/svicac_2023_007/role/offender/1> a ns5:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 
 <https://w3id.org/caselinker/resource/location/california-ca> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
@@ -152,10 +148,16 @@
     skos:altLabel "Seaside" ;
     ns2:name "Seaside city" .
 
-<https://w3id.org/caselinker/resource/case/svicac_2023_007/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+<https://w3id.org/caselinker/resource/platform/snapchat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        ns6:MessagingService ;
+    rdfs:label "Snapchat" ;
+    ns6:encryptionLevel "end-to-end" ;
+    ns2:name "Snapchat" .
 
 <https://w3id.org/caselinker/resource/case/svicac_2023_007/phase/arrested> a ns3:InitialPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Initial Phase · phase/arrested" .
+
+<https://w3id.org/caselinker/resource/case/svicac_2023_007/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

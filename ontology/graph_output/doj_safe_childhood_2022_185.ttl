@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns4: <https://cacontology.projectvic.org#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns6: <https://cacontology.projectvic.org/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
@@ -37,7 +37,11 @@
         <https://w3id.org/caselinker/resource/agency/hsi>,
         <https://w3id.org/caselinker/resource/agency/usao>,
         <https://w3id.org/caselinker/resource/agency/west-virginia-state-police-department> ;
-    ns1:object <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/admission/1> .
+    ns1:object <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/admission/1>,
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/person/victim/1>,
+        <https://w3id.org/caselinker/resource/platform/chat>,
+        <https://w3id.org/caselinker/resource/platform/dropbox> .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/admission/1/extraction-confidence> a ns6:AssessmentResult ;
     rdfs:label "Assessment Result · admission/1/extraction-confidence" ;
@@ -45,17 +49,17 @@
     ns6:hasConfidence 0.65 ;
     ns6:usesMethod <https://w3id.org/caselinker/resource/extractor/perpetrator-admissions> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/person/offender/1/age> a ns3:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/person/offender/1/age> a ns5:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns3:ageSubject <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/person/offender/1> ;
-    ns3:concernsAgeQuality ns3:Age ;
-    ns3:hasAgeInYears 48.0 .
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/person/offender/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 48.0 .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/person/victim/1/age> a ns3:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/person/victim/1/age> a ns5:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/victim/1/age" ;
-    ns3:ageSubject <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/person/victim/1> ;
-    ns3:concernsAgeQuality ns3:Age ;
-    ns3:hasAgeInYears 14.0 .
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/person/victim/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 14.0 .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -70,16 +74,6 @@
     ns1:kindOfRelationship "Has_Role" ;
     ns1:source <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/person/victim/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/role/victim/1> .
-
-<https://w3id.org/caselinker/resource/platform/chat> a ns6:DigitalSystemEntity,
-        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
-    rdfs:label "chat" ;
-    ns1:name "chat" .
-
-<https://w3id.org/caselinker/resource/platform/dropbox> a ns6:DigitalSystemEntity,
-        <https://cacontology.projectvic.org/platforms#FileHostingService> ;
-    rdfs:label "Dropbox" ;
-    ns1:name "Dropbox" .
 
 <https://w3id.org/caselinker/resource/agency/ceos> a ns6:OrganizationLikeEntity,
         ns2:FederalAgency ;
@@ -106,18 +100,18 @@
     rdfs:label "West Virginia State Police Department" ;
     ns1:name "West Virginia State Police Department" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/charge/1> a ns3:CSAM_Possession,
+        ns3:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/charge/2> a ns5:CSAM_Production,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/charge/2> a ns3:CSAM_Production,
+        ns3:CriminalCharge ;
     rdfs:label "production of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/charge/3> a ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/charge/3> a ns3:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/charge/4> a ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/charge/4> a ns3:CriminalCharge ;
     rdfs:label "child exploitation" ;
     dcterms:subject ns4:ChildSexualAbuseEvent .
 
@@ -143,21 +137,21 @@
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/legal-proceeding> a ns6:Event,
         ns6:LegalEvent,
-        ns5:LegalProceeding ;
+        ns3:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns5:chargeCount "4"^^xsd:nonNegativeInteger ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/charge/1>,
+    ns3:chargeCount "4"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/charge/1>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/charge/2>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/charge/3>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/charge/4> ;
-    ns5:resultsSentence <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/sentence/1>,
+    ns3:resultsSentence <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/sentence/1>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/sentence/2>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/sentence/3> .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/legal-step/sentenced> a ns6:Event,
         ns6:LegalEvent,
-        ns5:LegalProceeding,
-        ns5:SentencingHearing ;
+        ns3:LegalProceeding,
+        ns3:SentencingHearing ;
     rdfs:label "Sentencing Hearing · legal-step/sentenced" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/operation> a ns6:Event,
@@ -167,18 +161,18 @@
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/role/victim/1> a ns4:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/sentence/1> a ns5:CriminalSentence,
-        ns5:PrisonSentence ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/sentence/1> a ns3:CriminalSentence,
+        ns3:PrisonSentence ;
     rdfs:label "300 months" ;
     ns6:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/sentence/2> a ns5:CriminalSentence,
-        ns5:LifeImprisonmentSentence ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/sentence/2> a ns3:CriminalSentence,
+        ns3:LifeImprisonmentSentence ;
     rdfs:label "lifetime term supervised release" ;
     ns6:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/sentence/3> a ns5:CriminalSentence,
-        ns5:MonetaryPenalty ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/sentence/3> a ns3:CriminalSentence,
+        ns3:MonetaryPenalty ;
     rdfs:label "$27,500" ;
     ns6:assesses <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/role/offender/1> .
 
@@ -201,20 +195,30 @@
     dcterms:identifier "fips:54" ;
     ns1:name "West Virginia" .
 
+<https://w3id.org/caselinker/resource/platform/chat> a ns6:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
+    rdfs:label "chat" ;
+    ns1:name "chat" .
+
+<https://w3id.org/caselinker/resource/platform/dropbox> a ns6:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#FileHostingService> ;
+    rdfs:label "Dropbox" ;
+    ns1:name "Dropbox" .
+
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/admission/1> a <https://cacontology.projectvic.org/undercover#IncriminatingStatement> ;
     rdfs:label "electronically sending sexually explicit images of himself to the minor and receiving sexually explicit images of the..." ;
     dcterms:source <https://www.justice.gov/usao-sc/pr/charleston-man-sentenced-25-years-production-child-pornography> ;
     ns1:description "electronically sending sexually explicit images of himself to the minor and receiving sexually explicit images of the minor" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/phase/sentenced> a ns6:Phase,
+        ns3:SentencingPhase ;
+    rdfs:label "Sentencing Phase · phase/sentenced" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/victim/1" .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/phase/sentenced> a ns6:Phase,
-        ns5:SentencingPhase ;
-    rdfs:label "Sentencing Phase · phase/sentenced" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2022_185/role/offender/1> a ns4:OffenderRole ;
     rdfs:label "Offender Role · role/offender/1" .

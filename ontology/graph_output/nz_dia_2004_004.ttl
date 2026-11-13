@@ -1,12 +1,12 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org/core#> .
-@prefix ns2: <https://cacontology.projectvic.org#> .
+@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://cacontology.projectvic.org#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/nz_dia_2004_004> a ns2:CACInvestigation,
+<https://w3id.org/caselinker/resource/case/nz_dia_2004_004> a ns4:CACInvestigation,
         ns1:EnduringEntity ;
     rdfs:label "Case nz_dia_2004_004" ;
     dcterms:created "2026-11-11T16:25:21.209643"^^xsd:dateTime ;
@@ -16,8 +16,9 @@
     dcterms:provenance <https://w3id.org/caselinker/resource/case/nz_dia_2004_004/provenance> ;
     dcterms:source <https://www.dia.govt.nz/press.nsf/d77da9b523f12931cc256ac5000d19b6/f7b11b777b1563cfcc256e2d0073422a!OpenDocument>,
         "NZ DIA" ;
-    ns2:hasStep <https://w3id.org/caselinker/resource/case/nz_dia_2004_004/event/possession>,
-        <https://w3id.org/caselinker/resource/case/nz_dia_2004_004/legal-proceeding> .
+    ns4:hasStep <https://w3id.org/caselinker/resource/case/nz_dia_2004_004/event/possession>,
+        <https://w3id.org/caselinker/resource/case/nz_dia_2004_004/legal-proceeding> ;
+    ns3:object <https://w3id.org/caselinker/resource/case/nz_dia_2004_004/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/nz_dia_2004_004/assessment/semantic/exploitive-positions> a ns1:AssessmentResult ;
     rdfs:label "semantic similarity · exploitive_positions" ;
@@ -28,7 +29,7 @@
 
 <https://w3id.org/caselinker/resource/case/nz_dia_2004_004/assessment/semantic/possession-csam> a ns1:AssessmentResult ;
     rdfs:label "semantic similarity · possession_csam" ;
-    dcterms:subject ns2:CSAMIncident ;
+    dcterms:subject ns4:CSAMIncident ;
     ns1:assesses <https://w3id.org/caselinker/resource/case/nz_dia_2004_004/narrative> ;
     ns1:hasConfidence 0.5468 ;
     ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
@@ -49,23 +50,23 @@
 
 <https://w3id.org/caselinker/resource/case/nz_dia_2004_004/legal-proceeding> a ns1:Event,
         ns1:LegalEvent,
-        ns4:LegalProceeding ;
+        ns2:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns4:resultsSentence <https://w3id.org/caselinker/resource/case/nz_dia_2004_004/sentence/1> .
+    ns2:resultsSentence <https://w3id.org/caselinker/resource/case/nz_dia_2004_004/sentence/1> .
+
+<https://w3id.org/caselinker/resource/case/nz_dia_2004_004/sentence/1> a ns2:CriminalSentence,
+        ns2:MonetaryPenalty ;
+    rdfs:label "$12,000" ;
+    ns1:assesses <https://w3id.org/caselinker/resource/case/nz_dia_2004_004/role/offender/1> .
+
+<https://w3id.org/caselinker/resource/case/nz_dia_2004_004/event/possession> a ns4:CSAMIncident,
+        ns1:Event ;
+    rdfs:label "CSAMIncident · event/possession" .
 
 <https://w3id.org/caselinker/resource/case/nz_dia_2004_004/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
 
-<https://w3id.org/caselinker/resource/case/nz_dia_2004_004/sentence/1> a ns4:CriminalSentence,
-        ns4:MonetaryPenalty ;
-    rdfs:label "$12,000" ;
-    ns1:assesses <https://w3id.org/caselinker/resource/case/nz_dia_2004_004/role/offender/1> .
-
-<https://w3id.org/caselinker/resource/case/nz_dia_2004_004/event/possession> a ns2:CSAMIncident,
-        ns1:Event ;
-    rdfs:label "CSAMIncident · event/possession" .
-
-<https://w3id.org/caselinker/resource/case/nz_dia_2004_004/role/offender/1> a ns4:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/nz_dia_2004_004/role/offender/1> a ns2:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
-    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/nz_dia_2004_004/event/possession> .
+    ns4:participatesInEvent <https://w3id.org/caselinker/resource/case/nz_dia_2004_004/event/possession> .
 

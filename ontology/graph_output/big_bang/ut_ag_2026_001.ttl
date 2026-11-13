@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -25,16 +25,18 @@
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/ut_ag_2026_001/phase/charged> ;
     ns2:hasStep <https://w3id.org/caselinker/resource/case/ut_ag_2026_001/event/trafficking>,
         <https://w3id.org/caselinker/resource/case/ut_ag_2026_001/legal-proceeding> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/orem-police-department-ut>,
         <https://w3id.org/caselinker/resource/agency/provo-police-department-ut>,
-        <https://w3id.org/caselinker/resource/agency/utah-attorney-generals-office> .
+        <https://w3id.org/caselinker/resource/agency/utah-attorney-generals-office> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/ut_ag_2026_001/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/ut_ag_2026_001/person/victim/1> .
 
-<https://w3id.org/caselinker/resource/case/ut_ag_2026_001/person/victim/1/age> a ns4:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ut_ag_2026_001/person/victim/1/age> a ns5:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/victim/1/age" ;
-    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ut_ag_2026_001/person/victim/1> ;
-    ns4:concernsAgeQuality ns4:Age ;
-    ns4:hasAgeInYears 10.0 .
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/ut_ag_2026_001/person/victim/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 10.0 .
 
 <https://w3id.org/caselinker/resource/case/ut_ag_2026_001/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -57,50 +59,47 @@
     ns1:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/agency/orem-police-department-ut> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:LocalAgency ;
+        ns3:LocalAgency ;
     rdfs:label "Orem Police Department" ;
     dcterms:identifier "ori:UT0250300" ;
     ns1:name "Orem Police Department" .
 
 <https://w3id.org/caselinker/resource/agency/provo-police-department-ut> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:LocalAgency ;
+        ns3:LocalAgency ;
     rdfs:label "Provo Police Department" ;
     dcterms:identifier "ori:UT0250600" ;
     ns1:name "Provo Police Department" .
 
 <https://w3id.org/caselinker/resource/agency/utah-attorney-generals-office> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:StateAgency ;
+        ns3:StateAgency ;
     rdfs:label "Utah Attorney General's Office" ;
     ns1:name "Utah Attorney General's Office" .
 
-<https://w3id.org/caselinker/resource/case/ut_ag_2026_001/charge/1> a ns3:CriminalCharge,
-        ns3:StateCharge ;
+<https://w3id.org/caselinker/resource/case/ut_ag_2026_001/charge/1> a ns4:CriminalCharge,
+        ns4:StateCharge ;
     rdfs:label "sexual exploitation of a minor" .
 
-<https://w3id.org/caselinker/resource/case/ut_ag_2026_001/charge/2> a ns3:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ut_ag_2026_001/charge/2> a ns4:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
-<https://w3id.org/caselinker/resource/case/ut_ag_2026_001/charge/3> a ns3:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ut_ag_2026_001/charge/3> a ns4:CriminalCharge ;
     rdfs:label "child exploitation" ;
     dcterms:subject ns2:ChildSexualAbuseEvent .
 
 <https://w3id.org/caselinker/resource/case/ut_ag_2026_001/event/trafficking> a <https://cacontology.projectvic.org/core#Event>,
-        ns3:SexTrafficking ;
+        ns4:SexTrafficking ;
     rdfs:label "Sex Trafficking · event/trafficking" .
 
 <https://w3id.org/caselinker/resource/case/ut_ag_2026_001/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns3:LegalProceeding ;
+        ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns3:chargeCount "3"^^xsd:nonNegativeInteger ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ut_ag_2026_001/charge/1>,
+    ns4:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ut_ag_2026_001/charge/1>,
         <https://w3id.org/caselinker/resource/case/ut_ag_2026_001/charge/2>,
         <https://w3id.org/caselinker/resource/case/ut_ag_2026_001/charge/3> .
 
-<https://w3id.org/caselinker/resource/case/ut_ag_2026_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ut_ag_2026_001/role/offender/1> a ns3:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ut_ag_2026_001/role/offender/1> a ns4:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/ut_ag_2026_001/role/victim/1> a ns2:VictimRole ;
@@ -126,10 +125,13 @@
     dcterms:identifier "fips:49" ;
     ns1:name "Utah" .
 
-<https://w3id.org/caselinker/resource/case/ut_ag_2026_001/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
+<https://w3id.org/caselinker/resource/case/ut_ag_2026_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/ut_ag_2026_001/phase/charged> a ns2:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/charged" .
+
+<https://w3id.org/caselinker/resource/case/ut_ag_2026_001/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
 

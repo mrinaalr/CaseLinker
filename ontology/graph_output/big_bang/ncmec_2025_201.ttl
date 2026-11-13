@@ -1,15 +1,15 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org/core#> .
-@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://cacontology.projectvic.org/platforms#> .
-@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns6: <https://cacontology.projectvic.org/platforms#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_201> a ns3:CACInvestigation,
+<https://w3id.org/caselinker/resource/case/ncmec_2025_201> a ns4:CACInvestigation,
         ns1:EnduringEntity ;
     rdfs:label "Case ncmec_2025_201" ;
     dcterms:created "2026-11-10T16:33:09.882743"^^xsd:dateTime ;
@@ -21,15 +21,18 @@
         "NCMEC" ;
     dcterms:spatial <https://w3id.org/caselinker/resource/location/florida-fl>,
         <https://w3id.org/caselinker/resource/location/martin-county-fl> ;
-    ns3:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_201/phase/booked> ;
-    ns3:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_201/phase/booked> ;
-    ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_201/event/ai-csam>,
+    ns4:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_201/phase/booked> ;
+    ns4:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2025_201/phase/booked> ;
+    ns4:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2025_201/event/ai-csam>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_201/event/hands-on>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_201/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_201/legal-proceeding> ;
-    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_201/agency/martin-county-sheriffs-office>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_201/agency/mcso> .
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_201/agency/mcso> ;
+    ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2025_201/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/gen-ai>,
+        <https://w3id.org/caselinker/resource/platform/google-drive> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_201/assessment/semantic/exploitive-positions> a ns1:AssessmentResult ;
     rdfs:label "semantic similarity · exploitive_positions" ;
@@ -40,7 +43,7 @@
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_201/assessment/semantic/possession-csam> a ns1:AssessmentResult ;
     rdfs:label "semantic similarity · possession_csam" ;
-    dcterms:subject ns3:CSAMIncident ;
+    dcterms:subject ns4:CSAMIncident ;
     ns1:assesses <https://w3id.org/caselinker/resource/case/ncmec_2025_201/narrative> ;
     ns1:hasConfidence 0.6061 ;
     ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
@@ -52,73 +55,59 @@
     ns1:hasConfidence 0.4558 ;
     ns1:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_201/role/offender/1/has-role> a ns5:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_201/role/offender/1/has-role> a ns3:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns5:isDirectional true ;
-    ns5:kindOfRelationship "Has_Role" ;
-    ns5:source <https://w3id.org/caselinker/resource/case/ncmec_2025_201/person/offender/1> ;
-    ns5:target <https://w3id.org/caselinker/resource/case/ncmec_2025_201/role/offender/1> .
-
-<https://w3id.org/caselinker/resource/platform/gen-ai> a ns1:DigitalSystemEntity,
-        ns4:FileHostingService ;
-    rdfs:label "Gen AI" ;
-    ns4:platformType "generative-ai" ;
-    ns5:name "Gen AI" .
-
-<https://w3id.org/caselinker/resource/platform/google-drive> a ns1:DigitalSystemEntity,
-        ns4:FileHostingService ;
-    rdfs:label "Google Drive" ;
-    ns5:name "Google Drive" .
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2025_201/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2025_201/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/ncmec> a ns1:OrganizationLikeEntity,
-        ns2:FederalAgency ;
+        ns5:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
-    ns5:name "National Center for Missing and Exploited Children" .
+    ns3:name "National Center for Missing and Exploited Children" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_201/agency/martin-county-sheriffs-office> a ns1:OrganizationLikeEntity,
-        ns2:LocalAgency ;
+        ns5:LocalAgency ;
     rdfs:label "Martin County Sheriff's Office" ;
-    ns5:name "Martin County Sheriff's Office" .
+    ns3:name "Martin County Sheriff's Office" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_201/agency/mcso> a ns1:OrganizationLikeEntity,
-        ns2:LocalAgency ;
+        ns5:LocalAgency ;
     rdfs:label "MCSO" ;
-    ns5:name "MCSO" .
+    ns3:name "MCSO" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_201/charge/1> a ns3:DigitallyGeneratedCSAMIncident,
-        ns6:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_201/charge/1> a ns4:DigitallyGeneratedCSAMIncident,
+        ns2:CriminalCharge ;
     rdfs:label "AI-GENERATED CHILD PORNOGRAPHY" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_201/charge/2> a ns6:CSAM_Possession,
-        ns6:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_201/charge/2> a ns2:CSAM_Possession,
+        ns2:CriminalCharge ;
     rdfs:label "possession of computer generated child pornography which is a third degree felony" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_201/event/ai-csam> a ns3:DigitallyGeneratedCSAMIncident,
+<https://w3id.org/caselinker/resource/case/ncmec_2025_201/event/ai-csam> a ns4:DigitallyGeneratedCSAMIncident,
         <https://cacontology.projectvic.org/ai-csam#AIGeneratedCSAM>,
         ns1:Event ;
     rdfs:label "Digitally Generated CSAMIncident · event/ai-csam" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_201/event/hands-on> a ns3:ChildSexualAbuseEvent,
+<https://w3id.org/caselinker/resource/case/ncmec_2025_201/event/hands-on> a ns4:ChildSexualAbuseEvent,
         ns1:Event ;
     rdfs:label "Child Sexual Abuse Event · event/hands-on" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_201/event/possession> a ns3:CSAMIncident,
+<https://w3id.org/caselinker/resource/case/ncmec_2025_201/event/possession> a ns4:CSAMIncident,
         ns1:Event ;
     rdfs:label "CSAMIncident · event/possession" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_201/legal-proceeding> a ns1:Event,
         ns1:LegalEvent,
-        ns6:LegalProceeding ;
+        ns2:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns6:chargeCount "42"^^xsd:nonNegativeInteger ;
-    ns6:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_201/charge/1>,
+    ns2:chargeCount "42"^^xsd:nonNegativeInteger ;
+    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_201/charge/1>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_201/charge/2> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_201/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_201/role/offender/1> a ns6:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_201/role/offender/1> a ns2:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 
 <https://w3id.org/caselinker/resource/location/florida-fl> a ns1:PlaceLikeEntity,
@@ -126,15 +115,29 @@
     rdfs:label "Florida" ;
     dcterms:identifier "fips:12" ;
     skos:altLabel "Fla." ;
-    ns5:name "Florida" .
+    ns3:name "Florida" .
 
 <https://w3id.org/caselinker/resource/location/martin-county-fl> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Martin County" ;
     dcterms:identifier "fips:12085" ;
-    ns5:name "Martin County" .
+    ns3:name "Martin County" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_201/phase/booked> a ns3:InitialPhase,
+<https://w3id.org/caselinker/resource/platform/gen-ai> a ns1:DigitalSystemEntity,
+        ns6:FileHostingService ;
+    rdfs:label "Gen AI" ;
+    ns6:platformType "generative-ai" ;
+    ns3:name "Gen AI" .
+
+<https://w3id.org/caselinker/resource/platform/google-drive> a ns1:DigitalSystemEntity,
+        ns6:FileHostingService ;
+    rdfs:label "Google Drive" ;
+    ns3:name "Google Drive" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_201/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_201/phase/booked> a ns4:InitialPhase,
         ns1:Phase ;
     rdfs:label "Initial Phase · phase/booked" .
 

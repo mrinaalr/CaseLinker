@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/custodial#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -28,10 +28,12 @@
         <https://w3id.org/caselinker/resource/case/ncmec_2023_551/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_551/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/ncmec_2023_551/legal-proceeding> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/illinois-high-tech-crimes-bureau>,
         <https://w3id.org/caselinker/resource/agency/ncmec>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2023_551/agency/edgar-county-sheriffs-department> .
+        <https://w3id.org/caselinker/resource/case/ncmec_2023_551/agency/edgar-county-sheriffs-department> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2023_551/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2023_551/person/victim/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_551/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -54,27 +56,27 @@
     ns1:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/agency/illinois-high-tech-crimes-bureau> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:LocalAgency ;
+        ns3:LocalAgency ;
     rdfs:label "Illinois High Tech Crimes Bureau" ;
     ns1:name "Illinois High Tech Crimes Bureau" .
 
 <https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:FederalAgency ;
+        ns3:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
     ns1:name "National Center for Missing and Exploited Children" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_551/agency/edgar-county-sheriffs-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:LocalAgency ;
+        ns3:LocalAgency ;
     rdfs:label "Edgar County Sheriff's Department" ;
     ns1:name "Edgar County Sheriff's Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_551/charge/1> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_551/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
     rdfs:label "possession of child pornography" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_551/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
-        ns4:CSAM_Distribution ;
+        ns5:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_551/event/online-only> a ns2:ChildSexualAbuseEvent,
@@ -85,32 +87,26 @@
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "CSAMIncident · event/possession" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_551/event/trust-violation> a ns3:CustodialAbuse,
-        ns3:TrustViolation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_551/event/trust-violation> a ns4:CustodialAbuse,
+        ns4:TrustViolation ;
     rdfs:label "Custodial Abuse · event/trust-violation" ;
-    ns3:perpetratedBy <https://w3id.org/caselinker/resource/case/ncmec_2023_551/role/offender/1> ;
-    ns3:violatesRelationship <https://w3id.org/caselinker/resource/case/ncmec_2023_551/relationship/brother> .
+    ns4:perpetratedBy <https://w3id.org/caselinker/resource/case/ncmec_2023_551/role/offender/1> ;
+    ns4:violatesRelationship <https://w3id.org/caselinker/resource/case/ncmec_2023_551/relationship/brother> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2023_551/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns4:LegalProceeding ;
+        ns5:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): Edgar County Jail" ;
-    ns4:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_551/charge/1> .
+    ns5:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2023_551/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_551/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_551/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2023_551/relationship/brother> a ns3:CustodialRelationship,
-        ns3:FamilialRelationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_551/relationship/brother> a ns4:CustodialRelationship,
+        ns4:FamilialRelationship ;
     rdfs:label "Custodial Relationship · relationship/brother" ;
-    ns3:involvesChild <https://w3id.org/caselinker/resource/case/ncmec_2023_551/role/victim/1> ;
-    ns3:involvesCustodian <https://w3id.org/caselinker/resource/case/ncmec_2023_551/role/offender/1> ;
-    ns3:relationshipType "relative" ;
+    ns4:involvesChild <https://w3id.org/caselinker/resource/case/ncmec_2023_551/role/victim/1> ;
+    ns4:involvesCustodian <https://w3id.org/caselinker/resource/case/ncmec_2023_551/role/offender/1> ;
+    ns4:relationshipType "relative" ;
     ns1:isDirectional true ;
     ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2023_551/role/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2023_551/role/victim/1> .
@@ -134,6 +130,12 @@
     skos:altLabel "Paris" ;
     ns1:name "Paris city" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2023_551/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2023_551/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
+
 <https://w3id.org/caselinker/resource/case/ncmec_2023_551/phase/charged> a ns2:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/charged" .
@@ -141,6 +143,6 @@
 <https://w3id.org/caselinker/resource/case/ncmec_2023_551/role/victim/1> a ns2:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2023_551/role/offender/1> a ns4:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2023_551/role/offender/1> a ns5:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 

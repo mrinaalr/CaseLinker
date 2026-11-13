@@ -1,10 +1,10 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
 @prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns4: <https://cacontology.projectvic.org/hotlines#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://cacontology.projectvic.org/platforms#> .
+@prefix ns3: <https://cacontology.projectvic.org/hotlines#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/platforms#> .
+@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -25,9 +25,12 @@
     ns1:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_283/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_283/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_283/legal-proceeding> ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_283/agency/hall-county-sheriffs-office> ;
-    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2024_283/cybertip> .
+    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2024_283/cybertip>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_283/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/discord>,
+        <https://w3id.org/caselinker/resource/platform/social-media> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_283/cybertip/reporter/discord/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · cybertip/reporter/discord/has-role" ;
@@ -50,34 +53,34 @@
     ns2:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_283/agency/hall-county-sheriffs-office> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:LocalAgency ;
+        ns6:LocalAgency ;
     rdfs:label "Hall County Sheriff's Office" ;
     ns2:name "Hall County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_283/charge/1> a ns5:CriminalCharge,
-        ns5:StateCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_283/charge/1> a ns4:CriminalCharge,
+        ns4:StateCharge ;
     rdfs:label "sexual exploitation of a minor" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_283/charge/2> a ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_283/charge/2> a ns4:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_283/cybertip> a ns4:ESPReport,
+<https://w3id.org/caselinker/resource/case/ncmec_2024_283/cybertip> a ns3:ESPReport,
         <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
     rdfs:label "CyberTipline report" ;
-    ns4:reportedBy <https://w3id.org/caselinker/resource/case/ncmec_2024_283/cybertip/reporter/discord> ;
+    ns3:reportedBy <https://w3id.org/caselinker/resource/case/ncmec_2024_283/cybertip/reporter/discord> ;
     ns2:name "observe" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_283/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
-        ns5:CSAM_Distribution ;
+        ns4:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_283/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns5:LegalProceeding ;
+        ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): remains in the Hall County Jail" ;
-    ns5:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_283/charge/1>,
+    ns4:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_283/charge/1>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_283/charge/2> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_283/location/gainesville> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
@@ -85,27 +88,13 @@
     rdfs:label "Gainesville" ;
     ns2:name "Gainesville" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_283/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_283/role/offender/1> a ns5:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_283/role/offender/1> a ns4:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns1:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_283/event/possession> .
 
-<https://w3id.org/caselinker/resource/platform/discord> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        ns6:MessagingService ;
-    rdfs:label "Discord" ;
-    ns6:operatedBy <https://w3id.org/caselinker/resource/esp/discord> ;
-    ns2:name "Discord" .
-
-<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        ns6:SocialMediaPlatform ;
-    rdfs:label "social media" ;
-    ns2:name "social media" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_283/cybertip/reporter/discord> a ns4:ReporterRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_283/cybertip/reporter/discord> a ns3:ReporterRole ;
     rdfs:label "Reporter Role · cybertip/reporter/discord" ;
-    ns4:isAnonymous false .
+    ns3:isAnonymous false .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_283/event/possession> a ns1:CSAMIncident,
         <https://cacontology.projectvic.org/core#Event> ;
@@ -113,11 +102,25 @@
     ns1:usesChannel <https://w3id.org/caselinker/resource/platform/discord>,
         <https://w3id.org/caselinker/resource/platform/social-media> .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2024_283/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
 <https://w3id.org/caselinker/resource/case/ncmec_2024_283/phase/charged> a ns1:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/charged" .
 
-<https://w3id.org/caselinker/resource/esp/discord> a ns6:ElectronicServiceProvider ;
+<https://w3id.org/caselinker/resource/esp/discord> a ns5:ElectronicServiceProvider ;
     rdfs:label "Discord" ;
     ns2:name "Discord" .
+
+<https://w3id.org/caselinker/resource/platform/discord> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        ns5:MessagingService ;
+    rdfs:label "Discord" ;
+    ns5:operatedBy <https://w3id.org/caselinker/resource/esp/discord> ;
+    ns2:name "Discord" .
+
+<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        ns5:SocialMediaPlatform ;
+    rdfs:label "social media" ;
+    ns2:name "social media" .
 

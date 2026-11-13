@@ -1,10 +1,10 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns3: <https://cacontology.projectvic.org/core#> .
 @prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns5: <https://cacontology.projectvic.org#> .
-@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns6: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -27,8 +27,10 @@
         <https://w3id.org/caselinker/resource/case/ncmec_2024_080/event/hands-on>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_080/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_080/legal-proceeding> ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_080/agency/turlock-police-department> ;
-    ns4:object <https://w3id.org/caselinker/resource/case/ncmec_2024_080/cybertip> .
+    ns2:involvesAgency <https://w3id.org/caselinker/resource/case/ncmec_2024_080/agency/turlock-police-department> ;
+    ns4:object <https://w3id.org/caselinker/resource/case/ncmec_2024_080/cybertip>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_080/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/social-media> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_080/assessment/semantic/possession-csam> a ns3:AssessmentResult ;
     rdfs:label "semantic similarity · possession_csam" ;
@@ -37,11 +39,11 @@
     ns3:hasConfidence 0.5011 ;
     ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_080/person/offender/1/age> a ns2:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_080/person/offender/1/age> a ns6:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns2:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_080/person/offender/1> ;
-    ns2:concernsAgeQuality ns2:Age ;
-    ns2:hasAgeInYears 42.0 .
+    ns6:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_080/person/offender/1> ;
+    ns6:concernsAgeQuality ns6:Age ;
+    ns6:hasAgeInYears 42.0 .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_080/role/offender/1/has-role> a ns4:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -50,13 +52,8 @@
     ns4:source <https://w3id.org/caselinker/resource/case/ncmec_2024_080/person/offender/1> ;
     ns4:target <https://w3id.org/caselinker/resource/case/ncmec_2024_080/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/platform/social-media> a ns3:DigitalSystemEntity,
-        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "social media" ;
-    ns4:name "social media" .
-
 <https://w3id.org/caselinker/resource/case/ncmec_2024_080/agency/turlock-police-department> a ns3:OrganizationLikeEntity,
-        ns6:LocalAgency ;
+        ns2:LocalAgency ;
     rdfs:label "Turlock Police Department" ;
     ns4:name "Turlock Police Department" .
 
@@ -109,10 +106,15 @@
     skos:altLabel "Turlock City" ;
     ns4:name "Turlock city" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_080/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+<https://w3id.org/caselinker/resource/platform/social-media> a ns3:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "social media" ;
+    ns4:name "social media" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_080/phase/booked> a ns5:InitialPhase,
         ns3:Phase ;
     rdfs:label "Initial Phase · phase/booked" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_080/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

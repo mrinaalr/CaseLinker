@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -28,60 +28,62 @@
     ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/arkansas-state-police-department>,
         <https://w3id.org/caselinker/resource/agency/fulton-county-sheriff-s-office-ar>,
         <https://w3id.org/caselinker/resource/agency/icac> ;
-    ns1:object <https://w3id.org/caselinker/resource/case/arkansas_dps_2025_003/cybertip> .
+    ns3:object <https://w3id.org/caselinker/resource/case/arkansas_dps_2025_003/cybertip>,
+        <https://w3id.org/caselinker/resource/case/arkansas_dps_2025_003/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/social-media> .
 
-<https://w3id.org/caselinker/resource/case/arkansas_dps_2025_003/person/offender/1/age> a ns3:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/arkansas_dps_2025_003/person/offender/1/age> a ns5:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns3:ageSubject <https://w3id.org/caselinker/resource/case/arkansas_dps_2025_003/person/offender/1> ;
-    ns3:concernsAgeQuality ns3:Age ;
-    ns3:hasAgeInYears 25.0 .
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/arkansas_dps_2025_003/person/offender/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 25.0 .
 
-<https://w3id.org/caselinker/resource/case/arkansas_dps_2025_003/role/offender/1/has-role> a ns1:Relationship ;
+<https://w3id.org/caselinker/resource/case/arkansas_dps_2025_003/role/offender/1/has-role> a ns3:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns1:isDirectional true ;
-    ns1:kindOfRelationship "Has_Role" ;
-    ns1:source <https://w3id.org/caselinker/resource/case/arkansas_dps_2025_003/person/offender/1> ;
-    ns1:target <https://w3id.org/caselinker/resource/case/arkansas_dps_2025_003/role/offender/1> .
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/arkansas_dps_2025_003/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/arkansas_dps_2025_003/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/arkansas-state-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
         ns4:StateAgency ;
     rdfs:label "Arkansas State Police Department" ;
-    ns1:name "Arkansas State Police Department" .
+    ns3:name "Arkansas State Police Department" .
 
 <https://w3id.org/caselinker/resource/agency/fulton-county-sheriff-s-office-ar> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
         ns4:LocalAgency ;
     rdfs:label "Fulton County Sheriff's Office" ;
     dcterms:identifier "ori:AR0250000" ;
-    ns1:name "Fulton County Sheriff's Office" .
+    ns3:name "Fulton County Sheriff's Office" .
 
 <https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
         <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
     rdfs:label "ICAC Task Force" ;
     skos:altLabel "ICAC" ;
-    ns1:name "ICAC Task Force" .
+    ns3:name "ICAC Task Force" .
 
-<https://w3id.org/caselinker/resource/case/arkansas_dps_2025_003/charge/1> a ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/arkansas_dps_2025_003/charge/1> a ns1:CriminalCharge ;
     rdfs:label "CSAM" .
 
 <https://w3id.org/caselinker/resource/case/arkansas_dps_2025_003/cybertip> a <https://cacontology.projectvic.org/hotlines#ESPReport>,
         <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
     rdfs:label "CyberTipline report" ;
     rdfs:comment "Reported by an unnamed social media" ;
-    ns1:name "observe" .
+    ns3:name "observe" .
 
 <https://w3id.org/caselinker/resource/case/arkansas_dps_2025_003/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns5:LegalProceeding ;
+        ns1:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): booked into the Fulton County Detention Center" ;
-    ns5:chargeCount "10"^^xsd:nonNegativeInteger ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/arkansas_dps_2025_003/charge/1> .
+    ns1:chargeCount "10"^^xsd:nonNegativeInteger ;
+    ns1:hasCharge <https://w3id.org/caselinker/resource/case/arkansas_dps_2025_003/charge/1> .
 
 <https://w3id.org/caselinker/resource/case/arkansas_dps_2025_003/operation> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/taskforce#ReactiveOperation> ;
     rdfs:label "Reactive Operation · operation" .
 
-<https://w3id.org/caselinker/resource/case/arkansas_dps_2025_003/role/offender/1> a ns5:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/arkansas_dps_2025_003/role/offender/1> a ns1:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/arkansas_dps_2025_003/event/possession> .
 
@@ -90,19 +92,14 @@
     rdfs:label "Arkansas" ;
     dcterms:identifier "fips:05" ;
     skos:altLabel "Ark." ;
-    ns1:name "Arkansas" .
+    ns3:name "Arkansas" .
 
 <https://w3id.org/caselinker/resource/location/viola-town-ar> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Viola town" ;
     dcterms:identifier "fips:0572140" ;
     skos:altLabel "Viola" ;
-    ns1:name "Viola town" .
-
-<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "social media" ;
-    ns1:name "social media" .
+    ns3:name "Viola town" .
 
 <https://w3id.org/caselinker/resource/case/arkansas_dps_2025_003/event/possession> a ns2:CSAMIncident,
         <https://cacontology.projectvic.org/core#Event> ;
@@ -110,10 +107,15 @@
     ns2:severityLevel 3 ;
     ns2:usesChannel <https://w3id.org/caselinker/resource/platform/social-media> .
 
-<https://w3id.org/caselinker/resource/case/arkansas_dps_2025_003/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
 <https://w3id.org/caselinker/resource/case/arkansas_dps_2025_003/phase/charged> a ns2:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/charged" .
+
+<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "social media" ;
+    ns3:name "social media" .
+
+<https://w3id.org/caselinker/resource/case/arkansas_dps_2025_003/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

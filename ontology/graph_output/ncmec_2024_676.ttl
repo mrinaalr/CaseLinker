@@ -2,9 +2,9 @@
 @prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
 @prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns5: <https://cacontology.projectvic.org/hotlines#> .
-@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns6: <https://cacontology.projectvic.org/hotlines#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -28,13 +28,16 @@
         <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/ncmec>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_676/agency/middle-township-police-department> ;
-    ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2024_676/cybertip> .
+    ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2024_676/cybertip>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_676/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/social-media>,
+        <https://w3id.org/caselinker/resource/platform/twitter-x> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_676/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_676/person/offender/1/age> a ns5:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns4:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_676/person/offender/1> ;
-    ns4:concernsAgeQuality ns4:Age ;
-    ns4:hasAgeInYears 20.0 .
+    ns5:ageSubject <https://w3id.org/caselinker/resource/case/ncmec_2024_676/person/offender/1> ;
+    ns5:concernsAgeQuality ns5:Age ;
+    ns5:hasAgeInYears 20.0 .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_676/role/offender/1/has-role> a ns3:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -59,42 +62,32 @@
     rdfs:label "Middle Township Police Department" ;
     ns3:name "Middle Township Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_676/charge/1> a ns6:CSAM_Possession,
-        ns6:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_676/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
     rdfs:label "child pornography" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_676/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
     rdfs:label "CyberTipline report" ;
-    ns5:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns6:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
     ns3:name "observe" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_676/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
-        ns6:CSAM_Distribution ;
+        ns4:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_676/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns6:LegalProceeding ;
+        ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns6:chargeCount "1"^^xsd:nonNegativeInteger ;
-    ns6:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_676/charge/1> .
+    ns4:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_676/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_676/role/offender/1> a ns6:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_676/role/offender/1> a ns4:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_676/event/possession> .
 
-<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "social media" ;
-    ns3:name "social media" .
-
-<https://w3id.org/caselinker/resource/platform/twitter-x> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "Twitter / X" ;
-    ns3:name "Twitter / X" .
-
 <https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:HotlineOrganization,
+        ns6:HotlineOrganization,
         ns1:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
@@ -107,10 +100,20 @@
     ns2:usesChannel <https://w3id.org/caselinker/resource/platform/social-media>,
         <https://w3id.org/caselinker/resource/platform/twitter-x> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_676/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
 <https://w3id.org/caselinker/resource/case/ncmec_2024_676/phase/charged> a ns2:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/charged" .
+
+<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "social media" ;
+    ns3:name "social media" .
+
+<https://w3id.org/caselinker/resource/platform/twitter-x> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "Twitter / X" ;
+    ns3:name "Twitter / X" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_676/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

@@ -1,7 +1,7 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://cacontology.projectvic.org/custodial#> .
 @prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns5: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -28,7 +28,9 @@
         <https://w3id.org/caselinker/resource/case/pa_ag_2025_027/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/pa_ag_2025_027/legal-step/convicted> ;
     ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/luzerne-county-district-attorneys-office-pa-unverified>,
-        <https://w3id.org/caselinker/resource/agency/office-of-the-attorney-general-pa-unverified> .
+        <https://w3id.org/caselinker/resource/agency/office-of-the-attorney-general-pa-unverified> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/pa_ag_2025_027/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/pa_ag_2025_027/person/victim/1> .
 
 <https://w3id.org/caselinker/resource/case/pa_ag_2025_027/person/offender/1/age> a ns5:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
@@ -42,35 +44,35 @@
     ns5:concernsAgeQuality ns5:Age ;
     ns5:hasAgeInYears 11.0 .
 
-<https://w3id.org/caselinker/resource/case/pa_ag_2025_027/role/offender/1/has-role> a ns3:Relationship ;
+<https://w3id.org/caselinker/resource/case/pa_ag_2025_027/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns3:isDirectional true ;
-    ns3:kindOfRelationship "Has_Role" ;
-    ns3:source <https://w3id.org/caselinker/resource/case/pa_ag_2025_027/person/offender/1> ;
-    ns3:target <https://w3id.org/caselinker/resource/case/pa_ag_2025_027/role/offender/1> .
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/pa_ag_2025_027/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/pa_ag_2025_027/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/pa_ag_2025_027/role/victim/1/has-role> a ns3:Relationship ;
+<https://w3id.org/caselinker/resource/case/pa_ag_2025_027/role/victim/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/victim/1/has-role" ;
-    ns3:isDirectional true ;
-    ns3:kindOfRelationship "Has_Role" ;
-    ns3:source <https://w3id.org/caselinker/resource/case/pa_ag_2025_027/person/victim/1> ;
-    ns3:target <https://w3id.org/caselinker/resource/case/pa_ag_2025_027/role/victim/1> .
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/pa_ag_2025_027/person/victim/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/pa_ag_2025_027/role/victim/1> .
 
 <https://w3id.org/caselinker/resource/agency/luzerne-county-district-attorneys-office-pa-unverified> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
         ns4:StateAgency ;
     rdfs:label "Luzerne County District Attorney's Office" ;
-    ns3:name "Luzerne County District Attorney's Office" .
+    ns1:name "Luzerne County District Attorney's Office" .
 
 <https://w3id.org/caselinker/resource/agency/office-of-the-attorney-general-pa-unverified> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
         ns4:StateAgency ;
     rdfs:label "Office of the Attorney General" ;
-    ns3:name "Office of the Attorney General" .
+    ns1:name "Office of the Attorney General" .
 
-<https://w3id.org/caselinker/resource/case/pa_ag_2025_027/event/trust-violation> a ns1:CustodialAbuse,
-        ns1:TrustViolation ;
+<https://w3id.org/caselinker/resource/case/pa_ag_2025_027/event/trust-violation> a ns3:CustodialAbuse,
+        ns3:TrustViolation ;
     rdfs:label "Custodial Abuse · event/trust-violation" ;
-    ns1:perpetratedBy <https://w3id.org/caselinker/resource/case/pa_ag_2025_027/role/offender/1> ;
-    ns1:violatesRelationship <https://w3id.org/caselinker/resource/case/pa_ag_2025_027/relationship/mother> .
+    ns3:perpetratedBy <https://w3id.org/caselinker/resource/case/pa_ag_2025_027/role/offender/1> ;
+    ns3:violatesRelationship <https://w3id.org/caselinker/resource/case/pa_ag_2025_027/relationship/mother> .
 
 <https://w3id.org/caselinker/resource/case/pa_ag_2025_027/legal-step/convicted> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
@@ -78,47 +80,41 @@
         <https://cacontology.projectvic.org/legal-outcomes#SentencingHearing> ;
     rdfs:label "Sentencing Hearing · legal-step/convicted" .
 
-<https://w3id.org/caselinker/resource/case/pa_ag_2025_027/relationship/mother> a ns1:CustodialRelationship,
-        ns1:FamilialRelationship ;
+<https://w3id.org/caselinker/resource/case/pa_ag_2025_027/relationship/mother> a ns3:CustodialRelationship,
+        ns3:FamilialRelationship ;
     rdfs:label "Custodial Relationship · relationship/mother" ;
-    ns1:involvesChild <https://w3id.org/caselinker/resource/case/pa_ag_2025_027/role/victim/1> ;
-    ns1:involvesCustodian <https://w3id.org/caselinker/resource/case/pa_ag_2025_027/role/offender/1> ;
-    ns1:relationshipType "parent" ;
-    ns3:isDirectional true ;
-    ns3:source <https://w3id.org/caselinker/resource/case/pa_ag_2025_027/role/offender/1> ;
-    ns3:target <https://w3id.org/caselinker/resource/case/pa_ag_2025_027/role/victim/1> .
+    ns3:involvesChild <https://w3id.org/caselinker/resource/case/pa_ag_2025_027/role/victim/1> ;
+    ns3:involvesCustodian <https://w3id.org/caselinker/resource/case/pa_ag_2025_027/role/offender/1> ;
+    ns3:relationshipType "parent" ;
+    ns1:isDirectional true ;
+    ns1:source <https://w3id.org/caselinker/resource/case/pa_ag_2025_027/role/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/pa_ag_2025_027/role/victim/1> .
 
 <https://w3id.org/caselinker/resource/location/harrisburg-city-pa> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Harrisburg city" ;
     dcterms:identifier "fips:4232800" ;
     skos:altLabel "Harrisburg" ;
-    ns3:name "Harrisburg city" .
+    ns1:name "Harrisburg city" .
 
 <https://w3id.org/caselinker/resource/location/hazleton-city-pa> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Hazleton city" ;
     dcterms:identifier "fips:4233408" ;
     skos:altLabel "Hazleton" ;
-    ns3:name "Hazleton city" .
+    ns1:name "Hazleton city" .
 
 <https://w3id.org/caselinker/resource/location/luzerne-county-pa> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Luzerne County" ;
     dcterms:identifier "fips:42079" ;
-    ns3:name "Luzerne County" .
+    ns1:name "Luzerne County" .
 
 <https://w3id.org/caselinker/resource/location/pennsylvania-pa> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Pennsylvania" ;
     dcterms:identifier "fips:42" ;
-    ns3:name "Pennsylvania" .
-
-<https://w3id.org/caselinker/resource/case/pa_ag_2025_027/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/pa_ag_2025_027/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
+    ns1:name "Pennsylvania" .
 
 <https://w3id.org/caselinker/resource/case/pa_ag_2025_027/phase/convicted> a <https://cacontology.projectvic.org/core#Phase>,
         <https://cacontology.projectvic.org/legal-outcomes#SentencingPhase> ;
@@ -128,6 +124,12 @@
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "Child Sexual Abuse Event · event/hands-on" ;
     ns2:severityLevel 3 .
+
+<https://w3id.org/caselinker/resource/case/pa_ag_2025_027/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/pa_ag_2025_027/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
 
 <https://w3id.org/caselinker/resource/case/pa_ag_2025_027/role/victim/1> a ns2:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" ;

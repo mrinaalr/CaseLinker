@@ -1,8 +1,8 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -23,7 +23,8 @@
     ns3:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_607/phase/charged> ;
     ns3:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_607/phase/charged> ;
     ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_607/event/possession>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_607/legal-proceeding> .
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_607/legal-proceeding> ;
+    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2024_607/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_607/person/offender/1/age> a ns1:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
@@ -31,30 +32,30 @@
     ns1:concernsAgeQuality ns1:Age ;
     ns1:hasAgeInYears 40.0 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_607/role/offender/1/has-role> a ns4:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_607/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns4:isDirectional true ;
-    ns4:kindOfRelationship "Has_Role" ;
-    ns4:source <https://w3id.org/caselinker/resource/case/ncmec_2024_607/person/offender/1> ;
-    ns4:target <https://w3id.org/caselinker/resource/case/ncmec_2024_607/role/offender/1> .
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2024_607/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2024_607/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_607/charge/1> a ns2:CSAM_Possession,
-        ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_607/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
     rdfs:label "possession of child pornography" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_607/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns2:LegalProceeding ;
+        ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns2:chargeCount "3"^^xsd:nonNegativeInteger ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_607/charge/1> .
+    ns4:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_607/charge/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_607/location/jackson-county> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Jackson County" ;
-    ns4:name "Jackson County" .
+    ns2:name "Jackson County" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_607/role/offender/1> a ns2:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_607/role/offender/1> a ns4:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_607/event/possession> .
 
@@ -63,24 +64,24 @@
     rdfs:label "Kansas City city" ;
     dcterms:identifier "fips:2036000" ;
     skos:altLabel "Kansas City" ;
-    ns4:name "Kansas City city" .
+    ns2:name "Kansas City city" .
 
 <https://w3id.org/caselinker/resource/location/missouri-mo> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Missouri" ;
     dcterms:identifier "fips:29" ;
     skos:altLabel "Mo." ;
-    ns4:name "Missouri" .
+    ns2:name "Missouri" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_607/event/possession> a ns3:CSAMIncident,
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "CSAMIncident · event/possession" ;
     ns3:severityLevel 3 .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_607/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
 <https://w3id.org/caselinker/resource/case/ncmec_2024_607/phase/charged> a ns3:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/charged" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_607/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

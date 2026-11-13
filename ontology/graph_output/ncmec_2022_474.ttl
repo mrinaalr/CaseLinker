@@ -1,8 +1,8 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns3: <https://cacontology.projectvic.org/core#> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
@@ -30,7 +30,8 @@
         <https://w3id.org/caselinker/resource/case/ncmec_2022_474/legal-proceeding> ;
     ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/fbi>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_474/agency/coffee-county-sheriffs-office> ;
-    ns4:object <https://w3id.org/caselinker/resource/case/ncmec_2022_474/cybertip> .
+    ns2:object <https://w3id.org/caselinker/resource/case/ncmec_2022_474/cybertip>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2022_474/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_474/assessment/semantic/possession-csam> a ns3:AssessmentResult ;
     rdfs:label "semantic similarity · possession_csam" ;
@@ -39,42 +40,42 @@
     ns3:hasConfidence 0.5368 ;
     ns3:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_474/role/offender/1/has-role> a ns4:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_474/role/offender/1/has-role> a ns2:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns4:isDirectional true ;
-    ns4:kindOfRelationship "Has_Role" ;
-    ns4:source <https://w3id.org/caselinker/resource/case/ncmec_2022_474/person/offender/1> ;
-    ns4:target <https://w3id.org/caselinker/resource/case/ncmec_2022_474/role/offender/1> .
+    ns2:isDirectional true ;
+    ns2:kindOfRelationship "Has_Role" ;
+    ns2:source <https://w3id.org/caselinker/resource/case/ncmec_2022_474/person/offender/1> ;
+    ns2:target <https://w3id.org/caselinker/resource/case/ncmec_2022_474/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/fbi> a ns3:OrganizationLikeEntity,
         ns5:FederalAgency ;
     rdfs:label "Federal Bureau of Investigation" ;
     skos:altLabel "FBI" ;
-    ns4:name "Federal Bureau of Investigation" .
+    ns2:name "Federal Bureau of Investigation" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_474/agency/coffee-county-sheriffs-office> a ns3:OrganizationLikeEntity,
         ns5:LocalAgency ;
     rdfs:label "Coffee County Sheriff's Office" ;
-    ns4:name "Coffee County Sheriff's Office" .
+    ns2:name "Coffee County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_474/charge/1> a ns2:CSAM_Possession,
-        ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_474/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_474/charge/2> a ns2:CSAM_Distribution,
-        ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_474/charge/2> a ns4:CSAM_Distribution,
+        ns4:CriminalCharge ;
     rdfs:label "possession with the intent to disseminate child pornography and one count of" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_474/charge/3> a ns2:CSAM_Production,
-        ns2:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_474/charge/3> a ns4:CSAM_Production,
+        ns4:CriminalCharge ;
     rdfs:label "production of child pornography" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_474/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
     rdfs:label "CyberTipline report" ;
-    ns4:name "observe" .
+    ns2:name "observe" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_474/event/distribution> a ns3:Event,
-        ns2:CSAM_Distribution ;
+        ns4:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_474/event/possession> a ns1:CSAMIncident,
@@ -87,17 +88,14 @@
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_474/legal-proceeding> a ns3:Event,
         ns3:LegalEvent,
-        ns2:LegalProceeding ;
+        ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns2:chargeCount "43"^^xsd:nonNegativeInteger ;
-    ns2:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_474/charge/1>,
+    ns4:chargeCount "43"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2022_474/charge/1>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_474/charge/2>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_474/charge/3> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_474/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_474/role/offender/1> a ns2:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_474/role/offender/1> a ns4:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 
 <https://w3id.org/caselinker/resource/location/alabama-al> a ns3:PlaceLikeEntity,
@@ -105,26 +103,29 @@
     rdfs:label "Alabama" ;
     dcterms:identifier "fips:01" ;
     skos:altLabel "Ala." ;
-    ns4:name "Alabama" .
+    ns2:name "Alabama" .
 
 <https://w3id.org/caselinker/resource/location/alabama-al-01> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Alabama" ;
     dcterms:identifier "fips:01" ;
-    ns4:name "Alabama" .
+    ns2:name "Alabama" .
 
 <https://w3id.org/caselinker/resource/location/dale-county-al> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Dale County" ;
     dcterms:identifier "fips:01045" ;
-    ns4:name "Dale County" .
+    ns2:name "Dale County" .
 
 <https://w3id.org/caselinker/resource/location/level-plains-town> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Level Plains town" ;
     dcterms:identifier "fips:0142472" ;
     skos:altLabel "Level Plains" ;
-    ns4:name "Level Plains town" .
+    ns2:name "Level Plains town" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2022_474/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_474/phase/charged> a ns1:LegalProcessPhase,
         ns3:Phase ;

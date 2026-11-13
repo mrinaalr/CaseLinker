@@ -1,10 +1,10 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns1: <https://cacontology.projectvic.org/hotlines#> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns4: <https://cacontology.projectvic.org/platforms#> .
-@prefix ns5: <https://cacontology.projectvic.org/hotlines#> .
-@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns6: <https://cacontology.projectvic.org/platforms#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -27,54 +27,53 @@
     ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_168/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_168/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_168/operation> ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
         <https://w3id.org/caselinker/resource/agency/us-department-of-state> ;
-    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2024_168/cybertip> .
+    ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2024_168/cybertip>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_168/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/snapchat> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_168/role/offender/1/has-role> a ns1:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_168/role/offender/1/has-role> a ns3:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns1:isDirectional true ;
-    ns1:kindOfRelationship "Has_Role" ;
-    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_168/person/offender/1> ;
-    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_168/role/offender/1> .
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2024_168/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2024_168/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/us-department-of-state> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "U.S Department of State",
         "U.S. Department of State" ;
-    ns1:name "U.S Department of State",
+    ns3:name "U.S Department of State",
         "U.S. Department of State" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_168/charge/1> a ns6:CSAM_Possession,
-        ns6:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_168/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
     rdfs:label "child pornography" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_168/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
     rdfs:label "CyberTipline report" ;
-    ns5:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
-    ns1:name "observe" .
+    ns1:receivedBy <https://w3id.org/caselinker/resource/agency/ncmec> ;
+    ns3:name "observe" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_168/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns6:LegalProceeding ;
+        ns5:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): booked into the Palm Beach County jail; booked in the Palm Beach County Jail" ;
-    ns6:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns6:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_168/charge/1> .
+    ns5:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_168/charge/1> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_168/location/united-states> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "United States" ;
-    ns1:name "United States" .
+    ns3:name "United States" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_168/operation> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/taskforce#ReactiveOperation> ;
     rdfs:label "Reactive Operation · operation" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_168/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_168/role/offender/1> a ns6:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_168/role/offender/1> a ns5:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2024_168/event/possession> .
 
@@ -83,26 +82,20 @@
     rdfs:label "Florida" ;
     dcterms:identifier "fips:12" ;
     skos:altLabel "Fla." ;
-    ns1:name "Florida" .
+    ns3:name "Florida" .
 
 <https://w3id.org/caselinker/resource/location/palm-beach-county-fl> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Palm Beach County" ;
     dcterms:identifier "fips:12099" ;
-    ns1:name "Palm Beach County" .
-
-<https://w3id.org/caselinker/resource/platform/snapchat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        ns4:MessagingService ;
-    rdfs:label "Snapchat" ;
-    ns4:encryptionLevel "end-to-end" ;
-    ns1:name "Snapchat" .
+    ns3:name "Palm Beach County" .
 
 <https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns5:HotlineOrganization,
-        ns3:FederalAgency ;
+        ns1:HotlineOrganization,
+        ns4:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
-    ns1:name "National Center for Missing and Exploited Children" .
+    ns3:name "National Center for Missing and Exploited Children" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_168/event/possession> a ns2:CSAMIncident,
         <https://cacontology.projectvic.org/core#Event> ;
@@ -110,7 +103,16 @@
     ns2:severityLevel 3 ;
     ns2:usesChannel <https://w3id.org/caselinker/resource/platform/snapchat> .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2024_168/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
 <https://w3id.org/caselinker/resource/case/ncmec_2024_168/phase/charged> a ns2:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/charged" .
+
+<https://w3id.org/caselinker/resource/platform/snapchat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        ns6:MessagingService ;
+    rdfs:label "Snapchat" ;
+    ns6:encryptionLevel "end-to-end" ;
+    ns3:name "Snapchat" .
 

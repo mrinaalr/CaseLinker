@@ -1,8 +1,8 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns4: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns3: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -27,8 +27,10 @@
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/us_marshals_2023_010/phase/charged> ;
     ns2:hasStep <https://w3id.org/caselinker/resource/case/us_marshals_2023_010/event/multi-jurisdiction>,
         <https://w3id.org/caselinker/resource/case/us_marshals_2023_010/event/trust-violation> ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/usms>,
-        <https://w3id.org/caselinker/resource/case/us_marshals_2023_010/agency/berkeley-county-sheriffs-office> .
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/usms>,
+        <https://w3id.org/caselinker/resource/case/us_marshals_2023_010/agency/berkeley-county-sheriffs-office> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/us_marshals_2023_010/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/us_marshals_2023_010/person/victim/1> .
 
 <https://w3id.org/caselinker/resource/case/us_marshals_2023_010/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -45,7 +47,7 @@
     ns1:target <https://w3id.org/caselinker/resource/case/us_marshals_2023_010/role/victim/1> .
 
 <https://w3id.org/caselinker/resource/agency/usms> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:FederalAgency ;
+        ns4:FederalAgency ;
     rdfs:label "U.S. Marshals Service" ;
     skos:altLabel "U.S. Marshals",
         "U.S. Marshals Capital Area Regional Fugitive Task Force",
@@ -54,19 +56,19 @@
     ns1:name "U.S. Marshals Service" .
 
 <https://w3id.org/caselinker/resource/case/us_marshals_2023_010/agency/berkeley-county-sheriffs-office> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns3:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "Berkeley County Sheriff's Office" ;
     ns1:name "Berkeley County Sheriff's Office" .
 
 <https://w3id.org/caselinker/resource/case/us_marshals_2023_010/event/multi-jurisdiction> a <https://cacontology.projectvic.org/core#Event>,
-        ns3:MultiJurisdictionalInvestigation ;
+        ns4:MultiJurisdictionalInvestigation ;
     rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" .
 
-<https://w3id.org/caselinker/resource/case/us_marshals_2023_010/event/trust-violation> a ns4:CustodialAbuse,
-        ns4:TrustViolation ;
+<https://w3id.org/caselinker/resource/case/us_marshals_2023_010/event/trust-violation> a ns3:CustodialAbuse,
+        ns3:TrustViolation ;
     rdfs:label "Custodial Abuse · event/trust-violation" ;
-    ns4:perpetratedBy <https://w3id.org/caselinker/resource/case/us_marshals_2023_010/role/offender/1> ;
-    ns4:violatesRelationship <https://w3id.org/caselinker/resource/case/us_marshals_2023_010/relationship/parent> .
+    ns3:perpetratedBy <https://w3id.org/caselinker/resource/case/us_marshals_2023_010/role/offender/1> ;
+    ns3:violatesRelationship <https://w3id.org/caselinker/resource/case/us_marshals_2023_010/relationship/parent> .
 
 <https://w3id.org/caselinker/resource/case/us_marshals_2023_010/location/berkeley-county> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
@@ -78,18 +80,12 @@
     rdfs:label "Montgomery County" ;
     ns1:name "Montgomery County" .
 
-<https://w3id.org/caselinker/resource/case/us_marshals_2023_010/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/us_marshals_2023_010/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
-
-<https://w3id.org/caselinker/resource/case/us_marshals_2023_010/relationship/parent> a ns4:CaregiverRelationship,
-        ns4:CustodialRelationship ;
+<https://w3id.org/caselinker/resource/case/us_marshals_2023_010/relationship/parent> a ns3:CaregiverRelationship,
+        ns3:CustodialRelationship ;
     rdfs:label "Caregiver Relationship · relationship/parent" ;
-    ns4:involvesChild <https://w3id.org/caselinker/resource/case/us_marshals_2023_010/role/victim/1> ;
-    ns4:involvesCustodian <https://w3id.org/caselinker/resource/case/us_marshals_2023_010/role/offender/1> ;
-    ns4:relationshipType "parent" ;
+    ns3:involvesChild <https://w3id.org/caselinker/resource/case/us_marshals_2023_010/role/victim/1> ;
+    ns3:involvesCustodian <https://w3id.org/caselinker/resource/case/us_marshals_2023_010/role/offender/1> ;
+    ns3:relationshipType "parent" ;
     ns1:isDirectional true ;
     ns1:source <https://w3id.org/caselinker/resource/case/us_marshals_2023_010/role/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/us_marshals_2023_010/role/victim/1> .
@@ -119,6 +115,12 @@
     rdfs:label "West Virginia" ;
     dcterms:identifier "fips:54" ;
     ns1:name "West Virginia" .
+
+<https://w3id.org/caselinker/resource/case/us_marshals_2023_010/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/us_marshals_2023_010/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
 
 <https://w3id.org/caselinker/resource/case/us_marshals_2023_010/phase/charged> a ns2:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;

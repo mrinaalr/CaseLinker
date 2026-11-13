@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/platforms#> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://cacontology.projectvic.org/platforms#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -27,8 +27,11 @@
         <https://w3id.org/caselinker/resource/case/ncmec_2025_878/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_878/event/online-only>,
         <https://w3id.org/caselinker/resource/case/ncmec_2025_878/legal-proceeding> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2025_878/agency/madera-county-sheriffs-office> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2025_878/agency/madera-county-sheriffs-office> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2025_878/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/snapchat>,
+        <https://w3id.org/caselinker/resource/platform/social-media> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_878/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -37,30 +40,19 @@
     ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2025_878/person/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2025_878/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/platform/snapchat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        ns3:MessagingService ;
-    rdfs:label "Snapchat" ;
-    ns3:encryptionLevel "end-to-end" ;
-    ns1:name "Snapchat" .
-
-<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        ns3:SocialMediaPlatform ;
-    rdfs:label "social media" ;
-    ns1:name "social media" .
-
 <https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:FederalAgency ;
+        ns5:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
     ns1:name "National Center for Missing and Exploited Children" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_878/agency/madera-county-sheriffs-office> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:LocalAgency ;
+        ns5:LocalAgency ;
     rdfs:label "Madera County Sheriff's Office" ;
     ns1:name "Madera County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_878/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_878/charge/1> a ns3:CSAM_Possession,
+        ns3:CriminalCharge ;
     rdfs:label "child pornography" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_878/event/csam> a ns2:CSAMIncident,
@@ -68,7 +60,7 @@
     rdfs:label "CSAMIncident · event/csam" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_878/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
-        ns5:CSAM_Distribution ;
+        ns3:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_878/event/online-only> a ns2:ChildSexualAbuseEvent,
@@ -77,16 +69,13 @@
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_878/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns5:LegalProceeding ;
+        ns3:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): booked in the Madera County jail" ;
-    ns5:chargeCount "1"^^xsd:nonNegativeInteger ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_878/charge/1> .
+    ns3:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2025_878/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2025_878/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2025_878/role/offender/1> a ns5:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2025_878/role/offender/1> a ns3:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 
 <https://w3id.org/caselinker/resource/location/california-ca> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
@@ -108,6 +97,20 @@
     dcterms:identifier "fips:0652764" ;
     skos:altLabel "Oakhurst" ;
     ns1:name "Oakhurst CDP" .
+
+<https://w3id.org/caselinker/resource/platform/snapchat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        ns4:MessagingService ;
+    rdfs:label "Snapchat" ;
+    ns4:encryptionLevel "end-to-end" ;
+    ns1:name "Snapchat" .
+
+<https://w3id.org/caselinker/resource/platform/social-media> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        ns4:SocialMediaPlatform ;
+    rdfs:label "social media" ;
+    ns1:name "social media" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2025_878/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2025_878/phase/booked> a ns2:InitialPhase,
         <https://cacontology.projectvic.org/core#Phase> ;

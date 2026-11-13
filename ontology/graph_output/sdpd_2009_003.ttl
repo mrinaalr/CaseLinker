@@ -1,8 +1,8 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -22,7 +22,8 @@
         <https://w3id.org/caselinker/resource/case/sdpd_2009_003/event/hands-on>,
         <https://w3id.org/caselinker/resource/case/sdpd_2009_003/event/production>,
         <https://w3id.org/caselinker/resource/case/sdpd_2009_003/legal-proceeding> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/icac> .
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/icac> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/sdpd_2009_003/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/sdpd_2009_003/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -37,12 +38,12 @@
     skos:altLabel "ICAC" ;
     ns1:name "ICAC Task Force" .
 
-<https://w3id.org/caselinker/resource/case/sdpd_2009_003/charge/1> a ns3:CSAM_Possession,
-        ns3:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/sdpd_2009_003/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/sdpd_2009_003/charge/2> a ns3:CSAM_Production,
-        ns3:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/sdpd_2009_003/charge/2> a ns4:CSAM_Production,
+        ns4:CriminalCharge ;
     rdfs:label "production of child pornography" .
 
 <https://w3id.org/caselinker/resource/case/sdpd_2009_003/event/csam> a ns2:CSAMIncident,
@@ -59,16 +60,13 @@
 
 <https://w3id.org/caselinker/resource/case/sdpd_2009_003/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns3:LegalProceeding ;
+        ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns3:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/sdpd_2009_003/charge/1>,
+    ns4:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/sdpd_2009_003/charge/1>,
         <https://w3id.org/caselinker/resource/case/sdpd_2009_003/charge/2> .
 
-<https://w3id.org/caselinker/resource/case/sdpd_2009_003/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/sdpd_2009_003/role/offender/1> a ns3:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/sdpd_2009_003/role/offender/1> a ns4:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 
 <https://w3id.org/caselinker/resource/location/san-diego-city-ca> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
@@ -77,4 +75,7 @@
     dcterms:identifier "fips:0666000" ;
     skos:altLabel "San Diego" ;
     ns1:name "San Diego city" .
+
+<https://w3id.org/caselinker/resource/case/sdpd_2009_003/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

@@ -1,10 +1,10 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns5: <https://cacontology.projectvic.org/core#> .
-@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -27,8 +27,9 @@
     ns2:hasStep <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_009/event/distribution>,
         <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_009/event/possession>,
         <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_009/legal-proceeding> ;
-    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/arkansas-state-police-department>,
-        <https://w3id.org/caselinker/resource/agency/icac> .
+    ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/arkansas-state-police-department>,
+        <https://w3id.org/caselinker/resource/agency/icac> ;
+    ns3:object <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_009/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_009/assessment/semantic/evidence-seizure> a ns5:AssessmentResult ;
     rdfs:label "semantic similarity · evidence_seizure" ;
@@ -37,46 +38,46 @@
     ns5:hasConfidence 0.4693 ;
     ns5:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/arkansas_dps_2024_009/person/offender/1/age> a ns1:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/arkansas_dps_2024_009/person/offender/1/age> a ns4:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns1:ageSubject <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_009/person/offender/1> ;
-    ns1:concernsAgeQuality ns1:Age ;
-    ns1:hasAgeInYears 86.0 .
+    ns4:ageSubject <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_009/person/offender/1> ;
+    ns4:concernsAgeQuality ns4:Age ;
+    ns4:hasAgeInYears 86.0 .
 
-<https://w3id.org/caselinker/resource/case/arkansas_dps_2024_009/role/offender/1/has-role> a ns4:Relationship ;
+<https://w3id.org/caselinker/resource/case/arkansas_dps_2024_009/role/offender/1/has-role> a ns3:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns4:isDirectional true ;
-    ns4:kindOfRelationship "Has_Role" ;
-    ns4:source <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_009/person/offender/1> ;
-    ns4:target <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_009/role/offender/1> .
+    ns3:isDirectional true ;
+    ns3:kindOfRelationship "Has_Role" ;
+    ns3:source <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_009/person/offender/1> ;
+    ns3:target <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_009/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/arkansas-state-police-department> a ns5:OrganizationLikeEntity,
-        ns6:StateAgency ;
+        ns1:StateAgency ;
     rdfs:label "Arkansas State Police Department" ;
-    ns4:name "Arkansas State Police Department" .
+    ns3:name "Arkansas State Police Department" .
 
 <https://w3id.org/caselinker/resource/agency/icac> a ns5:OrganizationLikeEntity,
         <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
     rdfs:label "ICAC Task Force" ;
     skos:altLabel "ICAC" ;
-    ns4:name "ICAC Task Force" .
+    ns3:name "ICAC Task Force" .
 
-<https://w3id.org/caselinker/resource/case/arkansas_dps_2024_009/charge/1> a ns3:CSAM_Possession,
-        ns3:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/arkansas_dps_2024_009/charge/1> a ns6:CSAM_Possession,
+        ns6:CriminalCharge ;
     rdfs:label "child sexual abuse material" .
 
 <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_009/event/distribution> a ns5:Event,
-        ns3:CSAM_Distribution ;
+        ns6:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_009/legal-proceeding> a ns5:Event,
         ns5:LegalEvent,
-        ns3:LegalProceeding ;
+        ns6:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns3:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_009/charge/1> .
+    ns6:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns6:hasCharge <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_009/charge/1> .
 
-<https://w3id.org/caselinker/resource/case/arkansas_dps_2024_009/role/offender/1> a ns3:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/arkansas_dps_2024_009/role/offender/1> a ns6:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_009/event/possession> .
 
@@ -85,30 +86,30 @@
     rdfs:label "Arkansas" ;
     dcterms:identifier "fips:05" ;
     skos:altLabel "Ark." ;
-    ns4:name "Arkansas" .
+    ns3:name "Arkansas" .
 
 <https://w3id.org/caselinker/resource/location/arkansas-ar-05> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Arkansas" ;
     dcterms:identifier "fips:05" ;
-    ns4:name "Arkansas" .
+    ns3:name "Arkansas" .
 
 <https://w3id.org/caselinker/resource/location/warren-city-ar> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Warren city" ;
     dcterms:identifier "fips:0573310" ;
     skos:altLabel "Warren" ;
-    ns4:name "Warren city" .
+    ns3:name "Warren city" .
 
 <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_009/event/possession> a ns2:CSAMIncident,
         ns5:Event ;
     rdfs:label "CSAMIncident · event/possession" ;
     ns2:severityLevel 3 .
 
-<https://w3id.org/caselinker/resource/case/arkansas_dps_2024_009/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
 <https://w3id.org/caselinker/resource/case/arkansas_dps_2024_009/phase/arrested> a ns2:InitialPhase,
         ns5:Phase ;
     rdfs:label "Initial Phase · phase/arrested" .
+
+<https://w3id.org/caselinker/resource/case/arkansas_dps_2024_009/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

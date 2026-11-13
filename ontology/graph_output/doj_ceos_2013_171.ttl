@@ -1,10 +1,10 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org/core#> .
-@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org/custodial#> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
 @prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns6: <https://cacontology.projectvic.org/custodial#> .
+@prefix ns5: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns7: <https://cacontology.projectvic.org/temporal#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
@@ -35,9 +35,11 @@
         <https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/event/trust-violation>,
         <https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/legal-step/sentenced> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/doj>,
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/doj>,
         <https://w3id.org/caselinker/resource/agency/fbi>,
-        <https://w3id.org/caselinker/resource/agency/usao> .
+        <https://w3id.org/caselinker/resource/agency/usao> ;
+    ns5:object <https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/person/victim/1> .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/person/offender/1/age> a ns7:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
@@ -45,35 +47,35 @@
     ns7:concernsAgeQuality ns7:Age ;
     ns7:hasAgeInYears 50.0 .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/role/offender/1/has-role> a ns2:Relationship ;
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/role/offender/1/has-role> a ns5:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns2:isDirectional true ;
-    ns2:kindOfRelationship "Has_Role" ;
-    ns2:source <https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/person/offender/1> ;
-    ns2:target <https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/role/offender/1> .
+    ns5:isDirectional true ;
+    ns5:kindOfRelationship "Has_Role" ;
+    ns5:source <https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/person/offender/1> ;
+    ns5:target <https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/role/victim/1/has-role> a ns2:Relationship ;
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/role/victim/1/has-role> a ns5:Relationship ;
     rdfs:label "Relationship · role/victim/1/has-role" ;
-    ns2:isDirectional true ;
-    ns2:kindOfRelationship "Has_Role" ;
-    ns2:source <https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/person/victim/1> ;
-    ns2:target <https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/role/victim/1> .
+    ns5:isDirectional true ;
+    ns5:kindOfRelationship "Has_Role" ;
+    ns5:source <https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/person/victim/1> ;
+    ns5:target <https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/role/victim/1> .
 
 <https://w3id.org/caselinker/resource/agency/doj> a ns1:OrganizationLikeEntity,
-        ns5:FederalAgency ;
+        ns6:FederalAgency ;
     rdfs:label "U.S. Department of Justice" ;
-    ns2:name "U.S. Department of Justice" .
+    ns5:name "U.S. Department of Justice" .
 
 <https://w3id.org/caselinker/resource/agency/fbi> a ns1:OrganizationLikeEntity,
-        ns5:FederalAgency ;
+        ns6:FederalAgency ;
     rdfs:label "Federal Bureau of Investigation" ;
     skos:altLabel "FBI" ;
-    ns2:name "Federal Bureau of Investigation" .
+    ns5:name "Federal Bureau of Investigation" .
 
 <https://w3id.org/caselinker/resource/agency/usao> a ns1:OrganizationLikeEntity,
-        ns5:FederalAgency ;
+        ns6:FederalAgency ;
     rdfs:label "U.S. Attorney's Office" ;
-    ns2:name "U.S. Attorney's Office" .
+    ns5:name "U.S. Attorney's Office" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/charge/1> a ns4:CSAM_Possession,
         ns4:CriminalCharge ;
@@ -103,14 +105,14 @@
     rdfs:label "Production Offense · event/production" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/event/project-safe-childhood> a ns1:Event,
-        ns5:ProjectSafeChildhoodOperation ;
+        ns6:ProjectSafeChildhoodOperation ;
     rdfs:label "Project Safe Childhood Operation · event/project-safe-childhood" .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/event/trust-violation> a ns6:CustodialAbuse,
-        ns6:TrustViolation ;
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/event/trust-violation> a ns2:CustodialAbuse,
+        ns2:TrustViolation ;
     rdfs:label "Custodial Abuse · event/trust-violation" ;
-    ns6:perpetratedBy <https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/role/offender/1> ;
-    ns6:violatesRelationship <https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/relationship/mother> .
+    ns2:perpetratedBy <https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/role/offender/1> ;
+    ns2:violatesRelationship <https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/relationship/mother> .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/legal-proceeding> a ns1:Event,
         ns1:LegalEvent,
@@ -134,40 +136,37 @@
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/location/clarkston> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Clarkston" ;
-    ns2:name "Clarkston" .
+    ns5:name "Clarkston" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/location/eastern-district-of-washington> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Eastern District of Washington" ;
-    ns2:name "Eastern District of Washington" .
+    ns5:name "Eastern District of Washington" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/location/spokane> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Spokane" ;
-    ns2:name "Spokane" .
+    ns5:name "Spokane" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/location/united-states> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "United States" ;
-    ns2:name "United States" .
+    ns5:name "United States" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/location/washington-state> a ns1:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Washington State" ;
-    ns2:name "Washington State" .
+    ns5:name "Washington State" .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
-
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/relationship/mother> a ns6:CustodialRelationship,
-        ns6:FamilialRelationship ;
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/relationship/mother> a ns2:CustodialRelationship,
+        ns2:FamilialRelationship ;
     rdfs:label "Custodial Relationship · relationship/mother" ;
-    ns6:involvesChild <https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/role/victim/1> ;
-    ns6:involvesCustodian <https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/role/offender/1> ;
-    ns6:relationshipType "parent" ;
-    ns2:isDirectional true ;
-    ns2:source <https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/role/offender/1> ;
-    ns2:target <https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/role/victim/1> .
+    ns2:involvesChild <https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/role/victim/1> ;
+    ns2:involvesCustodian <https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/role/offender/1> ;
+    ns2:relationshipType "parent" ;
+    ns5:isDirectional true ;
+    ns5:source <https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/role/offender/1> ;
+    ns5:target <https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/role/victim/1> .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/sentence/1> a ns4:CriminalSentence,
         ns4:PrisonSentence ;
@@ -188,14 +187,17 @@
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Washington" ;
     dcterms:identifier "fips:53" ;
-    ns2:name "Washington" .
+    ns5:name "Washington" .
 
-<https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/phase/sentenced> a ns1:Phase,
         ns4:SentencingPhase ;
     rdfs:label "Sentencing Phase · phase/sentenced" .
+
+<https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/doj_ceos_2013_171/role/victim/1> a ns3:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" .

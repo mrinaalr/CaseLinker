@@ -1,10 +1,10 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns2: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
+@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns3: <https://cacontology.projectvic.org#> .
 @prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns5: <https://cacontology.projectvic.org/core#> .
-@prefix ns6: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns6: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -28,10 +28,12 @@
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_032/event/project-safe-childhood>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_032/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_032/legal-step/pleaded-guilty> ;
-    ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/ceos>,
+    ns6:involvesAgency <https://w3id.org/caselinker/resource/agency/ceos>,
         <https://w3id.org/caselinker/resource/agency/doj>,
         <https://w3id.org/caselinker/resource/agency/hsi>,
-        <https://w3id.org/caselinker/resource/agency/usao> .
+        <https://w3id.org/caselinker/resource/agency/usao> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_032/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/chat> .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_032/assessment/semantic/possession-csam> a ns5:AssessmentResult ;
     rdfs:label "semantic similarity · possession_csam" ;
@@ -40,38 +42,38 @@
     ns5:hasConfidence 0.5227 ;
     ns5:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_032/person/offender/1/age> a ns6:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_032/person/offender/1/age> a ns2:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns6:ageSubject <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_032/person/offender/1> ;
-    ns6:concernsAgeQuality ns6:Age ;
-    ns6:hasAgeInYears 23.0 .
+    ns2:ageSubject <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_032/person/offender/1> ;
+    ns2:concernsAgeQuality ns2:Age ;
+    ns2:hasAgeInYears 23.0 .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_032/role/offender/1/has-role> a ns2:Relationship ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_032/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns2:isDirectional true ;
-    ns2:kindOfRelationship "Has_Role" ;
-    ns2:source <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_032/person/offender/1> ;
-    ns2:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_032/role/offender/1> .
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_032/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_032/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/ceos> a ns5:OrganizationLikeEntity,
-        ns1:FederalAgency ;
+        ns6:FederalAgency ;
     rdfs:label "CEOS" ;
-    ns2:name "CEOS" .
+    ns1:name "CEOS" .
 
 <https://w3id.org/caselinker/resource/agency/doj> a ns5:OrganizationLikeEntity,
-        ns1:FederalAgency ;
+        ns6:FederalAgency ;
     rdfs:label "U.S. Department of Justice" ;
-    ns2:name "U.S. Department of Justice" .
+    ns1:name "U.S. Department of Justice" .
 
 <https://w3id.org/caselinker/resource/agency/hsi> a ns5:OrganizationLikeEntity,
-        ns1:FederalAgency ;
+        ns6:FederalAgency ;
     rdfs:label "Homeland Security Investigations" ;
-    ns2:name "Homeland Security Investigations" .
+    ns1:name "Homeland Security Investigations" .
 
 <https://w3id.org/caselinker/resource/agency/usao> a ns5:OrganizationLikeEntity,
-        ns1:FederalAgency ;
+        ns6:FederalAgency ;
     rdfs:label "U.S. Attorney's Office" ;
-    ns2:name "U.S. Attorney's Office" .
+    ns1:name "U.S. Attorney's Office" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_032/charge/1> a ns4:CSAM_Possession,
         ns4:CriminalCharge ;
@@ -86,7 +88,7 @@
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_032/event/project-safe-childhood> a ns5:Event,
-        ns1:ProjectSafeChildhoodOperation ;
+        ns6:ProjectSafeChildhoodOperation ;
     rdfs:label "Project Safe Childhood Operation · event/project-safe-childhood" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_032/legal-proceeding> a ns5:Event,
@@ -106,26 +108,21 @@
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_032/location/boston> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Boston" ;
-    ns2:name "Boston" .
+    ns1:name "Boston" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_032/location/new-england> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "New England" ;
-    ns2:name "New England" .
+    ns1:name "New England" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_032/location/united-states> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "United States" ;
-    ns2:name "United States" .
+    ns1:name "United States" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_032/role/offender/1> a ns3:OffenderRole ;
     rdfs:label "Offender Role · role/offender/1" ;
     ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_032/event/possession> .
-
-<https://w3id.org/caselinker/resource/platform/chat> a ns5:DigitalSystemEntity,
-        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
-    rdfs:label "chat" ;
-    ns2:name "chat" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_032/event/possession> a ns3:CSAMIncident,
         ns5:Event ;
@@ -133,10 +130,15 @@
     ns3:severityLevel 3 ;
     ns3:usesChannel <https://w3id.org/caselinker/resource/platform/chat> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_032/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_032/phase/pleaded-guilty> a ns5:Phase,
         ns4:PreTrialPhase ;
     rdfs:label "Pre Trial Phase · phase/pleaded-guilty" .
+
+<https://w3id.org/caselinker/resource/platform/chat> a ns5:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#AnonymousChatPlatform> ;
+    rdfs:label "chat" ;
+    ns1:name "chat" .
+
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2025_032/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix ns4: <https://cacontology.projectvic.org/core#> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -27,7 +27,9 @@
         <https://w3id.org/caselinker/resource/case/afp_2026_002/event/online-only>,
         <https://w3id.org/caselinker/resource/case/afp_2026_002/event/possession>,
         <https://w3id.org/caselinker/resource/case/afp_2026_002/legal-proceeding> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/australian-federal-police-department> .
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/australian-federal-police-department> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/afp_2026_002/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/social-media> .
 
 <https://w3id.org/caselinker/resource/case/afp_2026_002/assessment/semantic/possession-csam> a ns4:AssessmentResult ;
     rdfs:label "semantic similarity · possession_csam" ;
@@ -43,28 +45,23 @@
     ns1:source <https://w3id.org/caselinker/resource/case/afp_2026_002/person/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/afp_2026_002/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/platform/social-media> a ns4:DigitalSystemEntity,
-        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
-    rdfs:label "social media" ;
-    ns1:name "social media" .
-
 <https://w3id.org/caselinker/resource/agency/australian-federal-police-department> a ns4:OrganizationLikeEntity,
-        ns5:LocalAgency ;
+        ns3:LocalAgency ;
     rdfs:label "Australian Federal Police" ;
     ns1:name "Australian Federal Police" .
 
-<https://w3id.org/caselinker/resource/case/afp_2026_002/charge/1> a ns3:CSAM_Possession,
-        ns3:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/afp_2026_002/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/afp_2026_002/charge/2> a ns3:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/afp_2026_002/charge/2> a ns5:CriminalCharge ;
     rdfs:label "child exploitation" ;
     dcterms:subject ns2:ChildSexualAbuseEvent .
 
 <https://w3id.org/caselinker/resource/case/afp_2026_002/event/multi-jurisdiction> a ns4:Event,
-        ns5:MultiJurisdictionalInvestigation ;
+        ns3:MultiJurisdictionalInvestigation ;
     rdfs:label "Multi Jurisdictional Investigation · event/multi-jurisdiction" ;
-    ns5:crossesBorders true .
+    ns3:crossesBorders true .
 
 <https://w3id.org/caselinker/resource/case/afp_2026_002/event/online-only> a ns2:ChildSexualAbuseEvent,
         ns4:Event ;
@@ -76,10 +73,10 @@
 
 <https://w3id.org/caselinker/resource/case/afp_2026_002/legal-proceeding> a ns4:Event,
         ns4:LegalEvent,
-        ns3:LegalProceeding ;
+        ns5:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns3:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns3:hasCharge <https://w3id.org/caselinker/resource/case/afp_2026_002/charge/1>,
+    ns5:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/afp_2026_002/charge/1>,
         <https://w3id.org/caselinker/resource/case/afp_2026_002/charge/2> .
 
 <https://w3id.org/caselinker/resource/case/afp_2026_002/location/australia> a ns4:PlaceLikeEntity,
@@ -102,11 +99,16 @@
     rdfs:label "Washington" ;
     ns1:name "Washington" .
 
+<https://w3id.org/caselinker/resource/case/afp_2026_002/role/offender/1> a ns5:DefendantRole ;
+    rdfs:label "Defendant Role · role/offender/1" .
+
+<https://w3id.org/caselinker/resource/platform/social-media> a ns4:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#SocialMediaPlatform> ;
+    rdfs:label "social media" ;
+    ns1:name "social media" .
+
 <https://w3id.org/caselinker/resource/case/afp_2026_002/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/afp_2026_002/role/offender/1> a ns3:DefendantRole ;
-    rdfs:label "Defendant Role · role/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/afp_2026_002/phase/charged> a ns2:LegalProcessPhase,
         ns4:Phase ;

@@ -1,12 +1,12 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns2: <https://cacontology.projectvic.org/custodial#> .
-@prefix ns3: <https://cacontology.projectvic.org#> .
+@prefix ns2: <https://cacontology.projectvic.org#> .
+@prefix ns3: <https://cacontology.projectvic.org/custodial#> .
 @prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_152> a ns3:CACInvestigation,
+<https://w3id.org/caselinker/resource/case/ncmec_2022_152> a ns2:CACInvestigation,
         <https://cacontology.projectvic.org/core#EnduringEntity> ;
     rdfs:label "Case ncmec_2022_152" ;
     dcterms:created "2026-11-10T09:17:56.413360"^^xsd:dateTime ;
@@ -17,12 +17,15 @@
     dcterms:source <https://fox2now.com/news/missouri/joplin-man-arrested-on-child-porn-charges/>,
         "NCMEC" ;
     dcterms:spatial <https://w3id.org/caselinker/resource/case/ncmec_2022_152/location/springfield> ;
-    ns3:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_152/phase/arrested> ;
-    ns3:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_152/phase/arrested> ;
-    ns3:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_152/event/csam>,
+    ns2:currentPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_152/phase/arrested> ;
+    ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2022_152/phase/arrested> ;
+    ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2022_152/event/csam>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_152/event/distribution>,
         <https://w3id.org/caselinker/resource/case/ncmec_2022_152/event/trust-violation>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2022_152/legal-proceeding> .
+        <https://w3id.org/caselinker/resource/case/ncmec_2022_152/legal-proceeding> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2022_152/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2022_152/person/victim/1>,
+        <https://w3id.org/caselinker/resource/platform/kik> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_152/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -46,11 +49,11 @@
         ns4:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_152/event/trust-violation> a ns2:CustodialAbuse,
-        ns2:TrustViolation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_152/event/trust-violation> a ns3:CustodialAbuse,
+        ns3:TrustViolation ;
     rdfs:label "Custodial Abuse · event/trust-violation" ;
-    ns2:perpetratedBy <https://w3id.org/caselinker/resource/case/ncmec_2022_152/role/offender/1> ;
-    ns2:violatesRelationship <https://w3id.org/caselinker/resource/case/ncmec_2022_152/relationship/mother> .
+    ns3:perpetratedBy <https://w3id.org/caselinker/resource/case/ncmec_2022_152/role/offender/1> ;
+    ns3:violatesRelationship <https://w3id.org/caselinker/resource/case/ncmec_2022_152/relationship/mother> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_152/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
@@ -65,41 +68,41 @@
     rdfs:label "Springfield" ;
     ns1:name "Springfield" .
 
+<https://w3id.org/caselinker/resource/case/ncmec_2022_152/relationship/mother> a ns3:CustodialRelationship,
+        ns3:FamilialRelationship ;
+    rdfs:label "Custodial Relationship · relationship/mother" ;
+    ns3:involvesChild <https://w3id.org/caselinker/resource/case/ncmec_2022_152/role/victim/1> ;
+    ns3:involvesCustodian <https://w3id.org/caselinker/resource/case/ncmec_2022_152/role/offender/1> ;
+    ns3:relationshipType "parent" ;
+    ns1:isDirectional true ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2022_152/role/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2022_152/role/victim/1> .
+
 <https://w3id.org/caselinker/resource/case/ncmec_2022_152/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_152/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/victim/1" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_152/relationship/mother> a ns2:CustodialRelationship,
-        ns2:FamilialRelationship ;
-    rdfs:label "Custodial Relationship · relationship/mother" ;
-    ns2:involvesChild <https://w3id.org/caselinker/resource/case/ncmec_2022_152/role/victim/1> ;
-    ns2:involvesCustodian <https://w3id.org/caselinker/resource/case/ncmec_2022_152/role/offender/1> ;
-    ns2:relationshipType "parent" ;
-    ns1:isDirectional true ;
-    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2022_152/role/offender/1> ;
-    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2022_152/role/victim/1> .
+<https://w3id.org/caselinker/resource/case/ncmec_2022_152/phase/arrested> a ns2:InitialPhase,
+        <https://cacontology.projectvic.org/core#Phase> ;
+    rdfs:label "Initial Phase · phase/arrested" .
 
 <https://w3id.org/caselinker/resource/platform/kik> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
         <https://cacontology.projectvic.org/platforms#MessagingService> ;
     rdfs:label "Kik" ;
     ns1:name "Kik" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_152/phase/arrested> a ns3:InitialPhase,
-        <https://cacontology.projectvic.org/core#Phase> ;
-    rdfs:label "Initial Phase · phase/arrested" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2022_152/event/csam> a ns3:CSAMIncident,
+<https://w3id.org/caselinker/resource/case/ncmec_2022_152/event/csam> a ns2:CSAMIncident,
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "CSAMIncident · event/csam" ;
-    ns3:usesChannel <https://w3id.org/caselinker/resource/platform/kik> .
+    ns2:usesChannel <https://w3id.org/caselinker/resource/platform/kik> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2022_152/role/victim/1> a ns3:VictimRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2022_152/role/victim/1> a ns2:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_152/event/csam> .
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_152/event/csam> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2022_152/role/offender/1> a ns4:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
-    ns3:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_152/event/csam> .
+    ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/ncmec_2022_152/event/csam> .
 

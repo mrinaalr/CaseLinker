@@ -1,8 +1,8 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://cacontology.projectvic.org/platforms#> .
+@prefix ns3: <https://cacontology.projectvic.org/platforms#> .
+@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
@@ -27,55 +27,47 @@
         <https://w3id.org/caselinker/resource/case/ncmec_2024_565/operation> ;
     ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_565/agency/mower-county-sheriffs-office> ;
-    ns3:object <https://w3id.org/caselinker/resource/case/ncmec_2024_565/cybertip> .
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2024_565/cybertip>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_565/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/instagram>,
+        <https://w3id.org/caselinker/resource/platform/snapchat> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_565/role/offender/1/has-role> a ns3:Relationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_565/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns3:isDirectional true ;
-    ns3:kindOfRelationship "Has_Role" ;
-    ns3:source <https://w3id.org/caselinker/resource/case/ncmec_2024_565/person/offender/1> ;
-    ns3:target <https://w3id.org/caselinker/resource/case/ncmec_2024_565/role/offender/1> .
-
-<https://w3id.org/caselinker/resource/platform/instagram> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        ns4:SocialMediaPlatform ;
-    rdfs:label "Instagram" ;
-    ns3:name "Instagram" .
-
-<https://w3id.org/caselinker/resource/platform/snapchat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        ns4:MessagingService ;
-    rdfs:label "Snapchat" ;
-    ns4:encryptionLevel "end-to-end" ;
-    ns3:name "Snapchat" .
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_565/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_565/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/icac> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
         <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
     rdfs:label "ICAC Task Force" ;
     skos:altLabel "ICAC" ;
-    ns3:name "ICAC Task Force" .
+    ns1:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_565/agency/mower-county-sheriffs-office> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
         ns5:LocalAgency ;
     rdfs:label "Mower County Sheriff's Office" ;
-    ns3:name "Mower County Sheriff's Office" .
+    ns1:name "Mower County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_565/charge/1> a ns1:CSAM_Possession,
-        ns1:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_565/charge/1> a ns4:CSAM_Possession,
+        ns4:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_565/charge/2> a ns1:CriminalCharge,
-        ns1:OnlineEnticement ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_565/charge/2> a ns4:CriminalCharge,
+        ns4:OnlineEnticement ;
     rdfs:label "online enticement" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_565/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
     rdfs:label "CyberTipline report" ;
-    ns3:name "observe" .
+    ns1:name "observe" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_565/event/csam> a ns2:CSAMIncident,
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "CSAMIncident · event/csam" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_565/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
-        ns1:CSAM_Distribution ;
+        ns4:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_565/event/online-only> a ns2:ChildSexualAbuseEvent,
@@ -84,31 +76,42 @@
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_565/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns1:LegalProceeding ;
+        ns4:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): held in the Mower County jail" ;
-    ns1:chargeCount "2"^^xsd:nonNegativeInteger ;
-    ns1:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_565/charge/1>,
+    ns4:chargeCount "2"^^xsd:nonNegativeInteger ;
+    ns4:hasCharge <https://w3id.org/caselinker/resource/case/ncmec_2024_565/charge/1>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_565/charge/2> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_565/location/steele-county> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Steele County" ;
-    ns3:name "Steele County" .
+    ns1:name "Steele County" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_565/operation> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/taskforce#TaskForceOperation> ;
     rdfs:label "Task Force Operation · operation" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_565/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_565/role/offender/1> a ns1:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_565/role/offender/1> a ns4:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 
 <https://w3id.org/caselinker/resource/location/mower-county-mn> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Mower County" ;
     dcterms:identifier "fips:27099" ;
-    ns3:name "Mower County" .
+    ns1:name "Mower County" .
+
+<https://w3id.org/caselinker/resource/platform/instagram> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        ns3:SocialMediaPlatform ;
+    rdfs:label "Instagram" ;
+    ns1:name "Instagram" .
+
+<https://w3id.org/caselinker/resource/platform/snapchat> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        ns3:MessagingService ;
+    rdfs:label "Snapchat" ;
+    ns3:encryptionLevel "end-to-end" ;
+    ns1:name "Snapchat" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_565/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 

@@ -2,8 +2,8 @@
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
 @prefix ns3: <https://cacontology.projectvic.org/core#> .
-@prefix ns4: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -26,10 +26,11 @@
     ns2:hasStep <https://w3id.org/caselinker/resource/case/svicac_2026_003/event/distribution>,
         <https://w3id.org/caselinker/resource/case/svicac_2026_003/event/possession>,
         <https://w3id.org/caselinker/resource/case/svicac_2026_003/legal-proceeding> ;
-    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/anderson-police-department-ca>,
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/anderson-police-department-ca>,
         <https://w3id.org/caselinker/resource/agency/icac>,
         <https://w3id.org/caselinker/resource/agency/shasta-county-sheriff-s-office-ca> ;
-    ns1:object <https://w3id.org/caselinker/resource/case/svicac_2026_003/cybertip> .
+    ns1:object <https://w3id.org/caselinker/resource/case/svicac_2026_003/cybertip>,
+        <https://w3id.org/caselinker/resource/case/svicac_2026_003/person/offender/1> .
 
 <https://w3id.org/caselinker/resource/case/svicac_2026_003/assessment/semantic/evidence-seizure> a ns3:AssessmentResult ;
     rdfs:label "semantic similarity · evidence_seizure" ;
@@ -46,7 +47,7 @@
     ns1:target <https://w3id.org/caselinker/resource/case/svicac_2026_003/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/anderson-police-department-ca> a ns3:OrganizationLikeEntity,
-        ns5:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "Anderson Police Department" ;
     dcterms:identifier "ori:CA0450100" ;
     ns1:name "Anderson Police Department" .
@@ -58,13 +59,13 @@
     ns1:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/agency/shasta-county-sheriff-s-office-ca> a ns3:OrganizationLikeEntity,
-        ns5:LocalAgency ;
+        ns4:LocalAgency ;
     rdfs:label "Shasta County Sheriff's Office" ;
     dcterms:identifier "ori:CA0450000" ;
     ns1:name "Shasta County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/case/svicac_2026_003/charge/1> a ns4:CSAM_Possession,
-        ns4:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/svicac_2026_003/charge/1> a ns5:CSAM_Possession,
+        ns5:CriminalCharge ;
     rdfs:label "child porn" .
 
 <https://w3id.org/caselinker/resource/case/svicac_2026_003/cybertip> a <https://cacontology.projectvic.org/us/ncmec#NCMECCybertipReport> ;
@@ -72,15 +73,15 @@
     ns1:name "observe" .
 
 <https://w3id.org/caselinker/resource/case/svicac_2026_003/event/distribution> a ns3:Event,
-        ns4:CSAM_Distribution ;
+        ns5:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/svicac_2026_003/legal-proceeding> a ns3:Event,
         ns3:LegalEvent,
-        ns4:LegalProceeding ;
+        ns5:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns4:chargeCount "1"^^xsd:nonNegativeInteger ;
-    ns4:hasCharge <https://w3id.org/caselinker/resource/case/svicac_2026_003/charge/1> .
+    ns5:chargeCount "1"^^xsd:nonNegativeInteger ;
+    ns5:hasCharge <https://w3id.org/caselinker/resource/case/svicac_2026_003/charge/1> .
 
 <https://w3id.org/caselinker/resource/case/svicac_2026_003/location/northern-california> a ns3:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
@@ -92,10 +93,7 @@
     rdfs:label "Northstate" ;
     ns1:name "Northstate" .
 
-<https://w3id.org/caselinker/resource/case/svicac_2026_003/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/svicac_2026_003/role/offender/1> a ns4:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/svicac_2026_003/role/offender/1> a ns5:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" ;
     ns2:participatesInEvent <https://w3id.org/caselinker/resource/case/svicac_2026_003/event/possession> .
 
@@ -109,6 +107,9 @@
 <https://w3id.org/caselinker/resource/case/svicac_2026_003/event/possession> a ns2:CSAMIncident,
         ns3:Event ;
     rdfs:label "CSAMIncident · event/possession" .
+
+<https://w3id.org/caselinker/resource/case/svicac_2026_003/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/svicac_2026_003/phase/arrested> a ns2:InitialPhase,
         ns3:Phase ;

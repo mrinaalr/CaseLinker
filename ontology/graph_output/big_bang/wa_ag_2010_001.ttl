@@ -1,15 +1,15 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns5: <https://cacontology.projectvic.org/core#> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns4: <https://cacontology.projectvic.org/core#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/wa_ag_2010_001> a ns2:CACInvestigation,
-        ns5:EnduringEntity ;
+        ns4:EnduringEntity ;
     rdfs:label "Case wa_ag_2010_001" ;
     dcterms:created "2026-11-11T18:39:53.075594"^^xsd:dateTime ;
     dcterms:date "2010-07-20"^^xsd:date ;
@@ -29,101 +29,102 @@
         <https://w3id.org/caselinker/resource/case/wa_ag_2010_001/event/possession>,
         <https://w3id.org/caselinker/resource/case/wa_ag_2010_001/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/wa_ag_2010_001/legal-step/convicted> ;
-    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/fbi>,
-        <https://w3id.org/caselinker/resource/agency/seattle-police-department-wa> .
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/fbi>,
+        <https://w3id.org/caselinker/resource/agency/seattle-police-department-wa> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/wa_ag_2010_001/person/offender/1> .
 
-<https://w3id.org/caselinker/resource/case/wa_ag_2010_001/assessment/semantic/possession-csam> a ns5:AssessmentResult ;
+<https://w3id.org/caselinker/resource/case/wa_ag_2010_001/assessment/semantic/possession-csam> a ns4:AssessmentResult ;
     rdfs:label "semantic similarity · possession_csam" ;
     dcterms:subject ns2:CSAMIncident ;
-    ns5:assesses <https://w3id.org/caselinker/resource/case/wa_ag_2010_001/narrative> ;
-    ns5:hasConfidence 0.5304 ;
-    ns5:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+    ns4:assesses <https://w3id.org/caselinker/resource/case/wa_ag_2010_001/narrative> ;
+    ns4:hasConfidence 0.5304 ;
+    ns4:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/wa_ag_2010_001/role/offender/1/has-role> a ns4:Relationship ;
+<https://w3id.org/caselinker/resource/case/wa_ag_2010_001/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
-    ns4:isDirectional true ;
-    ns4:kindOfRelationship "Has_Role" ;
-    ns4:source <https://w3id.org/caselinker/resource/case/wa_ag_2010_001/person/offender/1> ;
-    ns4:target <https://w3id.org/caselinker/resource/case/wa_ag_2010_001/role/offender/1> .
+    ns1:isDirectional true ;
+    ns1:kindOfRelationship "Has_Role" ;
+    ns1:source <https://w3id.org/caselinker/resource/case/wa_ag_2010_001/person/offender/1> ;
+    ns1:target <https://w3id.org/caselinker/resource/case/wa_ag_2010_001/role/offender/1> .
 
-<https://w3id.org/caselinker/resource/agency/fbi> a ns5:OrganizationLikeEntity,
-        ns3:FederalAgency ;
+<https://w3id.org/caselinker/resource/agency/fbi> a ns4:OrganizationLikeEntity,
+        ns5:FederalAgency ;
     rdfs:label "Federal Bureau of Investigation" ;
     skos:altLabel "FBI" ;
-    ns4:name "Federal Bureau of Investigation" .
+    ns1:name "Federal Bureau of Investigation" .
 
-<https://w3id.org/caselinker/resource/agency/seattle-police-department-wa> a ns5:OrganizationLikeEntity,
-        ns3:LocalAgency ;
+<https://w3id.org/caselinker/resource/agency/seattle-police-department-wa> a ns4:OrganizationLikeEntity,
+        ns5:LocalAgency ;
     rdfs:label "Seattle Police Department" ;
     dcterms:identifier "ori:WASPD0000" ;
-    ns4:name "Seattle Police Department" .
+    ns1:name "Seattle Police Department" .
 
-<https://w3id.org/caselinker/resource/case/wa_ag_2010_001/charge/1> a ns1:CSAM_Possession,
-        ns1:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/wa_ag_2010_001/charge/1> a ns3:CSAM_Possession,
+        ns3:CriminalCharge ;
     rdfs:label "possession of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/wa_ag_2010_001/charge/2> a ns1:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/wa_ag_2010_001/charge/2> a ns3:CriminalCharge ;
     rdfs:label "child molestation" ;
     dcterms:subject <https://cacontology.projectvic.org/usa-federal-law#SexualAbuseOfMinor> .
 
-<https://w3id.org/caselinker/resource/case/wa_ag_2010_001/event/distribution> a ns5:Event,
-        ns1:CSAM_Distribution ;
+<https://w3id.org/caselinker/resource/case/wa_ag_2010_001/event/distribution> a ns4:Event,
+        ns3:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/wa_ag_2010_001/event/hands-on> a ns2:ChildSexualAbuseEvent,
-        ns5:Event ;
+        ns4:Event ;
     rdfs:label "Child Sexual Abuse Event · event/hands-on" .
 
 <https://w3id.org/caselinker/resource/case/wa_ag_2010_001/event/possession> a ns2:CSAMIncident,
-        ns5:Event ;
+        ns4:Event ;
     rdfs:label "CSAMIncident · event/possession" .
 
-<https://w3id.org/caselinker/resource/case/wa_ag_2010_001/legal-proceeding> a ns5:Event,
-        ns5:LegalEvent,
-        ns1:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/wa_ag_2010_001/legal-proceeding> a ns4:Event,
+        ns4:LegalEvent,
+        ns3:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns1:chargeCount "4"^^xsd:nonNegativeInteger ;
-    ns1:hasCharge <https://w3id.org/caselinker/resource/case/wa_ag_2010_001/charge/1>,
+    ns3:chargeCount "4"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/wa_ag_2010_001/charge/1>,
         <https://w3id.org/caselinker/resource/case/wa_ag_2010_001/charge/2> .
 
-<https://w3id.org/caselinker/resource/case/wa_ag_2010_001/legal-step/convicted> a ns5:Event,
-        ns5:LegalEvent,
-        ns1:LegalProceeding,
-        ns1:SentencingHearing ;
+<https://w3id.org/caselinker/resource/case/wa_ag_2010_001/legal-step/convicted> a ns4:Event,
+        ns4:LegalEvent,
+        ns3:LegalProceeding,
+        ns3:SentencingHearing ;
     rdfs:label "Sentencing Hearing · legal-step/convicted" .
 
-<https://w3id.org/caselinker/resource/case/wa_ag_2010_001/location/r-monroe> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/wa_ag_2010_001/location/r-monroe> a ns4:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "R-monroe" ;
-    ns4:name "R-monroe" .
-
-<https://w3id.org/caselinker/resource/case/wa_ag_2010_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
+    ns1:name "R-monroe" .
 
 <https://w3id.org/caselinker/resource/case/wa_ag_2010_001/role/offender/1> a ns2:OffenderRole ;
     rdfs:label "Offender Role · role/offender/1" .
 
-<https://w3id.org/caselinker/resource/location/olympia-city-wa> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/olympia-city-wa> a ns4:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Olympia city" ;
     dcterms:identifier "fips:5351300" ;
     skos:altLabel "Olympia" ;
-    ns4:name "Olympia city" .
+    ns1:name "Olympia city" .
 
-<https://w3id.org/caselinker/resource/location/seattle-city-wa> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/seattle-city-wa> a ns4:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Seattle city" ;
     dcterms:identifier "fips:5363000" ;
     skos:altLabel "Seattle" ;
-    ns4:name "Seattle city" .
+    ns1:name "Seattle city" .
 
-<https://w3id.org/caselinker/resource/location/snohomish-county-wa> a ns5:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/snohomish-county-wa> a ns4:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Snohomish County" ;
     dcterms:identifier "fips:53061" ;
-    ns4:name "Snohomish County" .
+    ns1:name "Snohomish County" .
 
-<https://w3id.org/caselinker/resource/case/wa_ag_2010_001/phase/convicted> a ns5:Phase,
-        ns1:SentencingPhase ;
+<https://w3id.org/caselinker/resource/case/wa_ag_2010_001/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/wa_ag_2010_001/phase/convicted> a ns4:Phase,
+        ns3:SentencingPhase ;
     rdfs:label "Sentencing Phase · phase/convicted" .
 

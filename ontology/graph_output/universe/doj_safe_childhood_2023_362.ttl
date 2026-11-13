@@ -1,9 +1,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://cacontology.projectvic.org#> .
-@prefix ns2: <https://cacontology.projectvic.org/multi-jurisdiction#> .
-@prefix ns3: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns2: <https://cacontology.projectvic.org/temporal#> .
+@prefix ns3: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix ns4: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
+@prefix ns5: <https://cacontology.projectvic.org/multi-jurisdiction#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -28,17 +28,19 @@
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_362/event/project-safe-childhood>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_362/legal-proceeding>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_362/legal-step/pleaded-guilty> ;
-    ns2:involvesAgency <https://w3id.org/caselinker/resource/agency/ceos>,
+    ns5:involvesAgency <https://w3id.org/caselinker/resource/agency/ceos>,
         <https://w3id.org/caselinker/resource/agency/doj>,
         <https://w3id.org/caselinker/resource/agency/fbi>,
         <https://w3id.org/caselinker/resource/agency/icac>,
-        <https://w3id.org/caselinker/resource/agency/usao> .
+        <https://w3id.org/caselinker/resource/agency/usao> ;
+    ns4:object <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_362/person/offender/1>,
+        <https://w3id.org/caselinker/resource/platform/kik> .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_362/person/offender/1/age> a ns3:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_362/person/offender/1/age> a ns2:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns3:ageSubject <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_362/person/offender/1> ;
-    ns3:concernsAgeQuality ns3:Age ;
-    ns3:hasAgeInYears 50.0 .
+    ns2:ageSubject <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_362/person/offender/1> ;
+    ns2:concernsAgeQuality ns2:Age ;
+    ns2:hasAgeInYears 50.0 .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_362/role/offender/1/has-role> a ns4:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -48,17 +50,17 @@
     ns4:target <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_362/role/offender/1> .
 
 <https://w3id.org/caselinker/resource/agency/ceos> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:FederalAgency ;
+        ns5:FederalAgency ;
     rdfs:label "CEOS" ;
     ns4:name "CEOS" .
 
 <https://w3id.org/caselinker/resource/agency/doj> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:FederalAgency ;
+        ns5:FederalAgency ;
     rdfs:label "U.S. Department of Justice" ;
     ns4:name "U.S. Department of Justice" .
 
 <https://w3id.org/caselinker/resource/agency/fbi> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:FederalAgency ;
+        ns5:FederalAgency ;
     rdfs:label "Federal Bureau of Investigation" ;
     skos:altLabel "FBI" ;
     ns4:name "Federal Bureau of Investigation" .
@@ -70,42 +72,42 @@
     ns4:name "ICAC Task Force" .
 
 <https://w3id.org/caselinker/resource/agency/usao> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns2:FederalAgency ;
+        ns5:FederalAgency ;
     rdfs:label "U.S. Attorney's Office" ;
     ns4:name "U.S. Attorney's Office" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_362/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_362/charge/1> a ns3:CSAM_Possession,
+        ns3:CriminalCharge ;
     rdfs:label "child pornography" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_362/charge/2> a ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_362/charge/2> a ns3:CriminalCharge ;
     rdfs:label "sexual exploitation" .
 
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_362/charge/3> a ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_362/charge/3> a ns3:CriminalCharge ;
     rdfs:label "child exploitation" ;
     dcterms:subject ns1:ChildSexualAbuseEvent .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_362/event/distribution> a <https://cacontology.projectvic.org/core#Event>,
-        ns5:CSAM_Distribution ;
+        ns3:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_362/event/project-safe-childhood> a <https://cacontology.projectvic.org/core#Event>,
-        ns2:ProjectSafeChildhoodOperation ;
+        ns5:ProjectSafeChildhoodOperation ;
     rdfs:label "Project Safe Childhood Operation · event/project-safe-childhood" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_362/legal-proceeding> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns5:LegalProceeding ;
+        ns3:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
-    ns5:chargeCount "3"^^xsd:nonNegativeInteger ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_362/charge/1>,
+    ns3:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns3:hasCharge <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_362/charge/1>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_362/charge/2>,
         <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_362/charge/3> .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_362/legal-step/pleaded-guilty> a <https://cacontology.projectvic.org/core#Event>,
         <https://cacontology.projectvic.org/core#LegalEvent>,
-        ns5:LegalProceeding,
-        ns5:PleaBargaining ;
+        ns3:LegalProceeding,
+        ns3:PleaBargaining ;
     rdfs:label "Plea Bargaining · legal-step/pleaded-guilty" .
 
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_362/location/roseville> a <https://cacontology.projectvic.org/core#PlaceLikeEntity>,
@@ -131,20 +133,20 @@
     skos:altLabel "Sacramento" ;
     ns4:name "Sacramento city" .
 
-<https://w3id.org/caselinker/resource/platform/kik> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#MessagingService> ;
-    rdfs:label "Kik" ;
-    ns4:name "Kik" .
-
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_362/event/csam> a ns1:CSAMIncident,
         <https://cacontology.projectvic.org/core#Event> ;
     rdfs:label "CSAMIncident · event/csam" ;
     ns1:usesChannel <https://w3id.org/caselinker/resource/platform/kik> .
 
+<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_362/phase/pleaded-guilty> a <https://cacontology.projectvic.org/core#Phase>,
+        ns3:PreTrialPhase ;
+    rdfs:label "Pre Trial Phase · phase/pleaded-guilty" .
+
+<https://w3id.org/caselinker/resource/platform/kik> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#MessagingService> ;
+    rdfs:label "Kik" ;
+    ns4:name "Kik" .
+
 <https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_362/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/doj_safe_childhood_2023_362/phase/pleaded-guilty> a <https://cacontology.projectvic.org/core#Phase>,
-        ns5:PreTrialPhase ;
-    rdfs:label "Pre Trial Phase · phase/pleaded-guilty" .
 

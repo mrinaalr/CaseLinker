@@ -1,16 +1,16 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix ns1: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns1: <https://cacontology.projectvic.org/temporal#> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
 @prefix ns3: <https://ontology.unifiedcyberontology.org/uco/core/> .
-@prefix ns4: <https://cacontology.projectvic.org/temporal#> .
-@prefix ns5: <https://cacontology.projectvic.org/legal-outcomes#> .
-@prefix ns6: <https://cacontology.projectvic.org/core#> .
+@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns5: <https://cacontology.projectvic.org/core#> .
+@prefix ns6: <https://cacontology.projectvic.org/legal-outcomes#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <https://w3id.org/caselinker/resource/case/fresno_so_2014_002> a ns2:CACInvestigation,
-        ns6:EnduringEntity ;
+        ns5:EnduringEntity ;
     rdfs:label "Case fresno_so_2014_002" ;
     dcterms:created "2026-11-11T14:17:04.374392"^^xsd:dateTime ;
     dcterms:date "2014-09-22"^^xsd:date ;
@@ -35,30 +35,33 @@
         <https://w3id.org/caselinker/resource/case/fresno_so_2014_002/event/possession>,
         <https://w3id.org/caselinker/resource/case/fresno_so_2014_002/event/sextortion>,
         <https://w3id.org/caselinker/resource/case/fresno_so_2014_002/legal-proceeding> ;
-    ns1:involvesAgency <https://w3id.org/caselinker/resource/agency/federal-agents>,
+    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/federal-agents>,
         <https://w3id.org/caselinker/resource/agency/federal-and-state>,
         <https://w3id.org/caselinker/resource/agency/fresno-county-sheriff-s-office-ca>,
         <https://w3id.org/caselinker/resource/agency/hsi>,
-        <https://w3id.org/caselinker/resource/agency/icac> .
+        <https://w3id.org/caselinker/resource/agency/icac> ;
+    ns3:object <https://w3id.org/caselinker/resource/case/fresno_so_2014_002/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/fresno_so_2014_002/person/victim/1>,
+        <https://w3id.org/caselinker/resource/platform/kik> .
 
-<https://w3id.org/caselinker/resource/case/fresno_so_2014_002/assessment/semantic/sextortion> a ns6:AssessmentResult ;
+<https://w3id.org/caselinker/resource/case/fresno_so_2014_002/assessment/semantic/sextortion> a ns5:AssessmentResult ;
     rdfs:label "semantic similarity · sextortion" ;
     dcterms:subject <https://cacontology.projectvic.org/sextortion#SextortionIncident> ;
-    ns6:assesses <https://w3id.org/caselinker/resource/case/fresno_so_2014_002/narrative> ;
-    ns6:hasConfidence 0.4534 ;
-    ns6:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
+    ns5:assesses <https://w3id.org/caselinker/resource/case/fresno_so_2014_002/narrative> ;
+    ns5:hasConfidence 0.4534 ;
+    ns5:usesMethod <https://w3id.org/caselinker/resource/extractor/semantic-embedding> .
 
-<https://w3id.org/caselinker/resource/case/fresno_so_2014_002/person/offender/1/age> a ns4:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/fresno_so_2014_002/person/offender/1/age> a ns1:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/offender/1/age" ;
-    ns4:ageSubject <https://w3id.org/caselinker/resource/case/fresno_so_2014_002/person/offender/1> ;
-    ns4:concernsAgeQuality ns4:Age ;
-    ns4:hasAgeInYears 26.0 .
+    ns1:ageSubject <https://w3id.org/caselinker/resource/case/fresno_so_2014_002/person/offender/1> ;
+    ns1:concernsAgeQuality ns1:Age ;
+    ns1:hasAgeInYears 26.0 .
 
-<https://w3id.org/caselinker/resource/case/fresno_so_2014_002/person/victim/1/age> a ns4:AgeAtTimeSituation ;
+<https://w3id.org/caselinker/resource/case/fresno_so_2014_002/person/victim/1/age> a ns1:AgeAtTimeSituation ;
     rdfs:label "Age At Time Situation · person/victim/1/age" ;
-    ns4:ageSubject <https://w3id.org/caselinker/resource/case/fresno_so_2014_002/person/victim/1> ;
-    ns4:concernsAgeQuality ns4:Age ;
-    ns4:hasAgeInYears 13.0 .
+    ns1:ageSubject <https://w3id.org/caselinker/resource/case/fresno_so_2014_002/person/victim/1> ;
+    ns1:concernsAgeQuality ns1:Age ;
+    ns1:hasAgeInYears 13.0 .
 
 <https://w3id.org/caselinker/resource/case/fresno_so_2014_002/role/offender/1/has-role> a ns3:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -74,145 +77,145 @@
     ns3:source <https://w3id.org/caselinker/resource/case/fresno_so_2014_002/person/victim/1> ;
     ns3:target <https://w3id.org/caselinker/resource/case/fresno_so_2014_002/role/victim/1> .
 
-<https://w3id.org/caselinker/resource/platform/kik> a ns6:DigitalSystemEntity,
-        <https://cacontology.projectvic.org/platforms#MessagingService> ;
-    rdfs:label "Kik" ;
-    ns3:name "Kik" .
-
-<https://w3id.org/caselinker/resource/agency/federal-agents> a ns6:OrganizationLikeEntity,
-        ns1:LocalAgency ;
+<https://w3id.org/caselinker/resource/agency/federal-agents> a ns5:OrganizationLikeEntity,
+        ns4:LocalAgency ;
     rdfs:label "Federal Agents" ;
     ns3:name "Federal Agents" .
 
-<https://w3id.org/caselinker/resource/agency/federal-and-state> a ns6:OrganizationLikeEntity,
-        ns1:LocalAgency ;
+<https://w3id.org/caselinker/resource/agency/federal-and-state> a ns5:OrganizationLikeEntity,
+        ns4:LocalAgency ;
     rdfs:label "Federal and State" ;
     ns3:name "Federal and State" .
 
-<https://w3id.org/caselinker/resource/agency/fresno-county-sheriff-s-office-ca> a ns6:OrganizationLikeEntity,
-        ns1:LocalAgency ;
+<https://w3id.org/caselinker/resource/agency/fresno-county-sheriff-s-office-ca> a ns5:OrganizationLikeEntity,
+        ns4:LocalAgency ;
     rdfs:label "Fresno County Sheriff's Office" ;
     dcterms:identifier "ori:CA0100000" ;
     ns3:name "Fresno County Sheriff's Office" .
 
-<https://w3id.org/caselinker/resource/agency/hsi> a ns6:OrganizationLikeEntity,
-        ns1:FederalAgency ;
+<https://w3id.org/caselinker/resource/agency/hsi> a ns5:OrganizationLikeEntity,
+        ns4:FederalAgency ;
     rdfs:label "Homeland Security Investigations" ;
     ns3:name "Homeland Security Investigations" .
 
-<https://w3id.org/caselinker/resource/agency/icac> a ns6:OrganizationLikeEntity,
+<https://w3id.org/caselinker/resource/agency/icac> a ns5:OrganizationLikeEntity,
         <https://cacontology.projectvic.org/taskforce#StateICACtaskForce> ;
     rdfs:label "ICAC Task Force" ;
     skos:altLabel "ICAC" ;
     ns3:name "ICAC Task Force" .
 
-<https://w3id.org/caselinker/resource/case/fresno_so_2014_002/charge/1> a ns5:CSAM_Possession,
-        ns5:CriminalCharge ;
+<https://w3id.org/caselinker/resource/case/fresno_so_2014_002/charge/1> a ns6:CSAM_Possession,
+        ns6:CriminalCharge ;
     rdfs:label "possession of child pornography" .
 
-<https://w3id.org/caselinker/resource/case/fresno_so_2014_002/charge/2> a ns5:CriminalCharge,
-        ns5:SextortionCharge ;
+<https://w3id.org/caselinker/resource/case/fresno_so_2014_002/charge/2> a ns6:CriminalCharge,
+        ns6:SextortionCharge ;
     rdfs:label "sextortion" .
 
-<https://w3id.org/caselinker/resource/case/fresno_so_2014_002/event/distribution> a ns6:Event,
-        ns5:CSAM_Distribution ;
+<https://w3id.org/caselinker/resource/case/fresno_so_2014_002/event/distribution> a ns5:Event,
+        ns6:CSAM_Distribution ;
     rdfs:label "CSAM Distribution · event/distribution" .
 
 <https://w3id.org/caselinker/resource/case/fresno_so_2014_002/event/possession> a ns2:CSAMIncident,
-        ns6:Event ;
+        ns5:Event ;
     rdfs:label "CSAMIncident · event/possession" .
 
-<https://w3id.org/caselinker/resource/case/fresno_so_2014_002/event/sextortion> a ns6:Event,
+<https://w3id.org/caselinker/resource/case/fresno_so_2014_002/event/sextortion> a ns5:Event,
         <https://cacontology.projectvic.org/sextortion#SextortionIncident> ;
     rdfs:label "Sextortion Incident · event/sextortion" .
 
-<https://w3id.org/caselinker/resource/case/fresno_so_2014_002/legal-proceeding> a ns6:Event,
-        ns6:LegalEvent,
-        ns5:LegalProceeding ;
+<https://w3id.org/caselinker/resource/case/fresno_so_2014_002/legal-proceeding> a ns5:Event,
+        ns5:LegalEvent,
+        ns6:LegalProceeding ;
     rdfs:label "Event · legal-proceeding" ;
     rdfs:comment "Pretrial detention facility (not a sentence): booked into the Fresno County Jail" ;
-    ns5:chargeCount "3"^^xsd:nonNegativeInteger ;
-    ns5:hasCharge <https://w3id.org/caselinker/resource/case/fresno_so_2014_002/charge/1>,
+    ns6:chargeCount "3"^^xsd:nonNegativeInteger ;
+    ns6:hasCharge <https://w3id.org/caselinker/resource/case/fresno_so_2014_002/charge/1>,
         <https://w3id.org/caselinker/resource/case/fresno_so_2014_002/charge/2> .
 
-<https://w3id.org/caselinker/resource/case/fresno_so_2014_002/location/city-of-selma> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/fresno_so_2014_002/location/city-of-selma> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "City of Selma" ;
     ns3:name "City of Selma" .
 
-<https://w3id.org/caselinker/resource/case/fresno_so_2014_002/location/san-luis-obispo-counties> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/case/fresno_so_2014_002/location/san-luis-obispo-counties> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "San Luis Obispo Counties" ;
     ns3:name "San Luis Obispo Counties" .
 
-<https://w3id.org/caselinker/resource/case/fresno_so_2014_002/role/offender/1> a ns5:DefendantRole ;
+<https://w3id.org/caselinker/resource/case/fresno_so_2014_002/role/offender/1> a ns6:DefendantRole ;
     rdfs:label "Defendant Role · role/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/fresno_so_2014_002/role/victim/1> a ns2:VictimRole ;
     rdfs:label "Victim Role · role/victim/1" .
 
-<https://w3id.org/caselinker/resource/location/fresno-city-ca> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/fresno-city-ca> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Fresno city" ;
     dcterms:identifier "fips:0627000" ;
     skos:altLabel "Fresno" ;
     ns3:name "Fresno city" .
 
-<https://w3id.org/caselinker/resource/location/fresno-county-ca> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/fresno-county-ca> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Fresno County" ;
     dcterms:identifier "fips:06019" ;
     ns3:name "Fresno County" .
 
-<https://w3id.org/caselinker/resource/location/kings-county-ca> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/kings-county-ca> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Kings County" ;
     dcterms:identifier "fips:06031" ;
     skos:altLabel "Kings" ;
     ns3:name "Kings County" .
 
-<https://w3id.org/caselinker/resource/location/madera-city-ca> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/madera-city-ca> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Madera city" ;
     dcterms:identifier "fips:0645022" ;
     skos:altLabel "Madera" ;
     ns3:name "Madera city" .
 
-<https://w3id.org/caselinker/resource/location/mariposa-cdp-ca> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/mariposa-cdp-ca> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Mariposa CDP" ;
     dcterms:identifier "fips:0645932" ;
     skos:altLabel "Mariposa" ;
     ns3:name "Mariposa CDP" .
 
-<https://w3id.org/caselinker/resource/location/merced-city-ca> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/merced-city-ca> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Merced city" ;
     dcterms:identifier "fips:0646898" ;
     skos:altLabel "Merced" ;
     ns3:name "Merced city" .
 
-<https://w3id.org/caselinker/resource/location/selma-city-ca> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/selma-city-ca> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Selma city" ;
     dcterms:identifier "fips:0670882" ;
     skos:altLabel "Selma" ;
     ns3:name "Selma city" .
 
-<https://w3id.org/caselinker/resource/location/tulare-city-ca> a ns6:PlaceLikeEntity,
+<https://w3id.org/caselinker/resource/location/tulare-city-ca> a ns5:PlaceLikeEntity,
         <https://ontology.unifiedcyberontology.org/uco/location/Location> ;
     rdfs:label "Tulare city" ;
     dcterms:identifier "fips:0680644" ;
     skos:altLabel "Tulare" ;
     ns3:name "Tulare city" .
 
+<https://w3id.org/caselinker/resource/platform/kik> a ns5:DigitalSystemEntity,
+        <https://cacontology.projectvic.org/platforms#MessagingService> ;
+    rdfs:label "Kik" ;
+    ns3:name "Kik" .
+
+<https://w3id.org/caselinker/resource/case/fresno_so_2014_002/phase/booked> a ns2:InitialPhase,
+        ns5:Phase ;
+    rdfs:label "Initial Phase · phase/booked" .
+
 <https://w3id.org/caselinker/resource/case/fresno_so_2014_002/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/offender/1" .
 
 <https://w3id.org/caselinker/resource/case/fresno_so_2014_002/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
     rdfs:label "Person · person/victim/1" .
-
-<https://w3id.org/caselinker/resource/case/fresno_so_2014_002/phase/booked> a ns2:InitialPhase,
-        ns6:Phase ;
-    rdfs:label "Initial Phase · phase/booked" .
 

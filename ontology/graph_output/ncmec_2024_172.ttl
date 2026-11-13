@@ -1,8 +1,8 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix ns1: <https://ontology.unifiedcyberontology.org/uco/core/> .
 @prefix ns2: <https://cacontology.projectvic.org#> .
-@prefix ns3: <https://cacontology.projectvic.org/custodial#> .
-@prefix ns4: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns3: <https://cacontology.projectvic.org/multi-jurisdiction#> .
+@prefix ns4: <https://cacontology.projectvic.org/custodial#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -24,8 +24,11 @@
     ns2:hasPhase <https://w3id.org/caselinker/resource/case/ncmec_2024_172/phase/charged> ;
     ns2:hasStep <https://w3id.org/caselinker/resource/case/ncmec_2024_172/event/possession>,
         <https://w3id.org/caselinker/resource/case/ncmec_2024_172/event/trust-violation> ;
-    ns4:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
-        <https://w3id.org/caselinker/resource/case/ncmec_2024_172/agency/delray-beach-police-department> .
+    ns3:involvesAgency <https://w3id.org/caselinker/resource/agency/ncmec>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_172/agency/delray-beach-police-department> ;
+    ns1:object <https://w3id.org/caselinker/resource/case/ncmec_2024_172/person/offender/1>,
+        <https://w3id.org/caselinker/resource/case/ncmec_2024_172/person/victim/1>,
+        <https://w3id.org/caselinker/resource/platform/kik> .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_172/role/offender/1/has-role> a ns1:Relationship ;
     rdfs:label "Relationship · role/offender/1/has-role" ;
@@ -42,34 +45,28 @@
     ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_172/role/victim/1> .
 
 <https://w3id.org/caselinker/resource/agency/ncmec> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:FederalAgency ;
+        ns3:FederalAgency ;
     rdfs:label "National Center for Missing and Exploited Children" ;
     skos:altLabel "NCMEC" ;
     ns1:name "National Center for Missing and Exploited Children" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_172/agency/delray-beach-police-department> a <https://cacontology.projectvic.org/core#OrganizationLikeEntity>,
-        ns4:LocalAgency ;
+        ns3:LocalAgency ;
     rdfs:label "Delray Beach Police Department" ;
     ns1:name "Delray Beach Police Department" .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_172/event/trust-violation> a ns3:CustodialAbuse,
-        ns3:TrustViolation ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_172/event/trust-violation> a ns4:CustodialAbuse,
+        ns4:TrustViolation ;
     rdfs:label "Custodial Abuse · event/trust-violation" ;
-    ns3:perpetratedBy <https://w3id.org/caselinker/resource/case/ncmec_2024_172/role/offender/1> ;
-    ns3:violatesRelationship <https://w3id.org/caselinker/resource/case/ncmec_2024_172/relationship/father> .
+    ns4:perpetratedBy <https://w3id.org/caselinker/resource/case/ncmec_2024_172/role/offender/1> ;
+    ns4:violatesRelationship <https://w3id.org/caselinker/resource/case/ncmec_2024_172/relationship/father> .
 
-<https://w3id.org/caselinker/resource/case/ncmec_2024_172/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/offender/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_172/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
-    rdfs:label "Person · person/victim/1" .
-
-<https://w3id.org/caselinker/resource/case/ncmec_2024_172/relationship/father> a ns3:CustodialRelationship,
-        ns3:FamilialRelationship ;
+<https://w3id.org/caselinker/resource/case/ncmec_2024_172/relationship/father> a ns4:CustodialRelationship,
+        ns4:FamilialRelationship ;
     rdfs:label "Custodial Relationship · relationship/father" ;
-    ns3:involvesChild <https://w3id.org/caselinker/resource/case/ncmec_2024_172/role/victim/1> ;
-    ns3:involvesCustodian <https://w3id.org/caselinker/resource/case/ncmec_2024_172/role/offender/1> ;
-    ns3:relationshipType "parent" ;
+    ns4:involvesChild <https://w3id.org/caselinker/resource/case/ncmec_2024_172/role/victim/1> ;
+    ns4:involvesCustodian <https://w3id.org/caselinker/resource/case/ncmec_2024_172/role/offender/1> ;
+    ns4:relationshipType "parent" ;
     ns1:isDirectional true ;
     ns1:source <https://w3id.org/caselinker/resource/case/ncmec_2024_172/role/offender/1> ;
     ns1:target <https://w3id.org/caselinker/resource/case/ncmec_2024_172/role/victim/1> .
@@ -93,14 +90,20 @@
     dcterms:identifier "fips:12099" ;
     ns1:name "Palm Beach County" .
 
-<https://w3id.org/caselinker/resource/platform/kik> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
-        <https://cacontology.projectvic.org/platforms#MessagingService> ;
-    rdfs:label "Kik" ;
-    ns1:name "Kik" .
+<https://w3id.org/caselinker/resource/case/ncmec_2024_172/person/offender/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/offender/1" .
+
+<https://w3id.org/caselinker/resource/case/ncmec_2024_172/person/victim/1> a <https://ontology.unifiedcyberontology.org/uco/identity/Person> ;
+    rdfs:label "Person · person/victim/1" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_172/phase/charged> a ns2:LegalProcessPhase,
         <https://cacontology.projectvic.org/core#Phase> ;
     rdfs:label "Legal Process Phase · phase/charged" .
+
+<https://w3id.org/caselinker/resource/platform/kik> a <https://cacontology.projectvic.org/core#DigitalSystemEntity>,
+        <https://cacontology.projectvic.org/platforms#MessagingService> ;
+    rdfs:label "Kik" ;
+    ns1:name "Kik" .
 
 <https://w3id.org/caselinker/resource/case/ncmec_2024_172/event/possession> a ns2:CSAMIncident,
         <https://cacontology.projectvic.org/core#Event> ;
