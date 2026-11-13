@@ -1,6 +1,6 @@
 # CaseLinker MCP tool registry
 
-**Local: 55 tools. Railway hosted: 45 tools** (eight collector WRITE tools and two local-disk duplicate tools omitted). Count `@mcp.tool()` decorators in `server.py` (WRITE tools register only when `collector_disk_write_enabled()` is true; `find_ingested_duplicates` and `verify_duplicate_pdf_pages` register only when not on Railway).
+**Local: 62 tools. Railway hosted: 47 tools** (eight collector WRITE tools, two local-disk duplicate tools and five repair-and-expand tools omitted). Count `@mcp.tool()` decorators in `server.py` (WRITE tools register only when `collector_disk_write_enabled()` is true; `find_ingested_duplicates` and `verify_duplicate_pdf_pages` register only when not on Railway).
 
 Authoritative implementation: `caselinker_mcp/server.py`. This file is the human-readable catalog for docs and agent hosts.
 
@@ -15,8 +15,10 @@ Authoritative implementation: `caselinker_mcp/server.py`. This file is the human
 | MCP-only (press collector READ) | **1** | `probe_press_url` — all hosts |
 | MCP-only (press collector WRITE) | **8** | **Local MCP only** — not registered on Railway |
 | MCP-only (local duplicate audit) | **2** | `find_ingested_duplicates`, `verify_duplicate_pdf_pages` — local disk, read-only |
-| **Total (local)** | **55** | |
-| **Total (Railway)** | **45** | WRITE and local-disk duplicate tools absent |
+| MCP-only (local DB analysis) | **2** | `get_sentencing_stats`, `filter_cases_by_jurisdiction` — read the local DB |
+| MCP-only (repair and expand) | **5** | `describe_pipeline`, `diagnose_case`, `profile_new_source`, `scaffold_extension`, `run_gate` — **local MCP only**; see `README.md` → *Repair and expand* |
+| **Total (local)** | **62** | |
+| **Total (Railway)** | **47** | WRITE, local-disk duplicate and repair-and-expand tools absent |
 
 There are **34** REST `/api/*` routes in `run/main.py`. **31** have MCP tools; four are intentionally excluded from MCP (admin/write/index): `POST /api/cache/clear`, `POST /api/case-studies/notes/{id}`, `POST /api/ontology/cache/warm`, `GET /api`.
 
@@ -28,9 +30,9 @@ No MCP resources (`@mcp.resource`) or prompts (`@mcp.prompt`) are registered.
 
 | Category | Local | Railway | Meaning |
 |----------|------:|--------:|---------|
-| Public (trusted key irrelevant) | **49** | **39** | Same behavior with or without trusted key |
+| Public (trusted key irrelevant) | **56** | **41** | Same behavior with or without trusted key |
 | Trusted-key sensitive | **6** | **6** | Blocked or reduced without trusted key |
-| **Total** | **55** | **45** | |
+| **Total** | **62** | **47** | |
 
 Corpus REST tools do **not** mutate the CaseLinker database. Collector WRITE tools create files on disk (JSON, url-lists, PDFs) under `collector_output/` or `collector/sources/` **on the MCP host**. They do **not** auto-ingest into sqlite. On Railway they are not registered (ephemeral FS).
 
@@ -140,6 +142,11 @@ Trusted key does **not** change behavior (still subject to normal slowapi / publ
 | `collect_case_dual_path` | collector suite | **WRITE** local only — A+B dual collect |
 | `download_free_recap` | `collector_tools` | **WRITE** local only — one free RECAP PDF; never PACER |
 | `fetch_free_key_docs` | `collector_tools` | **WRITE** local only — free key docs on one docket; never PACER |
+| `describe_pipeline` | `repair_expand.py` | **READ** local only — extension points read from the code, reserved decisions, open review counts |
+| `diagnose_case` | `repair_expand.py` | **READ** local only — stored evidence beside a replay of today's readers; candidates, gate reasons, masked excerpts (`extraction_trace`) |
+| `profile_new_source` | `repair_expand.py` | **READ** local only — split a local PDF/.txt and count what the readers extract; no write (`source_profile`) |
+| `scaffold_extension` | `repair_expand.py` | **WRITE** local only — `extensions/<name>/` stub and failing test; `dry_run` by default |
+| `run_gate` | `repair_expand.py` + `proposal_runner.py` | **READ** local only — integrity, fixed tests, and every case a rule / extension / code change moves (`regression_evidence`) |
 
 ### On-demand graph workflow
 

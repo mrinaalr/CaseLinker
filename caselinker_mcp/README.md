@@ -2,16 +2,18 @@
 
 The CaseLinker MCP (Model Context Protocol) server exposes structured tools to agents and AI Applications (Cursor, Claude Desktop, and other MCP clients). Tools include corpus search and analysis, knowledge graphs, triage, free court records search (via CourtListener), and the **collector suite** (press PDFs and free RECAP downloads).
 
-- **28** tools wrap the CaseLinker REST API
+- **31** tools wrap the CaseLinker REST API
 - **8** are MCP-only corpus / graph helpers
 - **1** SPARQL tool (`sparql_query`) — live `/sparql`, local Oxigraph, or local `.nq`
 - **4** search free public court and DOJ press records
 - **1** collector READ (`probe_press_url`) always
 - **8** collector WRITE — **local MCP only** (not registered on Railway)
 - **2** local-disk READ tools (`find_ingested_duplicates`, `verify_duplicate_pdf_pages`) — local MCP only
+- **2** local-DB analysis tools (`get_sentencing_stats`, `filter_cases_by_jurisdiction`)
+- **5** repair and expand tools (`describe_pipeline`, `diagnose_case`, `profile_new_source`, `scaffold_extension`, `run_gate`) — local MCP only, see [Repair and expand](#repair-and-expand)
 
-**Local stdio / local FastAPI mount:** **55 tools** (full READ + WRITE).
-**Railway hosted MCP:** **45 tools** (collector WRITE and local-disk duplicate tools omitted).
+**Local stdio / local FastAPI mount:** **62 tools** (full READ + WRITE).
+**Railway hosted MCP:** **47 tools** (collector WRITE, local-disk duplicate and repair-and-expand tools omitted).
 
 Corpus and analysis tools are read-only against the database. Collector WRITE tools write local JSON/PDFs only; they do not ingest into sqlite.
 
@@ -62,8 +64,8 @@ Set `CASELINKER_KEY` to a value listed in `CASELINKER_TRUSTED_KEYS` on Railway o
 
 ## Tool tiers
 
-**49 public** + **6 trusted-key sensitive** = **55 tools** on local MCP.
-On Railway hosted MCP the eight collector WRITE tools and the two local-disk duplicate tools are omitted → **39 public** + **6 trusted** = **45 tools**.
+**56 public** + **6 trusted-key sensitive** = **62 tools** on local MCP.
+On Railway hosted MCP the eight collector WRITE tools, the two local-disk duplicate tools and the five repair-and-expand tools are omitted → **41 public** + **6 trusted** = **47 tools**.
 
 ### Public tier
 
@@ -125,7 +127,7 @@ Fill in `CASELINKER_KEY` locally only if you need bulk export, full case narrati
 
 ## Hosted (Railway)
 
-CaseLinker exposes **two HTTP transports** on Railway (pick one in your MCP client config). Hosted MCP is **45 tools**: corpus + READ collector/public-records. Collector **WRITE** tools are not registered here — run local stdio MCP or the `collector/` CLI to write PDFs on your machine.
+CaseLinker exposes **two HTTP transports** on Railway (pick one in your MCP client config). Hosted MCP is **47 tools**: corpus + READ collector/public-records. Collector **WRITE** tools are not registered here — run local stdio MCP or the `collector/` CLI to write PDFs on your machine.
 
 | Transport | Client URL | How messages flow |
 |-----------|------------|-------------------|
@@ -235,6 +237,98 @@ Every successful graph tool response carries `interpretation_kind` and `interpre
 
 There is no conduct-feature similarity search yet. `get_cluster_groups` / `run_automated_analysis` return precomputed groups from a weighted tag-feature score (topics, platforms, severity, demographics, relationship, investigation and agencies). That score is not the graph tools, and it is not a validated same-conduct cohort either.
 
+## Repair and expand
+
+Five local tools ([`repair_expand.py`](repair_expand.py)) let an agent propose a change to extraction and measure it before a person reviews it. None writes to the corpus, and none admits a change: admission is a commit the maintainer reviews. They are not registered on Railway.
+
+| Tool | Answers | Writes |
+|---|---|---|
+| `describe_pipeline` | What can be extended, read from the code: layers, document kinds, every detector with the file and line that defines it, the fields the resolver settles, families and the 0.7 line, approved compiled rules, extensions found, the gate's files, the decisions reserved for the maintainer, open review counts | no |
+| `diagnose_case` | Why a stored value is what it is: stored rows and resolution beside a replay of today's readers on the stored text; every candidate with its detector, role, gate reason and a people-masked excerpt; field-shaped spans no reader raised; stored rows today's readers no longer raise | no |
+| `profile_new_source` | What today's readers make of a new PDF or `.txt`: source detected, cases split, columns filled, raised / kept / dropped per detector, resolution status, review reasons, cases already in the corpus by fingerprint | no |
+| `scaffold_extension` | `extensions/<name>/` with a detector stub and a test that fails until the pattern and the sample are written. `dry_run` by default | the folder only |
+| `run_gate` | Fixed checks, and every case a proposed change would move | no |
+
+```mermaid
+flowchart LR
+    D[get_field_disagreements] --> X[diagnose_case]
+    X --> P{fix}
+    P -->|one regex| R["run_gate(rule=…)<br/>all stored cases"]
+    P -->|code| C["run_gate()<br/>origin/main vs checkout"]
+    N[profile_new_source] --> S[scaffold_extension] --> E["run_gate(extension=…)<br/>frozen sample"]
+    R & C & E --> M[maintainer reads the listed cases<br/>and commits, or not]
+```
+
+### What run_gate measures
+
+| Check | Proposal | What it runs | Reports |
+|---|---|---|---|
+| integrity | always | `git diff` against the merge base with `origin/main` | an edited grader (`repair_expand.py`, `proposal_runner.py`) or a removed line in a fixed test fails the gate; added tests are fine |
+| tests | checkout, extension | each fixed test file in its own process, plus the extension's test | pass / fail / skip per file |
+| rule | `rule={id, field, role, regex, positives, negatives}` | `compiled_rules.validate_proposal`, then the regex over every stored case | matches, gate drops by reason, and for each case whose stored resolution changes: field, status before and after, whether the final value moved |
+| extension | `extension="<name>"` | its `detect_*` functions on a frozen sample | candidates kept and dropped, status counts for new fields, stored resolutions it would move for core fields |
+| replay | checkout, when `src/` differs from `origin/main` (or `checks=["replay"]`) | the deterministic pipeline of the base commit and of the checkout on the same stored texts | every case whose columns, assertions or resolutions differ |
+
+The frozen sample is every k-th case id in sorted order (`sample`, default 200) plus any `case_ids` passed, so the same corpus gives the same cases on every run.
+
+**A pass is not a verdict.** The gate has no labelled answers. It says the fixed checks hold and lists the cases a change moves; reading those cases against their text is the review. Every response carries `interpretation_kind: regression_evidence` and says so.
+
+### Why a proposal cannot grade itself
+
+A self-modifying coding agent has been reported to score well by disabling the check it was scored on: Zhang et al. describe an agent that removed the logging of the marker tokens a hallucination detector relied on, and call it objective hacking [1]. The gate is built so a proposal has no such path.
+
+- **Proposals run in a child process** ([`proposal_runner.py`](proposal_runner.py)): candidate regexes (validation included), extension modules and the checkout's own extraction code. The child gets no environment secrets and is stopped at a time limit. Whatever it patches stays in the child.
+- **The parent re-gates every candidate.** Core fields go through `gate_assertion`. New fields are read from the span by value type (`number`, `money`, `duration`, `literal`); the candidate's own value is ignored. A literal span on a person is dropped, and a literal's text is never returned.
+- **The grader and its tests are pinned to `origin/main`.** Integrity fails if either changed.
+- **Errors are reported by type**, never by message, since a message can quote case text.
+
+`tests/test_repair_expand.py` covers these cases: an extension that patches the span gate and claims a value, one that hangs, one that raises, one that prints, one that aims a literal at a name, an edited grader, and a weakened test.
+
+### Extensions
+
+An extension is a folder under [`extensions/`](../extensions/) with `extension.py` and `test_extension.py`. [`extensions/restitution/`](../extensions/restitution/) is the example: it reads restitution amounts, a field CaseLinker does not store.
+
+```python
+DOCUMENT_KINDS = ("press_release",)   # one of the accepted kinds
+FIELDS = {"restitution": "money"}     # new fields only, each with a value type
+
+def detect_restitution(ctx):          # every detect_* is a detector
+    return [{"field": "restitution", "role": "ordered",
+             "span_start": s, "span_end": e, "confidence": 0.8}]
+```
+
+An extension runs only in `run_gate` and `profile_new_source`. Ingest never loads one, and a new field is never stored. A field CaseLinker already gates (`age`, `sentence`, `investigation_type`) goes through the same span gate as every reader.
+
+### Where it stops
+
+| The tools do | The maintainer decides |
+|---|---|
+| Measure a rule, an extension or a code change against the stored corpus | Admitting a rule (`compiled_rules.APPROVED`) or merging code |
+| Rehearse a new field on real text | Storing a new field, or changing what a stored one means |
+| Route a new source's documents through the existing split and readers | A new document kind |
+| Show where the corpus would move | Re-extraction, re-resolve, graph rebuilds, Oxigraph reloads |
+
+The `cases` table has `victim_count`, `perpetrator_count` and `relationship_to_victim` columns, and the graphs map to CAC. A domain with another actor structure needs a schema and mapping decision first. These tools work up to that line and report it (`describe_pipeline.reserved_for_maintainer`).
+
+### Prior work
+
+The loop follows the tool-making literature: make a tool once, verify it, reuse it. The difference here is that verification is a fixed gate outside the proposal, and admission is a human commit.
+
+- LATM: a stronger model proposes a Python tool, verifies it against held-out examples as unit tests, then wraps it for a lighter model to reuse [2].
+- Voyager: a skill enters the library only after a separate critic judges the task complete [3].
+- Alita: a generated script becomes a reusable MCP server only after it runs and gives the expected result [4]. The authors report 75.15% pass@1 and 87.27% pass@3 on the GAIA validation set.
+- Live-SWE-agent: the agent starts with only bash tools and writes its own while solving an issue [5]. The authors report 75.4% on SWE-bench Verified with Claude 4.5 Sonnet.
+- Darwin Gödel Machine: the authors report a coding agent improving its own code from 20.0% to 50.0% on a subset of SWE-bench Verified, with the objective-hacking case above [1].
+
+New tools here load at server start. The MCP specification lets a server announce a changed tool list (`notifications/tools/list_changed`, a SHOULD for servers that declare `listChanged`) but does not oblige clients to re-fetch it [6].
+
+1. J. Zhang, S. Hu, C. Lu, R. Lange, J. Clune. *Darwin Gödel Machine: Open-Ended Evolution of Self-Improving Agents.* arXiv:[2505.22954](https://arxiv.org/abs/2505.22954), 2025 (v3 at ICLR 2026). Objective hacking: Appendix H.
+2. T. Cai, X. Wang, T. Ma, X. Chen, D. Zhou. *Large Language Models as Tool Makers.* ICLR 2024. arXiv:[2305.17126](https://arxiv.org/abs/2305.17126).
+3. G. Wang et al. *Voyager: An Open-Ended Embodied Agent with Large Language Models.* TMLR 2024. arXiv:[2305.16291](https://arxiv.org/abs/2305.16291).
+4. J. Qiu, X. Qi, T. Zhang et al. *Alita: Generalist Agent Enabling Scalable Agentic Reasoning with Minimal Predefinition and Maximal Self-Evolution.* arXiv:[2505.20286](https://arxiv.org/abs/2505.20286), 2025.
+5. C. S. Xia, Z. Wang, Y. Yang, Y. Wei, L. Zhang. *Live-SWE-agent: Can Software Engineering Agents Self-Evolve on the Fly?* arXiv:[2511.13646](https://arxiv.org/abs/2511.13646), 2025.
+6. Model Context Protocol, *Tools*, revision 2026-07-28. [modelcontextprotocol.io/specification/2026-07-28/server/tools](https://modelcontextprotocol.io/specification/2026-07-28/server/tools).
+
 ## Local stdio transport
 
 The default entry point uses stdio (local agent hosts):
@@ -247,11 +341,11 @@ For a standalone SSE process (not via Railway mount), set `MCP_TRANSPORT=sse` an
 
 ## Tools
 
-**55 tools locally / 45 on Railway.** See [`tool_registry.md`](tool_registry.md) for the authoritative list. Summary by tier:
+**62 tools locally / 47 on Railway.** See [`tool_registry.md`](tool_registry.md) for the authoritative list. Summary by tier:
 
 | Tier | Local | Railway | Examples |
 |------|------:|--------:|----------|
-| Public (trusted key irrelevant) | 48 | 38 | `get_cases_page`, `verify_duplicate_pdf_pages`; WRITE only local |
+| Public (trusted key irrelevant) | 56 | 41 | `get_cases_page`, `verify_duplicate_pdf_pages`; WRITE only local |
 | Trusted-key sensitive | 6 | 6 | `get_all_cases`, `get_lifecycle_cases`, `get_lifecycle_lstar`, `get_case`, `get_case_assertions`, `llm_chat` |
 
 Authoritative implementation: `@mcp.tool()` definitions in `server.py`. Tool docstrings there remain the source of parameter and behavior detail.

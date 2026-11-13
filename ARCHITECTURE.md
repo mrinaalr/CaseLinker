@@ -9,7 +9,7 @@
 | Graphs | 10,802 CAC/UCO case graphs + 10,802 provenance graphs in a public SPARQL store, plus 297 PACER court-record graphs |
 | Lifecycles | 30 federal cases modeled as CAC phase state machines with L\* trajectories |
 | Analysis | Platform harm (Q1 affordance → misuse → harm evidence), similarity clusters and automated insights, rule and model triage, 11-dimension facet cohorts |
-| Agents | 54 MCP tools locally, 44 hosted, over stdio, SSE and Streamable HTTP |
+| Agents | 62 MCP tools locally, 47 hosted, over stdio, SSE and Streamable HTTP |
 | Code | ~47k lines of Python, ~31k lines of HTML/JS, 61 test files (421 tests) |
 
 ## Contents
@@ -86,7 +86,7 @@ flowchart TD
 
   subgraph SERVE["Serving · run/ · caselinker_mcp/"]
     API["FastAPI<br/>18 pages · REST · /sparql · /resource"]
-    MCP["MCP server · 54 tools"]
+    MCP["MCP server · 62 tools"]
   end
 
   NEWS --> URLS
@@ -256,7 +256,7 @@ Grounded rows mint readable IRIs (`location/fips/{geoid}`, agency by ORI) in the
 
 ### Document kinds
 
-[`detectors.py`](src/Processing%20Layer/field_assertions/detectors.py) registers detectors by kind. `press_release` is the live set. `pacer`, `investigative_note` and `cybertip` are accepted kinds with no detectors yet: register one function returning the same assertion dicts and the gate and resolver apply unchanged.
+[`detectors.py`](src/Processing%20Layer/field_assertions/detectors.py) registers detectors by kind. `press_release` is the live set. `pacer`, `investigative_note` and `cybertip` are accepted kinds with no detectors yet: register one function returning the same assertion dicts and the gate and resolver apply unchanged. `collect_assertions(..., trace=[])` records every candidate with the detector that raised it, kept or dropped; the return value is the same with or without it. `diagnose_case` and `run_gate` read it (§11).
 
 Orchestration lives in [`processing.py`](src/Processing%20Layer/processing.py) `process_cases`: batch → pattern extract → MiniLM batch encode → Stanza bulk NER → spaCy pipe → `collect_assertions` → `resolve` → optional LLM round → merge → comparison values. Set `CASELINKER_PROFILE=1` for per-stage timings.
 
@@ -477,7 +477,9 @@ Runtime details worth knowing: slowapi rate limits per route; GZip and proxy-hea
 | Free public records (READ) | 5 | 5 | `search_doj_press_releases`, `search_courtlistener`, `list_free_recap_documents`, `resolve_free_recap_download`, `probe_press_url` |
 | Collector (WRITE, local disk) | 8 | 0 | `harvest_doj_press_topic`, `fetch_press_listing_urls`, `resolve_press_urls`, `build_press_pdf`, `collect_case_dual_path`, `download_free_recap`, `fetch_free_key_docs`, `drop_collected_pdf_pages` |
 | Local duplicate audit (READ) | 2 | 0 | `find_ingested_duplicates`, `verify_duplicate_pdf_pages` |
-| **Total** | **54** | **44** | |
+| Local DB analysis | 2 | 2 | `get_sentencing_stats`, `filter_cases_by_jurisdiction` |
+| Repair and expand (local) | 5 | 0 | `describe_pipeline`, `diagnose_case`, `profile_new_source`, `scaffold_extension`, `run_gate` |
+| **Total** | **62** | **47** | |
 
 Six tools are trusted-key sensitive: `get_all_cases`, `get_lifecycle_cases` and `get_lifecycle_lstar` return 403 without one; `get_case` and `get_case_assertions` return sanitized payloads; `llm_chat` keeps the daily cap.
 
@@ -486,6 +488,8 @@ Six tools are trusted-key sensitive: `get_all_cases`, `get_lifecycle_cases` and 
 | stdio | `python -m caselinker_mcp.server` (this repo's [`.mcp.json`](.mcp.json)) | `CASELINKER_KEY` env forwarded as `CaseLinker-Key` |
 | SSE | `https://caselinker.up.railway.app/mcp/sse` (+ `POST /mcp/messages`) | `Authorization: Bearer <MCP_ACCESS_KEY>`; optional per-request `CaseLinker-Key` header |
 | Streamable HTTP | `https://caselinker.up.railway.app/mcp-http/` | same |
+
+**Repair and expand.** Five local tools let an agent propose a change to extraction and measure it: a compiled rule over every stored case, an extension under [`extensions/`](extensions/) on a frozen sample, or the checkout's own code against `origin/main`. Proposals run in a child process ([`proposal_runner.py`](caselinker_mcp/proposal_runner.py)) and every candidate is re-gated in the parent, so a proposal cannot change the checks it is scored by. The gate lists the cases a change moves; it has no labelled answers, so a pass is not a verdict. Nothing writes to the corpus and nothing is admitted without a commit. Hand-off: [`caselinker_mcp/README.md` → Repair and expand](caselinker_mcp/README.md#repair-and-expand).
 
 When MCP points at a local SQLite, [`facet_local.py`](caselinker_mcp/facet_local.py) builds facet trees straight from the file. Session graphs live in Redis (`caselinker:mcp:graph:{id}`, 2 h) or process memory. No resources or prompts are registered.
 

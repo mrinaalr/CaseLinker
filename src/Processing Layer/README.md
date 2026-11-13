@@ -92,6 +92,8 @@ def pacer_ages(ctx):
 register_detector("pacer_ages", ("pacer",), pacer_ages, order=10)
 ```
 
+To try a detector before it is registered here, write it as an extension and measure it with `run_gate(extension=...)`; see [`caselinker_mcp/README.md` → Repair and expand](../../caselinker_mcp/README.md#repair-and-expand). `collect_assertions(..., trace=[])` lists every candidate with its detector and gate result, kept or dropped. Trace entries carry names in memory: never store or serve them.
+
 ## Layout
 
 | Path | Role |
