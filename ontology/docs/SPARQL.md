@@ -172,7 +172,7 @@ LIMIT 50
 | Triples (statements in named graphs) | `SELECT (COUNT(*) AS ?n) WHERE { GRAPH ?g { ?s ?p ?o } }` (live store **6,151,655** across **21,901** named graphs: 10,802 case + 10,802 provenance + 297 PACER) |
 | Distinct triples (graph ignored) | **5,639,508**, counted from the N-Quads export; a triple asserted in more than one named graph counts once |
 | Graph generation time | `dcterms:created` / `dcterms:modified` on the investigation (remap time, not offense date) |
-| Public source | `dcterms:source` (press-release URL and/or source label) |
+| Public source | `dcterms:source` (press-release URL); `dcterms:publisher` (source label) |
 | Reload | bulk load into an empty store, `python3 scripts/rebuild_oxigraph.py` ([Reloading the store](#reloading-the-store)) |
 
 Platform/agency extra facts can vary by generation batch order ([issue #10](https://github.com/mrinaalr/CaseLinker/issues/10)).

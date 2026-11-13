@@ -312,8 +312,8 @@ class TestLocationNerMapping(unittest.TestCase):
             spatial.update(ctx.objects(inv, cac.DCTERMS.spatial))
         self.assertIn(loc, spatial)
 
-    def test_ungrounded_mention_stays_in_its_case(self):
-        """An ungrounded mention is a node of this case only, so it joins no other case (#57)."""
+    def test_ungrounded_mention_gets_no_node(self):
+        """An ungrounded mention is not a Location in the case graph (#57)."""
         mapper = cac.CaseToCAC()
         case = {
             **cac.AZICAC_2011_006_FIXTURE,
@@ -323,8 +323,8 @@ class TestLocationNerMapping(unittest.TestCase):
         }
         graph, _ = mapper.map_case(case)
         self.assertNotIn("southern-district-of-texas", mapper._location_registry)
-        local = cac.BASE["case/dist_tx/location/southern-district-of-texas"]
-        self.assertTrue(any((local, cac.RDF.type, cac.UCO_LOCATION.Location) in ctx for ctx in graph.graphs()))
+        nodes = {str(n) for ctx in graph.graphs() for n in ctx.all_nodes()}
+        self.assertFalse([n for n in nodes if n.endswith("/location/southern-district-of-texas")])
 
     def test_shared_singleton_across_cases(self):
         mapper = cac.CaseToCAC()

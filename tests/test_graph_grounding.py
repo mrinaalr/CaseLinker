@@ -146,12 +146,29 @@ def test_unnamed_or_unstated_reporter(reporter, expect_type, expect_role):
     assert (tip, RDF.type, CAC_HOTLINES.ESPReport) in g if reporter["kind"] == "esp" else True
 
 
-def test_ungrounded_places_stay_in_their_case():
+def test_ungrounded_places_get_no_node():
     _, g = _graph("fixture_full_001")
-    assert (BASE["case/fixture_full_001"], DCTERMS.spatial, BASE["location/campton-hills-village"]) in g
-    assert (BASE["case/fixture_full_001"], DCTERMS.spatial,
-            BASE["case/fixture_full_001/location/springfield"]) in g
-    assert BASE["location/springfield"] not in set(g.all_nodes())
+    case = BASE["case/fixture_full_001"]
+    assert set(g.objects(case, DCTERMS.spatial)) == {BASE["location/campton-hills-village"]}
+    assert not [n for n in g.all_nodes() if str(n).endswith("/location/springfield")]
+
+
+def test_source_is_the_url_and_publisher_is_the_agency_label():
+    case = FX.case("fixture_full_001")
+    g = flatten_dataset(CaseToCAC().map_case(case)[0])
+    inv = BASE["case/fixture_full_001"]
+    assert [str(o) for o in g.objects(inv, DCTERMS.publisher)] == [case["source"]]
+    assert all(isinstance(o, URIRef) for o in g.objects(inv, DCTERMS.source))
+    assert list(g.objects(inv, DCTERMS.source))
+
+
+@pytest.mark.parametrize("inv_type,has_operation", [("online", False), ("undercover", True)])
+def test_operation_node_only_when_the_type_states_one(inv_type, has_operation):
+    case = FX.case("fixture_full_001")
+    case["investigation_type"] = inv_type
+    g = flatten_dataset(CaseToCAC().map_case(case)[0])
+    op = BASE["case/fixture_full_001/operation"]
+    assert ((op, None, None) in g) is has_operation
 
 
 def test_contact_charge_names_the_offense_it_concerns_without_an_event():
