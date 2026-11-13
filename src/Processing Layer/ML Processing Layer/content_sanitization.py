@@ -248,13 +248,12 @@ class ContentSanitizer:
         # Add demographic ranges (not specific ages)
         victim_demo = case.get('case_demographics') or case.get('victim_demographics')
         if victim_demo:
-            age_range = victim_demo.get('age_range')
-            if age_range:
-                key_facts['victim_age_range'] = age_range
-            elif victim_demo.get('ages'):
-                ages = victim_demo.get('ages', [])
-                if ages:
-                    key_facts['victim_age_range'] = {'min': min(ages), 'max': max(ages)}
+            # Same rule as processing.victim_age_span: the stated span widened by any single ages.
+            span = victim_demo.get('age_range') if isinstance(victim_demo.get('age_range'), dict) else {}
+            values = [a for a in (victim_demo.get('ages') or []) if isinstance(a, int)]
+            values += [span[k] for k in ('min', 'max') if isinstance(span.get(k), int)]
+            if values:
+                key_facts['victim_age_range'] = {'min': min(values), 'max': max(values)}
         
         return key_facts
     

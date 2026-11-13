@@ -221,6 +221,11 @@ _RANGE_FIRST = re.compile(
     rf"|^\s*-?\s*and\s+{NUMBER_RE}\s*-\s*years?\s*-\s*olds?\b",
     re.IGNORECASE,
 )
+# "8 to 10 years old": the unit after the high end makes the low end an age with no "ages" before it.
+_RANGE_LOW_YEARS_OLD = re.compile(
+    rf"^\s*(?:-\s*)?(?:to|through|thru)\s+{NUMBER_RE}\s*(?:-\s*)?(?:years?|yrs?)\s*(?:-|\s)\s*olds?\b",
+    re.IGNORECASE,
+)
 _RANGE_SECOND_BEFORE = re.compile(
     rf"\b(?:aged?|ages?(?:\s+of)?|between\s+the\s+ages?\s+of)\s+{NUMBER_RE}\s*"
     r"(?:-|to|and|through|thru)\s*$",
@@ -233,6 +238,10 @@ _CHILD_NOUN_COMMA_BEFORE = re.compile(
     re.IGNORECASE,
 )
 _CAP_NAME_PAREN_BEFORE = re.compile(r"[A-Z][\w'\-]+(?:\s+[A-Z][\w'\-]+){0,4}\s*\(\s*$")
+# "arrested Thomas Meyer (42) for …": after an arrest verb the parenthesis needs no follow-on word
+_ARRESTED_NAME_PAREN_BEFORE = re.compile(
+    r"\b(?:arrested|charged|indicted|arraigned|booked)\s+[A-Z][\w'\-]+(?:\s+[A-Z][\w'\-.]+){0,4}\s*\(\s*$"
+)
 
 # A bare child noun ("the 11-year-old sisters") identifies a child, not a victim. A victim
 # role from a noun alone needs the sentence to show victimization (contact, abuse, material,
@@ -315,6 +324,8 @@ def is_age_shaped(text: str, start: int, end: int) -> Tuple[bool, str]:
         return True, "age_range_low"
     if _RANGE_FIRST.match(right) and re.search(r"-\s*and\s", right[:8]):
         return True, "hyphen_range_low"
+    if _RANGE_LOW_YEARS_OLD.match(right):
+        return True, "age_range_low"
     if _RANGE_SECOND_BEFORE.search(left):
         return True, "age_range_high"
     # Appositive: "Bryce Bock, 32, of …" / "Smith, 32." / "Smith, 32 was …"
@@ -330,6 +341,8 @@ def is_age_shaped(text: str, start: int, end: int) -> Tuple[bool, str]:
         re.match(r"^\s*,\s*[A-Z][\w.\- ]{1,40}\)", right)
         or re.match(r"^\s*\)\s*(?:,|(?:of|from|was|were|has|is|who|appeared|pleaded|pled|admitted|and)\b)", right)
     ):
+        return True, "name_paren"
+    if _ARRESTED_NAME_PAREN_BEFORE.search(left) and re.match(r"^\s*\)", right):
         return True, "name_paren"
     return False, "not_age_shaped"
 
@@ -360,7 +373,43 @@ def is_closed_age_range(text: str, start: int, end: int) -> bool:
         re.IGNORECASE,
     ):
         return True
+    # "8 to 10 years old": the high end, with the unit after it
+    if re.search(rf"(?<![\w$]){NUMBER_RE}\s+(?:to|through|thru)\s+$", left, re.IGNORECASE) and _YEAR_OLD_AFTER.match(right):
+        return True
     return False
+
+
+_AGE_RANGE_RES = (
+    re.compile(
+        rf"(?<![\w$])(?P<lo>{NUMBER_RE})(?:\s*-\s*(?:to\s+)?|\s+(?:to|through|thru)\s+)(?P<hi>{NUMBER_RE})(?![\w])",
+        re.IGNORECASE,
+    ),
+    # "between the ages of 8 and 13": "and" joins a span only after "between"
+    re.compile(
+        rf"\bbetween\s+(?:the\s+)?(?:ages?\s+(?:of\s+)?)?(?P<lo>{NUMBER_RE})\s+and\s+(?P<hi>{NUMBER_RE})(?![\w])",
+        re.IGNORECASE,
+    ),
+)
+
+
+def age_range_at(text: str, start: int, end: int) -> Optional[Tuple[int, int, int]]:
+    """``(low, high, end of the span)`` when this age token is one end of a stated span of ages.
+
+    Covers what ``is_closed_age_range`` covers plus "between the ages of 8 and 13".
+    None when the token is not an end, or the ends do not parse as low < high.
+    """
+    lo_at = max(0, start - 60)
+    window = normalize_surface(text[lo_at : end + 60])
+    for rx in _AGE_RANGE_RES:
+        for m in rx.finditer(window):
+            if (lo_at + m.start("lo"), lo_at + m.end("lo")) != (start, end) and (
+                lo_at + m.start("hi"), lo_at + m.end("hi")
+            ) != (start, end):
+                continue
+            low, high = parse_number(m.group("lo")), parse_number(m.group("hi"))
+            if low is not None and high is not None and low < high:
+                return low, high, lo_at + m.end("hi")
+    return None
 
 
 def age_support(text: str, start: Optional[int], end: Optional[int], value) -> Tuple[bool, str]:

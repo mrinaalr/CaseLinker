@@ -1260,3 +1260,111 @@ def test_a_real_hyphenated_term_is_still_a_sentence():
     final = case["resolutions"]["sentence"]["final_value"] or {}
     assert "18-month" in final.get("imposed") and "five years" in final.get("imposed")
     assert "three-day" not in _sentence_values(case)
+
+
+# --- victim age spans and the shapes left open in #17 / #19 --------------------------------
+
+def _age_span(case):
+    return (case.get("case_demographics") or {}).get("age_range")
+
+
+@pytest.mark.parametrize(
+    "text, low, high",
+    [
+        ("Corin Ashcombe, 40, was charged with abusing girls between the ages of 8 and 13.", 8, 13),
+        ("Corin Ashcombe, 40, was charged with exploiting victims ages 6 to 16.", 6, 16),
+        ("Corin Ashcombe, 40, was charged with abusing a girl estimated to be 8 to 10 years old.", 8, 10),
+        ("Corin Ashcombe, 40, was charged with sexually abusing a 5- to 8-year-old girl.", 5, 8),
+        ("Corin Ashcombe, 40, was charged with abusing child victims, ages 7 thru 16.", 7, 16),
+    ],
+)
+def test_a_span_of_victim_ages_is_kept_as_a_span(text, low, high):
+    case, res = run(text)
+    final = age_final(res)
+    assert final["victim_ranges"] == [{"min": low, "max": high}]
+    # The ends of the span are not two victims, and nothing is left for review.
+    assert final["victims"] == [] and final["unresolved"] == []
+    assert _age_span(case) == {"min": low, "max": high}
+
+
+def test_two_victim_spans_give_the_lowest_low_and_the_highest_high():
+    case, res = run(
+        "Corin Ashcombe, 40, was charged with abusing victims ages 11 to 13. "
+        "He also abused victims between the ages of 13 and 16."
+    )
+    assert age_final(res)["victim_ranges"] == [{"min": 11, "max": 13}, {"min": 13, "max": 16}]
+    assert _age_span(case) == {"min": 11, "max": 16}
+
+
+def test_a_span_that_reaches_adults_is_not_cut_to_17():
+    case, res = run("Corin Ashcombe, 40, was charged with exploiting victims ages 12 thru 19.")
+    assert age_final(res)["victim_ranges"] == []
+    assert _age_span(case) is None
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        # a program's age band, not children in this case
+        "Corin Ashcombe, 40, was arrested. The camp serves children between the ages of 8 and 13.",
+        # ages shown in material are excluded, as single ages are
+        "Corin Ashcombe, 40, possessed images of girls ages 6 to 10.",
+        # a sentencing range
+        "Corin Ashcombe, 40, faces 5 to 10 years in prison.",
+        # a study, the children someone coaches, a stated preference, and a described video
+        "Corin Ashcombe, 40, was arrested. One in seven children, ages 10 to 17, are sexually solicited online.",
+        "Corin Ashcombe, 40, was arrested for sexual abuse; he is a tennis coach for children between the ages of 8 and 17.",
+        "Corin Ashcombe, 40, admitted a sexual attraction to children ages 3-10.",
+        "Corin Ashcombe, 40, shared a clip that shows a young girl between the ages of 8 and 13 being raped.",
+    ],
+)
+def test_a_span_that_is_not_about_victims_is_not_a_victim_span(text):
+    case, res = run(text)
+    assert age_final(res)["victim_ranges"] == []
+    assert _age_span(case) is None
+
+
+def test_the_object_of_an_arrest_is_the_perpetrator():
+    _, res = run("Police arrested 21-year-old Corin Ashcombe on child pornography charges.")
+    assert age_final(res)["perpetrators"] == [21]
+    _, res = run("Detectives arrested Corin Ashcombe (42) for child exploitation.")
+    assert age_final(res)["perpetrators"] == [42]
+    # A named child after another verb is not a defendant.
+    _, res = run("Corin Ashcombe, 40, was charged after police found 14-year-old Reese Thistlewood at his home.")
+    assert 14 not in age_final(res)["perpetrators"]
+
+
+def test_a_year_old_female_is_a_victim_when_the_sentence_shows_victimization():
+    _, res = run("Corin Ashcombe, 40, was arrested after sending sexual messages to a 13-year-old female.")
+    assert age_final(res)["victims"] == [13]
+    # With nothing done to her, an alias, or a juvenile who did the act, the age stays open.
+    for text in (
+        "Corin Ashcombe, 40, was arrested. A 13-year-old female lives next door.",
+        "Corin Ashcombe, 40, used aliases online, identifying as an 18-year-old female and a 13-year-old female.",
+        "Corin Ashcombe, 40, was arrested after agents determined that a 16-year-old male had recorded sexual video.",
+    ):
+        _, res = run(text)
+        assert age_final(res)["victims"] == []
+
+
+def test_both_readers_of_victim_ages_report_the_same_span():
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(
+        "content_sanitization_for_span",
+        Path(__file__).resolve().parents[1] / "src" / "Processing Layer" / "ML Processing Layer" / "content_sanitization.py",
+    )
+    sanitizer_mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(sanitizer_mod)
+    facts = sanitizer_mod.ContentSanitizer.extract_key_facts
+    pp = A.patterns._pp
+    for demo, want in (
+        ({"ages": [7], "age_range": {"min": 7, "max": 16}}, {"min": 7, "max": 16}),  # doj_archives_2006_001
+        ({"ages": [4, 6], "age_range": {"min": 4, "max": 14}}, {"min": 4, "max": 14}),  # azicac_2014_012
+        ({"ages": [15], "age_range": {"min": 8, "max": 13}}, {"min": 8, "max": 15}),
+        ({"ages": [12]}, {"min": 12, "max": 12}),
+        ({"age_range": {"min": 6, "max": 9}}, {"min": 6, "max": 9}),
+    ):
+        assert pp.victim_age_span(demo) == want
+        assert facts(sanitizer_mod.ContentSanitizer.__new__(sanitizer_mod.ContentSanitizer),
+                     {"case_demographics": demo}).get("victim_age_range") == want
