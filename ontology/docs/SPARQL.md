@@ -116,11 +116,11 @@ A full reload starts from an empty store, so pass the PACER N-Quads (`load_pacer
 The hosted store is `oxigraph serve` from `ghcr.io/oxigraph/oxigraph:0.5.13` on a 5 GB Railway volume (`/data/caselinker_oxigraph`). A reload is a bulk load into an empty store:
 
 1. Build the N-Quads anywhere: `python3 scripts/rebuild_oxigraph.py --output caselinker.nq.gz --no-load`, and `python3 scripts/load_pacer_jsonld.py --output pacer.nq` for the PACER graphs.
-2. Copy both to the web service, where `OXIGRAPH_URL` reaches the store over the private network: `railway ssh --service web "cat > /tmp/caselinker.nq.gz" < caselinker.nq.gz`.
+2. Copy both to the web service, where `OXIGRAPH_URL` reaches the store over the private network: `railway ssh --service web "cat > /tmp/caselinker.nq.gz" < caselinker.nq.gz`, and the same for `pacer.nq`.
 3. Wipe the volume (Railway dashboard → `oxigraph-volume-S6Fs` → Settings → Wipe volume). The bulk loader refuses a store that is not empty.
 4. In the web service: `python3 scripts/rebuild_oxigraph.py --skip-build --output /tmp/caselinker.nq.gz --extra-nq /tmp/pacer.nq`.
 
-`bulk_load_nquads` posts 500,000-line slices to `POST /store?no_transaction`, Oxigraph's bulk loader, which writes sorted data files and no write-ahead log. It holds the rebuild lock, so `/sparql` answers 503 until the load ends, and fails unless the store's quad count equals the lines sent. A full load (6,151,655 quads) takes about 5 minutes and leaves about 2.1 GB on the volume.
+`bulk_load_nquads` posts 500,000-line slices to `POST /store?no_transaction`, Oxigraph's bulk loader, which writes sorted data files and no write-ahead log. It holds the rebuild lock, so `/sparql` answers 503 while the store is partial, and fails unless the store's quad count equals the lines sent. A failed load keeps the lock, so a partial store is never served; rerun the load after another wipe, or remove `/tmp/caselinker-sparql-rebuild.lock` in the web service to serve what is there. Between the wipe and the start of the load the store is empty and `/sparql` answers with no rows. A full load (6,151,655 quads) takes about 5 minutes and leaves about 2.1 GB on the volume.
 
 The transactional path (plain `PUT` or `POST /store`, or `CLEAR ALL` before a load) logs every quad before writing it. On this volume that log reached 3.87 GB and filled the disk before a full load finished.
 

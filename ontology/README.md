@@ -165,7 +165,7 @@ See [`caselinker_mcp/README.md`](../caselinker_mcp/README.md). To run SPARQL aga
 # Map all DB ids → graph_output/*.ttl + *.jsonld (SHACL on)
 python3 -c "from ontology.graph_generate import generate_graphs; ..."  # or use features_to_cac CLI
 
-# Reload production Oxigraph: bulk load into an empty store (docs/SPARQL.md#reloading-the-store)
+# Build the N-Quads for a reload; the load runs in the web service after a volume wipe (docs/SPARQL.md#reloading-the-store)
 python3 scripts/rebuild_oxigraph.py --output caselinker.nq.gz --no-load
 ```
 

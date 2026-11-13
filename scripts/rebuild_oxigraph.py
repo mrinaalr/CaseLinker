@@ -53,6 +53,14 @@ def parse_args(argv=None) -> argparse.Namespace:
 
 def main(argv=None) -> int:
     args = parse_args(argv)
+    if not args.no_load:
+        if not args.oxigraph_url:
+            print("OXIGRAPH_URL / --oxigraph-url is required to load (or pass --no-load)", file=sys.stderr)
+            return 1
+        missing = [p for p in args.extra_nq if not p.is_file()]
+        if missing:
+            print(f"--extra-nq not found: {', '.join(map(str, missing))}", file=sys.stderr)
+            return 1
     failed = []
     if args.skip_build:
         if not args.output.is_file():
@@ -79,13 +87,6 @@ def main(argv=None) -> int:
     if args.no_load:
         print("Built N-Quads only (--no-load).")
         return 0
-    if not args.oxigraph_url:
-        print("OXIGRAPH_URL / --oxigraph-url is required to load (or pass --no-load)", file=sys.stderr)
-        return 1
-    missing = [p for p in args.extra_nq if not p.is_file()]
-    if missing:
-        print(f"--extra-nq not found: {', '.join(map(str, missing))}", file=sys.stderr)
-        return 1
     paths = [args.output, *args.extra_nq]
     print(f"Bulk-loading {', '.join(p.name for p in paths)} → {args.oxigraph_url.rstrip('/')}/store", flush=True)
     loaded = bulk_load_nquads(paths, args.oxigraph_url, chunk_lines=args.chunk_lines)

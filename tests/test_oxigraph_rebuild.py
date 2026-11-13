@@ -205,8 +205,15 @@ def _nq(path: Path, n: int, graph: str = "urn:g") -> Path:
 
 @pytest.fixture
 def lock_env(monkeypatch, tmp_path):
+    """File lock in tmp_path; the Redis flag is stubbed so no test touches a real Redis."""
+    run = ROOT / "run"
+    if str(run) not in sys.path:
+        sys.path.insert(0, str(run))
+    import sparql_rebuild_lock as lock
+
     monkeypatch.setenv("SPARQL_REBUILD_LOCK", str(tmp_path / "rebuild.lock"))
-    monkeypatch.delenv("REDIS_URL", raising=False)
+    monkeypatch.setattr(lock, "_redis_set_flag", lambda: None)
+    monkeypatch.setattr(lock, "_redis_clear_flag", lambda: None)
     return tmp_path / "rebuild.lock"
 
 
@@ -247,7 +254,7 @@ def test_bulk_load_fails_loudly_when_the_store_count_does_not_match(tmp_path, lo
     store = _FakeOxigraph(drop_lines=1)
     with pytest.raises(RuntimeError, match="holds 2 quads after loading 3 lines"):
         bulk_load_nquads([_nq(tmp_path / "c.nq", 3)], "http://ox", client=store.client())
-    assert not lock_env.exists()
+    assert lock_env.exists()              # a partial store stays behind the lock
 
 
 def test_build_nquads_writes_gzip_when_asked(tmp_path: Path):
@@ -270,3 +277,77 @@ def test_cli_skip_build_needs_an_existing_file_and_load_needs_a_url(tmp_path, mo
     nq = _nq(tmp_path / "c.nq", 2)
     assert rebuild_oxigraph.main(["--skip-build", "--output", str(nq)]) == 1          # no URL
     assert rebuild_oxigraph.main(["--skip-build", "--output", str(nq), "--no-load"]) == 0
+
+
+def test_every_bulk_post_happens_under_the_rebuild_lock(tmp_path, lock_env):
+    from oxigraph_rebuild import bulk_load_nquads
+
+    store = _FakeOxigraph()
+    seen = []
+    inner = store.handler
+
+    def handler(request):
+        if request.url.path == "/store":
+            seen.append(lock_env.exists())
+        return inner(request)
+
+    import httpx
+
+    client = httpx.Client(transport=httpx.MockTransport(handler))
+    bulk_load_nquads([_nq(tmp_path / "c.nq", 25)], "http://ox", chunk_lines=10, client=client)
+    assert seen == [True, True, True]
+    assert not lock_env.exists()
+
+
+def test_a_failed_load_keeps_the_lock_over_the_partial_store(tmp_path, lock_env):
+    from oxigraph_rebuild import bulk_load_nquads
+
+    class FailAfterFirst(_FakeOxigraph):
+        def handler(self, request):
+            import httpx
+
+            if request.url.path == "/store" and self.posts:
+                self.posts.append(("fail", b""))
+                return httpx.Response(500, text="IO error")
+            return super().handler(request)
+
+    store = FailAfterFirst()
+    with pytest.raises(RuntimeError, match="after 2 attempts"):
+        bulk_load_nquads([_nq(tmp_path / "c.nq", 20)], "http://ox", chunk_lines=10,
+                         retries=2, retry_wait_s=0, client=store.client())
+    assert store.quads == 10 and lock_env.exists()
+
+
+def test_a_rejected_slice_is_not_retried_and_chunk_size_must_be_positive(tmp_path, lock_env):
+    import httpx
+
+    from oxigraph_rebuild import bulk_load_nquads
+
+    calls = []
+
+    def handler(request):
+        if request.url.path == "/query":
+            return httpx.Response(200, json={"results": {"bindings": [{"n": {"value": "0"}}]}})
+        calls.append(1)
+        return httpx.Response(400, text="Parser error")
+
+    client = httpx.Client(transport=httpx.MockTransport(handler))
+    with pytest.raises(RuntimeError, match="rejected"):
+        bulk_load_nquads([_nq(tmp_path / "c.nq", 3)], "http://ox", retry_wait_s=0, client=client)
+    assert calls == [1]
+    with pytest.raises(ValueError):
+        bulk_load_nquads([_nq(tmp_path / "d.nq", 3)], "http://ox", chunk_lines=0, client=client)
+
+
+def test_cli_checks_load_arguments_before_building_and_stops_on_a_bad_graph(tmp_path, monkeypatch):
+    sys.path.insert(0, str(ROOT / "scripts"))
+    import rebuild_oxigraph
+
+    monkeypatch.delenv("OXIGRAPH_URL", raising=False)
+    graphs = tmp_path / "graphs"
+    _write_ttl(graphs / "case_a.ttl", "http://ex.org/a", "a")
+    out = tmp_path / "out.nq"
+    assert rebuild_oxigraph.main(["--graph-root", str(graphs), "--output", str(out)]) == 1
+    assert not out.exists()                                    # no URL: nothing built
+    (graphs / "case_b.ttl").write_text("not turtle <", encoding="utf-8")
+    assert rebuild_oxigraph.main(["--graph-root", str(graphs), "--output", str(out), "--no-load"]) == 1

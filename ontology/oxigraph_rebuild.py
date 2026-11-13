@@ -253,8 +253,9 @@ def bulk_load_nquads(
     connection costs one slice, not the whole load. A slice is posted again after
     a failure; reposting quads already stored is harmless, a store is a set.
 
-    Holds the rebuild lock so ``/sparql`` answers 503 while the store is partial.
-    Returns lines sent and the store's quad count, and raises when the store
+    Holds the rebuild lock so ``/sparql`` answers 503 while the store is partial,
+    and keeps it when the load fails. Returns lines sent and the store's quad
+    count, and raises when the store
     does not end with exactly the lines sent (the files hold no duplicate quads:
     every case is its own named graph).
     """
@@ -267,7 +268,10 @@ def bulk_load_nquads(
         sys.path.insert(0, str(_run))
     from sparql_rebuild_lock import acquire_rebuild_lock, release_rebuild_lock
 
+    if chunk_lines < 1:
+        raise ValueError(f"chunk_lines must be at least 1, got {chunk_lines}")
     base = oxigraph_url.rstrip("/")
+    own_client = client is None
     http = client or httpx.Client(timeout=timeout_s)
 
     def count() -> int:
@@ -290,6 +294,8 @@ def bulk_load_nquads(
                 if response.status_code < 400:
                     return
                 error = f"HTTP {response.status_code} {response.text[:300]}"
+                if response.status_code < 500:
+                    raise RuntimeError(f"Oxigraph rejected {label}: {error}")
             except httpx.HTTPError as exc:
                 error = repr(exc)
             print(f"  {label}: attempt {attempt} failed: {error}", flush=True)
@@ -297,36 +303,50 @@ def bulk_load_nquads(
                 time.sleep(retry_wait_s)
         raise RuntimeError(f"Oxigraph bulk load failed at {label} after {retries} attempts")
 
-    before = count()
-    if before:
-        raise RuntimeError(
-            f"Oxigraph store at {base} already holds {before} quads. The bulk loader "
-            "only loads an empty store; wipe the volume first."
-        )
-    acquire_rebuild_lock()
-    sent = 0
     try:
-        for path in nq_paths:
-            buf: List[bytes] = []
-            with _open_nquads(path) as handle:
-                for line in handle:
-                    if not line.strip():
-                        continue
-                    buf.append(line)
-                    if len(buf) >= chunk_lines:
-                        post(b"".join(buf), f"{path.name} line {sent + len(buf)}")
-                        sent += len(buf)
-                        buf = []
-                        print(f"  {sent} quads loaded", flush=True)
-            if buf:
-                post(b"".join(buf), f"{path.name} line {sent + len(buf)}")
-                sent += len(buf)
-            print(f"  {path.name} done, {sent} quads loaded", flush=True)
-        after = count()
+        before = count()
+        if before:
+            raise RuntimeError(
+                f"Oxigraph store at {base} already holds {before} quads. The bulk loader "
+                "only loads an empty store; wipe the volume first."
+            )
+        acquire_rebuild_lock()
+        return _bulk_post(nq_paths, chunk_lines, post, count, release_rebuild_lock)
     finally:
-        release_rebuild_lock()
+        if own_client:
+            http.close()
+
+
+def _bulk_post(nq_paths, chunk_lines, post, count, release_lock) -> Dict[str, int]:
+    """Post every file in slices. Releases the rebuild lock only after a complete load.
+
+    A failed load keeps the lock: the store is partial, and /sparql should keep
+    answering 503 until the load is redone or the lock is removed by hand.
+    """
+    sent = 0
+    for path in nq_paths:
+        buf: List[bytes] = []
+        with _open_nquads(path) as handle:
+            for line in handle:
+                if not line.strip():
+                    continue
+                buf.append(line)
+                if len(buf) >= chunk_lines:
+                    post(b"".join(buf), f"{path.name} line {sent + len(buf)}")
+                    sent += len(buf)
+                    buf = []
+                    print(f"  {sent} quads loaded", flush=True)
+        if buf:
+            post(b"".join(buf), f"{path.name} line {sent + len(buf)}")
+            sent += len(buf)
+        print(f"  {path.name} done, {sent} quads loaded", flush=True)
+    after = count()
     if after != sent:
-        raise RuntimeError(f"Oxigraph holds {after} quads after loading {sent} lines")
+        raise RuntimeError(
+            f"Oxigraph holds {after} quads after loading {sent} lines; "
+            "the rebuild lock stays in place"
+        )
+    release_lock()
     return {"quads_sent": sent, "store_quads": after}
 
 
