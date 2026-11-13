@@ -272,6 +272,7 @@ def collect_assertions(
     doc_kind: str = "press_release",
     compiled_rules_override: Optional[List[Dict]] = None,
     spacy_doc: Any = None,
+    trace: Optional[List[Dict]] = None,
 ) -> List[Dict]:
     """
     Assertions for one document, gated.
@@ -279,6 +280,11 @@ def collect_assertions(
     ``doc_kind`` selects detectors. Press releases are the live set. Other kinds
     run only detectors registered for them (NER, approved compiled rules, human
     verdicts, and anything a caller has registered).
+
+    ``trace`` is observation only. Pass a list and it receives one entry per
+    candidate, kept or dropped: ``{"detector", "raw", "gated"}``. The return value
+    is the same with or without it. Entries are not pseudonymized; keep them in
+    memory and never store or serve them.
     """
     text = case_text or ""
     if not text.strip():
@@ -297,9 +303,15 @@ def collect_assertions(
         spacy_doc=spacy_doc,
     )
     raw: List[Dict] = []
+    owners: List[str] = []
     for det in detectors.detectors_for(doc_kind):
-        raw.extend(det.fn(ctx) or [])
-    gated = [g for g in (gate_assertion(text, a) for a in raw) if g["span_ok"] or g["method"] in ("llm", "human")]
+        found = list(det.fn(ctx) or [])
+        raw.extend(found)
+        owners.extend(det.name for _ in found)
+    candidates = [gate_assertion(text, a) for a in raw]
+    if trace is not None:
+        trace.extend({"detector": d, "raw": a, "gated": g} for d, a, g in zip(owners, raw, candidates))
+    gated = [g for g in candidates if g["span_ok"] or g["method"] in ("llm", "human")]
     # Imposed terms stay a flat list. The subject of the sentencing clause is an extra.
     if ctx.spacy_doc is not None:
         spacy_patterns.attach_imposed_defendants(ctx.spacy_doc, gated)
