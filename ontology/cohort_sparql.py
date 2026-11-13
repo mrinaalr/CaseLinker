@@ -44,7 +44,7 @@ WHERE {
           dcterms:identifier ?id .
     OPTIONAL {
       SELECT ?case (GROUP_CONCAT(DISTINCT STR(?raw); separator=" | ") AS ?sources)
-      WHERE { ?case dcterms:source ?raw }
+      WHERE { ?case dcterms:source|dcterms:publisher ?raw }
       GROUP BY ?case
     }
     OPTIONAL {

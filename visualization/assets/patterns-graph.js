@@ -965,7 +965,7 @@
         const inv = flat.find(n => n['@id'] && /\/case\/[^/]+$/.test(n['@id']));
         let label = caseId;
         if (inv) {
-            const src = firstLiteral(inv['http://purl.org/dc/terms/source']);
+            const src = firstLiteral(inv['http://purl.org/dc/terms/publisher']) || firstLiteral(inv['http://purl.org/dc/terms/source']);
             const id  = firstLiteral(inv['http://purl.org/dc/terms/identifier']);
             const yr  = firstLiteral(inv['http://purl.org/dc/terms/date']);
             if (src || id) {
