@@ -395,7 +395,7 @@ flowchart LR
 | Analysis | [`analysis_ids.txt`](ontology/analysis_ids.txt) (124) | `graph_output/analysis/` | MCP exports, research cohorts |
 | Compare | [`selected_200_ids.txt`](ontology/selected_200_ids.txt) (200) | subset of universe | `/patterns` compare chips |
 
-**Oxigraph.** [`oxigraph_rebuild.py`](ontology/oxigraph_rebuild.py) picks one canonical Turtle per case (universe > staging > big_bang > analysis > pacer), loads it as named graph `https://w3id.org/caselinker/resource/case/{case_id}` and its sidecar as `…/{case_id}/provenance`, writes one N-Quads file and `PUT`s it to `/store` ([`scripts/rebuild_oxigraph.py`](scripts/rebuild_oxigraph.py)). The store runs with `--union-default-graph`. PACER court-record graphs modeled with the CASE-UCO SDK load separately and incrementally as `urn:pacer:kg:…` ([`scripts/load_pacer_jsonld.py`](scripts/load_pacer_jsonld.py) `--post`); a full rebuild does not restore them, so run both.
+**Oxigraph.** [`oxigraph_rebuild.py`](ontology/oxigraph_rebuild.py) picks one canonical Turtle per case (universe > staging > big_bang > analysis > pacer), loads it as named graph `https://w3id.org/caselinker/resource/case/{case_id}` and its sidecar as `…/{case_id}/provenance`, writes one N-Quads file and bulk-loads it into an empty store with `POST /store?no_transaction`, which keeps no write-ahead log ([`scripts/rebuild_oxigraph.py`](scripts/rebuild_oxigraph.py), [reload procedure](ontology/docs/SPARQL.md#reloading-the-store)). The service runs `ghcr.io/oxigraph/oxigraph:0.5.13`. The store runs with `--union-default-graph`. PACER court-record graphs modeled with the CASE-UCO SDK load separately and incrementally as `urn:pacer:kg:…` ([`scripts/load_pacer_jsonld.py`](scripts/load_pacer_jsonld.py) `--post`); a full rebuild does not restore them, so run both.
 
 **Public SPARQL** ([`run/sparql_proxy.py`](run/sparql_proxy.py)). SPARQL 1.1 Query only, classified with rdflib's parser rather than regex. Update and `SERVICE` are rejected; a missing outer `LIMIT` becomes 1000 and anything above 10,000 is a 400. 30 requests per minute per IP, 32 s store timeout. While a rebuild holds the lock ([`sparql_rebuild_lock.py`](run/sparql_rebuild_lock.py)) the endpoint returns 503. When the Railway store is asleep, [`oxigraph_wake.py`](run/oxigraph_wake.py) retries once and then answers HTTP 200 with `status: "waking"`, `retry: true` and `Retry-After`, so agents never see a raw 502.
 
@@ -517,7 +517,7 @@ flowchart LR
   end
   CLI --> SQ
   CLI -.->|"CASELINKER_LLM=1"| OL
-  CLI -.->|"rebuild_oxigraph.py --no-put"| LOX
+  CLI -.->|"rebuild_oxigraph.py --no-load"| LOX
 ```
 
 | Variable | Service | Purpose |
@@ -540,8 +540,8 @@ Runbook for a corpus change, from the repo root with `.venv` active:
 SKIP_PRECOMPUTE_CLUSTERS=1 ./scripts/run/ingest_all_pdfs.sh     # or python3 src/main.py <pdf>
 python3 scripts/run/precompute_clusters.py                       # slim caches + Redis
 python3 -c "from ontology.graph_generate import generate_graphs; generate_graphs()"   # TTL, JSON-LD, provenance
-python3 scripts/rebuild_oxigraph.py                              # wholesale PUT /store
-python3 scripts/load_pacer_jsonld.py --post                      # restore urn:pacer:kg graphs
+python3 scripts/load_pacer_jsonld.py --output pacer.nq           # urn:pacer:kg graphs
+python3 scripts/rebuild_oxigraph.py --extra-nq pacer.nq          # bulk load into an empty store
 ```
 
 Locally, `python3 run/main.py` serves on port 8000, `scripts/run/local_oxigraph.sh` runs a read-only store from an N-Quads backup, and `scripts/run/reresolve_assertions.py` re-votes stored assertions under a new rule set without touching the PDFs.
